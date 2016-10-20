@@ -1,8 +1,0 @@
-姓名	性别		专业			昵称		邮箱		        方向
-孙茂昀	男	15软件工程（嵌入式培养）	Duncan		1466863073@qq.com	后端
-桑春铨	男	15软件工程（嵌入式培养）	Spring		chunquansang@gmail.com	后端
-罗志强	男	15计单				luozQ		710277267@qq.com	ASP.NET
-杨雪梅	女	14软件工程（嵌入式培养）	yangxuemei	1278600696@qq.com	前端
-黄佳晴	女	15软件工程			HJQ		1045414146@qq.com	安卓
-单凯	男	15软件工程（嵌入式培养）	Cecurio		1072183582@qq.com	后端
-									
