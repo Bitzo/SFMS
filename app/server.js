@@ -39,6 +39,7 @@ app.use(require('./views/errors/404'))
 // });
 
 app.listen(config.port, config.host, function () {
+    console.log(process);
     console.log('在端口:' + app.get('port') + '监听!');
 });
           
