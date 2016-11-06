@@ -13,10 +13,10 @@ var router = express.Router();
 var userBiz = require('../service/userservice');
 
 router.get('/:user_id', function(req, res) {
-    var data = req.body;
+    var userid = req.params.user_id;
     //测试代码
-    data = {
-        'AccountID': 1
+    var data = {
+        'AccountID': userid
     };
 
     userBiz.queryAllUsers(data, function(err, result) {
