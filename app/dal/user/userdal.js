@@ -24,7 +24,6 @@ exports.queryAllUsers = function(data, callback) {
     db.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
-            connection.release();
             return;
         }
 
@@ -56,7 +55,6 @@ exports.insert = function(data, callback) {
     db.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
-            connection.release();
             return;
         }
 
