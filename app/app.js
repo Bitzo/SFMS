@@ -1,13 +1,18 @@
+require('./global_bootstrap')
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var routes = require('./routes/routes');
 
 var app = express();
+//避免dot-hell
+global.appRequire = function(path) {
+  return require(path.resolve(__dirname, path));
+}
 
 // 设置VIEWS文件夹，__dirname是node.js里面的全局变量。取得执行js所在的路径
 app.set('views', path.join(__dirname, 'views'));

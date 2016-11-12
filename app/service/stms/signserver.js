@@ -4,7 +4,7 @@
  * @Last Modified by:
  * @Last Modified time:
  */
-var signDAL = require('../dal/user/signdal.js');
+var signDAL = appRequire('dal/stms/signdal.js');
 
 //用户签到签退
 exports.signLog = function(data, callback) {

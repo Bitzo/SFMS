@@ -5,8 +5,8 @@
  * @Last Modified time: 2016-11-05 11:14:38
  */
 
-var db = require('../../db');
-var userModel = require('../../model/user/usermodel');
+var db_backend = appRequire('db/db_backend');
+var userModel = appRequire('model/backend/user/usermodel');
 
 //查询目前所有用户
 exports.queryAllUsers = function(data, callback) {
@@ -21,7 +21,7 @@ exports.queryAllUsers = function(data, callback) {
 
     console.log("查询用户所有用户:" + sql);
 
-    db.mysqlPool.getConnection(function(err, connection) {
+    db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             return;
@@ -52,7 +52,7 @@ exports.insert = function(data, callback) {
     }
     console.log("新增用户: " + insert_sql);
 
-    db.mysqlPool.getConnection(function(err, connection) {
+    db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             return;
@@ -85,7 +85,7 @@ exports.update = function(data, callback) {
 
     console.log("修改用户: " + upd_sql);
 
-    db.mysqlPool.getConnection(function(err, connection) {
+    db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             connection.release();
@@ -112,7 +112,7 @@ exports.delete = function(data, callback) {
 
     console.log("删除用户: " + del_sql);
 
-    db.mysqlPool.getConnection(function(err, connection) {
+    db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             connection.release();

@@ -17,10 +17,10 @@ var config = {
     port: 3000, // 程序运行的端口
     host: '127.0.0.1',
     mysql: {
-        host: '127.0.0.1',
-        user: 'snail',
-        password: 'snail',
-        database: 'JinkeBro',
+        host: '139.224.51.160',
+        user: 'jinkebro',
+        password: 'jinkebro1320',
+        database: 'jit_backend',
         connectionLimit: 100,
         supportBigNumbers: true,
     },

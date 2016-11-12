@@ -6,8 +6,8 @@
  */
 
 var mysql = require('mysql');
-var config = require('./config/config');
+var config = require('../config/config');
  
-var mysqlPool = mysql.createPool(config.mysql);
+var dbBackendPool = mysql.createPool(config.mysql);
 
-exports.mysqlPool = mysqlPool;
+exports.mysqlPool = dbBackendPool;

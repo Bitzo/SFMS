@@ -4,7 +4,7 @@
  * @Last Modified by:   snail
  * @Last Modified time: 2016-11-05 11:14:38
  */
-var userDAL = require('../dal/user/userdal.js');
+var userDAL = appRequire('dal/backend/user/userdal.js');
 
 //查询目前所有用户
 exports.queryAllUsers = function(data, callback){
