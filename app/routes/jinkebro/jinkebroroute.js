@@ -4,6 +4,13 @@ var crypto = require("crypto");
 
 var router=express.Router();
 
+//金科小哥主站点
+router.get('/', function(req, res, next) {
+    res.json({
+        title: '实验室管理系统主站'
+    });
+});
+
 router.get('/accesscheck',function(req,res){
   var query = url.parse(req.url,true).query;
   var signature = query.signature;

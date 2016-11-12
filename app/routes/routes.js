@@ -1,24 +1,25 @@
 /** 
  * @Author: snail
  * @Date:   2016-11-6 14:33:36
- * @Last Modified by:   
- * @Last Modified time: 
+ * @Last Modified by:   snail
+ * @Last Modified time: 2016-11-12 16:30
+ * @Function 按项目划分子模块
  */
-var index=require('./index');
+var backendRoute = appRequire('routes/backend/backendroute');
+var sfmsRoute = appRequire('routes/sfms/sfmsroute');
+var jinkeBroRoute = appRequire('routes/jinkebro/jinkebroroute');
+var aptRoute = appRequire('routes/api/apiroute');
 
-var weChat=require('./wechat');
+module.exports = function(app) {
 
-var userApi=require('../api/userbiz');
-
-var login=require('../api/login');
-var sign=require('../api/sign');
-
-module.exports = function (app) {
-    app.use('/', index);
-    app.use('/wechat', weChat);
+    app.use('/', backendRoute);
 
     //API相关
-    app.use('/api/user',userApi);
-    app.use('/api/login',login);
-    app.use('/api/sign',sign);
+    app.use('/api', aptRoute);
+
+    // //实验室管理子系统
+    app.use('/sfms', sfmsRoute);
+
+    // //金科小哥子系统
+    app.use('/jkbro', jinkeBroRoute);
 };
