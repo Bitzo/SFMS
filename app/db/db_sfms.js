@@ -10,7 +10,7 @@ var config = require('../config/config');
 
 var stmsConfig=config.mysql;
 
-stmsConfig.database = 'jit_stms';
+stmsConfig.database = 'jit_sfms';
 var dbJinkeBroPool = mysql.createPool(stmsConfig);
 
 exports.mysqlPool = dbJinkeBroPool;

@@ -5,8 +5,8 @@
  * @Last Modified time:
  */
 
-var db = appRequire('db/db_stms');
-var signModel = appRequire('model/stms/signmodel');
+var db = appRequire('db/db_sfms');
+var signModel = appRequire('model/sfms/signmodel');
 
 exports.signLogInsert = function (data, callback) {
     var sql = 'insert into sfms_signinfo set UserId = ?, ip = ?, UserAgent = ?, mac = ?, Longitude = ?, Latitude = ?, CreateTime = ?, signType = ?';
