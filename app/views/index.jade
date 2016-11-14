@@ -1,4 +1,4 @@
-extends shared/layout
+extends shared/login/layout
 
 //- include shared/footer.jade
 
@@ -30,8 +30,8 @@ block content
       div.form-group  
         input(type='checkbox')
         span  Remember me   
-        button.btn.btn-lg.btn-primary.pull-right(type="submit" ng-click="submit(userdata)") Sign in
+        button.btn.btn-lg.btn-primary.pull-right(type="submit" ng-click="submit(userdata)") sign in
  
 
 
-   include shared/footer.jade
+   include shared/login/footer.jade
