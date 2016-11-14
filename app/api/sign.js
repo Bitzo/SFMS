@@ -10,7 +10,7 @@ var url = require("url");
 
 var router = express.Router();
 //用户签到签退业务
-var signserver = appRequire('service/sfms/signserver');
+var signservice = appRequire('service/sfms/signservice');
 
 router.post('/', function (req, res) {
 
@@ -53,7 +53,7 @@ router.post('/', function (req, res) {
         'signType':signType
     };
 
-    signserver.signLog(data, function(err, result) {
+    signservice.signLog(data, function(err, result) {
         if (err) {
             res.json({
                 code: '500',
