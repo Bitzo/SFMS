@@ -4,7 +4,7 @@ var url = require("url");
 
 var router = express.Router();
 //用户业务逻辑组件
-var userBiz = appRequire('service/backend/userservice');
+var userService = appRequire('service/backend/userservice');
 
 router.get('/:user_id', function(req, res) {
     var userid = req.params.user_id;
@@ -13,7 +13,7 @@ router.get('/:user_id', function(req, res) {
         'AccountID': userid
     };
 
-    userBiz.queryAllUsers(data, function(err, result) {
+    userService.queryAllUsers(data, function(err, result) {
         if (err) {
             res.json({
                 msg: '查询失败'
