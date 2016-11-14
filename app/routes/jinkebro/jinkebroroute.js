@@ -11,7 +11,8 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/accesscheck',function(req,res){
+//微信开发者认证
+router.get('/wechat/accesscheck',function(req,res){
   var query = url.parse(req.url,true).query;
   var signature = query.signature;
   var echostr = query.echostr;
