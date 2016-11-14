@@ -1,0 +1,70 @@
+body {
+  padding: 20px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-image: url(../../imgs/bg.jpg);
+  background-size: 100%;
+  background-repeat: repeat-y;
+}
+a {
+  color: #999;
+}
+.nav{
+  min-width: 600px;
+}
+.nav h3{
+  margin-left: 20px;
+  font-size: 25px;
+  font-weight: 00;
+  color:#4f98bb;
+}
+.container{
+  position: relative;
+  top: 0px;
+  width: 50%
+}
+.container h2{
+  text-align: center;
+  min-width: 300px;  
+  letter-spacing: 5px;
+  font-size: 34px;
+  color: #83b9d4;
+}
+form{
+  max-width: 530px;
+  min-width: 250px;
+  position: relative;
+  top: 5px;
+  margin: 0px auto;
+  padding: 50px 50px 40px 50px;
+  background-color: rgba(245, 245, 245, 0.5);
+  border-radius: 10px;
+  box-shadow:  #ccc 5px 5px 25px;
+}
+form label{
+  color: #6b6a6a;
+  font-size: 15px;
+  font-weight: 500;
+}
+form .error{
+  position: relative;
+  top: 3px;
+  color: #d06666;
+  height: 15px;
+}
+form .pin_code{
+  width: 80%;
+  display: inline-block;
+}
+form  img{
+  position: relative;
+  left: 15px;
+}
+form button{
+  position:relative;
+  width: 30%;
+  min-width: 80px;
+}
+.footer{
+  margin: 20px auto;
+  text-align: center;
+}

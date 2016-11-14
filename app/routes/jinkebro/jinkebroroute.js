@@ -6,9 +6,8 @@ var router=express.Router();
 
 //金科小哥主站点
 router.get('/', function(req, res, next) {
-    res.json({
-        title: '实验室管理系统主站'
-    });
+        res.render('sfms', { title: 'Hi jkbro' });
+
 });
 
 //微信开发者认证
