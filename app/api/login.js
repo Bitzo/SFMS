@@ -47,6 +47,7 @@ router.post('/', function (req, res) {
     //先检查是否有该用户
     userBiz.queryAllUsers(data, function(err, result) {
         if (err) {
+            console.log("err1");
             res.json({
                 code: 500,
                 isSuccess: false,
