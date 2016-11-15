@@ -9,7 +9,7 @@
 var express = require('express');
 var router = express.Router();
 
-var rolefuncservice = appRequire('service/backend/rolefuncservice');
+var rolefuncservice = appRequire('service/backend/role/rolefuncservice');
 
 router.get('/:roleID',function (req, res) {
     var roleID = req.params.roleID;

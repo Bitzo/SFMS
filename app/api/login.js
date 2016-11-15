@@ -10,7 +10,7 @@ var url = require("url");
 
 var router = express.Router();
 //用户业务逻辑组件
-var userBiz = appRequire('service/backend/userservice');
+var userBiz = appRequire('service/backend/user/userservice');
 
 router.post('/', function (req, res) {
 

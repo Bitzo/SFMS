@@ -8,7 +8,7 @@
 var express = require('express');
 var router = express.Router();
 
-var functionservice = appRequire('service/backend/functionserver');
+var functionservice = appRequire('service/backend/function/functionserver');
 
 router.get('/', function(req, res) {
     var appID = req.query.appID || 1;
