@@ -6,7 +6,7 @@
  */
 
 var mysql = require('mysql');
-var config = require('../config/config');
+var config = appRequire('config/config');
 
 var jinkeConfig=config.mysql;
 
