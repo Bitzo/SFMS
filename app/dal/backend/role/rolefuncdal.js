@@ -85,5 +85,71 @@ exports.addRoleFunc = function (data, callback) {
             connection.release();
         });
     });
+};
 
+//更新角色功能点
+exports.updateRoleFunc = function(data, callback) {
+    var upd_sql = 'update jit_rolefunction set ';
+    var sql = '';
+    if (data !== undefined) {
+        for (var key in data) {
+            if (sql.length == 0) {
+                sql += key + " = '" + data[key] + "' ";
+            } else {
+                sql += " , " + key + " = '" + data[key] + "' ";
+            }
+        }
+    }
+    upd_sql += sql;
+    upd_sql += " where " + roleFunctionModel.PK + " = " + data[roleFunctionModel.PK];
+
+    console.log("更新角色功能点: " + upd_sql);
+
+    db_backend.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            connection.release();
+            return;
+        }
+
+        connection.query(upd_sql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+};
+
+//删除角色功能点
+exports.delRoleFunc = function (data, callback) {
+    var sql = 'delete from jit_rolefunction where ID in ';
+    sql += "(";
+    console.log(data);
+    for (var i in data) {
+        sql += data[i].ID;
+        if (i < data.length-1) sql += ', ';
+    }
+    sql += ")";
+
+    console.log("删除角色功能点：" + sql);
+
+    db_backend.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            connection.release();
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
 }

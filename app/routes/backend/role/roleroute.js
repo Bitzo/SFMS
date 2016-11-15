@@ -11,16 +11,22 @@ var router = express.Router();
 
 var roleservice = appRequire('service/backend/role/roleservice');
 
+//查询角色信息
 router.get('/',function (req, res) {
     var appID = req.query.appID;
     var page = req.query.page || 1;
+
+    var roleName = req.query.RoleName;
+    var isActive = req.query.IsActive;
 
     console.log(appID);
     console.log(page);
 
     var data = {
         'appID': appID,
-        'page': page
+        'page': page,
+        'RoleName': roleName,
+        'IsActive': isActive
     };
 
     //用于查询结果总数的计数

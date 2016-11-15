@@ -31,3 +31,27 @@ exports.addRoleFunc = function (data, callback) {
         callback(false, results);
     })
 }
+
+//更改角色功能点
+exports.updateRoleFunc = function (data, callback) {
+    rolefuncDAL.updateRoleFunc(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        console.log('updataRoleFunc');
+        callback(false, results);
+    })
+}
+
+//删除角色功能点
+exports.delRoleFunc = function (data, callback) {
+    rolefuncDAL.delRoleFunc(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        console.log('deleteRoleFunc');
+        callback(false, results);
+    })
+}

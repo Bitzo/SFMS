@@ -17,6 +17,14 @@ exports.queryAllRoles = function (data, callback) {
         sql += " and ApplicationID = '" + data['appID'] + "' ";
     }
 
+    if (data['RoleName'] !== undefined) {
+        sql += " and RoleName = '" + data['RoleName'] + "' ";
+    }
+
+    if (data['IsActive'] !== undefined) {
+        sql += " and IsActive = '" + data['IsActive'] + "' ";
+    }
+
     var num = 10; //每页显示的个数
 
     sql += " LIMIT " + (data['page']-1)*num + "," + num;
@@ -51,6 +59,14 @@ exports.countAllRoles = function (data, callback) {
     if (data['appID'] !== undefined) {
         sql += " and ApplicationID = '" + data['appID'] + "' ";
     };
+
+    if (data['RoleName'] !== undefined) {
+        sql += " and RoleName = '" + data['RoleName'] + "' ";
+    }
+
+    if (data['IsActive'] !== undefined) {
+        sql += " and IsActive = '" + data['IsActive'] + "' ";
+    }
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
