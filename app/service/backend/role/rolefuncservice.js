@@ -19,3 +19,15 @@ exports.queryRoleFunc = function (data, callback) {
         callback(false, results);
     })
 }
+
+//新增角色功能点
+exports.addRoleFunc = function (data, callback) {
+    rolefuncDAL.addRoleFunc(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        console.log('addRoleFunc');
+        callback(false, results);
+    })
+}

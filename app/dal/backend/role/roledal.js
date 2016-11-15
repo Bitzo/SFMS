@@ -73,7 +73,7 @@ exports.countAllRoles = function (data, callback) {
     })
 };
 
-//新增角色功能
+//新增角色
 exports.addRole = function (data, callback) {
     var insert_sql = 'insert into jit_role set';
 
