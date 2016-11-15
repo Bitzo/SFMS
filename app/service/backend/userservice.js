@@ -13,7 +13,7 @@ exports.queryAllUsers = function(data, callback){
             callback(true);
             return;
         }
-            console.log('test');
+        console.log('test');
         callback(false, results);
     });
 };

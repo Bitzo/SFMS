@@ -25,7 +25,7 @@ router.post('/', function (req, res) {
         }
     }
 
-    if(err!='required: ')
+    if(err != 'required: ')
     {
         res.json({
             code: 400,
@@ -37,7 +37,7 @@ router.post('/', function (req, res) {
 
     var userID = req.body.AccountID;
     var ip = req.body.ip;
-    var UserAgent = req.body.UserAgent||'';
+    var UserAgent = req.body.UserAgent || '';
     var mac = req.body.mac;
     var Longitude = req.body.Longitude;
     var Latitude = req.body.Latitude;

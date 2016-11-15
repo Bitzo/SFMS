@@ -17,7 +17,7 @@ module.exports = function(app) {
     //API相关
     app.use('/api', aptRoute);
 
-    // //实验室管理子系统
+    //实验室管理子系统
     app.use('/sfms', sfmsRoute);
 
     // //金科小哥子系统
