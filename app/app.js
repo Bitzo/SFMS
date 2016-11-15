@@ -6,7 +6,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var routes = require('./routes/routes');
+var routes = appRequire('routes/routes');
+var apiAuth = appRequire('util/validauth');
 
 var app = express();
 //避免dot-hell
@@ -33,6 +34,22 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 //静态文件目录设置,设置public文件夹为存放静态文件的目录
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.all('/*', function(req, res, next) {
+  // CORS headers
+  res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  // Set custom headers for CORS
+  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+  if (req.method == 'OPTIONS') {
+    res.status(200).end();
+  } else {
+    next();
+  }
+});
+
+//所有api/v1/开始的路由全部走接口鉴权
+app.all('/api/v1/*', [apiAuth]);
 
 //路由入口
 routes(app);

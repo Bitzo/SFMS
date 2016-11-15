@@ -1,13 +1,14 @@
 // Declare angular JS level module wich depends on filters, and services
 var myApp = angular.module('myApp', []);
 
-// controllers
-myApp.controller('formController', ['$scope','$http','$location', function ($scope,$http, $location) {
+
+myApp.controller('formController', ['$scope','$http','$location',  function ($scope,$http, $location) {
+    
     $scope.tips = '用户登录';
     $scope.submit = function(userdata){
         $http({
         method:'POST',
-        url:"/api/login",
+        url:"http://jit.sylcloud.cn:3000/api/login",
         data:{
              'account':userdata.username,
              'password':userdata.password
@@ -15,7 +16,7 @@ myApp.controller('formController', ['$scope','$http','$location', function ($sco
         }).
         success(function(response) {
          if (response.isSuccess){
-              $location.path('/index');
+
                console.log ('登录成功');
          } else{
              alert(response.msg)
@@ -27,5 +28,7 @@ myApp.controller('formController', ['$scope','$http','$location', function ($sco
     };
 
 }]);
+
+
 
 

@@ -42,12 +42,9 @@ exports.queryAllUsers = function(data, callback) {
 exports.insert = function(data, callback) {
     var insert_sql = 'insert into jit_user set';
     if (data !== undefined) {
+        var i=0;//判断是否是第一个
         for (var key in data) {
-            if (insert_sql.length == 0) {
-                insert_sql += key + " = '" + data[key] + "' ";
-            } else {
-                insert_sql += " , " + key + " = '" + data[key] + "' ";
-            }
+
         }
     }
     console.log("新增用户: " + insert_sql);

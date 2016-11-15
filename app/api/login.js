@@ -9,8 +9,9 @@ var express = require('express');
 var url = require("url");
 
 var router = express.Router();
+
 //用户业务逻辑组件
-var userBiz = appRequire('service/backend/userservice');
+var userBiz = appRequire('service/backend/user/userservice');
 
 router.post('/', function (req, res) {
 
@@ -47,6 +48,7 @@ router.post('/', function (req, res) {
     //先检查是否有该用户
     userBiz.queryAllUsers(data, function(err, result) {
         if (err) {
+            console.log("err1");
             res.json({
                 code: 500,
                 isSuccess: false,

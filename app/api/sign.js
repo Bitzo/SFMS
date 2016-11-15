@@ -10,7 +10,7 @@ var url = require("url");
 
 var router = express.Router();
 //用户签到签退业务
-var signserver = appRequire('service/sfms/signserver');
+var signservice = appRequire('service/sfms/signservice');
 
 router.post('/', function (req, res) {
 
@@ -25,7 +25,7 @@ router.post('/', function (req, res) {
         }
     }
 
-    if(err!='required: ')
+    if(err != 'required: ')
     {
         res.json({
             code: 400,
@@ -37,7 +37,7 @@ router.post('/', function (req, res) {
 
     var userID = req.body.AccountID;
     var ip = req.body.ip;
-    var UserAgent = req.body.UserAgent||'';
+    var UserAgent = req.body.UserAgent || '';
     var mac = req.body.mac;
     var Longitude = req.body.Longitude;
     var Latitude = req.body.Latitude;
@@ -53,7 +53,7 @@ router.post('/', function (req, res) {
         'signType':signType
     };
 
-    signserver.signLog(data, function(err, result) {
+    signservice.signLog(data, function(err, result) {
         if (err) {
             res.json({
                 code: '500',

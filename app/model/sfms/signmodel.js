@@ -7,14 +7,15 @@
 
 var signModel = {
     ID: 0,
-    sfms_SignInfocol: 0,
-    UserId: '',
-    UserAgent:'',
-    sfms_SignInfocol1: '',
-    Longitude:0,
-    Latitude:'',
-    CreateTime:'',
-    Remark:0,
+    UserId: 0,
+    UserAgent: '',
+    Longitude: '',
+    Latitude: '',
+    CreateTime: '',
+    Memo: '',
+    IP: '',
+    MAC: '',
+    SignType: 0,
     PK:'ID'
 }
 
