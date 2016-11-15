@@ -69,27 +69,17 @@ router.post('/login', function(req, res) {
   })
 });
 
-<<<<<<< HEAD
-
-
-
 router.use('/addmenu',addMenu);
 router.use('/queryallmenus',queryAllMenus);
 router.use('/updatemenu',updateMenu);
-
-
-
 // router.get('/addmenu',function(req,res,next) {
 // 	res.json({
 // 		title : 'zengjiacaidanjiemian'
 // 	});
 // });
-module.exports = router;
-=======
 router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
 router.use('/function',funcroute);
 router.use('/user',userroute);
 router.use('/userrole',userroleroute);
 module.exports = router;
->>>>>>> 72e0bbbf919bab737fc4907c3c8f52951da85893
