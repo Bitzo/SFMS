@@ -44,9 +44,9 @@ exports.insert = function(data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (insert_sql.length == 0) {
-                sql += key + " = '" + data[key] + "' ";
+                insert_sql += key + " = '" + data[key] + "' ";
             } else {
-                sql += " , " + key + " = '" + data[key] + "' ";
+                insert_sql += " , " + key + " = '" + data[key] + "' ";
             }
         }
     }
@@ -58,7 +58,7 @@ exports.insert = function(data, callback) {
             return;
         }
 
-        connection.query(sql, function(err) {
+        connection.query(insert_sql, function(err) {
             if (err) {
                 callback(true);
                 return;
@@ -75,9 +75,9 @@ exports.update = function(data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (upd_sql.length == 0) {
-                sql += key + " = '" + data[key] + "' ";
+                upd_sql += key + " = '" + data[key] + "' ";
             } else {
-                sql += " , " + key + " = '" + data[key] + "' ";
+                upd_sql += " , " + key + " = '" + data[key] + "' ";
             }
         }
     }
@@ -92,7 +92,7 @@ exports.update = function(data, callback) {
             return;
         }
 
-        connection.query(sql, function(err) {
+        connection.query(upd_sql, function(err) {
             if (err) {
                 callback(true);
                 return;
@@ -119,7 +119,7 @@ exports.delete = function(data, callback) {
             return;
         }
 
-        connection.query(sql, function(err) {
+        connection.query(del_sql, function(err) {
             if (err) {
                 callback(true);
                 return;
