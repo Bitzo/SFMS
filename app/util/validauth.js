@@ -12,7 +12,7 @@ var userService = appRequire('service/backend/userservice');
 
 module.exports = function(req, res, next) {
     var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
-    var key = (req.body && req.body.x_key) || (req.query && req.query.x_key) || req.headers['x-key'];
+    var key = (req.body && req.body.jitkey) || (req.query && req.query.jitkey) || req.headers['jitkey'];
 
     if (token || key) {
         try {
@@ -26,12 +26,14 @@ module.exports = function(req, res, next) {
                 });
                 return;
             }
-
+            console.log('key:' + key);
             var data = {
                 'AccountID': key
             };
+             
+            console.log('验证用户信息')
 
-            //验证登录用户
+                //验证登录用户
             userService.queryAllUsers(data, function(err, user) {
                 if (err) {
                     res.status(500);
@@ -43,7 +45,7 @@ module.exports = function(req, res, next) {
                     return;
                 }
 
-                if (user) {
+                if (user!=undefined&&user.AccountID>0) {
                     if ((req.url.indexOf('admin') >= 0 && dbUser.role == 'admin') || (req.url.indexOf('admin') < 0 && req.url.indexOf('/api/v1/') >= 0)) {
                         next(); // To move to next middleware
                     } else {

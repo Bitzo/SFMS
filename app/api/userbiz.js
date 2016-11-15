@@ -6,7 +6,7 @@ var router = express.Router();
 //用户业务逻辑组件
 var userService = appRequire('service/backend/userservice');
 
-router.get('/:user_id', function(req, res) {
+router.get('user/:user_id', function(req, res) {
     var userid = req.params.user_id;
     //测试代码
     var data = {
