@@ -63,5 +63,7 @@ router.post('/login', function(req, res) {
 
 router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
-
+router.use('/function',funcroute);
+router.use('/user',userroute);
+router.use('/userrole',userroleroute);
 module.exports = router;
