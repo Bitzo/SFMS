@@ -2,8 +2,8 @@
  * @Author: Duncan
  * @Date: 2016/11/15 19:04
  * @Last Modified by: Duncan
- * @Last Modified time: 2016/11/13 19:04
- * @Function: 用户信息的插入
+ * @Last Modified time: 2016/11/15 19:04
+ * @Function: 用户信息的插入,用户信息的查询
  */
 var express=require('express');
 var router=express.Router();
@@ -12,7 +12,7 @@ var url=require('url');
 //加载中间件
 var user=appRequire('service/backend/user/userservice');
 
-router.post('/insert',function(req,res)
+router.post('/',function(req,res)
 	{
 		var data=['ApplicationID','AccountID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','IsActive','Email','Address'];
 		var err='require: ';
@@ -126,6 +126,7 @@ router.post('/insert',function(req,res)
 		});
 
 	});
+
 
 
 module.exports=router;

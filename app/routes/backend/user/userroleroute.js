@@ -11,10 +11,8 @@
  var router=express.Router();
  var userrole=appRequire('service/backend/user/userroleservice');
  	
- 	router.post('/insert',function(req,res)
- 		{
-
- 			
+ 	router.post('/',function(req,res)
+ 		{	
  			var data=['ID','AccountID','RoleID'];
  			var err='require: ';
  			for(var value in data)
@@ -36,10 +34,7 @@
  				return ;
  			}
 
-
  			//获取参数
-
-
  			var ID=req.body.ID;
  			var AccountID=req.body.AccountID;
  			var RoleID=req.body.RoleID;
@@ -59,8 +54,6 @@
 				{
 					requireValue+=value+' ';	
 				}
-
-
 			}
 
 			if(requireValue!='缺少值：')
