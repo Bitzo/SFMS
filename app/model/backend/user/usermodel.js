@@ -3,6 +3,7 @@
  * @Date:   2016-11-05 11:14:38
  * @Last Modified by:   snail
  * @Last Modified time: 2016-11-05 11:14:38
+ * @Function  用户模型
  */
 
 var userModel = {
