@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-var roleroute = require('./role/roleroute');
-var rolefuncroute = require('./role/rolefuncroute');
+var roleroute = appRequire('routes/backend/role/roleroute');
+var rolefuncroute = appRequire('routes/backend/role/rolefuncroute');
 
-var userroute=require('./user/userroute')
-var funcroute=require('./function/functionroute');
-var userroleroute=require('./user/userroleroute')
+var userroute=appRequire('routes/backend/user/userroute')
+var funcroute=appRequire('routes/backend/function/functionroute');
+var userroleroute=appRequire('routes/backend/user/userroleroute')
 //主应用主站点
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Hi JinkeBro' });

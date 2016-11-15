@@ -127,6 +127,44 @@ router.post('/',function(req,res)
 
 	});
 
+router.get('/:user_id', function(req, res) {
+    var userid = req.params.user_id;
+    console.log(typeof(userid));
+    //console.log()
+    //测试代码
+    var data = {
+        'AccountID': userid
+    };
+
+    user.queryAllUsers(data, function(err, result) {
+        if (err) {
+            res.json({
+            	code:500,
+            	isSuccess:true,
+                msg: '查询失败'
+            });
+            return;
+        }
+        
+        if(result!=undefined&&result.length!=0)
+        {
+        res.json(
+        	{
+        		code:200,
+        		isSuccess:true,
+        		msg:result
+        	});
+    	}
+    	else
+    	{
+    		res.json({
+    			code:500,
+    			isSuccess:false,
+    			msg:"无此用户"
+    		})
+    	}
+    });
+});
 
 
 module.exports=router;
