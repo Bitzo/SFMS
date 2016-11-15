@@ -1,0 +1,111 @@
+body {
+  min-height: 1000px;
+  padding-top: 55px;
+}
+i{
+    color: white;
+}
+a{
+    width: 100%;
+}
+#navbar{
+	background-color: #3975a9;
+    min-width: 400px;
+	color: white;
+}
+#navbar .pull-right button span{
+    background-color: white;
+}
+#navbar .pull-right .badge{
+    background-color: white;
+    color: black;
+}
+#navbar .pull-right li{
+    height: 60px;
+}
+#navbar .pull-right li a{
+    height: 60px;
+    line-height: 30px;
+}
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    color: white;
+    font-style: normal;
+    background-color: #286090;
+}
+#navbar .pull-right .move-right{
+    position: absolute;
+    left: -21px;
+}
+#navbar .pull-right .dropdown-menu li{
+    height: 40px;
+    line-height: 40px;
+}
+#navbar .pull-right .dropdown-menu li a{
+    height: 40px;
+    line-height: 40px;
+}
+#navbar .pull-right .nav-user-photo{
+    margin: -4px 8px 0 0;
+    border-radius: 100%;
+    border: 2px solid #FFF;
+    max-width: 30px;
+}
+
+
+
+
+
+
+
+
+.sidebar{
+    padding: 0px;
+    min-width: 180px;
+    max-width: 200px;
+    min-height: 900px;
+    background: rgba(217, 237, 247, 0.18) ;
+}
+.sidebar .border{
+    display:none;
+}
+.sidebar .navlist a:hover .border{
+    display: block;
+    content: "";
+    position: absolute!important;
+    right: 0;
+    top: 2px;
+    border: 8px solid transparent;
+    border-width: 20px 12px;
+    border-right-color: #2b7dbc;
+}
+.sidebar .navlist .list-header{
+    position: relative;
+    left: 10px;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: #054175;
+    line-height: 45px;
+}
+.sidebar .navlist li{
+    letter-spacing: 2px;
+    padding-right: 0px;
+    font-size: 16px;
+    width: 100%;
+}
+.sidebar .navlist a{
+    width: 100%;
+}
+.sidebar .navlist li ul {
+    list-style: none;  
+    text-align: right;
+}
+.sidebar .navlist li ul li {
+    width: 100px;
+    list-style: none;
+    line-height: 20px;
+    font-size: 14px;    
+    letter-spacing: 2px;
+}
+.container {
+    min-height: 900px;
+}

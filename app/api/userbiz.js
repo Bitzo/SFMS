@@ -1,25 +1,19 @@
-/**
- * @Author: snail
- * @Date:   2016-11-05 11:14:38
- * @Last Modified by:   snail
- * @Last Modified time: 2016-11-05 11:14:38
- */
 
 var express = require('express');
 var url = require("url");
 
 var router = express.Router();
 //用户业务逻辑组件
-var userBiz = require('../service/userservice');
+var userService = appRequire('service/backend/userservice');
 
-router.get('/:user_id', function(req, res) {
+router.get('user/:user_id', function(req, res) {
     var userid = req.params.user_id;
     //测试代码
     var data = {
         'AccountID': userid
     };
 
-    userBiz.queryAllUsers(data, function(err, result) {
+    userService.queryAllUsers(data, function(err, result) {
         if (err) {
             res.json({
                 msg: '查询失败'

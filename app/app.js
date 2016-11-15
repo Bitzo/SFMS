@@ -1,13 +1,19 @@
+require('./global_bootstrap')
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-var routes = require('./routes/routes');
+var routes = appRequire('routes/routes');
+var apiAuth = appRequire('util/validauth');
 
 var app = express();
+//避免dot-hell
+global.appRequire = function(path) {
+  return require(path.resolve(__dirname, path));
+}
 
 // 设置VIEWS文件夹，__dirname是node.js里面的全局变量。取得执行js所在的路径
 app.set('views', path.join(__dirname, 'views'));
@@ -28,6 +34,22 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 //静态文件目录设置,设置public文件夹为存放静态文件的目录
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.all('/*', function(req, res, next) {
+  // CORS headers
+  res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  // Set custom headers for CORS
+  res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token,X-Key');
+  if (req.method == 'OPTIONS') {
+    res.status(200).end();
+  } else {
+    next();
+  }
+});
+
+//所有api/v1/开始的路由全部走接口鉴权
+app.all('/api/v1/*', [apiAuth]);
 
 //路由入口
 routes(app);

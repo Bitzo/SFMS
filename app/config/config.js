@@ -10,6 +10,7 @@ var config = {
     cookieSecret: 'snail',
     cookiekey: 'cookiename',
     wechat_token: 'snail',
+    jwt_secret:'j1i3t20',//jwt
     isdevelop: 1, //1表示是开发环境0:表示非开发环境
     secretsalt: 'what1r2u3nong7sha5lei4', //盐值
     redis_host: '127.0.0.1', // redis 配置，默认是本地
@@ -17,10 +18,9 @@ var config = {
     port: 3000, // 程序运行的端口
     host: '127.0.0.1',
     mysql: {
-        host: '127.0.0.1',
-        user: 'snail',
-        password: 'snail',
-        database: 'JinkeBro',
+        host: '139.224.51.160',
+        password: 'jinkebrocommon1320',
+        database: 'jit_backend',
         connectionLimit: 100,
         supportBigNumbers: true,
     },

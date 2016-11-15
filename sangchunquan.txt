@@ -1,0 +1,2 @@
+fetch 从远程获取最新版到本地但是不会自动merge 要手动合并
+pull 相当于 git fetch 和 git merge 从远程获取最新版到本地后自动merge
