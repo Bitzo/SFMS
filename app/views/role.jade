@@ -1,0 +1,39 @@
+extends shared/layout
+
+block content
+  div.container-fluid(na-app="role")
+    form.form-inline(role="form")
+      div.form-group
+        select.form-control(id="search",value="",placehole="查询条件",ng-model="option")
+          option 角色名称
+          option 角色权限
+          option 角色对应功能点
+          option 菜单
+        button.btn.btn-primary(type="submit",ng-click="searchRole()") 查询角色 
+        &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+       div.form-group 
+        button.btn.btn-primary(type="submit",ng-click="addRole()") 新增角色 
+    div.table-responsive.table_position(ng-controller="roleCtrl")
+      table.table.table-bordered.table-hover
+        thead
+        tr
+          th 角色ID
+          th 角色code
+          th 角色名称
+          th 是否有效 
+          th 操作
+         tbody
+          tr(ng-repeat="item in items") 
+           td{{item.roleId}}
+           td{{item.roleCode}}
+           td{{item.roleName}}
+           td{{item.isActivs}}
+           td
+            a(href="") 编辑
+               
+            
+
+
+          <script src="js/controllers/roleController.js"> 
+    
+  include shared/footer.jade

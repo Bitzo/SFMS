@@ -1,0 +1,181 @@
+extends shared/layout
+
+block content
+  div.container-fluid
+    form(method="post",action="") 
+      table.table.table-bordered.table-hover.definedwidth.m10
+        tr
+          td(width="15%",class="tableleft") 角色名称
+          td
+            input(type="text",name="title")
+        tr
+          td(class="tableleft") 是否有效
+          td
+            input(type="radio",name="isActive",value="1",checked) 
+            有效
+            &nbsp&nbsp&nbsp
+            input(type="radio",name="isActive",value="0")
+            无效 
+        tr
+          td(class="tableleft") 权限
+          td
+            ul
+              li
+                label.check.inline
+                  input(type="checkbox",name="group[]",value="")
+                  权限
+                  ul
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="1")
+                        权限列表
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="2")
+                        添加权限
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="3")
+                        编辑权限
+                     li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="4")
+                        删除权限
+        tr
+          td(class="tableleft") 角色
+          td
+            ul
+              li
+                label.check.inline
+                  input(type="checkbox",name="group[]",value="")
+                  角色
+                  ul
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="5")
+                        角色列表
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="6")
+                        添加角色
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="7")
+                        编辑角色
+                     li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="8")
+                        删除角色
+        tr
+          td(class="tableleft") 用户
+          td
+            ul
+              li
+                label.check.inline
+                  input(type="checkbox",name="group[]",value="")
+                  用户
+                  ul
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="9")
+                        用户列表
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="10")
+                        添加用户
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="11")
+                        编辑用户
+                     li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="12")
+                        删除用户
+
+        tr
+          td(class="tableleft") 菜单
+          td
+            ul
+              li
+                label.check.inline
+                  input(type="checkbox",name="group[]",value="")
+                  菜单
+                  ul
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="13")
+                        菜单列表
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="14")
+                        添加菜单
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="15")
+                        编辑菜单
+                     li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="16")
+                        删除菜单
+              
+        tr
+          td(class="tableleft") 功能点
+          td
+            ul
+              li
+                label.check.inline
+                  input(type="checkbox",name="group[]",value="")
+                  功能点
+                  ul
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="17")
+                        功能点
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="18")
+                        添加功能点
+                    li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="19")
+                        编辑功能点
+                     li
+                      label.check.inline
+                        input(type="checkbox",name="node[]",value="20")
+                        删除功能点
+        tr
+          td(class="tableleft")
+          td 
+            button.btn.btn-primary(type="submit") 添加
+            &nbsp&nbsp&nbsp&nbsp
+            button.btn.btn-success(type="button",id="backid",name="backid") 返回列表
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+ 
+ 
+ 
+  include shared/footer.jade
