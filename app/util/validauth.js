@@ -8,7 +8,7 @@
 
 var jwt = require('jwt-simple');
 var config = appRequire('config/config');
-var userService = appRequire('service/backend/userservice');
+var userService = appRequire('service/backend/user/userservice');
 
 module.exports = function(req, res, next) {
     var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];

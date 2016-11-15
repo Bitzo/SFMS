@@ -4,7 +4,11 @@ var router = express.Router();
 var roleroute = require('./role/roleroute');
 var rolefuncroute = require('./role/rolefuncroute');
 
-var userService = appRequire('service/backend/userservice');
+var userroute=require('./user/userroute')
+var funcroute=require('./function/functionroute');
+var userroleroute=require('./user/userroleroute')
+
+var userService = appRequire('service/backend/user/userservice');
 var jwtHelper=appRequire('util/jwthelper');
 
 //主应用主站点
