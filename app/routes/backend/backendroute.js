@@ -15,6 +15,10 @@ var userroleroute=require('./user/userroleroute')
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper=appRequire('util/jwthelper');
 
+var addapp = appRequire('routes/backend/application/addapp');
+var updateapp = appRequire('routes/backend/application/updateapp');
+var showapp = appRequire('routes/backend/application/showapp');
+
 //主应用主站点
 router.get('/', function(req, res, next) {
   res.render('index', {
@@ -82,4 +86,8 @@ router.use('/rolefunc', rolefuncroute);
 router.use('/function',funcroute);
 router.use('/user',userroute);
 router.use('/userrole',userroleroute);
+
+router.use('/app', addapp);
+router.use('/app', updateapp);
+router.use('/app', showapp);
 module.exports = router;
