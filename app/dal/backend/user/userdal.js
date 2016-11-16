@@ -44,12 +44,7 @@ exports.insert = function(data, callback) {
     if (data !== undefined) {
         var i=0;//判断是否是第一个
         for (var key in data) {
-            if (i == 0) {
-                insert_sql +=' '+ key + " = '" + data[key] + "' ";
-                i++;
-            } else {
-                insert_sql += " , " + key + " = '" + data[key] + "' ";
-            }
+
         }
     }
     console.log("新增用户: " + insert_sql);
@@ -77,9 +72,9 @@ exports.update = function(data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (upd_sql.length == 0) {
-                sql += key + " = '" + data[key] + "' ";
+                upd_sql += key + " = '" + data[key] + "' ";
             } else {
-                sql += " , " + key + " = '" + data[key] + "' ";
+                upd_sql += " , " + key + " = '" + data[key] + "' ";
             }
         }
     }
@@ -94,7 +89,7 @@ exports.update = function(data, callback) {
             return;
         }
 
-        connection.query(sql, function(err) {
+        connection.query(upd_sql, function(err) {
             if (err) {
                 callback(true);
                 return;
@@ -121,7 +116,7 @@ exports.delete = function(data, callback) {
             return;
         }
 
-        connection.query(sql, function(err) {
+        connection.query(del_sql, function(err) {
             if (err) {
                 callback(true);
                 return;
