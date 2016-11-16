@@ -9,17 +9,25 @@ var backendRoute = appRequire('routes/backend/backendroute');
 var sfmsRoute = appRequire('routes/sfms/sfmsroute');
 var jinkeBroRoute = appRequire('routes/jinkebro/jinkebroroute');
 var aptRoute = appRequire('routes/api/apiroute');
+var addapp = appRequire('routes/backend/application/addapp');
+var updateapp = appRequire('routes/backend/application/updateapp');
+var showapp = appRequire('routes/backend/application/showapp');
 
 module.exports = function(app) {
 
     app.use('/', backendRoute);
 
     //API相关
-    app.use('/api', aptRoute);
+    app.use('/api/v1/', aptRoute);
 
-    // //实验室管理子系统
+    //实验室管理子系统
     app.use('/sfms', sfmsRoute);
 
     // //金科小哥子系统
     app.use('/jkbro', jinkeBroRoute);
+
+    app.use('/app', addapp);
+    app.use('/app', updateapp);
+    app.use('/app', showapp);
+
 };

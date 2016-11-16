@@ -11,16 +11,22 @@ var router = express.Router();
 
 var roleservice = appRequire('service/backend/role/roleservice');
 
+//查询角色信息
 router.get('/',function (req, res) {
     var appID = req.query.appID;
     var page = req.query.page || 1;
+
+    var roleName = req.query.RoleName;
+    var isActive = req.query.IsActive;
 
     console.log(appID);
     console.log(page);
 
     var data = {
         'appID': appID,
-        'page': page
+        'page': page,
+        'RoleName': roleName,
+        'IsActive': isActive
     };
 
     //用于查询结果总数的计数
@@ -67,25 +73,28 @@ router.get('/',function (req, res) {
                 msg: '查询成功',
                 dataNum: countNum,
                 curPage: page,
-                totlePage: (countNum-1)/10+1,
+                totlePage: Math.ceil(countNum/10),
                 data: results
             };
             res.json(result);
+            return;
         } else {
             res.json({
                 code: 404,
                 isSuccess: false,
                 msg: "未查询到相关信息"
             });
+            return;
         }
 
     });
 
 });
 
+//增加角色信息
 router.post('/',function (req, res) {
 
-    var data = ['ApplicationID', 'RoleID', 'RoleCode', 'RoleName', 'IsActive'];
+    var data = ['ApplicationID', 'RoleCode', 'RoleName', 'IsActive'];
     var err = 'required: ';
     for(var value in data)
     {
@@ -107,14 +116,12 @@ router.post('/',function (req, res) {
     };
 
     var ApplicationID = req.body.ApplicationID;
-    var RoleID = req.body.RoleCode;
     var RoleCode = req.body.RoleCode;
     var RoleName = req.body.RoleName;
     var IsActive = req.body.IsActive;
 
     var data = {
         'ApplicationID': ApplicationID,
-        'RoleID': RoleCode,
         'RoleCode': RoleCode,
         'RoleName': RoleName,
         'IsActive': IsActive
@@ -137,12 +144,14 @@ router.post('/',function (req, res) {
                 data: data,
                 msg: "添加信息成功"
             })
+            return;
         } else {
             res.json({
                 code: 404,
                 isSuccess: false,
                 msg: "添加信息失败"
             })
+            return;
         }
     })
 

@@ -17,6 +17,14 @@ exports.queryAllRoles = function (data, callback) {
         sql += " and ApplicationID = '" + data['appID'] + "' ";
     }
 
+    if (data['RoleName'] !== undefined) {
+        sql += " and RoleName = '" + data['RoleName'] + "' ";
+    }
+
+    if (data['IsActive'] !== undefined) {
+        sql += " and IsActive = '" + data['IsActive'] + "' ";
+    }
+
     var num = 10; //每页显示的个数
 
     sql += " LIMIT " + (data['page']-1)*num + "," + num;
@@ -52,6 +60,14 @@ exports.countAllRoles = function (data, callback) {
         sql += " and ApplicationID = '" + data['appID'] + "' ";
     };
 
+    if (data['RoleName'] !== undefined) {
+        sql += " and RoleName = '" + data['RoleName'] + "' ";
+    }
+
+    if (data['IsActive'] !== undefined) {
+        sql += " and IsActive = '" + data['IsActive'] + "' ";
+    }
+
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -73,7 +89,7 @@ exports.countAllRoles = function (data, callback) {
     })
 };
 
-//新增角色功能
+//新增角色
 exports.addRole = function (data, callback) {
     var insert_sql = 'insert into jit_role set';
 
