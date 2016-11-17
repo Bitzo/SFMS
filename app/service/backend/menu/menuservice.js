@@ -3,7 +3,9 @@
  * @Date: 2016/11/14 18:53
  * @Last Modified by: Cecurio
  * @Last Modified time: 2016/11/14 18:53
- * @Function:
+ * @Function:queryAllMenus()查询所有的菜单，形成树形的json数据
+ * @Function:menuInsert()菜单新增
+ * @Function:menuUpdate()菜单编辑
  */
 var menuDAl = appRequire('dal/backend/menu/menudal');
 
@@ -13,7 +15,7 @@ exports.queryAllMenus = function(data, callback){
             callback(true);
             return ;
         }
-        console.log('queryAllMenus func');
+        console.log('queryAllMenus func in service');
         callback(false,results);
     });
 };
@@ -25,7 +27,7 @@ exports.menuInsert = function (data,callback) {
             callback(true);
             return ;
         }
-        console.log('menuInsert func');
+        console.log('menuInsert func in service');
         callback(false,results);
     });
 }
@@ -37,7 +39,33 @@ exports.menuUpdate = function (data,callback) {
             callback(true);
             return ;
         }
-        console.log('menuUpdate func');
+        console.log('menuUpdate func in service');
         callback(false,results);
+    })
+}
+
+//根据UserID显示出用户所有的菜单
+exports.queryMenuByUserID = function (data,callback) {
+
+    menuDAl.queryMenuByUserID(data,function (err,results) {
+        if(err){
+            callback(true);
+            return ;
+        }
+        console.log('queryMenuByUserID func in service');
+        callback(false,results);
+    });
+
+}
+
+exports.queryRoleByUserID = function (data,callback) {
+    menuDAl.queryRoleByUserID(data,function (err,results) {
+        if(err){
+            callback(true);
+            return ;
+        }
+        console.log('queryRoleByUserID func in service');
+        callback(false,results);
+
     })
 }

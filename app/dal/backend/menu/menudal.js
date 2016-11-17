@@ -17,7 +17,7 @@ exports.queryAllMenus = function (data,callback) {
     var sql = 'select ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName,IconPath,Url,Memo,IsActive from jit_menu where 1=1';
     if(data !== undefined){
         for(var key in data){
-            sql += ' and ' + key + ' = "'+ data.MenuID + '" ';
+            sql += ' and ' + key + ' = "'+ data[key] + '" ';
         }
     }
     console.log("查询所有菜单：" + sql);
@@ -129,3 +129,89 @@ exports.menuUpdate = function (data,callback) {
     });
 }
 
+//根据UserID显示出用户所有的菜单
+exports.queryRoleAndMenu = function (data,callback) {
+    var sql = ' select distinct jit_menu.MenuName,jit_role.RoleName '+
+    ' from jit_menu,jit_role,jit_roleuser,jit_usermenu '+
+    ' where jit_menu.MenuID in '+
+    ' (select jit_usermenu.menuID from jit_usermenu where jit_usermenu.userID = ?) '+
+    ' and jit_role.RoleID in '+
+    ' (select jit_roleuser.RoleID from jit_roleuser where jit_roleuser.AccountID = ?) ';
+
+
+    var value = [data.userID,data.userID];
+
+    db_backend.mysqlPool.getConnection(function (err,connection) {
+        if(err){
+            callback(true);
+            return;
+        }
+
+        connection.query(sql,value,function (err, results) {
+            if(err){
+                throw err;
+                callback(true);
+                return;
+            }
+
+            callback(false,results);
+            connection.release();
+        })
+    })
+}
+
+//
+exports.queryRoleByUserID = function (data,callback) {
+
+    var sql = ' select distinct jit_role.RoleName '+
+    ' from jit_role '+
+    ' where '+
+    ' jit_role.RoleID in '+
+    ' (select jit_roleuser.RoleID from jit_roleuser where jit_roleuser.AccountID = ?) ';
+    var value = [data.userID];
+
+    db_backend.mysqlPool.getConnection(function (err,connection) {
+        if(err){
+            callback(true);
+            return;
+        }
+
+        connection.query(sql,value,function (err, results) {
+            if(err){
+                throw err;
+                callback(true);
+                return;
+            }
+
+            callback(false,results);
+            connection.release();
+        })
+    })
+}
+//
+exports.queryMenuByUserID = function (data,callback) {
+    var sql = ' select  jit_menu.MenuName '+
+        ' from jit_menu '+
+        ' where jit_menu.MenuID in '+
+        ' (select jit_usermenu.menuID from jit_usermenu where jit_usermenu.userID = ?) ';
+
+    var value = [data.userID];
+
+    db_backend.mysqlPool.getConnection(function (err,connection) {
+        if(err){
+            callback(true);
+            return;
+        }
+
+        connection.query(sql,value,function (err, results) {
+            if(err){
+                throw err;
+                callback(true);
+                return;
+            }
+
+            callback(false,results);
+            connection.release();
+        })
+    })
+}
