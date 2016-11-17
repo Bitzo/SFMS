@@ -12,9 +12,7 @@ router.post('/',function(req,res,next) {
 	var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
 	var err = 'require: ';
 	for (var value in data){
-		//console.log(data[value]);
 		if(!(data[value] in req.body)){
-			// console.log(1);
 			err += data[value] + ' ';
 		}
 	}
@@ -71,14 +69,6 @@ router.post('/',function(req,res,next) {
 		}
 	});
 
-
-
-	// res.json({
-	// 	菜单级别 : menuLevel,
-	// 	菜单名字 : menuName,
-	// 	title : 'addmenu页面',
-	// 	body : '菜单增加业务逻辑'
-	// });
 });
 
 

@@ -4,6 +4,8 @@ var router = express.Router();
 var addMenu = appRequire('routes/backend/menu/addmenu');
 var queryAllMenus = appRequire('routes/backend/menu/queryallmenus');
 var updateMenu = appRequire('routes/backend/menu/updatemenu');
+var queryMenuByUserID = appRequire('routes/backend/menu/querymenubyuserid');
+var queryRoleByUserID = appRequire('routes/backend/menu/queryrolebyuserid');
 
 var roleroute = require('./role/roleroute');
 var rolefuncroute = require('./role/rolefuncroute');
@@ -73,17 +75,11 @@ router.post('/login', function(req, res) {
 
 
 router.use('/addmenu',addMenu);
-router.use('/queryallmenus',queryAllMenus);
+router.use('/querymenus',queryAllMenus);
 router.use('/updatemenu',updateMenu);
+router.use('/querymenubyuserid',queryMenuByUserID);
+router.use('/queryrolebyuserid',queryRoleByUserID);
 
-
-
-// router.get('/addmenu',function(req,res,next) {
-// 	res.json({
-// 		title : 'zengjiacaidanjiemian'
-// 	});
-// });
-module.exports = router;
 
 router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
