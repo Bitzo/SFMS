@@ -16,14 +16,17 @@ module.exports = function(app) {
     app.use('/', backendRoute);
 
     //API相关
-    app.use('/api', aptRoute);
+    app.use('/api/v1/', aptRoute);
 
     //后台首页
-    app.use('/', indexRoute);
+    app.use('/index', indexRoute);
 
     // //实验室管理子系统
+
     app.use('/sfms', sfmsRoute);
 
     // //金科小哥子系统
     app.use('/jkbro', jinkeBroRoute);
+
+
 };

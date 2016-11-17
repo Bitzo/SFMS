@@ -1,0 +1,57 @@
+/**
+ * @Author: luozQ
+ * @Date:   2016-11-13 20:42:38
+ * @Last Modified by:   luozQ
+ * @Last Modified time: 2016-11-14 20:41
+ * @Function: 功能点管理
+ */
+var functionDAL = appRequire('dal/backend/function/functiondal.js');
+var getTree=appRequire('service/backend/function/gettreefunction');
+
+//查询所有树形功能点
+exports.queryAllFunctions = function (data, callback) {
+    functionDAL.queryAllFunctions(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        console.log('functionserver');
+        //转成多层结构
+       // getTree(results,0);
+        callback(false, results);
+    });
+};
+
+
+//新增功能点
+exports.insert = function (data, callback) {
+    functionDAL.insert(data, function (err) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        callback(false);
+    });
+};
+
+//修改功能点
+exports.update = function (data, callback) {
+    functionDAL.update(data, function (err) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        callback(false);
+    });
+};
+
+//删除功能点
+exports.delete = function (data, callback) {
+    functionDAL.delete(data, function (err) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        callback(false);
+    });
+};

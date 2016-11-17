@@ -9,11 +9,13 @@ var express = require('express');
 var url = require("url");
 
 var router = express.Router();
+
 //用户业务逻辑组件
-var userBiz = appRequire('service/backend/userservice');
+var userBiz = appRequire('service/backend/user/userservice');
 
 router.post('/', function (req, res) {
 
+    console.log(111);
     //检查所需要的字段是否都存在
     var data = ['account', 'password'];
     var err = 'required: ';
