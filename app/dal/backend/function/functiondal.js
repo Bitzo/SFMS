@@ -2,30 +2,29 @@
  * @Author: luozQ
  * @Date:   2016-11-13 20:42:38
  * @Last Modified by:   luozQ
- * @Last Modified time: 2016-11-15 00:12:38
+ * @Last Modified time: 2016-11-16 10:12:38
+ *  @Function: 功能点管理
  */
 
 
 var db_backend = appRequire('db/db_backend');
 var functionModel = appRequire('model/backend/function/functionmodel');
 
-//得到功能点
+//得到所有功能点
 exports.queryAllFunctions = function (data, callback) {
-    var sql = 'select ApplicationID,FunctionID,FunctionLevel,ParentID,FunctionCode,FunctionName,Memo,IsActive from jit_function where 1=1 ';
+    var sql = 'select ApplicationID,FunctionID,FunctionLevel,ParentID,FunctionCode,FunctionName,Memo,IsActive from jit_function where IsActive=1';
     var condition = '';
 
-    if (data['appID'] !== undefined) {
-        sql += " and ApplicationID = '" + data['appID'] + "' ";
-    }
+    sql += " and ApplicationID = " + data['appID'] ;
 
-    console.log("查询功能点:" + sql);
+    console.log("得到所有功能点:" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
+            console.log('连接：err');
             callback(true);
             return;
         }
-
         connection.query(sql, function (err, results) {
             if (err) {
                 callback(true);

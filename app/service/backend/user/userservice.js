@@ -58,3 +58,17 @@ exports.login = function(data, callback) {
 
     callback(false, userObj);
 };
+
+
+exports.countUser=function(data,callback)
+{
+    userDAL.countUser(data,function(err,results)
+    {
+        if(err)
+        {
+            callback(true);
+            return;
+        }
+        callback(false,results);
+    });
+}
