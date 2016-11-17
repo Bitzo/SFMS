@@ -3,7 +3,7 @@
  * @Date: 2016/11/13 20:39
  * @Last Modified by: bitzo
  * @Last Modified time: 2016/11/13 20:39
- * @Function: 角色对应功能点查询
+ * @Function: 角色功能点的增删改查
  */
 
 var express = require('express');
@@ -87,8 +87,8 @@ router.post('/', function (req, res) {
     var funcID = req.body.data;
 
     var data = {
-        "RoleID": roleID,
-        "FunctionID": funcID
+        RoleID: roleID,
+        FunctionID: funcID
     }
 
     rolefuncservice.addRoleFunc(data, function (err, results) {
@@ -145,8 +145,8 @@ router.put('/',function (req, res) {
     var FunctionID = req.body.FunctionID;
 
     var data = {
-        "ID": ID,
-        "FunctionID": FunctionID
+        'ID': ID,
+        'FunctionID': FunctionID
     };
 
     rolefuncservice.updateRoleFunc(data, function (err, results) {

@@ -11,7 +11,7 @@ var roleFunctionModel = appRequire('model/backend/role/rolefunctionmodel');
 
 //查询角色功能点
 exports.queryRoleFunc = function (data, callback) {
-    var sql = 'select ID, RoleID, FunctionID from jit_rolefunction where 1=1';
+    var sql = 'select ID, RoleID, jit_rolefunction.FunctionID, FunctionName from jit_rolefunction,jit_function where 1=1 and jit_rolefunction.FunctionID = jit_function.FunctionID';
 
     if (data !==undefined) {
         for (var key in data) {

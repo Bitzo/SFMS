@@ -23,7 +23,7 @@ exports.queryAllRoles = function (data, callback) {
 
     var num = config.pageCount; //每页显示的个数
 
-    sql += " LIMIT " + (data['page']-1)*num + "," + num;
+    sql += " LIMIT " + (data.page-1)*num + "," + num;
 
     console.log("查询角色信息：" + sql);
 
@@ -85,21 +85,6 @@ exports.addRole = function (data, callback) {
     var insert_sql = 'insert into jit_role set';
 
     var sql = '';
-
-    function checkData(data) {
-        for (var key in data) {
-            if(data[key] === undefined) {
-                console.log(key);
-                return false;
-            }
-        }
-        return true;
-    }
-    if(!checkData(data))
-    {
-        callback(true);
-        return;
-    }
 
     if (data !== undefined) {
         for (var key in data) {

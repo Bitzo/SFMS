@@ -8,6 +8,7 @@
 
 var express = require('express');
 var router = express.Router();
+var config = appRequire('config/config');
 
 var roleservice = appRequire('service/backend/role/roleservice');
 
@@ -20,7 +21,7 @@ router.get('/',function (req, res) {
     var isActive = req.query.IsActive;
 
     var data = {
-        'appID': appID,
+        'ApplicationID': appID,
         'page': page,
         'RoleName': roleName,
         'IsActive': isActive
@@ -32,20 +33,6 @@ router.get('/',function (req, res) {
     //查询所有数据总数
     roleservice.countAllRoles(data, function (err, results) {
         if (err) {
-            countNum = -1;
-            return;
-        }
-        if (results !==undefined && results.length != 0) {
-            countNum = results[0]['num'];
-        } else {
-            countNum = -1;
-            return;
-        }
-    });
-
-    //查询所需的详细数据
-    roleservice.queryAllRoles(data, function (err, results) {
-        if (err) {
             res.json({
                 code: 500,
                 isSuccess: false,
@@ -53,19 +40,42 @@ router.get('/',function (req, res) {
             });
             return;
         }
+        if (results !==undefined && results.length != 0) {
+            countNum = results[0]['num'];
 
-        if (results !== undefined && results.length != 0 && countNum != -1) {
-            var result = {
-                code: 200,
-                isSuccess: true,
-                msg: '查询成功',
-                dataNum: countNum,
-                curPage: page,
-                totlePage: Math.ceil(countNum/10),
-                data: results
-            };
-            res.json(result);
-            return;
+            //查询所需的详细数据
+            roleservice.queryAllRoles(data, function (err, results) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                    return;
+                }
+
+                if (results !== undefined && results.length != 0 && countNum != -1) {
+                    var result = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        totlePage: Math.ceil(countNum/config.pageCount),
+                        data: results
+                    };
+                    res.json(result);
+                    return;
+                } else {
+                    res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                    return;
+                }
+
+            });
         } else {
             res.json({
                 code: 404,
@@ -74,7 +84,6 @@ router.get('/',function (req, res) {
             });
             return;
         }
-
     });
 
 });
@@ -113,7 +122,7 @@ router.post('/',function (req, res) {
         'RoleCode': RoleCode,
         'RoleName': RoleName,
         'IsActive': IsActive
-    }
+    };
 
     roleservice.addRole(data, function (err, results) {
         if (err) {
