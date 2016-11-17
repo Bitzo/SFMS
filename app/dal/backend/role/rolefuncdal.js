@@ -11,7 +11,7 @@ var roleFunctionModel = appRequire('model/backend/role/rolefunctionmodel');
 
 //查询角色功能点
 exports.queryRoleFunc = function (data, callback) {
-    var sql = 'select ID, RoleID, FunctionID from jit_rolefunction where 1=1';
+    var sql = 'select ID, RoleID, jit_rolefunction.FunctionID, FunctionName from jit_rolefunction,jit_function where 1=1 and jit_rolefunction.FunctionID = jit_function.FunctionID';
 
     if (data !==undefined) {
         for (var key in data) {
@@ -42,21 +42,6 @@ exports.queryRoleFunc = function (data, callback) {
 exports.addRoleFunc = function (data, callback) {
     var insert_sql = 'insert into jit_rolefunction (RoleID,FunctionID) VALUES ';
     var sql = '';
-
-    function checkData(data) {
-        for (var key in data) {
-            if(data[key] === undefined) {
-                console.log(key);
-                return false;
-            }
-        }
-        return true;
-    }
-    if(!checkData(data))
-    {
-        callback(true);
-        return;
-    }
 
     var roleID = data.RoleID;
     var funcID = data.FunctionID;
@@ -127,7 +112,6 @@ exports.updateRoleFunc = function(data, callback) {
 exports.delRoleFunc = function (data, callback) {
     var sql = 'delete from jit_rolefunction where ID in ';
     sql += "(";
-    console.log(data);
     for (var i in data) {
         sql += data[i].ID;
         if (i < data.length-1) sql += ', ';

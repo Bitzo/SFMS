@@ -8,8 +8,10 @@
 
 var express = require('express');
 var router = express.Router();
+var config = appRequire('config/config');
 
 var roleservice = appRequire('service/backend/role/roleservice');
+var rolefuncservice = appRequire('service/backend/role/rolefuncservice');
 
 //查询角色信息
 router.get('/',function (req, res) {
@@ -19,11 +21,8 @@ router.get('/',function (req, res) {
     var roleName = req.query.RoleName;
     var isActive = req.query.IsActive;
 
-    console.log(appID);
-    console.log(page);
-
     var data = {
-        'appID': appID,
+        'ApplicationID': appID,
         'page': page,
         'RoleName': roleName,
         'IsActive': isActive
@@ -38,13 +37,46 @@ router.get('/',function (req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "查询失败，服务器内部出错"
+                msg: "查询失败，服务器内部错误"
             });
             return;
         }
         if (results !==undefined && results.length != 0) {
             countNum = results[0]['num'];
-            console.log(countNum);
+
+            //查询所需的详细数据
+            roleservice.queryAllRoles(data, function (err, results) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                    return;
+                }
+
+                if (results !== undefined && results.length != 0 && countNum != -1) {
+                    var result = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        totlePage: Math.ceil(countNum/config.pageCount),
+                        data: results
+                    };
+                    res.json(result);
+                    return;
+                } else {
+                    res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                    return;
+                }
+
+            });
         } else {
             res.json({
                 code: 404,
@@ -53,40 +85,6 @@ router.get('/',function (req, res) {
             });
             return;
         }
-    });
-
-    //查询所需的详细数据
-    roleservice.queryAllRoles(data, function (err, results) {
-        if (err) {
-            res.json({
-                code: 500,
-                isSuccess: false,
-                msg: "查询失败，服务器内部错误"
-            })
-            return;
-        }
-
-        if (results !== undefined && results.length != 0) {
-            var result = {
-                code: 200,
-                isSuccess: true,
-                msg: '查询成功',
-                dataNum: countNum,
-                curPage: page,
-                totlePage: Math.ceil(countNum/10),
-                data: results
-            };
-            res.json(result);
-            return;
-        } else {
-            res.json({
-                code: 404,
-                isSuccess: false,
-                msg: "未查询到相关信息"
-            });
-            return;
-        }
-
     });
 
 });
@@ -115,18 +113,23 @@ router.post('/',function (req, res) {
         return;
     };
 
+    //增加角色所需要的参数
     var ApplicationID = req.body.ApplicationID;
     var RoleCode = req.body.RoleCode;
     var RoleName = req.body.RoleName;
     var IsActive = req.body.IsActive;
+
+    //增加角色功能点所需要的数据
+    var funcData = req.body.data;
 
     var data = {
         'ApplicationID': ApplicationID,
         'RoleCode': RoleCode,
         'RoleName': RoleName,
         'IsActive': IsActive
-    }
+    };
 
+    //先增添角色信息
     roleservice.addRole(data, function (err, results) {
         if (err) {
             res.json({
@@ -136,25 +139,80 @@ router.post('/',function (req, res) {
             })
             return;
         }
-
+        //角色信息增添成功
         if (results !== undefined && results.length != 0) {
-            res.json({
-                code: 200,
-                isSuccess: true,
-                data: data,
-                msg: "添加信息成功"
-            })
-            return;
+            if (funcData !== undefined){
+                //查询刚才添加的角色信息的RoleID
+                roleservice.queryAllRoles(data, function (err, results) {
+                    if (err) {
+                        res.json({
+                            code: 500,
+                            isSuccess: false,
+                            msg: "添加失败，服务器出错"
+                        });
+                        return;
+                    }
+                    //成功获取添加的角色RoleID
+                    if (results !== undefined && results.length != 0) {
+                        var roleID = results[0].RoleID;
+                        data = {
+                            'RoleID': roleID,
+                            'FunctionID': funcData
+                        }
+                        console.log("成功获取RoleID: "+roleID);
+                        //通过获取到的RoleID 与前端传输的功能点数据，为角色增加功能点
+                        rolefuncservice.addRoleFunc(data, function (err, results) {
+                            if (err) {
+                                res.json({
+                                    code: 500,
+                                    isSuccess: false,
+                                    msg: "添加失败，服务器出错"
+                                })
+                                return;
+                            }
+                            //增添成功
+                            if (results !== undefined && results.affectedRows != 0) {
+                                res.json({
+                                    code: 200,
+                                    isSuccess: true,
+                                    msg: "添加信息成功"
+                                })
+                                return;
+                            } else {
+                                res.json({
+                                    code: 404,
+                                    isSuccess: false,
+                                    msg: "添加信息失败"
+                                })
+                                return;
+                            }
+                        })
+                    } else {
+                        res.json({
+                            code: 404,
+                            isSuccess: false,
+                            msg: "添加信息失败"
+                        });
+                        return;
+                    }
+                })
+            } else {
+                res.json({
+                    code: 200,
+                    isSuccess: true,
+                    msg: "添加用户成功"
+                })
+                return;
+            }
         } else {
             res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "添加信息失败"
+                msg: "添加用户失败"
             })
             return;
         }
     })
-
 });
 
 module.exports = router;

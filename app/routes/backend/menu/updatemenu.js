@@ -3,7 +3,7 @@
  * @Date: 2016/11/15 14:38
  * @Last Modified by: Cecurio
  * @Last Modified time: 2016/11/15 14:38
- * @Function:
+ * @Function:修改MenuID对应元祖的信息
  */
 var express = require('express');
 var router = express.Router();
@@ -13,6 +13,7 @@ var url = require('url');
 var menuService = appRequire('service/backend/menu/menuservice');
 
 router.post('/',function (req,res) {
+    //接收前台数据
     var menuID = req.body.MenuID;
     var applicationID = req.body.ApplicationID;
     var menuLevel = req.body.MenuLevel;
@@ -53,9 +54,9 @@ router.post('/',function (req,res) {
                         isSuccess : false,
                         msg : '修改菜单失败'
                     });
+                    return ;
                 }
 
-                //console.log(results);
 
                 if(results !== undefined && results.affectedRows === 1){
                     res.json({

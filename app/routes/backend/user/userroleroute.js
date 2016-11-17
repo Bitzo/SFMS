@@ -2,8 +2,8 @@
  * @Author: Duncan
  * @Date: 2016/11/13 19:04
  * @Last Modified by: Duncan
- * @Last Modified time: 2016/11/13 19:04
- * @Function: 角色的勾选
+ * @Last Modified time: 2016/11/17 12:04
+ * @Function: 角色的勾选，角色的修改
  */
 
  var express=require('express');
@@ -88,4 +88,70 @@
  				});
  		});
 
+router.put('/',function(req,res)
+{
+	var data=['ID','AccountID','RoleID'];
+	var err ='required: ';
+	for(var value in data)
+	{
+		if(!(data[value] in req.body))
+		{
+			console.log("require: "+data[value]);
+			err += data[value]+' ';
+		}
+	}
+
+	if(err != 'required: ')
+	{
+		res.json({
+			code:400,
+			isSuccess:false,
+			msg:err
+		});
+		return ;
+	}
+
+	var ID =req.body.ID;
+	var AccountID=req.body.AccountID;
+	var RoleID=req.body.RoleID; 
+
+	var data = {
+		"ID":ID,
+		"AccountID":AccountID,
+		"RoleID":RoleID
+	}
+
+	userrole.updateUserRole(data,function(err,results)
+	{
+		if(err)
+		{
+			res.json(
+			{
+				code:500,
+				isSuccess:false,
+				msg:'修改信息失败，服务器出错'
+			});
+			return ;
+		}
+		if(results!==undefined&&results.affectedRows!=0)
+		{
+			res.json({
+				code:200,
+				isSuccess:true,
+				msg:"修改信息成功"
+			})
+			return ;
+		}else
+		{
+			res.json({
+				code:400,
+				isSuccess:false,
+				msg:"修改信息失败"
+			})
+			return ;
+		}
+	})
+
+
+});
 module.exports=router;

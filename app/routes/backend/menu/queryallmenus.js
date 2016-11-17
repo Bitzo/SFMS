@@ -12,13 +12,39 @@ var url = require('url');
 //菜单业务逻辑组件
 var menuService = appRequire('service/backend/menu/menuservice');
 
-router.post('/',function (req,res) {
-    // req.body是一个JSON对象
-    // var obj = req.body;
-    // for(var i in obj){   //遍历post请求提交的request表单
-    //     console.log(i);
-    //     console.log(obj[i]);
-    // }
+router.post('/nolimit',function (req,res) {
+
+    //没有查询条件，那就查询出所有
+
+    data = {
+
+    };
+
+    menuService.queryAllMenus(data,function (err,results) {
+        if(err){
+            res.json({
+                code : 500,
+                isSuccess : false,
+                msg : '查询所有菜单失败'
+            });
+            return ;
+        }
+
+        res.json({
+            code : 200,
+            isSuccess : true,
+            data : {
+                Menu : results
+            },
+            msg : '读取所有菜单成功！'
+        });
+    });
+
+
+});
+
+router.post('/bymenuid',function (req,res) {
+
     var menuID = req.body.MenuID;
 
     var data = {
@@ -36,6 +62,82 @@ router.post('/',function (req,res) {
         if(err){
             res.json({
                code : 500,
+                isSuccess : false,
+                msg : '查询所有菜单失败'
+            });
+            return ;
+        }
+
+        res.json({
+            code : 200,
+            isSuccess : true,
+            data : {
+                Menu : results
+            },
+            msg : '读取所有菜单成功！'
+        });
+    });
+
+
+});
+
+router.post('/bymenulevel',function (req,res) {
+
+    var MenuLevel = req.body.MenuLevel;
+
+    var data = {
+        "MenuLevel" : MenuLevel
+    };
+
+
+    // 如果没有查询条件，那就查询出所有
+    if(MenuLevel === undefined){
+        data = {
+
+        };
+    }
+    menuService.queryAllMenus(data,function (err,results) {
+        if(err){
+            res.json({
+                code : 500,
+                isSuccess : false,
+                msg : '查询所有菜单失败'
+            });
+            return ;
+        }
+
+        res.json({
+            code : 200,
+            isSuccess : true,
+            data : {
+                Menu : results
+            },
+            msg : '读取所有菜单成功！'
+        });
+    });
+
+
+});
+
+router.post('/byparentid',function (req,res) {
+
+    var ParentID = req.body.ParentID;
+
+    var data = {
+        "ParentID" : ParentID
+    };
+
+
+    // 如果没有查询条件，那就查询出所有
+    if(ParentID === undefined){
+        data = {
+
+        };
+    }
+    menuService.queryAllMenus(data,function (err,results) {
+        if(err){
+            res.json({
+                code : 500,
                 isSuccess : false,
                 msg : '查询所有菜单失败'
             });
