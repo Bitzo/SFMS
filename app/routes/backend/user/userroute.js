@@ -2,7 +2,7 @@
  * @Author: Duncan
  * @Date: 2016/11/15 19:04
  * @Last Modified by: Duncan
- * @Last Modified time: 2016/11/16 19:04
+ * @Last Modified time: 2016/11/17 19:04
  * @Function: 用户信息的插入,用户信息的查询
  */
 var express=require('express');
