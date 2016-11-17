@@ -25,6 +25,8 @@
     "serve-favicon": "~2.3.0",
     "underscore": "*",
     "mysql": "*",
+    "mocha": "*",
+    "should": "*",
     "jwt-simple": "^0.2.0"
   }
 }

@@ -9,14 +9,14 @@ var indexRoute = appRequire('routes/index/indexroute');
 var backendRoute = appRequire('routes/backend/backendroute');
 var sfmsRoute = appRequire('routes/sfms/sfmsroute');
 var jinkeBroRoute = appRequire('routes/jinkebro/jinkebroroute');
-var aptRoute = appRequire('routes/api/apiroute');
+var apiRoute = appRequire('routes/api/apiroute');
 
 module.exports = function(app) {
 
     app.use('/', backendRoute);
 
     //API相关
-    app.use('/api/v1/', aptRoute);
+    app.use('/api/v1/', apiRoute);
 
     //后台首页
     app.use('/index', indexRoute);
