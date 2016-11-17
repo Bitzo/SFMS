@@ -22,6 +22,22 @@ exports.queryRoleFunc = function (data, callback) {
 
 //新增角色功能点
 exports.addRoleFunc = function (data, callback) {
+
+    function checkData(data) {
+        for (var key in data) {
+            if(data[key] === undefined) {
+                console.log("undefined:"+ key);
+                return false;
+            }
+        }
+        return true;
+    }
+    if(!checkData(data))
+    {
+        callback(true);
+        return;
+    }
+
     rolefuncDAL.addRoleFunc(data, function (err, results) {
         if (err) {
             callback(true);
