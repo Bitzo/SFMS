@@ -19,9 +19,6 @@ router.get('/',function (req, res) {
     var roleName = req.query.RoleName;
     var isActive = req.query.IsActive;
 
-    console.log(appID);
-    console.log(page);
-
     var data = {
         'appID': appID,
         'page': page,
@@ -35,22 +32,13 @@ router.get('/',function (req, res) {
     //查询所有数据总数
     roleservice.countAllRoles(data, function (err, results) {
         if (err) {
-            res.json({
-                code: 500,
-                isSuccess: false,
-                msg: "查询失败，服务器内部出错"
-            });
+            countNum = -1;
             return;
         }
         if (results !==undefined && results.length != 0) {
             countNum = results[0]['num'];
-            console.log(countNum);
         } else {
-            res.json({
-                code: 404,
-                isSuccess: false,
-                msg: "未查询到相关信息"
-            });
+            countNum = -1;
             return;
         }
     });
@@ -62,11 +50,11 @@ router.get('/',function (req, res) {
                 code: 500,
                 isSuccess: false,
                 msg: "查询失败，服务器内部错误"
-            })
+            });
             return;
         }
 
-        if (results !== undefined && results.length != 0) {
+        if (results !== undefined && results.length != 0 && countNum != -1) {
             var result = {
                 code: 200,
                 isSuccess: true,

@@ -10,6 +10,7 @@ var signModel = appRequire('model/sfms/signmodel');
 
 exports.signLogInsert = function (data, callback) {
 
+    var sql = "insert into jit_signinfo set UserId = ?, IP = ?, UserAgent = ?, MAC = ?, Longitude = ?, Latitude = ?,CreateTime = ?, SignType = ?"
     var time = new Date();
 
     function checkData(data) {
@@ -27,7 +28,7 @@ exports.signLogInsert = function (data, callback) {
         return;
     }
 
-    var value = [data.AccountID, data.ip, data.UserAgent, data.MAC, data.Longitude, data.Latitude, time, data.SignType];
+    var value = [data.AccountId, data.IP, data.UserAgent, data.MAC, data.Longitude, data.Latitude, time, data.SignType];
     console.log("VALUE: "+value);
     console.log("记录签到信息："+sql);
     console.log(value);

@@ -8,24 +8,20 @@
 
 var db_backend = appRequire('db/db_backend');
 var roleModel = appRequire('model/backend/role/rolemodel');
+var config = appRequire('config/config');
 
 //查询所有角色信息
 exports.queryAllRoles = function (data, callback) {
-    var sql = 'select ApplicationID, RoleID, RoleCode, RoleName, IsActive from jit_role where 1=1';
+    var sql = 'select ApplicationID, RoleID, RoleCode, RoleName, IsActive from jit_role where 1=1 ';
 
-    if (data['appID'] !== undefined) {
-        sql += " and ApplicationID = '" + data['appID'] + "' ";
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && data[key] !== undefined)
+            sql += "and " + key + " = '" + data[key] + "' ";
+        }
     }
 
-    if (data['RoleName'] !== undefined) {
-        sql += " and RoleName = '" + data['RoleName'] + "' ";
-    }
-
-    if (data['IsActive'] !== undefined) {
-        sql += " and IsActive = '" + data['IsActive'] + "' ";
-    }
-
-    var num = 10; //每页显示的个数
+    var num = config.pageCount; //每页显示的个数
 
     sql += " LIMIT " + (data['page']-1)*num + "," + num;
 
@@ -54,18 +50,13 @@ exports.queryAllRoles = function (data, callback) {
 
 //计数，统计对应数据总个数
 exports.countAllRoles = function (data, callback) {
-    var sql =  'select count(*) AS num from jit_role where 1=1 ';
+    var sql =  'select count(1) AS num from jit_role where 1=1 ';
 
-    if (data['appID'] !== undefined) {
-        sql += " and ApplicationID = '" + data['appID'] + "' ";
-    };
-
-    if (data['RoleName'] !== undefined) {
-        sql += " and RoleName = '" + data['RoleName'] + "' ";
-    }
-
-    if (data['IsActive'] !== undefined) {
-        sql += " and IsActive = '" + data['IsActive'] + "' ";
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && data[key] !== undefined)
+                sql += "and " + key + " = '" + data[key] + "' ";
+        }
     }
 
     db_backend.mysqlPool.getConnection(function (err, connection) {

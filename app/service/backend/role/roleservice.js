@@ -10,6 +10,7 @@ var roleDAL = appRequire('dal/backend/role/roledal.js');
 
 //查询所有的角色
 exports.queryAllRoles = function (data, callback) {
+
     roleDAL.queryAllRoles(data, function (err, results) {
         if (err) {
             callback(true);

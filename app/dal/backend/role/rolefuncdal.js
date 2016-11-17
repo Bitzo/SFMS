@@ -43,21 +43,6 @@ exports.addRoleFunc = function (data, callback) {
     var insert_sql = 'insert into jit_rolefunction (RoleID,FunctionID) VALUES ';
     var sql = '';
 
-    function checkData(data) {
-        for (var key in data) {
-            if(data[key] === undefined) {
-                console.log(key);
-                return false;
-            }
-        }
-        return true;
-    }
-    if(!checkData(data))
-    {
-        callback(true);
-        return;
-    }
-
     var roleID = data.RoleID;
     var funcID = data.FunctionID;
 
@@ -127,7 +112,6 @@ exports.updateRoleFunc = function(data, callback) {
 exports.delRoleFunc = function (data, callback) {
     var sql = 'delete from jit_rolefunction where ID in ';
     sql += "(";
-    console.log(data);
     for (var i in data) {
         sql += data[i].ID;
         if (i < data.length-1) sql += ', ';
