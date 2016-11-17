@@ -53,3 +53,50 @@ exports.insert=function(data,callback)
 
 	});
 }
+
+exports.updateUserRole=function(data,callback)
+{
+	var sql='update jit_roleuser set ';
+	if(data!==undefined)
+	{
+		var i=0;
+		for(var key in data)
+		{
+			if(i==0)
+			{
+				sql+=key + "= '"+data[key]+"' ";
+				i++;
+			}
+			else
+			{
+				sql+=", "+key+" = '"+data[key]+"' ";
+			}
+		}
+	}
+
+	sql +=" where " + userModel.PK +" = ' "+data[userModel.PK]+"' ";
+
+	console.log(sql);
+
+	db_backend.mysqlPool.getConnection(function(err,connection)
+	{
+		if(err)
+		{
+			callback(true);
+			connection.release();
+			return ;
+		}
+
+		connection.query(sql,function(err,results)
+		{
+			if(err)
+			{
+				callback(true);
+				return ;
+			}
+			callback(false,results);
+			connection.release();
+		});
+	});
+	
+}

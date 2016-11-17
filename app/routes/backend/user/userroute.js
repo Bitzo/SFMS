@@ -16,11 +16,12 @@ var config=appRequire('config/config');
 router.post('/',function(req,res)
 	{
 		
-		var data=['ApplicationID','AccountID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address'];
+		var data=['ApplicationID','AccountID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
 		var err='require: ';
+
 		for(var value in data)
 		{
-			console.log(data[value]);
+			
 			if(!(data[value] in req.body))
 			{
 				///if(data[value]!='Email'&&data[value]!='Address')
@@ -70,12 +71,12 @@ router.post('/',function(req,res)
 			'IsActive':IsActive,
 			
 		}	
-		console.log(Email);
+	
 		//console.log(typeof(data[ApplicationID]));
 		var requireValue='缺少值：';
+		
 		for(var value in data)
-		{
-			
+		{	//console.log(typeof(value));
 			if(data[value].length==0)
 			{
 				requireValue+=value+' ';	
@@ -83,7 +84,7 @@ router.post('/',function(req,res)
 
 
 		}
-
+		console.log(111);
 		if(requireValue!='缺少值：')
 		{
 			res.json({
@@ -233,6 +234,7 @@ router.get('/', function(req, res) {
     	data['Address']=Address;
     }
     data['page']=page;
+  
 //获取所有用户的数量
 	user.countUser(data,function(err,result)
 	{
@@ -295,5 +297,160 @@ router.get('/', function(req, res) {
     });
 });
 
+router.put('/',function(req,res){
+	var data=['ApplicationID','AccountID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
+		var err='require: ';
+		for(var value in data)
+		{
+			
+			if(!(data[value] in req.body))
+			{
+				///if(data[value]!='Email'&&data[value]!='Address')
+				err+=data[value]+' ';//检查post传输的数据
+			}
 
+			
+		}
+
+		if(err!='require: ')
+		{
+			res.json({
+				code:500,
+				isSuccess:false,
+				msg:err
+			});
+			return;
+		}
+
+		//插入要传的参数
+		var ApplicationID=req.body.ApplicationID;
+		var AccountID=req.body.AccountID;
+		var Account=req.body.Account;
+		var UserName=req.body.UserName;
+		var Pwd=req.body.Pwd;
+		var CollegeID=req.body.CollegeID;
+		var GradeYear=req.body.GradeYear;
+		var Phone=req.body.Phone;
+		var ClassID=req.body.ClassID;
+		var Memo=req.body.Memo;
+		var CreateTime=req.body.CreateTime;
+		var CreateUserID=req.body.CreateUserID;
+		var EditUserID=req.body.EditUserID;
+		var EditTime=req.body.EditTime;
+		var IsActive=req.body.IsActive;
+		var Email=req.body.Email;
+		var Address=req.body.Address;
+
+		data={
+			'ApplicationID':ApplicationID,
+			'AccountID':AccountID,
+			'Account':Account,
+			'UserName':UserName,
+			'Pwd':Pwd,
+			'CreateTime':CreateTime,
+			'CreateUserID':CreateUserID,
+			'IsActive':IsActive,
+			
+		}	
+		//console.log(Email);
+		//console.log(typeof(data[ApplicationID]));
+		var requireValue='缺少值：';
+		for(var value in data)
+		{
+			
+			if(data[value].length==0)
+			{
+				requireValue+=value+' ';	
+			}
+
+
+		}
+
+		if(requireValue!='缺少值：')
+		{
+			res.json({
+					code:300,
+					isSuccess:false,
+					msg:requireValue
+				});
+				return;
+			}
+			
+			if(Email.length!=0&&Email!=undefined)
+			{
+				data['Email']=Email;
+			}
+			
+			
+			if(Address!=undefined&&Address.length!=0)
+			{
+				data['Address']=Address;
+			}
+
+
+			if(CollegeID!=undefined&&CollegeID.length!=0)
+			{
+				data['CollegeID']=CollegeID;
+			}
+			
+			if(GradeYear!=undefined&&GradeYear.length!=0)
+			{
+				data['GradeYear']=GradeYear;
+			}
+			
+			if(Phone!=undefined&&Phone.length!=0)
+			{
+				data['Phone']=Phone;
+			}
+
+			if(ClassID!=undefined&&ClassID.length!=0)
+			{
+				data['ClassID']=ClassID;
+			}
+			if(Memo!=undefined&&Memo.length!=0)
+			{
+				data['Memo']=Memo;
+			}
+			if(EditUserID!=undefined&&EditUserID.length!=0)
+			{
+				data['EditUserID']=EditUserID;
+			}
+			if(EditTime!=undefined&&EditTime.length!=0)
+			{
+				data['EditTime']=EditTime;
+			}
+
+
+			user.update(data,function(err,results)
+			{
+				if(err)
+				{
+					res.json(
+					{
+						code:500,
+						isSuccess:false,
+						msg:'修改信息失败，服务器出错'
+					});
+				return ;
+			}	
+			if(results!==undefined&&results.affectedRows!=0)
+			{
+				res.json({
+					code:200,
+					isSuccess:true,
+					msg:"修改信息成功"
+				})
+				return ;
+			}else
+			{
+				res.json({
+				code:400,
+				isSuccess:false,
+				msg:"修改信息失败"
+				})
+				return ;
+			}
+		})
+
+})
 module.exports=router;

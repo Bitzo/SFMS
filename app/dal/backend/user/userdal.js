@@ -21,7 +21,7 @@ exports.queryAllUsers = function(data, callback) {
             }
         }
     
-        console.log(data['page']);
+       // console.log(data['page']);
     var num =config.pageCount;//每一页要显示的数据量
 
     sql +=" limit "+(data['page']-1)*num+" , "+num;
@@ -83,15 +83,17 @@ exports.insert = function(data, callback) {
 exports.update = function(data, callback) {
     var upd_sql = 'update jit_user set ';
     if (data !== undefined) {
+        var i=0;
         for (var key in data) {
-            if (upd_sql.length == 0) {
+            if (i== 0) {
                 upd_sql += key + " = '" + data[key] + "' ";
+                i++;
             } else {
                 upd_sql += " , " + key + " = '" + data[key] + "' ";
             }
         }
     }
-    upd_sql += " WHERE " + userModel.pk + " = " + data[userModel.pk];
+    upd_sql += " WHERE " + userModel.PK+ " = " + data[userModel.PK];
 
     console.log("修改用户: " + upd_sql);
 
@@ -102,12 +104,12 @@ exports.update = function(data, callback) {
             return;
         }
 
-        connection.query(upd_sql, function(err) {
+        connection.query(upd_sql, function(err,results) {
             if (err) {
                 callback(true);
                 return;
             }
-            callback(false);
+            callback(false,results);
             connection.release();
         });
     });

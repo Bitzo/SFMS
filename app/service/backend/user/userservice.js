@@ -1,8 +1,8 @@
 /**
  * @Author: snail
  * @Date:   2016-11-05 11:14:38
- * @Last Modified by:   snail
- * @Last Modified time: 2016-11-05 11:14:38
+ * @Last Modified by:  Duncan
+ * @Last Modified time: 2016-11-17 20:00
  */
 var userDAL = appRequire('dal/backend/user/userdal');
 
@@ -30,12 +30,12 @@ exports.insert = function(data, callback) {
 
 //修改用户
 exports.update = function(data, callback) {
-    userDAL.update(data, function(err) {
+    userDAL.update(data, function(err,results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false);
+        callback(false,results);
     });
 };
 

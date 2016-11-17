@@ -13,12 +13,10 @@ var updateMenu = appRequire('routes/backend/menu/updatemenu');
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper=appRequire('util/jwthelper');
 
-<<<<<<< HEAD
-=======
 var addapp = appRequire('routes/backend/application/addapp');
 var updateapp = appRequire('routes/backend/application/updateapp');
 var showapp = appRequire('routes/backend/application/showapp');
->>>>>>> 62e955765095040ca7d2740eaaeb52842e942aa7
+
 
 //主应用主站点
 router.get('/', function(req, res, next) {
