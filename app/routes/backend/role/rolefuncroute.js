@@ -87,8 +87,8 @@ router.post('/', function (req, res) {
     var funcID = req.body.data;
 
     var data = {
-        RoleID: roleID,
-        FunctionID: funcID
+        'RoleID': roleID,
+        'FunctionID': funcID
     }
 
     rolefuncservice.addRoleFunc(data, function (err, results) {

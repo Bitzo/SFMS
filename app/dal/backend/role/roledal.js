@@ -22,8 +22,9 @@ exports.queryAllRoles = function (data, callback) {
     }
 
     var num = config.pageCount; //每页显示的个数
+    var page = data.page || 1;
 
-    sql += " LIMIT " + (data.page-1)*num + "," + num;
+    sql += " LIMIT " + (page-1)*num + "," + num;
 
     console.log("查询角色信息：" + sql);
 

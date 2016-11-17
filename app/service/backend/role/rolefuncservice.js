@@ -26,7 +26,7 @@ exports.addRoleFunc = function (data, callback) {
     function checkData(data) {
         for (var key in data) {
             if(data[key] === undefined) {
-                console.log(key);
+                console.log("undefined:"+ key);
                 return false;
             }
         }
