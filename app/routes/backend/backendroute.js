@@ -6,7 +6,7 @@ var rolefuncroute = require('./role/rolefuncroute');
 
 //主应用主站点
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Hi JinkeBro' });
+  res.render('login', { title: 'Hi login' });
 });
 
 router.use('/role', roleroute);
