@@ -15,10 +15,7 @@ var queryRoleByUserID = appRequire('routes/backend/menu/queryrolebyuserid');
 
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper=appRequire('util/jwthelper');
-<<<<<<< HEAD
 
-=======
->>>>>>> fb4ee04365c5744b49f8c06a02ce89a0029bc6ec
 var addapp = appRequire('routes/backend/application/addapp');
 var updateapp = appRequire('routes/backend/application/updateapp');
 var showapp = appRequire('routes/backend/application/showapp');
