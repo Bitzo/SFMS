@@ -25,6 +25,7 @@ var config = {
         connectionLimit: 100,
         supportBigNumbers: true,
     },
+     pageCount: 20,//分页时每一页要显示的数据量
     // 邮箱配置
     mail_opts: {
         host: '',

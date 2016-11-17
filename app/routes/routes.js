@@ -22,4 +22,6 @@ module.exports = function(app) {
 
     // //金科小哥子系统
     app.use('/jkbro', jinkeBroRoute);
+
+
 };

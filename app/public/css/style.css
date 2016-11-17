@@ -1,0 +1,35 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+/*rolejade*/
+.table_position{
+  margin-top:30px;
+}
+th{
+  background-color:lightgray;
+}
+
+/*roleadd*/
+.definewidth{
+	width:96%;
+	margin:auto;	
+}
+.m10{
+	margin-top:10px;
+}
+.m20{
+	padding-top:20px;
+}
+
+.tableleft{
+	text-align:center;
+	padding-left:5px;
+	background-color:#f5f5f5;
+  font-size:14pt;
+}

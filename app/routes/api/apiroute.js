@@ -8,7 +8,7 @@
 var express = require('express');
 var router = express.Router();
 var login = appRequire('api/login');
-
+var sign = appRequire('api/sign');
 
 router.get('/', function(req, res, next) {
     res.json({
@@ -17,5 +17,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.use('/login',login);
+router.use('/sign', sign);
 
 module.exports = router;

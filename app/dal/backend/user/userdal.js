@@ -1,26 +1,31 @@
 /**
  * @Author: snail
  * @Date:   2016-11-05 11:14:38
- * @Last Modified by:   snail
- * @Last Modified time: 2016-11-05 11:14:38
+ * @Last Modified by:  Duncan
+ * @Last Modified time: 2016-11-16 18:30
  */
 
 var db_backend = appRequire('db/db_backend');
 var userModel = appRequire('model/backend/user/usermodel');
-
+var config=appRequire('config/config')
 //查询目前所有用户
 exports.queryAllUsers = function(data, callback) {
     var sql = 'select ApplicationID,AccountID,Account,UserName,Pwd,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime,IsActive from jit_user where 1=1 ';
     var condition = '';
 
-    if (data !== undefined) {
+   
         for (var key in data) {
-            sql += ' and ' + key + " = '" + data[key] + "' ";
+            if(key!='page')
+            {
+                sql += ' and ' + key + " = '" + data[key] + "' ";
+            }
         }
-    }
+    
+        console.log(data['page']);
+    var num =config.pageCount;//每一页要显示的数据量
 
-    console.log("查询用户所有用户:" + sql);
-
+    sql +=" limit "+(data['page']-1)*num+" , "+num;
+    console.log("查询用户:" + sql);
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
@@ -41,17 +46,20 @@ exports.queryAllUsers = function(data, callback) {
 //新增用户
 exports.insert = function(data, callback) {
     var insert_sql = 'insert into jit_user set';
-    if (data !== undefined) {
-        var i=0;//判断是否是第一个
+    
+       var i=0;
         for (var key in data) {
-            if (i == 0) {
-                insert_sql +=' '+ key + " = '" + data[key] + "' ";
+            if(i==0)
+            {
+                insert_sql+=" "+key+" = "+" '"+data[key]+"' ";
                 i++;
-            } else {
-                insert_sql += " , " + key + " = '" + data[key] + "' ";
+            }
+            else
+            {
+                insert_sql+=", "+key+" = "+" '"+data[key]+"' ";
             }
         }
-    }
+    
     console.log("新增用户: " + insert_sql);
 
     db_backend.mysqlPool.getConnection(function(err, connection) {
@@ -77,9 +85,9 @@ exports.update = function(data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (upd_sql.length == 0) {
-                sql += key + " = '" + data[key] + "' ";
+                upd_sql += key + " = '" + data[key] + "' ";
             } else {
-                sql += " , " + key + " = '" + data[key] + "' ";
+                upd_sql += " , " + key + " = '" + data[key] + "' ";
             }
         }
     }
@@ -94,7 +102,7 @@ exports.update = function(data, callback) {
             return;
         }
 
-        connection.query(sql, function(err) {
+        connection.query(upd_sql, function(err) {
             if (err) {
                 callback(true);
                 return;
@@ -121,7 +129,7 @@ exports.delete = function(data, callback) {
             return;
         }
 
-        connection.query(sql, function(err) {
+        connection.query(del_sql, function(err) {
             if (err) {
                 callback(true);
                 return;
@@ -131,3 +139,34 @@ exports.delete = function(data, callback) {
         });
     });
 };
+
+
+exports.countUser=function(data,callback)
+{
+    var sql='select count(1) as num from jit_user where 1=1';
+    for(var key in data)
+    {
+        if(key!='page')
+        sql+=" and "+key+" = '"+data[key]+"' ";
+    }
+    db_backend.mysqlPool.getConnection(function(err,connection)
+    {
+        if(err)
+        {
+            callback(true);
+            return;
+        }
+        console.log(sql);
+        connection.query(sql,function(err,results)
+        {
+            if(err)
+            {
+                cllback(true);
+                return;
+            };
+            callback(false,results);
+            connection.release();
+        })
+    })
+
+}

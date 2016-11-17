@@ -8,19 +8,23 @@
 
 var express = require('express');
 var router = express.Router();
+var config = appRequire('config/config');
 
 var roleservice = appRequire('service/backend/role/roleservice');
 
+//查询角色信息
 router.get('/',function (req, res) {
     var appID = req.query.appID;
     var page = req.query.page || 1;
 
-    console.log(appID);
-    console.log(page);
+    var roleName = req.query.RoleName;
+    var isActive = req.query.IsActive;
 
     var data = {
-        'appID': appID,
-        'page': page
+        'ApplicationID': appID,
+        'page': page,
+        'RoleName': roleName,
+        'IsActive': isActive
     };
 
     //用于查询结果总数的计数
@@ -32,13 +36,46 @@ router.get('/',function (req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "查询失败，服务器内部出错"
+                msg: "查询失败，服务器内部错误"
             });
             return;
         }
         if (results !==undefined && results.length != 0) {
             countNum = results[0]['num'];
-            console.log(countNum);
+
+            //查询所需的详细数据
+            roleservice.queryAllRoles(data, function (err, results) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                    return;
+                }
+
+                if (results !== undefined && results.length != 0 && countNum != -1) {
+                    var result = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        totlePage: Math.ceil(countNum/config.pageCount),
+                        data: results
+                    };
+                    res.json(result);
+                    return;
+                } else {
+                    res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                    return;
+                }
+
+            });
         } else {
             res.json({
                 code: 404,
@@ -47,45 +84,14 @@ router.get('/',function (req, res) {
             });
             return;
         }
-    });
-
-    //查询所需的详细数据
-    roleservice.queryAllRoles(data, function (err, results) {
-        if (err) {
-            res.json({
-                code: 500,
-                isSuccess: false,
-                msg: "查询失败，服务器内部错误"
-            })
-            return;
-        }
-
-        if (results !== undefined && results.length != 0) {
-            var result = {
-                code: 200,
-                isSuccess: true,
-                msg: '查询成功',
-                dataNum: countNum,
-                curPage: page,
-                totlePage: (countNum-1)/10+1,
-                data: results
-            };
-            res.json(result);
-        } else {
-            res.json({
-                code: 404,
-                isSuccess: false,
-                msg: "未查询到相关信息"
-            });
-        }
-
     });
 
 });
 
+//增加角色信息
 router.post('/',function (req, res) {
 
-    var data = ['ApplicationID', 'RoleID', 'RoleCode', 'RoleName', 'IsActive'];
+    var data = ['ApplicationID', 'RoleCode', 'RoleName', 'IsActive'];
     var err = 'required: ';
     for(var value in data)
     {
@@ -107,18 +113,16 @@ router.post('/',function (req, res) {
     };
 
     var ApplicationID = req.body.ApplicationID;
-    var RoleID = req.body.RoleCode;
     var RoleCode = req.body.RoleCode;
     var RoleName = req.body.RoleName;
     var IsActive = req.body.IsActive;
 
     var data = {
         'ApplicationID': ApplicationID,
-        'RoleID': RoleCode,
         'RoleCode': RoleCode,
         'RoleName': RoleName,
         'IsActive': IsActive
-    }
+    };
 
     roleservice.addRole(data, function (err, results) {
         if (err) {
@@ -137,12 +141,14 @@ router.post('/',function (req, res) {
                 data: data,
                 msg: "添加信息成功"
             })
+            return;
         } else {
             res.json({
                 code: 404,
                 isSuccess: false,
                 msg: "添加信息失败"
             })
+            return;
         }
     })
 

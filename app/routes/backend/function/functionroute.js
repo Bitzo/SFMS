@@ -17,7 +17,6 @@ router.get('/', function(req, res) {
         'appID': appID,
     };
 
-
     //查询所需的详细数据
     functionservice.queryAllFunctions(data, function(err, results) {
         if (err) {
