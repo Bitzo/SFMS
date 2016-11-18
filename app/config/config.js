@@ -23,8 +23,6 @@ var config = {
         user: 'jinkebro_common_user',
         password: 'jinkebrocommon1320',
         database: 'jit_backend',
-
-
         connectionLimit: 100,
         supportBigNumbers: true,
     },

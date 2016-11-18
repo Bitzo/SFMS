@@ -16,7 +16,7 @@ var config=appRequire('config/config');
 router.post('/',function(req,res)
 	{
 		
-		var data=['ApplicationID','AccountID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
+		var data=['ApplicationID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
 		var err='require: ';
 
 		for(var value in data)
@@ -42,33 +42,31 @@ router.post('/',function(req,res)
 		}
 
 		//插入要传的参数
-		var ApplicationID=req.body.ApplicationID;
-		var AccountID=req.body.AccountID;
-		var Account=req.body.Account;
-		var UserName=req.body.UserName;
-		var Pwd=req.body.Pwd;
-		var CollegeID=req.body.CollegeID;
-		var GradeYear=req.body.GradeYear;
-		var Phone=req.body.Phone;
-		var ClassID=req.body.ClassID;
-		var Memo=req.body.Memo;
-		var CreateTime=req.body.CreateTime;
-		var CreateUserID=req.body.CreateUserID;
-		var EditUserID=req.body.EditUserID;
-		var EditTime=req.body.EditTime;
-		var IsActive=req.body.IsActive;
-		var Email=req.body.Email;
-		var Address=req.body.Address;
+		var applicationID=req.body.ApplicationID;
+		var account=req.body.Account;
+		var userName=req.body.UserName;
+		var pwd=req.body.Pwd;
+		var collegeID=req.body.CollegeID;
+		var gradeYear=req.body.GradeYear;
+		var phone=req.body.Phone;
+		var classID=req.body.ClassID;
+		var memo=req.body.Memo;
+		var createTime=req.body.CreateTime;
+		var createUserID=req.body.CreateUserID;
+		var editUserID=req.body.EditUserID;
+		var editTime=req.body.EditTime;
+		var isActive=req.body.IsActive;
+		var email=req.body.Email;
+		var address=req.body.Address;
 
 		data={
-			'ApplicationID':ApplicationID,
-			'AccountID':AccountID,
-			'Account':Account,
-			'UserName':UserName,
-			'Pwd':Pwd,
-			'CreateTime':CreateTime,
-			'CreateUserID':CreateUserID,
-			'IsActive':IsActive,
+			'ApplicationID':applicationID,
+			'Account':account,
+			'UserName':userName,
+			'Pwd':pwd,
+			'CreateTime':createTime,
+			'CreateUserID':createUserID,
+			'IsActive':isActive,
 			
 		}	
 	
@@ -95,48 +93,48 @@ router.post('/',function(req,res)
 				return;
 			}
 			
-			if(Email.length!=0&&Email!=undefined)
+			if(email.length!=0&&email!=undefined)
 			{
-				data['Email']=Email;
+				data['Email']=email;
 			}
 			
 			
-			if(Address!=undefined&&Address.length!=0)
+			if(address!=undefined&&address.length!=0)
 			{
-				data['Address']=Address;
+				data['Address']=address;
 			}
 
 
-			if(CollegeID!=undefined&&CollegeID.length!=0)
+			if(collegeID!=undefined&&collegeID.length!=0)
 			{
-				data['CollegeID']=CollegeID;
+				data['CollegeID']=collegeID;
 			}
 			
-			if(GradeYear!=undefined&&GradeYear.length!=0)
+			if(gradeYear!=undefined&&gradeYear.length!=0)
 			{
-				data['GradeYear']=GradeYear;
+				data['GradeYear']=gradeYear;
 			}
 			
-			if(Phone!=undefined&&Phone.length!=0)
+			if(phone!=undefined&&phone.length!=0)
 			{
-				data['Phone']=Phone;
+				data['Phone']=phone;
 			}
 
-			if(ClassID!=undefined&&ClassID.length!=0)
+			if(classID!=undefined&&classID.length!=0)
 			{
-				data['ClassID']=ClassID;
+				data['ClassID']=classID;
 			}
-			if(Memo!=undefined&&Memo.length!=0)
+			if(memo!=undefined&&memo.length!=0)
 			{
-				data['Memo']=Memo;
+				data['Memo']=memo;
 			}
-			if(EditUserID!=undefined&&EditUserID.length!=0)
+			if(editUserID!=undefined&&editUserID.length!=0)
 			{
-				data['EditUserID']=EditUserID;
+				data['EditUserID']=editUserID;
 			}
-			if(EditTime!=undefined&&EditTime.length!=0)
+			if(editTime!=undefined&&editTime.length!=0)
 			{
-				data['EditTime']=EditTime;
+				data['EditTime']=editTime;
 			}
 		user.insert(data,function(err)
 		{
@@ -164,74 +162,74 @@ router.post('/',function(req,res)
 
 router.get('/', function(req, res) {
 	var data={};
-	var AllCount;
+	var allCount;
 	var page=req.query.page;//页数
-    var AccountID = req.query.AccountID;
-    var ApplicationID=req.query.ApplicationID;
-    var Account=req.query.Account;
-    var UserName=req.query.UserName;
-    var CollegeID=req.query.CollegeID;
-    var GradeYear=req.query.GradeYear;
-    var ClassID=req.query.ClassID;
-    var CreateUserID=req.query.CreateUserID;
-    var EditUserID=req.query.EditUserID;
-    var IsActive=req.query.IsActive;
-    var Address=req.query.Address;
+    var accountID = req.query.AccountID;
+    var applicationID=req.query.ApplicationID;
+    var account=req.query.Account;
+    var userName=req.query.UserName;
+    var collegeID=req.query.CollegeID;
+    var gradeYear=req.query.GradeYear;
+    var classID=req.query.ClassID;
+    var createUserID=req.query.CreateUserID;
+    var editUserID=req.query.EditUserID;
+    var isActive=req.query.IsActive;
+    var address=req.query.Address;
     if(page==undefined||page.length==0)
     {
     	page=1;
     }
 
-    if(AccountID!==undefined&&AccountID.length!=0)
+    if(accountID!==undefined&&accountID.length!=0)
     {
-    	data['AccountID']=AccountID;
+    	data['AccountID']=accountID;
     }
 
-    if(ApplicationID!==undefined&&ApplicationID.length!=0)
+    if(applicationID!==undefined&&applicationID.length!=0)
     {
-    	data['ApplicationID']=ApplicationID;
+    	data['ApplicationID']=applicationID;
     }
 
-    if(Account!==undefined&&Account.length!=0)
+    if(account!==undefined&&account.length!=0)
     {
-    	data['Account']=Account;
+    	data['Account']=account;
     }
 
-    if(UserName!==undefined&&UserName.length!=0)
+    if(userName!==undefined&&userName.length!=0)
     {
-    	data['UserName']=UserName;
+    	data['UserName']=userName;
     }
 
 
-    if(CollegeID!==undefined&&AccountID.length!=0)
+    if(collegeID!==undefined&&accountID.length!=0)
     {
-    	data['AccountID']=AccountID;
+    	data['AccountID']=accountID;
     }
 
-    if(GradeYear!==undefined&&GradeYear.length!=0)
+    if(gradeYear!==undefined&&gradeYear.length!=0)
     {
-    	data['GradeYear']=GradeYear;
+    	data['GradeYear']=gradeYear;
     }
-    if(ClassID!==undefined&&ClassID.length!=0)
+    if(classID!==undefined&&classID.length!=0)
     {
-    	data['ClassID']=ClassID;
+    	data['ClassID']=classID;
     }
-     if(CreateUserID!==undefined&&CreateUserID.length!=0)
+     if(createUserID!==undefined&&createUserID.length!=0)
     {
-    	data['CreateUserID']=CreateUserID;
+    	data['CreateUserID']=createUserID;
     }
 
-    if(EditUserID!==undefined&&EditUserID.length!=0)
+    if(editUserID!==undefined&&editUserID.length!=0)
     {
-    	data['EditUserID']=EditUserID;
+    	data['EditUserID']=editUserID;
     }
-      if(IsActive!==undefined&&IsActive.length!=0)
+      if(isActive!==undefined&&isActive.length!=0)
     {
-    	data['IsActive']=IsActive;
+    	data['IsActive']=isActive;
     }
-     if(Address!==undefined&&Address.length!=0)
+     if(address!==undefined&&address.length!=0)
     {
-    	data['Address']=Address;
+    	data['Address']=address;
     }
     data['page']=page;
   
@@ -249,8 +247,8 @@ router.get('/', function(req, res) {
 		}
 		if(result!==undefined&&result.length!=0)
 		{
-		AllCount=result[0]['num'];
-		console.log(AllCount);
+		allCount=result[0]['num'];
+		console.log(allCount);
 		}
 		else
 		{
@@ -278,9 +276,9 @@ router.get('/', function(req, res) {
                 code: 200,
                 isSuccess: true,
                 msg: '查询成功',
-                dataNum: AllCount,
+                dataNum: allCount,
                 curPage: page,
-                totlePage: Math.ceil(AllCount/config.pageCount),
+                totlePage: Math.ceil(allCount/config.pageCount),
                 data: result
             };
         res.json(results);
@@ -323,33 +321,33 @@ router.put('/',function(req,res){
 		}
 
 		//插入要传的参数
-		var ApplicationID=req.body.ApplicationID;
-		var AccountID=req.body.AccountID;
-		var Account=req.body.Account;
-		var UserName=req.body.UserName;
-		var Pwd=req.body.Pwd;
-		var CollegeID=req.body.CollegeID;
-		var GradeYear=req.body.GradeYear;
-		var Phone=req.body.Phone;
-		var ClassID=req.body.ClassID;
-		var Memo=req.body.Memo;
-		var CreateTime=req.body.CreateTime;
-		var CreateUserID=req.body.CreateUserID;
-		var EditUserID=req.body.EditUserID;
-		var EditTime=req.body.EditTime;
-		var IsActive=req.body.IsActive;
-		var Email=req.body.Email;
-		var Address=req.body.Address;
+		var applicationID=req.body.ApplicationID;
+		var accountID=req.body.AccountID;
+		var account=req.body.Account;
+		var userName=req.body.UserName;
+		var pwd=req.body.Pwd;
+		var collegeID=req.body.CollegeID;
+		var gradeYear=req.body.GradeYear;
+		var phone=req.body.Phone;
+		var classID=req.body.ClassID;
+		var memo=req.body.Memo;
+		var createTime=req.body.CreateTime;
+		var createUserID=req.body.CreateUserID;
+		var editUserID=req.body.EditUserID;
+		var editTime=req.body.EditTime;
+		var isActive=req.body.IsActive;
+		var email=req.body.Email;
+		var address=req.body.Address;
 
 		data={
-			'ApplicationID':ApplicationID,
-			'AccountID':AccountID,
-			'Account':Account,
-			'UserName':UserName,
-			'Pwd':Pwd,
-			'CreateTime':CreateTime,
-			'CreateUserID':CreateUserID,
-			'IsActive':IsActive,
+			'ApplicationID':applicationID,
+			'AccountID':accountID,
+			'Account':account,
+			'UserName':userName,
+			'Pwd':pwd,
+			'CreateTime':createTime,
+			'CreateUserID':createUserID,
+			'IsActive':isActive,
 			
 		}	
 		//console.log(Email);
@@ -376,48 +374,48 @@ router.put('/',function(req,res){
 				return;
 			}
 			
-			if(Email.length!=0&&Email!=undefined)
+			if(email.length!=0&&email!=undefined)
 			{
-				data['Email']=Email;
+				data['Email']=email;
 			}
 			
 			
-			if(Address!=undefined&&Address.length!=0)
+			if(address!=undefined&&address.length!=0)
 			{
-				data['Address']=Address;
+				data['Address']=address;
 			}
 
 
-			if(CollegeID!=undefined&&CollegeID.length!=0)
+			if(collegeID!=undefined&&collegeID.length!=0)
 			{
-				data['CollegeID']=CollegeID;
+				data['CollegeID']=collegeID;
 			}
 			
-			if(GradeYear!=undefined&&GradeYear.length!=0)
+			if(gradeYear!=undefined&&gradeYear.length!=0)
 			{
-				data['GradeYear']=GradeYear;
+				data['GradeYear']=gradeYear;
 			}
 			
-			if(Phone!=undefined&&Phone.length!=0)
+			if(phone!=undefined&&phone.length!=0)
 			{
-				data['Phone']=Phone;
+				data['Phone']=phone;
 			}
 
-			if(ClassID!=undefined&&ClassID.length!=0)
+			if(classID!=undefined&&classID.length!=0)
 			{
-				data['ClassID']=ClassID;
+				data['ClassID']=classID;
 			}
-			if(Memo!=undefined&&Memo.length!=0)
+			if(memo!=undefined&&memo.length!=0)
 			{
-				data['Memo']=Memo;
+				data['Memo']=memo;
 			}
-			if(EditUserID!=undefined&&EditUserID.length!=0)
+			if(editUserID!=undefined&&editUserID.length!=0)
 			{
-				data['EditUserID']=EditUserID;
+				data['EditUserID']=editUserID;
 			}
-			if(EditTime!=undefined&&EditTime.length!=0)
+			if(editTime!=undefined&&editTime.length!=0)
 			{
-				data['EditTime']=EditTime;
+				data['EditTime']=editTime;
 			}
 
 

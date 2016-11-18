@@ -9,11 +9,11 @@
  var express=require('express');
  var url=require('url');
  var router=express.Router();
- var userrole=appRequire('service/backend/user/userroleservice');
+ var userRole=appRequire('service/backend/user/userroleservice');
  	
  	router.post('/',function(req,res)
  		{	
- 			var data=['ID','AccountID','RoleID'];
+ 			var data=['AccountID','RoleID'];
  			var err='require: ';
  			for(var value in data)
  			{
@@ -36,13 +36,12 @@
 
  			//获取参数
  			var ID=req.body.ID;
- 			var AccountID=req.body.AccountID;
- 			var RoleID=req.body.RoleID;
+ 			var accountID=req.body.AccountID;
+ 			var roleID=req.body.RoleID;
 
  			data={
- 				'ID':ID,
- 				'AccountID':AccountID,
- 				'RoleID':RoleID
+ 				'AccountID':accountID,
+ 				'RoleID':roleID
  			}
 
  			//判断传过来的数据是否为空
@@ -112,13 +111,13 @@ router.put('/',function(req,res)
 	}
 
 	var ID =req.body.ID;
-	var AccountID=req.body.AccountID;
-	var RoleID=req.body.RoleID; 
+	var accountID=req.body.AccountID;
+	var roleID=req.body.RoleID; 
 
 	var data = {
 		"ID":ID,
-		"AccountID":AccountID,
-		"RoleID":RoleID
+		"AccountID":accountID,
+		"RoleID":roleID
 	}
 
 	userrole.updateUserRole(data,function(err,results)
