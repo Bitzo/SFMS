@@ -114,19 +114,19 @@ router.post('/',function (req, res) {
     };
 
     //增加角色所需要的参数
-    var ApplicationID = req.body.ApplicationID;
-    var RoleCode = req.body.RoleCode;
-    var RoleName = req.body.RoleName;
-    var IsActive = req.body.IsActive;
+    var applicationID = req.body.ApplicationID;
+    var roleCode = req.body.RoleCode;
+    var roleName = req.body.RoleName;
+    var isActive = req.body.IsActive;
 
     //增加角色功能点所需要的数据
     var funcData = req.body.data;
 
     var data = {
-        'ApplicationID': ApplicationID,
-        'RoleCode': RoleCode,
-        'RoleName': RoleName,
-        'IsActive': IsActive
+        'ApplicationID': applicationID,
+        'RoleCode': roleCode,
+        'RoleName': roleName,
+        'IsActive': isActive
     };
 
     //先增添角色信息

@@ -35,22 +35,22 @@ router.post('/', function (req, res) {
         return;
     };
 
-    var userId = req.body.AccountID;
-    var IP = req.body.ip;
-    var UserAgent = req.body.UserAgent || '';
-    var MAC = req.body.mac;
-    var Longitude = req.body.Longitude;
-    var Latitude = req.body.Latitude;
-    var SignType = req.body.signType;
+    var userID = req.body.AccountID;
+    var ip = req.body.ip;
+    var userAgent = req.body.UserAgent || '';
+    var mac = req.body.mac;
+    var longitude = req.body.Longitude;
+    var latitude = req.body.Latitude;
+    var signType = req.body.signType;
 
     data = {
-        'AccountId': userId,
-        'IP':IP,
-        'UserAgent': UserAgent,
-        'MAC': MAC,
-        'Longitude': Longitude,
-        'Latitude':Latitude,
-        'SignType':SignType
+        'AccountId': userID,
+        'IP': ip,
+        'UserAgent': userAgent,
+        'MAC': mac,
+        'Longitude': longitude,
+        'Latitude': latitude,
+        'SignType': signType
     };
 
     signservice.signLog(data, function(err, result) {
