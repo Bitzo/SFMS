@@ -15,9 +15,8 @@ exports.queryAllFunctions = function (data, callback) {
             callback(true);
             return;
         }
-        console.log('functionserver');
         //转成多层结构
-       // getTree(results,0);
+        results=getTree.getTreeFunction(results,0);
         callback(false, results);
     });
 };
@@ -25,33 +24,33 @@ exports.queryAllFunctions = function (data, callback) {
 
 //新增功能点
 exports.insert = function (data, callback) {
-    functionDAL.insert(data, function (err) {
+    functionDAL.insert(data, function (err,results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false);
+        callback(false,results);
     });
 };
 
 //修改功能点
 exports.update = function (data, callback) {
-    functionDAL.update(data, function (err) {
+    functionDAL.update(data, function (err,results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false);
+        callback(false,results);
     });
 };
 
 //删除功能点
 exports.delete = function (data, callback) {
-    functionDAL.delete(data, function (err) {
+    functionDAL.delete(data, function (err,results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false);
+        callback(false,results);
     });
 };
