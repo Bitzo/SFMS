@@ -122,93 +122,120 @@ router.post('/',function (req, res) {
     //增加角色功能点所需要的数据
     var funcData = req.body.data;
 
+    //先查询要增添的角色信息是否已经存在
     var data = {
         'ApplicationID': applicationID,
-        'RoleCode': roleCode,
-        'RoleName': roleName,
-        'IsActive': isActive
+        'RoleName': roleName
     };
-
-    //先增添角色信息
-    roleservice.addRole(data, function (err, results) {
+    roleservice.countAllRoles(data, function (err, results) {
         if (err) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "添加失败，服务器出错"
-            })
+                msg: "增加失败，服务器内部错误"
+            });
             return;
         }
-        //角色信息增添成功
-        if (results !== undefined && results.length != 0) {
-            if (funcData !== undefined){
-                //查询刚才添加的角色信息的RoleID
-                roleservice.queryAllRoles(data, function (err, results) {
-                    if (err) {
-                        res.json({
-                            code: 500,
-                            isSuccess: false,
-                            msg: "添加失败，服务器出错"
-                        });
-                        return;
-                    }
-                    //成功获取添加的角色RoleID
-                    if (results !== undefined && results.length != 0) {
-                        var roleID = results[0].RoleID;
-                        data = {
-                            'RoleID': roleID,
-                            'FunctionID': funcData
-                        }
-                        console.log("成功获取RoleID: "+roleID);
-                        //通过获取到的RoleID 与前端传输的功能点数据，为角色增加功能点
-                        rolefuncservice.addRoleFunc(data, function (err, results) {
+        //没有查询重复的相关信息,则可以添加用户
+        if (results !== undefined && results[0]['num'] == 0) {
+            //先增添角色信息
+
+            data = {
+                'ApplicationID': applicationID,
+                'RoleCode': roleCode,
+                'RoleName': roleName,
+                'IsActive': isActive
+            };
+
+            roleservice.addRole(data, function (err, results) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "添加失败，服务器出错"
+                    })
+                    return;
+                }
+                //角色信息增添成功
+                if (results !== undefined && results.length != 0) {
+                    if (funcData !== undefined){
+                        //查询刚才添加的角色信息的RoleID
+                        roleservice.queryAllRoles(data, function (err, results) {
                             if (err) {
                                 res.json({
                                     code: 500,
                                     isSuccess: false,
                                     msg: "添加失败，服务器出错"
-                                })
+                                });
                                 return;
                             }
-                            //增添成功
-                            if (results !== undefined && results.affectedRows != 0) {
-                                res.json({
-                                    code: 200,
-                                    isSuccess: true,
-                                    msg: "添加信息成功"
+                            //成功获取添加的角色RoleID
+                            if (results !== undefined && results.length != 0) {
+                                var roleID = results[0].RoleID;
+                                data = {
+                                    'RoleID': roleID,
+                                    'FunctionID': funcData
+                                }
+                                console.log("成功获取RoleID: "+roleID);
+                                //通过获取到的RoleID 与前端传输的功能点数据，为角色增加功能点
+                                rolefuncservice.addRoleFunc(data, function (err, results) {
+                                    if (err) {
+                                        res.json({
+                                            code: 500,
+                                            isSuccess: false,
+                                            msg: "添加失败，服务器出错"
+                                        })
+                                        return;
+                                    }
+                                    //增添成功
+                                    if (results !== undefined && results.affectedRows != 0) {
+                                        res.json({
+                                            code: 200,
+                                            isSuccess: true,
+                                            msg: "添加信息成功"
+                                        })
+                                        return;
+                                    } else {
+                                        res.json({
+                                            code: 404,
+                                            isSuccess: false,
+                                            msg: "添加信息失败"
+                                        })
+                                        return;
+                                    }
                                 })
-                                return;
                             } else {
                                 res.json({
                                     code: 404,
                                     isSuccess: false,
                                     msg: "添加信息失败"
-                                })
+                                });
                                 return;
                             }
                         })
                     } else {
                         res.json({
-                            code: 404,
-                            isSuccess: false,
-                            msg: "添加信息失败"
-                        });
+                            code: 200,
+                            isSuccess: true,
+                            msg: "添加用户成功"
+                        })
                         return;
                     }
-                })
-            } else {
-                res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: "添加用户成功"
-                })
-                return;
-            }
+                } else {
+                    res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "添加用户失败"
+                    })
+                    return;
+                }
+            })
+
         } else {
             res.json({
-                code: 404,
+                code: 400,
                 isSuccess: false,
-                msg: "添加用户失败"
+                msg: "用户数据重复，添加失败"
             })
             return;
         }
