@@ -61,3 +61,15 @@ exports.addRole = function (data, callback) {
         callback(false, results);
     })
 }
+
+//修改角色的基本信息
+exports.updateRole = function (data, callback) {
+    roleDAL.updateRole(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        console.log("updateRole");
+        callback(false, results);
+    })
+}
