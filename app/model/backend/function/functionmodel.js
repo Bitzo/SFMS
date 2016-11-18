@@ -13,7 +13,7 @@ var functionmodel = {
     FunctionCode:'',
     FunctionName:'',
     Memo:'',
-    IsActive: true,
+    IsActive: 0,
     PK:'FunctionID'
 }
 

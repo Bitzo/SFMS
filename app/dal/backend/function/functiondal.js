@@ -15,7 +15,7 @@ exports.queryAllFunctions = function (data, callback) {
     var sql = 'select ApplicationID,FunctionID,FunctionLevel,ParentID,FunctionCode,FunctionName,Memo,IsActive from jit_function where IsActive=1';
     var condition = '';
 
-    sql += " and ApplicationID = " + data['appID'] ;
+    sql += " and ApplicationID = " + data['appID'];
 
     console.log("得到所有功能点:" + sql);
 
@@ -39,17 +39,7 @@ exports.queryAllFunctions = function (data, callback) {
 
 //新增功能点
 exports.insert = function (data, callback) {
-    var insert_sql = 'insert into jit_function set';
-    if (data !== undefined) {
-        for (var key in data) {
-            if (insert_sql.length == 0) {
-                sql += key + " = '" + data[key] + "' ";
-            } else {
-                sql += " , " + key + " = '" + data[key] + "' ";
-            }
-        }
-    }
-    console.log("新增功能点: " + insert_sql);
+    var insert_sql = 'insert into `jit_function` set ?';
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -57,12 +47,12 @@ exports.insert = function (data, callback) {
             return;
         }
 
-        connection.query(sql, function (err) {
+        connection.query(insert_sql,data, function (err,results) {
             if (err) {
                 callback(true);
                 return;
             }
-            callback(false);
+            callback(false,results);
             connection.release();
         });
     });
@@ -70,17 +60,8 @@ exports.insert = function (data, callback) {
 
 //修改功能点
 exports.update = function (data, callback) {
-    var upd_sql = 'update jit_function set ';
-    if (data !== undefined) {
-        for (var key in data) {
-            if (upd_sql.length == 0) {
-                sql += key + " = '" + data[key] + "' ";
-            } else {
-                sql += " , " + key + " = '" + data[key] + "' ";
-            }
-        }
-    }
-    upd_sql += " WHERE " + functionModel.pk + " = " + data[functionModel.pk];
+    var upd_sql = 'update jit_function set ?';
+    upd_sql += " WHERE " + functionModel.PK + " = " + data[functionModel.PK];
 
     console.log("修改功能点: " + upd_sql);
 
@@ -91,12 +72,12 @@ exports.update = function (data, callback) {
             return;
         }
 
-        connection.query(sql, function (err) {
+        connection.query(upd_sql,data,function (err,results) {
             if (err) {
                 callback(true);
                 return;
             }
-            callback(false);
+            callback(false,results);
             connection.release();
         });
     });
@@ -104,9 +85,9 @@ exports.update = function (data, callback) {
 
 //删除功能点
 exports.delete = function (data, callback) {
-    var del_sql = 'update  jit_function set IsActive=1 where FunctionID in ';
+    var del_sql = 'update  jit_function set IsActive=0 where FunctionID in ';
     del_sql += "(";
-    del_sql += data.toString();
+    del_sql += data.FunctionID.toString();
     del_sql += ")";
 
     console.log("删除功能点: " + del_sql);
@@ -118,12 +99,13 @@ exports.delete = function (data, callback) {
             return;
         }
 
-        connection.query(sql, function (err) {
+        connection.query(del_sql, function (err,results) {
             if (err) {
                 callback(true);
+                connection.release();
                 return;
             }
-            callback(false);
+            callback(false,results);
             connection.release();
         });
     });

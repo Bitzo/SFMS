@@ -12,14 +12,12 @@ function treeNode(id, pid, text, children) {
     this.text = text;
     this.children = children;
 }
-//测试数据
-//var data = [{ 'id': 1, 'pid': 0, 'text': '主节点' }, { 'id': 2, 'pid': 1, 'text': '分1' }, { 'id': 3, 'pid': 0, 'text': '主2' }, { 'id': 4, 'pid': 3, 'text': 211 }];
-
+//递归生成多层树结构
 function getTreeFunction(data, pid) {
     var treelist = [];
     for (var i = 0; i < data.length; i++) {
-        if (data[i].pid == pid) {
-            var tree = new treeNode(data[i].id, data[i].pid, data[i].text, getTreeFunction(data, data[i].id));
+        if (data[i].ParentID == pid) {
+            var tree = new treeNode(data[i].FunctionID, data[i].ParentID, data[i].FunctionName, getTreeFunction(data, data[i].FunctionID));
             treelist.push(tree)
         }
     }
@@ -27,7 +25,3 @@ function getTreeFunction(data, pid) {
 }
 
 exports.getTreeFunction = getTreeFunction;
-
-
-//var tree = getTreeFunction(data, 0);
-//console.log(tree[0].children)

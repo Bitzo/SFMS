@@ -74,7 +74,6 @@ router.post('/insert', function(req, res) {
     var FunctionName = req.body.FunctionName;
     var Memo = req.body.Memo;
     var IsActive = req.body.IsActive;
-
     var data = {
         'ApplicationID': ApplicationID,
         'FunctionLevel': FunctionLevel,
@@ -84,8 +83,7 @@ router.post('/insert', function(req, res) {
         'Memo': Memo,
         'IsActive': IsActive
     }
-
-    functionservice.insert(data, function(err, results) {
+    functionservice.insert(data, function(err,result) {
         if (err) {
             res.json({
                 code: 500,
@@ -94,8 +92,7 @@ router.post('/insert', function(req, res) {
             })
             return;
         }
-
-        if (results !== undefined && results.length != 0) {
+        if (result !== undefined && result.length != 0) {
             res.json({
                 code: 200,
                 isSuccess: true,
@@ -183,21 +180,21 @@ router.post('/update', function(req, res) {
 });
 
 router.post('/delete', function(req, res) {
-    var functionID = req.body.functionID;
-
-    if (functionID === undefined) {
+    var FunctionID = req.body.FunctionID;
+    console.log(FunctionID)
+    if (FunctionID === undefined) {
         res.json({
             code: 404,
             isSuccess: false,
-            msg: 'require functionID'
+            msg: 'require FunctionID'
         })
         return;
     }
 
     var data = {
-        'functionID': functionID
+        'FunctionID': FunctionID
     };
-
+    console.log(data)
     functionservice.delete(data, function(err, results) {
         if (err) {
             res.json({
