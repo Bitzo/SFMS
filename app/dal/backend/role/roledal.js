@@ -117,3 +117,42 @@ exports.addRole = function (data, callback) {
         });
     });
 };
+
+//修改角色基本信息
+exports.updateRole = function (data, callback) {
+    var sql = 'update jit_role set ';
+    var update_sql = '';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key != 'RoleID') {
+                if(update_sql.length == 0) {
+                    update_sql += key + " = '" + data[key] +"' ";
+                } else {
+                    update_sql += ", " + key + " = '" + data[key] +"' ";
+                }
+            }
+        }
+    }
+    update_sql += "where RoleID = " + data['RoleID'];
+
+    sql += update_sql;
+
+    console.log("修改角色: " + sql);
+
+    db_backend.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}

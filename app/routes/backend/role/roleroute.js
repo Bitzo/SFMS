@@ -242,4 +242,68 @@ router.post('/',function (req, res) {
     })
 });
 
+//角色基本信息更改
+router.put('/', function (req, res) {
+    var data = ['ApplicationID', 'RoleID', 'RoleCode', 'RoleName', 'IsActive'];
+    var err = 'required: ';
+    for(var value in data)
+    {
+        if(!(data[value] in req.body))
+        {
+            console.log("require " + data[value]);
+            err += data[value] + ' ';
+        }
+    }
+
+    if(err!='required: ')
+    {
+        res.json({
+            code: 400,
+            isSuccess: false,
+            msg: err
+        });
+        return;
+    }
+
+    var appID = req.body.ApplicationID;
+    var roleID = req.body.RoleID;
+    var roleCode = req.body.RoleCode;
+    var roleName = req.body.RoleName;
+    var isActive = req.body.IsActive;
+
+    data = {
+        'ApplicationID': appID,
+        'RoleID': roleID,
+        'RoleCode': roleCode,
+        'RoleName': roleName,
+        'IsActive': isActive
+    };
+
+    roleservice.updateRole(data, function (err, results) {
+        if (err) {
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "修改信息失败，服务器内部错误"
+            });
+            return;
+        }
+        if (results !== undefined && results.affectedRows != 0) {
+            res.json({
+                code: 200,
+                isSuccess: true,
+                msg: "修改信息成功"
+            });
+            return;
+        } else {
+            res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "修改信息失败"
+            });
+            return;
+        }
+    })
+});
+
 module.exports = router;
