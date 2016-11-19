@@ -60,7 +60,6 @@ router.get('/:roleID',function (req, res) {
 //角色功能点新增
 router.post('/', function (req, res) {
 
-    console.log(req.body.data[0].FunctionID);
     var data = ['RoleID', 'FunctionID'];
     var err = 'required: ';
 
@@ -92,6 +91,7 @@ router.post('/', function (req, res) {
     }
 
     rolefuncservice.addRoleFunc(data, function (err, results) {
+        console.log(results);
         if (err) {
             res.json({
                 code: 500,
@@ -120,11 +120,11 @@ router.post('/', function (req, res) {
 
 //角色功能点修改
 router.put('/',function (req, res) {
-    var data = ['ID', 'FunctionID'];
+    var data = ['RoleID', 'FunctionID'];
     var err = 'required: ';
     for(var value in data)
     {
-        if(!(data[value] in req.body))
+        if((!(data[value] in req.body.data[0]))&&(!(data[value] in req.body)))
         {
             console.log("require " + data[value]);
             err += data[value] + ' ';
@@ -141,11 +141,11 @@ router.put('/',function (req, res) {
         return;
     };
 
-    var ID = req.body.ID;
-    var FunctionID = req.body.FunctionID;
+    var RoleID = req.body.RoleID;
+    var FunctionID = req.body.data;
 
     var data = {
-        'ID': ID,
+        'RoleID': RoleID,
         'FunctionID': FunctionID
     };
 
