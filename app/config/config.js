@@ -19,15 +19,10 @@ var config = {
     host: '127.0.0.1',
     mysql: {
 
-        // host: '139.224.51.160',
-        // user: 'jinkebro_common_user',
-        // password: 'jinkebrocommon1320',
-        // database: 'jit_backend',
-
-        host: '127.0.0.1',
-        user: 'root',
-        password: '',
-        database: 'jinkebro',
+        host: '139.224.51.160',
+        user: 'jinkebro_common_user',
+        password: 'jinkebrocommon1320',
+        database: 'jit_backend',
         connectionLimit: 100,
         supportBigNumbers: true,
 
