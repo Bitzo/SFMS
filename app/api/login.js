@@ -15,7 +15,6 @@ var userBiz = appRequire('service/backend/user/userservice');
 
 router.post('/', function (req, res) {
 
-    console.log(111);
     //检查所需要的字段是否都存在
     var data = ['account', 'password'];
     var err = 'required: ';
