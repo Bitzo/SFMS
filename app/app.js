@@ -23,7 +23,8 @@ app.set('view engine', 'jade');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 //加载日志中间件，定义日志和输出级别
-app.use(logger('dev'));
+//app.use(logger('dev'));
+
 //加载解析json的中间件,接受json请求 
 app.use(bodyParser.json());
 //加载解析urlencoded请求体的中间件
@@ -81,5 +82,11 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+exports.logger = function(name) {
+  var logger = log4js.getLogger(name);
+  logger.setLevel('INFO');
+  return logger;
+};
 
 module.exports = app;

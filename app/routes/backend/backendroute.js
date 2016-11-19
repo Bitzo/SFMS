@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
+//log4js日志中间件
+var logger = appRequire("util/loghelper").helper;
 
 var roleroute = appRequire('routes/backend/role/roleroute');
 var rolefuncroute = appRequire('routes/backend/role/rolefuncroute');
-var user=appRequire('routes/backend/user/userroute')
-var funcroute=appRequire('routes/backend/function/functionroute');
-var userRole=appRequire('routes/backend/user/userroleroute')
+var user = appRequire('routes/backend/user/userroute')
+var funcroute = appRequire('routes/backend/function/functionroute');
+var userRole = appRequire('routes/backend/user/userroleroute')
 var addMenu = appRequire('routes/backend/menu/addmenu');
 var queryAllMenus = appRequire('routes/backend/menu/queryallmenus');
 var updateMenu = appRequire('routes/backend/menu/updatemenu');
@@ -14,18 +16,18 @@ var queryMenuByUserID = appRequire('routes/backend/menu/querymenubyuserid');
 var queryRoleByUserID = appRequire('routes/backend/menu/queryrolebyuserid');
 
 var userService = appRequire('service/backend/user/userservice');
-var jwtHelper=appRequire('util/jwthelper');
+var jwtHelper = appRequire('util/jwthelper');
 
 var addapp = appRequire('routes/backend/application/addapp');
 var updateapp = appRequire('routes/backend/application/updateapp');
 var showapp = appRequire('routes/backend/application/showapp');
 
-
 //主应用主站点
 router.get('/', function(req, res, next) {
-
-  res.render('login', { title: 'Hi login' });
-
+  logger.writeInfo("首页记录");
+  res.render('login', {
+    title: 'JIT1320管理集成平台'
+  });
 });
 
 //用户登录
@@ -75,21 +77,20 @@ router.post('/login', function(req, res) {
   })
 });
 
-router.use('/addmenu',addMenu);
-router.use('/querymenus',queryAllMenus);
-router.use('/updatemenu',updateMenu);
+router.use('/addmenu', addMenu);
+router.use('/querymenus', queryAllMenus);
+router.use('/updatemenu', updateMenu);
 
-router.use('/querymenubyuserid',queryMenuByUserID);
-router.use('/queryrolebyuserid',queryRoleByUserID);
+router.use('/querymenubyuserid', queryMenuByUserID);
+router.use('/queryrolebyuserid', queryRoleByUserID);
 
 router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
-router.use('/function',funcroute);
-router.use('/user',user);
-router.use('/userrole',userRole);
+router.use('/function', funcroute);
+router.use('/user', user);
+router.use('/userrole', userRole);
 router.use('/app', addapp);
 router.use('/app', updateapp);
 router.use('/app', showapp);
 
 module.exports = router;
-

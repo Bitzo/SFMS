@@ -1,3 +1,10 @@
+/**
+ * @Author: snail
+ * @Date:   2016-11-14 22:00:00
+ * @Last Modified by:
+ * @Last Modified time:
+ * @Function:接口鉴权
+ */
 var jwt = require('jwt-simple');
 var config = appRequire('config/config');
 
