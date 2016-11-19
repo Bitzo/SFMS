@@ -2,8 +2,8 @@
  * @Author: Duncan
  * @Date: 2016/11/15 19:04
  * @Last Modified by: Duncan
- * @Last Modified time: 2016/11/17 19:04
- * @Function: 用户信息的插入,用户信息的查询
+ * @Last Modified time: 2016/11/19 19:04
+ * @Function: 用户信息的插入,用户信息的查询，用户信息的更改
  */
 var express=require('express');
 var router=express.Router();
@@ -82,7 +82,7 @@ router.post('/',function(req,res)
 
 
 		}
-		console.log(111);
+		
 		if(requireValue!='缺少值：')
 		{
 			res.json({
@@ -92,6 +92,29 @@ router.post('/',function(req,res)
 				});
 				return;
 			}
+			//去除相同的账户名字
+			var sameAccount={'Account':account,'page':1};
+			user.queryAllUsers(sameAccount,function(err,result)
+			{
+				if(err)
+				{
+					res.json({
+						code:300,
+						isSuccess:false,
+						msg:"查询账户失败"
+					})
+					return ;
+				}
+				if(result!=undefined&&result!=0)
+				{
+					res.json({
+						code:300,
+						isSuccess:false,
+						msg:"账户名已存在"
+					})
+					return ;
+				}
+
 			
 			if(email.length!=0&&email!=undefined)
 			{
@@ -136,6 +159,8 @@ router.post('/',function(req,res)
 			{
 				data['EditTime']=editTime;
 			}
+
+
 		user.insert(data,function(err)
 		{
 			if(err)
@@ -159,7 +184,7 @@ router.post('/',function(req,res)
 		});
 
 	});
-
+});
 router.get('/', function(req, res) {
 	var data={};
 	var allCount;
