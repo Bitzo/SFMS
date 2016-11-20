@@ -29,17 +29,17 @@
     "mocha": "*",
     "should": "*",
     "jwt-simple": "^0.2.0",
-<<<<<<< HEAD
+
     "superagent": "*",
     "supertest": "*"
   },
   "devDependencies": {
-    "mocha": "^3.1.2"
-=======
+    "mocha": "^3.1.2",
+
     "superagent":"*",
     "supertest":"*",
     "captchapng":"0.0.1",
     "log4js":"1.0.1"
->>>>>>> c075aca20953449d0d9f637f3d8bdd06731cf4a6
+
   }
 }

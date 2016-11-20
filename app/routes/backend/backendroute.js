@@ -117,7 +117,7 @@ router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
 //管理功能点
 router.use('/function', funcroute);
-router.use('/user', user1);
+router.use('/user', user);
 router.use('/userrole', userRole);
 router.use('/app', addapp);
 router.use('/app', updateapp);
