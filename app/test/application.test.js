@@ -12,14 +12,13 @@ var should = require('should');
 var appService = appRequire('service/backend/application/applicationservice');
 
 var data = {
-    'ID': 1,
     'ApplicationCode': '单元测试代码',
     'ApplicationName': '单元测试应用',
     'Memo': '描述',
     'IsActive': 1
 }
 
-var insertID = -1;
+insertID = -1;
 
 describe("应用单元测试", function () {
     it("应用查询", function (done) {
