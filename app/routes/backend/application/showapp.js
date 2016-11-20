@@ -8,7 +8,8 @@
 
 var express = require('express');
 var router = express.Router();
-var userSpring = appRequire('service/backend/applicationservice');
+var userSpring = appRequire('service/backend/application/applicationservice');
+var logger = appRequire('util/loghelper').helper;
 
 router.get('/:app_id', function (req, res) {
     var data = ['ID', 'ApplicationCode', 'ApplicationName', 'Memo', 'IsActive'];
@@ -50,6 +51,7 @@ router.get('/:app_id', function (req, res) {
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
+            logger.writeError('查询应用,出错信息: ' + err);
             return;
         }
 
@@ -72,6 +74,8 @@ router.get('/:app_id', function (req, res) {
                 isSuccess: false,
                 msg: '应用不存在'
             });
+            logger.writeError('查询应用,出错信息: 查询用户不存在');
+            return;
         }
     });
 });

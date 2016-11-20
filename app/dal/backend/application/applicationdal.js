@@ -63,7 +63,7 @@ exports.insert = function(data, callback) {
                 callback(true);
                 return;
             }
-            callback(false);
+            callback(false, results);
             connection.release();
         });
     });
@@ -93,12 +93,12 @@ exports.update = function (data, callback) {
             callback(true);
             return;
         }
-        connection.query(upd_sql, function (err) {
+        connection.query(upd_sql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
             }
-            callback(false);
+            callback(false, results);
             connection.release();
         });
     });
@@ -118,12 +118,12 @@ exports.delete = function (data, callback) {
             callback(true);
             return;
         }
-        connection.query(del_sql, function (err) {
+        connection.query(del_sql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
             }
-            callback(false);
+            callback(false, results);
             connection.release();
         });
     });

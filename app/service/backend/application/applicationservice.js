@@ -19,31 +19,31 @@ exports.queryAllApp = function (data, callback) {
 };
 
 exports.insert = function (data, callback) {
-    appDAL.insert(data, function (err) {
+    appDAL.insert(data, function (err, results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false);
+        callback(false, results);
     });
 };
 
 exports.update = function (data, callback) {
-    appDAL.update(data, function (err) {
+    appDAL.update(data, function (err, results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false);
+        callback(false, results);
     });
 };
 
 exports.delete = function (data, callback) {
-    appDAL.delete(data, function (err) {
+    appDAL.delete(data, function (err, results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false);
+        callback(false, results);
     });
 };
