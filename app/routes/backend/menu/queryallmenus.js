@@ -12,6 +12,31 @@ var url = require('url');
 //菜单业务逻辑组件
 var menuService = appRequire('service/backend/menu/menuservice');
 
+//获得树形Menu结构
+router.get('/',function (req,res) {
+    // res.json({ti : '获得树形Menu结构'});
+    var data = {};
+    menuService.queryAllMenusFormTree(data,function (err,results) {
+        if(err){
+            res.json({
+                code : 500,
+                isSuccess : false,
+                msg : '查询所有菜单失败'
+            });
+            return ;
+        }
+
+        res.json({
+            code : 200,
+            isSuccess : true,
+            data : {
+                Menu : results
+            },
+            msg : '读取所有菜单成功！'
+        });
+    });
+})
+
 router.post('/nolimit',function (req,res) {
 
     //没有查询条件，那就查询出所有

@@ -21,8 +21,7 @@ router.post('/',function (req,res) {
         "userID" : userID
     };
 
-    //判断userID是否存在
-    // .....
+
     menuService.queryMenuByUserID(uniqueData,function (err,results) {
         if(err){
             res.json({
