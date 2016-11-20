@@ -13,12 +13,35 @@ var url = require('url');
 var menuService = appRequire('service/backend/menu/menuservice');
 
 router.post('/',function (req,res) {
+
+    // 检查所需要的字段是否都存在
+    var data = ['ApplicationID','MenuID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
+    var err = 'require: ';
+    for (var value in data){
+        if(!(data[value] in req.body)){
+            err += data[value] + ' ';
+        }
+    }
+    //如果要求的字段不在req的参数中
+    if(err !== 'require: ') {
+        res.json({
+            code:400,
+            isSuccess: false,
+            msg: '存在未填写的必填字段',
+            errorMsg: err
+        });
+        return ;
+    }
+
     //接收前台数据
     var menuID = req.body.MenuID;
     var applicationID = req.body.ApplicationID;
     var menuLevel = req.body.MenuLevel;
     var parentID = req.body.ParentID;
+    var sortIndex = req.body.SortIndex;
     var menuName = req.body.MenuName;
+    var iconPath = req.body.IconPath;
+    var url = req.body.Url;
     var memo = req.body.Memo;
     var isActive = req.body.IsActive;
     var data = {
@@ -26,7 +49,10 @@ router.post('/',function (req,res) {
         "ApplicationID" : applicationID,
         "MenuLevel" : menuLevel,
         "ParentID" : parentID,
+        "SortIndex" : sortIndex,
         "MenuName" : menuName,
+        "IconPath" : iconPath,
+        "Url" : url,
         "Memo" : memo,
         "IsActive" : isActive
     };
@@ -36,22 +62,24 @@ router.post('/',function (req,res) {
         "MenuID" : menuID
     }
 
-    menuService.queryAllMenus(JudgeData,function (err,results) {
+    menuService.queryAllMenus(JudgeData,function (err,result) {
         if(err){
             res.json({
                 code : 500,
                 isSuccess : false,
+                updateResult: result,
                 msg : '查询失败，服务器出错'
             });
             return ;
         }
         // 所要修改的菜单存在
-        if(results !== undefined && results.length !== 0){
+        if(result !== undefined && result.length !== 0){
             menuService.menuUpdate(data,function (err,results) {
                 if(err){
                     res.json({
                         code :500,
                         isSuccess : false,
+                        updateResults:results,
                         msg : '修改菜单失败'
                     });
                     return ;
@@ -62,6 +90,7 @@ router.post('/',function (req,res) {
                     res.json({
                         code : 200,
                         isSuccess : true,
+                        updateResults : results,
                         msg : '菜单修改成功'
                     });
                 }
@@ -71,6 +100,7 @@ router.post('/',function (req,res) {
             res.json({
                 code :404,
                 isSuccess : false,
+                updateResult:result,
                 msg : '所要修改的菜单不存在'
             });
         }

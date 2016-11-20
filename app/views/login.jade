@@ -22,7 +22,7 @@ block content
       div.form-group   
         label Security code     
         input(type="text" class="form-control pin_code" name='code' ng-model="userdata.code" ng-minlength='4' ng-maxlength='4' placeholder="Enter code shown in image" required)
-        img(src='imgs/pin.png' )   
+        img(src='/generatecode?width=100&height=30&date='+new Date())   
         p.error(ng-if='(signUpForm.code.$error.minlength || signUpForm.code.$error.maxlength )&& signUpForm.code.$touched' ) 验证码输入4位
       div.form-group  
         input(type='checkbox')

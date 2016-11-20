@@ -61,7 +61,7 @@ describe("用户功能单元测试",function()
 			{
 				return done(err);
 			}
-			results.affectedRows.should.be.above(0).and.should.be.a.Number;
+			results.insertId.should.be.above(0).and.should.be.a.Number;
 			done();
 		});
 		
