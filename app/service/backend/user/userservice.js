@@ -8,6 +8,18 @@ var userDAL = appRequire('dal/backend/user/userdal');
 
 //查询目前所有用户
 exports.queryAllUsers = function(data, callback) {
+    var page='add: '
+    for(var key in data)
+    {
+        if(key=='page')
+        {
+            page+='exit ';
+        }
+    }
+    if(page=='add: ')
+    {
+        data['page']=1;
+    }
     userDAL.queryAllUsers(data, function(err, results) {
         if (err) {
             callback(true);
