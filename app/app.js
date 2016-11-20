@@ -5,13 +5,14 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var routes = appRequire('routes/routes');
 var apiAuth = appRequire('util/validauth');
 
 var app = express();
 //避免dot-hell
-global.appRequire = function(path) {
+global.appRequire = function (path) {
   return require(path.resolve(__dirname, path));
 }
 
@@ -33,10 +34,17 @@ app.use(bodyParser.urlencoded({
 }));
 //加载解析cookie的中间件
 app.use(cookieParser());
+//加载session
+app.use(session({
+  secret: '1320Jinkbebro',
+  name: 'JinKebro',
+  cookie: { maxAge: 60000 },
+  resave: false,
+  saveUninitialized: true,
+}));
 //静态文件目录设置,设置public文件夹为存放静态文件的目录
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.all('/*', function(req, res, next) {
+app.all('/*', function (req, res, next) {
   // CORS headers
   res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -56,7 +64,7 @@ app.all('/api/v1/*', [apiAuth]);
 routes(app);
 
 // 捕获404错误，并转发到错误处理器
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -64,7 +72,7 @@ app.use(function(req, res, next) {
 
 // 开发环境下的500错误处理器，将错误信息渲染error模版并显示到浏览器中
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -75,7 +83,7 @@ if (app.get('env') === 'development') {
 
 // 生产环境下的错误处理器，将错误信息渲染error模版并显示到浏览器中
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
@@ -83,7 +91,7 @@ app.use(function(err, req, res, next) {
   });
 });
 
-exports.logger = function(name) {
+exports.logger = function (name) {
   var logger = log4js.getLogger(name);
   logger.setLevel('INFO');
   return logger;
