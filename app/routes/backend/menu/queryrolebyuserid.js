@@ -13,16 +13,24 @@ var url = require('url');
 var menuService = appRequire('service/backend/menu/menuservice');
 
 
-router.post('/',function (req,res) {
+router.get('/',function (req,res) {
     //接收前台数据
     //数据库中的userID就是AccountID
-    var userID = req.body.userID;
+    var userID = req.query.userID;
+
+    if (userID === undefined) {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require userID'
+        })
+        return;
+    }
+
     var uniqueData = {
         "userID" : userID
     };
 
-    //判断userID是否存在
-    // .....
     menuService.queryRoleByUserID(uniqueData,function (err,results) {
         if(err){
             res.json({
@@ -37,12 +45,13 @@ router.post('/',function (req,res) {
                 code : 200,
                 isSuccess :true,
                 data : {
-                    Menu : results
+                    Role : results
                 },
                 msg : '查询菜单成功'
             });
         }
-    })
+    });
+
 
 });
 

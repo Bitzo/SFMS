@@ -12,9 +12,19 @@ var url = require('url');
 //菜单业务逻辑组件
 var menuService = appRequire('service/backend/menu/menuservice');
 
-router.post('/',function(req,res,next) {
+router.delete('/',function(req,res,next) {
     //MenuID是主键，只需要此属性就可准确删除，不必传入其他参数
     var menuID = req.body.MenuID;
+
+    if (menuID === undefined) {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require menuID'
+        })
+        return;
+    }
+
     var data = {
         "MenuID" : menuID
     };

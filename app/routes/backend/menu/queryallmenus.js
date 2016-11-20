@@ -15,7 +15,19 @@ var menuService = appRequire('service/backend/menu/menuservice');
 //获得树形Menu结构
 router.get('/',function (req,res) {
     // res.json({ti : '获得树形Menu结构'});
-    var data = {};
+    var userID = req.query.userID;
+    if (userID === undefined) {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require userID'
+        })
+        return;
+    }
+
+    var data = {
+        "userID":userID
+    };
     menuService.queryAllMenusFormTree(data,function (err,results) {
         if(err){
             res.json({
@@ -37,9 +49,7 @@ router.get('/',function (req,res) {
     });
 })
 
-router.post('/nolimit',function (req,res) {
-
-    //没有查询条件，那就查询出所有
+router.get('/nolimit',function (req,res) {
 
     data = {
 
@@ -68,21 +78,24 @@ router.post('/nolimit',function (req,res) {
 
 });
 
-router.post('/bymenuid',function (req,res) {
+router.get('/:bymenuid',function (req,res) {
 
-    var menuID = req.body.MenuID;
+    var menuID = req.query.MenuID;
+
+    if (menuID === undefined) {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require menuID'
+        })
+        return;
+    }
 
     var data = {
         "MenuID" : menuID
     };
 
 
-    // 如果没有查询条件，那就查询出所有
-    if(menuID === undefined){
-        data = {
-
-        };
-    }
     menuService.queryAllMenus(data,function (err,results) {
         if(err){
             res.json({
@@ -106,21 +119,24 @@ router.post('/bymenuid',function (req,res) {
 
 });
 
-router.post('/bymenulevel',function (req,res) {
+router.get('/:bymenulevel',function (req,res) {
 
-    var MenuLevel = req.body.MenuLevel;
+    var menuLevel = req.query.MenuLevel;
+
+    if (menuLevel === undefined) {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require MenuLevel'
+        })
+        return;
+    }
 
     var data = {
-        "MenuLevel" : MenuLevel
+        "MenuLevel" : menuLevel
     };
 
 
-    // 如果没有查询条件，那就查询出所有
-    if(MenuLevel === undefined){
-        data = {
-
-        };
-    }
     menuService.queryAllMenus(data,function (err,results) {
         if(err){
             res.json({
@@ -144,21 +160,24 @@ router.post('/bymenulevel',function (req,res) {
 
 });
 
-router.post('/byparentid',function (req,res) {
+router.get('/:byparentid',function (req,res) {
 
-    var ParentID = req.body.ParentID;
+    var parentID = req.query.ParentID;
+
+    if (parentID === undefined) {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require ParentID'
+        })
+        return;
+    }
 
     var data = {
         "ParentID" : ParentID
     };
 
 
-    // 如果没有查询条件，那就查询出所有
-    if(ParentID === undefined){
-        data = {
-
-        };
-    }
     menuService.queryAllMenus(data,function (err,results) {
         if(err){
             res.json({

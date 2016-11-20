@@ -38,6 +38,8 @@ router.post('/',function(req,res,next) {
 	var isActive = req.body.IsActive;
 
 
+
+
 	// 存放接收的数据
 	var data = {
 		"ApplicationID" : applicationID ,
@@ -50,6 +52,19 @@ router.post('/',function(req,res,next) {
 		"Memo" : memo,
 		"IsActive" : isActive
 	};
+
+	var requiredvalue = '缺少输入参数：';
+	for(var key in data){
+		if(data[key].length == 0){
+			requiredvalue += key + ' ';
+			res.json({
+				code :300,
+				isSuccess : false,
+				errMsg : requiredvalue
+			})
+		}
+	}
+
 	//执行插入操作
 	menuService.menuInsert(data,function (err,result) {
 		if(err){
@@ -62,7 +77,6 @@ router.post('/',function(req,res,next) {
 			return ;
 		}
 
-		//console.log(result);
 
 		if(result !== undefined && result.affectedRows === 1){
 			res.json({
