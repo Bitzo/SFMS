@@ -2,8 +2,9 @@ var express = require('express');
 var router = express.Router();
 //log4js日志中间件
 var logger = appRequire("util/loghelper").helper;
-
+//角色模块路由
 var roleroute = appRequire('routes/backend/role/roleroute');
+//角色功能点路由
 var rolefuncroute = appRequire('routes/backend/role/rolefuncroute');
 var user = appRequire('routes/backend/user/userroute')
 var funcroute = appRequire('routes/backend/function/functionroute');

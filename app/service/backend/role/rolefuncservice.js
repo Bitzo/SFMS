@@ -8,7 +8,7 @@
 
 var rolefuncDAL = appRequire('dal/backend/role/rolefuncdal.js');
 
-//查询所有的角色
+//查询所有的角色功能点
 exports.queryRoleFunc = function (data, callback) {
     rolefuncDAL.queryRoleFunc(data, function (err, results) {
         if (err) {
@@ -16,6 +16,7 @@ exports.queryRoleFunc = function (data, callback) {
             return;
         }
         console.log('queryRoleFunc');
+        console.log(results);
         callback(false, results);
     })
 }
@@ -95,5 +96,20 @@ exports.updateRoleFunc = function (data, callback) {
             console.log('addRoleFunc');
             callback(false, results);
         })
+    })
+}
+
+exports.delRoleFunc = function (data, callback) {
+    var delData = {
+        'RoleID': data['RoleID']
+    };
+
+    rolefuncDAL.delRoleFunc(delData, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        console.log("已删除该用户所有的功能点");
+        callback(false, results);
     })
 }

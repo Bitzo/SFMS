@@ -15,7 +15,7 @@ exports.queryRoleFunc = function (data, callback) {
 
     if (data !==undefined) {
         for (var key in data) {
-            sql += ' and ' + key + " = '" + data[key] + "' ";
+            sql += ' and RoleID' + " = '" + data['RoleID'] + "' ";
         }
     }
 
@@ -44,7 +44,7 @@ exports.addRoleFunc = function (data, callback) {
     var sql = '';
 
     var roleID = data.RoleID;
-    var funcID = data.FunctionID;
+    var funcID = data.data;
 
     for (var key in funcID) {
         sql += "( " + roleID + ", " + funcID[key].FunctionID + ")";
