@@ -2,13 +2,13 @@
  * @Author: Duncan
  * @Date: 2016/11/15 19:04
  * @Last Modified by: Duncan
- * @Last Modified time: 2016/11/19 19:04
- * @Function: 用户信息的插入,用户信息的查询，用户信息的更改
+ * @Last Modified time: 2016/11/20 15:04
+ * @Function: 用户信息的插入,用户信息的查询，用户信息的更改,信息存入日志
  */
 var express=require('express');
 var router=express.Router();
 var url=require('url');
-
+var logger=appRequire('util/loghelper').helper;
 //加载中间件
 var user=appRequire('service/backend/user/userservice');
 var config=appRequire('config/config');
@@ -26,9 +26,7 @@ router.post('/',function(req,res)
 			{
 				///if(data[value]!='Email'&&data[value]!='Address')
 				err+=data[value]+' ';//检查post传输的数据
-			}
-
-			
+			}	
 		}
 
 		if(err!='require: ')
@@ -38,6 +36,7 @@ router.post('/',function(req,res)
 				isSuccess:false,
 				msg:err
 			});
+			logger.writeError("缺少key值");
 			return;
 		}
 
@@ -70,7 +69,7 @@ router.post('/',function(req,res)
 			
 		}	
 	
-		//console.log(typeof(data[ApplicationID]));
+		
 		var requireValue='缺少值：';
 		
 		for(var value in data)
@@ -90,6 +89,7 @@ router.post('/',function(req,res)
 					isSuccess:false,
 					msg:requireValue
 				});
+			logger.writeError(requireValue);
 				return;
 			}
 			//去除相同的账户名字
@@ -103,6 +103,7 @@ router.post('/',function(req,res)
 						isSuccess:false,
 						msg:"查询账户失败"
 					})
+					logger.writeError("查询账户失败");
 					return ;
 				}
 				if(result!=undefined&&result!=0)
@@ -112,6 +113,7 @@ router.post('/',function(req,res)
 						isSuccess:false,
 						msg:"账户名已存在"
 					})
+					logger.writeError("账户名已存在");
 					return ;
 				}
 
@@ -161,23 +163,31 @@ router.post('/',function(req,res)
 			}
 
 
-		user.insert(data,function(err)
+		user.insert(data,function(err,results)
 		{
+			//console.log(results);
 			if(err)
 			{
 				res.json({
 					code:500,
 					isSuccess:false,
+					//result:results,
 					msg:'插入失败'
 				});
+				logger.writeError("插入失败");
+				
 				return ;
-			}else
+			}
+			if(result.insertId!=0)
 			{
 				res.json({
 					code:200,
 					isSuccess:true,
+					//result:results,
 					msg:'插入成功'
 				});
+				logger.writeInfo("插入成功");
+				return ;
 			}
 
 
@@ -186,6 +196,9 @@ router.post('/',function(req,res)
 	});
 });
 router.get('/', function(req, res) {
+
+	logger.writeInfo("查询用户的记录");
+	//console.log(111);
 	var data={};
 	var allCount;
 	var page=req.query.page;//页数
@@ -200,6 +213,7 @@ router.get('/', function(req, res) {
     var editUserID=req.query.EditUserID;
     var isActive=req.query.IsActive;
     var address=req.query.Address;
+ 
     if(page==undefined||page.length==0)
     {
     	page=1;
@@ -268,12 +282,12 @@ router.get('/', function(req, res) {
 				isSuccess:false,
 				msg:"获取数量失败"
 			})
+			logger.writeError("数量获取失败");
 			return ;
 		}
 		if(result!==undefined&&result.length!=0)
 		{
 		allCount=result[0]['num'];
-		console.log(allCount);
 		}
 		else
 		{
@@ -282,6 +296,7 @@ router.get('/', function(req, res) {
                 isSuccess: false,
                 msg: "未查询到相关信息"
             });
+            logger.writeError("为查询到相关的信息");
             return ;
 		}
 	});
@@ -292,6 +307,7 @@ router.get('/', function(req, res) {
             	isSuccess:true,
                 msg: '查询失败'
             });
+            logger.writeError("查询失败");
             return;
         }
         
@@ -316,7 +332,9 @@ router.get('/', function(req, res) {
     			isSuccess:false,
     			msg:"未查到数据"
     		})
+    		logger.writeWarn("未查到数据");
     	}
+    	return ;
     });
 });
 
@@ -342,6 +360,7 @@ router.put('/',function(req,res){
 				isSuccess:false,
 				msg:err
 			});
+			logger.writeError(err);
 			return;
 		}
 
@@ -396,6 +415,8 @@ router.put('/',function(req,res){
 					isSuccess:false,
 					msg:requireValue
 				});
+
+			logger.writeError(requireValue);
 				return;
 			}
 			
@@ -454,6 +475,7 @@ router.put('/',function(req,res){
 						isSuccess:false,
 						msg:'修改信息失败，服务器出错'
 					});
+					logger.writeError("修改信息失败，服务器出错");
 				return ;
 			}	
 			if(results!==undefined&&results.affectedRows!=0)
@@ -463,6 +485,7 @@ router.put('/',function(req,res){
 					isSuccess:true,
 					msg:"修改信息成功"
 				})
+				logger.writeInfo("修改信息成功");
 				return ;
 			}else
 			{
@@ -471,6 +494,7 @@ router.put('/',function(req,res){
 				isSuccess:false,
 				msg:"修改信息失败"
 				})
+				logger.writeError("修改信息失败");
 				return ;
 			}
 		})

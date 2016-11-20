@@ -19,12 +19,12 @@ exports.queryAllUsers = function(data, callback) {
 
 //新增用户
 exports.insert = function(data, callback) {
-    userDAL.insert(data, function(err) {
+    userDAL.insert(data, function(err,results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false);
+        callback(false,results);
     });
 };
 
