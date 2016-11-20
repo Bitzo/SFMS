@@ -55,7 +55,7 @@ describe("用户功能单元测试",function()
 	{
 		var selectData={
 			'AccountID':insertUserID,
-			'page':1
+	
 		}
 		
 		userService.queryAllUsers(selectData,function(err,results)

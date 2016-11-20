@@ -7,6 +7,7 @@
  */
 
 var roleDAL = appRequire('dal/backend/role/roledal.js');
+var logger = appRequire("util/loghelper").helper;
 
 //查询所有的角色
 exports.queryAllRoles = function (data, callback) {
@@ -16,7 +17,7 @@ exports.queryAllRoles = function (data, callback) {
             callback(true);
             return;
         }
-        console.log('queryAllRoles');
+        logger.writeInfo('queryAllRoles');
         callback(false, results);
     })
 }
@@ -28,7 +29,7 @@ exports.countAllRoles = function (data, callback) {
             callback(true);
             return;
         }
-        console.log('countAllRoles');
+        logger.writeInfo('countAllRoles');
         callback(false, results);
     })
 }
@@ -57,7 +58,7 @@ exports.addRole = function (data, callback) {
             callback(true);
             return;
         }
-        console.log('addRole');
+        logger.writeInfo('addRole');
         callback(false, results);
     })
 }
@@ -69,7 +70,7 @@ exports.updateRole = function (data, callback) {
             callback(true);
             return;
         }
-        console.log("updateRole");
+        logger.writeInfo("updateRole");
         callback(false, results);
     })
 }

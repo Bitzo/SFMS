@@ -8,6 +8,7 @@
 
 var db_backend = appRequire('db/db_backend');
 var roleFunctionModel = appRequire('model/backend/role/rolefunctionmodel');
+var logger = appRequire("util/loghelper").helper;
 
 //查询角色功能点
 exports.queryRoleFunc = function (data, callback) {
@@ -19,7 +20,7 @@ exports.queryRoleFunc = function (data, callback) {
         }
     }
 
-    console.log("查询角色功能点：" + sql);
+    logger.writeInfo("查询角色功能点：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -53,7 +54,7 @@ exports.addRoleFunc = function (data, callback) {
 
     insert_sql += sql;
 
-    console.log("新增角色功能点：" + insert_sql);
+    logger.writeInfo("新增角色功能点：" + insert_sql);
 
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -88,7 +89,7 @@ exports.updateRoleFunc = function(data, callback) {
     upd_sql += sql;
     upd_sql += " where " + roleFunctionModel.PK + " = " + data[roleFunctionModel.PK];
 
-    console.log("更新角色功能点: " + upd_sql);
+    logger.writeInfo("更新角色功能点: " + upd_sql);
 
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -116,7 +117,7 @@ exports.delRoleFunc = function (data, callback) {
         sql += 'and RoleID = ' + data['RoleID'];
     }
 
-    console.log("删除角色功能点：" + sql);
+    logger.writeInfo("删除角色功能点：" + sql);
 
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {

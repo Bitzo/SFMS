@@ -11,6 +11,8 @@ var router = express.Router();
 
 var rolefuncservice = appRequire('service/backend/role/rolefuncservice');
 
+var logger = appRequire("util/loghelper").helper;
+
 //角色功能查询
 router.get('/:roleID',function (req, res) {
     var roleID = req.params.roleID;
@@ -67,7 +69,7 @@ router.post('/', function (req, res) {
     {
         if((!(data[value] in req.body.data[0]))&&(!(data[value] in req.body)))
         {
-            console.log("require " + data[value]);
+            logger.writeError("require " + data[value]);
             err += data[value] + ' ';
         }
     }
@@ -91,7 +93,7 @@ router.post('/', function (req, res) {
     }
 
     rolefuncservice.addRoleFunc(data, function (err, results) {
-        console.log(results);
+        logger.writeInfo(results);
         if (err) {
             res.json({
                 code: 500,
@@ -126,7 +128,7 @@ router.put('/',function (req, res) {
     {
         if((!(data[value] in req.body.data[0]))&&(!(data[value] in req.body)))
         {
-            console.log("require " + data[value]);
+            logger.writeError("require " + data[value]);
             err += data[value] + ' ';
         }
     }
