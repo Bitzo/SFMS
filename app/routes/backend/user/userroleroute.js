@@ -9,6 +9,7 @@
  var express=require('express');
  var url=require('url');
  var router=express.Router();
+ var logger=appRequire('util/loghelper').helper;
  var userRole=appRequire('service/backend/user/userroleservice');
  	
  	router.post('/',function(req,res)
@@ -31,6 +32,7 @@
  					isSuccess:false,
  					msg:err
  				});
+ 				logger.writeError(err);
  				return ;
  			}
 
@@ -62,9 +64,10 @@
 					isSuccess:false,
 					msg:requireValue
 				});
+				logger.writeError(requireValue);
 				return;
 			}
- 			userrole.insert(data,function(err)
+ 			userrole.insert(data,function(err,results)
  				{
  					if(err)
  					{
@@ -73,9 +76,10 @@
  							isSuccess:false,
  							msg:'插入失败'
  						});
+ 						logger.writeError("插入失败");
  						return ;
  					}
- 					else
+ 					if(results.insertId!=0)
  					{
  						res.json({
  							code:200,
@@ -107,6 +111,7 @@ router.put('/',function(req,res)
 			isSuccess:false,
 			msg:err
 		});
+		logger.writeError(err);
 		return ;
 	}
 
@@ -130,6 +135,7 @@ router.put('/',function(req,res)
 				isSuccess:false,
 				msg:'修改信息失败，服务器出错'
 			});
+			logger.writeError("修改信息失败，服务器出错");
 			return ;
 		}
 		if(results!==undefined&&results.affectedRows!=0)
@@ -146,7 +152,8 @@ router.put('/',function(req,res)
 				code:400,
 				isSuccess:false,
 				msg:"修改信息失败"
-			})
+			});
+			logger.writeError("修改信息失败");
 			return ;
 		}
 	})

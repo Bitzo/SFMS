@@ -33,6 +33,7 @@ var config = {
         user: 'root',
         password: 'woainiscq1314?',
         database: 'jit_backend',
+        
         connectionLimit: 100,
         supportBigNumbers: true,
 

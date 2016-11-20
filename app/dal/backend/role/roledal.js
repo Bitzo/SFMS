@@ -9,6 +9,7 @@
 var db_backend = appRequire('db/db_backend');
 var roleModel = appRequire('model/backend/role/rolemodel');
 var config = appRequire('config/config');
+var logger = appRequire("util/loghelper").helper;
 
 //查询所有角色信息
 exports.queryAllRoles = function (data, callback) {
@@ -26,7 +27,7 @@ exports.queryAllRoles = function (data, callback) {
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
-    console.log("查询角色信息：" + sql);
+    logger.writeInfo("查询角色信息：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -34,14 +35,14 @@ exports.queryAllRoles = function (data, callback) {
             return;
         }
 
-        console.log("连接成功");
+        logger.writeInfo("连接成功");
 
         connection.query(sql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
             };
-            console.log("查询成功");
+            logger.writeInfo("查询成功");
             callback(false, results);
             connection.release();
         })
@@ -66,15 +67,15 @@ exports.countAllRoles = function (data, callback) {
             return;
         }
 
-        console.log("连接成功");
-        console.log(sql);
+        logger.writeInfo("连接成功");
+        logger.writeInfo(sql);
 
         connection.query(sql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
             };
-            console.log("查询成功");
+            logger.writeInfo("查询成功");
             callback(false, results);
             connection.release();
         })
@@ -99,7 +100,7 @@ exports.addRole = function (data, callback) {
 
     insert_sql += sql;
 
-    console.log("新增角色: " + insert_sql);
+    logger.writeInfo("新增角色: " + insert_sql);
 
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -138,7 +139,7 @@ exports.updateRole = function (data, callback) {
 
     sql += update_sql;
 
-    console.log("修改角色: " + sql);
+    logger.writeInfo("修改角色: " + sql);
 
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {

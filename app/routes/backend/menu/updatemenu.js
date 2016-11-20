@@ -12,7 +12,7 @@ var url = require('url');
 //菜单业务逻辑组件
 var menuService = appRequire('service/backend/menu/menuservice');
 
-router.post('/',function (req,res) {
+router.put('/',function (req,res) {
 
     // 检查所需要的字段是否都存在
     var data = ['ApplicationID','MenuID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
@@ -56,6 +56,19 @@ router.post('/',function (req,res) {
         "Memo" : memo,
         "IsActive" : isActive
     };
+
+
+    var requiredvalue = '缺少输入的修改参数：';
+    for(var key in data){
+        if(data[key].length == 0){
+            requiredvalue += key + ' ';
+            res.json({
+                code :300,
+                isSuccess : false,
+                errMsg : requiredvalue
+            })
+        }
+    }
 
     // 修改MenuID之前，先判断是否存在这个MenuID,MenuID不可以更改
     var JudgeData = {

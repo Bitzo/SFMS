@@ -7,10 +7,12 @@ var roleroute = appRequire('routes/backend/role/roleroute');
 //角色功能点路由
 var rolefuncroute = appRequire('routes/backend/role/rolefuncroute');
 
+//用户的添加以及修改的路由
 
 var user = appRequire('routes/backend/user/userroute')
 //功能点
 var funcroute = appRequire('routes/backend/function/functionroute');
+//用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
 //菜单新增
 var addMenu = appRequire('routes/backend/menu/addmenu');

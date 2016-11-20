@@ -8,7 +8,7 @@
 
 var db_backend = appRequire('db/db_backend');
 var menuModel = appRequire('model/backend/menu/menumodel');
-
+var logger = appRequire('util/loghelper').helper;
 
 //查询目前所有菜单，提供所有菜单的信息，菜单属性展示
 exports.queryAllMenus = function(data, callback) {
@@ -24,10 +24,10 @@ exports.queryAllMenus = function(data, callback) {
 
         }
     }
-    console.log("【DAL】查询所有菜单：" + sql);
+    logger.writeInfo("【DAL】查询所有菜单：" + sql);
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            console.log("数据库连接错误：" + err);
+            logger.writeError("【DAL】数据库连接错误：" + err);
             callback(true);
             return;
         }
@@ -45,27 +45,29 @@ exports.queryAllMenus = function(data, callback) {
 
 //菜单新增
 exports.menuInsert = function (data,callback) {
-    var arr = new Array();
-    arr[0] = 'insert into jit_menu set ApplicationID = ?,' ;
-    arr[1] = ' MenuLevel = ?, ';
-    arr[2] = ' ParentID = ? , ';
-    arr[3] = ' SortIndex =? ,';
-    arr[4] = ' MenuName = ? , ';
-    arr[5] = ' IconPath = ? ,' ;
-    arr[6] = ' Url = ?,' ;
-    arr[7] = ' Memo = ? ,' ;
-    arr[8] = ' IsActive = ?';
-    var sql = arr.join(' ');
+    var insert_sql = 'insert into jit_menu set ';
+    var sql = '';
+    if(data !== undefined){
+        for(var key in data){
+            if(sql.length == 0){
+                sql += " " + key + " = '" + data[key] + "' " ;
+            }else{
+                sql += ", " + key + " = '" + data[key] + "' " ;
+            }
+        }
+    }
 
-    var value = [data.ApplicationID,data.MenuLevel,data.ParentID,data.SortIndex,data.MenuName,data.IconPath,data.Url,data.Memo,data.IsActive];
+    insert_sql += sql;
+
+    logger.writeInfo("menu insert_sql : " +insert_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            console.log("数据库连接错误：" + err);
+            logger.writeError("【DAL】数据库连接错误：" + err);
             callback(true);
             return;
         }
-        connection.query(sql, value, function(err, result) {
+        connection.query(insert_sql, function(err, result) {
             if (err) {
                 throw err;
                 callback(true);
@@ -81,19 +83,33 @@ exports.menuInsert = function (data,callback) {
 
 //菜单编辑，即修改菜单
 exports.menuUpdate = function(data, callback) {
-    var sql = 'update jit_menu set ApplicationID = ? , MenuLevel = ?, ParentID = ?, MenuName = ?,Memo =?, IsActive=? where MenuID = ? ';
+    var update_sql = 'update jit_menu set ';
+    var sql = '';
+    if(data !== undefined){
+        for(var key in data){
+            if(key != 'MenuID'){
+                if(sql.length == 0){
+                    sql += " " + key + " = '" + data[key] + "' " ;
+                }else{
+                    sql += ", " + key + " = '" + data[key] + "' " ;
+                }
+            }
+        }
+    }
+    sql += " where MenuID = " + data['MenuID'];
 
-    var value = [data.ApplicationID,data.MenuLevel,data.ParentID,data.MenuName,data.Memo,data.IsActive,data.MenuID];
+    update_sql = update_sql + sql;
+
+    logger.writeInfo("update_sql:" + update_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err) {
-            console.log("数据库连接错误：" + err);
+            logger.writeError("【DAL】数据库连接错误：" + err);
             callback(true);
             return;
         }
 
-
-        connection.query(sql, value, function(err, results) {
+        connection.query(update_sql, function(err, results) {
             if (err) {
                 throw err;
                 callback(true);
@@ -110,16 +126,19 @@ exports.menuUpdate = function(data, callback) {
 
 //菜单删除
 exports.menuDelete = function (data, callback) {
-    var sql = 'delete from jit_menu where 1=1 and MenuID = ?';
-    var value = [data.MenuID];
+    var sql = 'delete from jit_menu where 1=1 and MenuID = ';
+    sql = sql + data.MenuID;
+
+    logger.writeInfo("菜单删除的sql:" + sql);
+
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            console.log("数据库连接错误：" + err);
+            logger.writeError("【DAL】数据库连接错误：" + err);
             callback(true);
             return ;
         }
 
-        connection.query(sql, value, function(err, results) {
+        connection.query(sql, function(err, results) {
             if (err) {
                 throw err;
                 callback(true);
@@ -140,19 +159,21 @@ exports.queryRoleByUserID = function (data,callback) {
     arr[0] = ' select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleName,jit_roleuser.AccountID ';
     arr[1] = ' from jit_role ';
     arr[2] = ' left join jit_roleuser on  jit_role.RoleID = jit_roleuser.RoleID';
-    arr[3] = '  where jit_roleuser.AccountID = ? ';
+    arr[3] = '  where jit_roleuser.AccountID = ';
 
     var sql = arr.join(' ');
-    var value = [data.userID];
+    sql = sql + data.userID;
+
+    logger.writeInfo("UserID查询角色的sql: " + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            console.log("数据库连接错误：" + err);
+            logger.writeError("【DAL】数据库连接错误：" + err);
             callback(true);
             return;
         }
 
-        connection.query(sql,value,function (err, results) {
+        connection.query(sql,function (err, results) {
             if(err){
                 throw err;
                 callback(true);
@@ -168,30 +189,32 @@ exports.queryRoleByUserID = function (data,callback) {
 //根据UserID,获取用户相应地菜单
 exports.queryMenuByUserID = function (data,callback) {
     var arr = new Array();
-    arr[0] = ' select  jit_menu.MenuID,jit_menu.MenuName,jit_usermenu.userID  ';
+    arr[0] = ' select  * ';
     arr[1] = ' from jit_menu ';
     arr[2] = ' left join jit_usermenu on jit_menu.MenuID = jit_usermenu.menuID ';
-    arr[3] = ' where jit_usermenu.userID = ? ';
+    arr[3] = ' where jit_usermenu.userID =  ';
 
     var sql = arr.join(' ');
-    var value = [data.userID];
+    sql = sql + data.userID;
+
+    logger.writeInfo("UserID查询菜单的sql: " + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            console.log("数据库连接错误：" + err);
+            logger.writeError("【DAL】数据库连接错误：" + err);
             callback(true);
             return;
         }
 
-        connection.query(sql, value, function(err, results) {
+        connection.query(sql, function(err, results) {
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
-            console.log("sql: " + sql);
+
             callback(false,results);
             connection.release();
-        })
-    })
+        });
+    });
 }

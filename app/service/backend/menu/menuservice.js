@@ -6,9 +6,10 @@
  * @Function:queryAllMenus()查询所有的菜单，菜单新增，菜单修改，菜单删除
  */
 var menuDAl = appRequire('dal/backend/menu/menudal');
+var logger = appRequire('util/loghelper').helper;
 
 exports.queryAllMenusFormTree = function(data, callback){
-    menuDAl.queryAllMenus(data,function (err,results) {
+    menuDAl.queryMenuByUserID(data,function (err,results) {
         if(err){
             callback(true);
             return ;
@@ -35,11 +36,13 @@ exports.queryAllMenusFormTree = function(data, callback){
         }
 
         console.log('queryAllMenusFormTree func in service');
+        logger.writeInfo('queryAllMenusFormTree func in service');
         //返回菜单树形JSON
         callback(false,tree);
     });
 };
 
+//查询所有菜单，平面展示
 exports.queryAllMenus = function(data, callback){
     menuDAl.queryAllMenus(data,function (err,results) {
         if(err){
@@ -47,6 +50,7 @@ exports.queryAllMenus = function(data, callback){
             return ;
         }
         console.log('queryAllMenus func in service');
+        logger.writeInfo('queryAllMenus func in service');
         callback(false,results);
     });
 };
@@ -56,8 +60,8 @@ exports.menuInsert = function (data,callback) {
 
     function checkData(data) {
         for(var key in data){
-            if(data[key] === undefined || data[key] === null){
-                console.log("【service】传入的值存在空值");
+            if(data[key] === undefined){
+                console.log("【service】menu insert 传入的值存在空值");
                 return false;
             }
         }
@@ -73,7 +77,8 @@ exports.menuInsert = function (data,callback) {
             callback(true);
             return ;
         }
-        console.log('menuInsert func in service');
+        logger.writeInfo('menuInsert func in service');
+        logger.writeInfo('menuInsert func in service');
         callback(false,results);
     });
 }
@@ -83,8 +88,8 @@ exports.menuUpdate = function (data,callback) {
 
     function checkData(data) {
         for(var key in data){
-            if(data[key] === undefined || data[key] === null){
-                console.log("【service】传入的值存在空值");
+            if(data[key] === undefined){
+                console.log("【service】menuupdate func 传入的值存在空值");
                 console.log(data[key]);
                 return false;
             }
@@ -103,6 +108,7 @@ exports.menuUpdate = function (data,callback) {
             return ;
         }
         console.log('menuUpdate func in service');
+        logger.writeInfo('menuUpdate func in service');
         callback(false,results);
     })
 }
@@ -115,6 +121,7 @@ exports.menuDelete = function (data,callback) {
             return ;
         }
         console.log('menuDelete func in service');
+        logger.writeInfo('menuDelete func in service');
         callback(false,results);
     })
 }
@@ -128,6 +135,7 @@ exports.queryMenuByUserID = function (data,callback) {
             return ;
         }
         console.log('queryMenuByUserID func in service');
+        logger.writeInfo('queryMenuByUserID func in service');
         callback(false,results);
     });
 
@@ -141,6 +149,7 @@ exports.queryRoleByUserID = function (data,callback) {
             return ;
         }
         console.log('queryRoleByUserID func in service');
+        logger.writeInfo('queryRoleByUserID func in service');
         callback(false,results);
 
     })
