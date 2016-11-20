@@ -20,7 +20,7 @@ var data={
 	'CreateUserID':1,
 	'IsActive':1
 }
-insertUserID=-1;
+var insertUserID=-1;
 
 describe("用户功能单元测试",function()
 {
@@ -55,7 +55,7 @@ describe("用户功能单元测试",function()
 	{
 		var selectData={
 			'AccountID':insertUserID,
-	
+			
 		}
 		
 		userService.queryAllUsers(selectData,function(err,results)
