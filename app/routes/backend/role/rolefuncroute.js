@@ -141,12 +141,12 @@ router.put('/',function (req, res) {
         return;
     };
 
-    var RoleID = req.body.RoleID;
-    var FunctionID = req.body.data;
+    var roleID = req.body.RoleID;
+    var functionData = req.body.data;
 
     var data = {
-        'RoleID': RoleID,
-        'FunctionID': FunctionID
+        'RoleID': roleID,
+        'data': functionData
     };
 
     rolefuncservice.updateRoleFunc(data, function (err, results) {
@@ -179,16 +179,18 @@ router.put('/',function (req, res) {
 
 //角色功能点删除
 router.delete('/', function (req, res) {
-    if (!"ID" in req.body) {
+    if (req.body.RoleID === undefined) {
         res.json({
             code: 400,
             isSuccess: false,
-            msg: "require ID"
+            msg: "require RoleID"
         })
         return;
     }
 
-    var data = req.body.data;
+    var data = {
+        "RoleID": req.body.RoleID
+    };
 
     rolefuncservice.delRoleFunc(data, function (err, results) {
         if (err) {
@@ -199,7 +201,6 @@ router.delete('/', function (req, res) {
             })
             return;
         }
-
         if (results !== undefined && results.affectedRows != 0) {
             res.json({
                 code: 200,

@@ -5,7 +5,7 @@ var router = express.Router();
 
 
 router.get('/', function(req, res, next) {
-        res.render('index\\index', { title: 'Hi index' });
+        res.render('backend\\index', { title: 'Hi ijjjex' });
 });
 
 module.exports = router;

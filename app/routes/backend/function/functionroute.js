@@ -3,21 +3,22 @@
  * @Date:   2016-11-13 20:42:38
  * @Last Modified by:   luozQ
  * @Last Modified time: 2016-11-14 20:41
+ * @Function 功能点管理
  */
 
 var express = require('express');
 var router = express.Router();
 
-var functionservice = appRequire('service/backend/function/functionserver');
+var functionservice = appRequire('service/backend/function/functionservice');
 
+//得到所有树形功能点
 router.get('/', function(req, res) {
     var appID = req.query.appID || 1;
 
     var data = {
-        'appID': appID,
+        'ApplicationID': appID,
     };
 
-    //查询所需的详细数据
     functionservice.queryAllFunctions(data, function(err, results) {
         if (err) {
             res.json({
@@ -46,6 +47,7 @@ router.get('/', function(req, res) {
     });
 
 });
+
 //功能点的新增
 router.post('/insert', function(req, res) {
 
@@ -179,6 +181,7 @@ router.post('/update', function(req, res) {
 
 });
 
+//功能点的删除
 router.post('/delete', function(req, res) {
     var FunctionID = req.body.FunctionID;
     console.log(FunctionID)
@@ -218,7 +221,7 @@ router.post('/delete', function(req, res) {
             res.json({
                 code: 404,
                 isSuccess: false,
-                msg: '地址出错'
+                msg: '删除失败！请刷新！'
             })
         }
     })

@@ -1,34 +1,36 @@
 extends shared/layout
 block content
-  div.navbar
-    ul.nav.navbar-nav
-      li
-        img(src='imgs/logo_school.png')
-      li 
-        h3  <strong>实验室管理系统</strong>
- 
-  div.container.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
-    
-    h2.form-signin-heading 用户登录 
-    form.form-signin(name='signUpForm' ng-controller="formController" ng-submit="submitForm()") 
-      div.form-group 
-        label Username
-        input(type="text" name='username' class="form-control" placeholder="Enter Username" ng-minlength='4' ng-model="userdata.username" required autofocus)
-        p.error(ng-if='signUpForm.username.$touched && signUpForm.username.$error.minlength' ) 用户名至少4位
-      div.form-group        
-        label Password
-        input(type="password" name='password' class="form-control" placeholder="Password" ng-minlength='6' ng-maxlength='12' ng-model="userdata.password" required)
-        p.error(ng-if='(signUpForm.password.$error.minlength || signUpForm.password.$error.maxlength )&& signUpForm.password.$touched') 密码输入6-12位
-      div.form-group   
-        label Security code     
-        input(type="text" class="form-control pin_code" name='code' ng-model="userdata.code" ng-minlength='4' ng-maxlength='4' placeholder="Enter code shown in image" required)
-        img(src='imgs/pin.png' )   
-        p.error(ng-if='(signUpForm.code.$error.minlength || signUpForm.code.$error.maxlength )&& signUpForm.code.$touched' ) 验证码输入4位
-      div.form-group  
-        input(type='checkbox')
-        span  Remember me   
-        button.btn.btn-lg.btn-primary.pull-right(type="submit" ng-click="submit(userdata)") sign in
- 
+  div.login
+    div.navbar
+      ul.nav.navbar-nav
+        li
+          img(src='imgs/logo_school.png')
+        li 
+          h3  <strong>实验室管理系统</strong>
 
 
-   include shared/footer.jade
+    div.container.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
+      
+      h2.form-signin-heading 用户登录 
+      form.form-signin(name='signUpForm' ng-controller="formController" ng-submit="submitForm()") 
+        div.form-group 
+          label Username
+          input(type="text" name='username' class="form-control" placeholder="Enter Username" ng-minlength='4' ng-model="userdata.username" required autofocus)
+          p.error(ng-if='signUpForm.username.$touched && signUpForm.username.$error.minlength' ) 用户名至少4位
+        div.form-group        
+          label Password
+          input(type="password" name='password' class="form-control" placeholder="Password" ng-minlength='6' ng-maxlength='12' ng-model="userdata.password" required)
+          p.error(ng-if='(signUpForm.password.$error.minlength || signUpForm.password.$error.maxlength )&& signUpForm.password.$touched') 密码输入6-12位
+        div.form-group( ng-init="codeSrc = '/generatecode'")  
+          label Security code     
+          input(type="text" class="form-control pin_code" name='code' ng-model="userdata.code" ng-minlength='4' ng-maxlength='4' placeholder="Enter code shown in image" required)
+          img(ng-src="{{codeSrc}}" ng-click = 'changeCode()')
+          p.error(ng-if='(signUpForm.code.$error.minlength || signUpForm.code.$error.maxlength )&& signUpForm.code.$touched' ) 验证码输入4位
+        div.form-group 
+          input(type='checkbox')
+          span  Remember me   
+          button.btn.btn-lg.btn-primary.pull-right(type="submit" ng-click="submit(userdata)") sign in
+
+
+
+    include shared/footer.jade

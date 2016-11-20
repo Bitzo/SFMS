@@ -5,7 +5,7 @@ var router = express.Router();
 
 
 router.get('/', function(req, res, next) {
-        res.render('app', { title: 'Hi sfms' });
+        res.render(' ', { title: 'Hi sfms' });
 
 });
 
