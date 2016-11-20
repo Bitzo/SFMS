@@ -1,8 +1,9 @@
 .login{
   padding: 20px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-image: url(../../imgs/bg.jpg);
+  background-image: url(../../imgs/bg5.jpg);
   background-size: 100%;
+  min-height: 635px;
   background-repeat: repeat-y;
 }
 .login a {
@@ -36,7 +37,7 @@
   top: 5px;
   margin: 0px auto;
   padding: 50px 50px 40px 50px;
-  background-color: rgba(245, 245, 245, 0.5);
+  background-color: rgba(245, 245, 245, 0.1);
   border-radius: 10px;
   box-shadow:  #ccc 5px 5px 25px;
 }
@@ -57,7 +58,10 @@
 }
 .login form  img{
   position: relative;
-  left: 15px;
+  width: 75px;
+  height: 30px; 
+  left: 10px;
+  background-color: #ccc;
 }
 .login form button{
   position:relative;

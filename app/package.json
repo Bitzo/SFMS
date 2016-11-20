@@ -29,9 +29,17 @@
     "mocha": "*",
     "should": "*",
     "jwt-simple": "^0.2.0",
+
+    "superagent": "*",
+    "supertest": "*"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.2",
+
     "superagent":"*",
     "supertest":"*",
     "captchapng":"0.0.1",
     "log4js":"1.0.1"
+
   }
 }
