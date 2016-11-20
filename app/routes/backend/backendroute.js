@@ -5,8 +5,10 @@ var logger = appRequire("util/loghelper").helper;
 
 var roleroute = appRequire('routes/backend/role/roleroute');
 var rolefuncroute = appRequire('routes/backend/role/rolefuncroute');
-var user = appRequire('routes/backend/user/userroute')
+//用户的添加以及修改的路由
+var user1 = appRequire('routes/backend/user/userroute')
 var funcroute = appRequire('routes/backend/function/functionroute');
+//用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
 var addMenu = appRequire('routes/backend/menu/addmenu');
 var queryAllMenus = appRequire('routes/backend/menu/queryallmenus');
@@ -87,7 +89,7 @@ router.use('/queryrolebyuserid', queryRoleByUserID);
 router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
 router.use('/function', funcroute);
-router.use('/user', user);
+router.use('/user', user1);
 router.use('/userrole', userRole);
 router.use('/app', addapp);
 router.use('/app', updateapp);

@@ -37,14 +37,14 @@ exports.insert=function(data,callback)
 			return ;
 		}
 		
-		connection.query(insert_sql,function(err)
+		connection.query(insert_sql,function(err,results)
 		{
 			if(err)
 			{
 				callback(true);
 				return ;
 			}
-			callback(false);
+			callback(false,results);
 			connection.release();
 		});
 

@@ -12,14 +12,14 @@ var userRoleDAL= appRequire('dal/backend/user/userroledal');
 //勾选对应的功能,更改对应的功能
 
 exports.insert=function(data,callback){
-	userRoleDAL.insert(data,function(err)
+	userRoleDAL.insert(data,function(err,results)
 	{
 		if(err)
 		{
 			callback(true);
 			return;
 		}
-		callback(false);
+		callback(false,results);
 	});
 
 };

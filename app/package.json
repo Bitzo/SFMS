@@ -28,7 +28,10 @@
     "mocha": "*",
     "should": "*",
     "jwt-simple": "^0.2.0",
-    "superagent":"*",
-    "supertest":"*"
+    "superagent": "*",
+    "supertest": "*"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.2"
   }
 }
