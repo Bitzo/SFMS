@@ -2,26 +2,25 @@
  * @Author: luozQ
  * @Date:   2016-11-13 20:42:38
  * @Last Modified by:   luozQ
- * @Last Modified time: 2016-11-16 10:12:38
+ * @Last Modified time: 2016-11-20 13:44:38
  *  @Function: 功能点管理
  */
 
-
+var logger = appRequire("util/loghelper").helper;
 var db_backend = appRequire('db/db_backend');
 var functionModel = appRequire('model/backend/function/functionmodel');
 
 //得到所有功能点
 exports.queryAllFunctions = function (data, callback) {
     var sql = 'select ApplicationID,FunctionID,FunctionLevel,ParentID,FunctionCode,FunctionName,Memo,IsActive from jit_function where IsActive=1';
-    var condition = '';
 
-    sql += " and ApplicationID = " + data['appID'];
+    sql += " and ApplicationID = " + data['ApplicationID'];
 
-    console.log("得到所有功能点:" + sql);
+    logger.writeInfo("得到所有功能点:" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
-            console.log('连接：err');
+            logger.writeError('功能点连接：err' + err);
             callback(true);
             return;
         }
@@ -43,16 +42,18 @@ exports.insert = function (data, callback) {
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
+            logger.writeError('功能点新增连接：err' + err);
             callback(true);
             return;
         }
-
-        connection.query(insert_sql,data, function (err,results) {
+        logger.writeInfo('新增功能点' + insert_sql);
+        connection.query(insert_sql, data, function (err, results) {
             if (err) {
+                logger.writeError('新增功能点，出错信息：' + err)
                 callback(true);
                 return;
             }
-            callback(false,results);
+            callback(false, results);
             connection.release();
         });
     });
@@ -63,21 +64,22 @@ exports.update = function (data, callback) {
     var upd_sql = 'update jit_function set ?';
     upd_sql += " WHERE " + functionModel.PK + " = " + data[functionModel.PK];
 
-    console.log("修改功能点: " + upd_sql);
+    logger.writeInfo("修改功能点: " + upd_sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
+            logger.writeError('功能点修改连接：err' + err);
             callback(true);
-            connection.release();
             return;
         }
 
-        connection.query(upd_sql,data,function (err,results) {
+        connection.query(upd_sql, data, function (err, results) {
             if (err) {
+                logger.writeError('修改功能点，出错信息：' + err)
                 callback(true);
                 return;
             }
-            callback(false,results);
+            callback(false, results);
             connection.release();
         });
     });
@@ -85,12 +87,11 @@ exports.update = function (data, callback) {
 
 //删除功能点
 exports.delete = function (data, callback) {
-    var del_sql = 'update  jit_function set IsActive=0 where FunctionID in ';
-    del_sql += "(";
-    del_sql += data.FunctionID.toString();
-    del_sql += ")";
+    var del_sql = 'update  jit_function set IsActive=0 where FunctionID=';
 
-    console.log("删除功能点: " + del_sql);
+    del_sql += data.FunctionID;
+
+    logger.writeInfo("删除功能点: " + del_sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -99,13 +100,14 @@ exports.delete = function (data, callback) {
             return;
         }
 
-        connection.query(del_sql, function (err,results) {
+        connection.query(del_sql, function (err, results) {
             if (err) {
                 callback(true);
+                logger.writeError('删除功能点，出错信息：' + err)
                 connection.release();
                 return;
             }
-            callback(false,results);
+            callback(false, results);
             connection.release();
         });
     });

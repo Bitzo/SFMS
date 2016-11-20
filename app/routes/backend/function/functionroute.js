@@ -8,13 +8,13 @@
 var express = require('express');
 var router = express.Router();
 
-var functionservice = appRequire('service/backend/function/functionserver');
+var functionservice = appRequire('service/backend/function/functionservice');
 
 router.get('/', function(req, res) {
     var appID = req.query.appID || 1;
 
     var data = {
-        'appID': appID,
+        'ApplicationID': appID,
     };
 
     //查询所需的详细数据
@@ -179,6 +179,7 @@ router.post('/update', function(req, res) {
 
 });
 
+//功能点的删除
 router.post('/delete', function(req, res) {
     var FunctionID = req.body.FunctionID;
     console.log(FunctionID)
@@ -218,7 +219,7 @@ router.post('/delete', function(req, res) {
             res.json({
                 code: 404,
                 isSuccess: false,
-                msg: '地址出错'
+                msg: '删除失败！请刷新！'
             })
         }
     })
