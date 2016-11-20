@@ -50,9 +50,29 @@ describe("用户功能单元测试",function()
 			done();
 		});
 	});
+
+	it("用户的信息查询",function(done)
+	{
+		var selectData={
+			'AccountID':insertUserID,
+			'page':1
+		}
+		
+		userService.queryAllUsers(selectData,function(err,results)
+		{
+			if(err)
+			{
+				return done(err);
+			}
+			results[0].AccountID.should.be.equal(data.AccountID).and.should.be.a.Number;
+			done();
+		});
+	})
+
 	it ("用户角色的添加",function(done)
 	{
-		data={'RoleID':0,
+		data={
+		'RoleID':0,
 		'AccountID':insertUserID
 		}//RoleID为0,测试的RoleID值
 		userRoleService.insert(data,function(err,results)
