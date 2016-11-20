@@ -100,8 +100,9 @@ router.use('/querymenubyuserid',queryMenuByUserID);
 //通过UserID查询角色
 router.use('/queryrolebyuserid',queryRoleByUserID);
 
-
+//角色模块
 router.use('/role', roleroute);
+//角色功能点模块
 router.use('/rolefunc', rolefuncroute);
 router.use('/function', funcroute);
 router.use('/user', user);
