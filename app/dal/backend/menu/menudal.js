@@ -11,7 +11,7 @@ var menuModel = appRequire('model/backend/menu/menumodel');
 
 
 //查询目前所有菜单，提供所有菜单的信息，菜单属性展示
-exports.queryAllMenus = function (data,callback) {
+exports.queryAllMenus = function(data, callback) {
     var sql = 'select ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName,IconPath,Url,Memo,IsActive from jit_menu where 1=1';
     if(data !== undefined){
         for(var key in data){
@@ -29,15 +29,15 @@ exports.queryAllMenus = function (data,callback) {
         if(err){
             console.log("数据库连接错误：" + err);
             callback(true);
-            return ;
+            return;
         }
-        connection.query(sql,function (err,results) {
-            if(err){
+        connection.query(sql, function(err, results) {
+            if (err) {
                 callback(true);
-                return ;
+                return;
             }
 
-            callback(false,results);
+            callback(false, results);
             connection.release();
         });
     })
@@ -63,24 +63,24 @@ exports.menuInsert = function (data,callback) {
         if(err){
             console.log("数据库连接错误：" + err);
             callback(true);
-            return ;
+            return;
         }
-        connection.query(sql,value,function (err,result) {
-            if(err){
+        connection.query(sql, value, function(err, result) {
+            if (err) {
                 throw err;
                 callback(true);
-                return ;
+                return;
             }
-            callback(false,result);
+            callback(false, result);
             connection.release();
         })
     })
-        
-    
+
+
 }
 
 //菜单编辑，即修改菜单
-exports.menuUpdate = function (data,callback) {
+exports.menuUpdate = function(data, callback) {
     var sql = 'update jit_menu set ApplicationID = ? , MenuLevel = ?, ParentID = ?, MenuName = ?,Memo =?, IsActive=? where MenuID = ? ';
 
     var value = [data.ApplicationID,data.MenuLevel,data.ParentID,data.MenuName,data.Memo,data.IsActive,data.MenuID];
@@ -89,21 +89,24 @@ exports.menuUpdate = function (data,callback) {
         if(err) {
             console.log("数据库连接错误：" + err);
             callback(true);
-            return ;
+            return;
         }
 
-        connection.query(sql,value,function (err,results) {
-            if(err) {
+
+        connection.query(sql, value, function(err, results) {
+            if (err) {
+                throw err;
                 callback(true);
-                return ;
+                return;
             }
 
-            callback(false,results);
+            callback(false, results);
             connection.release();
         })
 
     });
 }
+
 
 //菜单删除
 exports.menuDelete = function (data, callback) {
@@ -115,19 +118,19 @@ exports.menuDelete = function (data, callback) {
             callback(true);
             return ;
         }
-        connection.query(sql,value,function (err,results) {
-            if(err){
+
+        connection.query(sql, value, function(err, results) {
+            if (err) {
                 throw err;
                 callback(true);
                 return ;
             }
 
-            callback(false,results);
+            callback(false, results);
             connection.release();
         })
     })
 }
-
 
 
 
@@ -156,7 +159,7 @@ exports.queryRoleByUserID = function (data,callback) {
                 return;
             }
 
-            callback(false,results);
+            callback(false, results);
             connection.release();
         })
     })
@@ -180,8 +183,8 @@ exports.queryMenuByUserID = function (data,callback) {
             return;
         }
 
-        connection.query(sql,value,function (err, results) {
-            if(err){
+        connection.query(sql, value, function(err, results) {
+            if (err) {
                 throw err;
                 callback(true);
                 return;

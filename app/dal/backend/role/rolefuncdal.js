@@ -110,20 +110,17 @@ exports.updateRoleFunc = function(data, callback) {
 
 //删除角色功能点
 exports.delRoleFunc = function (data, callback) {
-    var sql = 'delete from jit_rolefunction where ID in ';
-    sql += "(";
-    for (var i in data) {
-        sql += data[i].ID;
-        if (i < data.length-1) sql += ', ';
+    var sql = 'delete from jit_rolefunction where 1=1 ';
+
+    if (data !== undefined) {
+        sql += 'and RoleID = ' + data['RoleID'];
     }
-    sql += ")";
 
     console.log("删除角色功能点：" + sql);
 
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
-            connection.release();
             return;
         }
 

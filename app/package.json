@@ -27,6 +27,8 @@
     "mysql": "*",
     "mocha": "*",
     "should": "*",
-    "jwt-simple": "^0.2.0"
+    "jwt-simple": "^0.2.0",
+    "superagent":"*",
+    "supertest":"*"
   }
 }

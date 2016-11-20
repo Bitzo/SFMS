@@ -158,68 +158,48 @@ router.post('/',function (req, res) {
                 }
                 //角色信息增添成功
                 if (results !== undefined && results.length != 0) {
+                    //若存在功能点数据，则继续新增该角色的功能点
                     if (funcData !== undefined){
-                        //查询刚才添加的角色信息的RoleID
-                        roleservice.queryAllRoles(data, function (err, results) {
+                        roleID = results.insertId;
+                        data = {
+                            'RoleID': roleID,
+                            'FunctionID': funcData
+                        }
+                        console.log("成功获取RoleID: "+roleID);
+                        //通过获取到的RoleID 与前端传输的功能点数据，为角色增加功能点
+                        rolefuncservice.addRoleFunc(data, function (err, results) {
                             if (err) {
                                 res.json({
                                     code: 500,
                                     isSuccess: false,
                                     msg: "添加失败，服务器出错"
-                                });
+                                })
                                 return;
                             }
-                            //成功获取添加的角色RoleID
-                            if (results !== undefined && results.length != 0) {
-                                var roleID = results[0].RoleID;
-                                data = {
-                                    'RoleID': roleID,
-                                    'FunctionID': funcData
-                                }
-                                console.log("成功获取RoleID: "+roleID);
-                                //通过获取到的RoleID 与前端传输的功能点数据，为角色增加功能点
-                                rolefuncservice.addRoleFunc(data, function (err, results) {
-                                    if (err) {
-                                        res.json({
-                                            code: 500,
-                                            isSuccess: false,
-                                            msg: "添加失败，服务器出错"
-                                        })
-                                        return;
-                                    }
-                                    //增添成功
-                                    if (results !== undefined && results.affectedRows != 0) {
-                                        res.json({
-                                            code: 200,
-                                            isSuccess: true,
-                                            msg: "添加信息成功"
-                                        })
-                                        return;
-                                    } else {
-                                        res.json({
-                                            code: 404,
-                                            isSuccess: false,
-                                            msg: "添加信息失败"
-                                        })
-                                        return;
-                                    }
+                            //增添成功
+                            if (results !== undefined && results.affectedRows != 0) {
+                                res.json({
+                                    code: 200,
+                                    isSuccess: true,
+                                    msg: "添加信息成功"
                                 })
+                                return;
                             } else {
                                 res.json({
                                     code: 404,
                                     isSuccess: false,
                                     msg: "添加信息失败"
-                                });
+                                })
                                 return;
                             }
                         })
                     } else {
-                        res.json({
-                            code: 200,
-                            isSuccess: true,
-                            msg: "添加用户成功"
-                        })
-                        return;
+                       res.json({
+                           code: 200,
+                           isSuccess: true,
+                           msg: "添加用户成功"
+                       })
+                       return;
                     }
                 } else {
                     res.json({
@@ -229,9 +209,8 @@ router.post('/',function (req, res) {
                     })
                     return;
                 }
-            })
-
-        } else {
+        })
+        }else {
             res.json({
                 code: 400,
                 isSuccess: false,
@@ -265,11 +244,15 @@ router.put('/', function (req, res) {
         return;
     }
 
+    //编辑角色基本信息所需要的数据
     var appID = req.body.ApplicationID;
     var roleID = req.body.RoleID;
     var roleCode = req.body.RoleCode;
     var roleName = req.body.RoleName;
     var isActive = req.body.IsActive;
+
+    //增加角色功能点所需要的数据
+    var funcData = req.body.data;
 
     data = {
         'ApplicationID': appID,
@@ -288,13 +271,47 @@ router.put('/', function (req, res) {
             });
             return;
         }
+        //完成角色基本信息修改
         if (results !== undefined && results.affectedRows != 0) {
-            res.json({
-                code: 200,
-                isSuccess: true,
-                msg: "修改信息成功"
-            });
-            return;
+            //如果存在功能点数据，则继续修改功能点
+            if (funcData !== undefined) {
+                data = {
+                    "RoleID":roleID,
+                    "FunctionID":funcData
+                }
+                rolefuncservice.updateRoleFunc(data, function (err, results) {
+                    if (err) {
+                        res.json({
+                            code: 500,
+                            isSuccess: false,
+                            msg: "修改失败，服务器出错"
+                        });
+                        return;
+                    }
+                    if (results !== undefined && results.affectedRows != 0) {
+                        res.json({
+                            code: 200,
+                            isSuccess: true,
+                            msg: "修改信息成功"
+                        });
+                        return;
+                    } else {
+                        res.json({
+                            code: 404,
+                            isSuccess: false,
+                            msg: "修改信息失败"
+                        });
+                        return;
+                    }
+                })
+            } else {
+                res.json({
+                    code: 200,
+                    isSuccess: true,
+                    msg: "修改信息成功"
+                });
+                return;
+            }
         } else {
             res.json({
                 code: 404,
