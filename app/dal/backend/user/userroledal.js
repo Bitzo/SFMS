@@ -12,8 +12,7 @@ var userModel=appRequire('model/backend/user/userrolemodel');
 exports.insert=function(data,callback)
 {
 	var insert_sql='insert into jit_roleuser set';
-	if(data!==undefined)
-	{
+	
 		var i=0;
 		for(var key in data)
 		{
@@ -28,7 +27,6 @@ exports.insert=function(data,callback)
 			}
 		}
 		
-	}
 	console.log('用户新增角色：'+insert_sql);
 
 	db_backend.mysqlPool.getConnection(function(err,connection)
@@ -57,8 +55,6 @@ exports.insert=function(data,callback)
 exports.updateUserRole=function(data,callback)
 {
 	var sql='update jit_roleuser set ';
-	if(data!==undefined)
-	{
 		var i=0;
 		for(var key in data)
 		{
@@ -72,7 +68,7 @@ exports.updateUserRole=function(data,callback)
 				sql+=", "+key+" = '"+data[key]+"' ";
 			}
 		}
-	}
+	
 
 	sql +=" where " + userModel.PK +" = ' "+data[userModel.PK]+"' ";
 

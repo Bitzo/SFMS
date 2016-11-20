@@ -68,12 +68,12 @@ exports.insert = function(data, callback) {
             return;
         }
 
-        connection.query(insert_sql, function(err) {
+        connection.query(insert_sql, function(err,result) {
             if (err) {
                 callback(true);
                 return;
             }
-            callback(false);
+            callback(false,result);
             connection.release();
         });
     });
@@ -82,8 +82,7 @@ exports.insert = function(data, callback) {
 //修改用户
 exports.update = function(data, callback) {
     var upd_sql = 'update jit_user set ';
-    if (data !== undefined) {
-        var i=0;
+        var i=0;//判断是否为第一个参数
         for (var key in data) {
             if (i== 0) {
                 upd_sql += key + " = '" + data[key] + "' ";
@@ -92,7 +91,6 @@ exports.update = function(data, callback) {
                 upd_sql += " , " + key + " = '" + data[key] + "' ";
             }
         }
-    }
     upd_sql += " WHERE " + userModel.PK+ " = " + data[userModel.PK];
 
     console.log("修改用户: " + upd_sql);

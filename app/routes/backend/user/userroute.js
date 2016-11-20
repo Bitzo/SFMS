@@ -26,9 +26,7 @@ router.post('/',function(req,res)
 			{
 				///if(data[value]!='Email'&&data[value]!='Address')
 				err+=data[value]+' ';//检查post传输的数据
-			}
-
-			
+			}	
 		}
 
 		if(err!='require: ')
@@ -70,7 +68,7 @@ router.post('/',function(req,res)
 			
 		}	
 	
-		//console.log(typeof(data[ApplicationID]));
+		
 		var requireValue='缺少值：';
 		
 		for(var value in data)
@@ -171,7 +169,7 @@ router.post('/',function(req,res)
 					msg:'插入失败'
 				});
 				return ;
-			}else
+			}else if(result.insertID!=0)
 			{
 				res.json({
 					code:200,

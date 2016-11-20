@@ -3,7 +3,7 @@
  * @Date: 2016-11-15 14:22
  * @Last Modified by: Duncan
  * @Last Modified time: 2016-11-15 14:22
- * @Function: 角色对应功能点,角色功能点的
+ * @Function: 角色对应功能点增加
  */
 
 
