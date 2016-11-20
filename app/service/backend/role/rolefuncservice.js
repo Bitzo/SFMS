@@ -7,6 +7,7 @@
  */
 
 var rolefuncDAL = appRequire('dal/backend/role/rolefuncdal.js');
+var logger = appRequire("util/loghelper").helper;
 
 //查询所有的角色功能点
 exports.queryRoleFunc = function (data, callback) {
@@ -15,8 +16,8 @@ exports.queryRoleFunc = function (data, callback) {
             callback(true);
             return;
         }
-        console.log('queryRoleFunc');
-        console.log(results);
+        logger.writeInfo('queryRoleFunc');
+        logger.writeInfo(results);
         callback(false, results);
     })
 }
@@ -32,7 +33,7 @@ exports.addRoleFunc = function (data, callback) {
             callback(true);
             return;
         }
-        console.log("已删除该用户所有的功能点");
+        logger.writeInfo("已删除该用户所有的功能点");
 
         function checkData(data) {
             for (var key in data) {
@@ -54,7 +55,7 @@ exports.addRoleFunc = function (data, callback) {
                 callback(true);
                 return;
             }
-            console.log('addRoleFunc');
+            logger.writeInfo('addRoleFunc');
             callback(false, results);
         })
     })
@@ -71,12 +72,12 @@ exports.updateRoleFunc = function (data, callback) {
             callback(true);
             return;
         }
-        console.log("已删除该用户所有的功能点");
+        logger.writeInfo("已删除该用户所有的功能点");
 
         function checkData(data) {
             for (var key in data) {
                 if(data[key] === undefined) {
-                    console.log("undefined:"+ key);
+                    logger.writeInfo("undefined:"+ key);
                     return false;
                 }
             }
@@ -93,7 +94,7 @@ exports.updateRoleFunc = function (data, callback) {
                 callback(true);
                 return;
             }
-            console.log('addRoleFunc');
+            logger.writeInfo('addRoleFunc');
             callback(false, results);
         })
     })
@@ -109,7 +110,7 @@ exports.delRoleFunc = function (data, callback) {
             callback(true);
             return;
         }
-        console.log("已删除该用户所有的功能点");
+        logger.writeInfo("已删除该用户所有的功能点");
         callback(false, results);
     })
 }

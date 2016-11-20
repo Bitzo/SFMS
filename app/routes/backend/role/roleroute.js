@@ -13,6 +13,8 @@ var config = appRequire('config/config');
 var roleservice = appRequire('service/backend/role/roleservice');
 var rolefuncservice = appRequire('service/backend/role/rolefuncservice');
 
+var logger = appRequire("util/loghelper").helper;
+
 //查询角色信息
 router.get('/',function (req, res) {
     var appID = req.query.appID;
@@ -165,7 +167,7 @@ router.post('/',function (req, res) {
                             'RoleID': roleID,
                             'FunctionID': funcData
                         }
-                        console.log("成功获取RoleID: "+roleID);
+                        logger.writeInfo("成功获取RoleID: "+roleID);
                         //通过获取到的RoleID 与前端传输的功能点数据，为角色增加功能点
                         rolefuncservice.addRoleFunc(data, function (err, results) {
                             if (err) {
@@ -229,7 +231,7 @@ router.put('/', function (req, res) {
     {
         if(!(data[value] in req.body))
         {
-            console.log("require " + data[value]);
+            logger.writeInfo("require " + data[value]);
             err += data[value] + ' ';
         }
     }
