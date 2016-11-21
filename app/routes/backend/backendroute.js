@@ -43,6 +43,9 @@ router.get('/', function (req, res, next) {
   });
 });
 
+router.get('/index', function(req, res, next) {
+        res.render('backend/index', { title: '管理后台' });
+});
 //生成验证码
 router.get('/generatecode', code);
 

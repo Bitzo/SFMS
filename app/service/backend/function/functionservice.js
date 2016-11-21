@@ -54,3 +54,14 @@ exports.delete = function (data, callback) {
         callback(false,results);
     });
 };
+
+//根据FunctionID判断该功能点是否存在
+exports.queryFuncByID=function(data,callback){
+    functionDAL.queryFuncByID(data,function(err,results){
+        if(err){
+            callback(true);
+            return;
+        }
+        callback(false,results);
+    });
+}
