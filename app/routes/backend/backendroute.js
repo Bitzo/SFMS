@@ -48,6 +48,12 @@ router.get('/index', function(req, res, next) {
     title: '管理后台'
   });
 });
+
+router.get('/user', function(req, res, next) {
+  res.render('backend/user', {
+    title: '管理后台'
+  });
+});
 //生成验证码
 router.get('/generatecode', code);
 

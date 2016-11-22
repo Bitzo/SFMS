@@ -1,0 +1,31 @@
+block content
+ div(ng-controller="sfmsIndexController")
+  div.page-header
+   div.buttons
+    a.btn.btn-success(ng-href='')
+      i.icon.icon-plus 新建
+    button(ng-click='search()' class='btn btn-default') 刷新
+  div.page-content
+   ng-form.form-inline
+    label.form-group
+     input.form-control(placeholder='类型名')
+    label.form-group
+      input.form-control(placeholder='所属类别')
+    label.form-group
+     button.btn.btn-primary确定
+   table.table.table-striped.table-bordered.text-center
+    thead
+     tr
+      th 导航名称
+      th 导航icon
+      th 操作
+    tbody
+      tr(ng-repeat="data in datas")
+       td{{data.text}}
+       td{{data.icon}}
+       td
+        a(ng-href='')
+         i.icon.icon-edit 编辑
+        a(ng-href='')
+          i.icon.icon-trash 删除
+  jason-pagination(conf='paginationConf')
