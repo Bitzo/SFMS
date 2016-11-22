@@ -20,16 +20,16 @@ myApp.controller('formController', ['$scope', '$http', function($scope, $http) {
         }).
         success(function(response) {
             if (response !== undefined && response.data !== undefined && response.data.isSuccess) {
-                console.log('登录成功');
                 location.href = './index';
             } else {
-
+                alert(response.msg);
+                location.reload();
             }
         }).
         error(function(response) {
             console.log('登录失败');
             alert(response.msg);
-            location.href = 'error';
+            location.reload();
         });
     };
 }])
