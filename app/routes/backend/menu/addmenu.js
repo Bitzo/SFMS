@@ -37,7 +37,9 @@ router.post('/',function(req,res,next) {
 	var memo = req.body.Memo;
 	var isActive = req.body.IsActive;
 
-
+	if(memo === undefined || memo === null){
+		memo = '';
+	}
 
 
 	// 存放接收的数据
@@ -55,14 +57,18 @@ router.post('/',function(req,res,next) {
 
 	var requiredvalue = '缺少输入参数：';
 	for(var key in data){
-		if(data[key].length == 0){
-			requiredvalue += key + ' ';
-			res.json({
-				code :300,
-				isSuccess : false,
-				errMsg : requiredvalue
-			})
+		if(key != 'Memo'){
+			if(data[key].length == 0){
+				requiredvalue += key + ' ';
+				res.json({
+					code :300,
+					isSuccess : false,
+					errMsg : requiredvalue
+				});
+				return ;
+			}
 		}
+
 	}
 
 	//执行插入操作

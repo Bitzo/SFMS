@@ -112,3 +112,34 @@ exports.delete = function (data, callback) {
         });
     });
 };
+
+//根据FunctionID判断该功能点是否存在
+exports.queryFuncByID = function (data, callback) {
+    var sql = 'select count(*) as count from jit_function where IsActive=1';
+    sql += " and ApplicationID= " + data['ApplicationID'] + " and (";
+    var FunctionID = data.FunctionID;
+
+    for (var i in FunctionID) {
+        if (i == FunctionID.length-1) {
+            sql += "FunctionID=" + FunctionID[i] + " )";
+        } else {
+            sql += "FunctionID=" + FunctionID[i] + " or ";
+        }
+    }
+    logger.writeInfo("判断功能点是否存在:" + sql);
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            logger.writeError('功能点连接：err' + err);
+            callback(true);
+            return;
+        }
+        connection.query(sql, function (err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+};

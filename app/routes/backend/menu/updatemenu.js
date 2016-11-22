@@ -60,14 +60,17 @@ router.put('/',function (req,res) {
 
     var requiredvalue = '缺少输入的修改参数：';
     for(var key in data){
-        if(data[key].length == 0){
-            requiredvalue += key + ' ';
-            res.json({
-                code :300,
-                isSuccess : false,
-                errMsg : requiredvalue
-            })
+        if(key != 'Memo'){
+            if(data[key].length == 0){
+                requiredvalue += key + ' ';
+                res.json({
+                    code :300,
+                    isSuccess : false,
+                    errMsg : requiredvalue
+                });
+            }
         }
+
     }
 
     // 修改MenuID之前，先判断是否存在这个MenuID,MenuID不可以更改

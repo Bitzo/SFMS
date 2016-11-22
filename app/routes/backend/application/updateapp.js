@@ -9,7 +9,8 @@
 var express = require('express');
 var router = express.Router();
 
-var userSpring = appRequire('service/backend/applicationservice');
+var userSpring = appRequire('service/backend/application/applicationservice');
+var logger = appRequire('util/loghelper').helper;
 
 router.put('/:app_id', function(req, res) {
     var data = ['ID', 'ApplicationCode', 'ApplicationName', 'Memo', 'IsActive'];
@@ -45,6 +46,7 @@ router.put('/:app_id', function(req, res) {
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
+            logger.writeError('编辑应用,出错信息: ' + err);
             return;
         }
         console.log(results);
@@ -82,20 +84,29 @@ router.put('/:app_id', function(req, res) {
                 'Memo': Memo,
                 'IsActive': IsActive
             }
-            userSpring.update(data, function (err) {
+            userSpring.update(data, function (err, results) {
                 if (err) {
                     res.json({
                         code: 500,
                         isSuccess: false,
                         msg: '更新失败,服务器失败'
                     });
+                    logger.writeError('编辑应用,出错信息: ' + err);
                     return;
                 }
                 res.json({
                     code:200,
                     isSuccess: true,
+                    data: {
+                        ID: data.ID,
+                        ApplicationCode: data.ApplicationCode,
+                        ApplicationName: data.ApplicationName,
+                        Memo: data.Memo,
+                        IsActive: data.IsActive
+                    },
                     msg: '更新成功'
                 });
+                console.log(results);
             })
         } else {
             res.json({
@@ -103,6 +114,8 @@ router.put('/:app_id', function(req, res) {
                 isSuccess: false,
                 msg: '应用不存在'
             });
+            logger.writeError('编辑应用,出错信息: 编辑应用不存在');
+            return;
         }
     });
 
