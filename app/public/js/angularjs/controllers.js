@@ -19,9 +19,10 @@ myApp.controller('formController', ['$scope','$http',  function ($scope,$http) {
              }    
         }).
         success(function(response) {
+             location.href='./index';
          if (response.isSuccess){
                console.log ('登录成功');
-               location.href='./index';
+              
          } else{
 
          }

@@ -22,7 +22,6 @@ module.exports = function(app) {
     app.use('/index', indexRoute);
 
     // //实验室管理子系统
-
     app.use('/sfms', sfmsRoute);
 
     // //金科小哥子系统

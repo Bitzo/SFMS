@@ -1,0 +1,40 @@
+extends ../shared/layout.jade
+//- 用户管理页面
+block content
+  div.user(ng-controller="appcontroller")
+    nav.navbar(id='ch-nav')
+      span.navbar-brand
+        h4 用户管理
+      div.navbar-form.navbar-right
+        //- select.form-control( ng-model="selectedApp" ng-options="x for x in apps")
+        //- select.form-control( ng-model="selectedRole" ng-options="y for y in roles")
+        input(type="text" name='username' class="form-control" placeholder="输入查询条件" required autofocus)
+        button.btn.btn-primary 查询                        
+        button.btn.btn-info 新增用户 
+    div
+      div.table-responsive
+        table.table.table-hover
+          thead
+            tr
+              th ID
+              th Account
+              th Username
+              th Is Active
+              th.col-sm-2.col-md-2 Edit      
+          tbody
+            tr(ng-repeat="x in records")
+              td {{x.ID}}
+              td {{x.Account}}
+              td {{x.Username}}
+              td {{x.IsActive}}
+              td 
+                button.btn.btn-warning 编辑
+
+        
+      include ../shared/footer.jade
+
+
+
+
+
+   
