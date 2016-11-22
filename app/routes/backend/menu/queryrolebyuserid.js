@@ -47,7 +47,7 @@ router.get('/',function (req,res) {
                 data : {
                     Role : results
                 },
-                msg : '查询菜单成功'
+                msg : '查询角色成功'
             });
         }
     });
