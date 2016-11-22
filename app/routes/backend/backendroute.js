@@ -10,11 +10,11 @@ var rolefuncroute = appRequire('routes/backend/role/rolefuncroute');
 //用户的添加以及修改的路由
 
 var user = appRequire('routes/backend/user/userroute')
-//功能点
+  //功能点
 var funcroute = appRequire('routes/backend/function/functionroute');
 //用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
-//菜单新增
+  //菜单新增
 var addMenu = appRequire('routes/backend/menu/addmenu');
 //查询所有菜单
 var queryAllMenus = appRequire('routes/backend/menu/queryallmenus');
@@ -36,7 +36,7 @@ var showapp = appRequire('routes/backend/application/showapp');
 //验证码
 var code = appRequire('service/backend/code/codeservice').generateCode;
 //主应用主站点
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
   logger.writeInfo("首页记录");
   res.render('login', {
     title: 'JIT1320管理集成平台'
@@ -44,13 +44,15 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/index', function(req, res, next) {
-        res.render('backend/index', { title: '管理后台' });
+  res.render('backend/index', {
+    title: '管理后台'
+  });
 });
 //生成验证码
 router.get('/generatecode', code);
 
 //用户登录
-router.post('/login', function (req, res) {
+router.post('/login', function(req, res) {
   var username = req.body.username || '';
   var password = req.body.password || '';
   var code = req.body.code || '';
@@ -68,12 +70,12 @@ router.post('/login', function (req, res) {
   }
 
   var data = {
-    "username": username,
+    "account": username,
     "password": password,
-    "code":code
   };
 
-  userService.login(data, function (err, user) {
+  userService.querySingleUser(username,password, function(err, user) {
+console.log(user);
     if (err) {
       res.status(500);
       res.json({
@@ -94,7 +96,8 @@ router.post('/login', function (req, res) {
     }
 
     if (user) {
-      res.json(jwtHelper.genToken(user));
+      var obj={"isSuccess":true,"accountId":user.AccountID};
+      res.json(jwtHelper.genToken(obj));
     }
 
   })
