@@ -48,7 +48,7 @@ router.delete('/',function(req,res,next) {
                         code :500,
                         isSuccess : false,
                         deleteResults: results,
-                        msg : '修改删除失败'
+                        msg : '菜单删除失败'
                     });
                     return ;
                 }
