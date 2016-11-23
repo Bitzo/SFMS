@@ -69,19 +69,19 @@ router.post('/login', function(req, res) {
 
   var username = req.body.username || '';
   var password = req.body.password || '';
-  var code = req.body.code || '';
+  //var code = req.body.code || '';
 
   //验证码判断
-  if (req.session.code.toString() !== req.body.code.toString()) {
-    resultData.isSuccess = false;
-    resultData.msg = "验证码输入不正确!";
-    return res.json(resultData);
-  }
+  // if (req.session.code.toString() !== req.body.code.toString()) {
+  //   resultData.isSuccess = false;
+  //   resultData.msg = "验证码输入不正确!";
+  //   return res.json(resultData);
+  // }
 
   if (username == '' || password == '') {
     res.status(401);
-    resultData.isSuccess = false;
-    resultData.msg = "帐号密码不能为空!";
+    resultData.data.isSuccess = false;
+    resultData.data.msg = "帐号密码不能为空!";
     return res.json(resultData);
   }
 
@@ -102,15 +102,16 @@ router.post('/login', function(req, res) {
 
     if (!user || user.length == 0) {
       res.status(401);
-      resultData.msg = "帐号密码不对,请重试!";
+      resultData.data.msg = "帐号密码不对,请重试!";
       return res.json(resultData);
     }
 
     if (user.length > 0 && user[0].AccountID > 0) {
-      resultData.isSuccess = true;
-      resultData.accountId = user.AccountID;
+      resultData.data.isSuccess = true;
+      resultData.data.accountId = user[0].AccountID;
+      resultData.data.msg = "登录成功";
 
-      return res.json(jwtHelper.genToken(resultData));
+      return res.json(jwtHelper.genToken(resultData.data));
     }
 
     return res.json(resultData);

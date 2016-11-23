@@ -20,6 +20,7 @@ var logger = appRequire("util/loghelper").helper;
 router.get('/',function (req, res) {
     var appID = req.query.appID;
     var page = req.query.page || 1;
+    page = page>0?page:1;
 
     var roleName = req.query.RoleName;
     var isActive = req.query.IsActive;
