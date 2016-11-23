@@ -49,6 +49,7 @@ exports.queryAllMenus = function(data, callback){
             callback(true);
             return ;
         }
+
         console.log('queryAllMenus func in service');
         logger.writeInfo('queryAllMenus func in service');
         callback(false,results);
@@ -61,22 +62,25 @@ exports.menuInsert = function (data,callback) {
     function checkData(data) {
         for(var key in data){
             if(data[key] === undefined){
-                console.log("【service】menu insert 传入的值存在空值");
+                console.log("[service]menu insert 传入的值存在空值");
                 return false;
             }
         }
         return true;
     }
+
     //传入的值存在空值
     if(!checkData(data)){
         callback(true);
         return ;
     }
+
     menuDAl.menuInsert(data,function (err,results) {
         if(err){
             callback(true);
             return ;
         }
+
         logger.writeInfo('menuInsert func in service');
         logger.writeInfo('menuInsert func in service');
         callback(false,results);
@@ -89,13 +93,14 @@ exports.menuUpdate = function (data,callback) {
     function checkData(data) {
         for(var key in data){
             if(data[key] === undefined){
-                console.log("【service】menuupdate func 传入的值存在空值");
+                console.log("[service]menuupdate func 传入的值存在空值");
                 console.log(data[key]);
                 return false;
             }
         }
         return true;
     }
+
     //传入的值存在空值
     if(!checkData(data)){
         callback(true);
@@ -107,10 +112,11 @@ exports.menuUpdate = function (data,callback) {
             callback(true);
             return ;
         }
+
         console.log('menuUpdate func in service');
         logger.writeInfo('menuUpdate func in service');
         callback(false,results);
-    })
+    });
 }
 
 //菜单删除
@@ -120,10 +126,11 @@ exports.menuDelete = function (data,callback) {
             callback(true);
             return ;
         }
+
         console.log('menuDelete func in service');
         logger.writeInfo('menuDelete func in service');
         callback(false,results);
-    })
+    });
 }
 
 //根据UserID显示出用户所有的菜单
@@ -134,6 +141,7 @@ exports.queryMenuByUserID = function (data,callback) {
             callback(true);
             return ;
         }
+
         console.log('queryMenuByUserID func in service');
         logger.writeInfo('queryMenuByUserID func in service');
         callback(false,results);
@@ -148,9 +156,10 @@ exports.queryRoleByUserID = function (data,callback) {
             callback(true);
             return ;
         }
+
         console.log('queryRoleByUserID func in service');
         logger.writeInfo('queryRoleByUserID func in service');
         callback(false,results);
 
-    })
+    });
 }
