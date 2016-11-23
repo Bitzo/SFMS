@@ -78,8 +78,7 @@ router.get('/menuandrole',function (req,res) {
         "userID" : userID
     };
 
-    //得到useriD用户的菜单
-    menuService.queryMenuByUserID(uniqueData,function (err,menuResults) {
+    menuService.queryMenuAndRoleByUserID(uniqueData,function (err, results) {
         if(err){
             res.json({
                 code : 500,
@@ -88,42 +87,16 @@ router.get('/menuandrole',function (req,res) {
             });
             return;
         }
-        if(menuResults !== undefined && menuResults.length !== 0){
 
-            //已经得到userID用户的menu，下一步得到用户的role
-            menuService.queryRoleByUserID(uniqueData,function (err, roleResults) {
-                if(err){
-                    res.json({
-                        code : 500,
-                        isSuccess :false,
-                        msg : '服务器出错'
-                    });
-                    return;
-                }
+        res.json({
+            code : 200,
+            isSuccess :true,
+            data : {
+                MenuAndRole : results
+            },
+            msg : '查询菜单和角色成功'
+        });
 
-                if(roleResults !== undefined && roleResults.length !== 0){
-
-                    //合并两次查询的结果，一次性返回给前台
-                    var tempJson = {
-                        "Menu": menuResults,
-                        "Role":roleResults
-                    };
-
-                    res.json({
-                        code : 200,
-                        isSuccess :true,
-                        MenuAndRole : tempJson,
-                        msg : '查询菜单和角色成功'
-                    });
-                }else {
-                    res.json({
-                        code : 404,
-                        isSuccess : false,
-                        msg : '查询菜单和角色失败'
-                    });
-                }
-            });
-        }
     });
 });
 
