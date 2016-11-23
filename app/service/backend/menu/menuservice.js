@@ -163,3 +163,40 @@ exports.queryRoleByUserID = function (data,callback) {
 
     });
 }
+
+exports.queryMenuAndRoleByUserID = function (data,callback) {
+    menuDAl.queryMenuByUserID(data,function (err, menuResults) {
+        if(err){
+            callback(true);
+            return ;
+        }
+
+        if(menuResults !== undefined && menuResults.length !== 0){
+
+            //已经得到userID用户的menu，下一步得到用户的role
+            menuDAl.queryRoleByUserID(data,function (err, roleResults) {
+                if(err){
+                    callback(true);
+                    return;
+                }
+
+                if(roleResults !== undefined && roleResults.length !== 0){
+
+                    //合并两次查询的结果，一次性返回给前台
+                    var tempJson = {
+                        "Menu": menuResults,
+                        "Role":roleResults
+                    };
+
+                    console.log('queryMenuAndRoleByUserID func in service');
+                    logger.writeInfo('queryMenuAndRoleByUserID func in service');
+                    callback(false,tempJson);
+
+                }else {
+                    callback(true);
+                    return ;
+                }
+            });
+        }
+    });
+}
