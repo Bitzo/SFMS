@@ -122,35 +122,82 @@
 }
   
 
-.user{
-    width: 90%;
-     position: relative;
-    left: 50px;
-}
-.user form{
+.user-info{
+    width: 80%;
     position: relative;
     left: 50px;
 }
-.user .right{
+.user-info form{
     position: relative;
     background-color: #ccc;
-    right: 50px;
 }
-.user .form-group{
-     margin-left: 80px;
+.user-info form .img{
+    float: right;
+    text-align: center;
 }
-.user .right img{
+.user-info img{
      height: 200px;
      margin-bottom: 50px;
 }
-.user label{
+.user-info .form-group{
+     margin-left: 80px;
+     
+}
+.user-info label{
     font-size: 20px;
     color: #6b6363;
 }
-.user input{
+/*.user-info input{
     border-radius: 5px;
     border: 1px solid #999;
     height: 30px;
-    width: 250px;
-}
 
+}*/
+
+.user{
+    width: 90%;
+    position: relative;
+    left: 50px;
+}
+#ch-nav{
+	background-color:#fbfdfe;
+	height: 70px;
+	line-height: 50px;
+}
+ #ch-nav button{
+     margin-left: 5px;
+
+     margin-right: 10px;
+ }
+ .user table button{
+     margin-left: 10px;
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+  /*div.input-group.bootstrap-select
+          div.input-group-btn
+            button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" data-id="first-disabled")  所有用户
+              span.caret      
+            div.dropdown-menu.open(role="menu")  
+              div.bs-searchbox
+                input.form-control(type='text' autocomplete="off")
+              ul.dropdown-menu.inner(role="menu")
+                li.dropdown-header(data-optgroup="1")
+                  span.text 角色
+                li.selected(data-original-index="1" data-optgroup="1")
+                  a(tabindex="0" data-tokens="null")
+                    span.text 管理员 
+                 li.selected(data-original-index="1" data-optgroup="1")
+                  a(tabindex="0" data-tokens="null")
+                    span.text xiangmufuzeren        
+     */

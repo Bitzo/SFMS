@@ -17,6 +17,7 @@ module.exports = function(app) {
     //API相关
     app.use('/api/v1/', apiRoute);
 
+
     //实验室管理子系统
     app.use('/sfms', sfmsRoute);
 

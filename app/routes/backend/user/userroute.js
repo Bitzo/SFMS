@@ -93,7 +93,7 @@ router.post('/',function(req,res)
 				return;
 			}
 			//去除相同的账户名字
-			var sameAccount={'Account':account,'page':1};
+			var sameAccount={'Account':account};
 			user.queryAllUsers(sameAccount,function(err,result)
 			{
 				if(err)

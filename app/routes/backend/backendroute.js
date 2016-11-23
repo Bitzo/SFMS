@@ -48,25 +48,41 @@ router.get('/index', function(req, res, next) {
     title: '管理后台'
   });
 });
+
+router.get('/user', function(req, res, next) {
+  res.render('backend/user', {
+    title: '管理后台'
+  });
+});
 //生成验证码
 router.get('/generatecode', code);
 
 //用户登录
 router.post('/login', function(req, res) {
+  var resultData = {
+    "data": {
+      "isSuccess": false,
+      "accountId": -1,
+      "msg": "登录失败，请刷新后重试!"
+    }
+  };
+
   var username = req.body.username || '';
   var password = req.body.password || '';
   var code = req.body.code || '';
-  console.log("username:" + username);
-  console.log("password:" + password);
-  console.log("code:" + code);
-  console.log("session下的验证码" + req.session.code);
+
+  //验证码判断
+  if (req.session.code.toString() !== req.body.code.toString()) {
+    resultData.isSuccess = false;
+    resultData.msg = "验证码输入不正确!";
+    return res.json(resultData);
+  }
+
   if (username == '' || password == '') {
     res.status(401);
-    res.json({
-      "status": 401,
-      "message": "Invalid credentials"
-    });
-    return;
+    resultData.isSuccess = false;
+    resultData.msg = "帐号密码不能为空!";
+    return res.json(resultData);
   }
 
   var data = {
@@ -74,35 +90,32 @@ router.post('/login', function(req, res) {
     "password": password,
   };
 
-  userService.querySingleUser(username,password, function(err, user) {
-console.log(user);
+  userService.querySingleUser(username, password, function(err, user) {
     if (err) {
       res.status(500);
-      res.json({
+      return res.json({
         "status": 500,
         "message": "应用程序异常!",
         "error": err
       });
-      return;
     }
 
-    if (!user) {
+    if (!user || user.length == 0) {
       res.status(401);
-      res.json({
-        "status": 401,
-        "message": "Invalid credentials"
-      });
-      return;
+      resultData.msg = "帐号密码不对,请重试!";
+      return res.json(resultData);
     }
 
-    if (user) {
-      var obj={"isSuccess":true,"accountId":user.AccountID};
-      res.json(jwtHelper.genToken(obj));
+    if (user.length > 0 && user[0].AccountID > 0) {
+      resultData.isSuccess = true;
+      resultData.accountId = user.AccountID;
+
+      return res.json(jwtHelper.genToken(resultData));
     }
 
+    return res.json(resultData);
   })
 });
-
 
 //菜单新增
 router.use('/addmenu', addMenu);

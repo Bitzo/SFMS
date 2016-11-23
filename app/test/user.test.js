@@ -54,7 +54,7 @@ describe("用户功能单元测试",function()
 	it("用户的信息查询",function(done)
 	{
 		var selectData={
-			'AccountID':insertUserID,
+			'AccountID':insertUserID
 			
 		}
 		
