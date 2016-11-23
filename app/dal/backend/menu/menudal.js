@@ -2,7 +2,7 @@
  * @Author: Cecurio
  * @Date: 2016/11/14 18:56
  * @Last Modified by: Cecurio
- * @Last Modified time: 2016/11/14 18:56
+ * @Last Modified time: 2016/11/23 17:11
  * @Function: 查询所有菜单，菜单新增，菜单编辑，菜单删除，通过UserID(AccountID)查询所拥有的菜单、角色
  */
 
@@ -24,10 +24,10 @@ exports.queryAllMenus = function(data, callback) {
 
         }
     }
-    logger.writeInfo("【DAL】查询所有菜单：" + sql);
+    logger.writeInfo("[queryAllMenus func in menudal]查询所有菜单：" + sql);
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            logger.writeError("【DAL】数据库连接错误：" + err);
+            logger.writeError("[menudal]数据库连接错误：" + err);
             callback(true);
             return;
         }
@@ -59,11 +59,11 @@ exports.menuInsert = function (data,callback) {
 
     insert_sql += sql;
 
-    logger.writeInfo("menu insert_sql : " +insert_sql);
+    logger.writeInfo("[menuInsert func in menudal]菜单新增：" +insert_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            logger.writeError("【DAL】数据库连接错误：" + err);
+            logger.writeError("[menudal]数据库连接错误：" + err);
             callback(true);
             return;
         }
@@ -100,11 +100,11 @@ exports.menuUpdate = function(data, callback) {
 
     update_sql = update_sql + sql;
 
-    logger.writeInfo("update_sql:" + update_sql);
+    logger.writeInfo("[menuUpdate func in menudal]菜单编辑:" + update_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err) {
-            logger.writeError("【DAL】数据库连接错误：" + err);
+            logger.writeError("[menudal]数据库连接错误：" + err);
             callback(true);
             return;
         }
@@ -129,11 +129,11 @@ exports.menuDelete = function (data, callback) {
     var sql = 'delete from jit_menu where 1=1 and MenuID = ';
     sql = sql + data.MenuID;
 
-    logger.writeInfo("菜单删除的sql:" + sql);
+    logger.writeInfo("[menuDelete func in menudal]菜单删除：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            logger.writeError("【DAL】数据库连接错误：" + err);
+            logger.writeError("[menudal]数据库连接错误：" + err);
             callback(true);
             return ;
         }
@@ -156,19 +156,19 @@ exports.menuDelete = function (data, callback) {
 //根据UserID,获取用户的角色
 exports.queryRoleByUserID = function (data,callback) {
     var arr = new Array();
-    arr[0] = ' select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleName,jit_roleuser.AccountID ';
-    arr[1] = ' from jit_role ';
-    arr[2] = ' left join jit_roleuser on  jit_role.RoleID = jit_roleuser.RoleID';
-    arr[3] = '  where jit_roleuser.AccountID = ';
+    arr.push(' select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleName,jit_roleuser.AccountID ');
+    arr.push(' from jit_role ');
+    arr.push(' left join jit_roleuser on  jit_role.RoleID = jit_roleuser.RoleID');
+    arr.push('  where jit_roleuser.AccountID = ');
 
     var sql = arr.join(' ');
     sql = sql + data.userID;
 
-    logger.writeInfo("UserID查询角色的sql: " + sql);
+    logger.writeInfo("[queryRoleByUserID func in menudal]根据UserID查询角色: " + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            logger.writeError("【DAL】数据库连接错误：" + err);
+            logger.writeError("[menudal]数据库连接错误：" + err);
             callback(true);
             return;
         }
@@ -189,19 +189,20 @@ exports.queryRoleByUserID = function (data,callback) {
 //根据UserID,获取用户相应地菜单
 exports.queryMenuByUserID = function (data,callback) {
     var arr = new Array();
-    arr[0] = ' select  * ';
-    arr[1] = ' from jit_menu ';
-    arr[2] = ' left join jit_usermenu on jit_menu.MenuID = jit_usermenu.menuID ';
-    arr[3] = ' where jit_usermenu.userID =  ';
+    arr.push(' select  jit_menu.ApplicationID,jit_menu.MenuID,jit_menu.MenuLevel,jit_menu.ParentID, ');
+    arr.push(' jit_menu.SortIndex,jit_menu.MenuName,jit_menu.IconPath ,jit_menu.Url,jit_menu.Memo,jit_menu.IsActive,jit_usermenu.userID ');
+    arr.push(' from jit_menu ');
+    arr.push(' left join jit_usermenu on jit_menu.MenuID = jit_usermenu.menuID ');
+    arr.push(' where jit_usermenu.userID =  ');
 
     var sql = arr.join(' ');
     sql = sql + data.userID;
 
-    logger.writeInfo("UserID查询菜单的sql: " + sql);
+    logger.writeInfo("[queryMenuByUserID func in menudal]根据UserID查询菜单: : " + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
-            logger.writeError("【DAL】数据库连接错误：" + err);
+            logger.writeError("[menudal]数据库连接错误：" + err);
             callback(true);
             return;
         }

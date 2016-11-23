@@ -49,6 +49,12 @@ router.get('/',function (req,res) {
                 },
                 msg : '查询角色成功'
             });
+        }else {
+            res.json({
+                code : 404,
+                isSuccess : false,
+                msg : '查询角色失败'
+            });
         }
     });
 
