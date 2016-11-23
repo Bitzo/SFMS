@@ -117,7 +117,8 @@ router.post('/', function (req, res) {
                 'RoleID': roleID,
                 'data': funcData
             }
-            rolefuncservice.addRoleFunc(data, function (err, results) {
+            //先删除原来的功能点
+            rolefuncservice.delRoleFunc(data,function (err, results) {
                 logger.writeInfo(results);
                 if (err) {
                     res.json({
@@ -127,20 +128,35 @@ router.post('/', function (req, res) {
                     })
                     return;
                 }
-                if (results !== undefined && results.affectedRows != 0) {
-                    res.json({
-                        code: 200,
-                        isSuccess: true,
-                        msg: "添加信息成功"
+                //删除角色功能点成功
+                if (results!==undefined) {
+                    //新增功能点
+                    rolefuncservice.addRoleFunc(data, function (err, results) {
+                        logger.writeInfo(results);
+                        if (err) {
+                            res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: "添加失败，服务器出错"
+                            })
+                            return;
+                        }
+                        if (results !== undefined && results.affectedRows != 0) {
+                            res.json({
+                                code: 200,
+                                isSuccess: true,
+                                msg: "添加信息成功"
+                            })
+                            return;
+                        } else {
+                            res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "添加信息失败"
+                            })
+                            return;
+                        }
                     })
-                    return;
-                } else {
-                    res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "添加信息失败"
-                    })
-                    return;
                 }
             })
         } else {
@@ -211,7 +227,8 @@ router.put('/',function (req, res) {
                 'RoleID': roleID,
                 'data': funcData
             }
-            rolefuncservice.addRoleFunc(data, function (err, results) {
+            //先删除原先的功能点
+            rolefuncservice.delRoleFunc(data, function (err, results) {
                 logger.writeInfo(results);
                 if (err) {
                     res.json({
@@ -221,20 +238,34 @@ router.put('/',function (req, res) {
                     })
                     return;
                 }
-                if (results !== undefined && results.affectedRows != 0) {
-                    res.json({
-                        code: 200,
-                        isSuccess: true,
-                        msg: "修改信息成功"
+                //删除成功，开始修改
+                if(results!==undefined) {
+                    rolefuncservice.updateRoleFunc(data, function (err, results) {
+                        logger.writeInfo(results);
+                        if (err) {
+                            res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: "修改失败，服务器出错"
+                            })
+                            return;
+                        }
+                        if (results !== undefined && results.affectedRows != 0) {
+                            res.json({
+                                code: 200,
+                                isSuccess: true,
+                                msg: "修改信息成功"
+                            })
+                            return;
+                        } else {
+                            res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "修改信息失败"
+                            })
+                            return;
+                        }
                     })
-                    return;
-                } else {
-                    res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "修改信息失败"
-                    })
-                    return;
                 }
             })
         } else {
