@@ -66,9 +66,13 @@ router.get('/',function (req, res) {
                         msg: '查询成功',
                         dataNum: countNum,
                         curPage: page,
+                        curPageNum:config.pageCount,
                         totlePage: Math.ceil(countNum/config.pageCount),
                         data: results
                     };
+                    if(result.curPage == result.totlePage) {
+                        result.curPageNum = result.dataNum - (result.totlePage-1)*config.pageCount;
+                    }
                     res.json(result);
                     return;
                 } else {
