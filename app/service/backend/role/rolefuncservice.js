@@ -66,7 +66,6 @@ exports.updateRoleFunc = function (data, callback) {
     var delData = {
         'RoleID': data['RoleID']
     };
-
     rolefuncDAL.delRoleFunc(delData,function (err, results) {
         if (err) {
             callback(true);

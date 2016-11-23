@@ -8,7 +8,6 @@
 
 var jwt = require('jwt-simple');
 var config = appRequire('config/config');
-var userService = appRequire('service/backend/user/userservice');
 
 module.exports = function(req, res, next) {
     var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
@@ -26,45 +25,6 @@ module.exports = function(req, res, next) {
                 });
                 return;
             }
-            console.log('key:' + key);
-            var data = {
-                'AccountID': key
-            };
-             
-            console.log('验证用户信息')
-
-                //验证登录用户
-            userService.queryAllUsers(data, function(err, user) {
-                if (err) {
-                    res.status(500);
-                    res.json({
-                        "status": 500,
-                        "message": "应用程序异常!",
-                        "error": err
-                    });
-                    return;
-                }
-
-                if (user!=undefined&&user.AccountID>0) {
-                    if ((req.url.indexOf('admin') >= 0 && dbUser.role == 'admin') || (req.url.indexOf('admin') < 0 && req.url.indexOf('/api/v1/') >= 0)) {
-                        next(); // To move to next middleware
-                    } else {
-                        res.status(403);
-                        res.json({
-                            "status": 403,
-                            "message": "Not Authorized"
-                        });
-                        return;
-                    }
-                } else {
-                    res.status(401);
-                    res.json({
-                        "status": 401,
-                        "message": "Invalid User"
-                    });
-                    return;
-                }
-            });
         } catch (err) {
             res.status(500);
             res.json({

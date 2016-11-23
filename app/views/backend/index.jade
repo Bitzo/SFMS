@@ -81,93 +81,27 @@ block content
  
     div.main-container(id='main-container')
       div.main-container-inner
+        div.sidebar.col-sm-3.col-md-2.hidden-print.affix(id='sidebar' ng-controller="menucontroller" )
 
-        
-          div.sidebar.col-sm-3.col-md-2.hidden-print.affix(id='sidebar')
+           
+            ul.nav.navlist
+              span.list-header 菜单显示
+              li(ng-repeat="x in menu") 
+                a.accordion-toggle(href='#{{x.ID}}' data-toggle="collapse" )
+                  span.menu-text  
+                    span.glyphicon.glyphicon-home   {{x.MenuName}}   
+                    span.caret
+                ul.collapse(id='{{x.ID}}')
+                  li(ng-repeat="y in x.children") 
+                    a(href="{{y.Url}}")  {{y.MenuName}}
+               
 
-            ul.nav.navlist(id='app')
-              span.list-header 应用
-              li
-                a.accordion-toggle(href='#one' data-parent="#app" data-toggle="collapse" )
-                  span.menu-text 
-                    span.glyphicon.glyphicon-home   应用管理
-                    span.caret
-                ul.collapse(id='one')
-                  li
-                    a(href='#')  用户管理的
-                  li
-                    a(href='#/computers') 用户管理
-                  li
-                    a(href='#/printers')  用户得管理
-                  li
-                    a(href='#/blabla')  用户管理
-              li
-                a.accordion-toggle(href='#two' data-parent="#app" data-toggle="collapse" )
-                  span.menu-text 
-                    span.glyphicon.glyphicon-home   应用管理
-                    span.caret
-                ul.collapse(id='two')
-                  li
-                    a(href='#')  用户管理
-                  li
-                    a(href='#') 用户管理
-                  li
-                    a(href='#')  用户管理
-                  li
-                    a(href='#')  用户管理
-              li
-                a.active(href='#')
-                  span.glyphicon.glyphicon-tag   应用管理
-                  span.border
             hr
             
-            ul.nav.navlist(id='menu')   
-              span.list-header 菜单
-              li 
-                a.accordion-toggle(href='#fir' data-toggle="collapse" )
-                  span.menu-text 
-                    span.glyphicon.glyphicon-wrench   菜单设置
-                      span.caret
-                ul.submenu.panel-collapse.collapse(id='fir')
-                  li
-                    a(href='#')  菜单管理
-                  li
-                    a(href='#')  菜单管理
-                  li
-                    a(href='#')  菜单管理
-                  li
-                    a(href='#')  菜单管理
-
-              li 
-                a.accordion-toggle(href='#sec' data-toggle="collapse" )
-                  span.menu-text 
-                    span.glyphicon.glyphicon-stats   项目设置
-                      span.caret
-                ul.submenu.panel-collapse.collapse(id='sec')
-                  li
-                    a(href='#')  菜单管理
-                  li
-                    a(href='#')  菜单管理
-                  li
-                    a(href='#')  菜单管理
-                  li
-                    a(href='#')  菜单管理
-
-              li
-                a
-                  span.glyphicon.glyphicon-credit-card   项目设置
-                  span.border
-              li
-                a
-                  span.glyphicon.glyphicon-send   项目设置
-                  span.border
-
-
-
 
         div.container(ng-view)
-
-          include ../shared/footer.jade
+          
+      include ../shared/footer.jade
 
 
 
