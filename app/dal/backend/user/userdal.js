@@ -5,10 +5,10 @@
  * @Last Modified time: 2016-11-16 18:30
  */
 
-var db_backend = appRequire('db/db_backend');
-var userModel = appRequire('model/backend/user/usermodel');
-var config = appRequire('config/config')
-var logger = appRequire('util/loghelper').helper;
+ var db_backend = appRequire('db/db_backend');
+ var userModel = appRequire('model/backend/user/usermodel');
+ var config = appRequire('config/config')
+ var logger = appRequire('util/loghelper').helper;
 
 //根据Account,pwd查询单一有效用户
 exports.querySingleUser = function(account, pwd, callback) {
@@ -39,29 +39,28 @@ exports.queryAllUsers = function(data, callback) {
             sql += ' and ' + key + " = '" + data[key] + "' ";
         }
     }
-
     // console.log(data['page']);
-    var num = config.pageCount; //每一页要显示的数据量
+         var num = config.pageCount; //每一页要显示的数据量
 
-    sql += " limit " + (data['page'] - 1) * num + " , " + num;
-    logger.writeInfo("查询用户:" + sql);
-    console.log("查询用户:" + sql);
-    db_backend.mysqlPool.getConnection(function(err, connection) {
-        if (err) {
-            callback(true);
-            return;
-        }
-
-        connection.query(sql, function(err, results) {
+         sql += " limit " + (data['page'] - 1) * num + " , " + num;
+         logger.writeInfo("查询用户:" + sql);
+         console.log("查询用户:" + sql);
+         console.log(111);
+         db_backend.mysqlPool.getConnection(function(err, connection) {
             if (err) {
                 callback(true);
                 return;
             }
-            callback(false, results);
-            connection.release();
+            connection.query(sql, function(err, results) {
+                if (err) {
+                    callback(true);
+                    return;
+                }
+                callback(false, results);
+                connection.release();
+            });
         });
-    });
-};
+     };
 
 //新增用户
 exports.insert = function(data, callback) {
@@ -136,27 +135,27 @@ exports.update = function(data, callback) {
 exports.delete = function(data, callback) {
     var del_sql = 'delete from jit_user where AccountID in ';
     del_sql += "(";
-    del_sql += data.toString();
-    del_sql += ")";
+        del_sql += data.toString();
+        del_sql += ")";
 
-    console.log("删除用户: " + del_sql);
+console.log("删除用户: " + del_sql);
 
-    db_backend.mysqlPool.getConnection(function(err, connection) {
+db_backend.mysqlPool.getConnection(function(err, connection) {
+    if (err) {
+        callback(true);
+        connection.release();
+        return;
+    }
+
+    connection.query(del_sql, function(err) {
         if (err) {
             callback(true);
-            connection.release();
             return;
         }
-
-        connection.query(del_sql, function(err) {
-            if (err) {
-                callback(true);
-                return;
-            }
-            callback(false);
-            connection.release();
-        });
+        callback(false);
+        connection.release();
     });
+});
 };
 
 

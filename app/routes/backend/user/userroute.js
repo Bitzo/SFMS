@@ -5,25 +5,25 @@
  * @Last Modified time: 2016/11/20 15:04
  * @Function: 用户信息的插入,用户信息的查询，用户信息的更改,信息存入日志
  */
-var express=require('express');
-var router=express.Router();
-var url=require('url');
-var logger=appRequire('util/loghelper').helper;
+ var express=require('express');
+ var router=express.Router();
+ var url=require('url');
+ var logger=appRequire('util/loghelper').helper;
 //加载中间件
 var user=appRequire('service/backend/user/userservice');
 var config=appRequire('config/config');
 
 router.post('/',function(req,res)
+{
+	
+	var data=['ApplicationID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
+	var err='require: ';
+
+	for(var value in data)
 	{
 		
-		var data=['ApplicationID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
-		var err='require: ';
-
-		for(var value in data)
+		if(!(data[value] in req.body))
 		{
-			
-			if(!(data[value] in req.body))
-			{
 				///if(data[value]!='Email'&&data[value]!='Address')
 				err+=data[value]+' ';//检查post传输的数据
 			}	
@@ -68,7 +68,7 @@ router.post('/',function(req,res)
 			'IsActive':isActive,
 			
 		}	
-	
+		
 		
 		var requireValue='缺少值：';
 		
@@ -85,13 +85,13 @@ router.post('/',function(req,res)
 		if(requireValue!='缺少值：')
 		{
 			res.json({
-					code:300,
-					isSuccess:false,
-					msg:requireValue
-				});
+				code:300,
+				isSuccess:false,
+				msg:requireValue
+			});
 			logger.writeError(requireValue);
-				return;
-			}
+			return;
+		}
 			//去除相同的账户名字
 			var sameAccount={'Account':account};
 			user.queryAllUsers(sameAccount,function(err,result)
@@ -117,54 +117,54 @@ router.post('/',function(req,res)
 					return ;
 				}
 
-			
-			if(email.length!=0&&email!=undefined)
-			{
-				data['Email']=email;
-			}
-			
-			
-			if(address!=undefined&&address.length!=0)
-			{
-				data['Address']=address;
-			}
+				
+				if(email.length!=0&&email!=undefined)
+				{
+					data['Email']=email;
+				}
+				
+				
+				if(address!=undefined&&address.length!=0)
+				{
+					data['Address']=address;
+				}
 
 
-			if(collegeID!=undefined&&collegeID.length!=0)
-			{
-				data['CollegeID']=collegeID;
-			}
-			
-			if(gradeYear!=undefined&&gradeYear.length!=0)
-			{
-				data['GradeYear']=gradeYear;
-			}
-			
-			if(phone!=undefined&&phone.length!=0)
-			{
-				data['Phone']=phone;
-			}
+				if(collegeID!=undefined&&collegeID.length!=0)
+				{
+					data['CollegeID']=collegeID;
+				}
+				
+				if(gradeYear!=undefined&&gradeYear.length!=0)
+				{
+					data['GradeYear']=gradeYear;
+				}
+				
+				if(phone!=undefined&&phone.length!=0)
+				{
+					data['Phone']=phone;
+				}
 
-			if(classID!=undefined&&classID.length!=0)
-			{
-				data['ClassID']=classID;
-			}
-			if(memo!=undefined&&memo.length!=0)
-			{
-				data['Memo']=memo;
-			}
-			if(editUserID!=undefined&&editUserID.length!=0)
-			{
-				data['EditUserID']=editUserID;
-			}
-			if(editTime!=undefined&&editTime.length!=0)
-			{
-				data['EditTime']=editTime;
-			}
+				if(classID!=undefined&&classID.length!=0)
+				{
+					data['ClassID']=classID;
+				}
+				if(memo!=undefined&&memo.length!=0)
+				{
+					data['Memo']=memo;
+				}
+				if(editUserID!=undefined&&editUserID.length!=0)
+				{
+					data['EditUserID']=editUserID;
+				}
+				if(editTime!=undefined&&editTime.length!=0)
+				{
+					data['EditTime']=editTime;
+				}
 
 
-		user.insert(data,function(err,results)
-		{
+				user.insert(data,function(err,results)
+				{
 			//console.log(results);
 			if(err)
 			{
@@ -193,159 +193,159 @@ router.post('/',function(req,res)
 
 		});
 
-	});
+			});
 });
 router.get('/', function(req, res) {
 
 	logger.writeInfo("查询用户的记录");
-	//console.log(111);
+	console.log(111);
 	var data={};
 	var allCount;
 	var page=req.query.page;//页数
-    var accountID = req.query.AccountID;
-    var applicationID=req.query.ApplicationID;
-    var account=req.query.Account;
-    var userName=req.query.UserName;
-    var collegeID=req.query.CollegeID;
-    var gradeYear=req.query.GradeYear;
-    var classID=req.query.ClassID;
-    var createUserID=req.query.CreateUserID;
-    var editUserID=req.query.EditUserID;
-    var isActive=req.query.IsActive;
-    var address=req.query.Address;
- 
-    if(page==undefined||page.length==0)
-    {
-    	page=1;
-    }
-
-    if(accountID!==undefined&&accountID.length!=0)
-    {
-    	data['AccountID']=accountID;
-    }
-
-    if(applicationID!==undefined&&applicationID.length!=0)
-    {
-    	data['ApplicationID']=applicationID;
-    }
-
-    if(account!==undefined&&account.length!=0)
-    {
-    	data['Account']=account;
-    }
-
-    if(userName!==undefined&&userName.length!=0)
-    {
-    	data['UserName']=userName;
-    }
-
-
-    if(collegeID!==undefined&&accountID.length!=0)
-    {
-    	data['AccountID']=accountID;
-    }
-
-    if(gradeYear!==undefined&&gradeYear.length!=0)
-    {
-    	data['GradeYear']=gradeYear;
-    }
-    if(classID!==undefined&&classID.length!=0)
-    {
-    	data['ClassID']=classID;
-    }
-     if(createUserID!==undefined&&createUserID.length!=0)
-    {
-    	data['CreateUserID']=createUserID;
-    }
-
-    if(editUserID!==undefined&&editUserID.length!=0)
-    {
-    	data['EditUserID']=editUserID;
-    }
-      if(isActive!==undefined&&isActive.length!=0)
-    {
-    	data['IsActive']=isActive;
-    }
-     if(address!==undefined&&address.length!=0)
-    {
-    	data['Address']=address;
-    }
-    data['page']=page;
-  
-//获取所有用户的数量
-	user.countUser(data,function(err,result)
+	var accountID = req.query.AccountID;
+	var applicationID=req.query.ApplicationID;
+	var account=req.query.Account;
+	var userName=req.query.UserName;
+	var collegeID=req.query.CollegeID;
+	var gradeYear=req.query.GradeYear;
+	var classID=req.query.ClassID;
+	var createUserID=req.query.CreateUserID;
+	var editUserID=req.query.EditUserID;
+	var isActive=req.query.IsActive;
+	var address=req.query.Address;
+	
+	if(page==undefined||page.length==0)
 	{
-		if(err)
-		{
-			res.json({
-				code:500,
-				isSuccess:false,
-				msg:"获取数量失败"
-			})
-			logger.writeError("数量获取失败");
-			return ;
-		}
-		if(result!==undefined&&result.length!=0)
-		{
+		page=1;
+	}
+
+	if(accountID!==undefined&&accountID.length!=0)
+	{
+		data['AccountID']=accountID;
+	}
+
+	if(applicationID!==undefined&&applicationID.length!=0)
+	{
+		data['ApplicationID']=applicationID;
+	}
+
+	if(account!==undefined&&account.length!=0)
+	{
+		data['Account']=account;
+	}
+
+	if(userName!==undefined&&userName.length!=0)
+	{
+		data['UserName']=userName;
+	}
+
+
+	if(collegeID!==undefined&&accountID.length!=0)
+	{
+		data['AccountID']=accountID;
+	}
+
+	if(gradeYear!==undefined&&gradeYear.length!=0)
+	{
+		data['GradeYear']=gradeYear;
+	}
+	if(classID!==undefined&&classID.length!=0)
+	{
+		data['ClassID']=classID;
+	}
+	if(createUserID!==undefined&&createUserID.length!=0)
+	{
+		data['CreateUserID']=createUserID;
+	}
+
+	if(editUserID!==undefined&&editUserID.length!=0)
+	{
+		data['EditUserID']=editUserID;
+	}
+	if(isActive!==undefined&&isActive.length!=0)
+	{
+		data['IsActive']=isActive;
+	}
+	if(address!==undefined&&address.length!=0)
+	{
+		data['Address']=address;
+	}
+	data['page']=page;
+	
+//获取所有用户的数量
+user.countUser(data,function(err,result)
+{
+	if(err)
+	{
+		res.json({
+			code:500,
+			isSuccess:false,
+			msg:"获取数量失败"
+		})
+		logger.writeError("数量获取失败");
+		return ;
+	}
+	if(result!==undefined&&result.length!=0)
+	{
 		allCount=result[0]['num'];
-		}
-		else
-		{
-			res.json({
-                code: 500,
-                isSuccess: false,
-                msg: "未查询到相关信息"
-            });
-            logger.writeError("为查询到相关的信息");
-            return ;
-		}
-	});
-    user.queryAllUsers(data, function(err, result) {
-        if (err) {
-            res.json({
-            	code:500,
-            	isSuccess:true,
-                msg: '查询失败'
-            });
-            logger.writeError("查询失败");
-            return;
-        }
-        
-        if(result!=undefined&&result.length!=0)
-        {
-        	var results = {
-                code: 200,
-                isSuccess: true,
-                msg: '查询成功',
-                dataNum: allCount,
-                curPage: page,
-                totlePage: Math.ceil(allCount/config.pageCount),
-                data: result
-            };
-        res.json(results);
-        	
-    	}
-    	else
-    	{
-    		res.json({
-    			code:500,
-    			isSuccess:false,
-    			msg:"未查到数据"
-    		})
-    		logger.writeWarn("未查到数据");
-    	}
-    	return ;
-    });
+	}
+	else
+	{
+		res.json({
+			code: 500,
+			isSuccess: false,
+			msg: "未查询到相关信息"
+		});
+		logger.writeError("为查询到相关的信息");
+		return ;
+	}
+});
+user.queryAllUsers(data, function(err, result) {
+	if (err) {
+		res.json({
+			code:500,
+			isSuccess:true,
+			msg: '查询失败'
+		});
+		logger.writeError("查询失败");
+		return;
+	}
+	
+	if(result!=undefined&&result.length!=0)
+	{
+		var results = {
+			code: 200,
+			isSuccess: true,
+			msg: '查询成功',
+			dataNum: allCount,
+			curPage: page,
+			totlePage: Math.ceil(allCount/config.pageCount),
+			data: result
+		};
+		res.json(results);
+		
+	}
+	else
+	{
+		res.json({
+			code:500,
+			isSuccess:false,
+			msg:"未查到数据"
+		})
+		logger.writeWarn("未查到数据");
+	}
+	return ;
+});
 });
 
 router.put('/',function(req,res){
 	var data=['ApplicationID','AccountID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
-		var err='require: ';
-		for(var value in data)
+	var err='require: ';
+	for(var value in data)
+	{
+		
+		if(!(data[value] in req.body))
 		{
-			
-			if(!(data[value] in req.body))
-			{
 				///if(data[value]!='Email'&&data[value]!='Address')
 				err+=data[value]+' ';//检查post传输的数据
 			}
@@ -411,71 +411,71 @@ router.put('/',function(req,res){
 		if(requireValue!='缺少值：')
 		{
 			res.json({
-					code:300,
-					isSuccess:false,
-					msg:requireValue
-				});
+				code:300,
+				isSuccess:false,
+				msg:requireValue
+			});
 
 			logger.writeError(requireValue);
-				return;
-			}
-			
-			if(email.length!=0&&email!=undefined)
-			{
-				data['Email']=email;
-			}
-			
-			
-			if(address!=undefined&&address.length!=0)
-			{
-				data['Address']=address;
-			}
+			return;
+		}
+		
+		if(email.length!=0&&email!=undefined)
+		{
+			data['Email']=email;
+		}
+		
+		
+		if(address!=undefined&&address.length!=0)
+		{
+			data['Address']=address;
+		}
 
 
-			if(collegeID!=undefined&&collegeID.length!=0)
-			{
-				data['CollegeID']=collegeID;
-			}
-			
-			if(gradeYear!=undefined&&gradeYear.length!=0)
-			{
-				data['GradeYear']=gradeYear;
-			}
-			
-			if(phone!=undefined&&phone.length!=0)
-			{
-				data['Phone']=phone;
-			}
+		if(collegeID!=undefined&&collegeID.length!=0)
+		{
+			data['CollegeID']=collegeID;
+		}
+		
+		if(gradeYear!=undefined&&gradeYear.length!=0)
+		{
+			data['GradeYear']=gradeYear;
+		}
+		
+		if(phone!=undefined&&phone.length!=0)
+		{
+			data['Phone']=phone;
+		}
 
-			if(classID!=undefined&&classID.length!=0)
-			{
-				data['ClassID']=classID;
-			}
-			if(memo!=undefined&&memo.length!=0)
-			{
-				data['Memo']=memo;
-			}
-			if(editUserID!=undefined&&editUserID.length!=0)
-			{
-				data['EditUserID']=editUserID;
-			}
-			if(editTime!=undefined&&editTime.length!=0)
-			{
-				data['EditTime']=editTime;
-			}
+		if(classID!=undefined&&classID.length!=0)
+		{
+			data['ClassID']=classID;
+		}
+		if(memo!=undefined&&memo.length!=0)
+		{
+			data['Memo']=memo;
+		}
+		if(editUserID!=undefined&&editUserID.length!=0)
+		{
+			data['EditUserID']=editUserID;
+		}
+		if(editTime!=undefined&&editTime.length!=0)
+		{
+			data['EditTime']=editTime;
+		}
 
 
-			user.update(data,function(err,results)
+		user.update(data,function(err,results)
+		{
+			if(err)
 			{
-				if(err)
+				res.json(
 				{
-					res.json(
-					{
-						code:500,
-						isSuccess:false,
-						msg:'修改信息失败，服务器出错'
-					});
-					logger.writeError("修改信息失败，服务器出错");
+					code:500,
+					isSuccess:false,
+					msg:'修改信息失败，服务器出错'
+				});
+				logger.writeError("修改信息失败，服务器出错");
 				return ;
 			}	
 			if(results!==undefined&&results.affectedRows!=0)
@@ -490,14 +490,14 @@ router.put('/',function(req,res){
 			}else
 			{
 				res.json({
-				code:400,
-				isSuccess:false,
-				msg:"修改信息失败"
+					code:400,
+					isSuccess:false,
+					msg:"修改信息失败"
 				})
 				logger.writeError("修改信息失败");
 				return ;
 			}
 		})
 
-})
+	})
 module.exports=router;

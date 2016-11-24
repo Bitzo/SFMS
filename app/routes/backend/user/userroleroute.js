@@ -11,30 +11,30 @@
  var router=express.Router();
  var logger=appRequire('util/loghelper').helper;
  var userRole=appRequire('service/backend/user/userroleservice');
- 	
- 	router.post('/',function(req,res)
- 		{	
- 			var data=['AccountID','RoleID'];
- 			var err='require: ';
- 			for(var value in data)
- 			{
- 				console.log(data[value]);
- 				if(!(data[value] in req.body))
- 				{
- 					err+=data[value]+' ';
- 				}
- 			}
+ 
+ router.post('/',function(req,res)
+ {	
+ 	var data=['AccountID','RoleID'];
+ 	var err='require: ';
+ 	for(var value in data)
+ 	{
+ 		console.log(data[value]);
+ 		if(!(data[value] in req.body))
+ 		{
+ 			err+=data[value]+' ';
+ 		}
+ 	}
 
- 			if(err!='require: ')
- 			{
- 				res.json({
- 					code:500,
- 					isSuccess:false,
- 					msg:err
- 				});
- 				logger.writeError(err);
- 				return ;
- 			}
+ 	if(err!='require: ')
+ 	{
+ 		res.json({
+ 			code:500,
+ 			isSuccess:false,
+ 			msg:err
+ 		});
+ 		logger.writeError(err);
+ 		return ;
+ 	}
 
  			//获取参数
  			var ID=req.body.ID;
@@ -48,47 +48,47 @@
 
  			//判断传过来的数据是否为空
  			var requireValue='缺少值：';
-			for(var value in data)
-			{
-			
-				if(data[value].length==0)
-				{
-					requireValue+=value+' ';	
-				}
-			}
-
-			if(requireValue!='缺少值：')
-			{
-				res.json({
-					code:300,
-					isSuccess:false,
-					msg:requireValue
-				});
-				logger.writeError(requireValue);
-				return;
-			}
- 			userrole.insert(data,function(err,results)
+ 			for(var value in data)
+ 			{
+ 				
+ 				if(data[value].length==0)
  				{
- 					if(err)
- 					{
- 						res.json({
- 							code:500,
- 							isSuccess:false,
- 							msg:'插入失败'
- 						});
- 						logger.writeError("插入失败");
- 						return ;
- 					}
- 					if(results.insertId!=0)
- 					{
- 						res.json({
- 							code:200,
-							isSuccess:true,
-							msg:'插入成功'
-						});
- 					}
+ 					requireValue+=value+' ';	
+ 				}
+ 			}
 
+ 			if(requireValue!='缺少值：')
+ 			{
+ 				res.json({
+ 					code:300,
+ 					isSuccess:false,
+ 					msg:requireValue
  				});
+ 				logger.writeError(requireValue);
+ 				return;
+ 			}
+ 			userrole.insert(data,function(err,results)
+ 			{
+ 				if(err)
+ 				{
+ 					res.json({
+ 						code:500,
+ 						isSuccess:false,
+ 						msg:'插入失败'
+ 					});
+ 					logger.writeError("插入失败");
+ 					return ;
+ 				}
+ 				if(results.insertId!=0)
+ 				{
+ 					res.json({
+ 						code:200,
+ 						isSuccess:true,
+ 						msg:'插入成功'
+ 					});
+ 				}
+
+ 			});
  		});
 
 router.put('/',function(req,res)
