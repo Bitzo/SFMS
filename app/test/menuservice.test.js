@@ -101,6 +101,19 @@ describe("菜单功能单元测试", function() {
         });
     });
 
+    it("通过userID查询用户所属角色和菜单",function (done) {
+        var userData = {
+            "userID" : 1
+        }
+        menuService.queryMenuAndRoleByUserID(userData,function (err, result) {
+            if(err){
+                return done(err);
+            }
+            result.Menu.length.should.be.above(0).and.should.be.a.Number;
+            result.Role.length.should.be.above(0).and.should.be.a.Number;
+            done();
+        });
+    });
 
     it("菜单逻辑删除",function (done) {
         var deleteData = {

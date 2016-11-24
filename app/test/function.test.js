@@ -24,14 +24,6 @@ var data = {
 
 describe("功能点单元测试", function () {
 
-    it("功能点查询", function (done) {
-        funcService.queryAllFunctions(data, function (err, result) {
-            if (err) return done(err);
-            console.log(result);
-            done();
-        });
-    });
-
     it("功能点新增", function (done) {
         funcService.insert(data, function (err, result) {
             if (err) return done(err);
@@ -41,6 +33,13 @@ describe("功能点单元测试", function () {
         });
     });
 
+    it("功能点查询", function (done) {
+        funcService.queryAllFunctions(data, function (err, result) {
+            if (err) return done(err);
+            result.length.should.be.above(0).and.should.be.a.Number;
+            done();
+        });
+    });
     it("功能点修改", function (done) {
         data.FunctionID = insertFunctionID;
         data.Memo = '功能点修改描述';
@@ -53,6 +52,20 @@ describe("功能点单元测试", function () {
         });
     });
 
+    var QueryData={
+        "ApplicationID":1,
+        "FunctionID":[99,100,101,102]
+    }
+    it("根据多个FunctionID判断功能点是否存在", function (done) {
+        funcService.queryFuncByID(QueryData,function(err,result){
+            if(err){
+                return done(err);
+            }
+            console.log(result)
+            result.length.should.be.above(0).and.should.be.a.Number;
+            done();
+        });
+    });
     it("功能点逻辑删除", function (done) {
         data.FunctionID = insertFunctionID;
         funcService.delete(data, function (err, result) {
@@ -63,4 +76,5 @@ describe("功能点单元测试", function () {
             done();
         });
     });
+
 });

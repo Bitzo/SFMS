@@ -10,11 +10,11 @@ var rolefuncroute = appRequire('routes/backend/role/rolefuncroute');
 //用户的添加以及修改的路由
 
 var user = appRequire('routes/backend/user/userroute')
-//功能点
+  //功能点
 var funcroute = appRequire('routes/backend/function/functionroute');
 //用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
-//菜单新增
+  //菜单新增
 var addMenu = appRequire('routes/backend/menu/addmenu');
 //查询所有菜单
 var queryAllMenus = appRequire('routes/backend/menu/queryallmenus');
@@ -36,67 +36,87 @@ var showapp = appRequire('routes/backend/application/showapp');
 //验证码
 var code = appRequire('service/backend/code/codeservice').generateCode;
 //主应用主站点
-router.get('/', function (req, res, next) {
+router.get('/', function(req, res, next) {
   logger.writeInfo("首页记录");
   res.render('login', {
     title: 'JIT1320管理集成平台'
   });
 });
 
+router.get('/index', function(req, res, next) {
+  res.render('backend/index', {
+    title: '管理后台'
+  });
+});
+
+router.get('/user', function(req, res, next) {
+  res.render('backend/user', {
+    title: '管理后台'
+  });
+});
 //生成验证码
 router.get('/generatecode', code);
 
 //用户登录
-router.post('/login', function (req, res) {
+router.post('/login', function(req, res) {
+  var resultData = {
+    "data": {
+      "isSuccess": false,
+      "accountId": -1,
+      "msg": "登录失败，请刷新后重试!"
+    }
+  };
+
   var username = req.body.username || '';
   var password = req.body.password || '';
-  var code = req.body.code || '';
-  console.log("username:" + username);
-  console.log("password:" + password);
-  console.log("code:" + code);
-  console.log("session下的验证码" + req.session.code);
+  //var code = req.body.code || '';
+
+  //验证码判断
+  // if (req.session.code.toString() !== req.body.code.toString()) {
+  //   resultData.isSuccess = false;
+  //   resultData.msg = "验证码输入不正确!";
+  //   return res.json(resultData);
+  // }
+
   if (username == '' || password == '') {
     res.status(401);
-    res.json({
-      "status": 401,
-      "message": "Invalid credentials"
-    });
-    return;
+    resultData.data.isSuccess = false;
+    resultData.data.msg = "帐号密码不能为空!";
+    return res.json(resultData);
   }
 
   var data = {
-    "username": username,
+    "account": username,
     "password": password,
-    "code":code
   };
 
-  userService.login(data, function (err, user) {
+  userService.querySingleUser(username, password, function(err, user) {
     if (err) {
       res.status(500);
-      res.json({
+      return res.json({
         "status": 500,
         "message": "应用程序异常!",
         "error": err
       });
-      return;
     }
 
-    if (!user) {
+    if (!user || user.length == 0) {
       res.status(401);
-      res.json({
-        "status": 401,
-        "message": "Invalid credentials"
-      });
-      return;
+      resultData.data.msg = "帐号密码不对,请重试!";
+      return res.json(resultData);
     }
 
-    if (user) {
-      res.json(jwtHelper.genToken(user));
+    if (user.length > 0 && user[0].AccountID > 0) {
+      resultData.data.isSuccess = true;
+      resultData.data.accountId = user[0].AccountID;
+      resultData.data.msg = "登录成功";
+
+      return res.json(jwtHelper.genToken(resultData.data));
     }
 
+    return res.json(resultData);
   })
 });
-
 
 //菜单新增
 router.use('/addmenu', addMenu);
