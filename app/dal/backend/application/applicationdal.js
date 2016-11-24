@@ -3,10 +3,13 @@
  * @Date:   2016-11-14 18:42:38
  * @Last Modified by:
  * @Last Modified time:
+ * @Function: 应用模块
  */
 
 var db_backend= appRequire('db/db_backend');
 var applicationMode = appRequire('model/backend/application/applicationmodel');
+var config = appRequire('config/config');
+
 
 //查询目前所有应用
 exports.queryAllApp = function (data, callback) {
@@ -15,10 +18,16 @@ exports.queryAllApp = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            query_sql += ' and ' + key + " = '" + data[key] + "' ";
+            if (key != 'page') {
+                query_sql += ' and ' + key + " = '" + data[key] + "' ";
+            }
         }
     }
 
+    var num = config.pageCount;
+    var page = data.page || 1;
+
+    query_sql += " limit " + (page-1)*num + " , " + num;
     console.log("查询所有应用" + query_sql);
 
 
@@ -37,6 +46,37 @@ exports.queryAllApp = function (data, callback) {
         });
     });
 };
+
+//计数
+exports.countAllapps = function (data, callback) {
+    var sql =  'select count(1) AS num from jit_application where 1=1 ';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && data[key] !== undefined)
+                sql += "and " + key + " = '" + data[key] + "' ";
+        }
+    }
+
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+
+        connection.query(sql, function (err, results) {
+            if (err) {
+                callback(true);
+                return;
+            };
+
+            callback(false, results);
+            connection.release();
+        })
+    })
+};
+
 
 //新增应用
 exports.insert = function(data, callback) {
@@ -106,10 +146,10 @@ exports.update = function (data, callback) {
 
 //删除应用
 exports.delete = function (data, callback) {
-    var del_sql = 'delete from jit_application where ID in ';
-    del_sql += "(";
-    del_sql += data.toString();
-    del_sql += ")";
+    var del_sql = 'delete from jit_application where 1=1 ';
+    if (data !== undefined) {
+        del_sql += 'and ID = ' + data['ID'];
+    }
 
     console.log("删除用户" + del_sql);
 
