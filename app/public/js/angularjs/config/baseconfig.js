@@ -2,26 +2,27 @@
 /**
  * Created by Administrator on 2016/11/21.
  */
-myApp.config(function($routeProvider) {
+var myApp = angular.module('myApp', ['ngRoute','jason.pagination']).config(function($routeProvider) {
     $routeProvider.
     when('/sfms/index',{
-        templateUrl: 'sfms/index'
+        templateUrl: 'backend/index'
         // controller: 'HomeController'
     }).
-    when('/backend/index',{
-        templateUrl: 'backend/index'
-       
+    when('/computers',{
+        template:'这是电脑页面',
+        //controller: 'HomeController'
     }).
-    when('/backend/user',{
-        templateUrl: 'backend/user'
-     
+    when('/printers',{
+        template:'这是打印机页面',
+        //controller: 'HomeController'
     }).
     otherwise({
         redirectTo:'/'
     });
 
 
-}).run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {
+});
+myApp.run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {
     var locationChangeStartOff = $rootScope.$on('$locationChangeStart', locationChangeStart);
     var locationChangeSuccessOff = $rootScope.$on('$locationChangeSuccess', locationChangeSuccess);
 

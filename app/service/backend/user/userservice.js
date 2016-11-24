@@ -22,7 +22,6 @@ exports.querySingleUser = function(accountid, pwd, callback) {
     }
 
     userDAL.querySingleUser(accountid, pwd, function(err, results) {
-console.log('dal callback');
         if (err) {
             callback(true);
             return;

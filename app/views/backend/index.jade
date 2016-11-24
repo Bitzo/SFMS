@@ -85,13 +85,14 @@ block content
 
            
             ul.nav.navlist
-              span.list-header 菜单显示
+              span.list-header
+              a(href='#/computers')  菜单显示
               li(ng-repeat="x in menu") 
-                a.accordion-toggle(href='#{{x.ID}}' data-toggle="collapse" )
+                a.accordion-toggle(href='#{{x.MenuName}} ' data-toggle="collapse" )
                   span.menu-text  
                     span.glyphicon.glyphicon-home   {{x.MenuName}}   
                     span.caret
-                ul.collapse(id='{{x.ID}}')
+                ul.collapse(id='{{x.MenuName}}')
                   li(ng-repeat="y in x.children") 
                     a(href="{{y.Url}}")  {{y.MenuName}}
                

@@ -24,81 +24,59 @@ exports.queryRoleFunc = function (data, callback) {
 
 //新增角色功能点
 exports.addRoleFunc = function (data, callback) {
-    var delData = {
-        'RoleID': data['RoleID']
-    };
+    function checkData(data) {
+        for (var key in data) {
+            if (data[key] === undefined) {
+                console.log("undefined:" + key);
+                return false;
+            }
+        }
+        return true;
+    }
 
-    rolefuncDAL.delRoleFunc(delData,function (err, results) {
+    if (!checkData(data)) {
+        callback(true);
+        return;
+    }
+
+    rolefuncDAL.addRoleFunc(data, function (err, results) {
         if (err) {
             callback(true);
             return;
         }
-        logger.writeInfo("已删除该用户所有的功能点");
-
-        function checkData(data) {
-            for (var key in data) {
-                if (data[key] === undefined) {
-                    console.log("undefined:" + key);
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        if (!checkData(data)) {
-            callback(true);
-            return;
-        }
-
-        rolefuncDAL.addRoleFunc(data, function (err, results) {
-            if (err) {
-                callback(true);
-                return;
-            }
-            logger.writeInfo('addRoleFunc');
-            callback(false, results);
-        })
+        logger.writeInfo('addRoleFunc');
+        callback(false, results);
     })
 }
 
 //更改角色功能点
 exports.updateRoleFunc = function (data, callback) {
-    var delData = {
-        'RoleID': data['RoleID']
-    };
-    rolefuncDAL.delRoleFunc(delData,function (err, results) {
+    function checkData(data) {
+        for (var key in data) {
+            if(data[key] === undefined) {
+                logger.writeInfo("undefined:"+ key);
+                return false;
+            }
+        }
+        return true;
+    }
+    if(!checkData(data))
+    {
+        callback(true);
+        return;
+    }
+
+    rolefuncDAL.addRoleFunc(data, function (err, results) {
         if (err) {
             callback(true);
             return;
         }
-        logger.writeInfo("已删除该用户所有的功能点");
-
-        function checkData(data) {
-            for (var key in data) {
-                if(data[key] === undefined) {
-                    logger.writeInfo("undefined:"+ key);
-                    return false;
-                }
-            }
-            return true;
-        }
-        if(!checkData(data))
-        {
-            callback(true);
-            return;
-        }
-
-        rolefuncDAL.addRoleFunc(data, function (err, results) {
-            if (err) {
-                callback(true);
-                return;
-            }
-            logger.writeInfo('addRoleFunc');
-            callback(false, results);
-        })
+        logger.writeInfo('addRoleFunc');
+        callback(false, results);
     })
 }
 
+//删除角色的所有功能点
 exports.delRoleFunc = function (data, callback) {
     var delData = {
         'RoleID': data['RoleID']

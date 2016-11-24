@@ -20,6 +20,7 @@ var logger = appRequire("util/loghelper").helper;
 router.get('/',function (req, res) {
     var appID = req.query.appID;
     var page = req.query.page || 1;
+    page = page>0?page:1;
 
     var roleName = req.query.RoleName;
     var isActive = req.query.IsActive;
@@ -65,9 +66,13 @@ router.get('/',function (req, res) {
                         msg: '查询成功',
                         dataNum: countNum,
                         curPage: page,
+                        curPageNum:config.pageCount,
                         totlePage: Math.ceil(countNum/config.pageCount),
                         data: results
                     };
+                    if(result.curPage == result.totlePage) {
+                        result.curPageNum = result.dataNum - (result.totlePage-1)*config.pageCount;
+                    }
                     res.json(result);
                     return;
                 } else {
@@ -339,7 +344,8 @@ router.put('/', function (req, res) {
                                 "RoleID":roleID,
                                 "data":funcData
                             }
-                            rolefuncservice.updateRoleFunc(data, function (err, results) {
+                            //先删除原先的功能点
+                            rolefuncservice.delRoleFunc(data, function (err, results) {
                                 if (err) {
                                     res.json({
                                         code: 500,
@@ -348,20 +354,33 @@ router.put('/', function (req, res) {
                                     });
                                     return;
                                 }
-                                if (results !== undefined && results.affectedRows != 0) {
-                                    res.json({
-                                        code: 200,
-                                        isSuccess: true,
-                                        msg: "修改信息成功"
-                                    });
-                                    return;
-                                } else {
-                                    res.json({
-                                        code: 404,
-                                        isSuccess: false,
-                                        msg: "修改角色成功，修改功能点信息失败"
-                                    });
-                                    return;
+                                //已删除原来的功能点准备新增
+                                if (results!==undefined) {
+                                    rolefuncservice.updateRoleFunc(data, function (err, results) {
+                                        if (err) {
+                                            res.json({
+                                                code: 500,
+                                                isSuccess: false,
+                                                msg: "修改角色基本信息成功，修改功能点失败，服务器出错"
+                                            });
+                                            return;
+                                        }
+                                        if (results !== undefined && results.affectedRows != 0) {
+                                            res.json({
+                                                code: 200,
+                                                isSuccess: true,
+                                                msg: "修改信息成功"
+                                            });
+                                            return;
+                                        } else {
+                                            res.json({
+                                                code: 404,
+                                                isSuccess: false,
+                                                msg: "修改角色成功，修改功能点信息失败"
+                                            });
+                                            return;
+                                        }
+                                    })
                                 }
                             })
                         } else {
