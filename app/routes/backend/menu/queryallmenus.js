@@ -3,7 +3,7 @@
  * @Date: 2016/11/15 11:49
  * @Last Modified by: Cecurio
  * @Last Modified time: 2016/11/15 11:49
- * @Function:
+ * @Function:查询菜单
  */
 var express = require('express');
 var router = express.Router();
@@ -14,7 +14,7 @@ var menuService = appRequire('service/backend/menu/menuservice');
 
 //获得树形Menu结构
 router.get('/',function (req,res) {
-    // res.json({ti : '获得树形Menu结构'});
+
     var userID = req.query.userID;
     if (userID === undefined) {
         res.json({

@@ -17,7 +17,7 @@ router.post('/', function (req, res) {
     var err = 'required: ';
 
     for(var index in data) {
-        if (!data[index] in req.body) {
+        if (!(data[index] in req.body)) {
             console.log(data[index]);
             err += data[index] + ' ';
         }

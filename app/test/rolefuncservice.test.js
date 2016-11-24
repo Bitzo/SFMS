@@ -11,19 +11,13 @@ var should = require('should');
 var rolefuncService = appRequire('service/backend/role/rolefuncservice');
 
 var data = {
-    "RoleID": 53,
+    "RoleID": 1,
     "data": [
         {
             "FunctionID":1
         },
         {
             "FunctionID":2
-        },
-        {
-            "FunctionID":3
-        },
-        {
-            "FunctionID":4
         }
     ]
 }

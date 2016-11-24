@@ -14,7 +14,7 @@ var signservice = appRequire('service/sfms/signservice');
 
 router.post('/', function (req, res) {
 
-    var data = ['AccountID', 'ip', 'UserAgent', 'mac', 'Longitude', 'Latitude', 'signType'];
+    var data = ['jitkey', 'ip', 'UserAgent', 'mac', 'Longitude', 'Latitude', 'signType'];
     var err = 'required: ';
     for(var value in data)
     {
@@ -35,7 +35,7 @@ router.post('/', function (req, res) {
         return;
     };
 
-    var userID = req.body.AccountID;
+    var userID = req.body.jitkey;
     var ip = req.body.ip;
     var userAgent = req.body.UserAgent || '';
     var mac = req.body.mac;
