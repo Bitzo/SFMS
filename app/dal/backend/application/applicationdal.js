@@ -27,7 +27,7 @@ exports.queryAllApp = function (data, callback) {
     var num = config.pageCount;
     var page = data.page || 1;
 
-    query_sql += " LIMIT " + (page-1)*num + "," + num;
+    query_sql += " limit " + (page-1)*num + " , " + num;
     console.log("查询所有应用" + query_sql);
 
 
