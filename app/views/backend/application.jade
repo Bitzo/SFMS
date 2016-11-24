@@ -1,0 +1,36 @@
+extends ../shared/layout.jade
+//- 用户管理页面
+block content
+  div.user
+    nav.navbar(id='ch-nav')
+      span.navbar-brand
+        h4 应用管理
+      
+    div(ng-controller="applicationcontroller")
+      div.table-responsive
+        table.table.table-hover
+          thead
+            tr
+              th {{ID}}
+              th ApplicationCode
+              th ApplicationName
+              th IsActive
+              th.col-sm-2.col-md-2 Edit      
+          tbody
+            tr(ng-repeat="x in info")
+              td {{x.ID}}
+              td {{x.ApplicationCode}}
+              td {{x.ApplicationName}}
+              td {{x.IsActive}}
+              td {{x.IsActive}}
+              td 
+                button.btn.btn-warning 编辑
+
+        
+      include ../shared/footer.jade
+
+
+
+
+
+   

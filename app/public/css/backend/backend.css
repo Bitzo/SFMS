@@ -124,12 +124,11 @@
 
 .user-info{
     width: 80%;
-    position: relative;
-    left: 50px;
+    margin: 10px auto;
+    
 }
 .user-info form{
-    position: relative;
-    background-color: #ccc;
+   width: 80%;
 }
 .user-info form .img{
     float: right;
@@ -147,12 +146,7 @@
     font-size: 20px;
     color: #6b6363;
 }
-/*.user-info input{
-    border-radius: 5px;
-    border: 1px solid #999;
-    height: 30px;
 
-}*/
 
 .user{
     width: 90%;

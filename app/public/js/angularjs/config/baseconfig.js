@@ -5,23 +5,24 @@
 var myApp = angular.module('myApp', ['ngRoute','jason.pagination']).config(function($routeProvider) {
     $routeProvider.
     when('/sfms/index',{
-        templateUrl: 'sfms/index'
-        
-    }).
-    when('/backend/index',{
         templateUrl: 'backend/index'
-       
+        // controller: 'HomeController'
     }).
-    when('/backend/user',{
-        templateUrl: 'backend/user'
-     
+    when('/computers',{
+        template:'这是电脑页面',
+        //controller: 'HomeController'
+    }).
+    when('/printers',{
+        template:'这是打印机页面',
+        //controller: 'HomeController'
     }).
     otherwise({
         redirectTo:'/'
     });
 
 
-}).run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {
+});
+myApp.run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {
     var locationChangeStartOff = $rootScope.$on('$locationChangeStart', locationChangeStart);
     var locationChangeSuccessOff = $rootScope.$on('$locationChangeSuccess', locationChangeSuccess);
 

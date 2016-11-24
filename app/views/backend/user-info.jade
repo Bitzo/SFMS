@@ -1,66 +1,58 @@
 extends ../shared/layout.jade
-
+//- 新建编辑用户页面
 block content
   div.user-info
-    h4.page-header 编辑个人信息
+    h4.page-header 个人信息
     div
-      form
-        div.form-group.img.col-sm-4.col-md-4
-          img.nav-user-photo(src="imgs/backend/user_pic.png" alt="Jason's Photo")
-          br
-          button.btn.btn-primary 更换头像
-        div.form-group.col-sm-6.col-md-6
-          label 账号  ：   11145
-        div.form-group.col-sm-6.col-md-6
+      form(name='userForm' ng-controller="addusercontroller")
+        div.form-group
+          label  账号  ：  {{response传回的数据}}
+        div.form-group
           label.control-label 用户名 ：
           div
             input.form-control(type='text')
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 密码 ：
           div
             input.form-control(type='text')
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 电话号码 ：
           div
             input.form-control(type='text')
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 邮箱地址 ：
           div
             input.form-control(type='email')
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 家庭住址 ：
           div
             input.form-control(type='text')
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 创建时间 ：
           div
             input.form-control(type='text')
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 创建人ID ：
           div
             input.form-control(type='text')
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 所在项目 ：
-          select.selectpicker
-            option sfms
-            option jkbro
-            option hahaha
-            option hahaha                                 
-        div.form-group.col-sm-6.col-md-6
+          input.form-control(type='text')                            
+        div.form-group
           label.control-label 最近编辑时间 ：
           div
             input.form-control(type='text')
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 最近编辑ID ：
           div
             input.form-control(type='text')
             div.form-group
-        div.form-group.col-sm-6.col-md-6
+        div.form-group
           label.control-label 是否有效 ：
           div
-            input.form-control(type='radio' style ="width:20px;margin-right:10px;" checked)
+            input(type='radio' style ="width:20px;margin-right:10px;" checked)
             span 有效
-            input.form-control(type='radio' style ="width:20px;margin-right:10px;")
+            input(type='radio' style ="width:20px;margin-right:10px;")
             span  无效  
         div.form-group
           label 所在学院 ：
@@ -71,8 +63,8 @@ block content
             option 5
             option 5
         div.form-group.col-sm-5.col-md-5
-          a.btn.btn-lg.btn-danger.pull-right(style="color:white;margin-right:10px;") 重置
-          a.btn.btn-lg.btn-primary.pull-right(style="color:white;margin-right:10px;") 确认
+          a.btn.btn-lg.btn-danger.pull-right(style="color:white;margin-left:50px;") 重置
+          a.btn.btn-lg.btn-primary.pull-right(style="color:white;margin-right:50px;") 确认
       
           
           
