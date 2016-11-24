@@ -13,26 +13,7 @@ var logger = appRequire('util/loghelper').helper;
 var config = appRequire('config/config');
 
 router.get('/', function (req, res) {
-    var data = ['ID', 'ApplicationCode', 'ApplicationName', 'Memo', 'IsActive'];
-    var err = 'required: ';
     var page = req.query.page || 1;
-
-    for(var index in data) {
-        if (!data[index] in req.body) {
-            console.log(data[index]);
-            err += data[index] + ' ';
-        }
-    }
-
-    if (err != 'required: ') {
-        res.json({
-            code: 400,
-            isSuccess: false,
-            msg: err
-        });
-        return;
-    }
-
 
     var data = {
         'page': page
