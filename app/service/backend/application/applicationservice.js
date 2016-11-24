@@ -3,6 +3,7 @@
  * @Date:   2016-11-14 20:14:22
  * @Last Modified by:
  * @Last Modified time:
+ * @Function: 应用模块的service
  */
 
 var appDAL = appRequire('dal/backend/application/applicationdal');
@@ -20,6 +21,16 @@ exports.queryAllApp = function (data, callback) {
 
 exports.insert = function (data, callback) {
     appDAL.insert(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        callback(false, results);
+    });
+};
+
+exports.countAllapps = function (data, callback) {
+    appDAL.countAllapps(data, function (err, results) {
         if (err) {
             callback(true);
             return;
