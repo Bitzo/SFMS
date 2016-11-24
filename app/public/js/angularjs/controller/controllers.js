@@ -1,6 +1,5 @@
 // Declare angular JS level module wich depends on filters, and services
-var myApp = angular.module('myApp', ['ngRoute']);
-
+var myApp = angular.module('myApp', ['ngRoute','jason.pagination']);
 myApp.controller('formController', ['$scope', '$http', function($scope, $http) {
     $scope.tips = '用户登录';
     $scope.changeCode = function() {
@@ -33,6 +32,7 @@ myApp.controller('formController', ['$scope', '$http', function($scope, $http) {
         });
     };
 }]);
+//菜单显示
 myApp.controller('menucontroller', ['$scope','$http',function ($scope,$http) {
     $scope.li = 'huhuhu';
     $http({
@@ -51,5 +51,34 @@ myApp.controller('menucontroller', ['$scope','$http',function ($scope,$http) {
         
   });
  
-
+}]);
+//所有用户信息显示
+myApp.controller('usercontroller', ['$scope','$http',function ($scope,$http) {
+    $scope.AccountID = 'hhh';
+    $http({
+    method:'get',
+    url:"/backuser" , 
+    }).
+    success(function(response) {
+        console.log(response.data);
+        $scope.info = response.data;
+        
+    }).
+    error(function(response) {
+        console.log(response);     
+  });
+}]);
+//查询用户信息
+myApp.controller('searchcontroller', ['$scope','$http',function ($scope,$http) {
+    $scope.aaa = '查询';
+    $http({
+    method:'get',
+    url:"/user" , 
+    }).
+    success(function(response) {
+       
+    }).
+    error(function(response) {
+         
+  });
 }]);

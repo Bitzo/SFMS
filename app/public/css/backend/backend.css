@@ -124,11 +124,10 @@
 
 .user-info{
     width: 80%;
-    position: relative;
-    left: 50px;
+    margin: 10px auto;
+    
 }
 .user-info form{
-    position: relative;
     background-color: #ccc;
 }
 .user-info form .img{

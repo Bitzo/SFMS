@@ -2,11 +2,11 @@
 /**
  * Created by Administrator on 2016/11/21.
  */
-var myApp = angular.module('myApp', ['ngRoute','jason.pagination']).config(function($routeProvider) {
+myApp.config(function($routeProvider) {
     $routeProvider.
     when('/sfms/index',{
         templateUrl: 'sfms/index'
-        
+        // controller: 'HomeController'
     }).
     when('/backend/index',{
         templateUrl: 'backend/index'

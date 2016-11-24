@@ -54,6 +54,12 @@ router.get('/user', function(req, res, next) {
     title: '管理后台'
   });
 });
+
+router.get('/userinfo', function(req, res, next) {
+  res.render('backend/user-info', {
+    title: '管理后台'
+  });
+});
 //生成验证码
 router.get('/generatecode', code);
 
@@ -129,7 +135,7 @@ router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
 //管理功能点
 router.use('/function', funcroute);
-router.use('/user', user);
+router.use('/backuser', user);
 router.use('/userrole', userRole);
 router.use('/app', addapp);
 router.use('/app', updateapp);
