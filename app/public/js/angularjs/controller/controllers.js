@@ -102,21 +102,21 @@ myApp.controller('menucontroller', ['$scope','$http',function ($scope,$http) {
 
 
 //所有应用信息显示
-// myApp.controller('applicationcontroller', ['$scope','$http',function ($scope,$http) {
-//     $scope.ID = 'hhh';
-//     $http({
-//     method:'get',
-//     url:"/app" , 
-//     }).
-//     success(function(response) {
-//         console.log(response.data);
-//         $scope.info = response.data;
+myApp.controller('applicationcontroller', ['$scope','$http',function ($scope,$http) {
+    $scope.ID = 'hhh';
+    $http({
+    method:'get',
+    url:"/app" , 
+    }).
+    success(function(response) {
+        console.log(response.data);
+        $scope.info = response.data;
         
-//     }).
-//     error(function(response) {
-//         console.log(response);     
-//   });
-// }]);
+    }).
+    error(function(response) {
+        console.log(response);     
+  });
+}]);
 
 
 

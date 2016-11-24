@@ -43,29 +43,6 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/index', function(req, res, next) {
-  res.render('backend/index', {
-    title: '管理后台'
-  });
-});
-
-router.get('/user', function(req, res, next) {
-  res.render('backend/user', {
-    title: '管理后台'
-  });
-});
-
-router.get('/userinfo', function(req, res, next) {
-  res.render('backend/user-info', {
-    title: '管理后台'
-  });
-});
-
-router.get('/application', function(req, res, next) {
-  res.render('backend/application', {
-    title: '管理后台'
-  });
-});
 //生成验证码
 router.get('/generatecode', code);
 
