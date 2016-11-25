@@ -2,12 +2,12 @@
  * Created by Administrator on 2016/11/22.
  */
 myApp.controller('sfmsIndexController',function($scope,$http){
-
+    $scope.f={};
     function getList(){
         $http({
             method:'POST',
             url:"/sfms/gemeun",
-            data:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage}
+            data:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
         }).
         success(function(response) {
             var  data=response.datas;
@@ -25,5 +25,8 @@ myApp.controller('sfmsIndexController',function($scope,$http){
         itemsPerPage: 15
     }
     getList();
+    $scope.search=function(){
+        getList();
+    }
     $scope.$watch('paginationConf.currentPage + paginationConf.itemsPerPage', getList);
 })

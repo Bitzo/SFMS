@@ -5,15 +5,23 @@
 var myApp = angular.module('myApp', ['ngRoute','jason.pagination']).config(function($routeProvider) {
     $routeProvider.
     when('/sfms/index',{
-        templateUrl: 'backend/index'
+        templateUrl: 'sfms/index'
         // controller: 'HomeController'
     }).
-    when('/computers',{
-        template:'这是电脑页面',
+    when('/sfms/user',{
+        templateUrl: 'sfms/user',
         //controller: 'HomeController'
     }).
-    when('/printers',{
-        template:'这是打印机页面',
+    when('/sfms/user-info',{
+        templateUrl: 'sfms/user-info',
+        //controller: 'HomeController'
+    }).
+    when('/sfms/application',{
+        templateUrl: 'sfms/application',
+        //controller: 'HomeController'
+    }).
+    when('/sfms/application-info',{
+        templateUrl: 'sfms/application-info',
         //controller: 'HomeController'
     }).
     otherwise({
@@ -21,8 +29,7 @@ var myApp = angular.module('myApp', ['ngRoute','jason.pagination']).config(funct
     });
 
 
-});
-myApp.run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {
+}).run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {
     var locationChangeStartOff = $rootScope.$on('$locationChangeStart', locationChangeStart);
     var locationChangeSuccessOff = $rootScope.$on('$locationChangeSuccess', locationChangeSuccess);
 
@@ -30,7 +37,10 @@ myApp.run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $
     var routeChangeSuccessOff = $rootScope.$on('$routeChangeSuccess', routeChangeSuccess);
 
     function locationChangeStart(event) {
-        $log.log('locationChangeStart');
+      if($location.$$path=="")
+      {
+          event.preventDefault();
+      }
     }
 
     function locationChangeSuccess(event) {
@@ -40,13 +50,28 @@ myApp.run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $
 
     function routeChangeStart(event) {
         $log.log('routeChangeStart');
-        $log.log(arguments);
+        $log.log($location);
     }
 
     function routeChangeSuccess(event) {
         $log.log('routeChangeSuccess');
         $log.log(arguments);
     }
-}]).controller('baseController', function($scope){
+}]).controller('baseController', function($scope,$http){
+    $scope.menus=[];
+    function getList(){
+        $http({
+            method:'POST',
+            url:"/sfms/gemeun",
+            data:{pageindex:1,pagesize:100,f:{}}
+        }).
+        success(function(response) {
+            var  data=response.datas;
+            $scope.menus=JSON.parse(data);
+        }).
+        error(function(response) {
 
+        });
+    }
+    getList();
 })

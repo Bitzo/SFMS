@@ -1,15 +1,14 @@
-extends ../shared/layout.jade
 //- 用户管理页面
 block content
   div.user
-    nav.navbar(id='ch-nav' ng-controller="searchcontroller")
+    nav(id='ch-nav' ng-controller="searchcontroller")
       span.navbar-brand
         h4 用户管理
       div.navbar-form.navbar-right
         input(type="text" name='username' class="form-control" ng-model="seainfo" placeholder="输入查询条件" required autofocus)
         button.btn.btn-primary(type="submit" ng-click="search(seainfo)")
-          a( href='#/searchuser' style="color:white" ) {{aaa}}
-        a.btn.btn-primary(type="submit" href='#/add') 新增用户
+          a( href='#/searchuser' style="color:white" ) 查询用户
+        a.btn.btn-primary(type="submit" href='#/sfms/user-info') 新增用户
 
     div(ng-controller="usercontroller")
       div.table-responsive

@@ -49,55 +49,55 @@ myApp.controller('menucontroller', ['$scope','$http',function ($scope,$http) {
  
 }]);
 //所有用户信息显示
-// myApp.controller('usercontroller', ['$scope','$http',function ($scope,$http) {
-//     $scope.AccountID = 'hhh';
-//     $http({
-//     method:'get',
-//     url:"/backuser" , 
-//     }).
-//     success(function(response) {
-//         console.log(response.data);
-//         $scope.info = response.data;
+myApp.controller('usercontroller', ['$scope','$http',function ($scope,$http) {
+    $scope.AccountID = 'hhh';
+    $http({
+    method:'get',
+    url:"/backuser" , 
+    }).
+    success(function(response) {
+        console.log(response.data);
+        $scope.info = response.data;
         
-//     }).
-//     error(function(response) {
-//         console.log(response);     
-//   });
-// }]);
+    }).
+    error(function(response) {
+        console.log(response);     
+  });
+}]);
 
 
 
 //查询用户信息
-// myApp.controller('searchcontroller', ['$scope','$http',function ($scope,$http) {
-//     $scope.aaa = '查询';
-//     $http({
-//     method:'get',
-//     url:"/backuser?userID=" + 1,
-//     }).
-//     success(function(response) {
+myApp.controller('searchcontroller', ['$scope','$http',function ($scope,$http) {
+    $scope.aaa = '查询';
+    $http({
+    method:'get',
+    url:"/backuser?userID=" + 1,
+    }).
+    success(function(response) {
        
-//     }).
-//     error(function(response) {
+    }).
+    error(function(response) {
          
-//   });
-// }]);
+  });
+}]);
 
 
 
 //新增编辑用户信息
-// myApp.controller('addusercontroller', ['$scope','$http',function ($scope,$http) {
-//     $scope.aaa = '新增编辑';
-//     $http({
-//     method:'get',
-//     url:"/backuser?userID=" + 1,
-//     }).
-//     success(function(response) {
+myApp.controller('addusercontroller', ['$scope','$http',function ($scope,$http) {
+    $scope.aaa = '新增编辑';
+    $http({
+    method:'get',
+    url:"/backuser?userID=" + 1,
+    }).
+    success(function(response) {
        
-//     }).
-//     error(function(response) {
+    }).
+    error(function(response) {
          
-//   });
-// }]);
+  });
+}]);
 
 
 
@@ -121,16 +121,16 @@ myApp.controller('applicationcontroller', ['$scope','$http',function ($scope,$ht
 
 
 //新增编辑应用信息
-// myApp.controller('addapplicationcontroller', ['$scope','$http',function ($scope,$http) {
-//     $scope.aaa = '新增编辑';
-//     $http({
-//     method:'get',
-//     url:"/app?userID=" + 1,
-//     }).
-//     success(function(response) {
+myApp.controller('addapplicationcontroller', ['$scope','$http',function ($scope,$http) {
+    $scope.aaa = '新增编辑';
+    $http({
+    method:'get',
+    url:"/app?userID=" + 1,
+    }).
+    success(function(response) {
        
-//     }).
-//     error(function(response) {
+    }).
+    error(function(response) {
          
-//   });
-// }]);
+  });
+}]);
