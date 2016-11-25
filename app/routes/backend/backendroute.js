@@ -43,13 +43,19 @@ router.get('/', function(req, res, next) {
   });
 });
 
-//孙茂昀添加误删的路由
-router.get('/index',function(req,res,next)
-{
-  res.render('backend/index',{
-    title:'管理后台'
+router.get('/index', function(req, res, next) {
+  res.render('index/index', {
+    title: 'JIT1320管理集成平台'
   });
 });
+
+//孙茂昀添加误删的路由
+// router.get('/index',function(req,res,next)
+// {
+//   res.render('backend/index',{
+//     title:'管理后台'
+//   });
+// });
 
 router.get('/user',function(req,res,next)
 {
