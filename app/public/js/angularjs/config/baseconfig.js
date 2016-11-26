@@ -1,35 +1,34 @@
-
 /**
  * Created by Administrator on 2016/11/21.
  */
-var myApp = angular.module('myApp', ['ngRoute','jason.pagination']).config(function($routeProvider) {
+var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(function($routeProvider) {
     $routeProvider.
-    when('/sfms/index',{
+    when('/sfms/index', {
         templateUrl: 'sfms/index'
-        // controller: 'HomeController'
+            // controller: 'HomeController'
     }).
-    when('/sfms/user',{
+    when('/sfms/user', {
         templateUrl: 'sfms/user',
         //controller: 'HomeController'
     }).
-    when('/sfms/user-info',{
+    when('/sfms/user-info', {
         templateUrl: 'sfms/user-info',
         //controller: 'HomeController'
     }).
-    when('/sfms/application',{
+    when('/sfms/application', {
         templateUrl: 'sfms/application',
         //controller: 'HomeController'
     }).
-    when('/sfms/application-info',{
+    when('/sfms/application-info', {
         templateUrl: 'sfms/application-info',
         //controller: 'HomeController'
     }).
     otherwise({
-        redirectTo:'/'
+        redirectTo: '/'
     });
 
 
-}).run(['$rootScope', '$window', '$location', '$log', function ($rootScope, $window, $location, $log) {
+}).run(['$rootScope', '$window', '$location', '$log', function($rootScope, $window, $location, $log) {
     var locationChangeStartOff = $rootScope.$on('$locationChangeStart', locationChangeStart);
     var locationChangeSuccessOff = $rootScope.$on('$locationChangeSuccess', locationChangeSuccess);
 
@@ -37,10 +36,9 @@ var myApp = angular.module('myApp', ['ngRoute','jason.pagination']).config(funct
     var routeChangeSuccessOff = $rootScope.$on('$routeChangeSuccess', routeChangeSuccess);
 
     function locationChangeStart(event) {
-      if($location.$$path=="")
-      {
-          event.preventDefault();
-      }
+        if ($location.$$path == "") {
+            event.preventDefault();
+        }
     }
 
     function locationChangeSuccess(event) {
@@ -57,17 +55,22 @@ var myApp = angular.module('myApp', ['ngRoute','jason.pagination']).config(funct
         $log.log('routeChangeSuccess');
         $log.log(arguments);
     }
-}]).controller('baseController', function($scope,$http){
-    $scope.menus=[];
-    function getList(){
+}]).controller('baseController', function($scope, $http) {
+    $scope.menus = [];
+
+    function getList() {
         $http({
-            method:'POST',
-            url:"/sfms/gemeun",
-            data:{pageindex:1,pagesize:100,f:{}}
+            method: 'GET',
+            url: "/sfms/getmenu?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            data: {
+                pageindex: 1,
+                pagesize: 100,
+                f: {}
+            }
         }).
         success(function(response) {
-            var  data=response.datas;
-            $scope.menus=JSON.parse(data);
+            var data = response.datas;
+            $scope.menus = JSON.parse(data);
         }).
         error(function(response) {
 

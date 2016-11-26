@@ -37,7 +37,6 @@ var showapp = appRequire('routes/backend/application/showapp');
 var code = appRequire('service/backend/code/codeservice').generateCode;
 //主应用主站点
 router.get('/', function(req, res, next) {
-  logger.writeInfo("首页记录");
   res.render('login', {
     title: 'JIT1320管理集成平台'
   });
@@ -48,14 +47,6 @@ router.get('/index', function(req, res, next) {
     title: 'JIT1320管理集成平台'
   });
 });
-
-//孙茂昀添加误删的路由
-// router.get('/index',function(req,res,next)
-// {
-//   res.render('backend/index',{
-//     title:'管理后台'
-//   });
-// });
 
 router.get('/user',function(req,res,next)
 {
@@ -77,7 +68,7 @@ router.get('/application',function(req,res,next)
     title:'管理后台'
   });
 });
-//到这为止
+
 //生成验证码
 router.get('/generatecode', code);
 
@@ -93,14 +84,14 @@ router.post('/login', function(req, res) {
 
   var username = req.body.username || '';
   var password = req.body.password || '';
-  //var code = req.body.code || '';
+  var code = req.body.code || '';
 
   //验证码判断
-  // if (req.session.code.toString() !== req.body.code.toString()) {
-  //   resultData.isSuccess = false;
-  //   resultData.msg = "验证码输入不正确!";
-  //   return res.json(resultData);
-  // }
+  if (req.session.code.toString() !== req.body.code.toString()) {
+    resultData.isSuccess = false;
+    resultData.msg = "验证码输入不正确!";
+    return res.json(resultData);
+  }
 
   if (username == '' || password == '') {
     res.status(401);

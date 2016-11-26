@@ -8,6 +8,7 @@
 
 var jwt = require('jwt-simple');
 var config = appRequire('config/config');
+var logger = appRequire('util/loghelper').helper;
 
 module.exports = function(req, res, next) {
     var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
@@ -15,19 +16,27 @@ module.exports = function(req, res, next) {
 
     if (token || key) {
         try {
-            var decoded = jwt.decode(token, config.jwt_secret);
+            if (token.split('.').length !== 3) {
+                res.status(400);
+                return res.json({
+                    "status": 400,
+                    "message": "token不合法!",
+                });
+            }
 
+            var decoded = jwt.decode(token, config.jwt_secret);
             if (decoded.exp <= Date.now()) {
                 res.status(400);
                 res.json({
                     "status": 400,
-                    "message": "Token Expired"
+                    "message": "Token过期!"
                 });
                 return;
             } else {
                 next();
             }
         } catch (err) {
+
             res.status(500);
             res.json({
                 "status": 500,
@@ -39,7 +48,7 @@ module.exports = function(req, res, next) {
         res.status(401);
         res.json({
             "status": 401,
-            "message": "Invalid Token or Key"
+            "message": "未提供鉴权Token!"
         });
         return;
     }
