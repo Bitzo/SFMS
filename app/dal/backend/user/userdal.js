@@ -31,6 +31,25 @@ exports.querySingleUser = function(account, pwd, callback) {
     });
 }
 
+exports.querySingleID=function(accountid,callback) {
+    var sql='select  ApplicationID,AccountID,Account,UserName,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime from jit_user where IsActive=1 and AccountID=?';
+    db_backend.mysqlPool.getConnection(function(err,connection) {
+        if(err) {
+            callback(true);
+            return ;
+        }
+        connection.query(sql,[accountid],function(err,results) {
+            if(err) {
+                callback(true);
+                return ;
+            }
+
+            callback(false,results);
+            connection.release();
+        });
+    });
+}
+
 //查询目前所有用户
 exports.queryAllUsers = function(data, callback) {
     var sql = 'select ApplicationID,AccountID,Account,UserName,Pwd,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime,IsActive from jit_user where 1=1 ';

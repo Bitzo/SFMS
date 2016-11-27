@@ -15,10 +15,6 @@ var funcroute = appRequire('routes/backend/function/functionroute');
 //用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
 
-
-
-
-
 var menuRouter = appRequire('routes/backend/menu/menurouter');
 var userMenuRoleRouter = appRequire('routes/backend/menu/usermenurolerouter');
 
@@ -83,8 +79,8 @@ router.post('/login', function(req, res) {
 
   //验证码判断
   if (req.session.code.toString() !== req.body.code.toString()) {
-    resultData.isSuccess = false;
-    resultData.msg = "验证码输入不正确!";
+    resultData.data.isSuccess = false;
+    resultData.data.msg = "验证码输入不正确!";
     return res.json(resultData);
   }
 
@@ -128,13 +124,8 @@ router.post('/login', function(req, res) {
   })
 });
 
-
-
-
-
 router.use('/menu',menuRouter);
 router.use('/usermenurole',userMenuRoleRouter);
-
 
 //角色模块
 router.use('/role', roleroute);
