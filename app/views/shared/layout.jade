@@ -1,14 +1,191 @@
 doctype html
-html
+html(lang='en')
   head
-    title= title
-
-    link(rel='icon', href='/images/favicon.ico')   
-    link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css')
-    link(rel='stylesheet', href='bower_components/bootstrap-select/dist/css/bootstrap-select.css ')   
-    link(rel='stylesheet', href='css/login/login.css')  
-    link(rel='stylesheet', href='css/backend/backend.css')       
-
-   
-  body(ng-app="myApp" ng-controller='baseController')  
-    block content
+    meta(charset='utf-8')
+    title #{title}
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(href='assets/css/bootstrap.min.css', rel='stylesheet')
+    link(rel='stylesheet', href='assets/css/font-awesome.min.css')
+    link(rel='stylesheet', href='assets/css/ace.min.css')
+    link(rel='stylesheet', href='assets/css/ace-skins.min.css')
+    link(rel='stylesheet', href='css/index.css')
+  body(ng-app='myApp', ng-controller='baseController')
+    #navbar.navbar.navbar-default
+      #navbar-container.navbar-container
+        .navbar-header.pull-left
+          a.navbar-brand(href='#')
+            small
+              i.icon-leaf
+              |                     {{title}}
+        .navbar-header.pull-right(role='navigation')
+          ul.nav.ace-nav
+            li
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                i.icon-tasks
+                span.badge.badge-grey 4
+              ul.pull-right.dropdown-navbar.dropdown-menu.dropdown-caret.dropdown-close
+                li.dropdown-header
+                  i.icon-ok
+                  |                             还有4个任务完成
+                li
+                  a(href='#')
+                    .clearfix
+                      span.pull-left 软件更新
+                      span.pull-right 65%
+                    .progress.progress-mini
+                      .progress-bar(style='width:65%')
+                li
+                  a(href='#')
+                    .clearfix
+                      span.pull-left 硬件更新
+                      span.pull-right 35%
+                    .progress.progress-mini
+                      .progress-bar.progress-bar-danger(style='width:35%')
+                li
+                  a(href='#')
+                    .clearfix
+                      span.pull-left 单元测试
+                      span.pull-right 15%
+                    .progress.progress-mini
+                      .progress-bar.progress-bar-warning(style='width:15%')
+                li
+                  a(href='#')
+                    .clearfix
+                      span.pull-left 错误修复
+                      span.pull-right 90%
+                    .progress.progress-mini.progress-striped.active
+                      .progress-bar.progress-bar-success(style='width:90%')
+                li
+                  a(href='#')
+                    | 查看任务详情
+                    i.icon-arrow-right
+            li
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                i.icon-bell-alt.icon-animated-bell
+                span.badge.badge-important 8
+              ul.pull-right.dropdown-navbar.navbar-pink.dropdown-menu.dropdown-caret.dropdown-close
+                li.dropdown-header
+                  i.icon-warning-sign
+                  |                             8条通知
+                li
+                  a(href='#')
+                    .clearfix
+                      span.pull-left
+                        i.btn.btn-xs.no-hover.btn-pink.icon-comment
+                        | 												新闻评论
+                      span.pull-right.badge.badge-info +12
+                li
+                  a(href='#')
+                    i.btn.btn-xs.btn-primary.icon-user
+                    |                                 切换为编辑登录..
+                li
+                  a(href='#')
+                    .clearfix
+                      span.pull-left
+                        i.btn.btn-xs.no-hover.btn-success.icon-shopping-cart
+                        | 												新订单
+                      span.pull-right.badge.badge-success +8
+                li
+                  a(href='#')
+                    .clearfix
+                      span.pull-left
+                        i.btn.btn-xs.no-hover.btn-info.icon-twitter
+                        | 												粉丝
+                      span.pull-right.badge.badge-info +11
+                li
+                  a(href='#')
+                    | 查看所有通知
+                    i.icon-arrow-right
+            li
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                i.icon-envelope.icon-animated-vertical
+                span.badge.badge-success 5
+              ul.pull-right.dropdown-navbar.dropdown-menu.dropdown-caret.dropdown-close
+                li.dropdown-header
+                  i.icon-envelope-alt
+                  |                             5条消息
+                li
+                  a(href='#')
+                    img.msg-photo(src='assets/avatars/avatar.png', alt="Alex's Avatar")
+                    span.msg-body
+                      span.msg-title
+                        span.blue Alex:
+                        | 												不知道写啥 ...
+                      span.msg-time
+                        i.icon-time
+                        span 1分钟以前
+                li
+                  a(href='#')
+                    img.msg-photo(src='assets/avatars/avatar3.png', alt="Susan's Avatar")
+                    span.msg-body
+                      span.msg-title
+                        span.blue Susan:
+                        | 												不知道翻译...
+                      span.msg-time
+                        i.icon-time
+                        span 20分钟以前
+                li
+                  a(href='#')
+                    img.msg-photo(src='assets/avatars/avatar4.png', alt="Bob's Avatar")
+                    span.msg-body
+                      span.msg-title
+                        span.blue Bob:
+                        | 												到底是不是英文 ...
+                      span.msg-time
+                        i.icon-time
+                        span 下午3:15
+                li
+                  a(href='inbox.html')
+                    | 查看所有消息
+                    i.icon-arrow-right
+            li
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                img.nav-user-photo(src='assets/avatars/user.jpg', alt="Jason's Photo")
+                span.user-info
+                  small 欢迎光临,
+                  | 									Jason
+                i.icon-caret-down
+              ul.user-menu.pull-right.dropdown-menu.dropdown-yellow.dropdown-caret.dropdown-close
+                li
+                  a(href='#')
+                    i.icon-cog
+                    |                                 设置
+                li
+                  a(href='#')
+                    i.icon-user
+                    |                                 个人资料
+                li.divider
+                li
+                  a(href='#')
+                    i.icon-off
+                    |                                 退出
+    #main-container.main-container
+      .main-container-inner
+        a#menu-toggler.menu-toggler(href='#')
+          span.menu-text
+        #sidebar.sidebar
+          ul.nav.nav-list
+            li(ng-repeat='menu in menus')
+              a.dropdown-toggle(href='{{menu.url}}')
+                i(class='{{menu.icon}}')
+                span.menu-text  {{menu.text}}
+                b.arrow.icon-angle-down
+              ul.submenu
+                li(ng-repeat='menuchid in menu.children')
+                  a(href='{{menuchid.url}}')
+                    i.icon-double-angle-right
+                    span{{menuchid.text}}
+          #sidebar-collapse.sidebar-collapse
+            i.icon-double-angle-left(data-icon1='icon-double-angle-left', data-icon2='icon-double-angle-right')
+        .main-content
+          .page-content(ng-view='')
+// <script src="bower_components/jquery/dist/jquery.js"></script>
+script(src='assets/js/jquery-2.0.3.min.js')
+script(src='assets/js/bootstrap.min.js')
+script(src='assets/js/ace.min.js')
+script(src='assets/js/ace-extra.min.js')
+script(src='/bower_components/angular/angular.min.js')
+script(src='/bower_components/angular/angular-route.min.js')
+script(src='/js/angularjs/directive/pagination.js')
+script(src='/js/angularjs/config/baseconfig.js')
+script(src='/js/angularjs/controller/sfmsIndexController.js')
