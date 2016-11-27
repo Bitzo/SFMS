@@ -12,7 +12,7 @@ var logger = appRequire('util/loghelper').helper;
 
 //查询目前所有菜单，提供所有菜单的信息，菜单属性展示
 exports.queryAllMenus = function(data, callback) {
-    var sql = 'select ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName,IconPath,Url,Memo,IsActive from jit_menu where 1=1';
+    var sql = 'select ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName as "text",IconPath,Url,Memo,IsActive from jit_menu where 1=1';
     if(data !== undefined){
         for(var key in data){
             //判断data[key]是否是数值类型
@@ -190,7 +190,7 @@ exports.queryRoleByUserID = function (data,callback) {
 exports.queryMenuByUserID = function (data,callback) {
     var arr = new Array();
     arr.push(' select  jit_menu.ApplicationID,jit_menu.MenuID,jit_menu.MenuLevel,jit_menu.ParentID, ');
-    arr.push(' jit_menu.SortIndex,jit_menu.MenuName,jit_menu.IconPath ,jit_menu.Url,jit_menu.Memo,jit_menu.IsActive,jit_usermenu.userID ');
+    arr.push(' jit_menu.SortIndex,jit_menu.MenuName as text,jit_menu.IconPath as icon,jit_menu.Url as url,jit_menu.Memo ');
     arr.push(' from jit_menu ');
     arr.push(' left join jit_usermenu on jit_menu.MenuID = jit_usermenu.menuID ');
     arr.push(' where jit_usermenu.userID =  ');

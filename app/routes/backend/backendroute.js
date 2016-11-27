@@ -14,18 +14,13 @@ var user = appRequire('routes/backend/user/userroute')
 var funcroute = appRequire('routes/backend/function/functionroute');
 //用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
-  //菜单新增
-var addMenu = appRequire('routes/backend/menu/addmenu');
-//查询所有菜单
-var queryAllMenus = appRequire('routes/backend/menu/queryallmenus');
-//菜单编辑
-var updateMenu = appRequire('routes/backend/menu/updatemenu');
-//删除菜单
-var deleteMenu = appRequire('routes/backend/menu/deletemenu');
-//通过UserID查询菜单
-var queryMenuByUserID = appRequire('routes/backend/menu/querymenubyuserid');
-//通过UserID查询角色
-var queryRoleByUserID = appRequire('routes/backend/menu/queryrolebyuserid');
+
+
+
+
+
+var menuRouter = appRequire('routes/backend/menu/menurouter');
+var userMenuRoleRouter = appRequire('routes/backend/menu/usermenurolerouter');
 
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper = appRequire('util/jwthelper');
@@ -142,18 +137,13 @@ router.post('/login', function(req, res) {
   })
 });
 
-//菜单新增
-router.use('/addmenu', addMenu);
-//查询所有菜单
-router.use('/querymenus', queryAllMenus);
-//菜单编辑
-router.use('/updatemenu', updateMenu);
-//删除菜单
-router.use('/deletemenu', deleteMenu);
-//通过UserID查询菜单
-router.use('/querymenubyuserid', queryMenuByUserID);
-//通过UserID查询角色
-router.use('/queryrolebyuserid', queryRoleByUserID);
+
+
+
+
+router.use('/menu',menuRouter);
+router.use('/usermenurole',userMenuRoleRouter);
+
 
 //角色模块
 router.use('/role', roleroute);
