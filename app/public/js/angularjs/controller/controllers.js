@@ -43,7 +43,7 @@ myApp.controller('menucontroller', ['$scope', '$http', function($scope, $http) {
     $scope.li = 'huhuhu';
     $http({
         method: 'get',
-        url: "/querymenus?userID=" + 1,
+        url: "/menu/" + 1,
     }).
     success(function(response) {
         $scope.menu = response.data.Menu;
