@@ -64,12 +64,7 @@ app.all('/*', function(req, res, next) {
   }
 });
 
-//所有api/v1/开始的路由全部走接口鉴权
-app.all('/index', [apiAuth]);
-app.all('/sfms/*', [apiAuth]);
-app.all('/jkbro/*', [apiAuth]);
-
-app.all('/api/v1/*', [apiAuth]);
+app.all('/*', [apiAuth]);
 
 //路由入口
 routes(app);
