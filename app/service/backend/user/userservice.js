@@ -30,6 +30,26 @@ exports.querySingleUser = function(accountid, pwd, callback) {
     });
 };
 
+exports.querySingleID=function(accountid,callback)
+{
+    if(accountid==undefined&&accountid==null)
+    {
+        callback(true,{
+            msg:"账户ID不能为空！"
+        });
+
+    }
+    userDAL.querySingleID(accountid,function(err,result)
+    {
+        if(err)
+        {
+            callback(true);
+            return;
+        }
+        callback(false,result);
+    });
+};
+
 //查询目前所有用户
 exports.queryAllUsers = function(data, callback) {
     var page = 'add: '
