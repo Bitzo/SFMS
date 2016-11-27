@@ -21,9 +21,8 @@ var userMenuRoleRouter = appRequire('routes/backend/menu/usermenurolerouter');
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper = appRequire('util/jwthelper');
 
-var addapp = appRequire('routes/backend/application/addapp');
-var updateapp = appRequire('routes/backend/application/updateapp');
-var showapp = appRequire('routes/backend/application/showapp');
+var approuter = appRequire('routes/backend/application/approuter');
+
 //验证码
 var code = appRequire('service/backend/code/codeservice').generateCode;
 //主应用主站点
@@ -135,8 +134,6 @@ router.use('/rolefunc', rolefuncroute);
 router.use('/function', funcroute);
 router.use('/backuser', user);
 router.use('/userrole', userRole);
-router.use('/app', addapp);
-router.use('/app', updateapp);
-router.use('/app', showapp);
+router.use('/app', approuter);
 
 module.exports = router;
