@@ -33,7 +33,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/index', function(req, res, next) {
-  res.render('index/index', {
+  res.render('backend/index', {
     title: 'JIT1320管理集成平台'
   });
 });

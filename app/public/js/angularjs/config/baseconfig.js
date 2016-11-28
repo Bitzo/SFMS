@@ -60,7 +60,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
 
     function getList() {
         $http({
-            method: 'GET',
+            method: 'post',
             url: "/sfms/getmenu?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
             data: {
                 pageindex: 1,
@@ -77,4 +77,35 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         });
     }
     getList();
+    $scope.paginationConf = {
+        currentPage: 1,
+        itemsPerPage: 15,
+        action: "1111"
+    }
+    $scope.f={};
+    function getInit(){
+        $http({
+            method:'post',
+            url:"/sfms/getmenu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
+        }).
+        success(function(response) {
+            var  data=response.datas;
+            $scope.datas=JSON.parse(data);
+            $scope.paginationConf.totalItems=  response.total
+
+        }).
+        error(function(response) {
+            getInit();
+        });
+    }
+
+    $scope.paginationConf = {
+        currentPage: 1,
+        itemsPerPage: 15
+    }
+    $scope.$watch( 'paginationConf.action+currentPage+itemsPerPage',getInit);
+    $scope.search=function(){
+        getInit();
+    }
 })
