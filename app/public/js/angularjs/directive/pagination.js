@@ -2,10 +2,10 @@
  * Created by Administrator on 2016/11/22.
  */
 /**
- * name: tm.pagination
+ * name: jason.pagination
  * Version: 0.0.2
  */
-angular.module('jason.pagination', []).directive('jasonPagination',[function(){
+angular.module('jason.pagination').directive('jasonPagination',[function(){
     return {
         restrict: 'EA',
         template: '<div class="page-list">' +

@@ -5,7 +5,7 @@ myApp.controller('sfmsIndexController',function($scope,$http){
     $scope.f={};
     function getList(){
         $http({
-            method:'GET',
+            method:'post',
             url:"/sfms/getmenu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
         }).
@@ -25,8 +25,5 @@ myApp.controller('sfmsIndexController',function($scope,$http){
         itemsPerPage: 15
     }
     getList();
-    $scope.search=function(){
-        getList();
-    }
-    $scope.$watch('paginationConf.currentPage + paginationConf.itemsPerPage', getList);
+
 })

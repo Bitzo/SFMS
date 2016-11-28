@@ -30,9 +30,9 @@ router.get('/application-info', function(req, res, next) {
 
 });
 
-router.get('/getmenu', function(req, res, next) {
+router.post('/getmenu', function(req, res, next) {
         //res.render('sfms/index', { title: 'Hi gemeun' });
-        fs.readFile('../public/data/menu.json','utf-8',function(err,data) {
+        fs.readFile('public/data/menu.json','utf-8',function(err,data) {
 
             if (!err) {
                     var arr =JSON.parse(data);
