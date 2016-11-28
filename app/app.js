@@ -64,7 +64,7 @@ app.all('/*', function(req, res, next) {
   }
 });
 
-//app.all('/*', [apiAuth]);
+app.all('/*', [apiAuth]);
 
 //路由入口
 routes(app);
