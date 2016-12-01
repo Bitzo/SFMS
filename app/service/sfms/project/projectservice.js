@@ -50,3 +50,32 @@ exports.updateProject = function(data, callback) {
         callback(false, results);
     })
 }
+
+//项目信息查询-统计
+exports.countQuery = function (data, callback) {
+    var queryData = {
+        'ProjectName': data.projectName,
+        'ProjectManageName': data.projectManageName,
+        'ProjectStatus': data.projectStatus,
+    }
+    projectDAL.countQuery(queryData, function (err, results) {
+        if (err) {
+            callback(true, '失败');
+            return;
+        }
+        console.log('统计数据量');
+        callback(false, results);
+    })
+}
+
+//项目信息查询
+exports.queryProject = function (data, callback) {
+    projectDAL.queryProject(data, function (err, results) {
+        if (err) {
+            callback(true, '查询失败');
+            return;
+        }
+        console.log('查询项目信息');
+        callback(false, results);
+    })
+}

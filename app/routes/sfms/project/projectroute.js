@@ -171,4 +171,71 @@ router.put('/', function (req, res) {
     })
 })
 
+//项目基本信息查询
+router.get('/', function (req, res) {
+    var projectName = req.query.projectName,
+        projectManageName = req.query.projectManageName,
+        projectStatus = req.query.projectStatus,
+        page = req.query.page>0 ?req.query.page:1,
+        totleNum = 0;
+
+    var data = {
+        'ProjectName': projectName,
+        'ProjectManageName': projectManageName,
+        'ProjectStatus': projectStatus,
+        'page': page
+    }
+    
+    //查询数据量
+    projectservice.countQuery(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '服务器出错'
+            })
+        }
+        console.log(results);
+        totleNum = results[0].num;
+        if(totleNum > 0) {
+            //查询所需的详细数据
+            projectservice.queryProject(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '服务器出错'
+                    })
+                }
+                console.log(results);
+                if (results !== undefined && results.length > 0) {
+                    res.status(200);
+                    return res.json({
+                        status: 200,
+                        isSuccess: true,
+                        totleNum: totleNum,
+                        data: results
+                    })
+                } else {
+                    res.status(404);
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: '无数据'
+                    })
+                }
+            })
+        } else {
+            res.status(404);
+            return res.json({
+                status: 404,
+                isSuccess: false,
+                msg: '无数据'
+            })
+        }
+    })
+})
+
 module.exports = router;
