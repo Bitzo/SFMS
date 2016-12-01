@@ -11,7 +11,7 @@ var signModel = appRequire('model/sfms/sign/signmodel');
 exports.signLogInsert = function (data, callback) {
 
     var sql = "insert into jit_signinfo set UserId = ?, IP = ?, UserAgent = ?, MAC = ?, Longitude = ?, Latitude = ?,CreateTime = ?, SignType = ?"
-    var time = new Date();
+    var time = new Date().toLocaleString();
 
     function checkData(data) {
         for (var key in data) {
