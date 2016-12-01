@@ -4,6 +4,7 @@ var fs = require('fs');
 var url = require("url");
 //实验室管理系统 项目管理路由
 var project = appRequire('routes/sfms/project/projectroute');
+var projectuser = appRequire('routes/sfms/project/projectuserroute');
 //实验室管理系统主站点
 
 
@@ -63,6 +64,7 @@ router.post('/getmenu', function(req, res, next) {
         });
 
 });
-
+router.use('/projectuser',projectuser);
 router.use('/project',project);
+
 module.exports = router;
