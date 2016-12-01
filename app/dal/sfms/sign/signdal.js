@@ -6,7 +6,7 @@
  */
 
 var db_sfms = appRequire('db/db_sfms');
-var signModel = appRequire('model/sfms/signmodel');
+var signModel = appRequire('model/sfms/sign/signmodel');
 
 exports.signLogInsert = function (data, callback) {
 

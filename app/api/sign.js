@@ -10,7 +10,7 @@ var url = require("url");
 
 var router = express.Router();
 //用户签到签退业务
-var signservice = appRequire('service/sfms/signservice');
+var signservice = appRequire('service/sfms/sign/signservice');
 
 router.post('/', function (req, res) {
 
