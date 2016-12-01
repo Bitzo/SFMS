@@ -9,8 +9,7 @@ html(lang='en')
     link(rel='stylesheet', href='assets/css/font-awesome.min.css')
     link(rel='stylesheet', href='assets/css/ace.min.css')
     link(rel='stylesheet', href='assets/css/ace-skins.min.css')
-    link(rel='stylesheet', href='css/style.css')
-  body(ng-app='myApp', ng-controller='baseController')
+  body(ng-app='myApp')
     #navbar.navbar.navbar-default
       #navbar-container.navbar-container
         .navbar-header.pull-left
@@ -186,17 +185,30 @@ html(lang='en')
               span.btn.btn-warning
               span.btn.btn-danger
           // #sidebar-shortcuts
-          ul.nav.nav-list
-            li(ng-repeat='menu in menus')
-              a.dropdown-toggle(href='{{menu.url}}')
+          //- ul.nav.nav-list
+          //-   li(ng-repeat='menu in menus')
+          //-     a.dropdown-toggle(href='{{menu.url}}')
+          //-       i(class='{{menu.icon}}')
+          //-       span.menu-text  {{menu.text}}
+          //-       b.arrow.icon-angle-down
+          //-     ul.submenu
+          //-       li(ng-repeat='menuchid in menu.children')
+          //-         a(href='{{menuchid.url}}')
+          //-           i.icon-double-angle-right
+          //-           span{{menuchid.text}}
+
+         
+          ul.nav.nav-list(ng-controller='menucontroller')
+            li(ng-repeat='menu in menus') 
+              a.dropdown-toggle(href='{{menu.Url}}') 
                 i(class='{{menu.icon}}')
-                span.menu-text  {{menu.text}}
+                span.menu-text  {{menu.MenuName}}
                 b.arrow.icon-angle-down
               ul.submenu
                 li(ng-repeat='menuchid in menu.children')
-                  a(href='{{menuchid.url}}')
+                  a(href='{{menuchid.Url}}')
                     i.icon-double-angle-right
-                    span{{menuchid.text}}
+                    span {{menuchid.MenuName}}
              // /.nav-list
           #sidebar-collapse.sidebar-collapse
             i.icon-double-angle-left(data-icon1='icon-double-angle-left', data-icon2='icon-double-angle-right')
@@ -216,5 +228,7 @@ script(src='/bower_components/angular/angular-route.min.js')
 script(src='/js/angularjs/directive/pagecontent.js')
 script(src='/js/angularjs/directive/pagination.js')
 script(src='/js/angularjs/config/baseconfig.js')
+script(src='/js/angularjs/controller/controllers.js')
+
 
 //script(src='/js/angularjs/controller/sfmsIndexController.js')
