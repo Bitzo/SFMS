@@ -33,3 +33,32 @@ exports.updateProjectUser = function(data, callback) {
         callback(false, results);
     })
 }
+
+//项目用户信息查询
+exports.queryProjectUser = function (data, callback) {
+    projectuserDAL.queryProjectUser(data, function (err, results) {
+        if (err) {
+            callback(true, '查询失败');
+            return;
+        }
+        console.log('查询项目用户');
+        callback(false, results);
+    })
+}
+
+//项目用户信息查询数据量统计
+exports.countQuery = function (data, callback) {
+    var queryData = {
+        'ProjectName': data.ProjectName,
+        'UserName': data.UserName,
+        'IsActive': data.IsActive
+    }
+    projectuserDAL.countQuery(queryData, function (err, results) {
+        if (err) {
+            callback(true, '失败');
+            return;
+        }
+        console.log('统计数据量');
+        callback(false, results);
+    })
+}
