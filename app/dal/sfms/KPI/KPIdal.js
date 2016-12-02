@@ -91,3 +91,72 @@ exports.updateKPI = function (data, callback) {
         });
     });
 }
+
+//KPI查询数据量统计
+exports.countQuery = function (data, callback) {
+    var sql = 'select count(1) as num from jit_kpiinfo where 1=1 ';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (data[key] !== undefined && key !== 'page') {
+                sql += 'and ' + key + "= '" + data[key] + "' ";
+            }
+        }
+    }
+
+    console.log('KPI查询统计：' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            console.log('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                console.log('err: '+ err);
+                callback(true, '查询失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
+
+//KPI查询
+exports.queryKPI = function (data, callback) {
+    var sql = 'select ID,KPIName,KPIType,KPIScore,ProjectID,UserID,UserName,CreateTime,OperateUser,CheckTime,CheckUser,KPIStatus,Remark from jit_kpiinfo where 1=1 ',
+        page = data.page || 1,
+        num = config.pageCount;
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && data[key] !== undefined)
+                sql += "and " + key + " = '" + data[key] + "' ";
+        }
+    }
+
+    sql += " LIMIT " + (page-1)*num + "," + num;
+
+    console.log("查询KPI信息：" + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            console.log('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                console.log('err: '+ err);
+                callback(true, '查询失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}

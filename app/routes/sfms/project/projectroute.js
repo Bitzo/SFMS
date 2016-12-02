@@ -9,6 +9,7 @@
 var express = require('express');
 var router = express.Router();
 var projectservice = appRequire('service/sfms/project/projectservice');
+var config = appRequire('config/config');
 
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
@@ -211,13 +212,20 @@ router.get('/', function (req, res) {
                 }
                 console.log(results);
                 if (results !== undefined && results.length > 0) {
-                    res.status(200);
-                    return res.json({
+                    var result = {
                         status: 200,
                         isSuccess: true,
                         totleNum: totleNum,
+                        curPage: page,
+                        totlePage: Math.ceil(totleNum/config.pageCount),
+                        curNum: config.pageCount,
                         data: results
-                    })
+                    };
+                    if(result.curPage == result.totlePage) {
+                        result.curNum = result.totleNum - (result.totlePage-1)*config.pageCount;
+                    }
+                    res.status(200);
+                    return res.json(result);
                 } else {
                     res.status(404);
                     return res.json({

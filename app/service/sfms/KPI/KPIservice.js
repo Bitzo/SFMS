@@ -33,3 +33,34 @@ exports.updateKPI = function(data, callback) {
         callback(false, results);
     })
 }
+
+//KPI信息查询
+exports.queryKPI = function (data, callback) {
+    KPIdal.queryKPI(data, function (err, results) {
+        if (err) {
+            callback(true, '查询失败');
+            return;
+        }
+        console.log('查询KPI信息');
+        callback(false, results);
+    })
+}
+
+//KPI查询数据量统计
+exports.countQuery = function (data, callback) {
+    var queryData = {
+        'KPIName': data.KPIName,
+        'KPIType': data.KPIType,
+        'ProjectID': data.ProjectID,
+        'UserName': data.UserName,
+        'KPIStatus': data.KPIStatus,
+    }
+    KPIdal.countQuery(queryData, function (err, results) {
+        if (err) {
+            callback(true, '失败');
+            return;
+        }
+        console.log('统计KPI数据量');
+        callback(false, results);
+    })
+}
