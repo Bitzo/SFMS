@@ -5,7 +5,7 @@
  * name: jason.pagination
  * Version: 0.0.2
  */
-angular.module('jason.pagination').directive('jasonPagination',[function(){
+angular.module('jason.pagination',[]).directive('jasonPagination',[function(){
     return {
         restrict: 'EA',
         template: '<div class="page-list">' +

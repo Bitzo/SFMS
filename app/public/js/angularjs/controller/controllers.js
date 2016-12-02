@@ -40,13 +40,18 @@ myApp.controller('formController', ['$scope', '$http', function($scope, $http) {
 }]);
 //菜单显示
 myApp.controller('menucontroller', ['$scope', '$http', function($scope, $http) {
-    $scope.li = 'huhuhu';
+    
+    $scope.asd = 'aaa';
     $http({
         method: 'get',
-        url: "/menu/" + 1,
+        // url: "/menu/" + 1,
+        url: "/menu/1?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        data:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
     }).
     success(function(response) {
-        $scope.menu = response.data.Menu;
+        console.log('h');
+        $scope.menus = response.data.Menu;
+        console.log($scope.menus);
     }).
     error(function(response) {
         console.log(response);
