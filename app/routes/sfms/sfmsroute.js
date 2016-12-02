@@ -7,6 +7,8 @@ var project = appRequire('routes/sfms/project/projectroute');
 var projectuser = appRequire('routes/sfms/project/projectuserroute');
 //实验室管理系统 签到信息管理路由
 var sign = appRequire('routes/sfms/sign/signroute');
+//实验室管理系统 KPI管理路由
+var kpi = appRequire('routes/sfms/KPI/KPIroute')
 //实验室管理系统主站点
 
 
@@ -69,5 +71,5 @@ router.post('/getmenu', function(req, res, next) {
 router.use('/projectuser', projectuser);
 router.use('/project', project);
 router.use('/sign', sign);
-
+router.use('/kpi',kpi);
 module.exports = router;
