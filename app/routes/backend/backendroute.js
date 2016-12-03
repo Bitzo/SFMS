@@ -14,9 +14,12 @@ var user = appRequire('routes/backend/user/userroute')
 var funcroute = appRequire('routes/backend/function/functionroute');
 //用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
-
+//菜单路由
 var menuRouter = appRequire('routes/backend/menu/menurouter');
+//通过userID查看菜单角色路由
 var userMenuRoleRouter = appRequire('routes/backend/menu/usermenurolerouter');
+//数据字典路由
+var datadictionaryRouter = appRequire('routes/backend/datadictionary/datadictionaryrouter');
 
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper = appRequire('util/jwthelper');
@@ -123,8 +126,12 @@ router.post('/login', function(req, res) {
   })
 });
 
+//菜单模块
 router.use('/menu',menuRouter);
+//通过userID获取相应的菜单和角色
 router.use('/usermenurole',userMenuRoleRouter);
+//数据字典
+router.use('/datadict',datadictionaryRouter);
 
 //角色模块
 router.use('/role', roleroute);

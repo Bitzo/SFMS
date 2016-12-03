@@ -10,7 +10,9 @@
  var url=require('url');
  var logger=appRequire('util/loghelper').helper;
 //加载中间件
-var user=appRequire('service/backend/user/userservice');
+var user=appRequire('service/backend/user/userservice'),
+    menuService = appRequire('service/backend/menu/menuservice');
+
 var config=appRequire('config/config');
 
 router.post('/',function(req,res)
@@ -195,6 +197,10 @@ router.post('/',function(req,res)
 
 			});
 });
+
+
+
+
 router.get('/', function(req, res) {
 
 	logger.writeInfo("查询用户的记录");
@@ -336,6 +342,81 @@ user.queryAllUsers(data, function(err, result) {
 	}
 	return ;
 });
+});
+
+router.get('/:userID',function (req,res) {
+	var userID = req.params.userID;
+	if (userID === undefined || userID === '') {
+		return res.json({
+			code: 404,
+			isSuccess: false,
+			msg: 'require userID'
+		});
+	}
+	if(isNaN(userID)){
+		return res.json({
+			code: 500,
+			isSuccess: false,
+			msg: 'userID不是数字'
+		});
+	}
+	var uniqueData = {
+		"userID" : userID
+	};
+
+	//判断user是否存在
+	user.querySingleID(userID,function (err,result) {
+		if(err){
+			return res.json({
+				code : 500,
+				isSuccess :false,
+				msg : '服务器出错'
+			});
+		}
+		//user存在，则可以进行查询
+		if(result !== undefined && result.length != 0){
+			menuService.queryMenuAndRoleByUserID(uniqueData,function (err, results) {
+				if(err){
+					return res.json({
+						code : 500,
+						isSuccess :false,
+						msg : '服务器出错'
+					});
+
+				}
+
+				if(results.Menu !== undefined && results.Menu.length != 0 ){
+					if(results.Role !== undefined &&  results.Role.length != 0){
+						return res.json({
+							code : 200,
+							isSuccess :true,
+							data : results,
+							msg : '查询菜单和角色成功'
+						});
+					}else {
+						return res.json({
+							code : 404,
+							isSuccess :false,
+							msg : '未查到角色'
+						});
+					}
+
+				}else {
+					return res.json({
+						code : 404,
+						isSuccess :false,
+						msg : '未查到菜单'
+					});
+				}
+			});
+		}else{
+			return res.json({
+				code : 404,
+				isSuccess :false,
+				msg : '用户不存在'
+			});
+		}
+	});
 });
 
 router.put('/',function(req,res){
@@ -500,4 +581,7 @@ router.put('/',function(req,res){
 		})
 
 	})
+
+
+
 module.exports=router;
