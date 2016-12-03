@@ -17,12 +17,12 @@ exports.queryAllRoles = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
             sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
 
-    var num = config.pageCount; //每页显示的个数
+    var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
     sql += " LIMIT " + (page-1)*num + "," + num;
@@ -56,7 +56,7 @@ exports.countAllRoles = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }

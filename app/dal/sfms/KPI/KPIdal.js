@@ -98,7 +98,7 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (data[key] !== undefined && key !== 'page') {
+            if (data[key] !== undefined && key !== 'page' && key !== 'pageNum') {
                 sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
@@ -129,11 +129,11 @@ exports.countQuery = function (data, callback) {
 exports.queryKPI = function (data, callback) {
     var sql = 'select ID,KPIName,KPIType,KPIScore,ProjectID,UserID,UserName,CreateTime,OperateUser,CheckTime,CheckUser,KPIStatus,Remark from jit_kpiinfo where 1=1 ',
         page = data.page || 1,
-        num = config.pageCount;
+        num = data.pageNum;
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }

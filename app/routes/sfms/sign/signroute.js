@@ -20,14 +20,18 @@ router.get('/', function (req, res) {
         createTime = req.query.createTime,
         signType = req.query.signType,
         totleNum = 0,
-        page = req.query.page > 0 ? req.query.page : 1;
+        page = req.query.page > 0 ? req.query.page : 1,
+        pageNum = req.query.pageNum;
+
+    if (pageNum === undefined) pageNum = config.pageCount;
 
     var data = {
         'UserID': userID,
         'UserAgent': userAgent,
         'CreateTime': createTime,
         'SignType': signType,
-        'page': page
+        'page': page,
+        'pageNum': pageNum
     }
 
     signservice.countQuery(data, function (err, results) {
@@ -58,12 +62,12 @@ router.get('/', function (req, res) {
                         isSuccess: true,
                         totleNum: totleNum,
                         curPage: page,
-                        totlePage: Math.ceil(totleNum/config.pageCount),
-                        curNum: config.pageCount,
+                        totlePage: Math.ceil(totleNum/pageNum),
+                        curNum: pageNum,
                         data: results
                     };
                     if(result.curPage == result.totlePage) {
-                        result.curNum = result.totleNum - (result.totlePage-1)*config.pageCount;
+                        result.curNum = result.totleNum - (result.totlePage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);

@@ -22,6 +22,7 @@ router.post('/', function (req, res) {
         ProjectID = req.body.ProjectID,
         UserID = req.body.UserID,
         UserName = req.body.UserName,
+        OperateUser = req.body.OperateUser,
         KPIStatus = req.body.KPIStatus,
         Remark = req.body.Remark;
 
@@ -32,11 +33,12 @@ router.post('/', function (req, res) {
         'ProjectId': ProjectID,
         'UserID': UserID,
         'UserName': UserName,
+        'OperateUser': OperateUser,
         'KPIStatus': KPIStatus,
         'Remark': Remark
     }
     //检查所需要的参数是否齐全
-    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'KPIStatus', 'UserName', 'Remark'],
+    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID','OperateUser','KPIStatus', 'UserName', 'Remark'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -92,6 +94,7 @@ router.put('/', function (req, res) {
         ProjectID = req.body.ProjectID,
         UserID = req.body.UserID,
         UserName = req.body.UserName,
+        OperateUser = req.body.OperateUser,
         KPIStatus = req.body.KPIStatus,
         Remark = req.body.Remark;
 
@@ -103,12 +106,13 @@ router.put('/', function (req, res) {
         'ProjectId': ProjectID,
         'UserID': UserID,
         'UserName': UserName,
+        'OperateUser': OperateUser,
         'KPIStatus': KPIStatus,
         'Remark': Remark
     }
 
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'KPIStatus', 'UserName', 'Remark'],
+    var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'OperateUser', 'KPIStatus', 'UserName', 'Remark'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -153,7 +157,6 @@ router.put('/', function (req, res) {
             })
         }
     })
-
 })
 
 //KPI查询
@@ -164,7 +167,10 @@ router.get('/', function (req, res) {
         UserName = req.query.UserName,
         KPIStatus = req.query.KPIStatus,
         page = req.query.page > 0 ? req.query.page : 1,
+        pageNum = req.query.pageNum,
         totleNum = 0;
+
+    if (pageNum === undefined) pageNum = config.pageCount;
 
     var data = {
         'KPIName': KPIName,
@@ -172,7 +178,8 @@ router.get('/', function (req, res) {
         'ProjectID': ProjectID,
         'UserName': UserName,
         'KPIStatus': KPIStatus,
-        'page': page
+        'page': page,
+        'pageNum': pageNum
     }
 
     KPIservice.countQuery(data, function (err, results) {
@@ -204,12 +211,12 @@ router.get('/', function (req, res) {
                         isSuccess: true,
                         totleNum: totleNum,
                         curPage: page,
-                        totlePage: Math.ceil(totleNum/config.pageCount),
-                        curNum: config.pageCount,
+                        totlePage: Math.ceil(totleNum/pageNum),
+                        curNum: pageNum,
                         data: results
                     };
                     if(result.curPage == result.totlePage) {
-                        result.curNum = result.totleNum - (result.totlePage-1)*config.pageCount;
+                        result.curNum = result.totleNum - (result.totlePage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);

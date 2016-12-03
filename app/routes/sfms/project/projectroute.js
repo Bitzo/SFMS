@@ -178,13 +178,17 @@ router.get('/', function (req, res) {
         projectManageName = req.query.projectManageName,
         projectStatus = req.query.projectStatus,
         page = req.query.page>0 ?req.query.page:1,
+        pageNum = req.query.pageNum,
         totleNum = 0;
+
+    if (pageNum === undefined) pageNum = config.pageCount;
 
     var data = {
         'ProjectName': projectName,
         'ProjectManageName': projectManageName,
         'ProjectStatus': projectStatus,
-        'page': page
+        'page': page,
+        'pageNum': pageNum
     }
     
     //查询数据量
@@ -217,12 +221,12 @@ router.get('/', function (req, res) {
                         isSuccess: true,
                         totleNum: totleNum,
                         curPage: page,
-                        totlePage: Math.ceil(totleNum/config.pageCount),
-                        curNum: config.pageCount,
+                        totlePage: Math.ceil(totleNum/pageNum),
+                        curNum: pageNum,
                         data: results
                     };
                     if(result.curPage == result.totlePage) {
-                        result.curNum = result.totleNum - (result.totlePage-1)*config.pageCount;
+                        result.curNum = result.totleNum - (result.totlePage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);

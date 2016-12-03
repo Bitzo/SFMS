@@ -96,12 +96,12 @@ exports.updateProjectUser = function (data, callback) {
 //项目用户信息查询
 exports.queryProjectUser = function (data, callback) {
     var sql = 'select ID,ProjectName,ProjectID,UserID,UserName,CreateTime,OperateUser,EditTime,EditName,Duty,IsActive from jit_projectruser where 1=1 ',
-        num = config.pageCount,
-        page = data.page;
+        page = data.page,
+        num = data.pageNum;
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && data[key] !== undefined) {
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined) {
                 sql += "and " + key + "= '" + data[key] + "' ";
             }
         }
@@ -135,7 +135,7 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] !== undefined && key !== 'page')
+            if(data[key] !== undefined && key !== 'page' && key !== 'pageNum')
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }

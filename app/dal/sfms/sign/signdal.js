@@ -58,11 +58,11 @@ exports.signLogInsert = function (data, callback) {
 exports.querySign = function (data, callback) {
     var sql = 'select ID,UserID,UserAgent,Longitude,Latitude,CreateTime,Remark,IP,MAC,SignType from jit_signinfo where 1=1 ',
         page = data.page > 0?data.page:1,
-        num = config.pageCount;
+        num = data.pageNum;
     console.log(page);
     if (data !== undefined) {
         for (var key in data) {
-            if(key !== 'page' && data[key] !== undefined) {
+            if(key !== 'page' && key !== 'pageNum' && data[key] !== undefined) {
                 sql += "and " + key + " = '" + data[key] + "' ";
             }
         }
@@ -97,7 +97,7 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] !== undefined && key !== 'page')
+            if(data[key] !== undefined && key !== 'page' && key !== 'pageNum')
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }

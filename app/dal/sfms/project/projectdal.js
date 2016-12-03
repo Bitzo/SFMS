@@ -95,7 +95,7 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] !== undefined && key !== 'page')
+            if(data[key] !== undefined && key !== 'page' && key !== 'pageNum')
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }
@@ -123,12 +123,12 @@ exports.countQuery = function (data, callback) {
 //查询项目信息
 exports.queryProject = function (data, callback) {
     var sql = 'select ID,ProjectName,ProjectDesc,ProjectID,ProjectManageID,ProjectManageName,ProjectEndTime,ProjectTimeLine,CreateTime,OperateUser,EditTime,EditUser,ProjectStatus,ProjectPrice from jit_projectbaseinfo where 1=1 ',
-    num = config.pageCount, //每页显示的个数
-    page = data.page || 1;
+        page = data.page || 1,
+        num = data.pageNum;
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }

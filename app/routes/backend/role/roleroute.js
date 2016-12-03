@@ -20,16 +20,19 @@ var logger = appRequire("util/loghelper").helper;
 router.get('/',function (req, res) {
     var appID = req.query.appID,
         page = req.query.page || 1,
+        pageNum = req.query.pageNum,
         roleName = req.query.RoleName,
         isActive = req.query.IsActive;
     page = page>0?page:1;
-
     var data = {
         'ApplicationID': appID,
         'page': page,
+        'pageNum': pageNum,
         'RoleName': roleName,
         'IsActive': isActive
     };
+
+    if (pageNum === undefined) pageNum = config.pageCount;
 
     //用于查询结果总数的计数
     var countNum = 0;
@@ -64,12 +67,12 @@ router.get('/',function (req, res) {
                         msg: '查询成功',
                         dataNum: countNum,
                         curPage: page,
-                        curPageNum:config.pageCount,
-                        totlePage: Math.ceil(countNum/config.pageCount),
+                        curPageNum:pageNum,
+                        totlePage: Math.ceil(countNum/pageNum),
                         data: results
                     };
                     if(result.curPage == result.totlePage) {
-                        result.curPageNum = result.dataNum - (result.totlePage-1)*config.pageCount;
+                        result.curPageNum = result.dataNum - (result.totlePage-1)*pageNum;
                     }
                     return res.json(result);
                 } else {

@@ -160,13 +160,17 @@ router.get('/', function (req, res) {
         userName = req.query.userName,
         isActive = req.query.isActive,
         page = req.query.page > 0 ? req.query.page : 1 ,
+        pageNum = req.query.pageNum,
         totleNum = 0;
+
+    if (pageNum === undefined) pageNum = config.pageCount;
 
     var data = {
         'ProjectName': projectName,
         'UserName': userName,
         'IsActive': isActive,
-        'page': page
+        'page': page,
+        'pageNum': pageNum
     }
 
     //查询数据量
@@ -194,13 +198,20 @@ router.get('/', function (req, res) {
                 }
                 console.log(results);
                 if (results !== undefined && results.length > 0) {
-                    res.status(200);
-                    return res.json({
+                    var result = {
                         status: 200,
                         isSuccess: true,
                         totleNum: totleNum,
+                        curPage: page,
+                        totlePage: Math.ceil(totleNum/pageNum),
+                        curNum: pageNum,
                         data: results
-                    })
+                    };
+                    if(result.curPage == result.totlePage) {
+                        result.curNum = result.totleNum - (result.totlePage-1)*pageNum;
+                    }
+                    res.status(200);
+                    return res.json(result);
                 } else {
                     res.status(404);
                     return res.json({
