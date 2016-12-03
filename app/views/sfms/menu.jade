@@ -1,6 +1,6 @@
 block content
   //div(ng-controller="sfmsIndexController")
-  jason-pagecontent(action='/app' conf='paginationConf')
+  jason-pagecontent(action='/usermenurole' conf='paginationConf')
     div.page-header
       div.buttons.text-right
         a.btn.btn-success(ng-href='')
@@ -21,17 +21,23 @@ block content
             th ApplicationID
             th UserName
             th Is Active
-            th Is Active
+            th CreateTime
+            th Pwd
+            th CreateUserID
             th 操作
         tbody
           tr(ng-repeat="x in datas")
-            td {{x.ID}}
-            td {{x.ApplicationCode}}
-            td {{x.ApplicationName}}
+            td {{x.AccountID}}
+            td {{x.ApplicationID}}
+            td {{x.UserName}}
             td {{x.IsActive}}
-            td {{x.IsActive}}
+            td {{x.CreateTime}}
+            td {{x.Pwd}}
+            td {{x.CreateUserID}}
             td
-              a.btn.btn-primary(type="submit" href='#/sfms/application-info') 编辑
+              a(ng-href='')
+                i.icon.icon-edit 编辑
+              a(ng-href='')
+                i.icon.icon-trash 删除
       div.pull-right
         jason-pagination(conf='paginationConf')
-

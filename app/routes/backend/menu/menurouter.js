@@ -14,6 +14,38 @@ var menuService = appRequire('service/backend/menu/menuservice'),
     userService = appRequire('service/backend/user/userservice'),
     logger = appRequire("util/loghelper").helper;
 
+router.get('/',function (req,res) {
+    var data = {
+
+    };
+    menuService.queryAllMenusFormTreeInTable(data,function (err,results) {
+        if(err){
+            return res.json({
+                code : 500,
+                isSuccess : false,
+                msg : '服务器连接错误'
+            });
+        }
+
+        if(results !== undefined && results.length !== 0){
+            return res.json({
+                code : 200,
+                isSuccess : true,
+                data : {
+                    Menu : results
+                },
+                msg : '读取所有菜单成功！'
+            });
+        }else {
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: '未查到相应菜单'
+            });
+        }
+    });
+});
+
 //获得树形Menu结构
 router.get('/:userID',function (req,res) {
 

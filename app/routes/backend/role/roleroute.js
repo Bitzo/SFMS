@@ -24,6 +24,9 @@ router.get('/',function (req, res) {
         roleName = req.query.RoleName,
         isActive = req.query.IsActive;
     page = page>0?page:1;
+
+    if (pageNum === undefined) pageNum = config.pageCount;
+
     var data = {
         'ApplicationID': appID,
         'page': page,
@@ -31,8 +34,6 @@ router.get('/',function (req, res) {
         'RoleName': roleName,
         'IsActive': isActive
     };
-
-    if (pageNum === undefined) pageNum = config.pageCount;
 
     //用于查询结果总数的计数
     var countNum = 0;

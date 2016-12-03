@@ -23,7 +23,6 @@ router.post('/', function (req, res) {
         UserID = req.body.UserID,
         UserName = req.body.UserName,
         OperateUser = req.body.OperateUser,
-        KPIStatus = req.body.KPIStatus,
         Remark = req.body.Remark;
 
     var data = {
@@ -34,11 +33,11 @@ router.post('/', function (req, res) {
         'UserID': UserID,
         'UserName': UserName,
         'OperateUser': OperateUser,
-        'KPIStatus': KPIStatus,
+        'KPIStatus': '待审核',
         'Remark': Remark
     }
     //检查所需要的参数是否齐全
-    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID','OperateUser','KPIStatus', 'UserName', 'Remark'],
+    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID','OperateUser', 'UserName', 'Remark'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -107,12 +106,12 @@ router.put('/', function (req, res) {
         'UserID': UserID,
         'UserName': UserName,
         'OperateUser': OperateUser,
-        'KPIStatus': KPIStatus,
+        'KPIStatus': '待审核',
         'Remark': Remark
     }
 
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'OperateUser', 'KPIStatus', 'UserName', 'Remark'],
+    var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'OperateUser', 'UserName', 'Remark'],
         err = 'required: ';
     for(var value in temp)
     {

@@ -17,7 +17,8 @@ var projectUserModel = {
     EditName: '',
     EditTime: '',
     Duty: '',
-    IsActive: ''
+    IsActive: '',
+    PK:'ID'
 }
 
 module.exports = projectUserModel;

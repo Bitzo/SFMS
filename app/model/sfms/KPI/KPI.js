@@ -19,7 +19,8 @@ var KPImodel = {
     CheckTime: '',
     CheckUser: '',
     KPIStatus: '',
-    Remark: ''
+    Remark: '',
+    PK:'ID'
 }
 
 module.exports = KPImodel;
