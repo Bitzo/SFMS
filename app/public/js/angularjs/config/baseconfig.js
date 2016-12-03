@@ -4,23 +4,23 @@
 var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(function($routeProvider) {
     $routeProvider.
     when('/sfms/index', {
-        templateUrl: 'sfms/index'
+        templateUrl: '/sfms/index'
             // controller: 'HomeController'
     }).
     when('/sfms/user', {
-        templateUrl: 'sfms/user',
+        templateUrl: '/sfms/user',
         //controller: 'HomeController'
     }).
     when('/sfms/user-info', {
-        templateUrl: 'sfms/user-info',
+        templateUrl: '/sfms/user-info',
         //controller: 'HomeController'
     }).
     when('/sfms/application', {
-        templateUrl: 'sfms/application',
+        templateUrl: '/sfms/application',
         //controller: 'HomeController'
     }).
     when('/sfms/application-info', {
-        templateUrl: 'sfms/application-info',
+        templateUrl: '/sfms/application-info',
         //controller: 'HomeController'
     }).
     otherwise({
@@ -42,8 +42,9 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     }
 
     function locationChangeSuccess(event) {
-        $log.log('locationChangeSuccess');
+        $log.log('locationChangeSuccess');    
         $log.log(arguments);
+        console.log($location.path());
     }
 
     function routeChangeStart(event) {
@@ -60,7 +61,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
 
     function getList() {
         $http({
-            method: 'GET',
+            method: 'get',
             url: "/sfms/getmenu?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
             data: {
                 pageindex: 1,
@@ -77,4 +78,35 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         });
     }
     getList();
+    $scope.paginationConf = {
+        currentPage: 1,
+        itemsPerPage: 15,
+        action: "1111"
+    }
+    $scope.f={};
+    function getInit(){
+        $http({
+            method:'get',
+            url:"/sfms/getmenu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
+        }).
+        success(function(response) {
+            var  data=response.datas;
+            $scope.datas=JSON.parse(data);
+            $scope.paginationConf.totalItems=  response.total
+
+        }).
+        error(function(response) {
+            getInit();
+        });
+    }
+
+    $scope.paginationConf = {
+        currentPage: 1,
+        itemsPerPage: 15
+    }
+    $scope.$watch( 'paginationConf.action+currentPage+itemsPerPage',getInit);
+    $scope.search=function(){
+        getInit();
+    }
 })

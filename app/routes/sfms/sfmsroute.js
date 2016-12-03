@@ -2,6 +2,13 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var url = require("url");
+//实验室管理系统 项目管理路由
+var project = appRequire('routes/sfms/project/projectroute');
+var projectuser = appRequire('routes/sfms/project/projectuserroute');
+//实验室管理系统 签到信息管理路由
+var sign = appRequire('routes/sfms/sign/signroute');
+//实验室管理系统 KPI管理路由
+var kpi = appRequire('routes/sfms/KPI/KPIroute')
 //实验室管理系统主站点
 
 
@@ -30,9 +37,9 @@ router.get('/application-info', function(req, res, next) {
 
 });
 
-router.get('/getmenu', function(req, res, next) {
+router.post('/getmenu', function(req, res, next) {
         //res.render('sfms/index', { title: 'Hi gemeun' });
-        fs.readFile('../public/data/menu.json','utf-8',function(err,data) {
+        fs.readFile('public/data/menu.json','utf-8',function(err,data) {
 
             if (!err) {
                     var arr =JSON.parse(data);
@@ -61,5 +68,8 @@ router.get('/getmenu', function(req, res, next) {
         });
 
 });
-
+router.use('/projectuser', projectuser);
+router.use('/project', project);
+router.use('/sign', sign);
+router.use('/kpi',kpi);
 module.exports = router;

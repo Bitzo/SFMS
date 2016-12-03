@@ -4,7 +4,7 @@
 var path = require('path');
 var config = {
     app_name: 'JinkeBro',
-    app_description: '金科小哥项目',
+    app_description: 'JIT1320管理集成平台',
     app_keywords: 'JinkeBro',
     app_version: '0.1.0',
     cookieSecret: 'snail',
