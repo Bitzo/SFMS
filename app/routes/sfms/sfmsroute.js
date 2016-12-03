@@ -2,6 +2,15 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var url = require("url");
+//实验室管理系统 项目管理路由
+var project = appRequire('routes/sfms/project/projectroute');
+var projectuser = appRequire('routes/sfms/project/projectuserroute');
+//实验室管理系统 签到信息管理路由
+var sign = appRequire('routes/sfms/sign/signroute');
+//实验室管理系统 KPI管理路由
+var kpi = appRequire('routes/sfms/KPI/KPIroute');
+//实验室管理系统 财务管理路由
+var finance = appRequire('routes/sfms/finance/financeroute');
 //实验室管理系统主站点
 
 
@@ -82,5 +91,14 @@ router.get('/getmenu', function(req, res, next) {
         });
 
 });
-
+//项目用户 有关路由
+router.use('/projectuser', projectuser);
+//项目管理 路由
+router.use('/project', project);
+//签到管理 路由
+router.use('/sign', sign);
+//绩效管理 路由
+router.use('/kpi',kpi);
+//财务管理 路由
+router.use('/finance', finance);
 module.exports = router;

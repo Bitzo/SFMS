@@ -2,29 +2,26 @@ var express = require('express');
 var router = express.Router();
 //log4js日志中间件
 var logger = appRequire("util/loghelper").helper;
+var config = appRequire("config/config");
 //角色模块路由
 var roleroute = appRequire('routes/backend/role/roleroute');
 //角色功能点路由
 var rolefuncroute = appRequire('routes/backend/role/rolefuncroute');
-
-//用户的添加以及修改的路由
-
+//用户的添加以及修改的路由   
 var user = appRequire('routes/backend/user/userroute')
-  //功能点
+//功能点
 var funcroute = appRequire('routes/backend/function/functionroute');
 //用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
-
+//菜单
 var menuRouter = appRequire('routes/backend/menu/menurouter');
 var userMenuRoleRouter = appRequire('routes/backend/menu/usermenurolerouter');
-
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper = appRequire('util/jwthelper');
-
 var approuter = appRequire('routes/backend/application/approuter');
-
 //验证码
 var code = appRequire('service/backend/code/codeservice').generateCode;
+
 //主应用主站点
 router.get('/', function(req, res, next) {
   res.render('login', {
@@ -37,6 +34,7 @@ router.get('/index', function(req, res, next) {
     title: 'JIT1320管理集成平台'
   });
 });
+
 
 router.get('/user',function(req,res,next)
 {
@@ -137,8 +135,8 @@ router.post('/login', function(req, res) {
   })
 });
 
-router.use('/menu',menuRouter);
-router.use('/usermenurole',userMenuRoleRouter);
+router.use('/menu', menuRouter);
+router.use('/usermenurole', userMenuRoleRouter);
 
 //角色模块
 router.use('/role', roleroute);
@@ -148,6 +146,6 @@ router.use('/rolefunc', rolefuncroute);
 router.use('/function', funcroute);
 router.use('/backuser', user);
 router.use('/userrole', userRole);
-router.use('/app', approuter);
+router.use('/app', approuter); //应用功能模块
 
 module.exports = router;

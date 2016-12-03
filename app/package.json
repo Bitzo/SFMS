@@ -32,7 +32,9 @@
     "superagent": "*",
     "supertest": "*",
     "captchapng": "0.0.1",
-    "log4js": "1.0.1"
+    "log4js": "1.0.1",
+    "validator": "*",
+    "moment": "*"
   },
   "devDependencies": {
 
