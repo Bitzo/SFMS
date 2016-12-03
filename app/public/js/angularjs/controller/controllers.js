@@ -44,9 +44,7 @@ myApp.controller('menucontroller', ['$scope', '$http', function($scope, $http) {
     $scope.asd = 'aaa';
     $http({
         method: 'get',
-        // url: "/menu/" + 1,
         url: "/menu/1?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-        data:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
     }).
     success(function(response) {
         console.log('h');
