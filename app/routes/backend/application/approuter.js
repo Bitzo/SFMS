@@ -136,6 +136,11 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', function (req, res) {
+    var pageNum = req.query.pageNum;
+
+    if (pageNum === undefined) {
+        pageNum = config.countNum;
+    }
     var page = req.query.page || 1;
 
     var data = {
@@ -170,14 +175,19 @@ router.get('/', function (req, res) {
                 logger.writeError('查询应用,出错信息: ' + err);
                 return;
             }
-
+            if (page == Math.ceil(countNum/pageNum)) {
+                var curpageNum = countNum - (page-1) * pageNum;
+            } else {
+                var curpageNum = pageNum;
+            }
             if (results !== undefined && results.length != 0) {
                 res.json({
                     code:200,
                     isSuccess: true,
                     currentpage: page,
                     countNum: countNum,
-                    totlePage: Math.ceil(countNum/config.pageCount),
+                    pageNum: curpageNum,
+                    totlePage: Math.ceil(countNum/pageNum),
                     data: results,
                     msg: '查找成功'
                 });
