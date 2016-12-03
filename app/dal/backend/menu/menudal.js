@@ -15,15 +15,21 @@ exports.queryAllMenus = function(data, callback) {
     var sql = 'select ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName,IconPath,Url,Memo,IsActive from jit_menu where 1=1';
     if(data !== undefined){
         for(var key in data){
-            //判断data[key]是否是数值类型
-            if(!isNaN(data[key])){
-                sql += ' and ' + key + ' = '+ data[key] + ' ';
-            }else {
-                sql += ' and ' + key + ' = "'+ data[key] + '" ';
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined){
+                //判断data[key]是否是数值类型
+                if(!isNaN(data[key])){
+                    sql += ' and ' + key + ' = '+ data[key] + ' ';
+                }else {
+                    sql += ' and ' + key + ' = "'+ data[key] + '" ';
+                }
             }
-
         }
     }
+    var num = data.pageNum; //每页显示的个数
+    var page = data.page || 1;
+
+    sql += " LIMIT " + (page-1)*num + "," + num;
+
     logger.writeInfo("[queryAllMenus func in menudal]查询所有菜单：" + sql);
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -42,6 +48,38 @@ exports.queryAllMenus = function(data, callback) {
         });
     })
 }
+
+//计数，查询菜单表的总个数
+exports.countAllMenus = function (data, callback) {
+    var sql =  'select count(1) AS num from jit_menu where 1=1 ';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
+                sql += "and " + key + " = '" + data[key] + "' ";
+        }
+    }
+
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo("连接成功");
+        logger.writeInfo(sql);
+
+        connection.query(sql, function (err, results) {
+            if (err) {
+                callback(true);
+                return;
+            };
+            logger.writeInfo("查询成功");
+            callback(false, results);
+            connection.release();
+        })
+    })
+};
 
 //菜单新增
 exports.menuInsert = function (data,callback) {
