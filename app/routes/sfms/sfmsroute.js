@@ -24,8 +24,18 @@ router.get('/user', function(req, res, next) {
 
 });
 
-router.get('/user-info', function(req, res, next) {
-        res.render('sfms/user-info', { title: 'Hi sfms' });
+router.get('/role', function(req, res, next) {
+        res.render('sfms/role', { title: 'Hi sfms' });
+
+});
+
+router.get('/userinfo', function(req, res, next) {
+        res.render('sfms/userinfo', { title: 'Hi sfms' });
+
+});
+
+router.get('/menu', function(req, res, next) {
+        res.render('sfms/menu', { title: 'Hi sfms' });
 
 });
 
@@ -39,22 +49,33 @@ router.get('/application-info', function(req, res, next) {
 
 });
 
-router.post('/getmenu', function(req, res, next) {
+router.get('/getmenu', function(req, res, next) {
         //res.render('sfms/index', { title: 'Hi gemeun' });
         fs.readFile('public/data/menu.json','utf-8',function(err,data) {
 
             if (!err) {
                     var arr =JSON.parse(data);
 
-                    var query = req.body;
+                    var query = req.query;
                     console.log(query);
+                    var text ="";
+                    var id="";
+                    if(query.f!='{}')
+                    {    var f= JSON.parse(query.f);
+                         text = f.text==null?"":f.text;
+                            id=f.id;
+                    }
 
-                    var  text=query.f.text==null?"":query.f.text;
+
+                    //console.log(query.f.text);
                     var newarr= arr.filter(function(o){
                             console.log(o.text);
                             console.log(text);
-                            return o.text.indexOf(text)>=0;
+                            console.log(id);
+                            console.log(o.text.indexOf(text)>=0&&o.id.indexOf(id)>=0);
+                            return o.text.indexOf(text)>=0&&o.id.indexOf(id)>=0;
                     });
+
                     var  pageindex= query.pageindex;
                     var  pagesize= query.pagesize;
                     console.log("pagesize,pageindex"+pagesize+pageindex+arr.length);
