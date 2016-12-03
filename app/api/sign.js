@@ -27,6 +27,7 @@ router.post('/', function (req, res) {
 
     if(err != 'required: ')
     {
+        res.status(400);
         res.json({
             code: 400,
             isSuccess: false,
@@ -55,8 +56,9 @@ router.post('/', function (req, res) {
 
     signservice.signLog(data, function(err, result) {
         if (err) {
+            res.status(500);
             res.json({
-                code: '500',
+                code: 500,
                 isSuccess: false,
                 msg: '记录失败,连接数据库有误'
             });
@@ -65,6 +67,7 @@ router.post('/', function (req, res) {
         console.log(result);
         if (result!==undefined&&result.affectedRows===1)
         {
+            res.status(200);
             res.json({
                 code:200,
                 isSuccess: true,

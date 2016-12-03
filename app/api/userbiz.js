@@ -33,15 +33,19 @@ router.get('/:user_id', function(req, res) {
                 gradeYear = '2015',
                 className = '15软件工程（嵌入式培养）3班';
             var data = {
-                ApplicationID: result.ApplicationID,
-                AccountID: result.AccountID,
-                Account: result.Account,
-                UserName: result.UserName,
-                CollegeName: collegeName,
-                GradeYear: gradeYear,
-                Phone: "13776653627",
-                ClassName: className,
-                Memo: result.Memo
+                status: 200,
+                isSuccess: true,
+                data: {
+                    ApplicationID: result.ApplicationID,
+                    AccountID: result.AccountID,
+                    Account: result.Account,
+                    UserName: result.UserName,
+                    CollegeName: collegeName,
+                    GradeYear: gradeYear,
+                    Phone: "13776653627",
+                    ClassName: className,
+                    Memo: result.Memo
+                }
             }
             res.status(200);
             res.json(data);
