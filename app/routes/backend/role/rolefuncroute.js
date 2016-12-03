@@ -22,6 +22,7 @@ router.get('/:roleID',function (req, res) {
     };
 
     if (roleID === undefined) {
+        res.status(404);
         return res.json({
                     code: 404,
                     isSuccess: false,
@@ -31,6 +32,7 @@ router.get('/:roleID',function (req, res) {
     
     rolefuncservice.queryRoleFunc(data, function (err, results) {
         if (err) {
+            res.status(500);
             return res.json({
                         code:500,
                         isSuccess: false,
@@ -39,6 +41,7 @@ router.get('/:roleID',function (req, res) {
         }
         //查询到结果并返回
         if (results !== undefined && results.length != 0) {
+            res.status(200);
             return res.json({
                         code:200,
                         isSuccess: true,
@@ -47,6 +50,7 @@ router.get('/:roleID',function (req, res) {
                         data: results
                     })
         } else {
+            res.status(404);
             return res.json({
                         code: 404,
                         isSuccess: false,
@@ -77,6 +81,7 @@ router.post('/', function (req, res) {
 
     if(err!='required: ')
     {
+        res.status(400);
         return res.json({
                     code: 400,
                     isSuccess: false,
@@ -98,6 +103,7 @@ router.post('/', function (req, res) {
     //验证传入的functionID是否都存在或有效
     functionservice.queryFuncByID(data, function (err, results) {
         if (err) {
+            res.status(500);
             return res.json({
                         code: 500,
                         isSuccess: false,
@@ -115,6 +121,7 @@ router.post('/', function (req, res) {
             rolefuncservice.delRoleFunc(data,function (err, results) {
                 logger.writeInfo(results);
                 if (err) {
+                    res.status(500);
                     return res.json({
                                 code: 500,
                                 isSuccess: false,
@@ -127,6 +134,7 @@ router.post('/', function (req, res) {
                     rolefuncservice.addRoleFunc(data, function (err, results) {
                         logger.writeInfo(results);
                         if (err) {
+                            res.status(500);
                             return res.json({
                                         code: 500,
                                         isSuccess: false,
@@ -134,12 +142,14 @@ router.post('/', function (req, res) {
                                     })
                         }
                         if (results !== undefined && results.affectedRows != 0) {
+                            res.status(200);
                             return res.json({
                                         code: 200,
                                         isSuccess: true,
                                         msg: "添加信息成功"
                                     })
                         } else {
+                            res.status(404);
                             return res.json({
                                         code: 404,
                                         isSuccess: false,
@@ -151,6 +161,7 @@ router.post('/', function (req, res) {
             })
         } else {
             //数据非法，重新输入
+            res.status(400);
             return res.json({
                         code: 400,
                         isSuccess: false,
@@ -180,6 +191,7 @@ router.put('/',function (req, res) {
 
     if(err!='required: ')
     {
+        res.status(400);
         return res.json({
                     code: 400,
                     isSuccess: false,
@@ -201,6 +213,7 @@ router.put('/',function (req, res) {
     //验证传入的functionID是否都存在或有效
     functionservice.queryFuncByID(data, function (err, results) {
         if (err) {
+            res.status(500);
             return res.json({
                         code: 500,
                         isSuccess: false,
@@ -218,6 +231,7 @@ router.put('/',function (req, res) {
             rolefuncservice.delRoleFunc(data, function (err, results) {
                 logger.writeInfo(results);
                 if (err) {
+                    res.status(500);
                     return res.json({
                                 code: 500,
                                 isSuccess: false,
@@ -229,6 +243,7 @@ router.put('/',function (req, res) {
                     rolefuncservice.updateRoleFunc(data, function (err, results) {
                         logger.writeInfo(results);
                         if (err) {
+                            res.status(500);
                             return res.json({
                                         code: 500,
                                         isSuccess: false,
@@ -236,12 +251,14 @@ router.put('/',function (req, res) {
                                     })
                         }
                         if (results !== undefined && results.affectedRows != 0) {
+                            res.status(200);
                             return res.json({
                                         code: 200,
                                         isSuccess: true,
                                         msg: "修改信息成功"
                                     })
                         } else {
+                            res.status(404);
                             return res.json({
                                         code: 404,
                                         isSuccess: false,
@@ -253,6 +270,7 @@ router.put('/',function (req, res) {
             })
         } else {
             //数据非法，重新输入
+            res.status(400);
             return res.json({
                         code: 400,
                         isSuccess: false,
@@ -265,6 +283,7 @@ router.put('/',function (req, res) {
 //角色功能点删除
 router.delete('/', function (req, res) {
     if (req.body.RoleID === undefined) {
+        res.status(400);
         return res.json({
                     code: 400,
                     isSuccess: false,
@@ -278,6 +297,7 @@ router.delete('/', function (req, res) {
 
     rolefuncservice.delRoleFunc(data, function (err, results) {
         if (err) {
+            res.status(500);
             return res.json({
                         code: 500,
                         isSuccess: false,
@@ -285,12 +305,14 @@ router.delete('/', function (req, res) {
                     })
         }
         if (results !== undefined && results.affectedRows != 0) {
+            res.status(200);
             return res.json({
                         code: 200,
                         isSuccess: true,
                         msg: "删除功能点成功"
                     })
         } else {
+            res.status(404);
             return res.json({
                         code: 404,
                         isSuccess: false,
