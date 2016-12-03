@@ -77,6 +77,35 @@ exports.countAllapps = function (data, callback) {
     })
 };
 
+exports.countAllapps = function (data, callback) {
+    var sql =  'select count(1) AS num from jit_application where 1=1 ';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && data[key] !== undefined)
+                sql += "and " + key + " = '" + data[key] + "' ";
+        }
+    }
+
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+
+        connection.query(sql, function (err, results) {
+            if (err) {
+                callback(true);
+                return;
+            };
+
+            callback(false, results);
+            connection.release();
+        })
+    })
+};
+
 
 //新增应用
 exports.insert = function(data, callback) {
