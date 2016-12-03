@@ -156,7 +156,9 @@ router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
 //管理功能点
 router.use('/function', funcroute);
+//用户的模块
 router.use('/backuser', user);
+//用户添加角色模块
 router.use('/userrole', userRole);
 router.use('/app', approuter); //应用功能模块
 
