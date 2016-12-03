@@ -134,6 +134,6 @@ router.use('/rolefunc', rolefuncroute);
 router.use('/function', funcroute);
 router.use('/backuser', user);
 router.use('/userrole', userRole);
-router.use('/app', approuter);
+router.use('/app', approuter); //应用功能模块
 
 module.exports = router;
