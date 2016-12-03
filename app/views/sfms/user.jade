@@ -1,45 +1,43 @@
-//- 用户管理页面
 block content
-  div.user
-    nav(id='ch-nav' ng-controller="searchcontroller")
-      span.navbar-brand
-        h4 用户管理
-      div.navbar-form.navbar-right
-        input(type="text" name='username' class="form-control" ng-model="seainfo" placeholder="输入查询条件" required autofocus)
-        button.btn.btn-primary(type="submit" ng-click="search(seainfo)")
-          a( href='#/searchuser' style="color:white" ) 查询用户
-        a.btn.btn-primary(type="submit" href='#/sfms/user-info') 新增用户
-
-    div(ng-controller="usercontroller")
-      div.table-responsive
-        table.table.table-hover
-          thead
-            tr
-              th AccountID
-              th ApplicationID
-              th UserName
-              th Is Active
-              th CreateTime
-              th Pwd
-              th CreateUserID
-              th.col-sm-2.col-md-2 Edit      
-          tbody
-            tr(ng-repeat="x in info")
-              td {{x.AccountID}}
-              td {{x.ApplicationID}}
-              td {{x.UserName}}
-              td {{x.IsActive}}
-              td {{x.CreateTime}}
-              td {{x.Pwd}}
-              td {{x.CreateUserID}}
-              td 
-                button.btn.btn-warning 编辑
-
-        
-      include ../shared/footer.jade
-
-
-
-
-
-   
+  //div(ng-controller="sfmsIndexController")
+  jason-pagecontent(action='/backuser' conf='paginationConf')
+    div.page-header
+      div.buttons.text-right
+        a.btn.btn-success(href='#/sfms/userinfo')
+          i.icon.icon-plus 新建
+        button(ng-click='search()' class='btn btn-default') 刷新
+    div.page-content
+      ng-form.form-inline
+        label.form-group.my-form-group
+          input.form-control(placeholder='名称' ng-model='f.text')
+        label.form-group.my-form-group
+          input.form-control(placeholder='所属类别')
+        label.form-group.my-form-group
+          button.btn.btn-primary(ng-click='search()') 确定
+      table.table.table-striped.table-bordered.text-center
+        thead
+          tr
+            th AccountID
+            th ApplicationID
+            th UserName
+            th Is Active
+            th CreateTime
+            th Pwd
+            th CreateUserID
+            th 操作
+        tbody
+          tr(ng-repeat="x in datas")
+            td {{x.AccountID}}
+            td {{x.ApplicationID}}
+            td {{x.UserName}}
+            td {{x.IsActive}}
+            td {{x.CreateTime}}
+            td {{x.Pwd}}
+            td {{x.CreateUserID}}
+            td
+              a(ng-href='')
+                i.icon.icon-edit 编辑
+              a(ng-href='')
+                i.icon.icon-trash 删除
+      div.pull-right
+        jason-pagination(conf='paginationConf')

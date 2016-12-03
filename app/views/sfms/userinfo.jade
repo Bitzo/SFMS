@@ -1,11 +1,12 @@
-//- 新建编辑用户页面
+
 block content
+  //div(ng-controller="sfmsIndexController")
   div.user-info
     h4.page-header 个人信息
     div
-      form(name='userForm' ng-controller="addusercontroller")
+      form(name='userForm')
         div.form-group
-          label  账号  ：  {{response传回的数据}}
+          label  账号  ：  hhh
         div.form-group
           label.control-label 用户名 ：
           div
@@ -63,7 +64,7 @@ block content
             option 5
         div.form-group.col-sm-5.col-md-5
           a.btn.btn-lg.btn-danger.pull-right(style="color:white;margin-left:50px;") 重置
-          a.btn.btn-lg.btn-primary.pull-right(style="color:white;margin-right:50px;") 确认
+          a.btn.btn-lg.btn-primary.pull-right(ng-click=) 确认
       
           
           
