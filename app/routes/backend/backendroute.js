@@ -42,40 +42,6 @@ router.get('/index', function(req, res, next) {
 });
 
 
-router.get('/user',function(req,res,next)
-{
-  res.render('sfms/user',{
-    title:'管理后台'
-  });
-});
-
-router.get('/role',function(req,res,next)
-{
-  res.render('sfms/role',{
-    title:'管理后台'
-  });
-});
-
-router.get('/userinfo',function(req,res,next)
-{
-  res.render('sfms/userinfo',{
-    title:'管理后台'
-  });
-});
-
-router.get('/menu',function(req,res,next)
-{
-  res.render('sfms/menu',{
-    title:'管理后台'});
-
-});
-
-router.get('/application',function(req,res,next)
-{
-  res.render('sfms/application',{
-    title:'管理后台'});
-
-});
 
 //生成验证码
 router.get('/generatecode', code);

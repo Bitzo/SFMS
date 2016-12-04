@@ -1,6 +1,6 @@
 block content
   //div(ng-controller="sfmsIndexController")
-  jason-pagecontent(action='/usermenurole' conf='paginationConf')
+  jason-pagecontent(action='/menu/plain' conf='paginationConf')
     div.page-header
       div.buttons.text-right
         a.btn.btn-success(ng-href='')
@@ -17,23 +17,21 @@ block content
       table.table.table-striped.table-bordered.text-center
         thead
           tr
-            th AccountID
             th ApplicationID
-            th UserName
-            th Is Active
-            th CreateTime
-            th Pwd
-            th CreateUserID
+            th MenuID
+            th MenuName
+            th Url
+            th Memo
+            th IsActive
             th 操作
         tbody
           tr(ng-repeat="x in datas")
-            td {{x.AccountID}}
             td {{x.ApplicationID}}
-            td {{x.UserName}}
+            td {{x.MenuID}}
+            td {{x.MenuName}}
+            td {{x.Url}}
+            td {{x.Memo}}
             td {{x.IsActive}}
-            td {{x.CreateTime}}
-            td {{x.Pwd}}
-            td {{x.CreateUserID}}
             td
               a(ng-href='')
                 i.icon.icon-edit 编辑

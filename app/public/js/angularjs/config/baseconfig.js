@@ -92,12 +92,16 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         $http({
             method:'get',
             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
+            params:{
+                pageindex:$scope.paginationConf.currentPage,
+                pagesize:$scope.paginationConf.itemsPerPage,
+                f:$scope.f
+            }
         }).
         success(function(response) {
             var  data=response.data;
             $scope.datas=response.data;
-            $scope.paginationConf.totalItems=  100
+            $scope.paginationConf.totalItems= response.dataNum;
 
         }).
         error(function(response) {

@@ -94,6 +94,7 @@ router.get('/tree',function (req,res) {
 });
 
 router.get('/plain',function (req,res) {
+    console.log('hhhh');
     var page = req.query.page || 1,
         pageNum = req.query.pageNum;
 
