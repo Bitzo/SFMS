@@ -41,8 +41,6 @@ router.get('/index', function(req, res, next) {
   });
 });
 
-
-
 //生成验证码
 router.get('/generatecode', code);
 

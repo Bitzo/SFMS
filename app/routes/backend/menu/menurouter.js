@@ -16,8 +16,8 @@ var menuService = appRequire('service/backend/menu/menuservice'),
     config = appRequire('config/config');
 
 router.get('/tree',function (req,res) {
-    var page = req.query.page || 1,
-        pageNum = req.query.pageNum;
+    var page = req.query.pageindex || 1,
+        pageNum = req.query.pagesize;
 
     page = page>0 ? page : 1;
 
@@ -47,6 +47,7 @@ router.get('/tree',function (req,res) {
             countNum = results[0]['num'];
 
             //查询所需的详细数据
+            console.log(data);
             menuService.queryAllMenusFormTreeInTable(data, function (err, result) {
                 if (err) {
                     res.status(500);
@@ -94,9 +95,10 @@ router.get('/tree',function (req,res) {
 });
 
 router.get('/plain',function (req,res) {
-    console.log('hhhh');
-    var page = req.query.page || 1,
-        pageNum = req.query.pageNum;
+
+    var page = req.query.pageindex || 1,
+        pageNum = req.query.pagesize;
+
 
     page = page>0 ? page : 1;
 

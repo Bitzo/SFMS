@@ -177,8 +177,8 @@ router.get('/', function (req, res) {
     var projectName = req.query.projectName,
         projectManageName = req.query.projectManageName,
         projectStatus = req.query.projectStatus,
-        page = req.query.page>0 ?req.query.page:1,
-        pageNum = req.query.pageNum,
+        page = req.query.pageindex>0 ?req.query.pageindex:1,
+        pageNum = req.query.pagesize,
         totleNum = 0;
 
     if (pageNum === undefined) pageNum = config.pageCount;
@@ -219,14 +219,14 @@ router.get('/', function (req, res) {
                     var result = {
                         status: 200,
                         isSuccess: true,
-                        totleNum: totleNum,
+                        dataNum: totleNum,
                         curPage: page,
                         totlePage: Math.ceil(totleNum/pageNum),
-                        curNum: pageNum,
+                        curPageNum: pageNum,
                         data: results
                     };
                     if(result.curPage == result.totlePage) {
-                        result.curNum = result.totleNum - (result.totlePage-1)*pageNum;
+                        result.curPageNum = result.dataNum - (result.totlePage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);
