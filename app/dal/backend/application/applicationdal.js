@@ -8,7 +8,7 @@
 
 var db_backend= appRequire('db/db_backend');
 var applicationMode = appRequire('model/backend/application/applicationmodel');
-var config = appRequire('config/config');
+//var config = appRequire('config/config');
 
 
 //查询目前所有应用
@@ -18,13 +18,13 @@ exports.queryAllApp = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'page') {
+            if (key != 'page' && key != 'pageNum') {
                 query_sql += ' and ' + key + " = '" + data[key] + "' ";
             }
         }
     }
 
-    var num = config.pageCount;
+    var num = data.pageNum;
     var page = data.page || 1;
 
     query_sql += " limit " + (page-1)*num + " , " + num;
@@ -76,36 +76,6 @@ exports.countAllapps = function (data, callback) {
         })
     })
 };
-
-exports.countAllapps = function (data, callback) {
-    var sql =  'select count(1) AS num from jit_application where 1=1 ';
-
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key !== 'page' && data[key] !== undefined)
-                sql += "and " + key + " = '" + data[key] + "' ";
-        }
-    }
-
-    db_backend.mysqlPool.getConnection(function (err, connection) {
-        if (err) {
-            callback(true);
-            return;
-        }
-
-
-        connection.query(sql, function (err, results) {
-            if (err) {
-                callback(true);
-                return;
-            };
-
-            callback(false, results);
-            connection.release();
-        })
-    })
-};
-
 
 //新增应用
 exports.insert = function(data, callback) {
