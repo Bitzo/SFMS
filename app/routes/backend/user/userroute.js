@@ -321,6 +321,7 @@ user.queryAllUsers(data, function(err, result) {
 			msg: '查询成功',
 			dataNum: allCount,
 			curPage: page,
+			curpageNum:pageNum,
 			totlePage: Math.ceil(allCount/pageNum),
 			data: result
 		};
