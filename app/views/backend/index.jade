@@ -9,7 +9,7 @@ html(lang='en')
     link(rel='stylesheet', href='assets/css/font-awesome.min.css')
     link(rel='stylesheet', href='assets/css/ace.min.css')
     link(rel='stylesheet', href='assets/css/ace-skins.min.css')
-  body(ng-app='myApp')
+  body(ng-app='myApp' ng-controller="baseController")
     #navbar.navbar.navbar-default
       #navbar-container.navbar-container
         .navbar-header.pull-left
@@ -198,7 +198,7 @@ html(lang='en')
           //-           span{{menuchid.text}}
 
          
-          ul.nav.nav-list(ng-controller='menucontroller')
+          ul.nav.nav-list
             li(ng-repeat='menu in menus') 
               a.dropdown-toggle(href='{{menu.Url}}') 
                 i(class='{{menu.icon}}')
@@ -228,7 +228,7 @@ script(src='/bower_components/angular/angular-route.min.js')
 script(src='/js/angularjs/directive/pagecontent.js')
 script(src='/js/angularjs/directive/pagination.js')
 script(src='/js/angularjs/config/baseconfig.js')
-script(src='/js/angularjs/controller/controllers.js')
+//script(src='/js/angularjs/controller/controllers.js')
 
 
 //script(src='/js/angularjs/controller/sfmsIndexController.js')

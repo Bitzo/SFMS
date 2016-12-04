@@ -13,9 +13,15 @@ var user = appRequire('routes/backend/user/userroute')
 var funcroute = appRequire('routes/backend/function/functionroute');
 //用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
-//菜单
+
+//菜单路由
 var menuRouter = appRequire('routes/backend/menu/menurouter');
+//通过userID查看菜单角色路由
 var userMenuRoleRouter = appRequire('routes/backend/menu/usermenurolerouter');
+//数据字典路由
+var datadictionaryRouter = appRequire('routes/backend/datadictionary/datadictionaryrouter');
+
+
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper = appRequire('util/jwthelper');
 var approuter = appRequire('routes/backend/application/approuter');
@@ -32,24 +38,6 @@ router.get('/', function(req, res, next) {
 router.get('/index', function(req, res, next) {
   res.render('backend/index', {
     title: 'JIT1320管理集成平台'
-  });
-});
-
-router.get('/user', function(req, res, next) {
-  res.render('backend/user', {
-    title: 'JIT1320管理集成平台'
-  });
-});
-
-router.get('/userinfo', function(req, res, next) {
-  res.render('backend/user-info', {
-    title: 'JIT1320管理集成平台'
-  });
-});
-
-router.get('/application', function(req, res, next) {
-  res.render('backend/application', {
-    title: '管理后台'
   });
 });
 
@@ -117,8 +105,14 @@ router.post('/login', function(req, res) {
   })
 });
 
-router.use('/menu', menuRouter);
-router.use('/usermenurole', userMenuRoleRouter);
+
+//菜单模块
+router.use('/menu',menuRouter);
+//通过userID获取相应的菜单和角色
+router.use('/usermenurole',userMenuRoleRouter);
+//数据字典
+router.use('/datadict',datadictionaryRouter);
+
 
 //角色模块
 router.use('/role', roleroute);
@@ -126,7 +120,9 @@ router.use('/role', roleroute);
 router.use('/rolefunc', rolefuncroute);
 //管理功能点
 router.use('/function', funcroute);
+//用户的模块
 router.use('/backuser', user);
+//用户添加角色模块
 router.use('/userrole', userRole);
 router.use('/app', approuter); //应用功能模块
 

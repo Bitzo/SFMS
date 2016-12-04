@@ -5,8 +5,8 @@
  * @Last Modified time: 2016/11/14 18:53
  * @Function:queryAllMenus()查询所有的菜单，菜单新增，菜单修改，菜单删除
  */
-var menuDAl = appRequire('dal/backend/menu/menudal');
-var logger = appRequire('util/loghelper').helper;
+var menuDAl = appRequire('dal/backend/menu/menudal'),
+    logger = appRequire('util/loghelper').helper;
 
 exports.queryAllMenusFormTree = function(data, callback){
     menuDAl.queryMenuByUserID(data,function (err,results) {
@@ -26,12 +26,11 @@ exports.queryAllMenusFormTree = function(data, callback){
                     arr.push(results[j]);
                 }
             }
-            if(k==i){
+            if(k == i){
                 results[i].children = arr;
             }
             if(results[i].MenuLevel == 1){
                 tree.push(results[i]);
-
             }
         }
 
@@ -41,6 +40,51 @@ exports.queryAllMenusFormTree = function(data, callback){
         callback(false,tree);
     });
 };
+
+exports.queryAllMenusFormTreeInTable = function(data, callback){
+    menuDAl.queryAllMenus(data,function (err,results) {
+        if(err){
+            callback(true);
+            return ;
+        }
+        //形成菜单树形结构
+        var tree = [];
+        var k;
+        for(var i=0;i<results.length;i++){
+            var arr = [];
+            for(var j=0;j<results.length;j++){
+                if(results[i].MenuID == results[j].ParentID){
+                    k = i;
+                    results[i].children = [];
+                    arr.push(results[j]);
+                }
+            }
+            if(k == i){
+                results[i].children = arr;
+            }
+            if(results[i].MenuLevel == 1){
+                tree.push(results[i]);
+            }
+        }
+
+        console.log('queryAllMenusFormTreeInTable func in service');
+        logger.writeInfo('queryAllMenusFormTreeInTable func in service');
+        //返回菜单树形JSON
+        callback(false,tree);
+    });
+};
+
+//查询对应项目的角色个数
+exports.countAllMenus = function (data, callback) {
+    menuDAl.countAllMenus(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        logger.writeInfo('countAllMenus');
+        callback(false, results);
+    });
+}
 
 //查询所有菜单，平面展示
 exports.queryAllMenus = function(data, callback){

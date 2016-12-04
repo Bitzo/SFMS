@@ -27,8 +27,9 @@
 
  	if(err!='require: ')
  	{
+ 		res.status(400);
  		res.json({
- 			code:500,
+ 			code:400,
  			isSuccess:false,
  			msg:err
  		});
@@ -37,9 +38,9 @@
  	}
 
  			//获取参数
- 			var ID=req.body.ID;
- 			var accountID=req.body.AccountID;
- 			var roleID=req.body.RoleID;
+			var ID=req.body.ID,
+ 			 accountID=req.body.AccountID,
+ 			 roleID=req.body.RoleID;
 
  			data={
  				'AccountID':accountID,
@@ -59,8 +60,9 @@
 
  			if(requireValue!='缺少值：')
  			{
+ 				res.status(400);
  				res.json({
- 					code:300,
+ 					code:400,
  					isSuccess:false,
  					msg:requireValue
  				});
@@ -71,8 +73,9 @@
  			{
  				if(err)
  				{
+ 					res.status(404);
  					res.json({
- 						code:500,
+ 						code:404,
  						isSuccess:false,
  						msg:'插入失败'
  					});
@@ -106,6 +109,7 @@ router.put('/',function(req,res)
 
 	if(err != 'required: ')
 	{
+		res.status(400);
 		res.json({
 			code:400,
 			isSuccess:false,
@@ -115,9 +119,9 @@ router.put('/',function(req,res)
 		return ;
 	}
 
-	var ID =req.body.ID;
-	var accountID=req.body.AccountID;
-	var roleID=req.body.RoleID; 
+	var ID =req.body.ID,
+	 accountID=req.body.AccountID,
+	 roleID=req.body.RoleID; 
 
 	var data = {
 		"ID":ID,
@@ -129,8 +133,9 @@ router.put('/',function(req,res)
 	{
 		if(err)
 		{
+			res.status(500);
 			res.json(
-			{
+			{	
 				code:500,
 				isSuccess:false,
 				msg:'修改信息失败，服务器出错'
@@ -148,8 +153,9 @@ router.put('/',function(req,res)
 			return ;
 		}else
 		{
+			res.status(500);
 			res.json({
-				code:400,
+				code:500,
 				isSuccess:false,
 				msg:"修改信息失败"
 			});

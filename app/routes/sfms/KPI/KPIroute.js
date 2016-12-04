@@ -23,7 +23,6 @@ router.post('/', function (req, res) {
         UserID = req.body.UserID,
         UserName = req.body.UserName,
         OperateUser = req.body.OperateUser,
-        KPIStatus = req.body.KPIStatus,
         Remark = req.body.Remark;
 
     var data = {
@@ -34,11 +33,11 @@ router.post('/', function (req, res) {
         'UserID': UserID,
         'UserName': UserName,
         'OperateUser': OperateUser,
-        'KPIStatus': KPIStatus,
+        'KPIStatus': '待审核',
         'Remark': Remark
     }
     //检查所需要的参数是否齐全
-    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID','OperateUser','KPIStatus', 'UserName', 'Remark'],
+    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID','OperateUser', 'UserName', 'Remark'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -107,12 +106,12 @@ router.put('/', function (req, res) {
         'UserID': UserID,
         'UserName': UserName,
         'OperateUser': OperateUser,
-        'KPIStatus': KPIStatus,
+        'KPIStatus': '待审核',
         'Remark': Remark
     }
 
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'OperateUser', 'KPIStatus', 'UserName', 'Remark'],
+    var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'OperateUser', 'UserName', 'Remark'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -166,8 +165,8 @@ router.get('/', function (req, res) {
         ProjectID = req.query.ProjectID,
         UserName = req.query.UserName,
         KPIStatus = req.query.KPIStatus,
-        page = req.query.page > 0 ? req.query.page : 1,
-        pageNum = req.query.pageNum,
+        page = req.query.pageindex > 0 ? req.query.pageindex : 1,
+        pageNum = req.query.pagesize,
         totleNum = 0;
 
     if (pageNum === undefined) pageNum = config.pageCount;
@@ -209,14 +208,14 @@ router.get('/', function (req, res) {
                     var result = {
                         status: 200,
                         isSuccess: true,
-                        totleNum: totleNum,
+                        dataNum: totleNum,
                         curPage: page,
                         totlePage: Math.ceil(totleNum/pageNum),
-                        curNum: pageNum,
+                        curPageNum: pageNum,
                         data: results
                     };
                     if(result.curPage == result.totlePage) {
-                        result.curNum = result.totleNum - (result.totlePage-1)*pageNum;
+                        result.curPageNum = result.dataNum - (result.totlePage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);

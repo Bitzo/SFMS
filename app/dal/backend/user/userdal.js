@@ -54,17 +54,16 @@ exports.querySingleID=function(accountid,callback) {
 exports.queryAllUsers = function(data, callback) {
     var sql = 'select ApplicationID,AccountID,Account,UserName,Pwd,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime,IsActive from jit_user where 1=1 ';
     for (var key in data) {
-        if (key != 'page') {
+        if (key != 'page'&&key!='pageNum') {
             sql += ' and ' + key + " = '" + data[key] + "' ";
         }
     }
     // console.log(data['page']);
-         var num = config.pageCount; //每一页要显示的数据量
+         var num = data['pageNum']; //每一页要显示的数据量
 
          sql += " limit " + (data['page'] - 1) * num + " , " + num;
          logger.writeInfo("查询用户:" + sql);
          console.log("查询用户:" + sql);
-         console.log(111);
          db_backend.mysqlPool.getConnection(function(err, connection) {
             if (err) {
                 callback(true);
@@ -181,7 +180,7 @@ db_backend.mysqlPool.getConnection(function(err, connection) {
 exports.countUser = function(data, callback) {
     var sql = 'select count(1) as num from jit_user where 1=1';
     for (var key in data) {
-        if (key != 'page')
+        if (key != 'page'&&key!='pageNum')
             sql += " and " + key + " = '" + data[key] + "' ";
     }
     db_backend.mysqlPool.getConnection(function(err, connection) {
