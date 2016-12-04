@@ -228,6 +228,13 @@ router.get('/', function (req, res) {
                     })
                 }
             })
+        } else {
+            res.status(404);
+            return res.json({
+                status: 404,
+                isSuccess: false,
+                msg: '无数据'
+            })
         }
     })
 })

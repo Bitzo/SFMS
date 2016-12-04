@@ -161,4 +161,86 @@ router.put('/', function (req, res) {
     })
 })
 
+//财务信息查询
+router.get('/', function (req, res) {
+    var fiName = req.query.fiName,
+        inOutType = req.query.inOutType,
+        projectID = req.query.projectID,
+        userName = req.query.userName,
+        fiStatus = req.query.fiStatus,
+        page = req.query.pageindex,
+        pageNum = req.query.pagesize,
+        totleNum = 0;
+
+    page = page > 0 ? page : 1;
+    if (pageNum === undefined) pageNum = config.pageCount;
+
+    var data = {
+        'FiName': fiName,
+        'InOutType': inOutType,
+        'ProjectID': projectID,
+        'UserName': userName,
+        'FiStatus': fiStatus,
+        'page': page,
+        'pageNum': pageNum
+    }
+
+    financeService.countQuery(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '服务器出错'
+            })
+        }
+        console.log(results);
+        totleNum = results[0].num;
+        if(totleNum > 0) {
+            //查询所需的详细数据
+            financeService.queryFinance(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '服务器出错'
+                    })
+                }
+                console.log(results);
+                if (results !== undefined && results.length > 0) {
+                    var result = {
+                        status: 200,
+                        isSuccess: true,
+                        dataNum: totleNum,
+                        curPage: page,
+                        totlePage: Math.ceil(totleNum/pageNum),
+                        curPageNum: pageNum,
+                        data: results
+                    };
+                    if(result.curPage == result.totlePage) {
+                        result.curPageNum = result.dataNum - (result.totlePage-1)*pageNum;
+                    }
+                    res.status(200);
+                    return res.json(result);
+                } else {
+                    res.status(404);
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: '无数据'
+                    })
+                }
+            })
+        } else {
+            res.status(404);
+            return res.json({
+                status: 404,
+                isSuccess: false,
+                msg: '无数据'
+            })
+        }
+    })
+
+})
 module.exports = router;
