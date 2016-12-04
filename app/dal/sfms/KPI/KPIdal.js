@@ -29,7 +29,7 @@ exports.addKPI = function (data, callback) {
     }
     insert_sql += sql;
 
-    console.log('新增KPI：' + sql);
+    console.log('新增KPI：' + insert_sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -50,7 +50,7 @@ exports.addKPI = function (data, callback) {
     });
 }
 
-//项目新增
+//KPI编辑
 exports.updateKPI = function (data, callback) {
     var update_sql = 'update jit_kpiinfo set',
         time = new Date().toLocaleString(),

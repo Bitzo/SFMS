@@ -20,7 +20,8 @@ var projectbaseinfoModel = {
     EditTime: '',
     EditUser: '',
     ProjectStatusL: '',
-    ProjectPrice: ''
+    ProjectPrice: '',
+    PK:'ID'
 }
 
 module.exports = projectbaseinfoModel;

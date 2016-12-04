@@ -10,7 +10,9 @@
  var url=require('url');
  var logger=appRequire('util/loghelper').helper;
 //加载中间件
-var user=appRequire('service/backend/user/userservice');
+var user=appRequire('service/backend/user/userservice'),
+    menuService = appRequire('service/backend/menu/menuservice');
+
 var config=appRequire('config/config');
 
 router.post('/',function(req,res)
@@ -31,8 +33,9 @@ router.post('/',function(req,res)
 
 		if(err!='require: ')
 		{
+			res.status(400);
 			res.json({
-				code:500,
+				code:400,
 				isSuccess:false,
 				msg:err
 			});
@@ -41,22 +44,22 @@ router.post('/',function(req,res)
 		}
 
 		//插入要传的参数
-		var applicationID=req.body.ApplicationID;
-		var account=req.body.Account;
-		var userName=req.body.UserName;
-		var pwd=req.body.Pwd;
-		var collegeID=req.body.CollegeID;
-		var gradeYear=req.body.GradeYear;
-		var phone=req.body.Phone;
-		var classID=req.body.ClassID;
-		var memo=req.body.Memo;
-		var createTime=req.body.CreateTime;
-		var createUserID=req.body.CreateUserID;
-		var editUserID=req.body.EditUserID;
-		var editTime=req.body.EditTime;
-		var isActive=req.body.IsActive;
-		var email=req.body.Email;
-		var address=req.body.Address;
+		var applicationID=req.body.ApplicationID,
+		 account=req.body.Account,
+		 userName=req.body.UserName,
+		 pwd=req.body.Pwd,
+		 collegeID=req.body.CollegeID,
+		 gradeYear=req.body.GradeYear,
+		 phone=req.body.Phone,
+		 classID=req.body.ClassID,
+		 memo=req.body.Memo,
+		 createTime=req.body.CreateTime,
+		 createUserID=req.body.CreateUserID,
+		 editUserID=req.body.EditUserID,
+		 editTime=req.body.EditTime,
+		 isActive=req.body.IsActive,
+		 email=req.body.Email,
+		 address=req.body.Address;
 
 		data={
 			'ApplicationID':applicationID,
@@ -84,8 +87,9 @@ router.post('/',function(req,res)
 		
 		if(requireValue!='缺少值：')
 		{
+			res.status(400);
 			res.json({
-				code:300,
+				code:400,
 				isSuccess:false,
 				msg:requireValue
 			});
@@ -98,8 +102,9 @@ router.post('/',function(req,res)
 			{
 				if(err)
 				{
+					res.status(400);
 					res.json({
-						code:300,
+						code:400,
 						isSuccess:false,
 						msg:"查询账户失败"
 					})
@@ -108,8 +113,9 @@ router.post('/',function(req,res)
 				}
 				if(result!=undefined&&result!=0)
 				{
+					res.status(400);
 					res.json({
-						code:300,
+						code:400,
 						isSuccess:false,
 						msg:"账户名已存在"
 					})
@@ -165,17 +171,15 @@ router.post('/',function(req,res)
 
 				user.insert(data,function(err,results)
 				{
-			//console.log(results);
-			if(err)
-			{
-				res.json({
-					code:500,
-					isSuccess:false,
-					//result:results,
-					msg:'插入失败'
+					if(err)
+					{
+						res.status(500);
+						res.json({
+						code:500,
+						isSuccess:false,
+						msg:'插入失败'
 				});
-				logger.writeError("插入失败");
-				
+				logger.writeError("插入失败");				
 				return ;
 			}
 			if(result.insertId!=0)
@@ -183,36 +187,35 @@ router.post('/',function(req,res)
 				res.json({
 					code:200,
 					isSuccess:true,
-					//result:results,
 					msg:'插入成功'
 				});
 				logger.writeInfo("插入成功");
 				return ;
 			}
-
-
 		});
 
 			});
 });
+
+
+
+
 router.get('/', function(req, res) {
 
 	logger.writeInfo("查询用户的记录");
-	console.log(111);
-	var data={};
-	var allCount;
-	var page=req.query.page;//页数
-	var accountID = req.query.AccountID;
-	var applicationID=req.query.ApplicationID;
-	var account=req.query.Account;
-	var userName=req.query.UserName;
-	var collegeID=req.query.CollegeID;
-	var gradeYear=req.query.GradeYear;
-	var classID=req.query.ClassID;
-	var createUserID=req.query.CreateUserID;
-	var editUserID=req.query.EditUserID;
-	var isActive=req.query.IsActive;
-	var address=req.query.Address;
+	var data={},
+	 allCount,
+	 page=req.query.page,//页数
+	 accountID = req.query.AccountID,
+	 applicationID=req.query.ApplicationID,
+	 account=req.query.Account,
+	 userName=req.query.UserName,
+	 gradeYear=req.query.GradeYear,
+	 classID=req.query.ClassID,
+	 createUserID=req.query.CreateUserID,
+	 editUserID=req.query.EditUserID,
+	 isActive=req.query.IsActive,
+	 pageNum=req.query.pageNum;
 	
 	if(page==undefined||page.length==0)
 	{
@@ -240,11 +243,6 @@ router.get('/', function(req, res) {
 	}
 
 
-	if(collegeID!==undefined&&accountID.length!=0)
-	{
-		data['AccountID']=accountID;
-	}
-
 	if(gradeYear!==undefined&&gradeYear.length!=0)
 	{
 		data['GradeYear']=gradeYear;
@@ -266,17 +264,19 @@ router.get('/', function(req, res) {
 	{
 		data['IsActive']=isActive;
 	}
-	if(address!==undefined&&address.length!=0)
+	if(pageNum==undefined)
 	{
-		data['Address']=address;
+		pageNum=config.pageCount;
 	}
 	data['page']=page;
-	
+	data['pageNum']=pageNum;
+
 //获取所有用户的数量
 user.countUser(data,function(err,result)
 {
 	if(err)
 	{
+		res.status(500);
 		res.json({
 			code:500,
 			isSuccess:false,
@@ -291,8 +291,9 @@ user.countUser(data,function(err,result)
 	}
 	else
 	{
+		res.status(400);
 		res.json({
-			code: 500,
+			code: 400,
 			isSuccess: false,
 			msg: "未查询到相关信息"
 		});
@@ -302,6 +303,7 @@ user.countUser(data,function(err,result)
 });
 user.queryAllUsers(data, function(err, result) {
 	if (err) {
+		res.status(500);
 		res.json({
 			code:500,
 			isSuccess:true,
@@ -319,14 +321,20 @@ user.queryAllUsers(data, function(err, result) {
 			msg: '查询成功',
 			dataNum: allCount,
 			curPage: page,
-			totlePage: Math.ceil(allCount/config.pageCount),
+			curpageNum:pageNum,
+			totlePage: Math.ceil(allCount/pageNum),
 			data: result
 		};
+		if(results.curPage==results.totlePage)
+		{
+			results.curpageNum=results.dataNum - (results.totlePage-1)*pageNum;
+		}
 		res.json(results);
-		
+		return;
 	}
 	else
 	{
+		res.status(500);
 		res.json({
 			code:500,
 			isSuccess:false,
@@ -336,6 +344,81 @@ user.queryAllUsers(data, function(err, result) {
 	}
 	return ;
 });
+});
+
+router.get('/:userID',function (req,res) {
+	var userID = req.params.userID;
+	if (userID === undefined || userID === '') {
+		return res.json({
+			code: 404,
+			isSuccess: false,
+			msg: 'require userID'
+		});
+	}
+	if(isNaN(userID)){
+		return res.json({
+			code: 500,
+			isSuccess: false,
+			msg: 'userID不是数字'
+		});
+	}
+	var uniqueData = {
+		"userID" : userID
+	};
+
+	//判断user是否存在
+	user.querySingleID(userID,function (err,result) {
+		if(err){
+			return res.json({
+				code : 500,
+				isSuccess :false,
+				msg : '服务器出错'
+			});
+		}
+		//user存在，则可以进行查询
+		if(result !== undefined && result.length != 0){
+			menuService.queryMenuAndRoleByUserID(uniqueData,function (err, results) {
+				if(err){
+					return res.json({
+						code : 500,
+						isSuccess :false,
+						msg : '服务器出错'
+					});
+
+				}
+
+				if(results.Menu !== undefined && results.Menu.length != 0 ){
+					if(results.Role !== undefined &&  results.Role.length != 0){
+						return res.json({
+							code : 200,
+							isSuccess :true,
+							data : results,
+							msg : '查询菜单和角色成功'
+						});
+					}else {
+						return res.json({
+							code : 404,
+							isSuccess :false,
+							msg : '未查到角色'
+						});
+					}
+
+				}else {
+					return res.json({
+						code : 404,
+						isSuccess :false,
+						msg : '未查到菜单'
+					});
+				}
+			});
+		}else{
+			return res.json({
+				code : 404,
+				isSuccess :false,
+				msg : '用户不存在'
+			});
+		}
+	});
 });
 
 router.put('/',function(req,res){
@@ -355,8 +438,9 @@ router.put('/',function(req,res){
 
 		if(err!='require: ')
 		{
+			res.status(400);
 			res.json({
-				code:500,
+				code:400,
 				isSuccess:false,
 				msg:err
 			});
@@ -365,23 +449,23 @@ router.put('/',function(req,res){
 		}
 
 		//插入要传的参数
-		var applicationID=req.body.ApplicationID;
-		var accountID=req.body.AccountID;
-		var account=req.body.Account;
-		var userName=req.body.UserName;
-		var pwd=req.body.Pwd;
-		var collegeID=req.body.CollegeID;
-		var gradeYear=req.body.GradeYear;
-		var phone=req.body.Phone;
-		var classID=req.body.ClassID;
-		var memo=req.body.Memo;
-		var createTime=req.body.CreateTime;
-		var createUserID=req.body.CreateUserID;
-		var editUserID=req.body.EditUserID;
-		var editTime=req.body.EditTime;
-		var isActive=req.body.IsActive;
-		var email=req.body.Email;
-		var address=req.body.Address;
+		var applicationID=req.body.ApplicationID,
+		 accountID=req.body.AccountID,
+		 account=req.body.Account,
+		 userName=req.body.UserName,
+		 pwd=req.body.Pwd,
+		 collegeID=req.body.CollegeID,
+		 gradeYear=req.body.GradeYear,
+		 phone=req.body.Phone,
+		 classID=req.body.ClassID,
+		 memo=req.body.Memo,
+		 createTime=req.body.CreateTime,
+		 createUserID=req.body.CreateUserID,
+		 editUserID=req.body.EditUserID,
+		 editTime=req.body.EditTime,
+		 isActive=req.body.IsActive,
+		 email=req.body.Email,
+		 address=req.body.Address;
 
 		data={
 			'ApplicationID':applicationID,
@@ -410,8 +494,9 @@ router.put('/',function(req,res){
 
 		if(requireValue!='缺少值：')
 		{
+			res.status(400);
 			res.json({
-				code:300,
+				code:400,
 				isSuccess:false,
 				msg:requireValue
 			});
@@ -469,6 +554,7 @@ router.put('/',function(req,res){
 		{
 			if(err)
 			{
+				res.status(500);
 				res.json(
 				{
 					code:500,
@@ -489,6 +575,7 @@ router.put('/',function(req,res){
 				return ;
 			}else
 			{
+				res.status(400);
 				res.json({
 					code:400,
 					isSuccess:false,
@@ -500,4 +587,7 @@ router.put('/',function(req,res){
 		})
 
 	})
+
+
+
 module.exports=router;

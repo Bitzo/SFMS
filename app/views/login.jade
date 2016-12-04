@@ -25,7 +25,7 @@ body(ng-app='myApp', ng-controller='formController')
           label  密码 ：
           input(type="password" name='password' class="form-control" placeholder="请输入密码" ng-minlength='6' ng-maxlength='12' ng-model="userdata.password" required)
           p.error(ng-if='(signUpForm.password.$error.minlength || signUpForm.password.$error.maxlength )&& signUpForm.password.$touched') 密码输入6-12位
-        div.form-group(ng-init="codesrc='/generatecode'")
+        div.form-group
           label  验证码 ：
           br          
           input(type="text" class="form-control pin_code" name='code' ng-model="userdata.code" ng-minlength='4' ng-maxlength='4' placeholder="请输入右侧图片的验证码" required)
@@ -38,8 +38,5 @@ body(ng-app='myApp', ng-controller='formController')
 script(src='assets/js/jquery-2.0.3.min.js')
 script(src='assets/js/bootstrap.min.js')
 script(src='/bower_components/angular/angular.min.js')
-script(src='/bower_components/angular/angular-route.min.js')
-script(src='/js/angularjs/directive/pagination.js')
-script(src='/js/angularjs/config/baseconfig.js')
 script(src='/js/angularjs/controller/controllers.js')
 include shared/footer.jade

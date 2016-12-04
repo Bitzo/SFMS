@@ -6,9 +6,9 @@
  * @Function:
  */
 
-var express = require('express');
-var router = express.Router();
-var url = require('url');
+var express = require('express'),
+    router = express.Router(),
+    url = require('url');
 
 //菜单业务、用户业务逻辑组件
 var menuService = appRequire('service/backend/menu/menuservice'),
