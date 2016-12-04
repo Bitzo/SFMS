@@ -136,12 +136,12 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-    var pageNum = req.query.pageNum;
+    var page = req.query.pageindex || 1;
+    var pageNum = req.query.pagesize;
 
     if (pageNum === undefined) {
-        pageNum = config.countNum;
+        pageNum = config.pageCount;
     }
-    var page = req.query.page || 1;
 
     var data = {
         'page': page
@@ -165,6 +165,10 @@ router.get('/', function (req, res) {
             countNum = results[0]['num'];
             console.log(countNum);
         }
+        data = {
+            'page': page,
+            'pageNum': pageNum
+        };
         userSpring.queryAllApp(data, function (err, results) {
             if (err) {
                 res.json({
@@ -184,9 +188,9 @@ router.get('/', function (req, res) {
                 res.json({
                     code:200,
                     isSuccess: true,
-                    currentpage: page,
-                    countNum: countNum,
-                    pageNum: curpageNum,
+                    curPage: page,
+                    dataNum: countNum,
+                    curPageNum: curpageNum,
                     totlePage: Math.ceil(countNum/pageNum),
                     data: results,
                     msg: '查找成功'
