@@ -51,7 +51,7 @@ describe("菜单功能单元测试", function() {
 
     it("树形展示菜单",function (done) {
         var userData = {
-            "userID" : 1
+            "userID" : 12
         }
         menuService.queryAllMenusFormTree(userData,function (err,result) {
             if(err){
@@ -64,7 +64,9 @@ describe("菜单功能单元测试", function() {
 
     it("菜单查询",function (done) {
         var queryData = {
-            "MenuID" : insertMenuID
+            "MenuID" : insertMenuID,
+            "page": 1,
+            "pageNum" :10
         }
         menuService.queryAllMenus(queryData,function (err, result) {
             if(err){
@@ -77,12 +79,14 @@ describe("菜单功能单元测试", function() {
 
     it("通过UserID查询用户菜单",function (done) {
         var userData = {
-            "userID" : 1
+            "userID" : 12
         }
         menuService.queryRoleByUserID(userData,function (err, result) {
             if(err){
                 return done(err);
             }
+            console.log("通过UserID查询用户菜单 test");
+            console.log(result);
             result.length.should.be.above(0).and.should.be.a.Number;
             done();
         });
@@ -90,12 +94,13 @@ describe("菜单功能单元测试", function() {
 
     it("通过userID查询用户角色",function (done) {
         var userData = {
-            "userID" : 1
+            "userID" : 12
         }
         menuService.queryMenuByUserID(userData,function (err, result) {
             if(err){
                 return done(err);
             }
+            console.log(result);
             result.length.should.be.above(0).and.should.be.a.Number;
             done();
         });
@@ -103,12 +108,13 @@ describe("菜单功能单元测试", function() {
 
     it("通过userID查询用户所属角色和菜单",function (done) {
         var userData = {
-            "userID" : 1
+            "userID" : 12
         }
         menuService.queryMenuAndRoleByUserID(userData,function (err, result) {
             if(err){
                 return done(err);
             }
+            console.log(result);
             result.Menu.length.should.be.above(0).and.should.be.a.Number;
             result.Role.length.should.be.above(0).and.should.be.a.Number;
             done();
