@@ -19,6 +19,10 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         templateUrl: '/sfms/role'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
+    when('/sfms/roleAdd', {
+        templateUrl: '/sfms/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
     when('/sfms/application', {
         templateUrl: '/sfms/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
