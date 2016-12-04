@@ -12,38 +12,163 @@ var express = require('express'),
 //菜单业务逻辑组件
 var menuService = appRequire('service/backend/menu/menuservice'),
     userService = appRequire('service/backend/user/userservice'),
-    logger = appRequire("util/loghelper").helper;
+    logger = appRequire("util/loghelper").helper,
+    config = appRequire('config/config');
 
-router.get('/',function (req,res) {
+router.get('/tree',function (req,res) {
+    var page = req.query.page || 1,
+        pageNum = req.query.pageNum;
+
+    page = page>0 ? page : 1;
+
+    if (pageNum === undefined){
+        pageNum = config.pageCount;
+    }
+
+    //用于查询结果总数的计数
+    var countNum = 0;
+
     var data = {
-
+        'page': page,
+        'pageNum': pageNum
     };
-    menuService.queryAllMenusFormTreeInTable(data,function (err,results) {
-        if(err){
-            return res.json({
-                code : 500,
-                isSuccess : false,
-                msg : '服务器连接错误'
-            });
-        }
 
-        if(results !== undefined && results.length !== 0){
-            return res.json({
-                code : 200,
-                isSuccess : true,
-                data : {
-                    Menu : results
-                },
-                msg : '读取所有菜单成功！'
+    menuService.countAllMenus(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
             });
-        }else {
+            return;
+        }
+        if (results !==undefined && results.length != 0) {
+            countNum = results[0]['num'];
+
+            //查询所需的详细数据
+            menuService.queryAllMenusFormTreeInTable(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                }
+
+                if (result !== undefined && result.length != 0 && countNum != -1) {
+                    var resultBack = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        curPageNum:pageNum,
+                        totlePage: Math.ceil(countNum/pageNum),
+                        data: result
+                    };
+                    if(resultBack.curPage == resultBack.totlePage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    }
+                    //res.status(404);
+                    return res.json(resultBack);
+                } else {
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                }
+            });
+        } else {
+            res.status(404);
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: '未查到相应菜单'
+                msg: "未查询到相关信息"
             });
         }
     });
+
+});
+
+router.get('/plain',function (req,res) {
+    var page = req.query.page || 1,
+        pageNum = req.query.pageNum;
+
+    page = page>0 ? page : 1;
+
+    if (pageNum === undefined){
+        pageNum = config.pageCount;
+    }
+
+    //用于查询结果总数的计数
+    var countNum = 0;
+
+    var data = {
+        'page': page,
+        'pageNum': pageNum
+    };
+
+    menuService.countAllMenus(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
+            });
+            return;
+        }
+        if (results !==undefined && results.length != 0) {
+            countNum = results[0]['num'];
+
+            //查询所需的详细数据
+            menuService.queryAllMenus(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                }
+
+                if (result !== undefined && result.length != 0 && countNum != -1) {
+                    var resultBack = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        curPageNum:pageNum,
+                        totlePage: Math.ceil(countNum/pageNum),
+                        data: result
+                    };
+                    if(resultBack.curPage == resultBack.totlePage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    }
+                    //res.status(404);
+                    return res.json(resultBack);
+                } else {
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                }
+            });
+        } else {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相关信息"
+            });
+        }
+    });
+
 });
 
 //获得树形Menu结构

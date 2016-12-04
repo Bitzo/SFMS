@@ -26,12 +26,11 @@ exports.queryAllMenusFormTree = function(data, callback){
                     arr.push(results[j]);
                 }
             }
-            if(k==i){
+            if(k == i){
                 results[i].children = arr;
             }
             if(results[i].MenuLevel == 1){
                 tree.push(results[i]);
-
             }
         }
 
@@ -60,12 +59,11 @@ exports.queryAllMenusFormTreeInTable = function(data, callback){
                     arr.push(results[j]);
                 }
             }
-            if(k==i){
+            if(k == i){
                 results[i].children = arr;
             }
             if(results[i].MenuLevel == 1){
                 tree.push(results[i]);
-
             }
         }
 
@@ -75,6 +73,18 @@ exports.queryAllMenusFormTreeInTable = function(data, callback){
         callback(false,tree);
     });
 };
+
+//查询对应项目的角色个数
+exports.countAllMenus = function (data, callback) {
+    menuDAl.countAllMenus(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        logger.writeInfo('countAllMenus');
+        callback(false, results);
+    });
+}
 
 //查询所有菜单，平面展示
 exports.queryAllMenus = function(data, callback){
