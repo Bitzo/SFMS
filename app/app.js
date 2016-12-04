@@ -103,7 +103,7 @@ exports.logger = function(name) {
   return logger;
 };
 var  http=require('http');
-http.createServer(app).listen(3004, function () {
-  console.log("Express server listening on port 3002" );
+http.createServer(app).listen(80, function () {
+  console.log("Express server listening on port 80" );
 });
 module.exports = app;

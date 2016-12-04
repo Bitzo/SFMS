@@ -9,17 +9,18 @@ var backendRoute = appRequire('routes/backend/backendroute');
 var sfmsRoute = appRequire('routes/sfms/sfmsroute');
 var jinkeBroRoute = appRequire('routes/jinkebro/jinkebroroute');
 var apiRoute = appRequire('routes/api/apiroute');
+//微信相关
+var weChatRoute = appRequire('routes/api/wechatroute');
 
 module.exports = function(app) {
     //主站
     app.use('/', backendRoute);
-
+    //微信相关
+    app.use('/wechat', weChatRoute);
     //API相关
     app.use('/api/v1/', apiRoute);
-
     //实验室管理子系统
     app.use('/sfms', sfmsRoute);
-
     //金科小哥子系统
     app.use('/jkbro', jinkeBroRoute);
 };
