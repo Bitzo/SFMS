@@ -12,7 +12,7 @@ myApp.controller('sfmsIndexController',function($scope,$http){
         success(function(response) {
             var  data=response.datas;
             $scope.datas=JSON.parse(data);
-            $scope.paginationConf.totalItems=  response.total
+            $scope.paginationConf.totalItems=  response.dataNum;
 
         }).
         error(function(response) {

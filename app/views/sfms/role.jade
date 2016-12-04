@@ -1,6 +1,28 @@
 block content
     //div(ng-controller="sfmsIndexController")
     jason-pagecontent(action='/role' conf='paginationConf')
+        div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-header
+                        button.close(type="button",data-dismiss="modal")
+                            span(aria-hidden="true")&times;
+                            span.sr-only Close
+                            h4.modal-title(id="myModalLabel") 角色对应功能点
+                    div.modal-body 
+                        table.table.table-striped.table-bordered.text-center
+                            thead
+                                tr
+                                    th 应用ID
+                                    th 应用名称
+                            tbody
+                                tr(ng-repeat="data in datas")
+                                    td {{data.FunctionID}}
+                                    td {{data.FunctionName}}
+
+                    div.modal-footer
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
+                        button.btn.btn-primary(type="button") Save changes
         div.page-header
             div.buttons.text-right
                 a.btn.btn-success(href='#/sfms/roleAdd')
@@ -22,6 +44,7 @@ block content
                         th 角色名称
                         th 是否有效
                         th 操作
+                        th 模态框
                 tbody
                     tr(ng-repeat="data in datas")
                         td {{data.ApplicationID}}
@@ -29,10 +52,13 @@ block content
                         td {{data.RoleName}}
                         td {{data.IsActive}}
                         td
-                            a(ng-href='#/roleEdit')
+                            a(ng-href='#/sfms/roleEdit')
                                 i.icon.icon-edit 编辑
                             a(ng-href='')
                                 i.icon.icon-trash 删除
+                        td
+                            button.btn(type="button",data-toggle="modal",data-target="#myModal",placehold="功能点模态框") 模态框
+                        
 
 
             div.pull-right

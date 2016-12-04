@@ -117,4 +117,37 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     $scope.search=function(){
         getInit();
     }
+
+    
+
+    $scope.roleSubmit=function(role){
+         $http({
+            method: 'POST',
+            url: "/role",
+            data: {
+                'ApplicationID':role.applicationID,
+                'RoleName':role.roleName,
+                'RoleCode':role.roleCode,
+                'IsActive':role.isActive,
+                'roleFunck':role.Funck,
+                'access_token':localStorage.getItem('jit_token'),
+                'jitkey':localStorage.getItem('jit_key')
+            }
+            
+        }).
+        success(function(response) {
+           alert(response.data.msg);
+           alert('提交成功');
+        }).
+        error(function(response) {
+            if (response && response.data && !response.isSuccess) {
+                alert(response.data.msg);
+            } else {
+                alert('提交失败!');
+            }
+        });
+    }
+
+
+    
 })
