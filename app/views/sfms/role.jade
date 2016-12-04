@@ -1,0 +1,39 @@
+block content
+    //div(ng-controller="sfmsIndexController")
+    jason-pagecontent(action='/role' conf='paginationConf')
+
+        div.page-content
+            ng-form.form-inline
+                label.form-group.my-form-group
+                    input.form-control(placeholder='应用ID' ng-model='f.ApplicationID')
+                label.form-group.my-form-group
+                    input.form-control(placeholder='角色名称' ng-model="f.RoleName")
+                label.form-group.my-form-group
+                    button.btn.btn-primary(ng-click='search()') 确定
+                div.buttons.pull-right
+                    a.btn.btn-success(href='#/sfms/roleAdd')
+                        i.icon.icon-plus 新建
+                    button(ng-click='search()' class='btn btn-default') 刷新
+            table.table.table-striped.table-bordered.text-center
+                thead
+                    tr
+                        th 应用ID
+                        th 角色code
+                        th 角色名称
+                        th 是否有效
+                        th 操作
+                tbody
+                    tr(ng-repeat="data in datas")
+                        td {{data.ApplicationID}}
+                        td {{data.RoleCode}}
+                        td {{data.RoleName}}
+                        td {{data.IsActive}}
+                        td
+                            a(ng-href='#/roleEdit')
+                                i.icon.icon-edit 编辑
+                            a(ng-href='')
+                                i.icon.icon-trash 删除
+
+
+            div.pull-right
+                jason-pagination(conf='paginationConf')

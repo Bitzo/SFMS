@@ -1,0 +1,214 @@
+.sfms {
+    min-height: 1000px;
+    padding-top: 55px;
+}
+
+.sfms i {
+    color: white;
+}
+
+.sfms a {
+    width: 100%;
+}
+
+.sfms #navbar {
+    background-color: #3975a9;
+    min-width: 400px;
+    color: white;
+}
+
+.sfms .pull-right button span {
+    background-color: white;
+}
+
+.sfms .pull-right .badge {
+    background-color: white;
+    color: black;
+}
+
+.sfms .pull-right li {
+    height: 60px;
+}
+
+.sfms .pull-right li a {
+    height: 60px;
+    line-height: 30px;
+}
+
+.sfms .navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:focus,
+.navbar-default .navbar-nav>.open>a:hover {
+    color: white;
+    font-style: normal;
+    background-color: #286090;
+}
+
+.sfms .pull-right .move-right {
+    position: absolute;
+    left: -21px;
+}
+
+.sfms .pull-right .dropdown-menu li {
+    height: 40px;
+    line-height: 40px;
+}
+
+.sfms .pull-right .dropdown-menu li a {
+    height: 40px;
+    line-height: 40px;
+}
+
+.sfms .pull-right .nav-user-photo {
+    margin: -4px 8px 0 0;
+    border-radius: 100%;
+    border: 2px solid #FFF;
+    max-width: 30px;
+}
+
+.sfms .sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    padding: 10px 0px 20px 0px;
+    z-index: 1000;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* Scrollable contents if viewport is shorter than content. */
+    background: rgba(217, 237, 247, 0.18);
+    border-right: 1px solid #eee;
+}
+
+.sfms .sidebar .border {
+    display: none;
+}
+
+.sfms .sidebar .navlist a:hover .border {
+    display: block;
+    content: "";
+    position: absolute!important;
+    right: 0;
+    top: 2px;
+    border: 8px solid transparent;
+    border-width: 20px 12px;
+    border-right-color: #2b7dbc;
+}
+
+.sfms .sidebar .navlist .list-header {
+    position: relative;
+    left: 10px;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: #054175;
+    line-height: 45px;
+}
+
+.sfms .sidebar .navlist li {
+    letter-spacing: 3px;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+.sfms .sidebar .navlist li a {
+    width: 100%;
+}
+
+.sfms .sidebar .navlist a {
+    width: 100%;
+}
+
+.sfms .sidebar .navlist li ul {
+    list-style: none;
+    text-align: right;
+}
+
+.sfms .sidebar .navlist li ul li {
+    width: 100px;
+    list-style: none;
+    padding-right: 0px;
+    line-height: 20px;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.sfms .container {
+    position: absolute;
+    top: 60px;
+    left: 200px;
+    padding: 20px;
+    background-color: rgba(217, 217, 217, 0.18);
+}
+
+.sfms footer {
+    text-align: center;
+}
+
+.user-info {
+    width: 80%;
+    margin: 10px auto;
+}
+
+.user-info form {
+    width: 80%;
+}
+
+.user-info form .img {
+    float: right;
+    text-align: center;
+}
+
+.user-info img {
+    height: 200px;
+    margin-bottom: 50px;
+}
+
+.user-info .form-group {
+    margin-left: 80px;
+}
+
+.user-info label {
+    font-size: 20px;
+    color: #6b6363;
+}
+
+.user {
+    width: 90%;
+    position: relative;
+    left: 50px;
+}
+
+#ch-nav {
+    background-color: #fbfdfe;
+    height: 70px;
+    line-height: 50px;
+}
+
+#ch-nav button {
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+.user table button {
+    margin-left: 10px;
+}
+
+
+/*div.input-group.bootstrap-select
+          div.input-group-btn
+            button.btn.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" data-id="first-disabled")  所有用户
+              span.caret      
+            div.dropdown-menu.open(role="menu")  
+              div.bs-searchbox
+                input.form-control(type='text' autocomplete="off")
+              ul.dropdown-menu.inner(role="menu")
+                li.dropdown-header(data-optgroup="1")
+                  span.text 角色
+                li.selected(data-original-index="1" data-optgroup="1")
+                  a(tabindex="0" data-tokens="null")
+                    span.text 管理员 
+                 li.selected(data-original-index="1" data-optgroup="1")
+                  a(tabindex="0" data-tokens="null")
+                    span.text xiangmufuzeren        
+     */

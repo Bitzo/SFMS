@@ -1,0 +1,11 @@
+extends shared/layout
+//- 500报错界面
+block content
+   div.container
+     div.row.pad-top.text-center(style="padding-top: 20px;letter-spacing:3px;line-height: 100px;")
+       div.col-lg-12.col-md-12.col-sm-12.col-xs-12
+         h1
+           strong 500 ! error
+         p #{message}
+         img(src="imgs/error/error.png")
+  include shared/footer.jade

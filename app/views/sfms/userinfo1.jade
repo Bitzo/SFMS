@@ -1,0 +1,77 @@
+
+block content
+  //div(ng-controller="sfmsIndexController")
+  div.user-info
+    h4.page-header 个人信息
+    div
+      form(name='userForm')
+        div.form-group
+          label  账号  ：  hhh
+        div.form-group
+          label.control-label 用户名 ：
+          div
+            input.form-control(type='text')
+        div.form-group
+          label.control-label 密码 ：
+          div
+            input.form-control(type='text')
+        div.form-group
+          label.control-label 电话号码 ：
+          div
+            input.form-control(type='text')
+        div.form-group
+          label.control-label 邮箱地址 ：
+          div
+            input.form-control(type='email')
+        div.form-group
+          label.control-label 家庭住址 ：
+          div
+            input.form-control(type='text')
+        div.form-group
+          label.control-label 创建时间 ：
+          div
+            input.form-control(type='text')
+        div.form-group
+          label.control-label 创建人ID ：
+          div
+            input.form-control(type='text')
+        div.form-group
+          label.control-label 所在项目 ：
+          input.form-control(type='text')
+        div.form-group
+          label.control-label 最近编辑时间 ：
+          div
+            input.form-control(type='text')
+        div.form-group
+          label.control-label 最近编辑ID ：
+          div
+            input.form-control(type='text')
+            div.form-group
+        div.form-group
+          label.control-label 是否有效 ：
+          div
+            input(type='radio' style ="width:20px;margin-right:10px;" checked)
+            span 有效
+            input(type='radio' style ="width:20px;margin-right:10px;")
+            span  无效
+        div.form-group
+          label 所在学院 ：
+          select.form-control
+            option 1
+            option 5
+            option 4
+            option 5
+            option 5
+        div.form-group.col-sm-5.col-md-5
+          a.btn.btn-lg.btn-danger.pull-right(style="color:white;margin-left:50px;") 重置
+          a.btn.btn-lg.btn-primary.pull-right(ng-click=) 确认
+
+
+
+
+ include ../shared/footer.jade
+
+
+
+
+

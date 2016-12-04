@@ -1,0 +1,37 @@
+block content()
+  //div(ng-controller="sfmsIndexController")
+  jason-pagecontent(action='/app' conf='paginationConf')
+
+    div.page-content(stule="button {height :30px;}")
+      ng-form.form-inline
+        label.form-group.my-form-group
+          input.form-control(placeholder='名称' ng-model='f.text')
+        label.form-group.my-form-group
+          input.form-control(placeholder='所属类别')
+        label.form-group.my-form-group
+          button.btn.btn-primary(ng-click='search()') 确定
+        div.buttons.pull-right
+          a.btn.btn-success(ng-href='')
+            i.icon.icon-plus 新建
+          button(ng-click='search()' class='btn btn-default') 刷新
+      table.table.table-striped.table-bordered.text-center
+        thead
+          tr
+            th AccountID
+            th ApplicationID
+            th UserName
+            th Is Active
+            th Is Active
+            th 操作
+        tbody
+          tr(ng-repeat="x in datas")
+            td {{x.ID}}
+            td {{x.ApplicationCode}}
+            td {{x.ApplicationName}}
+            td {{x.IsActive}}
+            td {{x.IsActive}}
+            td
+              a.btn.btn-primary(type="submit" href='#/sfms/application-info') 编辑
+      div.pull-right
+        jason-pagination(conf='paginationConf')
+
