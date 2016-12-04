@@ -205,7 +205,7 @@ router.get('/', function(req, res) {
 	logger.writeInfo("查询用户的记录");
 	var data={},
 	 allCount,
-	 page=req.query.page,//页数
+	 page=req.query.pageindex,//页数
 	 accountID = req.query.AccountID,
 	 applicationID=req.query.ApplicationID,
 	 account=req.query.Account,
@@ -215,7 +215,7 @@ router.get('/', function(req, res) {
 	 createUserID=req.query.CreateUserID,
 	 editUserID=req.query.EditUserID,
 	 isActive=req.query.IsActive,
-	 pageNum=req.query.pageNum;
+	 pageNum=req.query.pagesize;
 	
 	if(page==undefined||page.length==0)
 	{

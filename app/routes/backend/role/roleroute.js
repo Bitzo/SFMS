@@ -18,9 +18,10 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询角色信息
 router.get('/',function (req, res) {
+    console.log(req.query);
     var appID = req.query.appID,
-        page = req.query.page || 1,
-        pageNum = req.query.pageNum,
+        page = req.query.pageindex || 1,
+        pageNum = req.query.pagesize,
         roleName = req.query.RoleName,
         isActive = req.query.IsActive;
     page = page>0?page:1;
@@ -77,7 +78,7 @@ router.get('/',function (req, res) {
                     if(result.curPage == result.totlePage) {
                         result.curPageNum = result.dataNum - (result.totlePage-1)*pageNum;
                     }
-                    res.status(404);
+                    res.status(200);
                     return res.json(result);
                 } else {
                     return res.json({

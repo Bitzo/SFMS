@@ -34,7 +34,10 @@
     "captchapng": "0.0.1",
     "log4js": "1.0.1",
     "validator": "*",
-    "moment": "*"
+    "moment": "*",
+    "xml2js": "*",
+    "sha1": "*",
+    "iconv-lite": "*"
   },
   "devDependencies": {
 
