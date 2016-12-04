@@ -38,10 +38,12 @@ var config = {
         }
     },
     //微信相关
-    wechat: {
+    weChat: {
         token: 'snail',
         appid: 'wx844d9a89f533f63d',
-        url:'https://api.weixin.qq.com/cgi-bin/'
+        secret:'e668e2f31c16fac4528be7f82692085d',
+        baseUrl:'https://api.weixin.qq.com/cgi-bin/',
+        accessTokenUrl:'token?grant_type=client_credential&',
     }
 };
 
