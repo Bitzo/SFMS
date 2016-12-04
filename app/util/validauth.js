@@ -11,7 +11,8 @@ var config = appRequire('config/config');
 var logger = appRequire('util/loghelper').helper;
 
 module.exports = function(req, res, next) {
-    if (req.url === '/' || req.url === '/login' || req.url === '/generatecode' || req.url === '/api/v1/login') {
+    if (req.url === '/' || req.url === '/login' || req.url === '/generatecode' || req.url === '/api/v1/login' || req.url.indexOf('/wechat') >= 0) {
+        logger.writeInfo('通过的url:' + req.url);
         next();
     } else {
         var token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['x-access-token'];
