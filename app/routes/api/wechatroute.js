@@ -16,7 +16,7 @@ var logger = appRequire('util/loghelper').helper;
 
 //微信接收消息通用组件
 var wechat = appRequire("service/wechat/wechatservice");
-wechat.token = config.wechat.token;
+wechat.token = config.weChat.token;
 
 //微信开发者认证
 router.get('/accesscheck', function(req, res, next) {
@@ -93,6 +93,9 @@ wechat.textMsg(function(msg) {
             }
     }
     wechat.sendMsg(resMsg);
+    // wechat.getAccessToken(1,function(){
+
+    // });
 });
 
 // 监听图片消息

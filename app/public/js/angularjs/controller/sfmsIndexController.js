@@ -7,7 +7,11 @@ myApp.controller('sfmsIndexController',function($scope,$http){
         $http({
             method:'post',
             url:"/sfms/getmenu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            data:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
+            data:{
+                pageindex:$scope.paginationConf.currentPage,
+                pagesize:$scope.paginationConf.itemsPerPage,
+                f:$scope.f
+            }
         }).
         success(function(response) {
             var  data=response.datas;
@@ -26,4 +30,4 @@ myApp.controller('sfmsIndexController',function($scope,$http){
     }
     getList();
 
-})
+});

@@ -35,8 +35,9 @@
     "log4js": "1.0.1",
     "validator": "*",
     "moment": "*",
-    "xml2js":"*",
-    "sha1":"*"
+    "xml2js": "*",
+    "sha1": "*",
+    "iconv-lite": "*"
   },
   "devDependencies": {
 

@@ -29,6 +29,11 @@ router.get('/role', function(req, res, next) {
 
 });
 
+router.get('/roleAdd', function(req, res, next) {
+    res.render('sfms/roleAdd', { title: 'Hi sfms' });
+
+});
+
 router.get('/userinfo', function(req, res, next) {
         res.render('sfms/userinfo', { title: 'Hi sfms' });
 
@@ -36,6 +41,11 @@ router.get('/userinfo', function(req, res, next) {
 
 router.get('/menu', function(req, res, next) {
         res.render('sfms/menu', { title: 'Hi sfms' });
+
+});
+
+router.get('/menuadd', function(req, res, next) {
+        res.render('sfms/menuadd', { title: 'Hi sfms' });
 
 });
 

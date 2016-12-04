@@ -1,7 +1,7 @@
 block content
 
   jason-pagecontent(action='/backuser' conf='paginationConf')
-    
+
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
@@ -11,10 +11,10 @@ block content
         label.form-group.my-form-group
           button.btn.btn-primary(ng-click='search()')确定
         div.page-header
-      div.buttons.text-right
+      div.buttons.pull-right
         a.btn.btn-success(ng-href='')
           i.icon.icon-plus 新建
-        button(ng-click='search()' class='btn btn-default')刷新
+        button(ng-click='search()' class='btn btn-default') 刷新
       table.table.table-striped.table-bordered.text-center
         thead
           tr
