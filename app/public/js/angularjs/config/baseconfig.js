@@ -97,7 +97,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         success(function(response) {
             var  data=response.data;
             $scope.datas=response.data;
-            $scope.paginationConf.totalItems=  100
+            $scope.paginationConf.totalItems= response.dataNum;
 
         }).
         error(function(response) {
