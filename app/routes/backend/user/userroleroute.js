@@ -133,9 +133,9 @@ router.put('/',function(req,res)
 	{
 		if(err)
 		{
+			res.status(500);
 			res.json(
-			{
-				res.status(500);
+			{	
 				code:500,
 				isSuccess:false,
 				msg:'修改信息失败，服务器出错'
