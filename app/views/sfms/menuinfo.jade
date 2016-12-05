@@ -1,0 +1,84 @@
+link(rel='stylesheet' href="css/backend/role.css")
+block content
+  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
+    span 
+      h2 菜单新增
+    form(method="post",name="menuinfo" )
+      table.table.table-bordered.table-hover.definedwidth.m10
+        tr
+          td(width="15%",class="tableleft") 菜单ID 下拉
+          td
+            select(id="search",value="",ng-model='',style="width:163px;height:30px",)
+              option SfmsID
+              option JinkeBroIDxc
+              option xxxID
+        tr
+          td(width="15%",class="tableleft") 应用ID
+          td
+            input(type="text",name="ApplicationID",ng-model='menu.ApplicationID',ng-minlength="7",ng-maxlength='7')
+            &nbsp&nbsp
+            
+        tr
+          td(width="15%",class="tableleft") 菜单对应的层级
+          td
+            input(type="text",name="MenuLevel",ng-model='menu.MenuLevel')
+            &nbsp&nbsp
+            
+           
+        tr
+          td(width="15%",class="tableleft") 	对应的父级ID
+          td
+            input(type="text",name="ParentID",ng-model="menu.ParentID",ng-minlength="6",ng-maxlength='12')
+            &nbsp&nbsp
+           
+           
+
+        tr
+          td(width="15%",class="tableleft") 对应的菜单排序顺序
+          td
+            input(type="text",name="SortIndex",ng-model='menu.SortIndex',ng-minlength="6",ng-maxlength='12')
+            &nbsp&nbsp
+          
+           
+        tr
+          td(width="15%",class="tableleft") 	菜单名称
+          td
+            input(type="text",name="MenuName",ng-model='menu.MenuName',ng-minlength="3",ng-maxlength='10')
+            &nbsp&nbsp
+           
+            
+        tr
+          td(width="15%",class="tableleft") 菜单对应的url
+          td
+            input(type="text",name="Url",ng-model='menu.Url',ng-minlength="3",ng-maxlength='10')
+            &nbsp&nbsp
+           
+          
+        tr
+          td(width="15%",class="tableleft") 备注(可选)
+          td
+            input(type="number",name="Memo",ng-model="menu.Memo",ng-minlength="11",ng-maxlength='11')
+            &nbsp&nbsp
+            
+            
+        tr
+          td(class="tableleft") 是否有效
+          td
+            input(type="radio",name="IsActive",value="1",ng-model="menu.IsActive",checked)
+            有效
+            &nbsp&nbsp            
+            input(type="radio",name="IsActive",ng-model="menu.IsActive",value="0")
+            无效
+
+        tr
+          td(class="tableleft")
+          td
+            button.btn.btn-primary(type="submit",ng-click="submitmenua(menu)") 添加
+ 
+            &nbsp&nbsp&nbsp&nbsp
+            a.btn.btn-success(href='#sfms/menu') 返回列表
+
+
+
+ include ../shared/footer.jade  
+      
