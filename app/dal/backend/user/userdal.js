@@ -120,12 +120,15 @@ exports.update = function(data, callback) {
     var upd_sql = 'update jit_user set ';
     var i = 0; //判断是否为第一个参数
     for (var key in data) {
+        if(key!='AccountID')
+        {
         if (i == 0) {
             upd_sql += key + " = '" + data[key] + "' ";
             i++;
         } else {
             upd_sql += " , " + key + " = '" + data[key] + "' ";
         }
+    }
     }
     upd_sql += " WHERE " + userModel.PK + " = " + data[userModel.PK];
 
@@ -134,7 +137,6 @@ exports.update = function(data, callback) {
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
-            connection.release();
             return;
         }
 
@@ -199,4 +201,34 @@ exports.countUser = function(data, callback) {
         })
     })
 
+}
+
+exports.queryAccount=function(data,callback)
+{
+
+    var sql = 'select ApplicationID,AccountID,Account,UserName,Pwd,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime,IsActive from jit_user where 1=1 ';
+    for(var key in data)
+    sql+=' and Account = "'+data[key]+'" ';
+    console.log(111);
+    console.log(sql);
+    db_backend.mysqlPool.getConnection(function(err,connection)
+    {
+        if(err)
+        {
+            logger.writeError("数据库链接的错误");
+            callback(true);
+            return;
+        }
+        connection.query(sql,function(err,results)
+        {
+            if(err)
+            {
+                callback(true);
+                return ;
+            }
+             callback(false,results);
+            connection.release();
+        });
+       
+    });
 }

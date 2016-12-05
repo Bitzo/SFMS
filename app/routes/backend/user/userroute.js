@@ -14,11 +14,11 @@ var user=appRequire('service/backend/user/userservice'),
     menuService = appRequire('service/backend/menu/menuservice');
 
 var config=appRequire('config/config');
-
+var moment=require('moment');
 router.post('/',function(req,res)
 {
 	
-	var data=['ApplicationID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
+	var data=['ApplicationID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateUserID','EditUserID','Email','Address','IsActive'];
 	var err='require: ';
 
 	for(var value in data)
@@ -42,7 +42,7 @@ router.post('/',function(req,res)
 			logger.writeError("缺少key值");
 			return;
 		}
-
+	
 		//插入要传的参数
 		var applicationID=req.body.ApplicationID,
 		 account=req.body.Account,
@@ -53,10 +53,9 @@ router.post('/',function(req,res)
 		 phone=req.body.Phone,
 		 classID=req.body.ClassID,
 		 memo=req.body.Memo,
-		 createTime=req.body.CreateTime,
+		 createTime=moment().format("YYYY-MM-DD HH:mm:ss"),
 		 createUserID=req.body.CreateUserID,
 		 editUserID=req.body.EditUserID,
-		 editTime=req.body.EditTime,
 		 isActive=req.body.IsActive,
 		 email=req.body.Email,
 		 address=req.body.Address;
@@ -81,8 +80,6 @@ router.post('/',function(req,res)
 			{
 				requireValue+=value+' ';	
 			}
-
-
 		}
 		
 		if(requireValue!='缺少值：')
@@ -96,10 +93,12 @@ router.post('/',function(req,res)
 			logger.writeError(requireValue);
 			return;
 		}
+
 			//去除相同的账户名字
 			var sameAccount={'Account':account};
-			user.queryAllUsers(sameAccount,function(err,result)
+			user.queryAccount(sameAccount,function(err,result)
 			{
+				console.log(111);
 				if(err)
 				{
 					res.status(400);
@@ -163,10 +162,7 @@ router.post('/',function(req,res)
 				{
 					data['EditUserID']=editUserID;
 				}
-				if(editTime!=undefined&&editTime.length!=0)
-				{
-					data['EditTime']=editTime;
-				}
+				
 
 
 				user.insert(data,function(err,results)
@@ -193,8 +189,7 @@ router.post('/',function(req,res)
 				return ;
 			}
 		});
-
-			});
+	});
 });
 
 
@@ -202,6 +197,7 @@ router.post('/',function(req,res)
 
 router.get('/', function(req, res) {
 
+	console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
 	logger.writeInfo("查询用户的记录");
 	var data={},
 	 allCount,
@@ -210,7 +206,6 @@ router.get('/', function(req, res) {
 	 applicationID=req.query.ApplicationID,
 	 account=req.query.Account,
 	 userName=req.query.UserName,
-	 gradeYear=req.query.GradeYear,
 	 classID=req.query.ClassID,
 	 createUserID=req.query.CreateUserID,
 	 editUserID=req.query.EditUserID,
@@ -236,16 +231,9 @@ router.get('/', function(req, res) {
 	{
 		data['Account']=account;
 	}
-
 	if(userName!==undefined&&userName.length!=0)
 	{
 		data['UserName']=userName;
-	}
-
-
-	if(gradeYear!==undefined&&gradeYear.length!=0)
-	{
-		data['GradeYear']=gradeYear;
 	}
 	if(classID!==undefined&&classID.length!=0)
 	{
@@ -255,7 +243,6 @@ router.get('/', function(req, res) {
 	{
 		data['CreateUserID']=createUserID;
 	}
-
 	if(editUserID!==undefined&&editUserID.length!=0)
 	{
 		data['EditUserID']=editUserID;
@@ -270,10 +257,9 @@ router.get('/', function(req, res) {
 	}
 	data['page']=page;
 	data['pageNum']=pageNum;
-
+console.log(111);
 //获取所有用户的数量
-user.countUser(data,function(err,result)
-{
+user.countUser(data,function(err,result){	
 	if(err)
 	{
 		res.status(500);
@@ -288,32 +274,20 @@ user.countUser(data,function(err,result)
 	if(result!==undefined&&result.length!=0)
 	{
 		allCount=result[0]['num'];
-	}
-	else
-	{
-		res.status(400);
-		res.json({
-			code: 400,
-			isSuccess: false,
-			msg: "未查询到相关信息"
-		});
-		logger.writeError("为查询到相关的信息");
-		return ;
-	}
-});
-user.queryAllUsers(data, function(err, result) {
-	if (err) {
-		res.status(500);
-		res.json({
-			code:500,
-			isSuccess:true,
-			msg: '查询失败'
-		});
+		//查询所需要的数据
+		user.queryAllUsers(data, function(err, result) {
+		if (err) {
+			res.status(500);
+			res.json({
+				code:500,
+				isSuccess:true,
+				msg: '查询失败'
+			});
 		logger.writeError("查询失败");
 		return;
 	}
 	
-	if(result!=undefined&&result.length!=0)
+	if(result!=undefined&&result.length!=0&&allCount != -1)
 	{
 		var results = {
 			code: 200,
@@ -322,13 +296,14 @@ user.queryAllUsers(data, function(err, result) {
 			dataNum: allCount,
 			curPage: page,
 			curpageNum:pageNum,
-			totlePage: Math.ceil(allCount/pageNum),
+			totalPage: Math.ceil(allCount/pageNum),
 			data: result
 		};
 		if(results.curPage==results.totlePage)
 		{
 			results.curpageNum=results.dataNum - (results.totlePage-1)*pageNum;
 		}
+		res.status(200);
 		res.json(results);
 		return;
 	}
@@ -339,11 +314,25 @@ user.queryAllUsers(data, function(err, result) {
 			code:500,
 			isSuccess:false,
 			msg:"未查到数据"
-		})
+		});
 		logger.writeWarn("未查到数据");
-	}
-	return ;
+		return ;
+	}	
 });
+}
+	else
+	{
+		res.status(404);
+		res.json({
+			code: 404,
+			isSuccess: false,
+			msg: "未查询到相关信息"
+		});
+		logger.writeError("为查询到相关的信息");
+		return ;
+	}
+
+	});	
 });
 
 router.get('/:userID',function (req,res) {
@@ -422,7 +411,7 @@ router.get('/:userID',function (req,res) {
 });
 
 router.put('/',function(req,res){
-	var data=['ApplicationID','AccountID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateTime','CreateUserID','EditUserID','EditTime','Email','Address','IsActive'];
+	var data=['ApplicationID','AccountID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateUserID','EditUserID','Email','Address','IsActive'];
 	var err='require: ';
 	for(var value in data)
 	{
@@ -459,10 +448,9 @@ router.put('/',function(req,res){
 		 phone=req.body.Phone,
 		 classID=req.body.ClassID,
 		 memo=req.body.Memo,
-		 createTime=req.body.CreateTime,
 		 createUserID=req.body.CreateUserID,
 		 editUserID=req.body.EditUserID,
-		 editTime=req.body.EditTime,
+		 editTime=moment().format("YYYY-MM-DD HH:mm:ss"),
 		 isActive=req.body.IsActive,
 		 email=req.body.Email,
 		 address=req.body.Address;
@@ -473,10 +461,10 @@ router.put('/',function(req,res){
 			'Account':account,
 			'UserName':userName,
 			'Pwd':pwd,
-			'CreateTime':createTime,
+			'EditTime':editTime,
 			'CreateUserID':createUserID,
 			'IsActive':isActive,
-			
+			'EditUserID':editUserID
 		}	
 		//console.log(Email);
 		//console.log(typeof(data[ApplicationID]));
@@ -539,14 +527,6 @@ router.put('/',function(req,res){
 		if(memo!=undefined&&memo.length!=0)
 		{
 			data['Memo']=memo;
-		}
-		if(editUserID!=undefined&&editUserID.length!=0)
-		{
-			data['EditUserID']=editUserID;
-		}
-		if(editTime!=undefined&&editTime.length!=0)
-		{
-			data['EditTime']=editTime;
 		}
 
 
