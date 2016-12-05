@@ -23,6 +23,10 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         templateUrl: '/sfms/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
+     when('/sfms/roleEdit', {
+        templateUrl: '/sfms/roleEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
     when('/sfms/application', {
         templateUrl: '/sfms/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
@@ -119,7 +123,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     }
 
     
-
+//添加角色
     $scope.roleSubmit=function(role){
          $http({
             method: 'POST',
@@ -146,6 +150,24 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
                 alert('提交失败!');
             }
         });
+    }
+
+
+    //删除角色
+    $scope.del=function(RoleID){
+        var index=-1;
+        for(var i=0;i<$scope.datas.length;i++){
+            if($scope.datas[i]['RoleID']=RoleID){
+                index=i;
+                break;
+            };
+        }
+        $scope.datas.splice(index,1);
+    }
+
+    //编辑角色
+    $scope.update=function(RoleID){
+
     }
 
 

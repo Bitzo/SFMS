@@ -52,9 +52,9 @@ block content
                         td {{data.RoleName}}
                         td {{data.IsActive}}
                         td
-                            a(ng-href='#/sfms/roleEdit')
+                            a(href="#/sfms/roleEdit")
                                 i.icon.icon-edit 编辑
-                            a(ng-href='')
+                            a(ng-click="del(data.RoleID)")
                                 i.icon.icon-trash 删除
                         td
                             button.btn(type="button",data-toggle="modal",data-target="#myModal",placehold="功能点模态框") 模态框
