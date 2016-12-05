@@ -19,9 +19,9 @@ router.get('/', function (req, res) {
         userAgent = req.query.userAgent,
         createTime = req.query.createTime,
         signType = req.query.signType,
-        totleNum = 0,
-        page = req.query.page > 0 ? req.query.page : 1,
-        pageNum = req.query.pageNum;
+        totalNum = 0,
+        page = req.query.page > 0 ? req.query.pageindex : 1,
+        pageNum = req.query.pagesize || 20;
 
     if (pageNum === undefined) pageNum = config.pageCount;
 
@@ -44,8 +44,8 @@ router.get('/', function (req, res) {
             })
         }
         console.log(results);
-        totleNum = results[0].num;
-        if(totleNum > 0) {
+        totalNum = results[0].num;
+        if(totalNum > 0) {
             //查询所需的详细数据
             signservice.querySign(data, function (err, results) {
                 if (err) {
@@ -60,14 +60,14 @@ router.get('/', function (req, res) {
                     var result = {
                         status: 200,
                         isSuccess: true,
-                        totleNum: totleNum,
+                        totalNum: totalNum,
                         curPage: page,
-                        totlePage: Math.ceil(totleNum/pageNum),
+                        totalPage: Math.ceil(totalNum/pageNum),
                         curNum: pageNum,
                         data: results
                     };
-                    if(result.curPage == result.totlePage) {
-                        result.curNum = result.totleNum - (result.totlePage-1)*pageNum;
+                    if(result.curPage == result.totalPage) {
+                        result.curNum = result.totalNum - (result.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);

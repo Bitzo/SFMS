@@ -9,11 +9,12 @@ var db_sfms = appRequire('db/db_sfms');
 var KPIModel = appRequire('model/sfms/KPI/KPI');
 var config = appRequire('config/config');
 var logger = appRequire("util/loghelper").helper;
+var moment = require('moment');
 
 //项目新增
 exports.addKPI = function (data, callback) {
     var insert_sql = 'insert into jit_kpiinfo set',
-        time = new Date().toLocaleString(),
+        time = moment().format('YYYY-MM-DD HH:mm:ss'),
         sql = '';
 
     data.CreateTime = time;
@@ -53,7 +54,7 @@ exports.addKPI = function (data, callback) {
 //KPI编辑
 exports.updateKPI = function (data, callback) {
     var update_sql = 'update jit_kpiinfo set',
-        time = new Date().toLocaleString(),
+        time = moment().format('YYYY-MM-DD HH:mm:ss'),
         sql = '';
 
     data.CreateTime = time;
@@ -153,6 +154,44 @@ exports.queryKPI = function (data, callback) {
             if (err) {
                 console.log('err: '+ err);
                 callback(true, '查询失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
+
+//KPI审核
+exports.checkKPI = function (data, callback) {
+    var time = moment().format('YYYY-MM-DD HH:mm:ss'),
+        sql = 'update jit_kpiinfo set',
+        update_sql = '';
+    for(var key in data) {
+        if(key != 'ID') {
+            if(update_sql.length == 0) {
+                update_sql += ' ' + key + " = '" + data[key] +"'";
+            } else {
+                update_sql += ", " + key + " = '" + data[key] +"'";
+            }
+        }
+    }
+    sql += update_sql + ", CheckTime = '" + time + "'";
+    sql += ' where ID = ' + data.ID;
+
+    console.log('审核KPI： ' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            console.log('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+        connection.multipleStatements = true;
+        connection.query(sql, function(err, results) {
+            if (err) {
+                console.log('err: '+ err);
+                callback(true, '修改失败');
                 return;
             }
             callback(false, results);

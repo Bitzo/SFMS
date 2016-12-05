@@ -9,11 +9,12 @@ var db_sfms = appRequire('db/db_sfms');
 var KPIModel = appRequire('model/sfms/KPI/KPI');
 var config = appRequire('config/config');
 var logger = appRequire("util/loghelper").helper;
+var moment = require('moment');
 
 //财务信息新增
 exports.addFinance = function (data, callback) {
     var insert_sql = 'insert into jit_financeinfo set',
-        time = new Date().toLocaleString(),
+        time = moment().format('YYYY-MM-DD HH:mm:ss'),
         sql = '';
 
     data.CreateTime = time;
@@ -53,7 +54,7 @@ exports.addFinance = function (data, callback) {
 //财务编辑
 exports.updateFinance = function (data, callback) {
     var update_sql = 'update jit_financeinfo set',
-        time = new Date().toLocaleString(),
+        time = moment().format('YYYY-MM-DD HH:mm:ss'),
         sql = '';
 
     data.CreateTime = time;

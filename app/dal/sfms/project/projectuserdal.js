@@ -9,12 +9,13 @@ var db_sfms = appRequire('db/db_sfms');
 var projectModel = appRequire('model/sfms/project/projectuser');
 var config = appRequire('config/config');
 var logger = appRequire("util/loghelper").helper;
+var moment = require('moment');
 
 //项目用户新增
 exports.addProjectUser = function (data, callback) {
     var insert_sql = 'insert into jit_projectruser set ',
         sql = '',
-        time = new Date().toLocaleString();
+        time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     data.CreateTime = time;
     data.EditTime = time;
@@ -55,7 +56,7 @@ exports.addProjectUser = function (data, callback) {
 exports.updateProjectUser = function (data, callback) {
     var sql = 'update jit_projectruser set',
         update_sql = '',
-        time = new Date().toLocaleString();
+        time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     data.EditTime = time;
 

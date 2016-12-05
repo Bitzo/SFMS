@@ -18,10 +18,9 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询角色信息
 router.get('/',function (req, res) {
-    console.log(req.query);
     var appID = req.query.appID,
         page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize,
+        pageNum = req.query.pagesize || 20,
         roleName = req.query.RoleName,
         isActive = req.query.IsActive;
     page = page>0?page:1;
@@ -35,7 +34,7 @@ router.get('/',function (req, res) {
         'RoleName': roleName,
         'IsActive': isActive
     };
-
+    console.log(data)
     //用于查询结果总数的计数
     var countNum = 0;
 
@@ -72,15 +71,16 @@ router.get('/',function (req, res) {
                         dataNum: countNum,
                         curPage: page,
                         curPageNum:pageNum,
-                        totlePage: Math.ceil(countNum/pageNum),
+                        totalPage: Math.ceil(countNum/pageNum),
                         data: results
                     };
-                    if(result.curPage == result.totlePage) {
-                        result.curPageNum = result.dataNum - (result.totlePage-1)*pageNum;
+                    if(result.curPage == result.totalPage) {
+                        result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);
                 } else {
+                    res.status(404);
                     return res.json({
                                 code: 404,
                                 isSuccess: false,
