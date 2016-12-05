@@ -1,19 +1,19 @@
 block content
   //div(ng-controller="sfmsIndexController")
   jason-pagecontent(action='/backuser' conf='paginationConf')
-    div.page-header
-      div.buttons.text-right
-        a.btn.btn-success(href='#/sfms/userinfo')
-          i.icon.icon-plus 新建
-        button(ng-click='search()' class='btn btn-default') 刷新
+
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
           input.form-control(placeholder='名称' ng-model='f.text')
         label.form-group.my-form-group
-          input.form-control(placeholder='所属类别')
+          input.form-control(placeholder='所属类别' ng-model='f.text')
         label.form-group.my-form-group
           button.btn.btn-primary(ng-click='search()') 确定
+        div.buttons.pull-right
+          a.btn.btn-success(href='#/sfms/userinfo')
+            i.icon.icon-plus 新建
+          button(ng-click='search()' class='btn btn-default') 刷新
       table.table.table-striped.table-bordered.text-center
         thead
           tr
@@ -26,7 +26,7 @@ block content
             th CreateUserID
             th 操作
         tbody
-          tr(ng-repeat="x in datas")
+          tr(ng-repeat="x in datas" )
             td {{x.AccountID}}
             td {{x.ApplicationID}}
             td {{x.UserName}}

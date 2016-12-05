@@ -49,6 +49,11 @@ router.get('/menu', function(req, res, next) {
 
 });
 
+router.get('/menuadd', function(req, res, next) {
+        res.render('sfms/menuadd', { title: 'Hi sfms' });
+
+});
+
 router.get('/application', function(req, res, next) {
         res.render('sfms/application', { title: 'Hi sfms' });
 

@@ -64,3 +64,21 @@ exports.countQuery = function (data, callback) {
         callback(false, results);
     })
 }
+
+//KPI审核
+exports.checkKPI = function (data, callback) {
+    var result='';
+    for(var i in data) {
+        KPIdal.checkKPI(data[i], function (err, results) {
+            if (err) {
+                callback(true, '失败');
+                return;
+            }
+            console.log('审核KPI');
+            // callback(false, results);
+            result = results;
+        })
+    }
+    console.log(123);
+    callback(false, result);
+}

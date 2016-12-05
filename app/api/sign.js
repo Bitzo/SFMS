@@ -20,7 +20,7 @@ router.post('/', function (req, res) {
     {
         if(!(data[value] in req.body))
         {
-            console.log(1);
+            console.log(data[value]);
             err += data[value] + ' ';
         }
     }

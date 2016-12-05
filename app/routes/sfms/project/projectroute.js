@@ -10,6 +10,7 @@ var express = require('express');
 var router = express.Router();
 var projectservice = appRequire('service/sfms/project/projectservice');
 var config = appRequire('config/config');
+var moment = require('moment');
 
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
@@ -105,7 +106,7 @@ router.put('/', function (req, res) {
         projectStatus = req.body.projectStatus,
         projectPrice = req.body.projectPrice,
         accountID = req.body.jitkey,
-        time = new Date().toLocaleString();
+        time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     var data = {
         'ID': ID,
@@ -178,8 +179,8 @@ router.get('/', function (req, res) {
         projectManageName = req.query.projectManageName,
         projectStatus = req.query.projectStatus,
         page = req.query.pageindex>0 ?req.query.pageindex:1,
-        pageNum = req.query.pagesize,
-        totleNum = 0;
+        pageNum = req.query.pagesize || 20,
+        totalNum = 0;
 
     if (pageNum === undefined) pageNum = config.pageCount;
 
@@ -202,8 +203,8 @@ router.get('/', function (req, res) {
             })
         }
         console.log(results);
-        totleNum = results[0].num;
-        if(totleNum > 0) {
+        totalNum = results[0].num;
+        if(totalNum > 0) {
             //查询所需的详细数据
             projectservice.queryProject(data, function (err, results) {
                 if (err) {
@@ -219,14 +220,14 @@ router.get('/', function (req, res) {
                     var result = {
                         status: 200,
                         isSuccess: true,
-                        dataNum: totleNum,
+                        dataNum: totalNum,
                         curPage: page,
-                        totlePage: Math.ceil(totleNum/pageNum),
+                        totalPage: Math.ceil(totalNum/pageNum),
                         curPageNum: pageNum,
                         data: results
                     };
                     if(result.curPage == result.totlePage) {
-                        result.curPageNum = result.dataNum - (result.totlePage-1)*pageNum;
+                        result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);

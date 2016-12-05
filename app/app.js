@@ -9,6 +9,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var routes = appRequire('routes/routes');
 var apiAuth = appRequire('util/validauth');
+var config = appRequire('config/config');
 
 var app = express();
 //避免dot-hell
@@ -103,7 +104,7 @@ exports.logger = function(name) {
   return logger;
 };
 var  http=require('http');
-http.createServer(app).listen(80, function () {
+http.createServer(app).listen(config.port, function () {
   console.log("Express server listening on port 80" );
 });
 module.exports = app;
