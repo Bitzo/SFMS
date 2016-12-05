@@ -200,3 +200,34 @@ exports.countAllDataDicts = function (data, callback) {
         })
     })
 };
+
+exports.queryDatadictionaryByCode = function (data,callback) {
+    var sql = 'select DictionaryCode,DictionaryValue from jit_datadictionary where 1=0 ';
+
+    if (data !== undefined) {
+        for(var i in data.DictionaryCode)
+            sql += "or DictionaryCode" + " = '" + data.DictionaryCode[i] + "' ";
+    }
+
+    logger.writeInfo("查询字典信息 by Code：" + sql);
+
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo("连接成功");
+
+        connection.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                callback(true);
+                return;
+            };
+            logger.writeInfo("查询成功");
+            callback(false, results);
+            connection.release();
+        })
+    })
+}
