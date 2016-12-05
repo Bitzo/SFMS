@@ -44,8 +44,8 @@ router.get('/menu', function(req, res, next) {
 
 });
 
-router.get('/menuadd', function(req, res, next) {
-        res.render('sfms/menuadd', { title: 'Hi sfms' });
+router.get('/menuinfo', function(req, res, next) {
+        res.render('sfms/menuinfo', { title: 'Hi sfms' });
 
 });
 
@@ -54,8 +54,8 @@ router.get('/application', function(req, res, next) {
 
 });
 
-router.get('/application-info', function(req, res, next) {
-        res.render('sfms/application-info', { title: 'Hi sfms' });
+router.get('/applicationinfo', function(req, res, next) {
+        res.render('sfms/applicationinfo', { title: 'Hi sfms' });
 
 });
 
