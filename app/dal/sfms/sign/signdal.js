@@ -8,11 +8,12 @@
 var db_sfms = appRequire('db/db_sfms');
 var signModel = appRequire('model/sfms/sign/signmodel');
 var config = appRequire('config/config');
+var moment = require('moment');
 
 //签到记录新增
 exports.signLogInsert = function (data, callback) {
-    var sql = "insert into jit_signinfo set UserId = ?, IP = ?, UserAgent = ?, MAC = ?, Longitude = ?, Latitude = ?,CreateTime = ?, SignType = ?"
-    var time = new Date().toLocaleString();
+    var sql = "insert into jit_signinfo set UserId = ?, IP = ?, UserAgent = ?, MAC = ?, Longitude = ?, Latitude = ?,CreateTime = ?, SignType = ?",
+        time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     function checkData(data) {
         for (var key in data) {

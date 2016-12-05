@@ -1,11 +1,7 @@
 block content
     //div(ng-controller="sfmsIndexController")
     jason-pagecontent(action='/role' conf='paginationConf')
-        div.page-header
-            div.buttons.text-right
-                a.btn.btn-success(href='#/sfms/roleAdd')
-                    i.icon.icon-plus 新建
-                button(ng-click='search()' class='btn btn-default') 刷新
+
         div.page-content
             ng-form.form-inline
                 label.form-group.my-form-group
@@ -14,6 +10,10 @@ block content
                     input.form-control(placeholder='角色名称' ng-model="f.RoleName")
                 label.form-group.my-form-group
                     button.btn.btn-primary(ng-click='search()') 确定
+                div.buttons.pull-right
+                    a.btn.btn-success(href='#/sfms/roleAdd')
+                        i.icon.icon-plus 新建
+                    button(ng-click='search()' class='btn btn-default') 刷新
             table.table.table-striped.table-bordered.text-center
                 thead
                     tr

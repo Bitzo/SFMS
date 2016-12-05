@@ -161,7 +161,7 @@ router.get('/', function (req, res) {
         isActive = req.query.isActive,
         page = req.query.pageindex > 0 ? req.query.pageindex : 1 ,
         pageNum = req.query.pagesize,
-        totleNum = 0;
+        totalNum = 0;
 
     if (pageNum === undefined) pageNum = config.pageCount;
 
@@ -184,8 +184,8 @@ router.get('/', function (req, res) {
             })
         }
         console.log(results);
-        totleNum = results[0].num;
-        if(totleNum > 0) {
+        totalNum = results[0].num;
+        if(totalNum > 0) {
             //查询所需的详细数据
             projectuserservice.queryProjectUser(data, function (err, results) {
                 if (err) {
@@ -201,14 +201,14 @@ router.get('/', function (req, res) {
                     var result = {
                         status: 200,
                         isSuccess: true,
-                        dataNum: totleNum,
+                        dataNum: totalNum,
                         curPage: page,
-                        totlePage: Math.ceil(totleNum/pageNum),
+                        totalPage: Math.ceil(totalNum/pageNum),
                         curPageNum: pageNum,
                         data: results
                     };
-                    if(result.curPage == result.totlePage) {
-                        result.curPageNum = result.dataNum - (result.totlePage-1)*pageNum;
+                    if(result.curPage == result.totalPage) {
+                        result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(result);

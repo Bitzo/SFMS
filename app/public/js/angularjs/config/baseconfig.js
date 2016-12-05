@@ -35,6 +35,10 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         templateUrl: '/sfms/menu'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
+    when('/sfms/menuadd', {
+        templateUrl: '/sfms/menuadd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
     otherwise({
         redirectTo: '/'
     });
@@ -96,7 +100,11 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         $http({
             method:'get',
             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{pageindex:$scope.paginationConf.currentPage,pagesize:$scope.paginationConf.itemsPerPage,f:$scope.f}
+            params:{
+                pageindex:$scope.paginationConf.currentPage,
+                pagesize:$scope.paginationConf.itemsPerPage,
+                f:$scope.f
+            }
         }).
         success(function(response) {
             var  data=response.data;
@@ -113,8 +121,31 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         currentPage: 1,
         itemsPerPage: 15
     }
-    $scope.$watch( 'paginationConf.action+currentPage+itemsPerPage',getInit);
+    $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
+    $scope.$watch( 'paginationConf.action',getInit);
     $scope.search=function(){
         getInit();
+    }
+
+     $scope.submitusera=function(user){
+        console.log('hhhhh');
+        // $http({
+        //     method:'post',
+        //     url:"/sfms/getmenu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+        //     data:{
+        //         pageindex:$scope.paginationConf.currentPage,
+        //         pagesize:$scope.paginationConf.itemsPerPage,
+        //         f:$scope.f
+        //     }
+        // }).
+        // success(function(response) {
+        //     var  data=response.datas;
+        //     $scope.datas=JSON.parse(data);
+        //     $scope.paginationConf.totalItems=  response.total
+
+        // }).
+        // error(function(response) {
+        //     getList();
+        // });
     }
 })

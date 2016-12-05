@@ -95,8 +95,10 @@ router.get('/tree',function (req,res) {
 });
 
 router.get('/plain',function (req,res) {
+
     var page = req.query.pageindex || 1,
         pageNum = req.query.pagesize;
+
 
     page = page>0 ? page : 1;
 

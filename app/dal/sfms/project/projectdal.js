@@ -9,11 +9,12 @@ var db_sfms = appRequire('db/db_sfms');
 var projectModel = appRequire('model/sfms/project/projectbaseinfo');
 var config = appRequire('config/config');
 var logger = appRequire("util/loghelper").helper;
+var moment = require('moment');
 
 //项目新增
 exports.addProject = function (data, callback) {
     var insert_sql = 'insert into jit_projectbaseinfo set',
-        time = new Date().toLocaleString(),
+        time = moment().format('YYYY-MM-DD HH:mm:ss'),
         sql = '';
 
     data.EditTime = time;
