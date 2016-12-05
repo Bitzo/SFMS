@@ -34,6 +34,11 @@ router.get('/roleAdd', function(req, res, next) {
 
 });
 
+router.get('/roleEdit', function(req, res, next) {
+    res.render('sfms/roleEdit', { title: 'Hi sfms' });
+
+});
+
 router.get('/userinfo', function(req, res, next) {
         res.render('sfms/userinfo', { title: 'Hi sfms' });
 
