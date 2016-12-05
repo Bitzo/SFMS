@@ -23,6 +23,10 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         templateUrl: '/sfms/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
+     when('/sfms/roleEdit', {
+        templateUrl: '/sfms/roleEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
     when('/sfms/application', {
         templateUrl: '/sfms/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
@@ -126,26 +130,51 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     $scope.search=function(){
         getInit();
     }
+    
+//添加角色
+    $scope.roleSubmit=function(role){
+         $http({
+            method: 'POST',
+            url: "/role",
+            data: {
+                'ApplicationID':role.applicationID,
+                'RoleName':role.roleName,
+                'RoleCode':role.roleCode,
+                'IsActive':role.isActive,
+                'roleFunck':role.Funck,
+                'access_token':localStorage.getItem('jit_token'),
+                'jitkey':localStorage.getItem('jit_key')
+            }
+            
+        }).
+        success(function(response) {
+           alert(response.data.msg);
+           alert('提交成功');
+        }).
+        error(function(response) {
+            if (response && response.data && !response.isSuccess) {
+                alert(response.data.msg);
+            } else {
+                alert('提交失败!');
+            }
+        });
+    }
 
-     $scope.submitusera=function(user){
-        console.log('hhhhh');
-        // $http({
-        //     method:'post',
-        //     url:"/sfms/getmenu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //     data:{
-        //         pageindex:$scope.paginationConf.currentPage,
-        //         pagesize:$scope.paginationConf.itemsPerPage,
-        //         f:$scope.f
-        //     }
-        // }).
-        // success(function(response) {
-        //     var  data=response.datas;
-        //     $scope.datas=JSON.parse(data);
-        //     $scope.paginationConf.totalItems=  response.total
 
-        // }).
-        // error(function(response) {
-        //     getList();
-        // });
+    //删除角色
+    $scope.del=function(RoleID){
+        var index=-1;
+        for(var i=0;i<$scope.datas.length;i++){
+            if($scope.datas[i]['RoleID']=RoleID){
+                index=i;
+                break;
+            };
+        }
+        $scope.datas.splice(index,1);
+    }
+
+    //编辑角色
+    $scope.update=function(RoleID){
+
     }
 })
