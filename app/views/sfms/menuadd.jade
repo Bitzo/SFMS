@@ -2,25 +2,25 @@ link(rel='stylesheet' href="css/backend/role.css")
 block content
   div.container-fluid(ng-controller="baseController")
     span 
-      h2 用户新增
+      h2  菜单新增
     form(method="post",name="userInfo" )
       table.table.table-bordered.table-hover.definedwidth.m10
         //- tr
-        //-   td(width="15%",class="tableleft") 用户ID
+        //-   td(width="15%",class="tableleft") 菜单ID
         //-   td
         //-     select(id="search",value="",ng-model='',style="width:163px;height:30px",)
         //-       option SfmsID
         //-       option JinkeBroIDxc
         //-       option xxxID
         tr
-          td(width="15%",class="tableleft") 用户ID
+          td(width="15%",class="tableleft") 菜单ID
           td
             input(type="text",name="ApplicationID",ng-model='user.ApplicationID',ng-minlength="7",ng-maxlength='7',required)
             &nbsp&nbsp
-            //- small.error(ng-show="userInfo.ApplicationID.$error.minlength && userInfo.ApplicationID.$touched" ) 用户ID为7位
-            //- small.error(ng-show="userInfo.ApplicationID.$error.maxlength &&") 用户ID为7位
+            //- small.error(ng-show="userInfo.ApplicationID.$error.minlength && userInfo.ApplicationID.$touched" ) 菜单ID为7位
+            //- small.error(ng-show="userInfo.ApplicationID.$error.maxlength &&") 菜单ID为7位
         tr
-          td(width="15%",class="tableleft") 用户姓名
+          td(width="15%",class="tableleft") 菜单姓名
           td
             input(type="text",name="UserName",ng-model='user.UserName',required)
             &nbsp&nbsp
