@@ -6,7 +6,7 @@ block content
     form(method="post",name="appinfo" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") the id of application. 下拉
+          td(width="15%",class="tableleft") 应用ID 下拉
           td
             select(id="search",value="",ng-model='',style="width:163px;height:30px",)
               option SfmsID
@@ -19,14 +19,14 @@ block content
             &nbsp&nbsp
             
         tr
-          td(width="15%",class="tableleft") the code of application.
+          td(width="15%",class="tableleft") 应用CODE
           td
             input(type="text",name="ApplicationCode",ng-model='app.ApplicationCode')
             &nbsp&nbsp
             
            
         tr
-          td(width="15%",class="tableleft") 	the name of application.
+          td(width="15%",class="tableleft") 	应用名称
           td
             input(type="text",name="ApplicationName",ng-model="app.ApplicationName",ng-minlength="6",ng-maxlength='12')
             &nbsp&nbsp
@@ -34,14 +34,14 @@ block content
            
 
         tr
-          td(width="15%",class="tableleft") 	the description of application.
+          td(width="15%",class="tableleft") 	备注（可选）
           td
             input(type="text",name="Memo",ng-model='app.Memo',ng-minlength="6",ng-maxlength='12')
             &nbsp&nbsp
           
             
         tr
-          td(class="tableleft") 	whether the application is active.
+          td(class="tableleft") 	是否有效
           td
             input(type="radio",name="IsActive",value="1",ng-model="app.IsActive",checked)
             有效
