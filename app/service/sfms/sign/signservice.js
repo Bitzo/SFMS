@@ -67,3 +67,14 @@ exports.signCheck = function (data, callback) {
         callback(false, results);
     })
 }
+
+exports.signCount = function (data, callback) {
+    signDAL.signCount(data, function (err, results) {
+        if(err) {
+            callback(true);
+            return;
+        }
+        logger.writeInfo('签到信息统计');
+        callback(false, results);
+    })
+}

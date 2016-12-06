@@ -162,3 +162,37 @@ exports.signCheck = function (data, callback) {
         });
     });
 }
+
+//签到信息统计
+exports.signCount = function (data, callback) {
+    var sql = 'select UserID,CreateTime,SignType from jit_signinfo where 1=1';
+
+    if (data !== undefined) {
+        if (data.userID != '') sql += ' and UserID = ' + data.userID;
+        if (data.startTime != '') sql += " and CreateTime >= '" + data.startTime + "'";
+        if (data.endTime != '') sql += " and CreateTime <= '" + data.endTime + "'";
+    }
+
+    sql += ' order by UserID,CreateTime';
+
+    console.log('签到信息统计：' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            console.log('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                console.log('err: '+ err);
+                callback(true, '失败');
+                return;
+            }
+            console.log("查询成功");
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
