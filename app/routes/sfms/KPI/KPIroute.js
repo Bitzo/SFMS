@@ -248,7 +248,7 @@ router.put('/check', function (req, res) {
     for (var key in temp) {
         if (!(temp[key] in data[0])) {
             console.log("require: " + temp[key]);
-            err += temp[value];
+            err += temp[key];
         }
     }
     if (err != 'require: ') {
@@ -265,15 +265,15 @@ router.put('/check', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: results
             })
         }
-        if(results !== undefined && results.affectedRows > 0) {
+        if(results !== undefined && results.length > 0) {
             res.status(200);
             return res.json({
                 status: 200,
                 isSuccess: true,
-                msg: '修改成功'
+                msg: results
             })
         } else {
             res.status(404);

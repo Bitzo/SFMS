@@ -74,6 +74,7 @@ router.post('/', function (req, res) {
             res.json({
                 code: 400,
                 isSuccess: false,
+                signType: results[0].SignType,
                 msg: '记录失败,签到信息有误'
             })
         } else {

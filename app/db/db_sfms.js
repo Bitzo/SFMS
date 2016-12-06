@@ -11,6 +11,7 @@ var config = appRequire('config/config');
 var stmsConfig = config.mysql;
 
 stmsConfig.database = 'jit_sfms';
+stmsConfig.multipleStatements = true;
 var dbJinkeBroPool = mysql.createPool(stmsConfig);
 
 exports.mysqlPool = dbJinkeBroPool;

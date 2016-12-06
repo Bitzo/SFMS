@@ -64,3 +64,15 @@ exports.countQuery = function (data, callback) {
         callback(false, results);
     })
 }
+
+//财务审核
+exports.checkFinance = function (data, callback) {
+    financeDAL.checkFinance(data, function (err, results) {
+        if (err) {
+            callback(true, results);
+            return;
+        }
+        console.log('审核财务');
+        callback(false, results);
+    })
+}
