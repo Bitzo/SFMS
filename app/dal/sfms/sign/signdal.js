@@ -12,8 +12,9 @@ var moment = require('moment');
 
 //签到记录新增
 exports.signLogInsert = function (data, callback) {
-    var sql = "insert into jit_signinfo set UserId = ?, IP = ?, UserAgent = ?, MAC = ?, Longitude = ?, Latitude = ?,CreateTime = ?, SignType = ?",
-        time = moment().format('YYYY-MM-DD HH:mm:ss');
+    var insert_sql = "insert into jit_signinfo set ",
+        sql = '';
+        // time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     function checkData(data) {
         for (var key in data) {
@@ -30,10 +31,17 @@ exports.signLogInsert = function (data, callback) {
         return;
     }
 
-    var value = [data.AccountId, data.IP, data.UserAgent, data.MAC, data.Longitude, data.Latitude, time, data.SignType];
-    console.log("VALUE: "+value);
-    console.log("记录签到信息："+sql);
-    console.log(value);
+    if (data !== undefined) {
+        for (var key in data) {
+            if (sql.length == 0) {
+                sql += " " + key + " = '" + data[key] + "' ";
+            } else {
+                sql += ", " + key + " = '" + data[key] + "' ";
+            }
+        }
+    }
+    insert_sql += sql;
+    console.log("记录签到信息："+insert_sql);
 
     db_sfms.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -41,13 +49,13 @@ exports.signLogInsert = function (data, callback) {
             return;
         }
 
-        connection.query(sql, value, function (err, result) {
+        connection.query(insert_sql, function (err, result) {
             if (err) {
                 console.log('err: '+ err);
                 callback(true);
                 return;
             }
-            result.time = time;
+            result.time = data.CreateTime;
 
             callback(false, result);
             connection.release();
@@ -126,7 +134,7 @@ exports.countQuery = function (data, callback) {
 
 //签到信息验证查询
 exports.signCheck = function (data, callback) {
-    var sql = 'select ID,UserID,SignType from jit_signinfo where ID = ( select max(ID) from jit_signinfo where 1=1';
+    var sql = 'select ID,UserID,CreateTime,SignType from jit_signinfo where ID = ( select max(ID) from jit_signinfo where 1=1';
 
     if(data !== undefined) {
         sql += ' and UserID = ' + data.UserID + ')';
