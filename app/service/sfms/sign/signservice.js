@@ -54,3 +54,15 @@ exports.countQuery = function (data, callback) {
         callback(false, results);
     })
 }
+
+//签到信息验证查询
+exports.signCheck = function (data, callback) {
+    signDAL.signCheck(data, function (err, results) {
+        if(err) {
+            callback(true);
+            return;
+        }
+        console.log('签到信息验证查询');
+        callback(false, results);
+    })
+}

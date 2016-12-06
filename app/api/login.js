@@ -10,6 +10,7 @@ var url = require("url");
 var router = express.Router();
 
 var userService = appRequire('service/backend/user/userservice');
+var signservice = appRequire('service/sfms/sign/signservice')
 var jwtHelper = appRequire('util/jwthelper');
 
 //用户登录
@@ -18,6 +19,7 @@ router.post('/', function(req, res) {
         "data": {
             "isSuccess": false,
             "accountId": -1,
+            "signType": -1,
             "msg": "登录失败，请刷新后重试!"
         }
     };
@@ -54,14 +56,33 @@ router.post('/', function(req, res) {
         }
 
         if (user.length > 0 && user[0].AccountID > 0) {
-            resultData.data.isSuccess = true;
-            resultData.data.accountId = user[0].AccountID;
-            resultData.data.msg = "登录成功";
-
-            return res.json(jwtHelper.genToken(resultData.data));
+            //签到信息验证
+            data = {
+                'UserID': user[0].AccountID
+            };
+            signservice.signCheck(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        "status": 500,
+                        "message": "应用程序异常!",
+                        "error": err
+                    });
+                }
+                console.log(results);
+                resultData.data.isSuccess = true;
+                resultData.data.accountId = user[0].AccountID;
+                resultData.data.msg = "登录成功";
+                if(results[0] !== undefined) {
+                    resultData.data.signType = results[0].SignType;
+                } else {
+                    resultData.data.signType = 1;
+                }
+                return res.json(jwtHelper.genToken(resultData.data));
+            })
+        } else {
+            return res.json(resultData);
         }
-
-        return res.json(resultData);
     })
 });
 module.exports = router;

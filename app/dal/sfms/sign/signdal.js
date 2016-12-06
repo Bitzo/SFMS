@@ -123,3 +123,33 @@ exports.countQuery = function (data, callback) {
         });
     });
 }
+
+//签到信息验证查询
+exports.signCheck = function (data, callback) {
+    var sql = 'select ID,UserID,SignType from jit_signinfo where ID = ( select max(ID) from jit_signinfo where 1=1';
+
+    if(data !== undefined) {
+        sql += ' and UserID = ' + data.UserID + ')';
+    }
+
+    console.log('签到信息核实：' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            console.log('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                console.log('err: '+ err);
+                callback(true, '失败');
+                return;
+            }
+            console.log("查询成功");
+            callback(false, results);
+            connection.release();
+        });
+    });
+}

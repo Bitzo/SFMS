@@ -53,8 +53,8 @@ router.post('/', function (req, res) {
         'Latitude': latitude,
         'SignType': signType
     };
-
-    signservice.signLog(data, function(err, result) {
+    //先验证签到信息
+    signservice.signCheck({'UserID':userID}, function (err, results) {
         if (err) {
             res.status(500);
             res.json({
@@ -64,18 +64,39 @@ router.post('/', function (req, res) {
             });
             return;
         }
-        console.log(result);
-        if (result!==undefined&&result.affectedRows===1)
-        {
-            res.status(200);
+        if (results[0] === undefined) results[0] = {SignType: 1};
+        if (results[0].SignType == data.SignType) {
+            res.status(400);
             res.json({
-                code:200,
-                isSuccess: true,
-                signTime: result.time,
-                msg: "sign success"
+                code: 400,
+                isSuccess: false,
+                msg: '记录失败,签到信息有误'
+            })
+        } else {
+            signservice.signLog(data, function(err, result) {
+                if (err) {
+                    res.status(500);
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '记录失败,连接数据库有误'
+                    });
+                    return;
+                }
+                console.log(result);
+                if (result!==undefined&&result.affectedRows===1)
+                {
+                    res.status(200);
+                    res.json({
+                        code:200,
+                        isSuccess: true,
+                        signTime: result.time,
+                        msg: "sign success"
+                    });
+                }
             });
         }
-    });
+    })
 });
 
 module.exports = router;
