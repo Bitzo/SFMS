@@ -12,6 +12,7 @@ var router = express.Router();
 var userService = appRequire('service/backend/user/userservice');
 var signservice = appRequire('service/sfms/sign/signservice')
 var jwtHelper = appRequire('util/jwthelper');
+var logger = appRequire("util/loghelper").helper;
 
 //用户登录
 router.post('/', function(req, res) {
@@ -69,7 +70,7 @@ router.post('/', function(req, res) {
                         "error": err
                     });
                 }
-                console.log(results);
+                logger.writeInfo('前一次签到信息：' + results);
                 resultData.data.isSuccess = true;
                 resultData.data.accountId = user[0].AccountID;
                 resultData.data.msg = "登录成功";

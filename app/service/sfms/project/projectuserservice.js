@@ -17,7 +17,7 @@ exports.addProjectUser = function(data, callback) {
             callback(true, '新增失败');
             return;
         }
-        console.log('新增项目用户');
+        logger.writeInfo('新增项目用户');
         callback(false, results);
     })
 }
@@ -29,7 +29,7 @@ exports.updateProjectUser = function(data, callback) {
             callback(true, '修改失败');
             return;
         }
-        console.log('修改项目用户');
+        logger.writeInfo('修改项目用户');
         callback(false, results);
     })
 }
@@ -41,7 +41,7 @@ exports.queryProjectUser = function (data, callback) {
             callback(true, '查询失败');
             return;
         }
-        console.log('查询项目用户');
+        logger.writeInfo('查询项目用户');
         callback(false, results);
     })
 }
@@ -58,7 +58,7 @@ exports.countQuery = function (data, callback) {
             callback(true, '失败');
             return;
         }
-        console.log('统计数据量');
+        logger.writeInfo('统计数据量');
         callback(false, results);
     })
 }

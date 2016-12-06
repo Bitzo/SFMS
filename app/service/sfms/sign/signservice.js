@@ -5,6 +5,7 @@
  * @Last Modified time:
  */
 var signDAL = appRequire('dal/sfms/sign/signdal.js');
+var logger = appRequire("util/loghelper").helper;
 
 //用户签到签退
 exports.signLog = function(data, callback) {
@@ -13,7 +14,7 @@ exports.signLog = function(data, callback) {
             callback(true);
             return;
         }
-        console.log('test1');
+        logger.writeInfo('签到签退记录新增');
         callback(false, results);
     });
 };
@@ -26,13 +27,13 @@ exports.querySign = function (data, callback) {
                 delete data.key;
         }
     }
-    console.log(data)
+    logger.writeInfo(data)
     signDAL.querySign(data, function (err, results) {
         if(err) {
             callback(true);
             return;
         }
-        console.log('查询签到记录');
+        logger.writeInfo('查询签到记录');
         callback(false, results);
     })
 }
@@ -50,7 +51,7 @@ exports.countQuery = function (data, callback) {
             callback(true);
             return;
         }
-        console.log('查询数据量统计');
+        logger.writeInfo('查询数据量统计');
         callback(false, results);
     })
 }
@@ -62,7 +63,7 @@ exports.signCheck = function (data, callback) {
             callback(true);
             return;
         }
-        console.log('签到信息验证查询');
+        logger.writeInfo('签到信息验证查询');
         callback(false, results);
     })
 }

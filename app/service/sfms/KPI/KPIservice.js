@@ -17,7 +17,7 @@ exports.addKPI = function(data, callback) {
             callback(true, '新增失败');
             return;
         }
-        console.log('新增KPI');
+        logger.writeInfo('新增KPI');
         callback(false, results);
     })
 }
@@ -29,7 +29,7 @@ exports.updateKPI = function(data, callback) {
             callback(true, '修改失败');
             return;
         }
-        console.log('修改KPI');
+        logger.writeInfo('修改KPI');
         callback(false, results);
     })
 }
@@ -41,7 +41,7 @@ exports.queryKPI = function (data, callback) {
             callback(true, '查询失败');
             return;
         }
-        console.log('查询KPI信息');
+        logger.writeInfo('查询KPI信息');
         callback(false, results);
     })
 }
@@ -60,7 +60,7 @@ exports.countQuery = function (data, callback) {
             callback(true, '失败');
             return;
         }
-        console.log('统计KPI数据量');
+        logger.writeInfo('统计KPI数据量');
         callback(false, results);
     })
 }
@@ -72,7 +72,7 @@ exports.checkKPI = function (data, callback) {
             callback(true, results);
             return;
         }
-        console.log('审核KPI');
+        logger.writeInfo('审核KPI');
         callback(false, results);
     })
 }

@@ -43,7 +43,7 @@ router.get('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        console.log(results);
+        logger.writeInfo(results);
         totalNum = results[0].num;
         if(totalNum > 0) {
             //查询所需的详细数据

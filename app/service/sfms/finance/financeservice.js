@@ -17,7 +17,7 @@ exports.addFinance = function(data, callback) {
             callback(true, '新增失败');
             return;
         }
-        console.log('新增财务信息');
+        logger.writeInfo('新增财务信息');
         callback(false, results);
     })
 }
@@ -29,7 +29,7 @@ exports.updateFinance = function(data, callback) {
             callback(true, '修改失败');
             return;
         }
-        console.log('修改财务信息');
+        logger.writeInfo('修改财务信息');
         callback(false, results);
     })
 }
@@ -41,7 +41,7 @@ exports.queryFinance = function (data, callback) {
             callback(true, '查询失败');
             return;
         }
-        console.log('查询KPI信息');
+        logger.writeInfo('查询KPI信息');
         callback(false, results);
     })
 }
@@ -60,7 +60,7 @@ exports.countQuery = function (data, callback) {
             callback(true, '失败');
             return;
         }
-        console.log('统计KPI数据量');
+        logger.writeInfo('统计KPI数据量');
         callback(false, results);
     })
 }
@@ -72,7 +72,7 @@ exports.checkFinance = function (data, callback) {
             callback(true, results);
             return;
         }
-        console.log('审核财务');
+        logger.writeInfo('审核财务');
         callback(false, results);
     })
 }
