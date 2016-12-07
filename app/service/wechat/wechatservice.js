@@ -406,6 +406,7 @@ Weixin.prototype.sendNewsMsg = function(msg) {
 }
 
 //返回图片的消息
+//问题:根据接口返回的数据但在微信客户端没有显示出图片
 Weixin.prototype.sendimgMsg=function(msg){
  var time = Math.round(new Date().getTime() / 1000);
 
