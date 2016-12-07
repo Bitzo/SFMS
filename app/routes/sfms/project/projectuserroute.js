@@ -42,7 +42,7 @@ router.post('/', function (req, res) {
     {
         if(!(temp[value] in req.body))
         {
-            console.log("require " + temp[value]);
+            logger.writeInfo("require " + temp[value]);
             err += temp[value] + ' ';
         }
     }
@@ -113,7 +113,7 @@ router.put('/', function (req, res) {
     {
         if(!(temp[value] in req.body))
         {
-            console.log("require " + temp[value]);
+            logger.writeInfo("require " + temp[value]);
             err += temp[value] + ' ';
         }
     }
@@ -183,7 +183,7 @@ router.get('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        console.log(results);
+        logger.writeInfo(results);
         totalNum = results[0].num;
         if(totalNum > 0) {
             //查询所需的详细数据
@@ -196,7 +196,7 @@ router.get('/', function (req, res) {
                         msg: '服务器出错'
                     })
                 }
-                console.log(results);
+                logger.writeInfo(results);
                 if (results !== undefined && results.length > 0) {
                     var result = {
                         status: 200,

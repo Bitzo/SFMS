@@ -11,6 +11,8 @@ var url = require("url");
 var router = express.Router();
 //用户签到签退业务
 var signservice = appRequire('service/sfms/sign/signservice');
+var moment = require('moment');
+var logger = appRequire("util/loghelper").helper;
 
 router.post('/', function (req, res) {
 
@@ -20,7 +22,7 @@ router.post('/', function (req, res) {
     {
         if(!(data[value] in req.body))
         {
-            console.log(data[value]);
+            console.log('require:' + data[value]);
             err += data[value] + ' ';
         }
     }
@@ -43,18 +45,20 @@ router.post('/', function (req, res) {
     var longitude = req.body.longitude;
     var latitude = req.body.latitude;
     var signType = req.body.signType;
+    var time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     data = {
-        'AccountId': userID,
+        'UserID': userID,
         'IP': ip,
         'UserAgent': userAgent,
         'MAC': mac,
         'Longitude': longitude,
         'Latitude': latitude,
-        'SignType': signType
+        'SignType': signType,
+        'CreateTime': time
     };
-
-    signservice.signLog(data, function(err, result) {
+    //先验证签到信息
+    signservice.signCheck({'UserID':userID}, function (err, results) {
         if (err) {
             res.status(500);
             res.json({
@@ -64,18 +68,51 @@ router.post('/', function (req, res) {
             });
             return;
         }
-        console.log(result);
-        if (result!==undefined&&result.affectedRows===1)
-        {
-            res.status(200);
+        logger.writeInfo('前一次签到信息：' + results);
+        if (results[0] === undefined) results[0] = {SignType: 1};
+        if (results[0].SignType == data.SignType) {
+            res.status(400);
             res.json({
-                code:200,
-                isSuccess: true,
-                signTime: result.time,
-                msg: "sign success"
+                code: 400,
+                isSuccess: false,
+                signType: results[0].SignType,
+                msg: '记录失败,签到信息有误'
+            })
+        } else {
+            //如果是签退,判断是否已经垮天,若垮天则更改签退时间为签到当日的23：59：59
+            if (data.SignType == 1) {
+                if(!moment(results[0].CreateTime).isSame(data.CreateTime, 'day')) {
+                    results[0].CreateTime = moment(results[0].CreateTime).set({
+                        'hour':23,
+                        'minute':59,
+                        'second': 59
+                    }).format('YYYY-MM-DD HH:mm:ss');
+                    data.CreateTime = results[0].CreateTime;
+                }
+            }
+            signservice.signLog(data, function(err, result) {
+                if (err) {
+                    res.status(500);
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '记录失败,连接数据库有误'
+                    });
+                    return;
+                }
+                if (result!==undefined&&result.affectedRows===1)
+                {
+                    res.status(200);
+                    res.json({
+                        code:200,
+                        isSuccess: true,
+                        signTime: result.time,
+                        msg: "sign success"
+                    });
+                }
             });
         }
-    });
+    })
 });
 
 module.exports = router;

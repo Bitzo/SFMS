@@ -112,8 +112,6 @@ router.use('/menu',menuRouter);
 router.use('/usermenurole',userMenuRoleRouter);
 //数据字典
 router.use('/datadict',datadictionaryRouter);
-
-
 //角色模块
 router.use('/role', roleroute);
 //角色功能点模块
@@ -124,6 +122,7 @@ router.use('/function', funcroute);
 router.use('/backuser', user);
 //用户添加角色模块
 router.use('/userrole', userRole);
-router.use('/app', approuter); //应用功能模块
+//应用功能模块
+router.use('/app', approuter);
 
 module.exports = router;

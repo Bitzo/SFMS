@@ -30,18 +30,18 @@ exports.addFinance = function (data, callback) {
     }
 
     insert_sql += sql;
-    console.log('新增财务信息：' + insert_sql);
+    logger.writeInfo('新增财务信息：' + insert_sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
-            console.log('err: '+ err);
+            logger.writeError('err: '+ err);
             callback(true, '连接数据库失败');
             return;
         }
 
         connection.query(insert_sql, function(err, results) {
             if (err) {
-                console.log('err: '+ err);
+                logger.writeError('err: '+ err);
                 callback(true, '新增失败');
                 return;
             }
@@ -72,18 +72,18 @@ exports.updateFinance = function (data, callback) {
     }
     update_sql += sql;
     update_sql += 'where ID = ' + data.ID;
-    console.log('修改财务信息：' + update_sql);
+    logger.writeInfo('修改财务信息：' + update_sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
-            console.log('err: '+ err);
+            logger.writeError('err: '+ err);
             callback(true, '连接数据库失败');
             return;
         }
 
         connection.query(update_sql, function(err, results) {
             if (err) {
-                console.log('err: '+ err);
+                logger.writeError('err: '+ err);
                 callback(true, '修改失败');
                 return;
             }
@@ -105,18 +105,18 @@ exports.countQuery = function (data, callback) {
         }
     }
 
-    console.log('财务查询统计：' + sql);
+    logger.writeInfo('财务查询统计：' + sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
-            console.log('err: '+ err);
+            logger.writeError('err: '+ err);
             callback(true, '连接数据库失败');
             return;
         }
 
         connection.query(sql, function(err, results) {
             if (err) {
-                console.log('err: '+ err);
+                logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
@@ -141,22 +141,76 @@ exports.queryFinance = function (data, callback) {
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
-    console.log("查询财务信息：" + sql);
+    logger.writeInfo("查询财务信息：" + sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
-            console.log('err: '+ err);
+            logger.writeError('err: '+ err);
             callback(true, '连接数据库失败');
             return;
         }
 
         connection.query(sql, function(err, results) {
             if (err) {
-                console.log('err: '+ err);
+                logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
             callback(false, results);
+            connection.release();
+        });
+    });
+}
+//财务审核
+exports.checkFinance = function (data, callback) {
+    var time = moment().format('YYYY-MM-DD HH:mm:ss'),
+        sql = '';
+
+    for(var i in data) {
+        sql += 'update jit_financeinfo set';
+        var update_sql = '';
+        for(var key in data[i]) {
+            if(key != 'ID') {
+                if(update_sql.length == 0) {
+                    update_sql += ' ' + key + " = '" + data[i][key] +"'";
+                } else {
+                    update_sql += ", " + key + " = '" + data[i][key] +"'";
+                }
+            }
+        }
+        sql += update_sql + ", CheckTime = '" + time + "'";
+        sql += ' where ID = ' + data[i].ID;
+        sql += ';'
+    }
+
+    logger.writeInfo('审核财务： ' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '修改失败');
+                return;
+            }
+            var status = [];
+            logger.writeInfo(data);
+            if (results.length > 1) {
+                for(var i in results) {
+                    status[i] = {};
+                    status[i].ID = data[i].ID;
+                    status[i].isSuccess = results[i].affectedRows?true:false;
+                }
+            } else {
+                status[0] = {};
+                status[0].ID = data[0].ID;
+                status[0].isSuccess = results.affectedRows?true:false;
+            }
+            callback(false, status);
             connection.release();
         });
     });

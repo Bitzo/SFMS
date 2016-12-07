@@ -45,7 +45,7 @@ router.post('/', function (req, res) {
     {
         if(!(temp[value] in req.body))
         {
-            console.log("require " + temp[value]);
+            logger.writeInfo("require " + temp[value]);
             err += temp[value] + ' ';
         }
     }
@@ -120,7 +120,7 @@ router.put('/', function (req, res) {
     {
         if(!(temp[value] in req.body))
         {
-            console.log("require " + temp[value]);
+            logger.writeInfo("require " + temp[value]);
             err += temp[value] + ' ';
         }
     }
@@ -194,7 +194,7 @@ router.get('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        console.log(results);
+        logger.writeInfo(results);
         totalNum = results[0].num;
         if(totalNum > 0) {
             //查询所需的详细数据
@@ -207,7 +207,7 @@ router.get('/', function (req, res) {
                         msg: '服务器出错'
                     })
                 }
-                console.log(results);
+                logger.writeInfo(results);
                 if (results !== undefined && results.length > 0) {
                     var result = {
                         status: 200,
@@ -241,6 +241,52 @@ router.get('/', function (req, res) {
             })
         }
     })
+})
 
+//财务审核
+router.put('/check', function (req, res) {
+    var data = req.body.data,
+        temp = ['ID', 'CheckUser', 'FIStatu', 'Remark'],
+        err = 'require: ';
+    logger.writeInfo(data);
+    for (var key in temp) {
+        if (!(temp[key] in data[0])) {
+            logger.writeInfo("require: " + temp[key]);
+            err += temp[key];
+        }
+    }
+    if (err != 'require: ') {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: err
+        })
+    }
+    financeService.checkFinance(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: results
+            })
+        }
+        if(results !== undefined && results.length > 0) {
+            res.status(200);
+            return res.json({
+                status: 200,
+                isSuccess: true,
+                msg: results
+            })
+        } else {
+            res.status(404);
+            return res.json({
+                status: 404,
+                isSuccess: false,
+                msg: results
+            })
+        }
+    })
 })
 module.exports = router;
