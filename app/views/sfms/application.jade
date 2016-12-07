@@ -1,7 +1,5 @@
-block content()
-  //div(ng-controller="sfmsIndexController")
+block content
   jason-pagecontent(action='/app' conf='paginationConf')
-
     div.page-content(stule="button {height :30px;}")
       ng-form.form-inline
         label.form-group.my-form-group
@@ -9,11 +7,11 @@ block content()
         label.form-group.my-form-group
           input.form-control(placeholder='所属类别')
         label.form-group.my-form-group
-          button.btn.btn-primary(ng-click='search()') 确定
+          button.btn.btn-sm.btn-primary(ng-click='search()') 确定
         div.buttons.pull-right
-          a.btn.btn-success(ng-href='#/sfms/applicationinfo')
+          a.btn.btn-sm.btn-success(ng-href='#/sfms/applicationinfo')
             i.icon.icon-plus 新建
-          button(ng-click='search()' class='btn btn-default') 刷新
+          button(ng-click='search()' class='btn btn-sm btn-default') 刷新
       table.table.table-striped.table-bordered.text-center
         thead
           tr
@@ -31,7 +29,10 @@ block content()
             td {{x.IsActive}}
             td {{x.IsActive}}
             td
-              a.btn.btn-primary(type="submit" href='#/sfms/application-info') 编辑
+              a(ng-href='')
+                i.icon.icon-edit 编辑
+              a(ng-href='')
+                i.icon.icon-trash 删除
       div.pull-right
         jason-pagination(conf='paginationConf')
 

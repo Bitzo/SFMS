@@ -20,17 +20,13 @@ router.get('/:user_id', function(req, res) {
             })
             return;
         }
-        //成功获取用户基本信息（未处理数据）
+        //成功获取用户基本信息
         if (result !== undefined && result.length > 0) {
             result = result[0];
             //开始处理初始的数据
             var collegeName = result.CollegeID,
                 gradeYear = result.GradeYear,
                 className = result.ClassID;
-            /**
-             *  待加入数据字典接口
-             *  对code进行转换成有意义的值
-             */
             var query = {
                 'DictionaryCode': [collegeName, gradeYear, className]
             }
@@ -44,7 +40,6 @@ router.get('/:user_id', function(req, res) {
                     })
                     return;
                 }
-                console.log(results);
                 collegeName = results[0].DictionaryValue;//'软件工程学院';
                 gradeYear = results[1].DictionaryValue;//'2015';
                 className = results[2].DictionaryValue;//'15软件工程（嵌入式培养）3班';

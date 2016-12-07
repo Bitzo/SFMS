@@ -12,6 +12,7 @@ var router = express.Router();
 //用户签到签退业务
 var signservice = appRequire('service/sfms/sign/signservice');
 var moment = require('moment');
+var logger = appRequire("util/loghelper").helper;
 
 router.post('/', function (req, res) {
 
@@ -21,7 +22,7 @@ router.post('/', function (req, res) {
     {
         if(!(data[value] in req.body))
         {
-            console.log(data[value]);
+            console.log('require:' + data[value]);
             err += data[value] + ' ';
         }
     }
@@ -67,13 +68,14 @@ router.post('/', function (req, res) {
             });
             return;
         }
-        console.log(results);
+        logger.writeInfo('前一次签到信息：' + results);
         if (results[0] === undefined) results[0] = {SignType: 1};
         if (results[0].SignType == data.SignType) {
             res.status(400);
             res.json({
                 code: 400,
                 isSuccess: false,
+                signType: results[0].SignType,
                 msg: '记录失败,签到信息有误'
             })
         } else {
@@ -88,7 +90,6 @@ router.post('/', function (req, res) {
                     data.CreateTime = results[0].CreateTime;
                 }
             }
-            console.log(data);
             signservice.signLog(data, function(err, result) {
                 if (err) {
                     res.status(500);

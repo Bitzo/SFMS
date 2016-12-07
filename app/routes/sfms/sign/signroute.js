@@ -9,7 +9,7 @@ var express = require('express');
 var router = express.Router();
 var signservice = appRequire('service/sfms/sign/signservice');
 var config = appRequire('config/config');
-
+var moment = require('moment');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
 
@@ -43,7 +43,7 @@ router.get('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        console.log(results);
+        logger.writeInfo(results);
         totalNum = results[0].num;
         if(totalNum > 0) {
             //查询所需的详细数据
@@ -79,6 +79,88 @@ router.get('/', function (req, res) {
                         msg: '无数据'
                     })
                 }
+            })
+        } else {
+            res.status(404);
+            return res.json({
+                status: 404,
+                isSuccess: false,
+                msg: '无数据'
+            })
+        }
+    })
+})
+
+//签到记录的统计
+router.get('/count', function (req, res) {
+    var userID = req.query.accountID || '',
+        startTime = req.query.startTime || '',
+        endTime = req.query.endTime || '';
+
+    if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
+    if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
+
+    var data = {
+        'userID': userID,
+        'startTime': startTime,
+        'endTime': endTime
+    }
+
+    signservice.signCount(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '服务器出错'
+            })
+        }
+        if (results!==undefined && results.length > 0) {
+            //查询到数据，开始统计
+            //先取出所有用户ID
+            var userInfo = [],k=0;
+            userInfo[k] = {
+                userID: results[0].UserID,
+                inTime: 0,
+                outTime: 0,
+                signNum: 0
+            };
+            for(var i=0;i<results.length;++i) {
+                if(userInfo[k].userID != results[i].UserID) {
+                    userInfo[++k] = {
+                        userID: results[i].UserID,
+                        inTime: 0,
+                        outTime: 0,
+                        signNum: 0
+                    };
+                }
+                if (userInfo[k].inTime == 0 && results[i].SignType == 1) continue;
+                if (results[i].SignType == 0) {
+                    //计算前先判断这次的签到信息是否有匹配的签出信息，若无，则跳过此数据
+                    if(i==results.length-1) break;
+                    if(results[i+1].UserID != undefined && results[i+1].UserID == userInfo[k].userID) {
+                        userInfo[k].inTime += moment(results[i].CreateTime).unix();
+                        userInfo[k].signNum ++;
+                    }
+                } else {
+                    userInfo[k].outTime += moment(results[i].CreateTime).unix();
+                }
+            }
+            //获取完所有用户ID，对数据遍历，算出用户的签到总时长
+            for(var i in userInfo) {
+                //取得签到时常总秒数，换算成小时
+                var second = userInfo[i].outTime - userInfo[i].inTime;
+                var h = Math.floor(second/3600);
+                var m = Math.floor((second - h*3600)/60);
+                var s = (second - h*3600 - m*60);
+                userInfo[i].signTime = h+':'+m+':'+s ;
+                delete userInfo[i].inTime;
+                delete userInfo[i].outTime;
+            }
+            res.status(200);
+            return res.json({
+                dataNum: results.length,
+                results: userInfo
             })
         } else {
             res.status(404);
