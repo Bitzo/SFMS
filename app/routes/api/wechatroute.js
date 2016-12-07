@@ -5,7 +5,7 @@
  * @Last Modified time:
  * 微信相关的操作
  */
-console.log
+
 var express = require('express');
 var router = express.Router();
 var url = require("url");
