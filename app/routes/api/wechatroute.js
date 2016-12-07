@@ -5,7 +5,7 @@
  * @Last Modified time:
  * 微信相关的操作
  */
-
+console.log
 var express = require('express');
 var router = express.Router();
 var url = require("url");
@@ -21,7 +21,8 @@ wechat.token = config.weChat.token;
 //微信开发者认证
 router.get('/accesscheck', function(req, res, next) {
     var query = url.parse(req.url, true).query;
-    console.log(query);
+    
+    
     var signature = query.signature;
     var echostr = query.echostr;
     var timestamp = query['timestamp'];
@@ -94,15 +95,30 @@ wechat.textMsg(function(msg) {
             }
     }
     wechat.sendMsg(resMsg);
-    // wechat.getAccessToken(1,function(){
-
-    // });
+     // wechat.getAccessToken(1,function(){
+     //        console.log("dankai");
+     // });    
 });
 
 // 监听图片消息
 wechat.imageMsg(function(msg) {
     console.log("imageMsg received");
     console.log(JSON.stringify(msg));
+    var resMsg ={};
+    switch(msg.msgType)
+    {
+        case 'image':
+
+        //返回的图片数据
+        resMsg={
+            fromUserName:msg.toUserName,
+            toUserName:msg.fromUserName,
+            msgType:"image",
+            MediaId:msg.MediaId
+        }
+        break;
+    }
+    wechat.sendMsg(resMsg);
 });
 
 // 监听语音消息
@@ -131,6 +147,7 @@ wechat.eventMsg(function(msg) {
 
 //接受用户的消息
 router.post('/accesscheck', function(req, res) {
+
     wechat.handleCustomerMsg(req, res);
 });
 

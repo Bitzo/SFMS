@@ -154,6 +154,7 @@ Weixin.prototype.eventMsg = function(callback) {
     return this;
 }
 
+
 // ----------------- 消息处理 -----------------------
 /*
  * 文本消息格式：
@@ -194,7 +195,8 @@ Weixin.prototype.parseImageMsg = function() {
         "createTime": this.data.CreateTime[0],
         "msgType": this.data.MsgType[0],
         "picUrl": this.data.PicUrl[0],
-        "msgId": this.data.MsgId[0]
+        "msgId": this.data.MsgId[0],
+        "MediaId":this.data.MediaId[0]
     }
 
     emitter.emit("weixinImageMsg", msg);
@@ -403,18 +405,37 @@ Weixin.prototype.sendNewsMsg = function(msg) {
     return this;
 }
 
+//返回图片的消息
+Weixin.prototype.sendimgMsg=function(msg){
+ var time = Math.round(new Date().getTime() / 1000);
+
+    var output = "" +
+        "<xml>" +
+        "<ToUserName><![CDATA[" + msg.toUserName + "]]></ToUserName>" +
+        "<FromUserName><![CDATA[" + msg.fromUserName + "]]></FromUserName>" +
+        "<CreateTime>" + time + "</CreateTime>" +
+        "<MsgType><![CDATA[" + msg.msgType + "]]></MsgType>" +
+        "<image>" +
+        "<MediaId><![CDATA["+ msg.MediaId + "]]></MediaId>" +
+        "</image>" +
+        "</xml>";
+
+    this.res.type('xml');
+    this.res.status(200).send(output);
+}
+//
 // ------------ 主逻辑 -----------------
 // 解析
 Weixin.prototype.parse = function() {
 
     this.msgType = this.data.MsgType[0] ? this.data.MsgType[0] : "text";
-
     switch (this.msgType) {
         case 'text':
             this.parseTextMsg();
             break;
 
         case 'image':
+           
             this.parseImageMsg();
             break;
 
@@ -450,6 +471,8 @@ Weixin.prototype.sendMsg = function(msg) {
         case 'news':
             this.sendNewsMsg(msg);
             break;
+        case 'image':
+            this.sendimgMsg(msg);
     }
 }
 
@@ -466,7 +489,6 @@ Weixin.prototype.handleCustomerMsg = function(req, res) {
     req.on('data', function(chunk) {
         buf += chunk;
     });
-
     // 内容接收完毕
     req.on('end', function() {
         xml2js.parseString(buf, function(err, json) {
