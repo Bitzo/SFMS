@@ -18,7 +18,7 @@ var moment=require('moment');
 router.post('/',function(req,res)
 {
 	
-	var data=['ApplicationID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateUserID','EditUserID','Email','Address','IsActive'];
+	var data=['ApplicationID','Account','UserName','Pwd','CreateUserID','IsActive'];
 	var err='require: ';
 
 	for(var value in data)
@@ -123,7 +123,7 @@ router.post('/',function(req,res)
 				}
 
 				
-				if(email.length!=0&&email!=undefined)
+				if(email!=undefined && email.length!=0)
 				{
 					data['Email']=email;
 				}

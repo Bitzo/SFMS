@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
+  div.container-fluid(action='/menu' conf='paginationConf' ng-controller="baseController")
     span 
       h2 菜单新增
     form(method="post",name="menuinfo" )
@@ -13,51 +13,58 @@ block content
               option JinkeBroIDxc
               option xxxID
         tr
-          td(width="15%",class="tableleft") 应用ID
+          td(width="15%",class="tableleft") 应用ID  int
           td
-            input(type="text",name="ApplicationID",ng-model='menu.ApplicationID',ng-minlength="7",ng-maxlength='7')
+            input(type="text",name="ApplicationID",ng-model='menu.ApplicationID',ng-maxlength='11')
             &nbsp&nbsp
             
+      
         tr
-          td(width="15%",class="tableleft") 菜单对应的层级
+          td(width="15%",class="tableleft") 菜单对应的层级 int
           td
-            input(type="text",name="MenuLevel",ng-model='menu.MenuLevel')
-            &nbsp&nbsp
-            
-           
+            select(id="search",value="",ng-model='menu.MenuLevel',style="width:163px;height:30px",)
+              option 1
+              option 2
+              
+
         tr
-          td(width="15%",class="tableleft") 	对应的父级ID
+          td(width="15%",class="tableleft") 	对应的父级ID int
           td
-            input(type="text",name="ParentID",ng-model="menu.ParentID",ng-minlength="6",ng-maxlength='12')
+            input(type="text",name="ParentID",ng-model="menu.ParentID",ng-maxlength='11')
             &nbsp&nbsp
            
            
 
         tr
-          td(width="15%",class="tableleft") 对应的菜单排序顺序
+          td(width="15%",class="tableleft") 对应的菜单排序顺序 int 
           td
-            input(type="text",name="SortIndex",ng-model='menu.SortIndex',ng-minlength="6",ng-maxlength='12')
+            input(type="text",name="SortIndex",ng-model='menu.SortIndex',ng-maxlength='11')
             &nbsp&nbsp
           
            
         tr
           td(width="15%",class="tableleft") 	菜单名称
           td
-            input(type="text",name="MenuName",ng-model='menu.MenuName',ng-minlength="3",ng-maxlength='10')
+            input(type="text",name="MenuName",ng-model='menu.MenuName',ng-maxlength='50')
             &nbsp&nbsp
-           
+
+        tr
+          td(width="15%",class="tableleft") 	对应菜单的icon路径
+          td
+            input(type="text",name="IconPath",ng-model='menu.IconPath',ng-maxlength='100')
+            &nbsp&nbsp 
             
         tr
           td(width="15%",class="tableleft") 菜单对应的url
           td
-            input(type="text",name="Url",ng-model='menu.Url',ng-minlength="3",ng-maxlength='10')
+            input(type="text",name="Url",ng-model='menu.Url',ng-maxlength='50')
             &nbsp&nbsp
            
           
         tr
           td(width="15%",class="tableleft") 备注(可选)
           td
-            input(type="number",name="Memo",ng-model="menu.Memo",ng-minlength="11",ng-maxlength='11')
+            input(type="number",name="Memo",ng-model="menu.Memo",ng-maxlength='200')
             &nbsp&nbsp
             
             
@@ -73,10 +80,10 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-primary(type="submit",ng-click="submitmenua(menu)") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="submitmenua(menu)") 添加
  
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-success(href='#sfms/menu') 返回列表
+            a.btn.btn-sm.btn-success(href='#sfms/menu') 返回列表
 
 
 
