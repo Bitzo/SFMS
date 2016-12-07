@@ -21,6 +21,7 @@ wechat.token = config.weChat.token;
 //微信开发者认证
 router.get('/accesscheck', function(req, res, next) {
     var query = url.parse(req.url, true).query;
+    console.log(query);
     var signature = query.signature;
     var echostr = query.echostr;
     var timestamp = query['timestamp'];

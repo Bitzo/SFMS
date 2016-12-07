@@ -69,7 +69,7 @@
  				logger.writeError(requireValue);
  				return;
  			}
- 			userrole.insert(data,function(err,results)
+ 			userRole.insert(data,function(err,results)
  			{
  				if(err)
  				{
@@ -128,8 +128,8 @@ router.put('/',function(req,res)
 		"AccountID":accountID,
 		"RoleID":roleID
 	}
-
-	userrole.updateUserRole(data,function(err,results)
+	
+	userRole.updateUserRole(data,function(err,results)
 	{
 		if(err)
 		{

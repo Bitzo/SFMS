@@ -104,3 +104,15 @@ exports.datadictionaryDelete = function (data,callback) {
         callback(false,results);
     });
 }
+
+exports.queryDatadictionaryByCode = function (data,callback) {
+    datadictionaryDal.queryDatadictionaryByCode(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo('queryDatadictionary');
+        callback(false, results);
+    })
+}

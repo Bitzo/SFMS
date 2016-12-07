@@ -49,6 +49,7 @@
 
  exports.updateUserRole=function(data,callback)
  {
+ 	
  	var sql='update jit_roleuser set ';
  	var i=0;
  	for(var key in data)

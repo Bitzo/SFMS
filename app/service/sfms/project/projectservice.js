@@ -17,7 +17,7 @@ exports.addProject = function(data, callback) {
             callback(true, '新增失败');
             return;
         }
-        console.log('新增项目');
+        logger.writeInfo('新增项目');
         callback(false, results);
     })
 }
@@ -28,7 +28,7 @@ exports.updateProject = function(data, callback) {
     function checkData(data) {
         for (var key in data) {
             if(data[key] === undefined) {
-                console.log(key);
+                logger.writeInfo(key);
                 return false;
             }
         }
@@ -40,13 +40,13 @@ exports.updateProject = function(data, callback) {
         callback(true, '数据有误');
         return;
     }
-    console.log('修改项目');
+    logger.writeInfo('修改项目');
     projectDAL.updateProject(data, function (err, results) {
         if (err) {
             callback(true, '修改失败');
             return;
         }
-        console.log('修改项目');
+        logger.writeInfo('修改项目');
         callback(false, results);
     })
 }
@@ -63,7 +63,7 @@ exports.countQuery = function (data, callback) {
             callback(true, '失败');
             return;
         }
-        console.log('统计数据量');
+        logger.writeInfo('统计数据量');
         callback(false, results);
     })
 }
@@ -75,7 +75,7 @@ exports.queryProject = function (data, callback) {
             callback(true, '查询失败');
             return;
         }
-        console.log('查询项目信息');
+        logger.writeInfo('查询项目信息');
         callback(false, results);
     })
 }

@@ -23,20 +23,24 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         templateUrl: '/sfms/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
+     when('/sfms/roleEdit', {
+        templateUrl: '/sfms/roleEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
     when('/sfms/application', {
         templateUrl: '/sfms/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/application-info', {
-        templateUrl: '/sfms/application-info'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/sfms/applicationinfo', {
+        templateUrl: '/sfms/applicationinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
     when('/sfms/menu', {
         templateUrl: '/sfms/menu'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/menuadd', {
-        templateUrl: '/sfms/menuadd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/sfms/menuinfo', {
+        templateUrl: '/sfms/menuinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
     otherwise({
@@ -81,7 +85,6 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             url: "/menu/1?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         }).
         success(function(response) {
-            console.log('h');
             $scope.menus = response.data.Menu;
             console.log($scope.menus);
         }).
@@ -126,26 +129,118 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     $scope.search=function(){
         getInit();
     }
-
-     $scope.submitusera=function(user){
-        console.log('hhhhh');
-        // $http({
-        //     method:'post',
-        //     url:"/sfms/getmenu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //     data:{
-        //         pageindex:$scope.paginationConf.currentPage,
-        //         pagesize:$scope.paginationConf.itemsPerPage,
-        //         f:$scope.f
-        //     }
-        // }).
-        // success(function(response) {
-        //     var  data=response.datas;
-        //     $scope.datas=JSON.parse(data);
-        //     $scope.paginationConf.totalItems=  response.total
-
-        // }).
-        // error(function(response) {
-        //     getList();
-        // });
+    
+//添加角色
+    $scope.roleSubmit=function(role){
+         $http({
+            method: 'POST',
+            url: "/role",
+            data: {
+                'ApplicationID':role.applicationID,
+                'RoleName':role.roleName,
+                'RoleCode':role.roleCode,
+                'IsActive':role.isActive,
+                'roleFunck':role.Funck,
+                'access_token':localStorage.getItem('jit_token'),
+                'jitkey':localStorage.getItem('jit_key')
+            }
+            
+        }).
+        success(function(response) {
+           alert(response.data.msg);
+           alert('提交成功');
+        }).
+        error(function(response) {
+            if (response && response.data && !response.isSuccess) {
+                alert(response.data.msg);
+            } else {
+                alert('提交失败!');
+            }
+        });
     }
+
+
+    //删除角色
+    $scope.del=function(RoleID){
+        var index=-1;
+        for(var i=0;i<$scope.datas.length;i++){
+            if($scope.datas[i]['RoleID']=RoleID){
+                index=i;
+                break;
+            };
+        }
+        $scope.datas.splice(index,1);
+    }
+
+
+     $scope.user={};
+     $scope.submitusera = function(user) {
+         console.log('hhh');
+         $http({
+            method:'post',
+             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                user:$scope.user
+            }
+        }).
+        success(function(response) {
+           console.log($scope.user);
+           console.log('yes');
+
+        }).
+        error(function(response) {
+           console.log($scope.user);
+           console.log('no');
+        });
+    };
+
+    $scope.menu={};
+     $scope.submitmenua = function(menu) {
+         console.log('menu');
+         $http({
+            method:'post',
+             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                menu:$scope.menu
+            }
+        }).
+        success(function(response) {
+           console.log($scope.menu);
+           console.log('yes');
+
+        }).
+        error(function(response) {
+           console.log($scope.menu);
+           console.log('no');
+        });
+    };
+
+    $scope.app={};
+     $scope.submitappa = function(app) {
+         console.log('app');
+         $http({
+            method:'post',
+             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                app:$scope.app
+            }
+        }).
+        success(function(response) {
+           console.log($scope.app);
+           console.log('yes');
+
+        }).
+        error(function(response) {
+           console.log($scope.app);
+           console.log('no');
+        });
+    };
+
+
+
+    //编辑角色
+    $scope.update=function(RoleID){
+
+    }
+
 })
