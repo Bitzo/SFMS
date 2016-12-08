@@ -421,4 +421,67 @@ router.put('/', function (req, res) {
     })
 });
 
+//删除角色
+router.delete('/', function (req, res) {
+    var roleID = req.body.roleID;
+
+    if (roleID == '' || roleID === undefined) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: "require roleID"
+        })
+    }
+
+    var data = {
+        'RoleID': roleID,
+        'IsActive': 0
+    }
+
+    roleservice.updateRole(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "服务器出错"
+            });
+        }
+        if (results!==undefined && results.affectedRows > 0) {
+            rolefuncservice.delRoleFunc(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "服务器出错"
+                    });
+                }
+                if (results !== undefined) {
+                    res.status(200);
+                    res.json({
+                        status: 200,
+                        isSuccess: true,
+                        msg: "删除成功"
+                    })
+                } else {
+                    res.status(400);
+                    res.json({
+                        status: 400,
+                        isSuccess: true,
+                        msg: "删除成.功"
+                    })
+                }
+            })
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: "删除失败"
+            });
+        }
+    })
+})
 module.exports = router;
