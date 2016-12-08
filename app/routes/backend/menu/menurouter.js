@@ -314,7 +314,7 @@ router.get('/:userID',function (req,res) {
 router.post('/',function(req,res,next) {
 
     // 检查所需要的字段是否都存在
-    var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
+    var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','IsActive'];
     var err = 'require: ';
     for (var value in data){
         if(!(data[value] in req.body)){

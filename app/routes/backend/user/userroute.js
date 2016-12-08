@@ -216,19 +216,20 @@ router.post('/',function(req,res)
 
 router.get('/', function(req, res) {
 
+    var query = JSON.parse(req.query.f);
 	console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
 	logger.writeInfo("查询用户的记录");
 	var data={},
 	 allCount,
 	 page=req.query.pageindex,//页数
-	 accountID = req.query.AccountID,
-	 applicationID=req.query.ApplicationID,
-	 account=req.query.Account,
-	 userName=req.query.UserName,
-	 classID=req.query.ClassID,
-	 createUserID=req.query.CreateUserID,
-	 editUserID=req.query.EditUserID,
-	 isActive=req.query.IsActive,
+	 accountID = query.AccountID,
+	 applicationID=query.ApplicationID,
+	 account=query.Account,
+	 userName=query.UserName,
+	 classID=query.ClassID,
+	 createUserID=query.CreateUserID,
+	 editUserID=query.EditUserID,
+	 isActive=query.IsActive,
 	 pageNum=req.query.pagesize;
 	
 	if(page==undefined||page.length==0)
@@ -276,8 +277,9 @@ router.get('/', function(req, res) {
 	}
 	data['page']=page;
 	data['pageNum']=pageNum;
-console.log(111);
+console.log(data);
 //获取所有用户的数量
+
 user.countUser(data,function(err,result){	
 	if(err)
 	{
