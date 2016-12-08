@@ -18,14 +18,15 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询角色信息
 router.get('/',function (req, res) {
-    var appID = req.query.appID,
+    var query = JSON.parse(req.query.f);
+    var appID = query.ApplicationID || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || 20,
-        roleName = req.query.RoleName,
-        isActive = req.query.IsActive;
+        roleName = query.RoleName || '',
+        isActive = query.IsActive || '';
     page = page>0?page:1;
 
-    if (pageNum === undefined) pageNum = config.pageCount;
+    if (pageNum == '') pageNum = config.pageCount;
 
     var data = {
         'ApplicationID': appID,
@@ -80,18 +81,18 @@ router.get('/',function (req, res) {
                     res.status(200);
                     return res.json(result);
                 } else {
-                    res.status(404);
+                    res.status(200);
                     return res.json({
-                                code: 404,
+                                code: 200,
                                 isSuccess: false,
                                 msg: "未查询到相关信息"
                             });
                 }
             });
         } else {
-            res.status(404);
+            res.status(200);
             return res.json({
-                        code: 404,
+                        code: 200,
                         isSuccess: false,
                         msg: "未查询到相关信息"
                     });

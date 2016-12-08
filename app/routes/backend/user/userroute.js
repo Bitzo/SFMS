@@ -257,8 +257,9 @@ router.get('/', function(req, res) {
 	}
 	data['page']=page;
 	data['pageNum']=pageNum;
-console.log(111);
+console.log(data);
 //获取所有用户的数量
+
 user.countUser(data,function(err,result){	
 	if(err)
 	{

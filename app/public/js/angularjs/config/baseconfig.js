@@ -110,10 +110,10 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             }
         }).
         success(function(response) {
-            var  data=response.data;
             $scope.datas=response.data;
             $scope.paginationConf.totalItems= response.dataNum;
             console.log($scope.f);
+            console.log(response);
 
         }).
         error(function(response) {
@@ -130,6 +130,9 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     $scope.search=function(){
         getInit();
     }
+
+
+
     
 //添加角色
     $scope.roleSubmit=function(role){
@@ -148,8 +151,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             
         }).
         success(function(response) {
-           alert(response.data.msg);
-           alert('提交成功');
+        
         }).
         error(function(response) {
             if (response && response.data && !response.isSuccess) {
@@ -159,7 +161,40 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             }
         });
     }
+   
+    //删除
+     $scope.remove = function(index){
+         console.log('delete');
+         
+         
+         $scope.f={
+             "AccountID":$scope.datas[index].AccountID,
+             "MenuID":$scope.datas[index].MenuID,
+             "IsActive":0,
+         };
+         $http({
+            method:'get',
+            url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:$scope.f
+            }
+        });
+        $scope.datas.splice(index,1);
+        console.log($scope.f);
+      }
 
+      //显示模态框数据
+     $scope.more = function(index){
+         console.log('more');
+         $scope.f={
+             "userID":$scope.datas[index].AccountID,
+         };
+         $http({
+            method:'get',
+            url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+        });
+        console.log(response);
+      }
 
     //删除角色
     $scope.del=function(RoleID){
@@ -172,6 +207,11 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         }
         $scope.datas.splice(index,1);
     }
+    //编辑角色
+    $scope.update=function(RoleID){
+
+    }
+
 
      //用户菜单应用添加
     //  $scope.added={};
@@ -201,7 +241,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
 
 
 
-  
+     //用户添加
      $scope.submitusera = function(user) {
          console.log('hhh');
          $http({
@@ -220,15 +260,20 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         success(function(response) {
            console.log($scope.user);
            console.log(response);
+           if(response.isSuccess){
+              alert(response.msg);
+           }else{
+              alert(response.errorMsg);
+           }
 
         }).
         error(function(response) {
-           console.log($scope.user);
-           console.log(response);
+           alert(response.msg);
         });
     };
 
 
+     //菜单添加
      $scope.submitmenua = function(menu) {
          console.log('menu');
          $http({
@@ -247,17 +292,18 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             }
         }).
         success(function(response) {
-           console.log($scope.menu);
-           console.log(response);
-
+           if(response.isSuccess){
+              alert(response.msg);
+           }else{
+              alert(response.errorMsg);
+           }
         }).
         error(function(response) {
-           console.log($scope.menu);
-            console.log(response);
+            alert(response.msg);
         });
     };
 
-
+       //应用添加
      $scope.submitappa = function(app) {
          console.log('app');
          $http({
@@ -274,19 +320,22 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         success(function(response) {
            console.log($scope.app);
            console.log(response);
+           if(response.isSuccess){
+              alert(response.msg);
+           }else{
+              alert(response.errorMsg);
+           }
 
         }).
         error(function(response) {
-           console.log($scope.app);
-           console.log(response);
+           alert(response.msg);
         });
     };
+    
+
+    
 
 
 
-    //编辑角色
-    $scope.update=function(RoleID){
-
-    }
-
+    
 })

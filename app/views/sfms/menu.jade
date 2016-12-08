@@ -3,9 +3,18 @@ block content
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
-          input.form-control(placeholder='名称' ng-model='f.text')
+          input.form-control(placeholder='ApplicationID'  style="width:100px;" ng-model='f.ApplicationID')
         label.form-group.my-form-group
-          input.form-control(placeholder='所属类别' ng-model='f.cla')
+          input.form-control(placeholder='MenuID' style="width:100px;" ng-model='f.MenuID')  
+        label.form-group.my-form-group
+          input.form-control(placeholder='UserName'  style="width:100px;" ng-model='f.UserName')
+        label.form-group.my-form-group
+          input.form-control(placeholder='Is Active'  style="width:100px;" ng-model='f.IsActive')
+        label.form-group.my-form-group
+          input.form-control(placeholder='CreateTime'  style="width:100px;" ng-model='f.CreateTime')
+        label.form-group.my-form-group
+          input.form-control(placeholder='CreateUserID'  style="width:100px;" ng-model='f.CreateUserID')
+
         label.form-group.my-form-group
           button.btn.btn-sm.btn-primary(ng-click='search()') 确定
         div.buttons.pull-right
@@ -14,7 +23,8 @@ block content
           button(ng-click='search()' class='btn btn-sm	 btn-default') 刷新
       table.table.table-striped.table-bordered.text-center
         thead
-          tr
+          tr 
+            th 序号
             th ApplicationID
             th MenuID
             th MenuName
@@ -24,6 +34,7 @@ block content
             th 操作
         tbody
           tr(ng-repeat="x in datas")
+            td {{$index+1}}
             td {{x.ApplicationID}}
             td {{x.MenuID}}
             td {{x.MenuName}}
@@ -33,7 +44,7 @@ block content
             td
               a(ng-href='')
                 i.icon.icon-edit 编辑
-              a(ng-href='')
+              a(ng-click='remove($index)')
                 i.icon.icon-trash 删除
       div.pull-right
         jason-pagination(conf='paginationConf')

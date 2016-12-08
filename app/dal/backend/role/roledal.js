@@ -17,7 +17,7 @@ exports.queryAllRoles = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
             sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
@@ -56,7 +56,7 @@ exports.countAllRoles = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
