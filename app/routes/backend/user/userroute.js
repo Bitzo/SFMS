@@ -18,7 +18,7 @@ var moment=require('moment');
 router.post('/',function(req,res)
 {
 	
-	var data=['ApplicationID','Account','UserName','Pwd','CollegeID','GradeYear','Phone','ClassID','Memo','CreateUserID','EditUserID','Email','Address','IsActive'];
+	var data=['ApplicationID','Account','UserName','Pwd','CreateUserID','IsActive'];
 	var err='require: ';
 
 	for(var value in data)
@@ -93,7 +93,25 @@ router.post('/',function(req,res)
 			logger.writeError(requireValue);
 			return;
 		}
+		//用来检验是否是数字
 
+		var intNum = {
+			"ApplicationID":applicationID,
+			"CreateUserID":createUserID,
+			"IsActive":isActive
+		}
+		for(var key in intNum)
+		{
+			if(isNaN(intNum[key]))
+			{
+				return res.json(
+				{
+					code:500,
+					isSuccess:false,
+					msg:key + ":" +intNum[key] + " 必须是数字"
+				});
+			}
+		}
 			//去除相同的账户名字
 			var sameAccount={'Account':account};
 			user.queryAccount(sameAccount,function(err,result)
@@ -123,7 +141,8 @@ router.post('/',function(req,res)
 				}
 
 				
-				if(email.length!=0&&email!=undefined)
+
+				if(email!=undefined&&email.length!=0)
 				{
 					data['Email']=email;
 				}
