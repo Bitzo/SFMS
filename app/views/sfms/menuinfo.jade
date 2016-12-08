@@ -4,25 +4,19 @@ block content
     span 
       h2 菜单新增
     form(method="post",name="menuinfo" )
-      table.table.table-bordered.table-hover.definedwidth.m10
-        tr
-          td(width="15%",class="tableleft") 菜单ID 下拉
-          td
-            select(id="search",value="",ng-model='',style="width:163px;height:30px",)
-              option SfmsID
-              option JinkeBroIDxc
-              option xxxID
+     table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用ID  int
           td
-            input(type="text",name="ApplicationID",ng-model='menu.ApplicationID',ng-maxlength='11')
+            input(type="text",name="ApplicationID",ng-model='menu.ApplicationID',ng-maxlength='11',required)
             &nbsp&nbsp
+            small.error(ng-show="menu.ApplicationID.$error.maxlength && menu.ApplicationID.$touched") 应用ID最多11位
             
       
         tr
-          td(width="15%",class="tableleft") 菜单对应的层级 int
+          td(width="15%",class="tableleft") 菜单对应的层级
           td
-            select(id="search",value="",ng-model='menu.MenuLevel',style="width:163px;height:30px",)
+            select(id="search",value="",ng-model='menu.MenuLevel',style="width:163px;height:30px",required)
               option 1
               option 2
               
@@ -30,42 +24,48 @@ block content
         tr
           td(width="15%",class="tableleft") 	对应的父级ID int
           td
-            input(type="text",name="ParentID",ng-model="menu.ParentID",ng-maxlength='11')
+            input(type="text",name="ParentID",ng-model="menu.ParentID",ng-maxlength='11',required)
             &nbsp&nbsp
+            small.error(ng-show="menu.ParentID.$error.maxlength && menu.ParentID.$touched") 对应的父级ID最多11位
            
            
 
         tr
           td(width="15%",class="tableleft") 对应的菜单排序顺序 int 
           td
-            input(type="text",name="SortIndex",ng-model='menu.SortIndex',ng-maxlength='11')
+            input(type="text",name="SortIndex",ng-model='menu.SortIndex',ng-maxlength='11',required)
             &nbsp&nbsp
+            small.error(ng-show="menu.SortIndex.$error.maxlength && menu.SortIndex.$touched") 对应的菜单排序顺序最多11位
           
            
         tr
-          td(width="15%",class="tableleft") 	菜单名称
+          td(width="15%",class="tableleft") 	菜单名称 String
           td
-            input(type="text",name="MenuName",ng-model='menu.MenuName',ng-maxlength='50')
+            input(type="text",name="MenuName",ng-model='menu.MenuName',ng-maxlength='50',required)
             &nbsp&nbsp
+            small.error(ng-show="menu.MenuName.$error.maxlength && menu.MenuName.$touched") 菜单名称最多50位
 
         tr
-          td(width="15%",class="tableleft") 	对应菜单的icon路径
+          td(width="15%",class="tableleft") 	对应菜单的icon路径 String
           td
-            input(type="text",name="IconPath",ng-model='menu.IconPath',ng-maxlength='100')
+            input(type="text",name="IconPath",ng-model='menu.IconPath',ng-maxlength='100',required)
             &nbsp&nbsp 
+            small.error(ng-show="menu.IconPath.$error.maxlength && menu.IconPath.$touched") 对应菜单的icon路径最多100位
             
         tr
-          td(width="15%",class="tableleft") 菜单对应的url
+          td(width="15%",class="tableleft") 菜单对应的url String
           td
-            input(type="text",name="Url",ng-model='menu.Url',ng-maxlength='50')
+            input(type="text",name="Url",ng-model='menu.Url',ng-maxlength='50',required)
             &nbsp&nbsp
+            small.error(ng-show="menu.Url.$error.maxlength && menu.Url.$touched") 菜单对应的url最多50位
            
           
         tr
-          td(width="15%",class="tableleft") 备注(可选)
+          td(width="15%",class="tableleft") 备注(可选) String
           td
             input(type="number",name="Memo",ng-model="menu.Memo",ng-maxlength='200')
             &nbsp&nbsp
+            small.error(ng-show="menu.Memo.$error.maxlength && menu.Memo.$touched") 备注最多200位
             
             
         tr

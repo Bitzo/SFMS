@@ -18,14 +18,15 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询角色信息
 router.get('/',function (req, res) {
-    var appID = req.query.appID,
+    var query = JSON.parse(req.query.f);
+    var appID = query.ApplicationID || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || 20,
-        roleName = req.query.RoleName,
-        isActive = req.query.IsActive;
+        roleName = query.RoleName || '',
+        isActive = query.IsActive || '';
     page = page>0?page:1;
 
-    if (pageNum === undefined) pageNum = config.pageCount;
+    if (pageNum == '') pageNum = config.pageCount;
 
     var data = {
         'ApplicationID': appID,
@@ -80,18 +81,18 @@ router.get('/',function (req, res) {
                     res.status(200);
                     return res.json(result);
                 } else {
-                    res.status(404);
+                    res.status(200);
                     return res.json({
-                                code: 404,
+                                code: 200,
                                 isSuccess: false,
                                 msg: "未查询到相关信息"
                             });
                 }
             });
         } else {
-            res.status(404);
+            res.status(200);
             return res.json({
-                        code: 404,
+                        code: 200,
                         isSuccess: false,
                         msg: "未查询到相关信息"
                     });
@@ -419,4 +420,67 @@ router.put('/', function (req, res) {
     })
 });
 
+//删除角色
+router.delete('/', function (req, res) {
+    var roleID = req.body.roleID;
+
+    if (roleID == '' || roleID === undefined) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: "require roleID"
+        })
+    }
+
+    var data = {
+        'RoleID': roleID,
+        'IsActive': 0
+    }
+
+    roleservice.updateRole(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "服务器出错"
+            });
+        }
+        if (results!==undefined && results.affectedRows > 0) {
+            rolefuncservice.delRoleFunc(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "服务器出错"
+                    });
+                }
+                if (results !== undefined) {
+                    res.status(200);
+                    res.json({
+                        status: 200,
+                        isSuccess: true,
+                        msg: "删除成功"
+                    })
+                } else {
+                    res.status(400);
+                    res.json({
+                        status: 400,
+                        isSuccess: true,
+                        msg: "删除成.功"
+                    })
+                }
+            })
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: "删除失败"
+            });
+        }
+    })
+})
 module.exports = router;
