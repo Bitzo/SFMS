@@ -95,6 +95,7 @@ wechat.textMsg(function(msg) {
             }
     }
     wechat.sendMsg(resMsg);
+    //测试创建菜单
     wechat.getAccessToken(1,function(result){
            console.log(result);
        var access_token = result.access_token;
