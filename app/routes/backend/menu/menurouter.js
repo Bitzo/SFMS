@@ -314,7 +314,7 @@ router.get('/:userID',function (req,res) {
 router.post('/',function(req,res,next) {
 
     // 检查所需要的字段是否都存在
-    var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','IsActive'];
+    var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
     var err = 'require: ';
     for (var value in data){
         if(!(data[value] in req.body)){
@@ -581,9 +581,11 @@ router.delete('/',function(req,res) {
         "MenuID" : menuID,
         "IsActive" : 0
     };
-
+    var deleteData = {
+        "MenuID" : menuID
+    };
     //查询要删除的菜单是否存在
-    menuService.countAllMenus(data,function (err,result) {
+    menuService.countAllMenus(deleteData,function (err,result) {
         if(err){
             return res.json({
                 code : 500,
