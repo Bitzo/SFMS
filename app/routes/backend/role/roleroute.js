@@ -18,15 +18,16 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询角色信息
 router.get('/',function (req, res) {
+    var query = JSON.parse(req.query.f);
     console.log(req.query);
-    var appID = req.query.appID,
+    var appID = query.ApplicationID || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || 20,
-        roleName = req.query.RoleName,
-        isActive = req.query.IsActive;
+        roleName = query.RoleName || '',
+        isActive = query.IsActive || '';
     page = page>0?page:1;
 
-    if (pageNum === undefined) pageNum = config.pageCount;
+    if (pageNum == '') pageNum = config.pageCount;
 
     var data = {
         'ApplicationID': appID,
