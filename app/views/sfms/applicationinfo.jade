@@ -15,20 +15,20 @@ block content
         tr
           td(width="15%",class="tableleft") ID
           td
-            input(type="text",name="ID",ng-model='app.ID',ng-minlength="7",ng-maxlength='7')
+            input(type="text",name="ID",ng-model='app.ID')
             &nbsp&nbsp
             
         tr
           td(width="15%",class="tableleft") 应用CODE
           td
-            input(type="text",name="ApplicationCode",ng-model='app.ApplicationCode')
+            input(type="text",name="ApplicationCode",ng-model='app.ApplicationCode',ng-maxlength='12')
             &nbsp&nbsp
             
            
         tr
           td(width="15%",class="tableleft") 	应用名称
           td
-            input(type="text",name="ApplicationName",ng-model="app.ApplicationName",ng-minlength="6",ng-maxlength='12')
+            input(type="text",name="ApplicationName",ng-model="app.ApplicationName",ng-maxlength='12')
             &nbsp&nbsp
            
            
@@ -36,7 +36,7 @@ block content
         tr
           td(width="15%",class="tableleft") 	备注（可选）
           td
-            input(type="text",name="Memo",ng-model='app.Memo',ng-minlength="6",ng-maxlength='12')
+            input(type="text",name="Memo",ng-model='app.Memo',ng-maxlength='12')
             &nbsp&nbsp
           
             
@@ -52,10 +52,10 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-primary(type="submit",ng-click="submitappa(app)") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="submitappa(app)") 添加
  
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-success(href='#sfms/app') 返回列表
+            a.btn.btn-sm.btn-success(href='#sfms/app') 返回列表
 
 
 

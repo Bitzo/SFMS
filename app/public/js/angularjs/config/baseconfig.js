@@ -113,10 +113,11 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             var  data=response.data;
             $scope.datas=response.data;
             $scope.paginationConf.totalItems= response.dataNum;
+            console.log($scope.f);
 
         }).
         error(function(response) {
-
+            console.log($scope.f);
         });
     }
 
@@ -172,67 +173,112 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         $scope.datas.splice(index,1);
     }
 
+     //用户菜单应用添加
+    //  $scope.added={};
+    //  $scope.addnew = function(added) {
+    //      console.log('hhh');
+    //       console.log($scope.paginationConf.action);
+    //      $http({
+    //         method:'post',
+    //         url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //         data:{
+    //             added:$scope.added
+    //         }
+    //     }).
+    //     success(function(response) {
+     
+    //        console.log($scope.added);
+    //        console.log('yes');
 
-     $scope.user={};
+    //     }).
+    //     error(function(response) {
+    //        console.log($scope.added);
+    //        console.log('no');
+    //     });
+    // };
+
+
+
+
+
+  
      $scope.submitusera = function(user) {
          console.log('hhh');
          $http({
             method:'post',
-             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url:"/backuser?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:{
-                user:$scope.user
+                'ApplicationID':user.ApplicationID,
+                'Account':user.Account,
+                'UserName':user.UserName,
+                'Pwd':user.Pwd,
+                'CreateTime':user.CreateTime,
+                'CreateUserID':user.CreateUserID,
+                'IsActive':user.IsActive,
             }
         }).
         success(function(response) {
            console.log($scope.user);
-           console.log('yes');
+           console.log(response);
 
         }).
         error(function(response) {
            console.log($scope.user);
-           console.log('no');
+           console.log(response);
         });
     };
 
-    $scope.menu={};
+
      $scope.submitmenua = function(menu) {
          console.log('menu');
          $http({
             method:'post',
-             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url:"/menu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:{
-                menu:$scope.menu
+                'ApplicationID':menu.ApplicationID,
+                'MenuLevel':menu.MenuLevel,
+                'ParentID':menu.ParentID,
+                'SortIndex':menu.SortIndex,
+                'MenuName':menu.MenuName,
+                'IconPath':menu.IconPath,
+                'Url':menu.Url,
+                'Memo':menu.Memo,                
+                'IsActive':menu.IsActive,
             }
         }).
         success(function(response) {
            console.log($scope.menu);
-           console.log('yes');
+           console.log(response);
 
         }).
         error(function(response) {
            console.log($scope.menu);
-           console.log('no');
+            console.log(response);
         });
     };
 
-    $scope.app={};
+
      $scope.submitappa = function(app) {
          console.log('app');
          $http({
             method:'post',
-             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url:"/app?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:{
-                app:$scope.app
+                'ID':app.ID,
+                'ApplicationCode':app.ApplicationCode,
+                'ApplicationName':app.ApplicationName,
+                'Memo':app.Memo,               
+                'IsActive':app.IsActive,
             }
         }).
         success(function(response) {
            console.log($scope.app);
-           console.log('yes');
+           console.log(response);
 
         }).
         error(function(response) {
            console.log($scope.app);
-           console.log('no');
+           console.log(response);
         });
     };
 

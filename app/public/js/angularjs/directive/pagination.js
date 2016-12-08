@@ -8,8 +8,9 @@
 angular.module('jason.pagination').directive('jasonPagination',[function(){
     return {
         restrict: 'EA',
-        template: '<div class="page-list">' +
-        '<ul class="pagination" ng-show="conf.totalItems > 0">' +
+        template: '<div class="page-list" style="min-width:500px;letter-spacing: 1px;">' +
+
+        '<ul class="pagination pull-left" style="line-height:60px;background-color:#ccc;margin-right:30px;" ng-show="conf.totalItems > 0">' +
         '<li ng-class="{disabled: conf.currentPage == 1}" ng-click="prevPage()"><span>&laquo;</span></li>' +
         '<li ng-repeat="item in pageList track by $index" ng-class="{active: item == conf.currentPage, separate: item == \'...\'}" ' +
         'ng-click="changeCurrentPage(item)">' +
@@ -17,7 +18,9 @@ angular.module('jason.pagination').directive('jasonPagination',[function(){
         '</li>' +
         '<li ng-class="{disabled: conf.currentPage == conf.numberOfPages}" ng-click="nextPage()"><span>&raquo;</span></li>' +
         '</ul>' +
-        '<div class="page-total" ng-show="conf.totalItems > 0">' +
+        
+        '<div class="page-total pull-right"  style="line-height:70px;" ng-show="conf.totalItems > 0">' +
+
         '第<input type="text" ng-model="jumpPageNum"  ng-keyup="jumpToPage($event)"/>页 ' +
         '每页<select ng-model="conf.itemsPerPage" ng-options="option for option in conf.perPageOptions " ng-change="changeItemsPerPage()"></select>' +
         '/共<strong>{{ conf.totalItems }}</strong>条' +

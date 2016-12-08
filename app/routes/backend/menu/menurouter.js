@@ -17,7 +17,11 @@ var menuService = appRequire('service/backend/menu/menuservice'),
 
 router.get('/tree',function (req,res) {
     var page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize;
+        pageNum = req.query.pagesize,
+        applicationID = req.query.ApplicationID,
+        menuID = req.query.MenuID,
+        parentID = req.query.ParentID,
+        menuLevel = req.query.MenuLevel;
 
     page = page>0 ? page : 1;
 
@@ -29,8 +33,12 @@ router.get('/tree',function (req,res) {
     var countNum = 0;
 
     var data = {
-        'page': page,
-        'pageNum': pageNum
+        page : page,
+        pageNum : pageNum,
+        ApplicationID : applicationID,
+        MenuID : menuID,
+        ParentID : parentID,
+        MenuLevel : menuLevel
     };
 
     menuService.countAllMenus(data, function (err, results) {
@@ -97,7 +105,11 @@ router.get('/tree',function (req,res) {
 router.get('/plain',function (req,res) {
 
     var page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize;
+        pageNum = req.query.pagesize,
+        applicationID = req.query.ApplicationID,
+        menuID = req.query.MenuID,
+        parentID = req.query.ParentID,
+        menuLevel = req.query.MenuLevel;
 
 
     page = page>0 ? page : 1;
@@ -110,9 +122,14 @@ router.get('/plain',function (req,res) {
     var countNum = 0;
 
     var data = {
-        'page': page,
-        'pageNum': pageNum
+        page : page,
+        pageNum : pageNum,
+        ApplicationID : applicationID,
+        MenuID : menuID,
+        ParentID : parentID,
+        MenuLevel : menuLevel
     };
+
 
     menuService.countAllMenus(data, function (err, results) {
         if (err) {
