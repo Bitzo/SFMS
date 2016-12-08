@@ -314,7 +314,7 @@ router.get('/:userID',function (req,res) {
 router.post('/',function(req,res,next) {
 
     // 检查所需要的字段是否都存在
-    var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','IsActive'];
+    var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
     var err = 'require: ';
     for (var value in data){
         if(!(data[value] in req.body)){
@@ -558,7 +558,8 @@ router.put('/',function (req,res) {
 
 });
 
-router.delete('/',function(req,res,next) {
+//逻辑删除
+router.delete('/',function(req,res) {
     //MenuID是主键，只需要此属性就可准确删除，不必传入其他参数
     var menuID = req.body.MenuID;
 
@@ -577,11 +578,14 @@ router.delete('/',function(req,res,next) {
         });
     }
     var data = {
+        "MenuID" : menuID,
+        "IsActive" : 0
+    };
+    var deleteData = {
         "MenuID" : menuID
     };
-
     //查询要删除的菜单是否存在
-    menuService.queryAllMenus(data,function (err,result) {
+    menuService.countAllMenus(deleteData,function (err,result) {
         if(err){
             return res.json({
                 code : 500,
@@ -592,7 +596,7 @@ router.delete('/',function(req,res,next) {
         }
         //所要删除的菜单存在，执行删除操作
         if(result !== undefined && result.length !== 0){
-            menuService.menuDelete(data,function (err,results) {
+            menuService.menuUpdate(data,function (err,results) {
                 if(err){
                     return res.json({
                         code :500,
