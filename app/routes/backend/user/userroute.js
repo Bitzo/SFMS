@@ -215,8 +215,9 @@ router.post('/',function(req,res)
 
 
 router.get('/', function(req, res) {
-
+    console.log(1234);
     var query = JSON.parse(req.query.f);
+	console.log(1233);
 	console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
 	logger.writeInfo("查询用户的记录");
 	var data={},
