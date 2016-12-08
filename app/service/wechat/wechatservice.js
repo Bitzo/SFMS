@@ -70,7 +70,7 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         res.on("end", function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-
+            //console.log(result);
             var logModel = {
                 ApplicationID: 1,
                 ApplicationName: '金科小哥',
@@ -104,6 +104,69 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         logger.writeErr('获取微信token时异常' + new Date());
     });
 }
+
+//微信创建菜单的方法
+Weixin.prototype.createMenu=function(accessToken,callback)
+{
+    //微信的创建菜单的url
+
+    //var postUrl = config.weChat.baseUrl + "menu/create?accessToken=" + accessToken;
+    var postUrl="/cgi-bin/menu/create?accessToken=" + accessToken;
+
+ console.log(postUrl);
+    内容请求
+    var body = {
+        "button":[
+        {
+            "type": "view",
+            "name": "我要下单",
+            "url":"http://www.baidu.com"
+        },
+        {
+            "name": "我",
+            "sub_button":[
+            {
+                "type":"view",
+                "name":"搜索",
+                "url":"http://www.soso.com"
+            }]
+        }]
+    }
+    var bodyString = JSON.stringify(body);
+    //头文件
+    var headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': bodyString.length
+    };
+
+    var options = {
+        host:'api.weixin.qq.com',
+        port:80,
+        path: postUrl,
+        method: 'POST',
+        headers: headers
+
+    }
+    var req=https.request(options,function(res)
+    {
+       res.setEncoding('utf-8');
+       var responseString =''
+       res.on('data',function(data)
+       {
+          console.log(data);
+       });
+
+    }).on('error',function(e)
+    {
+       // logger.writeErr('微信创建菜单失败');
+        console.log("微信创建菜单失败");
+    });
+
+    req.write(bodyString);
+    req.end();
+
+}
+
 
 // ------------------ 监听 ------------------------
 // 监听文本消息
