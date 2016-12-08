@@ -14,7 +14,7 @@ var express = require('express'),
 
 
 router.post('/', function (req, res) {
-    var data = ['ID', 'ApplicationCode', 'ApplicationName', 'Memo', 'IsActive'];
+    var data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
     var err = 'required: ';
 
     for(var index in data) {
@@ -77,9 +77,9 @@ router.post('/', function (req, res) {
     }
 
     var data = {
-        'ApplicationName': ApplicationName
+        'ApplicationName': ApplicationName,
+        'pageNum': config.pageCount
     };
-
     //检查是否有该应用
     userSpring.queryAllApp(data, function (err, results) {
         if (err) {
@@ -211,7 +211,7 @@ router.get('/', function (req, res) {
 });
 
 router.put('/:app_id', function(req, res) {
-    var data = ['ID', 'ApplicationCode', 'ApplicationName', 'Memo', 'IsActive'];
+    var data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
     var err = 'required: ';
 
     for (var index in data) {
@@ -234,7 +234,8 @@ router.put('/:app_id', function(req, res) {
 
 
     var data = {
-        'ID': ID
+        'ID': ID,
+        'pageNum': config.pageCount
     }
 
     userSpring.queryAllApp(data, function (err, results) {
@@ -276,36 +277,61 @@ router.put('/:app_id', function(req, res) {
                 var IsActive = results[0].IsActive;
             }
             data = {
-                'ID': ID,
-                'ApplicationCode': ApplicationCode,
                 'ApplicationName': ApplicationName,
-                'Memo': Memo,
-                'IsActive': IsActive
+                'pageNum' : config.pageCount
             }
-            userSpring.update(data, function (err, results) {
+            userSpring.queryAllApp(data, function (err, results) {
                 if (err) {
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '更新失败,服务器失败'
+                        msg: '查询失败，服务器出错'
                     });
                     logger.writeError('编辑应用,出错信息: ' + err);
                     return;
                 }
-                res.json({
-                    code:200,
-                    isSuccess: true,
-                    data: {
-                        ID: data.ID,
-                        ApplicationCode: data.ApplicationCode,
-                        ApplicationName: data.ApplicationName,
-                        Memo: data.Memo,
-                        IsActive: data.IsActive
-                    },
-                    msg: '更新成功'
-                });
-                console.log(results);
-            })
+                if (results === undefined || results.length == 0) {
+                    data = {
+                        'ID': ID,
+                        'ApplicationCode': ApplicationCode,
+                        'ApplicationName': ApplicationName,
+                        'Memo': Memo,
+                        'IsActive': IsActive
+                    }
+                    userSpring.update(data, function (err, results) {
+                        if (err) {
+                            res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: '更新失败,服务器失败'
+                            });
+                            logger.writeError('编辑应用,出错信息: ' + err);
+                            return;
+                        }
+                        res.json({
+                            code:200,
+                            isSuccess: true,
+                            data: {
+                                ID: data.ID,
+                                ApplicationCode: data.ApplicationCode,
+                                ApplicationName: data.ApplicationName,
+                                Memo: data.Memo,
+                                IsActive: data.IsActive
+                            },
+                            msg: '更新成功'
+                        });
+                        console.log(results);
+                    });
+                } else {
+                    res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: '应用名已经存在'
+                    });
+                    logger.writeError('编辑应用,出错信息: 编辑应用名已经存在');
+                    return;
+                }
+            });
         } else {
             res.json({
                 code: 404,
