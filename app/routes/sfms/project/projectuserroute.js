@@ -222,9 +222,9 @@ router.get('/', function (req, res) {
                 }
             })
         } else {
-            res.status(404);
+            res.status(200);
             return res.json({
-                status: 404,
+                status: 200,
                 isSuccess: false,
                 msg: '无数据'
             })
