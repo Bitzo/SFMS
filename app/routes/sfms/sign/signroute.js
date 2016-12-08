@@ -81,9 +81,9 @@ router.get('/', function (req, res) {
                 }
             })
         } else {
-            res.status(404);
+            res.status(200);
             return res.json({
-                status: 404,
+                status: 200,
                 isSuccess: false,
                 msg: '无数据'
             })
@@ -149,10 +149,10 @@ router.get('/count', function (req, res) {
             //获取完所有用户ID，对数据遍历，算出用户的签到总时长
             for(var i in userInfo) {
                 //取得签到时常总秒数，换算成小时
-                var second = userInfo[i].outTime - userInfo[i].inTime;
-                var h = Math.floor(second/3600);
-                var m = Math.floor((second - h*3600)/60);
-                var s = (second - h*3600 - m*60);
+                var second = userInfo[i].outTime - userInfo[i].inTime,
+                    h = Math.floor(second/3600),
+                    m = Math.floor((second - h*3600)/60),
+                    s = (second - h*3600 - m*60);
                 userInfo[i].signTime = h+':'+m+':'+s ;
                 delete userInfo[i].inTime;
                 delete userInfo[i].outTime;
@@ -163,9 +163,9 @@ router.get('/count', function (req, res) {
                 results: userInfo
             })
         } else {
-            res.status(404);
+            res.status(200);
             return res.json({
-                status: 404,
+                status: 200,
                 isSuccess: false,
                 msg: '无数据'
             })

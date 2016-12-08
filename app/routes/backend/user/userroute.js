@@ -93,7 +93,25 @@ router.post('/',function(req,res)
 			logger.writeError(requireValue);
 			return;
 		}
+		//用来检验是否是数字
 
+		var intNum = {
+			"ApplicationID":applicationID,
+			"CreateUserID":createUserID,
+			"IsActive":isActive
+		}
+		for(var key in intNum)
+		{
+			if(isNaN(intNum[key]))
+			{
+				return res.json(
+				{
+					code:500,
+					isSuccess:false,
+					msg:key + ":" +intNum[key] + " 必须是数字"
+				});
+			}
+		}
 			//去除相同的账户名字
 			var sameAccount={'Account':account};
 			user.queryAccount(sameAccount,function(err,result)
@@ -123,7 +141,8 @@ router.post('/',function(req,res)
 				}
 
 				
-				if(email!=undefined && email.length!=0)
+
+				if(email!=undefined&&email.length!=0)
 				{
 					data['Email']=email;
 				}
@@ -197,19 +216,20 @@ router.post('/',function(req,res)
 
 router.get('/', function(req, res) {
 
+    var query = JSON.parse(req.query.f);
 	console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
 	logger.writeInfo("查询用户的记录");
 	var data={},
 	 allCount,
 	 page=req.query.pageindex,//页数
-	 accountID = req.query.AccountID,
-	 applicationID=req.query.ApplicationID,
-	 account=req.query.Account,
-	 userName=req.query.UserName,
-	 classID=req.query.ClassID,
-	 createUserID=req.query.CreateUserID,
-	 editUserID=req.query.EditUserID,
-	 isActive=req.query.IsActive,
+	 accountID = query.AccountID,
+	 applicationID=query.ApplicationID,
+	 account=query.Account,
+	 userName=query.UserName,
+	 classID=query.ClassID,
+	 createUserID=query.CreateUserID,
+	 editUserID=query.EditUserID,
+	 isActive=query.IsActive,
 	 pageNum=req.query.pagesize;
 	
 	if(page==undefined||page.length==0)

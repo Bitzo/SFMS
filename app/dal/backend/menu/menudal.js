@@ -15,7 +15,7 @@ exports.queryAllMenus = function(data, callback) {
     var sql = 'select ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName,IconPath,Url,Memo,IsActive from jit_menu where 1=1';
     if(data !== undefined){
         for(var key in data){
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined){
+            if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
                 //判断data[key]是否是数值类型
                 if(!isNaN(data[key])){
                     sql += ' and ' + key + ' = '+ data[key] + ' ';
@@ -58,7 +58,7 @@ exports.countAllMenus = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
