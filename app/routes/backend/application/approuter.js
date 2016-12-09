@@ -136,9 +136,21 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-    var page = req.query.pageindex || 1;
-    var pageNum = req.query.pagesize;
+    var page = req.query.pageindex || 1,
+        pageNum = req.query.pagesize,
+        ID,
+        ApplicationName,
+        ApplicationCode;
 
+    if (req.query.ID !== undefined) {
+        ID = req.query.ID;
+    }
+    if (req.query.ApplicationName) {
+        ApplicationName = req.query.ApplicationName;
+    }
+    if (req.query.ApplicationCode) {
+        ApplicationName = req.query.ApplicationCode;
+    }
     if (pageNum === undefined) {
         pageNum = config.pageCount;
     }
@@ -167,8 +179,18 @@ router.get('/', function (req, res) {
         }
         data = {
             'page': page,
-            'pageNum': pageNum
+            'pageNum': pageNum,
+            'IsActive': 1
         };
+        if (ID !== undefined) {
+            data.ID = ID;
+        }
+        if (ApplicationName !== undefined) {
+            data.ApplicationName = ApplicationName;
+        }
+        if (ApplicationCode !== undefined) {
+            data.ApplicationCode = ApplicationCode;
+        }
         userSpring.queryAllApp(data, function (err, results) {
             if (err) {
                 res.json({
@@ -210,6 +232,7 @@ router.get('/', function (req, res) {
 
 });
 
+//编辑应用
 router.put('/:app_id', function(req, res) {
     var data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
     var err = 'required: ';
@@ -231,8 +254,6 @@ router.put('/:app_id', function(req, res) {
     }
 
     var ID = req.params.app_id;
-
-
     var data = {
         'ID': ID,
         'pageNum': config.pageCount
@@ -343,6 +364,68 @@ router.put('/:app_id', function(req, res) {
         }
     });
 
+});
+
+//删除应用
+router.delete('/', function (req, res) {
+    var ID = req.body.ID;
+    var data = {
+        'ID': ID,
+        'pageNum': config.pageCount
+    }
+
+    userSpring.queryAllApp(data, function (err, results) {
+        if (err) {
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+            logger.writeError('删除应用,出错信息: ' + err);
+            return;
+        }
+        if (results !== undefined && results.length != 0) {
+            data = {
+                'ID': results[0].ID,
+                'ApplicationCode': results[0].ApplicationCode,
+                'ApplicationName': results[0].ApplicationName,
+                'Memo': results[0].Memo,
+                'IsActive': 0
+            }
+            userSpring.update(data, function (err, results) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '更新失败,服务器失败'
+                    });
+                    logger.writeError('删除应用,出错信息: ' + err);
+                    return;
+                }
+                res.json({
+                    code: 200,
+                    isSuccess: true,
+                    data: {
+                        ID: data.ID,
+                        ApplicationCode: data.ApplicationCode,
+                        ApplicationName: data.ApplicationName,
+                        Memo: data.Memo,
+                        IsActive: data.IsActive
+                    },
+                    msg: '删除成功'
+                });
+            });
+
+        } else {
+            res.json({
+                code: 404,
+                isSuccess: false,
+                msg: '应用不存在'
+            });
+            logger.writeError('删除应用,出错信息: 删除应用不存在');
+            return;
+        }
+    });
 });
 
 module.exports = router;

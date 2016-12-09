@@ -3,28 +3,26 @@ block content
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
-          input.form-control(placeholder='ApplicationID'  style="width:100px;" ng-model='f.ApplicationID')
+          input.form-control(placeholder='应用ID'  style="width:100px;" ng-model='f.ApplicationID')
         label.form-group.my-form-group
-          input.form-control(placeholder='MenuID' style="width:100px;" ng-model='f.MenuID')  
+          input.form-control(placeholder='菜单ID' style="width:100px;" ng-model='f.MenuID')  
         label.form-group.my-form-group
-          input.form-control(placeholder='MenuName'  style="width:100px;" ng-model='f.MenuName')
+          input.form-control(placeholder='菜单名称'  style="width:100px;" ng-model='f.MenuName')
   
         label.form-group.my-form-group
-          button.btn.btn-sm.btn-primary(ng-click='search()') 确定
+          button.btn.btn-sm.btn-primary(ng-click='search()') 查询
         div.buttons.pull-right
-          a.btn.btn-sm.btn-success(ng-href='#/sfms/menuinfo')
+          a.btn.btn-sm.btn-success(ng-href='#/backend/menuinfo')
             i.icon.icon-plus 新建
           button(ng-click='search()' class='btn btn-sm	 btn-default') 刷新
+      hr
       table.table.table-striped.table-bordered.text-center
         thead
           tr 
             th 序号
-            th ApplicationID
-            th MenuID
-            th MenuName
-            th Url
-            th Memo
-            th IsActive
+            th 应用ID
+            th 菜单ID
+            th 菜单名称
             th 操作
         tbody
           tr(ng-repeat="x in datas")
@@ -32,11 +30,8 @@ block content
             td {{x.ApplicationID}}
             td {{x.MenuID}}
             td {{x.MenuName}}
-            td {{x.Url}}
-            td {{x.Memo}}
-            td {{x.IsActive}}
             td
-              a(ng-href='')
+              a(ng-click="show(x.MenuID)",href='#/backend/menuedit/' )
                 i.icon.icon-edit 编辑
               a(ng-click='remove($index)')
                 i.icon.icon-trash 删除
