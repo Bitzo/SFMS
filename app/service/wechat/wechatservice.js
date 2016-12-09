@@ -110,11 +110,10 @@ Weixin.prototype.createMenu=function(accessToken,callback)
 {
     //微信的创建菜单的url
 
-    //var postUrl = config.weChat.baseUrl + "menu/create?accessToken=" + accessToken;
-    var postUrl="/cgi-bin/menu/create?accessToken=" + accessToken;
-
+    var postUrl = config.weChat.baseUrl + "menu/create?accessToken=" + accessToken;
+    
  console.log(postUrl);
-    内容请求
+   // 内容请求
     var body = {
         "button":[
         {
@@ -133,6 +132,7 @@ Weixin.prototype.createMenu=function(accessToken,callback)
         }]
     }
     var bodyString = JSON.stringify(body);
+    console.log(bodyString);
     //头文件
     var headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
