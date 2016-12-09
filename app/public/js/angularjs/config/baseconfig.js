@@ -71,7 +71,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     function getList() {
         $http({
             method: 'get',
-            url: "/menu/1?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            url: "/menu?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         }).success(function (response) {
             $scope.menus = response.data.Menu;
         }).error(function (response) {
