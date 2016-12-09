@@ -3,49 +3,92 @@
  */
 var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(function($routeProvider) {
     $routeProvider.
-    when('/sfms/index', {
-        templateUrl: '/sfms/index'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/index', {
+        templateUrl: '/index'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
             // controller: 'HomeController'
     }).
-    when('/sfms/user', {
-        templateUrl: '/sfms/user'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/user', {
+        templateUrl: '/user'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/userinfo', {
-        templateUrl: '/sfms/userinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/userinfo', {
+        templateUrl: '/userinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/role', {
-        templateUrl: '/sfms/role'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/role', {
+        templateUrl: '/role'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/roleAdd', {
-        templateUrl: '/sfms/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/roleAdd', {
+        templateUrl: '/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-     when('/sfms/roleEdit', {
-        templateUrl: '/sfms/roleEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+     when('/backend/roleEdit', {
+        templateUrl: '/roleEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/application', {
-        templateUrl: '/sfms/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/application', {
+        templateUrl: '/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/applicationinfo', {
-        templateUrl: '/sfms/applicationinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/applicationinfo', {
+        templateUrl: '/applicationinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/menu', {
-        templateUrl: '/sfms/menu'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/menu', {
+        templateUrl: '/menu'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
-    when('/sfms/menuinfo', {
-        templateUrl: '/sfms/menuinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+    when('/backend/menuinfo', {
+        templateUrl: '/menuinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
     otherwise({
         redirectTo: '/'
     });
+
+
+// when('/sfms/index', {
+//         templateUrl: '/sfms/index'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//             // controller: 'HomeController'
+//     }).
+//     when('/sfms/user', {
+//         templateUrl: '/sfms/user'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+//     when('/sfms/userinfo', {
+//         templateUrl: '/sfms/userinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+//     when('/sfms/role', {
+//         templateUrl: '/sfms/role'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+//     when('/sfms/roleAdd', {
+//         templateUrl: '/sfms/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+//      when('/sfms/roleEdit', {
+//         templateUrl: '/sfms/roleEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+//     when('/sfms/application', {
+//         templateUrl: '/sfms/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+//     when('/sfms/applicationinfo', {
+//         templateUrl: '/sfms/applicationinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+//     when('/sfms/menu', {
+//         templateUrl: '/sfms/menu'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+//     when('/sfms/menuinfo', {
+//         templateUrl: '/sfms/menuinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         //controller: 'HomeController'
+//     }).
+
 
 
 }).run(['$rootScope', '$window', '$location', '$log', function($rootScope, $window, $location, $log) {
@@ -170,6 +213,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
          $scope.f={
              "AccountID":$scope.datas[index].AccountID,
              "MenuID":$scope.datas[index].MenuID,
+             "ID":$scope.datas[index].ID,             
              "IsActive":0,
          };
          $http({
@@ -321,6 +365,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
            console.log($scope.app);
            console.log(response);
            if(response.isSuccess){
+              console.log(app);
               alert(response.msg);
            }else{
               alert(response.errorMsg);

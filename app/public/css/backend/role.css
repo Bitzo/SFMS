@@ -14,7 +14,8 @@
 }
 
 .tableleft{
-	text-align:center;
+	text-align:left;
+    letter-spacing: 1px;
 	padding-left:5px;
 	background-color:#f5f5f5;
 }

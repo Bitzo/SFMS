@@ -6,32 +6,25 @@ block content
     form(method="post",name="appinfo" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") ID int
+          td(width="15%",class="tableleft") 应用号 
           td
-            input(type="text",name="ID",ng-model='app.ID',ng-maxlength='11')
-            &nbsp&nbsp
-            small.error(ng-show="app.ID.$error.maxlength && app.ID.$touched") ID最多11位
-
-        tr
-          td(width="15%",class="tableleft") 应用CODE varchar
-          td
-            input(type="text",name="ApplicationCode",ng-model='app.ApplicationCode',ng-maxlength='50')
+            input(type="textview",name="ApplicationCode",ng-model='app.ApplicationCode',ng-maxlength='50')
             &nbsp&nbsp
             small.error(ng-show="app.ApplicationCode.$error.maxlength && app.ApplicationCode.$touched") 应用CODE最多50位
 
            
         tr
-          td(width="15%",class="tableleft") 	应用名称 varchar
+          td(width="15%",class="tableleft") 	应用名称 
           td
-            input(type="text",name="ApplicationName",ng-model="app.ApplicationName",ng-maxlength='50')
+            input(type="textview",name="ApplicationName",ng-model="app.ApplicationName",ng-maxlength='50')
             &nbsp&nbsp
             small.error(ng-show="app.ApplicationName.$error.maxlength && app.ApplicationName.$touched") 应用名称最多50位
            
 
         tr
-          td(width="15%",class="tableleft") 	备注（可选） varchar
+          td(width="15%",class="tableleft") 	备注（可选） 
           td
-            input(type="text",name="Memo",ng-model='app.Memo',ng-maxlength='200')
+            input(type="textview",name="Memo",ng-model='app.Memo',ng-maxlength='200')
             &nbsp&nbsp
             small.error(ng-show="app.Memo.$error.maxlength && app.Memo.$touched") 备注最多200位
 

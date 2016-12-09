@@ -1,0 +1,104 @@
+link(rel='stylesheet' href="css/backend/role.css")
+block content
+  div.container-fluid(ng-controller="baseController")
+    span 
+      h2 用户新增
+    form(method="post",name="userInfo" )
+      table.table.table-bordered.table-hover.definedwidth.m10
+        tr
+          td(width="15%",class="tableleft") 应用ID 
+          td
+            select(id="search",value="",ng-model='user.ApplicationID',style="width:153px;height:30px",required)
+              option 1
+              option 2
+            
+        tr
+          td(width="15%",class="tableleft") 用户姓名 
+          td
+            input(type="textview",name="UserName",ng-model='user.UserName',ng-maxlength='11')
+            &nbsp&nbsp
+            small.error(ng-show="user.UserName.$error.maxlength && user.UserName.$touched") 用户姓名最多11位
+           
+        tr
+          td(width="15%",class="tableleft") 密码 
+          td
+            input(type="textview",name="Pwd",ng-model="user.Pwd",ng-maxlength='50')
+            &nbsp&nbsp
+            small.error(ng-show="user.Pwd.$error.maxlength && user.Pwd.$touched") 密码最多50位
+           
+        tr
+          td(width="15%",class="tableleft") 账户名 
+          td
+            input(type="textview",name="Account",ng-model="user.Account",ng-maxlength='50')
+            &nbsp&nbsp
+            small.error(ng-show="user.Account.$error.maxlength && user.Account.$touched") 账户最多50位
+
+        //- tr
+        //-   td(width="15%",class="tableleft") 创建者ID num
+        //-   td
+        //-     input(type="textview",name="CreateUserID",ng-model='user.CreateUserID',ng-maxlength='11')
+        //-     &nbsp&nbsp
+        //-     small.error(ng-show="user.CreateUserID.$error.maxlength && user.CreateUserID.$touched") 创建者ID最多11位
+              
+        tr
+          td(width="15%",class="tableleft") 班级 (可选)  
+          td
+            select(id="search",value="",ng-model='user.ClassID',style="width:153px;height:30px",required)
+              option 3
+              option 4
+        tr
+          td(width="15%",class="tableleft") 电话号码 (可选) 
+          td
+            input(type="number",name="Phone",ng-model="user.Phone",ng-maxlength='11',style="width:153px;height:30px")
+            &nbsp&nbsp
+            small.error(ng-show="user.Phone.$error.maxlength && user.Phone.$touched") 电话号码11位
+            
+        tr
+          td(width="15%",class="tableleft") 地址 (可选) 
+          td
+            input(type="textview",name="Address",ng-model="user.Address",ng-maxlength='200')
+            &nbsp&nbsp
+            small.error(ng-show="user.Address.$error.maxlength && user.Address.$touched") 填写地址
+           
+        tr
+          td(width="15%",class="tableleft") 大学ID (可选) 
+          td
+            select(id="search",value="",ng-model='user.CollegeID',style="width:153px;height:30px",required)
+              option f
+              option g
+
+        tr
+          td(width="15%",class="tableleft") 备注 (可选)  
+          td
+            input(type="textview",name="Memo",ng-model='user.Memo',ng-maxlength='200')
+            &nbsp&nbsp
+            small.error(ng-show="user.Memo.$error.maxlength && user.Memo.$touched") 填写备注
+            
+        tr
+          td(width="15%",class="tableleft") 邮箱 (可选)
+          td
+            input(type="email",name="roleCode",ng-model='user.Email',ng-maxlength='50')
+            &nbsp&nbsp
+            small.error(ng-show="user.Email.$error.maxlength && user.Email.$touched") 请填写正确的邮箱地址
+           
+        tr
+          td(class="tableleft") 是否有效
+          td
+            input(type="radio",name="isActive",value="1",ng-model="user.IsActive",checked)
+            有效
+            &nbsp&nbsp            
+            input(type="radio",name="isActive",ng-model="user.IsActive",value="0")
+            无效
+
+        tr
+          td(class="tableleft")
+          td
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="submitusera(user)") 添加
+ 
+            &nbsp&nbsp&nbsp&nbsp
+            a.btn.btn-sm.btn-success(href='#sfms/user') 返回列表
+
+
+
+ include ../shared/footer.jade  
+      
