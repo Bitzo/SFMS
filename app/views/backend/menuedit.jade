@@ -8,7 +8,7 @@ block content
         tr
           td(width="15%",class="tableleft") 应用ID  
           td
-            input(type="textview",name="ApplicationID",ng-model='formdata.ApplicationID',ng-maxlength='11',required)
+            input(type="textview",name="ApplicationID",ng-model='formdata.ApplicationID',ng-value="#{items.ApplicationID}",ng-maxlength='11',required)
             &nbsp&nbsp
             small.error(ng-show="formdata.ApplicationID.$error.maxlength && formdata.ApplicationID.$touched") 应用ID最多11位
             

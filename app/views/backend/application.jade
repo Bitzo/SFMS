@@ -1,4 +1,5 @@
 block content
+
   jason-pagecontent(action='/app' conf='paginationConf')
     div.page-content(stule="button {height :30px;}")
       ng-form.form-inline
@@ -37,6 +38,8 @@ block content
                 i.icon.icon-edit 编辑
               a(ng-click='remove($index)')
                 i.icon.icon-trash 删除
+
+            
       div.pull-right
         jason-pagination(conf='paginationConf')
 

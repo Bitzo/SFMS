@@ -81,6 +81,11 @@ router.get('/menuinfo', function(req, res, next) {
 
 });
 
+router.get('/menuedit', function(req, res, next) {
+        res.render('backend/menuedit', { title: 'Hi backend' });
+
+});
+
 router.get('/application', function(req, res, next) {
         res.render('backend/application', { title: 'Hi backend' });
 

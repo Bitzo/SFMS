@@ -12,7 +12,8 @@ var kpi = appRequire('routes/sfms/KPI/KPIroute');
 //实验室管理系统 财务管理路由
 var finance = appRequire('routes/sfms/finance/financeroute');
 //实验室管理系统主站点
-
+var userSpring = appRequire('service/backend/application/applicationservice');
+var logger = appRequire('util/loghelper').helper;
 
 // router.get('/index', function(req, res, next) {
 //         res.render('sfms/index', { title: 'Hi sfms' });
@@ -27,12 +28,51 @@ var finance = appRequire('routes/sfms/finance/financeroute');
 // router.get('/role', function(req, res, next) {
 //         res.render('sfms/role', { title: 'Hi sfms' });
 
+
 // });
 
 // router.get('/roleAdd', function(req, res, next) {
 //     res.render('sfms/roleAdd', { title: 'Hi sfms' });
 
-// });
+//});
+router.get('/appedit', function(req, res, next) {
+        console.log("here");
+        var data = {
+                ID: req.query.ID==null?"1":req.query.ID
+        };
+        userSpring.queryAllApp(data, function (err, results) {
+                if (err) {
+                        res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: '查询失败，服务器出错'
+                        });
+                        logger.writeError('查询应用,出错信息: ' + err);
+                        return;
+                }
+                if (results !== undefined && results.length != 0) {
+                        res.render('sfms/appedit',{
+                                code:200,
+                                isSuccess: true,
+                                data: results[0],
+                                msg: '查找成功'
+                        });
+                        console.log(results);
+                } else {
+                        res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: '应用不存在'
+                        });
+                        logger.writeError('查询应用,出错信息: 查询用户不存在');
+                        return;
+                }
+        });
+
+});
+router.get('/roleAdd', function(req, res, next) {
+    res.render('sfms/roleAdd', { title: 'Hi sfms' });
+});
 
 // router.get('/roleEdit', function(req, res, next) {
 //     res.render('sfms/roleEdit', { title: 'Hi sfms' });
@@ -104,6 +144,41 @@ router.get('/getmenu', function(req, res, next) {
             }
 
         });
+
+});
+router.get('/getappbyid', function (req, res) {
+        //var pageNum = req.query.id;
+        var data = {
+                ID: req.query.ID==null?"1":req.query.ID
+        };
+        userSpring.queryAllApp(data, function (err, results) {
+                        if (err) {
+                                res.json({
+                                        code: 500,
+                                        isSuccess: false,
+                                        msg: '查询失败，服务器出错'
+                                });
+                                logger.writeError('查询应用,出错信息: ' + err);
+                                return;
+                        }
+                        if (results !== undefined && results.length != 0) {
+                                res.json({
+                                        code:200,
+                                        isSuccess: true,
+                                        data: results,
+                                        msg: '查找成功'
+                                });
+                                console.log(results);
+                        } else {
+                                res.json({
+                                        code: 404,
+                                        isSuccess: false,
+                                        msg: '应用不存在'
+                                });
+                                logger.writeError('查询应用,出错信息: 查询用户不存在');
+                                return;
+                        }
+                });
 
 });
 //项目用户 有关路由

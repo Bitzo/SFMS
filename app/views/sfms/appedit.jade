@@ -1,0 +1,22 @@
+div.form-horizontal
+    .form-group
+        label.col-sm-1.control-label(for='ApplicationCode')  ApplicationCode
+        .col-sm-5
+            input#ApplicationCode.form-control(ng-model='{{formdata.ApplicationCode}}' value='#{data.ApplicationCode}')
+    .form-group
+        label.col-sm-1.control-label(for='ID') ID
+        .col-sm-5
+            input#ID.form-control(type='email', ng-model='{{formdata.ID}}', readonly='true' value='#{data.ID}')
+    .form-group
+        label.col-sm-1.control-label(for='ApplicationName') 名称
+        .col-sm-5
+            input#ApplicationName.form-control(ng-model='{{formdata.ApplicationName}}' value='#{data.ApplicationName}')
+    .form-group
+        .col-sm-offset-1.col-sm-5
+            .checkbox
+                label
+                    input(type='checkbox')
+                    |  IsActive
+    .form-group
+        .col-sm-offset-1.col-sm-5
+            button.btn.btn-default(type='submit' ng-click="submitform('/sfms/appupdate')") 提交

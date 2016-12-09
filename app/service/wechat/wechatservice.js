@@ -70,7 +70,7 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         res.on("end", function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-
+            //console.log(result);
             var logModel = {
                 ApplicationID: 1,
                 ApplicationName: '金科小哥',
@@ -104,6 +104,66 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         logger.writeErr('获取微信token时异常' + new Date());
     });
 }
+
+//微信创建菜单的方法
+Weixin.prototype.createMenu = function(accessToken, callback) {
+    //微信的创建菜单的url
+
+    //var postUrl = config.weChat.baseUrl + "menu/create?accessToken=" + accessToken;
+    var postUrl = config.weChat.createMenu + accessToken;
+    var body = {
+        "button": [{
+            "type": "view",
+            "name": "我要下单",
+            "url": "http://www.baidu.com"
+        }, {
+            "type": "view",
+            "name": "跟踪包裹",
+            "url": "http://www.baidu.com"
+        }, {
+            "name": "我",
+            "sub_button": [{
+                "type": "view",
+                "name": "个人信息",
+                "url": "http://www.soso.com"
+            }, {
+                "type": "view",
+                "name": "联系我们",
+                "url": "http://www.soso.com"
+            }]
+        }]
+    }
+    var bodyString = JSON.stringify(body);
+    var options = {
+        protocol: 'https:',
+        host: config.weChat.host,
+        port: '443',
+        path: postUrl,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(bodyString)
+        }
+    }
+
+    var post_req = https.request(options, function(res) {
+        console.log("statusCode: ", res.statusCode);
+        console.log("headers: ", res.headers);
+
+        res.setEncoding('utf8');
+        res.on('data', function(chunk) {
+            console.log('Response: ' + chunk);
+        });
+    });
+
+    post_req.on('error', function(e) {
+        console.log('problem with request: ' + e.message);
+    });
+
+    post_req.write(bodyString);
+    post_req.end();
+}
+
 
 // ------------------ 监听 ------------------------
 // 监听文本消息
@@ -196,7 +256,7 @@ Weixin.prototype.parseImageMsg = function() {
         "msgType": this.data.MsgType[0],
         "picUrl": this.data.PicUrl[0],
         "msgId": this.data.MsgId[0],
-        "MediaId":this.data.MediaId[0]
+        "MediaId": this.data.MediaId[0]
     }
 
     emitter.emit("weixinImageMsg", msg);
@@ -407,26 +467,26 @@ Weixin.prototype.sendNewsMsg = function(msg) {
 
 //返回图片的消息
 //问题:根据接口返回的数据但在微信客户端没有显示出图片
-Weixin.prototype.sendimgMsg=function(msg){
- var time = Math.round(new Date().getTime() / 1000);
+Weixin.prototype.sendimgMsg = function(msg) {
+        var time = Math.round(new Date().getTime() / 1000);
 
-    var output = "" +
-        "<xml>" +
-        "<ToUserName><![CDATA[" + msg.toUserName + "]]></ToUserName>" +
-        "<FromUserName><![CDATA[" + msg.fromUserName + "]]></FromUserName>" +
-        "<CreateTime>" + time + "</CreateTime>" +
-        "<MsgType><![CDATA[" + msg.msgType + "]]></MsgType>" +
-        "<image>" +
-        "<MediaId><![CDATA["+ msg.MediaId + "]]></MediaId>" +
-        "</image>" +
-        "</xml>";
+        var output = "" +
+            "<xml>" +
+            "<ToUserName><![CDATA[" + msg.toUserName + "]]></ToUserName>" +
+            "<FromUserName><![CDATA[" + msg.fromUserName + "]]></FromUserName>" +
+            "<CreateTime>" + time + "</CreateTime>" +
+            "<MsgType><![CDATA[" + msg.msgType + "]]></MsgType>" +
+            "<image>" +
+            "<MediaId><![CDATA[" + msg.MediaId + "]]></MediaId>" +
+            "</image>" +
+            "</xml>";
 
-    this.res.type('xml');
-    this.res.status(200).send(output);
-}
-//
-// ------------ 主逻辑 -----------------
-// 解析
+        this.res.type('xml');
+        this.res.status(200).send(output);
+    }
+    //
+    // ------------ 主逻辑 -----------------
+    // 解析
 Weixin.prototype.parse = function() {
 
     this.msgType = this.data.MsgType[0] ? this.data.MsgType[0] : "text";
@@ -436,7 +496,7 @@ Weixin.prototype.parse = function() {
             break;
 
         case 'image':
-           
+
             this.parseImageMsg();
             break;
 

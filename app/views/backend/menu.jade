@@ -31,7 +31,7 @@ block content
             td {{x.MenuID}}
             td {{x.MenuName}}
             td
-              a(ng-href='')
+              a(ng-click="show(x.MenuID)",href='#/backend/menuedit/' )
                 i.icon.icon-edit 编辑
               a(ng-click='remove($index)')
                 i.icon.icon-trash 删除

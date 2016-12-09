@@ -10,12 +10,12 @@ block content
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
-                                  th 角色
-                                  th 菜单
+                                  th 角色ID
+                                  th 角色名称
                             tbody
                                 tr(ng-repeat="data in data")
-                                    td {{data.FunctionID}}
-                                    td {{data.FunctionName}}
+                                    td {{data.RoleID}}
+                                    td {{data.RoleName}}
 
 
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
@@ -27,10 +27,6 @@ block content
           input.form-control(placeholder='应用ID'  style="width:100px;" ng-model='f.ApplicationID')
         label.form-group.my-form-group
           input.form-control(placeholder='用户名'  style="width:100px;" ng-model='f.UserName')
-        //- label.form-group.my-form-group
-        //-   input.form-control(placeholder='Is Active'  style="width:100px;" ng-model='f.IsActive')
-        //- label.form-group.my-form-group
-        //-   input.form-control(placeholder='CreateTime'  style="width:100px;" ng-model='f.CreateTime')
         label.form-group.my-form-group
           input.form-control(placeholder='创建者ID'  style="width:100px;" ng-model='f.CreateUserID')
         
@@ -61,11 +57,11 @@ block content
             td {{x.CreateTime}}
             td {{x.CreateUserID}}
             td
-              a( href='#/sfms/appedit/:{{x.ID}}')
+              a( href='#/backend/menuinfo/:{{x.ID}}')
                 i.icon.icon-edit 编辑 
               a(ng-click='remove($index)')
                 i.icon.icon-trash 删除
-              a( data-toggle="modal",data-target="#myModal",ng-click='more($index)') 
+              a(data-toggle="modal",data-target="#myModal",ng-click="more($index,'userrole/userID/')") 
                 i.icon.icon-zoom-in  更多
       div.pull-right
         jason-pagination(conf='paginationConf')

@@ -139,7 +139,7 @@ router.get('/plain',function (req,res) {
         menuName = query.MenuName || '',
         isActive = query.IsActive || '';
 
-
+console.log(query);
     page = page>0 ? page : 1;
 
     if (pageNum == ''){
@@ -312,18 +312,19 @@ router.get('/:userID',function (req,res) {
 
 //新增菜单
 router.post('/',function(req,res,next) {
-
+ console.log(req);
     // 检查所需要的字段是否都存在
     var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
     var err = 'require: ';
     for (var value in data){
-        if(!(data[value] in req.body)){
+        if(!(data[value] in req.body.formdata)){
             err += data[value] + ' ';
         }
     }
     //如果要求的字段不在req的参数中
     if(err !== 'require: ') {
         logger.writeError(err);
+        res.status(400);
         return res.json({
             code:400,
             isSuccess: false,
@@ -333,15 +334,15 @@ router.post('/',function(req,res,next) {
 
     }
 
-    var applicationID = req.body.ApplicationID;
-    var menuLevel = req.body.MenuLevel;
-    var parentID = req.body.ParentID;
-    var sortIndex = req.body.SortIndex;
-    var menuName = req.body.MenuName;
-    var iconPath = req.body.IconPath;
-    var url = req.body.Url;
-    var memo = req.body.Memo;
-    var isActive = req.body.IsActive;
+    var applicationID = req.body.formdata.ApplicationID;
+    var menuLevel = req.body.formdata.MenuLevel;
+    var parentID = req.body.formdata.ParentID;
+    var sortIndex = req.body.formdata.SortIndex;
+    var menuName = req.body.formdata.MenuName;
+    var iconPath = req.body.formdata.IconPath;
+    var url = req.body.formdata.Url;
+    var memo = req.body.formdata.Memo;
+    var isActive = req.body.formdata.IsActive;
 
     if(memo === undefined || memo === null){
         memo = '';
