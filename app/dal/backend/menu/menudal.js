@@ -15,7 +15,7 @@ exports.queryAllMenus = function(data, callback) {
     var sql = 'select ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName,IconPath,Url,Memo,IsActive from jit_menu where 1=1';
     if(data !== undefined){
         for(var key in data){
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined){
+            if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
                 //判断data[key]是否是数值类型
                 if(!isNaN(data[key])){
                     sql += ' and ' + key + ' = '+ data[key] + ' ';
@@ -58,8 +58,8 @@ exports.countAllMenus = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
-                sql += "and " + key + " = '" + data[key] + "' ";
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+                sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
 
@@ -137,7 +137,7 @@ exports.menuUpdate = function(data, callback) {
             }
         }
     }
-    sql += " where MenuID = " + data['MenuID'];
+    sql += " where IsActive = 1 and MenuID = " + data['MenuID'];
 
     update_sql = update_sql + sql;
 
@@ -167,10 +167,10 @@ exports.menuUpdate = function(data, callback) {
 
 //菜单删除
 exports.menuDelete = function (data, callback) {
-    var sql = 'delete from jit_menu where 1=1 and MenuID = ';
-    sql = sql + data.MenuID;
+    var update_sql = 'update jit_menu set IsActive = 0 where IsActive = 1 and MenuID = ' + data['MenuID'];
 
-    logger.writeInfo("[menuDelete func in menudal]菜单删除：" + sql);
+
+    logger.writeInfo("[menuDelete func in menudal]菜单删除：" + update_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -179,7 +179,7 @@ exports.menuDelete = function (data, callback) {
             return ;
         }
 
-        connection.query(sql, function(err, results) {
+        connection.query(update_sql, function(err, results) {
             if (err) {
                 throw err;
                 callback(true);

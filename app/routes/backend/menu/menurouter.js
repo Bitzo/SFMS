@@ -16,16 +16,19 @@ var menuService = appRequire('service/backend/menu/menuservice'),
     config = appRequire('config/config');
 
 router.get('/tree',function (req,res) {
-    var page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize,
-        applicationID = req.query.ApplicationID,
-        menuID = req.query.MenuID,
-        parentID = req.query.ParentID,
-        menuLevel = req.query.MenuLevel;
+    var query = JSON.parse(req.query.f);
+    var page = query.pageindex || 1,
+        pageNum = query.pagesize || 20,
+        applicationID = query.ApplicationID || '',
+        menuID = query.MenuID || '',
+        parentID = query.ParentID || '',
+        menuLevel = query.MenuLevel || '',
+        menuName = query.MenuName || '',
+        isActive = query.IsActive || '';
 
     page = page>0 ? page : 1;
 
-    if (pageNum === undefined){
+    if (pageNum == ''){
         pageNum = config.pageCount;
     }
 
@@ -38,11 +41,23 @@ router.get('/tree',function (req,res) {
         ApplicationID : applicationID,
         MenuID : menuID,
         ParentID : parentID,
-        MenuLevel : menuLevel
+        MenuLevel : menuLevel,
+        MenuName : menuName,
+        IsActive : isActive
     };
 
-    for (var key in data){
-        if(isNaN(data[key]) && data[key] !== undefined){
+    var intdata = {
+        page : page,
+        pageNum : pageNum,
+        ApplicationID : applicationID,
+        MenuID : menuID,
+        ParentID : parentID,
+        MenuLevel : menuLevel,
+        IsActive : isActive
+    };
+
+    for (var key in intdata){
+        if(isNaN(intdata[key]) && intdata[key] != ''){
             return res.json({
                 code: 500,
                 isSuccess: false,
@@ -96,7 +111,7 @@ router.get('/tree',function (req,res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        errorMsg: "未查询到相关信息"
+                        errorMsg: "未查询到此菜单"
                     });
                 }
             });
@@ -105,7 +120,7 @@ router.get('/tree',function (req,res) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                errorMsg: "未查询到相关信息"
+                errorMsg: "未查询到此菜单"
             });
         }
     });
@@ -114,17 +129,20 @@ router.get('/tree',function (req,res) {
 
 router.get('/plain',function (req,res) {
 
-    var page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize,
-        applicationID = req.query.ApplicationID,
-        menuID = req.query.MenuID,
-        parentID = req.query.ParentID,
-        menuLevel = req.query.MenuLevel;
+    var query = JSON.parse(req.query.f);
+    var page = query.pageindex || 1,
+        pageNum = query.pagesize || 20,
+        applicationID = query.ApplicationID || '',
+        menuID = query.MenuID || '',
+        parentID = query.ParentID || '',
+        menuLevel = query.MenuLevel || '',
+        menuName = query.MenuName || '',
+        isActive = query.IsActive || '';
 
 
     page = page>0 ? page : 1;
 
-    if (pageNum === undefined){
+    if (pageNum == ''){
         pageNum = config.pageCount;
     }
 
@@ -137,12 +155,23 @@ router.get('/plain',function (req,res) {
         ApplicationID : applicationID,
         MenuID : menuID,
         ParentID : parentID,
-        MenuLevel : menuLevel
+        MenuLevel : menuLevel,
+        MenuName : menuName,
+        IsActive : isActive
     };
 
+    var intdata = {
+        page : page,
+        pageNum : pageNum,
+        ApplicationID : applicationID,
+        MenuID : menuID,
+        ParentID : parentID,
+        MenuLevel : menuLevel,
+        IsActive : isActive
+    };
 
-    for (var key in data){
-        if(isNaN(data[key]) && data[key] !== undefined){
+    for (var key in intdata){
+        if(isNaN(intdata[key]) && intdata[key] != ''){
             return res.json({
                 code: 500,
                 isSuccess: false,
@@ -195,7 +224,7 @@ router.get('/plain',function (req,res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        errorMsg: "未查询到相关信息"
+                        errorMsg: "未查询到此菜单"
                     });
                 }
             });
@@ -204,7 +233,7 @@ router.get('/plain',function (req,res) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                errorMsg: "未查询到相关信息"
+                errorMsg: "未查询到此菜单"
             });
         }
     });
@@ -529,7 +558,8 @@ router.put('/',function (req,res) {
 
 });
 
-router.delete('/',function(req,res,next) {
+//逻辑删除
+router.delete('/',function(req,res) {
     //MenuID是主键，只需要此属性就可准确删除，不必传入其他参数
     var menuID = req.body.MenuID;
 
@@ -548,11 +578,14 @@ router.delete('/',function(req,res,next) {
         });
     }
     var data = {
+        "MenuID" : menuID,
+        "IsActive" : 0
+    };
+    var deleteData = {
         "MenuID" : menuID
     };
-
     //查询要删除的菜单是否存在
-    menuService.queryAllMenus(data,function (err,result) {
+    menuService.countAllMenus(deleteData,function (err,result) {
         if(err){
             return res.json({
                 code : 500,
@@ -563,7 +596,7 @@ router.delete('/',function(req,res,next) {
         }
         //所要删除的菜单存在，执行删除操作
         if(result !== undefined && result.length !== 0){
-            menuService.menuDelete(data,function (err,results) {
+            menuService.menuUpdate(data,function (err,results) {
                 if(err){
                     return res.json({
                         code :500,

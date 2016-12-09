@@ -95,9 +95,15 @@ wechat.textMsg(function(msg) {
             }
     }
     wechat.sendMsg(resMsg);
-     // wechat.getAccessToken(1,function(){
-     //        console.log("dankai");
-     // });    
+    //测试创建菜单
+    wechat.getAccessToken(1,function(result){
+           console.log(result);
+       var access_token = result.access_token;
+            wechat.createMenu(access_token,function(data)
+            {
+                console.log(data);
+            })
+     });    
 });
 
 // 监听图片消息
@@ -149,6 +155,10 @@ wechat.eventMsg(function(msg) {
 router.post('/accesscheck', function(req, res) {
 
     wechat.handleCustomerMsg(req, res);
+    // wechat.getAccessToken(1,function(result)
+    // {
+    //     console.log(result);
+    // })
 });
 
 module.exports = router;

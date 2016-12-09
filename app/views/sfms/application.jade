@@ -1,17 +1,20 @@
 block content
-  jason-pagecontent(action='/app' conf='paginationConf')
-    div.page-content(stule="button {height :30px;}")
-      ng-form.form-inline
-        label.form-group.my-form-group
+  //div(ng-controller="sfmsIndexController")
+  jason-pagecontent(action='/app' conf='paginationConf' type="page")
+    div.page-header
+      div.buttons.text-right
+        a.btn.btn-success(ng-href='')
+          i.icon.icon-plus 新建
+        button(ng-click='search()' class='btn btn-default')刷新
+    div.page-content
+      form.form-inline(role='form')
+        div.form-group
+          label.sr-only 名称
           input.form-control(placeholder='名称' ng-model='f.text')
-        label.form-group.my-form-group
+        div.form-group
+          label.sr-only 所属类别
           input.form-control(placeholder='所属类别')
-        label.form-group.my-form-group
-          button.btn.btn-sm.btn-primary(ng-click='search()') 确定
-        div.buttons.pull-right
-          a.btn.btn-sm.btn-success(ng-href='#/sfms/applicationinfo')
-            i.icon.icon-plus 新建
-          button(ng-click='search()' class='btn btn-sm btn-default') 刷新
+        button.btn.btn-primary(ng-click='search()')确定
       table.table.table-striped.table-bordered.text-center
         thead
           tr
@@ -29,10 +32,7 @@ block content
             td {{x.IsActive}}
             td {{x.IsActive}}
             td
-              a(ng-href='')
-                i.icon.icon-edit 编辑
-              a(ng-href='')
-                i.icon.icon-trash 删除
+              a.btn.btn-primary( href='#/sfms/appedit/:{{x.ID}}') 编辑
       div.pull-right
         jason-pagination(conf='paginationConf')
 
