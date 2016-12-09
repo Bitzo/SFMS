@@ -104,6 +104,105 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         logger.writeErr('获取微信token时异常' + new Date());
     });
 }
+//微信获取用户的列表
+Weixin.prototype.getCustomerList = function(accessToken,callback)
+{
+    var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken;
+    console.log(getUrl);
+    https.get(getUrl,function(res)
+    {
+        var datas = [];
+        var size = 0;
+        res.on('data',function(data)
+        {
+            datas.push(data);
+            size += data.length;
+        });
+
+        res.on('end',function()
+        {
+            var buff = Buffer.concat(datas,size);
+            var result = JSON.parse(iconv.decode(buff,"utf8"));//转码
+            console.log(result);
+
+            if(callback && typeof callback === 'function')
+            {
+                callback(result);
+            }
+
+        })
+    }).on('error',function(e)
+    {
+        logger.writeErr('获取列表信息时异常' + new Date());
+    });
+}
+
+//微信获取到所有用户的列表，即所有用户的openid
+Weixin.prototype.getNextOpenid=function(accessToken,nextopenid,callback)
+{
+    var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
+    console.log(getUrl);
+    https.get(getUrl,function(res)
+    {
+        var datas = [];
+        var size = 0;
+        res.on('data',function(data)
+        {
+            datas.push(data);
+            size += data.length;
+        });
+
+        res.on('end',function()
+        {
+            var buff = Buffer.concat(datas,size);
+            var result = JSON.parse(iconv.decode(buff,"utf8"));//转码
+            console.log(result);
+
+            if(callback && typeof callback === 'function')
+            {
+                callback(result);
+            }
+
+        })
+    }).on('error',function(e)
+    {
+        logger.writeErr('获取列表信息时异常' + new Date());
+    });
+}
+//微信获取用户信息
+Weixin.prototype.getCustomer=function(accessToken,openid,callback)
+{
+    //get获取微信端的接口的url
+    var getUrl = config.weChat.baseUrl + config.weChat.getCustomer + accessToken + "&openid=" + openid;
+    https.get(getUrl,function(res)
+    {
+        var datas = [];
+        var size = 0;
+        res.on('data',function(data)
+        {
+            datas.push(data);
+            size += data.length;
+        });
+
+        res.on('end',function()
+        {
+            var buff = Buffer.concat(datas,size);
+            var result = JSON.parse(iconv.decode(buff,"utf8"));//转码
+            console.log(result);
+
+            if(callback && typeof callback === 'function')
+            {
+                callback(result);
+            }
+
+        })
+    }).on('error',function(e)
+    {
+        logger.writeErr('获取用户信息时异常' + new Date());
+    });
+
+}
+
 
 //微信创建菜单的方法
 Weixin.prototype.createMenu = function(accessToken, callback) {
@@ -130,7 +229,12 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
                 "type": "view",
                 "name": "联系我们",
                 "url": "http://www.soso.com"
-            }]
+            },{
+                "type": "location_select",
+                "name": "发送位置",
+                "key" : "rselfmenu_2_0"
+            }
+            ]
         }]
     }
     var bodyString = JSON.stringify(body);
@@ -153,6 +257,8 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Content-Length': Buffer.byteLength(bodyString)
         }
+
+
     }
 
     var post_req = https.request(options, function(res) {
@@ -478,7 +584,7 @@ Weixin.prototype.sendNewsMsg = function(msg) {
 //问题:根据接口返回的数据但在微信客户端没有显示出图片
 Weixin.prototype.sendimgMsg = function(msg) {
         var time = Math.round(new Date().getTime() / 1000);
-
+        var funcFlag = msg.funcFlag ? msg.funcFlag : this.funcFlag;
         var output = "" +
             "<xml>" +
             "<ToUserName><![CDATA[" + msg.toUserName + "]]></ToUserName>" +
@@ -488,10 +594,12 @@ Weixin.prototype.sendimgMsg = function(msg) {
             "<image>" +
             "<MediaId><![CDATA[" + msg.MediaId + "]]></MediaId>" +
             "</image>" +
+            "<funcFlag><![CDATA["+ msg.funcFlag + "]]></funcFlag>" +
             "</xml>";
 
         this.res.type('xml');
         this.res.status(200).send(output);
+        return this;
     }
     //
     // ------------ 主逻辑 -----------------
