@@ -130,8 +130,10 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         $http({
             method: 'get',
             url: "/menu?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+
         }).
         success(function(response) {
+
             $scope.menus = response.data.Menu;
             console.log($scope.menus);
         }).
