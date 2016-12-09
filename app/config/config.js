@@ -46,6 +46,8 @@ var config = {
         baseUrl:'https://api.weixin.qq.com/cgi-bin/',
         accessTokenUrl:'token?grant_type=client_credential&',//获取token
         createMenu:'/cgi-bin/menu/create?access_token=',//创建菜单
+        getCustomer:'user/info?access_token=',//获取用户的基本信息
+        getCustomerList:'user/get?access_token=' //获取用户的列表
     }
 };
 

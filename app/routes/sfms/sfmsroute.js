@@ -15,20 +15,26 @@ var finance = appRequire('routes/sfms/finance/financeroute');
 var userSpring = appRequire('service/backend/application/applicationservice');
 var logger = appRequire('util/loghelper').helper;
 
-router.get('/index', function(req, res, next) {
-        res.render('sfms/index', { title: 'Hi sfms' });
+// router.get('/index', function(req, res, next) {
+//         res.render('sfms/index', { title: 'Hi sfms' });
 
-});
+// });
 
-router.get('/user', function(req, res, next) {
-        res.render('sfms/user', { title: 'Hi sfms' });
+// router.get('/user', function(req, res, next) {
+//         res.render('sfms/user', { title: 'Hi sfms' });
 
-});
+// });
 
-router.get('/role', function(req, res, next) {
-        res.render('sfms/role', { title: 'Hi sfms' });
+// router.get('/role', function(req, res, next) {
+//         res.render('sfms/role', { title: 'Hi sfms' });
 
-});
+
+// });
+
+// router.get('/roleAdd', function(req, res, next) {
+//     res.render('sfms/roleAdd', { title: 'Hi sfms' });
+
+//});
 router.get('/appedit', function(req, res, next) {
         console.log("here");
         var data = {
@@ -66,38 +72,37 @@ router.get('/appedit', function(req, res, next) {
 });
 router.get('/roleAdd', function(req, res, next) {
     res.render('sfms/roleAdd', { title: 'Hi sfms' });
-
 });
 
-router.get('/roleEdit', function(req, res, next) {
-    res.render('sfms/roleEdit', { title: 'Hi sfms' });
+// router.get('/roleEdit', function(req, res, next) {
+//     res.render('sfms/roleEdit', { title: 'Hi sfms' });
 
-});
+// });
 
-router.get('/userinfo', function(req, res, next) {
-        res.render('sfms/userinfo', { title: 'Hi sfms' });
+// router.get('/userinfo', function(req, res, next) {
+//         res.render('sfms/userinfo', { title: 'Hi sfms' });
 
-});
+// });
 
-router.get('/menu', function(req, res, next) {
-        res.render('sfms/menu', { title: 'Hi sfms' });
+// router.get('/menu', function(req, res, next) {
+//         res.render('sfms/menu', { title: 'Hi sfms' });
 
-});
+// });
 
-router.get('/menuinfo', function(req, res, next) {
-        res.render('sfms/menuinfo', { title: 'Hi sfms' });
+// router.get('/menuinfo', function(req, res, next) {
+//         res.render('sfms/menuinfo', { title: 'Hi sfms' });
 
-});
+// });
 
-router.get('/application', function(req, res, next) {
-        res.render('sfms/application', { title: 'Hi sfms' });
+// router.get('/application', function(req, res, next) {
+//         res.render('sfms/application', { title: 'Hi sfms' });
 
-});
+// });
 
-router.get('/applicationinfo', function(req, res, next) {
-        res.render('sfms/applicationinfo', { title: 'Hi sfms' });
+// router.get('/applicationinfo', function(req, res, next) {
+//         res.render('sfms/applicationinfo', { title: 'Hi sfms' });
 
-});
+// });
 
 router.get('/getmenu', function(req, res, next) {
         //res.render('sfms/index', { title: 'Hi gemeun' });

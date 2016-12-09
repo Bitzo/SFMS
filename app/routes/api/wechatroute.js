@@ -95,15 +95,6 @@ wechat.textMsg(function(msg) {
             }
     }
     wechat.sendMsg(resMsg);
-    //测试创建菜单
-    wechat.getAccessToken(1,function(result){
-           console.log(result);
-       var access_token = result.access_token;
-            wechat.createMenu(access_token,function(data)
-            {
-                console.log(data);
-            })
-     });    
 });
 
 // 监听图片消息
@@ -120,7 +111,8 @@ wechat.imageMsg(function(msg) {
             fromUserName:msg.toUserName,
             toUserName:msg.fromUserName,
             msgType:"image",
-            MediaId:msg.MediaId
+            MediaId:msg.MediaId,
+            funcFlag:1
         }
         break;
     }
@@ -148,17 +140,17 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
+  //  console.log(msg);
     console.log(JSON.stringify(msg));
-});
+    console.log("获取用用户的信息");
+   
+    
+    });
 
 //接受用户的消息
 router.post('/accesscheck', function(req, res) {
 
     wechat.handleCustomerMsg(req, res);
-    // wechat.getAccessToken(1,function(result)
-    // {
-    //     console.log(result);
-    // })
 });
 
 module.exports = router;
