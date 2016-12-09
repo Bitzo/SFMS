@@ -42,8 +42,10 @@ var config = {
         token: 'snail',
         appid: 'wx844d9a89f533f63d',
         secret:'e668e2f31c16fac4528be7f82692085d',
+        host:'api.weixin.qq.com',
         baseUrl:'https://api.weixin.qq.com/cgi-bin/',
-        accessTokenUrl:'token?grant_type=client_credential&',
+        accessTokenUrl:'token?grant_type=client_credential&',//获取token
+        createMenu:'/cgi-bin/menu/create?access_token=',//创建菜单
     }
 };
 
