@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/menu' conf='paginationConf' ng-controller="baseController")
+  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
     span 
       h2 菜单新增
     form(method="post",name="menuinfo" )
@@ -81,7 +81,7 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/menu')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/backmenu')") 添加
  
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/menu') 返回列表

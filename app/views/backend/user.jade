@@ -57,11 +57,11 @@ block content
             td {{x.CreateTime}}
             td {{x.CreateUserID}}
             td
-              a(ng-click="show(x.AccountID,'/backmenu')",href='#/backend/useredit/' )
+              a(ng-click="show(x.AccountID,'/backuser')",href='#/backend/useredit/' )
                 i.icon.icon-edit 编辑 
-              a(ng-click='remove($index)')
+              a(ng-click="remove($index,'/backuser')")
                 i.icon.icon-trash 删除
-              a(data-toggle="modal",data-target="#myModal",ng-click="more($index,'userrole/userID/')") 
+              a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'userrole/userID/')") 
                 i.icon.icon-zoom-in  更多
       div.pull-right
         jason-pagination(conf='paginationConf')

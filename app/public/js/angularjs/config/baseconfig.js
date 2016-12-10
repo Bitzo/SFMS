@@ -158,8 +158,6 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         getInit();
     }
 
-
-
     
 //添加角色
     $scope.roleSubmit=function(role){
@@ -206,8 +204,6 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     }
 
 
-
-
     //新增
      $scope.formdata={};
      $scope.addnew = function(formdata,action) {
@@ -222,7 +218,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         }).
         success(function(response) {
             console.log($http.url)
-           console.log($scope.added);
+           console.log($scope.formdata);
            console.log(response);
            if(response.isSuccess){
               alert(response.msg);
@@ -236,6 +232,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
            console.log('no');
         });
     };
+
 
  //修改
     $scope.show=function(index,action){
@@ -269,29 +266,43 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         });
     }
    
+
     //删除
      $scope.d={};
      $scope.remove = function(index,action){
          console.log('delete');
+         console.log(index);   
+         console.log(action);                        
          $scope.d={
              "AccountID":$scope.datas[index].AccountID,
              "MenuID":$scope.datas[index].MenuID,
-             "ID":$scope.datas[index].ID,             
-             "IsActive":0,
+             "ID":$scope.datas[index].ID,   
+             "RoleID" : $scope.datas[index].RoleID    
          };
          $http({
             method:'delete',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
-                f:$scope.f.MenuID
+                d:$scope.d 
             }
+        }).
+        success(function(response) {
+            console.log($scope.d);            
+            console.log('删除成功');            
+            console.log(response.msg);
+        }).
+        error(function(response) {
+            console.log($scope.d);
+            console.log('删除失败');                        
+            console.log(response.msg);
         });
         $scope.datas.splice(index,1);
-        console.log($scope.f);
+        console.log($scope.d);
       }
 
-      //显示模态框数据
-     $scope.more = function(index,action){
+
+      //显示用户模态框数据
+     $scope.moreuser = function(index,action){
          console.log('more');
          $scope.f={
              "userID":$scope.datas[index].AccountID,
@@ -311,6 +322,30 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         });
       }
 
+
+       //显示角色模态框
+        $scope.morerole = function(index,action){
+                console.log('more');
+                $scope.f={
+                    "RoleID":$scope.datas[index].RoleID,
+                };
+                $http({
+                    method:'get',
+                    url:action+$scope.f.RoleID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                }).
+                success(function(response) {
+                    console.log(response);
+                    $scope.data = response.data;
+                    console.log($scope.menus);
+
+                }).
+                error(function(response) {
+                    console.log(response);
+                });
+            }
+  
+
+       //显示角色新增页面
 
     
 

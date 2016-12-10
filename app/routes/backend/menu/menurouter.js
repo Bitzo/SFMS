@@ -148,6 +148,10 @@ console.log(query);
         pageNum = config.pageCount;
     }
 
+    if(isActive === undefined || isActive == ''){
+        isActive = 1;
+    }
+
     //用于查询结果总数的计数
     var countNum = 0;
 
@@ -463,16 +467,16 @@ router.put('/',function (req,res) {
     }
 
     //接收前台数据
-    var menuID = req.body.MenuID;
-    var applicationID = req.body.ApplicationID;
-    var menuLevel = req.body.MenuLevel;
-    var parentID = req.body.ParentID;
-    var sortIndex = req.body.SortIndex;
-    var menuName = req.body.MenuName;
-    var iconPath = req.body.IconPath;
-    var url = req.body.Url;
-    var memo = req.body.Memo;
-    var isActive = req.body.IsActive;
+    var menuID = req.body.formdata.MenuID;
+    var applicationID = req.body.formdata.ApplicationID;
+    var menuLevel = req.body.formdata.MenuLevel;
+    var parentID = req.body.formdata.ParentID;
+    var sortIndex = req.body.formdata.SortIndex;
+    var menuName = req.body.formdata.MenuName;
+    var iconPath = req.body.formdata.IconPath;
+    var url = req.body.formdata.Url;
+    var memo = req.body.formdata.Memo;
+    var isActive = req.body.formdata.IsActive;
     var data = {
         "MenuID" : menuID,
         "ApplicationID" : applicationID,
@@ -585,8 +589,8 @@ router.put('/',function (req,res) {
 //逻辑删除
 router.delete('/',function(req,res) {
     //MenuID是主键，只需要此属性就可准确删除，不必传入其他参数
-    var menuID = req.body.MenuID;
-
+    var d = JSON.parse(req.query.d);
+    var menuID = d.MenuID;
     if (menuID === undefined) {
         res.status(404);
         return res.json({

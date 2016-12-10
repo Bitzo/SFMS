@@ -23,7 +23,7 @@ router.get('/',function (req, res) {
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || 20,
         roleName = query.RoleName || '',
-        isActive = query.IsActive || '';
+        isActive = query.IsActive || 1;
     page = page>0?page:1;
 
     if (pageNum == '') pageNum = config.pageCount;
@@ -422,7 +422,7 @@ router.put('/', function (req, res) {
 
 //删除角色
 router.delete('/', function (req, res) {
-    var roleID = req.body.roleID;
+    var roleID = req.body.RoleID;
 
     if (roleID == '' || roleID === undefined) {
         res.status(400);
