@@ -18,6 +18,8 @@ var logger = appRequire('util/loghelper').helper;
 var wechat = appRequire("service/wechat/wechatservice");
 wechat.token = config.weChat.token;
 
+//从微信端获取数据插入数据库
+var wechatCustomer = appRequire("service/wechat/customer/customerservice");
 //微信开发者认证
 router.get('/accesscheck', function(req, res, next) {
     var query = url.parse(req.url, true).query;
@@ -94,20 +96,10 @@ wechat.textMsg(function(msg) {
                 funcFlag: 0
             }
     }
-    // wechat.sendMsg(resMsg);
+     wechat.sendMsg(resMsg);
 
     //测试获取token
-    wechat.getLocalAccessToken(1, function(issuccess, token) {
-        if (issuccess) {
-            resMsg.content = token;
-            wechat.sendMsg(resMsg);
-        }
-        else
-        {
-            resMsg.content = '操作失败';
-            wechat.sendMsg(resMsg);
-        }
-    })
+    
 });
 
 // 监听图片消息
@@ -152,12 +144,66 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
-    //  console.log(msg);
-    console.log(JSON.stringify(msg));
-    console.log("获取用用户的信息");
+   // console.log(JSON.stringify(msg));
+    if(msg.eventKey.length==0)//是关注与取消关注的判断
+    {
+       wechat.getLocalAccessToken(1, function(issuccess, token) {
+        if (issuccess) {
+            wechat.getCustomer(token,msg.fromUserName,function(result)
+                {
+                    
+                    console.log(result.subscribe);
+                    if(result.subscribe == 1)//关注的人
+                    {
+                        var data={
+                            "WechatUserCode" : result.openid,
+                            "NickName" : result.nickname,
+                            "Sex" : result.sex
+                        }
+                    //  wechatCustomer.insert(data,function(err,result)
+                    //  {
+                    //     if(err)
+                    //     {
+                    //         console.log("插入失败");
+                    //         return;
+                    //     }
+                    //     if(result.insertId != 0)
+                    //     {
+                    //         console.log("插入成功");
+                    //         return;
+                    //     }
 
+                    // })
+                    }else//取消关注
+                    {
+                        var data = {
+                            "WechatUserCode" :result.openid,
+                            "IsActive" : 0
+                        }
+                        wechatCustomer.update(data,function(err,results)
+                        {
+                            if(err)
+                            {
+                                console.log("修改失败");
+                                return;
+                            }
+                            if(results !== undefined && results.affectedRows != 0)
+                            {
+                                console.log("修改成功");
+                                return;
+                            }
+                        });
+                    }
+                });
+            }
+         }); 
+       }
+        else
+        {
+            console.log("获取失败");    
+        }
+    });
 
-});
 
 //接受用户的消息
 router.post('/accesscheck', function(req, res) {

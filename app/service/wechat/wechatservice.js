@@ -209,7 +209,8 @@ Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
     //微信获取用户信息
 Weixin.prototype.getCustomer = function(accessToken, openid, callback) {
     //get获取微信端的接口的url
-    var getUrl = config.weChat.baseUrl + config.weChat.getCustomer + accessToken + "&openid=" + openid;
+    var getUrl = config.weChat.baseUrl + "user/info?access_token=" + accessToken + "&openid=" + openid;
+   // console.log(getUrl);
     https.get(getUrl, function(res) {
         var datas = [];
         var size = 0;
