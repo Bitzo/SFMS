@@ -57,7 +57,7 @@ block content
             td {{x.CreateTime}}
             td {{x.CreateUserID}}
             td
-              a( href='#/backend/menuinfo/:{{x.ID}}')
+              a(ng-click="show(x.AccountID,'/backmenu')",href='#/backend/useredit/' )
                 i.icon.icon-edit 编辑 
               a(ng-click='remove($index)')
                 i.icon.icon-trash 删除
