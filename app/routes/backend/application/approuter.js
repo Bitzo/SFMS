@@ -14,11 +14,12 @@ var express = require('express'),
 
 
 router.post('/', function (req, res) {
-    var data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
-    var err = 'required: ';
+    var query = JSON.parse(req.query.formdata);
+        data = ['ApplicationCode', 'ApplicationName', 'IsActive'],
+        err = 'required: ';
 
     for(var index in data) {
-        if (!(data[index] in req.body)) {
+        if (!(data[index] in query)) {
             console.log(data[index]);
             err += data[index] + ' ';
         }
@@ -33,9 +34,8 @@ router.post('/', function (req, res) {
         return;
     }
 
-
-    if (req.body.ApplicationCode !== undefined && req.body.ApplicationCode.length != 0) {
-        var ApplicationCode = req.body.ApplicationCode;
+    if (req.query.ApplicationCode !== undefined && req.query.ApplicationCode.length != 0) {
+        var ApplicationCode = req.query.ApplicationCode;
     } else {
         res.json({
             code: 404,
@@ -46,8 +46,8 @@ router.post('/', function (req, res) {
         return;
     }
 
-    if (req.body.ApplicationName !== undefined && req.body.ApplicationName.length != 0) {
-        var ApplicationName = req.body.ApplicationName;
+    if (req.query.ApplicationName !== undefined && req.query.ApplicationName.length != 0) {
+        var ApplicationName = req.query.ApplicationName;
     } else {
         res.json({
             code: 404,
@@ -58,14 +58,14 @@ router.post('/', function (req, res) {
         return;
     }
 
-    if (req.body.Memo !== undefined && req.body.Memo.length != 0) {
-        var Memo = req.body.Memo;
+    if (req.query.Memo !== undefined && req.query.Memo.length != 0) {
+        var Memo = req.query.Memo;
     } else {
         var Memo = null;
     }
 
-    if (req.body.IsActive !== undefined && req.body.IsActive.length != 0) {
-        var IsActive = req.body.IsActive;
+    if (req.query.IsActive !== undefined && req.query.IsActive.length != 0) {
+        var IsActive = req.query.IsActive;
     } else {
         res.json({
             code: 404,
@@ -142,14 +142,12 @@ router.get('/', function (req, res) {
         ApplicationName,
         ApplicationCode;
 
+    var query = JSON.parse(req.query.f);
     if (req.query.ID !== undefined) {
         ID = req.query.ID;
     }
     if (req.query.ApplicationName) {
         ApplicationName = req.query.ApplicationName;
-    }
-    if (req.query.ApplicationCode) {
-        ApplicationName = req.query.ApplicationCode;
     }
     if (pageNum === undefined) {
         pageNum = config.pageCount;
@@ -233,12 +231,12 @@ router.get('/', function (req, res) {
 });
 
 //编辑应用
-router.put('/:app_id', function(req, res) {
-    var data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
-    var err = 'required: ';
-
+router.put('/', function(req, res) {
+    var data = ['ApplicationCode', 'ApplicationName', 'IsActive'],
+        err = 'required: ',
+        query = JSON.parse(req.query.f);
     for (var index in data) {
-        if (!(data[index] in req.body)) {
+        if (!(data[index] in query)) {
             console.log(data[index]);
             err += data[index] + ' ';
         }
@@ -252,8 +250,7 @@ router.put('/:app_id', function(req, res) {
         });
         return;
     }
-
-    var ID = req.params.app_id;
+    var ID = query.ID;
     var data = {
         'ID': ID,
         'pageNum': config.pageCount
@@ -274,26 +271,26 @@ router.put('/:app_id', function(req, res) {
 
             var ID = results[0].ID;
 
-            if (req.body.ApplicationCode != undefined && req.body.ApplicationCode.length != 0) {
-                var ApplicationCode = req.body.ApplicationCode;
+            if (req.query.ApplicationCode != undefined && req.query.ApplicationCode.length != 0) {
+                var ApplicationCode = req.query.ApplicationCode;
             } else {
                 var ApplicationCode = results[0].ApplicationCode;
             }
 
-            if (req.body.ApplicationName !== undefined && req.body.ApplicationName.length != 0) {
-                var ApplicationName = req.body.ApplicationName;
+            if (req.query.ApplicationName !== undefined && req.query.ApplicationName.length != 0) {
+                var ApplicationName = req.query.ApplicationName;
             } else {
                 var ApplicationName = results[0].ApplicationName;
             }
 
-            if (req.body.Memo !== undefined && req.body.Memo.length != 0) {
-                var Memo = req.body.Memo;
+            if (req.query.Memo !== undefined && req.query.Memo.length != 0) {
+                var Memo = req.query.Memo;
             } else {
                 var Memo = results[0].Memo
             }
 
-            if (req.body.IsActive !== undefined && req.body.IsActive.length != 0) {
-                var IsActive = req.body.IsActive;
+            if (req.query.IsActive !== undefined && req.query.IsActive.length != 0) {
+                var IsActive = req.query.IsActive;
             } else {
                 var IsActive = results[0].IsActive;
             }
@@ -368,7 +365,8 @@ router.put('/:app_id', function(req, res) {
 
 //删除应用
 router.delete('/', function (req, res) {
-    var ID = req.body.ID;
+    var query = JSON.parse(req.query.d),
+        ID = req.query.ID;
     var data = {
         'ID': ID,
         'pageNum': config.pageCount
