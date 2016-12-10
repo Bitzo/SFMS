@@ -70,7 +70,6 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         res.on("end", function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-            //console.log(result);
             var logModel = {
                 ApplicationID: 1,
                 ApplicationName: '金科小哥',
@@ -108,7 +107,6 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
 //微信创建菜单的方法
 Weixin.prototype.createMenu = function(accessToken, callback) {
     //微信的创建菜单的url
-
     //var postUrl = config.weChat.baseUrl + "menu/create?accessToken=" + accessToken;
     var postUrl = config.weChat.createMenu + accessToken;
     var body = {
