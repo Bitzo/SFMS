@@ -1,13 +1,10 @@
 /**
- * Created by Jaosn on 2016/11/28.
- * Description :page context
+ * Created by Administrator on 2016/12/6.
  */
-
-
-angular.module('jason.pagination',[]).directive('jasonPagecontent',[function(){
+angular.module('jason.form',[]).directive('jasonFormcontent',[function(){
     return {
         restrict: 'EA',
-        template:"<div class='page-content'><div ng-transclude=''></div></div>",
+        template:"<div><div ng-transclude=''></div></div>",
         scope: {
             conf: '='
         },

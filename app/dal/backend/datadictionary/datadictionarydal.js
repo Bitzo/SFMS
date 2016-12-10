@@ -133,7 +133,7 @@ exports.queryDatadictionary = function (data,callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
@@ -171,7 +171,7 @@ exports.countAllDataDicts = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 if(!isNaN(data[key])){
                     sql += " and " + key + " = " + data[key] + " ";
                 }else{
@@ -179,7 +179,7 @@ exports.countAllDataDicts = function (data, callback) {
                 }
         }
     }
-
+    console.log(sql);
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);

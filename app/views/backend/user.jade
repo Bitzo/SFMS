@@ -10,48 +10,43 @@ block content
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
-                                  th 角色
-                                  th 菜单
+                                  th 角色ID
+                                  th 角色名称
                             tbody
                                 tr(ng-repeat="data in data")
-                                    td {{data.FunctionID}}
-                                    td {{data.FunctionName}}
+                                    td {{data.RoleID}}
+                                    td {{data.RoleName}}
 
 
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
-          input.form-control(placeholder='AccountID' style="width:100px;" ng-model='f.AccountID')
+          input.form-control(placeholder='账户ID' style="width:100px;" ng-model='f.AccountID')
         label.form-group.my-form-group
-          input.form-control(placeholder='ApplicationID'  style="width:100px;" ng-model='f.ApplicationID')
+          input.form-control(placeholder='应用ID'  style="width:100px;" ng-model='f.ApplicationID')
         label.form-group.my-form-group
-          input.form-control(placeholder='UserName'  style="width:100px;" ng-model='f.UserName')
+          input.form-control(placeholder='用户名'  style="width:100px;" ng-model='f.UserName')
         label.form-group.my-form-group
-          input.form-control(placeholder='Is Active'  style="width:100px;" ng-model='f.IsActive')
-        label.form-group.my-form-group
-          input.form-control(placeholder='CreateTime'  style="width:100px;" ng-model='f.CreateTime')
-        label.form-group.my-form-group
-          input.form-control(placeholder='CreateUserID'  style="width:100px;" ng-model='f.CreateUserID')
+          input.form-control(placeholder='创建者ID'  style="width:100px;" ng-model='f.CreateUserID')
         
         
         label.form-group.my-form-group
-          button.btn.btn-sm.btn-primary(ng-click='search()') 确定
+          button.btn.btn-sm.btn-primary(ng-click='search()') 查询
         div.buttons.pull-right
-          a.btn.btn-sm.btn-success(href='#/sfms/userinfo')
+          a.btn.btn-sm.btn-success(href='#/backend/userinfo')
             i.icon.icon-plus 新建
           button(ng-click='search()' class='btn btn-sm btn-default') 刷新
+      hr
       table.table.table-striped.table-bordered.text-center
         thead
           tr 
             th 序号
-            th AccountID
-            th ApplicationID
-            th UserName
-            th Is Active
-            th CreateTime
-            th Pwd
-            th CreateUserID
+            th 账户ID
+            th 应用ID
+            th 用户名
+            th 创建时间
+            th 创建者ID
             th 操作
         tbody
           tr(ng-repeat="x in datas" )
@@ -59,16 +54,14 @@ block content
             td {{x.AccountID}}
             td {{x.ApplicationID}}
             td {{x.UserName}}
-            td {{x.IsActive}}
             td {{x.CreateTime}}
-            td {{x.Pwd}}
             td {{x.CreateUserID}}
             td
-              a(ng-href='')
+              a( href='#/backend/menuinfo/:{{x.ID}}')
                 i.icon.icon-edit 编辑 
               a(ng-click='remove($index)')
                 i.icon.icon-trash 删除
-              a( data-toggle="modal",data-target="#myModal",ng-click='more($index)') 
+              a(data-toggle="modal",data-target="#myModal",ng-click="more($index,'userrole/userID/')") 
                 i.icon.icon-zoom-in  更多
       div.pull-right
         jason-pagination(conf='paginationConf')
