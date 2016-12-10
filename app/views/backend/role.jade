@@ -25,7 +25,7 @@ block content
                         button.btn.btn-primary(type="button") Save changes
         div.page-header
             div.buttons.text-right
-                a.btn.btn-success(href='#/sfms/roleAdd')
+                a.btn.btn-success(href='#/backend/roleAdd')
                     i.icon.icon-plus 新建
                 button(ng-click='search()' class='btn btn-default') 刷新
         div.page-content
@@ -52,7 +52,7 @@ block content
                         td {{data.RoleName}}
                         td {{data.IsActive}}
                         td
-                            a(href="#/sfms/roleEdit")
+                            a(href="#/backend/roleEdit")
                                 i.icon.icon-edit 编辑
                             a(ng-click="del(data.RoleID)")
                                 i.icon.icon-trash 删除
