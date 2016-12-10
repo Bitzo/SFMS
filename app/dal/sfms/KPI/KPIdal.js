@@ -105,7 +105,7 @@ exports.countQuery = function (data, callback) {
         }
     }
 
-    clogger.writeInfo('KPI查询统计：' + sql);
+    logger.writeInfo('KPI查询统计：' + sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
