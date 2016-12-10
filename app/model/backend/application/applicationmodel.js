@@ -10,7 +10,7 @@ var applicationModel = {
     ApplicationCode: '',
     ApplicationName: '',
     Memo: '',
-    IsActive: true,
+    IsActive: 1,
     PK: 'ID'
 }
 

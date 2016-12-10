@@ -6,7 +6,6 @@
  * 微信相关
  */
 
-
 var sha1 = require('sha1'),
     events = require('events'),
     emitter = new events.EventEmitter(),
@@ -19,6 +18,9 @@ var logger = appRequire('util/loghelper').helper;
 var logService = appRequire('service/backend/log/logservice');
 //日期组件
 var moment = require('moment');
+//redis缓存组件
+var redisHelper = appRequire('util/redishelper');
+var redisCache = new redisHelper();
 
 // 微信类
 var Weixin = function() {
@@ -31,7 +33,6 @@ var Weixin = function() {
 
 // 验证
 Weixin.prototype.checkSignature = function(req) {
-
     // 获取校验参数
     this.signature = req.query.signature;
     this.timestamp = req.query.timestamp;
@@ -53,7 +54,54 @@ Weixin.prototype.checkSignature = function(req) {
     }
 }
 
-//获取access_token
+/*
+ *获取access_token
+ *先走redis缓存，如未获取到，再重新请求微信获取，并覆盖缓存
+ */
+Weixin.prototype.getLocalAccessToken = function(operatorid, callback) {
+    var me = this;
+    redisCache.get(config.weChat.rediskey, function(err, token) {
+        if (err) {
+            //记录异常
+            logger.writeInfo('从redis获取微信token异常' + new Date());
+        } else {
+            if (token != 'null' && token != null) {
+                callback(true, token);
+            } else {
+                logger.writeInfo('redis中没有微信的token，准备从微信重新获取' + new Date());
+
+                //从微信重新请求获取数据
+                me.getAccessToken(operatorid, function(wehcattoken) {
+                    logger.writeInfo('从微信重新获取access_token' + new Date());
+                    if (wehcattoken != undefined && wehcattoken.access_token !== undefined && wehcattoken.access_token !== null) {
+                        logger.writeInfo('从微信重新获取access_token:' + wehcattoken);
+
+                        //放到redis
+                        redisCache.set(config.weChat.rediskey, wehcattoken.access_token, function(err, result) {
+                            if (err) {
+                                logger.writeErr('redis插入键异常' + new Date());
+                            }
+                            logger.writeInfo('将access_token插入到redis成功');
+                        });
+
+                        redisCache.expire(config.weChat.rediskey, config.weChat.expiretime, function(err, result) {
+                            if (err) {
+                                logger.writeErr('redis设置键过期异常' + new Date());
+                            }
+                            logger.writeInfo('将redis中access_token设置过期成功');
+                            callback(true, wehcattoken);
+                        });
+
+                    } else {
+                        callback(false, null);
+                    }
+                });
+            }
+        }
+    });
+};
+
+//从微信获取access_token
 Weixin.prototype.getAccessToken = function(operatorid, callback) {
     var accessurl = config.weChat.baseUrl + config.weChat.accessTokenUrl +
         'appid=' + config.weChat.appid +
@@ -70,14 +118,14 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         res.on("end", function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-            //console.log(result);
+
             var logModel = {
                 ApplicationID: 1,
                 ApplicationName: '金科小哥',
                 OperationName: '获取微信AccessToken',
                 OldValue: '',
                 OperationUrl: '',
-                NewValue: '',
+                NewValue: result.access_token,
                 Action: '微信操作_获取AccessToken',
                 Type: 1,
                 ObjName: '',
@@ -103,101 +151,84 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
     }).on('error', function(e) {
         logger.writeErr('获取微信token时异常' + new Date());
     });
-}
+};
+
 //微信获取用户的列表
-Weixin.prototype.getCustomerList = function(accessToken,callback)
-{
+Weixin.prototype.getCustomerList = function(accessToken, callback) {
     var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken;
     console.log(getUrl);
-    https.get(getUrl,function(res)
-    {
+    https.get(getUrl, function(res) {
         var datas = [];
         var size = 0;
-        res.on('data',function(data)
-        {
+        res.on('data', function(data) {
             datas.push(data);
             size += data.length;
         });
 
-        res.on('end',function()
-        {
-            var buff = Buffer.concat(datas,size);
-            var result = JSON.parse(iconv.decode(buff,"utf8"));//转码
+        res.on('end', function() {
+            var buff = Buffer.concat(datas, size);
+            var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
             console.log(result);
 
-            if(callback && typeof callback === 'function')
-            {
+            if (callback && typeof callback === 'function') {
                 callback(result);
             }
 
         })
-    }).on('error',function(e)
-    {
+    }).on('error', function(e) {
         logger.writeErr('获取列表信息时异常' + new Date());
     });
 }
 
 //微信获取到所有用户的列表，即所有用户的openid
-Weixin.prototype.getNextOpenid=function(accessToken,nextopenid,callback)
-{
-    var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
-    console.log(getUrl);
-    https.get(getUrl,function(res)
-    {
-        var datas = [];
-        var size = 0;
-        res.on('data',function(data)
-        {
-            datas.push(data);
-            size += data.length;
+Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
+        var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
+        console.log(getUrl);
+        https.get(getUrl, function(res) {
+            var datas = [];
+            var size = 0;
+            res.on('data', function(data) {
+                datas.push(data);
+                size += data.length;
+            });
+
+            res.on('end', function() {
+                var buff = Buffer.concat(datas, size);
+                var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
+                console.log(result);
+
+                if (callback && typeof callback === 'function') {
+                    callback(result);
+                }
+
+            })
+        }).on('error', function(e) {
+            logger.writeErr('获取列表信息时异常' + new Date());
         });
-
-        res.on('end',function()
-        {
-            var buff = Buffer.concat(datas,size);
-            var result = JSON.parse(iconv.decode(buff,"utf8"));//转码
-            console.log(result);
-
-            if(callback && typeof callback === 'function')
-            {
-                callback(result);
-            }
-
-        })
-    }).on('error',function(e)
-    {
-        logger.writeErr('获取列表信息时异常' + new Date());
-    });
-}
-//微信获取用户信息
-Weixin.prototype.getCustomer=function(accessToken,openid,callback)
-{
+    }
+    //微信获取用户信息
+Weixin.prototype.getCustomer = function(accessToken, openid, callback) {
     //get获取微信端的接口的url
     var getUrl = config.weChat.baseUrl + config.weChat.getCustomer + accessToken + "&openid=" + openid;
-    https.get(getUrl,function(res)
-    {
+    https.get(getUrl, function(res) {
         var datas = [];
         var size = 0;
-        res.on('data',function(data)
-        {
+        res.on('data', function(data) {
             datas.push(data);
             size += data.length;
         });
 
-        res.on('end',function()
-        {
-            var buff = Buffer.concat(datas,size);
-            var result = JSON.parse(iconv.decode(buff,"utf8"));//转码
+        res.on('end', function() {
+            var buff = Buffer.concat(datas, size);
+            var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
             console.log(result);
 
-            if(callback && typeof callback === 'function')
-            {
+            if (callback && typeof callback === 'function') {
                 callback(result);
             }
 
         })
-    }).on('error',function(e)
-    {
+    }).on('error', function(e) {
         logger.writeErr('获取用户信息时异常' + new Date());
     });
 
@@ -207,7 +238,6 @@ Weixin.prototype.getCustomer=function(accessToken,openid,callback)
 //微信创建菜单的方法
 Weixin.prototype.createMenu = function(accessToken, callback) {
     //微信的创建菜单的url
-   // 内容请求
     //var postUrl = config.weChat.baseUrl + "menu/create?accessToken=" + accessToken;
     var postUrl = config.weChat.createMenu + accessToken;
     var body = {
@@ -229,12 +259,11 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
                 "type": "view",
                 "name": "联系我们",
                 "url": "http://www.soso.com"
-            },{
+            }, {
                 "type": "location_select",
                 "name": "发送位置",
-                "key" : "rselfmenu_2_0"
-            }
-            ]
+                "key": "rselfmenu_2_0"
+            }]
         }]
     }
     var bodyString = JSON.stringify(body);
@@ -594,7 +623,7 @@ Weixin.prototype.sendimgMsg = function(msg) {
             "<image>" +
             "<MediaId><![CDATA[" + msg.MediaId + "]]></MediaId>" +
             "</image>" +
-            "<funcFlag><![CDATA["+ msg.funcFlag + "]]></funcFlag>" +
+            "<funcFlag><![CDATA[" + msg.funcFlag + "]]></funcFlag>" +
             "</xml>";
 
         this.res.type('xml');
