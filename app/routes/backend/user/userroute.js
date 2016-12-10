@@ -17,7 +17,7 @@ var config=appRequire('config/config');
 var moment=require('moment');
 router.post('/',function(req,res)
 {
-	
+	console.log(1)
 	var data=['ApplicationID','Account','UserName','Pwd','CreateUserID','IsActive'];
 	var err='require: ';
 
