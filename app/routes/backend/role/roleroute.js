@@ -20,16 +20,18 @@ var logger = appRequire("util/loghelper").helper;
 router.get('/',function (req, res) {
     var query = JSON.parse(req.query.f);
     var appID = query.ApplicationID || '',
+        roleID = query.RoleID || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || 20,
         roleName = query.RoleName || '',
-        isActive = query.IsActive || '';
+        isActive = query.IsActive || 1;
     page = page>0?page:1;
 
     if (pageNum == '') pageNum = config.pageCount;
 
     var data = {
         'ApplicationID': appID,
+        'RoleID': roleID,
         'page': page,
         'pageNum': pageNum,
         'RoleName': roleName,
@@ -113,7 +115,7 @@ router.post('/',function (req, res) {
         isActive = req.body.formdata.IsActive;
 
     //增加角色功能点所需要的数据
-    var funcData = req.body.dormdata.data;
+    var funcData = req.body.formdata.data;
 
     for(var value in data)
     {
@@ -422,7 +424,7 @@ router.put('/', function (req, res) {
 
 //删除角色
 router.delete('/', function (req, res) {
-    var roleID = req.body.roleID;
+    var roleID = req.query.d.RoleID;
 
     if (roleID == '' || roleID === undefined) {
         res.status(400);
@@ -469,7 +471,7 @@ router.delete('/', function (req, res) {
                     res.json({
                         status: 400,
                         isSuccess: true,
-                        msg: "删除成.功"
+                        msg: "删除成功"
                     })
                 }
             })
