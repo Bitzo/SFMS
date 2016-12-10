@@ -310,8 +310,11 @@ router.put('/', function(req, res) {
                 var IsActive = results[0].IsActive;
             }
             data = {
+                'ID': ID,
+                'ApplicatioCode': ApplicationCode,
                 'ApplicationName': ApplicationName,
-                'pageNum' : config.pageCount
+                'Memo': Memo,
+                'IsActive': IsActive
             }
             userSpring.update(data, function (err, results) {
                 if (err) {
