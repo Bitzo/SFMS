@@ -79,7 +79,7 @@ router.post('/', function (req, res) {
                 msg: '记录失败,签到信息有误'
             })
         } else {
-            //如果是签退,判断是否已经垮天,若垮天则更改签退时间为签到当日的23：59：59
+            //如果是签退,判断是否已经跨天,若跨天则更改签退时间为签到当日的23：59：59
             if (data.SignType == 1) {
                 if(!moment(results[0].CreateTime).isSame(data.CreateTime, 'day')) {
                     results[0].CreateTime = moment(results[0].CreateTime).set({

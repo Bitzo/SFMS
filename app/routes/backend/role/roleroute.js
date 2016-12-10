@@ -20,6 +20,7 @@ var logger = appRequire("util/loghelper").helper;
 router.get('/',function (req, res) {
     var query = JSON.parse(req.query.f);
     var appID = query.ApplicationID || '',
+        roleID = query.RoleID || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || 20,
         roleName = query.RoleName || '',
@@ -30,6 +31,7 @@ router.get('/',function (req, res) {
 
     var data = {
         'ApplicationID': appID,
+        'RoleID': roleID,
         'page': page,
         'pageNum': pageNum,
         'RoleName': roleName,
@@ -107,17 +109,17 @@ router.post('/',function (req, res) {
         err = 'required: ';
 
     //增加角色所需要的参数
-    var applicationID = req.body.ApplicationID,
-        roleCode = req.body.RoleCode,
-        roleName = req.body.RoleName,
-        isActive = req.body.IsActive;
+    var applicationID = req.body.formdata.ApplicationID,
+        roleCode = req.body.formdata.RoleCode,
+        roleName = req.body.formdata.RoleName,
+        isActive = req.body.formdata.IsActive;
 
     //增加角色功能点所需要的数据
-    var funcData = req.body.data;
+    var funcData = req.body.formdata.data;
 
     for(var value in data)
     {
-        if(!(data[value] in req.body))
+        if(!(data[value] in req.body.formdata))
         {
             console.log("require " + data[value]);
             err += data[value] + ' ';
@@ -273,18 +275,18 @@ router.put('/', function (req, res) {
         err = 'required: ';
 
     //编辑角色基本信息所需要的数据
-    var appID = req.body.ApplicationID,
-        roleID = req.body.RoleID,
-        roleCode = req.body.RoleCode,
-        roleName = req.body.RoleName,
-        isActive = req.body.IsActive;
+    var appID = req.body.formdata.ApplicationID,
+        roleID = req.body.formdata.RoleID,
+        roleCode = req.body.formdata.RoleCode,
+        roleName = req.body.formdata.RoleName,
+        isActive = req.body.formdata.IsActive;
 
     //增加角色功能点所需要的数据
-    var funcData = req.body.data;
+    var funcData = req.body.formdata.data;
 
     for(var value in data)
     {
-        if(!(data[value] in req.body))
+        if(!(data[value] in req.body.formdata))
         {
             logger.writeInfo("require " + data[value]);
             err += data[value] + ' ';
@@ -422,8 +424,7 @@ router.put('/', function (req, res) {
 
 //删除角色
 router.delete('/', function (req, res) {
-    var roleID = req.body.RoleID;
-
+    var roleID = req.query.d.RoleID;
     if (roleID == '' || roleID === undefined) {
         res.status(400);
         return res.json({
@@ -469,7 +470,7 @@ router.delete('/', function (req, res) {
                     res.json({
                         status: 400,
                         isSuccess: true,
-                        msg: "删除成.功"
+                        msg: "删除成功"
                     })
                 }
             })

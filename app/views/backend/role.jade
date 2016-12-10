@@ -52,13 +52,13 @@ block content
                         td {{data.RoleName}}
                         td {{data.IsActive}}
                         td
+
                           a(ng-click="show(x.RoleID,'/backrole')",href='#/backend/rolEdit/' )
                             i.icon.icon-edit 编辑 
                           a(ng-click="remove($index,'/backrole')")
                             i.icon.icon-trash 删除
                           a(data-toggle="modal",data-target="#myModal",ng-click="morerole($index,'rolefunc/')") 
                             i.icon.icon-zoom-in  更多
-                                        
 
 
             div.pull-right
