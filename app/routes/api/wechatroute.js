@@ -21,8 +21,8 @@ wechat.token = config.weChat.token;
 //微信开发者认证
 router.get('/accesscheck', function(req, res, next) {
     var query = url.parse(req.url, true).query;
-    
-    
+
+
     var signature = query.signature;
     var echostr = query.echostr;
     var timestamp = query['timestamp'];
@@ -56,7 +56,7 @@ wechat.textMsg(function(msg) {
                 fromUserName: msg.toUserName,
                 toUserName: msg.fromUserName,
                 msgType: "text",
-                content: "这是文本回复"+new Date(),
+                content: "这是文本回复" + new Date(),
                 funcFlag: 0
             };
             break;
@@ -94,35 +94,39 @@ wechat.textMsg(function(msg) {
                 funcFlag: 0
             }
     }
-    wechat.sendMsg(resMsg);
-    //测试创建菜单
-    wechat.getAccessToken(1,function(result){
-           console.log(result);
-       var access_token = result.access_token;
-            wechat.createMenu(access_token,function(data)
-            {
-                console.log(data);
-            })
-     });    
+    // wechat.sendMsg(resMsg);
+
+    //测试获取token
+    wechat.getLocalAccessToken(1, function(issuccess, token) {
+        if (issuccess) {
+            resMsg.content = token;
+            wechat.sendMsg(resMsg);
+        }
+        else
+        {
+            resMsg.content = '操作失败';
+            wechat.sendMsg(resMsg);
+        }
+    })
 });
 
 // 监听图片消息
 wechat.imageMsg(function(msg) {
     console.log("imageMsg received");
     console.log(JSON.stringify(msg));
-    var resMsg ={};
-    switch(msg.msgType)
-    {
+    var resMsg = {};
+    switch (msg.msgType) {
         case 'image':
 
-        //返回的图片数据
-        resMsg={
-            fromUserName:msg.toUserName,
-            toUserName:msg.fromUserName,
-            msgType:"image",
-            MediaId:msg.MediaId
-        }
-        break;
+            //返回的图片数据
+            resMsg = {
+                fromUserName: msg.toUserName,
+                toUserName: msg.fromUserName,
+                msgType: "image",
+                MediaId: msg.MediaId,
+                funcFlag: 1
+            }
+            break;
     }
     wechat.sendMsg(resMsg);
 });
@@ -148,17 +152,17 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
+    //  console.log(msg);
     console.log(JSON.stringify(msg));
+    console.log("获取用用户的信息");
+
+
 });
 
 //接受用户的消息
 router.post('/accesscheck', function(req, res) {
 
     wechat.handleCustomerMsg(req, res);
-    // wechat.getAccessToken(1,function(result)
-    // {
-    //     console.log(result);
-    // })
 });
 
 module.exports = router;
