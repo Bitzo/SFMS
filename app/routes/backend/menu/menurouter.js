@@ -100,7 +100,7 @@ router.get('/tree',function (req,res) {
                         dataNum: countNum,
                         curPage: page,
                         curPageNum:pageNum,
-                        totlePage: Math.ceil(countNum/pageNum),
+                        totalPage: Math.ceil(countNum/pageNum),
                         data: result
                     };
                     if(resultBack.curPage == resultBack.totlePage) {
@@ -113,7 +113,7 @@ router.get('/tree',function (req,res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "未查询到此菜单"
+                        msg: "未查询到相应菜单"
                     });
                 }
             });
@@ -122,7 +122,7 @@ router.get('/tree',function (req,res) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "未查询到此菜单"
+                msg: "未查询到相应菜单"
             });
         }
     });
@@ -214,7 +214,7 @@ console.log(query);
                         dataNum: countNum,
                         curPage: page,
                         curPageNum:pageNum,
-                        totlePage: Math.ceil(countNum/pageNum),
+                        totalPage: Math.ceil(countNum/pageNum),
                         data: result
                     };
                     if(resultBack.curPage == resultBack.totlePage) {
@@ -227,7 +227,7 @@ console.log(query);
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "未查询到此菜单"
+                        msg: "未查询到相应菜单"
                     });
                 }
             });
@@ -236,7 +236,7 @@ console.log(query);
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "未查询到此菜单"
+                msg: "未查询到相应菜单"
             });
         }
     });
