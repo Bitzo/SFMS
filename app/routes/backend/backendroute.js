@@ -71,6 +71,11 @@ router.get('/userinfo', function(req, res, next) {
 
 });
 
+router.get('/useredit', function(req, res, next) {
+        res.render('backend/useredit', { title: 'Hi backend' });
+
+});
+
 router.get('/menu', function(req, res, next) {
         res.render('backend/menu', { title: 'Hi backend' });
 
@@ -93,6 +98,11 @@ router.get('/application', function(req, res, next) {
 
 router.get('/applicationinfo', function(req, res, next) {
         res.render('backend/applicationinfo', { title: 'Hi backend' });
+
+});
+
+router.get('/applicationedit', function(req, res, next) {
+        res.render('backend/applicationedit', { title: 'Hi backend' });
 
 });
 

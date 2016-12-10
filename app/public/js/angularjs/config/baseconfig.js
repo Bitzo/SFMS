@@ -240,8 +240,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         };
     function getInitmenu(index,action){   
             console.log(index);   
-            console.log(action);      
-               
+            console.log(action);                  
         $http({
             method:'get',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -255,7 +254,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             }
         }).
         success(function(response) {
-            $scope.formdata=response.data.Menu[0];
+            $scope.formdata=response.data[0];
             console.log($scope.formdata.ApplicationID);            
             console.log('修改成功');            
             console.log(response);
@@ -265,6 +264,35 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             console.log(response);
         });
     }
+     
+     //提交修改
+     $scope.formdata={};
+     $scope.newedit = function(formdata,action) {
+         console.log(formdata);
+         console.log(action);
+         $http({
+            method:'put',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata:$scope.formdata
+            }
+        }).
+        success(function(response) {
+            console.log($http.url)
+           console.log($scope.formdata);
+           console.log(response);
+           if(response.isSuccess){
+              alert(response.msg);
+           }else{
+              alert(response.msg);
+           }
+
+        }).
+        error(function(response) {
+           console.log(response);
+           console.log('no');
+        });
+    };
    
 
     //删除
@@ -346,6 +374,36 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
   
 
        //显示角色新增页面
+        $scope.addrole=function(iaction){
+            getInitrole(action);
+        };
+
+
+    function getInitrole(action){   
+            console.log(action);                  
+        $http({
+            method:'get',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:{
+                     MenuID:index,
+                     RoleID:index,
+                     ID:index,
+                     AccountID:index,
+                  }
+            }
+        }).
+        success(function(response) {
+            $scope.formdata=response.data[0];
+            console.log($scope.formdata.ApplicationID);            
+            console.log('修改成功');            
+            console.log(response);
+        }).
+        error(function(response) {
+            console.log('修改失败');                        
+            console.log(response);
+        });
+    }
 
     
 

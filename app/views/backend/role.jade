@@ -30,7 +30,7 @@ block content
                 label.form-group.my-form-group
                     button.btn.btn-sm.btn-primary(ng-click='search()') 查询
                 div.buttons.pull-right
-                  a.btn.btn-sm.btn-success(href='#/backend/roleAdd')
+                  a.btn.btn-sm.btn-success(ng-click="addrole('/function')",href='#/backend/roleAdd')
                     i.icon.icon-plus 新建
                   button(ng-click='search()' class='btn btn-sm btn-default') 刷新
              hr
@@ -53,7 +53,7 @@ block content
                         td {{data.IsActive}}
                         td
 
-                          a(ng-click="show(x.RoleID,'/backrole')",href='#/backend/rolEdit/' )
+                          a(ng-click="show(x.RoleID,'/backrole')",href='#/backend/roleEdit/' )
                             i.icon.icon-edit 编辑 
                           a(ng-click="remove($index,'/backrole')")
                             i.icon.icon-trash 删除

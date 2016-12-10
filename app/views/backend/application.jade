@@ -32,9 +32,9 @@ block content
             td {{x.ApplicationCode}}
             td {{x.ApplicationName}}
             td
-              a(ng-click="show(x.ID,'/backmenu')",href='#/backend/applicationedit/' )
+              a(ng-click="show(x.ID,'/app')",href='#/backend/applicationedit/' )
                 i.icon.icon-edit 编辑
-              a(ng-click='remove($index)')
+              a(ng-click="remove($index,'/app')")
                 i.icon.icon-trash 删除
 
             

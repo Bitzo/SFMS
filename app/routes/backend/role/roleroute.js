@@ -424,13 +424,13 @@ router.put('/', function (req, res) {
 
 //删除角色
 router.delete('/', function (req, res) {
-    var roleID = req.query.d.RoleID;
+    var roleID = JSON.parse(req.query.d).RoleID;
     if (roleID == '' || roleID === undefined) {
         res.status(400);
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: "require roleID"
+            msg: "require RoleID"
         })
     }
 
