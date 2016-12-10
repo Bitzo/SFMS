@@ -107,17 +107,17 @@ router.post('/',function (req, res) {
         err = 'required: ';
 
     //增加角色所需要的参数
-    var applicationID = req.body.ApplicationID,
-        roleCode = req.body.RoleCode,
-        roleName = req.body.RoleName,
-        isActive = req.body.IsActive;
+    var applicationID = req.body.formdata.ApplicationID,
+        roleCode = req.body.formdata.RoleCode,
+        roleName = req.body.formdata.RoleName,
+        isActive = req.body.formdata.IsActive;
 
     //增加角色功能点所需要的数据
-    var funcData = req.body.data;
+    var funcData = req.body.dormdata.data;
 
     for(var value in data)
     {
-        if(!(data[value] in req.body))
+        if(!(data[value] in req.body.formdata))
         {
             console.log("require " + data[value]);
             err += data[value] + ' ';
@@ -273,18 +273,18 @@ router.put('/', function (req, res) {
         err = 'required: ';
 
     //编辑角色基本信息所需要的数据
-    var appID = req.body.ApplicationID,
-        roleID = req.body.RoleID,
-        roleCode = req.body.RoleCode,
-        roleName = req.body.RoleName,
-        isActive = req.body.IsActive;
+    var appID = req.body.formdata.ApplicationID,
+        roleID = req.body.formdata.RoleID,
+        roleCode = req.body.formdata.RoleCode,
+        roleName = req.body.formdata.RoleName,
+        isActive = req.body.formdata.IsActive;
 
     //增加角色功能点所需要的数据
-    var funcData = req.body.data;
+    var funcData = req.body.formdata.data;
 
     for(var value in data)
     {
-        if(!(data[value] in req.body))
+        if(!(data[value] in req.body.formdata))
         {
             logger.writeInfo("require " + data[value]);
             err += data[value] + ' ';
