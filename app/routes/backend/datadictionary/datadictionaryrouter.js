@@ -15,10 +15,21 @@ var datadictionaryService = appRequire('service/backend/datadictionary/datadicti
     logger = appRequire("util/loghelper").helper;
 
 
-//查
+//查看字典
 router.get('/',function (req,res) {
-    var page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize;
+    var query = JSON.parse(req.query.f);
+
+    var page = query.pageindex || 1,
+        pageNum = query.pagesize || 20,
+        applicationID = query.ApplicationID || '',
+        dictionaryID = query.DictionaryID || '',
+        dictionaryLevel = query.DictionaryLevel || '',
+        parentID = query.ParentID || '',
+        category = query.Category || '',
+        dictionaryCode = query.DictionaryCode || '',
+        dictionaryValue = query.DictionaryValue || '',
+        memo = query.Memo || '',
+        isActive = query.IsActive || '';
 
     page = page>0 ? page : 1;
 
@@ -27,8 +38,16 @@ router.get('/',function (req,res) {
     }
 
     var data = {
-        'page': page,
-        'pageNum': pageNum
+        "page": page,
+        "pageNum": pageNum,
+        "ApplicationID" : applicationID,
+        "DictionaryID" : dictionaryID,
+        "DictionaryLevel" : dictionaryLevel,
+        "ParentID" : parentID,
+        "Category" : category,
+        "DictionaryCode" : dictionaryCode,
+        "DictionaryValue" : dictionaryValue,
+        "IsActive" : isActive
     };
 
     //用于查询结果总数的计数
@@ -67,19 +86,20 @@ router.get('/',function (req,res) {
                         dataNum: countNum,
                         curPage: page,
                         curPageNum:pageNum,
-                        totlePage: Math.ceil(countNum/pageNum),
+                        totalPage: Math.ceil(countNum/pageNum),
                         data: result
                     };
                     if(resultBack.curPage == resultBack.totlePage) {
                         resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
                     }
-                    res.status(404);
+                    res.status(200);
                     return res.json(resultBack);
                 } else {
+                    res.status(404);
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "未查询到相关信息"
+                        msg: "未查询到相关字典信息"
                     });
                 }
             });
@@ -88,13 +108,13 @@ router.get('/',function (req,res) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "未查询到相关信息"
+                msg: "未查询到相关字典信息"
             });
         }
     });
 });
 
-//增
+//新增字典
 router.post('/',function (req,res) {
     var data = ['ApplicationID', 'DictionaryLevel', 'ParentID', 'Category','DictionaryCode','DictionaryValue'],
         err = 'required: ';
@@ -175,7 +195,7 @@ router.post('/',function (req,res) {
     })
 });
 
-//改
+//字典编辑
 router.put('/',function (req,res) {
     var data = ['ApplicationID','DictionaryID', 'DictionaryLevel', 'ParentID', 'Category','DictionaryCode','DictionaryValue'],
         err = 'required: ';
@@ -209,9 +229,9 @@ router.put('/',function (req,res) {
 
     if(err != 'required: ')
     {
-        res.status(400);
+        res.status(404);
         return res.json({
-            code: 400,
+            code: 404,
             isSuccess: false,
             msg: err
         });
@@ -229,11 +249,11 @@ router.put('/',function (req,res) {
         IsActive : isActive
     };
 
-    var data = {
+    var checkData = {
         DictionaryID : dictionaryID
     };
     //判断是否有此字典
-    datadictionaryService.countAllDataDicts(data, function (err, result) {
+    datadictionaryService.countAllDataDicts(checkData, function (err, result) {
         if (err) {
             res.status(500);
             return res.json({
@@ -257,7 +277,7 @@ router.put('/',function (req,res) {
                 if(results!== undefined && results.affectedRows != 0){
                     res.status(200);
                     return res.json({
-                        code : 500,
+                        code : 200,
                         isSuccess : true,
                         successResult : results,
                         msg : '字典修改成功'
@@ -272,9 +292,9 @@ router.put('/',function (req,res) {
                 }
             });
         }else {
-            res.status(400);
+            res.status(404);
             return res.json({
-                code: 400,
+                code: 404,
                 isSuccess: false,
                 msg: "此字典不存在，不能修改"
             });
@@ -284,12 +304,12 @@ router.put('/',function (req,res) {
 
 });
 
-//删
+//物理删除字典
 router.delete('/',function (req,res) {
-    //MenuID是主键，只需要此属性就可准确删除，不必传入其他参数
+    //DictionaryID是主键，只需要此属性就可准确删除，不必传入其他参数
     var dictionaryID = req.body.DictionaryID;
-
     if (dictionaryID === undefined) {
+        res.status(404);
         return res.json({
             code: 404,
             isSuccess: false,
@@ -297,8 +317,9 @@ router.delete('/',function (req,res) {
         });
     }
     if(isNaN(dictionaryID)){
+        res.status(400);
         return res.json({
-            code: 500,
+            code: 400,
             isSuccess: false,
             msg: 'DictionaryID不是数字'
         });
@@ -331,6 +352,7 @@ router.delete('/',function (req,res) {
 
                 //判断是否删除成功
                 if(results !== undefined && results.affectedRows != 0){
+                    res.status(200);
                     return res.json({
                         code : 200,
                         isSuccess : true,
@@ -338,6 +360,7 @@ router.delete('/',function (req,res) {
                         msg : '字典删除成功'
                     });
                 }else {
+                    res.status(404);
                     return res.json({
                         code: 404,
                         isSuccess: false,
@@ -346,9 +369,9 @@ router.delete('/',function (req,res) {
                 }
             });
         }else {
-            res.status(400);
+            res.status(404);
             return res.json({
-                code: 400,
+                code: 404,
                 isSuccess: false,
                 msg: "此字典不存在，删除失败"
             });
@@ -356,5 +379,87 @@ router.delete('/',function (req,res) {
     });
 
 });
+
+//逻辑删除字典
+router.delete('/logical',function (req,res) {
+    //MenuID是主键，只需要此属性就可准确删除，不必传入其他参数
+    var dictionaryID = req.body.DictionaryID;
+
+    if (dictionaryID === undefined) {
+        res.status(404);
+        return res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require DictionaryID'
+        });
+    }
+    if(isNaN(dictionaryID)){
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: 'DictionaryID不是数字'
+        });
+    }
+    var data = {
+        "DictionaryID" : dictionaryID
+    };
+
+    var formData = {
+        "DictionaryID" : dictionaryID,
+        "IsActive" : 0
+    };
+    //判断是否有此字典
+    datadictionaryService.countAllDataDicts(data, function (err, result) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "服务器内部错误"
+            });
+        }
+        //如果有，则可以删除
+        if (result !== undefined && result[0]['num'] != 0) {
+            datadictionaryService.datadictionaryDeleteLogically(formData,function (err,results) {
+                if(err){
+                    res.status(500);
+                    return res.json({
+                        code :500,
+                        isSuccess : false,
+                        msg : '服务器出错'
+                    });
+                }
+
+                //判断是否删除成功
+                if(results !== undefined && results.affectedRows != 0){
+                    res.status(200);
+                    return res.json({
+                        code : 200,
+                        isSuccess : true,
+                        deleteResult : results,
+                        msg : '字典删除成功'
+                    });
+                }else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "字典删除失败"
+                    });
+                }
+            });
+        }else {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "此字典不存在，删除失败"
+            });
+        }
+    });
+
+});
+
 
 module.exports = router;

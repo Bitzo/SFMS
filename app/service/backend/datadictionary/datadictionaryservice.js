@@ -105,6 +105,18 @@ exports.datadictionaryDelete = function (data,callback) {
     });
 }
 
+exports.datadictionaryDeleteLogically = function (data, callback) {
+    datadictionaryDal.datadictionaryUpdate(data,function (err, results) {
+        if(err){
+            callback(true);
+            return ;
+        }
+
+        console.log('datadictionaryDeleteLogically func in service');
+        logger.writeInfo('datadictionaryDeleteLogically func in service');
+        callback(false,results);
+    });
+}
 exports.queryDatadictionaryByCode = function (data,callback) {
     datadictionaryDal.queryDatadictionaryByCode(data, function (err, results) {
         if (err) {
