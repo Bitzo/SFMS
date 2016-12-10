@@ -37,6 +37,8 @@ var config = {
     weChat: {
         token: 'snail',
         appid: 'wx844d9a89f533f63d',
+        rediskey:'jit_jkbro_wechat_token',
+        expiretime:7200,
         secret: 'e668e2f31c16fac4528be7f82692085d',
         host: 'api.weixin.qq.com',
         baseUrl: 'https://api.weixin.qq.com/cgi-bin/',

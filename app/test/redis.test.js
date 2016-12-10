@@ -9,7 +9,8 @@
 require('../global_bootstrap')
 var should = require('should');
 var redisCache = appRequire('util/redishelper');
-//键的名字以项目名_模块_键的名称组合
+
+//键的名字以组织名_项目名_模块_键的名称组合
 var key = 'jkbro_wechat_token';
 
 describe("redis缓存单元测试", function() {
