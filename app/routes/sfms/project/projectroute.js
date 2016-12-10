@@ -125,8 +125,7 @@ router.put('/', function (req, res) {
     }
 
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'projectName', 'projectDesc', 'projectID', 'jitkey', 'projectStatus', 'projectPrice',
-            'projectManageID', 'projectManageName', 'projectEndTime', 'projectTimeLine'],
+    var temp = ['ID', 'projectName', 'projectDesc', 'projectID', 'jitkey', 'projectStatus', 'projectPrice', 'projectManageID', 'projectManageName', 'projectEndTime', 'projectTimeLine'],
         err = 'required: ';
     for(var value in temp)
     {

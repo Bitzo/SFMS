@@ -8,8 +8,6 @@
 
 var db_backend= appRequire('db/db_backend');
 var applicationMode = appRequire('model/backend/application/applicationmodel');
-//var config = appRequire('config/config');
-
 
 //查询目前所有应用
 exports.queryAllApp = function (data, callback) {

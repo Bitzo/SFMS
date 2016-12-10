@@ -94,7 +94,6 @@ router.put('/', function (req, res) {
         UserID = req.body.UserID,
         UserName = req.body.UserName,
         OperateUser = req.body.OperateUser,
-        KPIStatus = req.body.KPIStatus,
         Remark = req.body.Remark;
 
     var data ={

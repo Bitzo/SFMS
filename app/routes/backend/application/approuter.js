@@ -14,17 +14,19 @@ var express = require('express'),
 
 
 router.post('/', function (req, res) {
-    var data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
-    var err = 'required: ';
+    var query = JSON.parse(req.query.formdata);
+        data = ['ApplicationCode', 'ApplicationName', 'IsActive'],
+        err = 'required: ';
 
     for(var index in data) {
-        if (!(data[index] in req.body)) {
+        if (!(data[index] in query)) {
             console.log(data[index]);
             err += data[index] + ' ';
         }
     }
 
     if (err != 'required: ') {
+        res.status(400);
         res.json({
             code: 400,
             isSuccess: false,
@@ -33,10 +35,10 @@ router.post('/', function (req, res) {
         return;
     }
 
-
-    if (req.body.ApplicationCode !== undefined && req.body.ApplicationCode.length != 0) {
-        var ApplicationCode = req.body.ApplicationCode;
+    if (query.ApplicationCode !== undefined && query.ApplicationCode.length != 0) {
+        var ApplicationCode = query.ApplicationCode;
     } else {
+        res.status(404);
         res.json({
             code: 404,
             isSucess: false,
@@ -46,9 +48,10 @@ router.post('/', function (req, res) {
         return;
     }
 
-    if (req.body.ApplicationName !== undefined && req.body.ApplicationName.length != 0) {
-        var ApplicationName = req.body.ApplicationName;
+    if (query.ApplicationName !== undefined && query.ApplicationName.length != 0) {
+        var ApplicationName = query.ApplicationName;
     } else {
+        res.status(404);
         res.json({
             code: 404,
             isSucess: false,
@@ -58,15 +61,16 @@ router.post('/', function (req, res) {
         return;
     }
 
-    if (req.body.Memo !== undefined && req.body.Memo.length != 0) {
-        var Memo = req.body.Memo;
+    if (query.Memo !== undefined && query.Memo.length != 0) {
+        var Memo = query.Memo;
     } else {
         var Memo = null;
     }
 
-    if (req.body.IsActive !== undefined && req.body.IsActive.length != 0) {
-        var IsActive = req.body.IsActive;
+    if (query.IsActive !== undefined && query.IsActive.length != 0) {
+        var IsActive = query.IsActive;
     } else {
+        res.status(404);
         res.json({
             code: 404,
             isSucess: false,
@@ -83,6 +87,7 @@ router.post('/', function (req, res) {
     //检查是否有该应用
     userSpring.queryAllApp(data, function (err, results) {
         if (err) {
+            res.status(500);
             res.json({
                 code: 500,
                 isSuccess: false,
@@ -101,6 +106,7 @@ router.post('/', function (req, res) {
             }
             userSpring.insert(data, function (err, results) {
                 if (err) {
+                    res.status(500);
                     res.json({
                         code: 500,
                         isSuccess: false,
@@ -109,6 +115,7 @@ router.post('/', function (req, res) {
                     logger.writeError('新增应用,出错信息: ' + err);
                     return;
                 }
+                res.status(200);
                 res.json({
                     code: 200,
                     isSuccess: true,
@@ -124,6 +131,7 @@ router.post('/', function (req, res) {
                 console.log(results.insertId);
             });
         } else {
+            res.status(404);
             res.json({
                 code: 404,
                 isSucess: false,
@@ -136,20 +144,19 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', function (req, res) {
+    console.log(req.query);
     var page = req.query.pageindex || 1,
         pageNum = req.query.pagesize,
         ID,
         ApplicationName,
         ApplicationCode;
 
-    if (req.query.ID !== undefined) {
-        ID = req.query.ID;
+    var query = JSON.parse(req.query.f);
+    if (query.ID !== undefined) {
+        ID = query.ID;
     }
-    if (req.query.ApplicationName) {
-        ApplicationName = req.query.ApplicationName;
-    }
-    if (req.query.ApplicationCode) {
-        ApplicationName = req.query.ApplicationCode;
+    if (query.ApplicationName) {
+        ApplicationName = query.ApplicationName;
     }
     if (pageNum === undefined) {
         pageNum = config.pageCount;
@@ -164,6 +171,7 @@ router.get('/', function (req, res) {
 
     userSpring.countAllapps(data, function (err, results) {
         if (err) {
+            res.status(500);
             res.json({
                 code: 500,
                 isSuccess: false,
@@ -193,6 +201,7 @@ router.get('/', function (req, res) {
         }
         userSpring.queryAllApp(data, function (err, results) {
             if (err) {
+                res.status(500);
                 res.json({
                     code: 500,
                     isSuccess: false,
@@ -207,6 +216,7 @@ router.get('/', function (req, res) {
                 var curpageNum = pageNum;
             }
             if (results !== undefined && results.length != 0) {
+                res.status(200);
                 res.json({
                     code:200,
                     isSuccess: true,
@@ -219,6 +229,7 @@ router.get('/', function (req, res) {
                 });
                 console.log(results);
             } else {
+                res.status(404);
                 res.json({
                     code: 404,
                     isSuccess: false,
@@ -233,18 +244,19 @@ router.get('/', function (req, res) {
 });
 
 //编辑应用
-router.put('/:app_id', function(req, res) {
-    var data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
-    var err = 'required: ';
-
+router.put('/', function(req, res) {
+    var data = ['ApplicationCode', 'ApplicationName', 'IsActive'],
+        err = 'required: ',
+        query = JSON.parse(req.query.f);
     for (var index in data) {
-        if (!(data[index] in req.body)) {
+        if (!(data[index] in query)) {
             console.log(data[index]);
             err += data[index] + ' ';
         }
     }
 
     if (err != 'required: ') {
+        res.status(400);
         res.json({
             code: 400,
             isSuccess: false,
@@ -252,8 +264,7 @@ router.put('/:app_id', function(req, res) {
         });
         return;
     }
-
-    var ID = req.params.app_id;
+    var ID = query.ID;
     var data = {
         'ID': ID,
         'pageNum': config.pageCount
@@ -261,6 +272,7 @@ router.put('/:app_id', function(req, res) {
 
     userSpring.queryAllApp(data, function (err, results) {
         if (err) {
+            res.status(500);
             res.json({
                 code: 500,
                 isSuccess: false,
@@ -274,86 +286,64 @@ router.put('/:app_id', function(req, res) {
 
             var ID = results[0].ID;
 
-            if (req.body.ApplicationCode != undefined && req.body.ApplicationCode.length != 0) {
-                var ApplicationCode = req.body.ApplicationCode;
+            if (query.ApplicationCode != undefined && query.ApplicationCode.length != 0) {
+                var ApplicationCode = query.ApplicationCode;
             } else {
                 var ApplicationCode = results[0].ApplicationCode;
             }
 
-            if (req.body.ApplicationName !== undefined && req.body.ApplicationName.length != 0) {
-                var ApplicationName = req.body.ApplicationName;
+            if (query.ApplicationName !== undefined && query.ApplicationName.length != 0) {
+                var ApplicationName = query.ApplicationName;
             } else {
                 var ApplicationName = results[0].ApplicationName;
             }
 
-            if (req.body.Memo !== undefined && req.body.Memo.length != 0) {
-                var Memo = req.body.Memo;
+            if (query.Memo !== undefined && query.Memo.length != 0) {
+                var Memo = query.Memo;
             } else {
                 var Memo = results[0].Memo
             }
 
-            if (req.body.IsActive !== undefined && req.body.IsActive.length != 0) {
-                var IsActive = req.body.IsActive;
+            if (query.IsActive !== undefined && query.IsActive.length != 0) {
+                var IsActive = query.IsActive;
             } else {
                 var IsActive = results[0].IsActive;
             }
             data = {
+                'ID': ID,
+                'ApplicatioCode': ApplicationCode,
                 'ApplicationName': ApplicationName,
-                'pageNum' : config.pageCount
+                'Memo': Memo,
+                'IsActive': IsActive
             }
-            userSpring.queryAllApp(data, function (err, results) {
+            userSpring.update(data, function (err, results) {
                 if (err) {
+                    res.status(500);
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '查询失败，服务器出错'
+                        msg: '更新失败,服务器失败'
                     });
                     logger.writeError('编辑应用,出错信息: ' + err);
                     return;
                 }
-                if (results === undefined || results.length == 0) {
-                    data = {
-                        'ID': ID,
-                        'ApplicationCode': ApplicationCode,
-                        'ApplicationName': ApplicationName,
-                        'Memo': Memo,
-                        'IsActive': IsActive
-                    }
-                    userSpring.update(data, function (err, results) {
-                        if (err) {
-                            res.json({
-                                code: 500,
-                                isSuccess: false,
-                                msg: '更新失败,服务器失败'
-                            });
-                            logger.writeError('编辑应用,出错信息: ' + err);
-                            return;
-                        }
-                        res.json({
-                            code:200,
-                            isSuccess: true,
-                            data: {
-                                ID: data.ID,
-                                ApplicationCode: data.ApplicationCode,
-                                ApplicationName: data.ApplicationName,
-                                Memo: data.Memo,
-                                IsActive: data.IsActive
-                            },
-                            msg: '更新成功'
-                        });
-                        console.log(results);
-                    });
-                } else {
-                    res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: '应用名已经存在'
-                    });
-                    logger.writeError('编辑应用,出错信息: 编辑应用名已经存在');
-                    return;
-                }
+                res.status(200);
+                res.json({
+                    code:200,
+                    isSuccess: true,
+                    data: {
+                        ID: data.ID,
+                        ApplicationCode: data.ApplicationCode,
+                        ApplicationName: data.ApplicationName,
+                        Memo: data.Memo,
+                        IsActive: data.IsActive
+                    },
+                    msg: '更新成功'
+                });
+                console.log(results);
             });
         } else {
+            res.status(404);
             res.json({
                 code: 404,
                 isSuccess: false,
@@ -368,7 +358,8 @@ router.put('/:app_id', function(req, res) {
 
 //删除应用
 router.delete('/', function (req, res) {
-    var ID = req.body.ID;
+    var query = JSON.parse(req.query.d),
+        ID = query.ID;
     var data = {
         'ID': ID,
         'pageNum': config.pageCount
@@ -376,6 +367,7 @@ router.delete('/', function (req, res) {
 
     userSpring.queryAllApp(data, function (err, results) {
         if (err) {
+            res.status(500);
             res.json({
                 code: 500,
                 isSuccess: false,
@@ -394,6 +386,7 @@ router.delete('/', function (req, res) {
             }
             userSpring.update(data, function (err, results) {
                 if (err) {
+                    res.status(500);
                     res.json({
                         code: 500,
                         isSuccess: false,
@@ -402,6 +395,7 @@ router.delete('/', function (req, res) {
                     logger.writeError('删除应用,出错信息: ' + err);
                     return;
                 }
+                res.status(200);
                 res.json({
                     code: 200,
                     isSuccess: true,
@@ -417,6 +411,7 @@ router.delete('/', function (req, res) {
             });
 
         } else {
+            res.status(404);
             res.json({
                 code: 404,
                 isSuccess: false,
