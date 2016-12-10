@@ -21,9 +21,11 @@ var customerDAL = appRequire('dal/wehcat/customerdal')
  	this.country = '';//国家
  	this.city = '';//城市
  	this.createTime= 0;//创建的时间
- 	this.memo ='';
+ 	this.memo = ''//备注
+ 	this.isActive =1;//是否为有效的用户
  	//从个人信息获取到的消息
  	this.customerAccount ='';//用户的账户名
+ 	this.areaID = 0;//用户所在的区
  	this.dormID = 0;//用户的楼栋
  	this.houseNum = 0;//用户的门号
  	this.balanceNum = 0;//用户的余额
@@ -35,12 +37,26 @@ var customerDAL = appRequire('dal/wehcat/customerdal')
 
 //用户的插入service
 Customer.prototype.insert = function(callback) {
-	// customerDAL = insert
-	//2016-12-9 先搭一个框子，下面同理
+	for(var i in this)
+	{
+		
+	}
+	 customerDAL.insert(data,function(err,results)
+	 {
+	 	if(err)
+	 	{
+	 		callback(true);
+	 		return;
+	 	}
+	 	callback(false,results);
+	 });
 };
 
 //用户的账户更新的service
-Customer.prototype.update = function(first_argument) {
-	// body...
+Customer.prototype.update = function(callback) {
+	customerDAL.update (this,function(err,result)
+	{
+
+	});
 };
 module.exports = new Customer();
