@@ -162,7 +162,7 @@ router.post('/login', function(req, res) {
 
 
 //菜单模块
-router.use('/menu',menuRouter);
+router.use('/backmenu',menuRouter);
 //通过userID获取相应的菜单和角色
 router.use('/usermenurole',userMenuRoleRouter);
 //数据字典
