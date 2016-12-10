@@ -41,6 +41,61 @@ router.get('/index', function(req, res, next) {
   });
 });
 
+router.get('/index', function(req, res, next) {
+        res.render('backend/index', { title: 'Hi backend' });
+
+});
+
+router.get('/user', function(req, res, next) {
+        res.render('backend/user', { title: 'Hi backend' });
+
+});
+
+router.get('/role', function(req, res, next) {
+        res.render('backend/role', { title: 'Hi backend' });
+
+});
+
+router.get('/roleAdd', function(req, res, next) {
+    res.render('backend/roleAdd', { title: 'Hi backend' });
+
+});
+
+router.get('/roleEdit', function(req, res, next) {
+    res.render('backend/roleEdit', { title: 'Hi backend' });
+
+});
+
+router.get('/userinfo', function(req, res, next) {
+        res.render('backend/userinfo', { title: 'Hi backend' });
+
+});
+
+router.get('/menu', function(req, res, next) {
+        res.render('backend/menu', { title: 'Hi backend' });
+
+});
+
+router.get('/menuinfo', function(req, res, next) {
+        res.render('backend/menuinfo', { title: 'Hi backend' });
+
+});
+
+router.get('/menuedit', function(req, res, next) {
+        res.render('backend/menuedit', { title: 'Hi backend' });
+
+});
+
+router.get('/application', function(req, res, next) {
+        res.render('backend/application', { title: 'Hi backend' });
+
+});
+
+router.get('/applicationinfo', function(req, res, next) {
+        res.render('backend/applicationinfo', { title: 'Hi backend' });
+
+});
+
 //生成验证码
 router.get('/generatecode', code);
 
@@ -107,13 +162,13 @@ router.post('/login', function(req, res) {
 
 
 //菜单模块
-router.use('/menu',menuRouter);
+router.use('/backmenu',menuRouter);
 //通过userID获取相应的菜单和角色
 router.use('/usermenurole',userMenuRoleRouter);
 //数据字典
 router.use('/datadict',datadictionaryRouter);
 //角色模块
-router.use('/role', roleroute);
+router.use('/backrole', roleroute);
 //角色功能点模块
 router.use('/rolefunc', rolefuncroute);
 //管理功能点

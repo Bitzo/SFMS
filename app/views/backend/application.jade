@@ -1,0 +1,45 @@
+block content
+
+  jason-pagecontent(action='/app' conf='paginationConf')
+    div.page-content(stule="button {height :30px;}")
+      ng-form.form-inline
+        label.form-group.my-form-group
+          input.form-control(placeholder='ID' style="width:100px;" ng-model='f.ID')
+        label.form-group.my-form-group
+          input.form-control(placeholder='应用号'  style="width:100px;" ng-model='f.ApplicationCode')
+        label.form-group.my-form-group
+          input.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName')
+        //- label.form-group.my-form-group
+        //-   input.form-control(placeholder='Is Active'  style="width:100px;" ng-model='f.IsActive')
+
+        label.form-group.my-form-group
+          button.btn.btn-sm.btn-primary(ng-click='search()') 查询
+        div.buttons.pull-right
+          a.btn.btn-sm.btn-success(ng-href='#/backend/applicationinfo')
+            i.icon.icon-plus 新建
+          button(ng-click='search()' class='btn btn-sm btn-default') 刷新
+      hr
+      table.table.table-striped.table-bordered.text-center
+        thead
+          tr
+            th 序号
+            th ID
+            th 应用号
+            th 应用名称
+            th 操作
+        tbody
+          tr(ng-repeat="x in datas")
+            td {{$index+1}}
+            td {{x.ID}}
+            td {{x.ApplicationCode}}
+            td {{x.ApplicationName}}
+            td
+              a(ng-href='')
+                i.icon.icon-edit 编辑
+              a(ng-click='remove($index)')
+                i.icon.icon-trash 删除
+
+            
+      div.pull-right
+        jason-pagination(conf='paginationConf')
+
