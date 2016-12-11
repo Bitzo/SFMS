@@ -19,7 +19,7 @@ router.post('/', function (req, res) {
     var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
     var err = 'require: ';
 
-    for (var value in data) {
+    for (var value in data.formdata) {
 
         if (!(data[value] in req.body)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
@@ -388,7 +388,7 @@ router.get('/:userID', function (req, res) {
 });
 
 router.put('/', function (req, res) {
-    var data = ['ApplicationID', 'AccountID', 'Account', 'UserName', 'Pwd', 'CollegeID', 'GradeYear', 'Phone', 'ClassID', 'Memo', 'CreateUserID', 'EditUserID', 'Email', 'Address', 'IsActive'];
+    var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
     var err = 'require: ';
     for (var value in data) {
 
