@@ -426,7 +426,7 @@ router.put('/', function (req, res) {
         editUserID = req.body.formdata.EditUserID,
         editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
         isActive = req.body.formdata.IsActive,
-        email = req.body.formdata.Email,
+        email = req.body.formdata.Email,git
         address = req.body.formdata.Address;
 
     data = {
