@@ -16,12 +16,12 @@ var user = appRequire('service/backend/user/userservice'),
 var config = appRequire('config/config');
 var moment = require('moment');
 router.post('/', function (req, res) {
-    var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
+    var data = ['ApplicationID', 'Account', 'UserName', 'Pwd',  'IsActive'];
     var err = 'require: ';
 
-    for (var value in data.formdata) {
+    for (var value in data) {
 
-        if (!(data[value] in req.body)) {
+        if (!(data[value] in req.body.formdata)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
             err += data[value] + ' ';//检查post传输的数据
         }
@@ -49,7 +49,7 @@ router.post('/', function (req, res) {
         classID = req.body.formdata.ClassID,
         memo = req.body.formdata.Memo,
         createTime = moment().format("YYYY-MM-DD HH:mm:ss"),
-        createUserID = req.body.formdata.CreateUserID,
+        createUserID = 1,
         editUserID = req.body.formdata.EditUserID,
         isActive = req.body.formdata.IsActive,
         email = req.body.formdata.Email,
@@ -388,12 +388,15 @@ router.get('/:userID', function (req, res) {
 });
 
 router.put('/', function (req, res) {
+    //console.log(req.body.formdata.ApplicationID)
     var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
     var err = 'require: ';
+    
     for (var value in data) {
 
         if (!(data[value] in req.body.formdata)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
+            
             err += data[value] + ' ';//检查post传输的数据
         }
 
@@ -426,7 +429,7 @@ router.put('/', function (req, res) {
         editUserID = req.body.formdata.EditUserID,
         editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
         isActive = req.body.formdata.IsActive,
-        email = req.body.formdata.Email,git
+        email = req.body.formdata.Email,
         address = req.body.formdata.Address;
 
     data = {
@@ -438,20 +441,18 @@ router.put('/', function (req, res) {
         'EditTime': editTime,
         'CreateUserID': createUserID,
         'IsActive': isActive,
-        'EditUserID': editUserID
+        'EditUserID': 1
     }
     //console.log(Email);
     //console.log(typeof(data[ApplicationID]));
+    
     var requireValue = '缺少值：';
     for (var value in data) {
-
         if (data[value].length == 0) {
             requireValue += value + ' ';
         }
 
-
     }
-
     if (requireValue != '缺少值：') {
         res.status(400);
         res.json({
@@ -463,11 +464,9 @@ router.put('/', function (req, res) {
         logger.writeError(requireValue);
         return;
     }
-
-    if (email.length != 0 && email != undefined) {
+    if (email != undefined&& email.length != 0 ) {
         data['Email'] = email;
     }
-
 
     if (address != undefined && address.length != 0) {
         data['Address'] = address;

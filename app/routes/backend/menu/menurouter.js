@@ -450,7 +450,7 @@ router.put('/',function (req,res) {
     var data = ['ApplicationID','MenuID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
     var err = 'require: ';
     for (var value in data){
-        if(!(data[value] in req.body)){
+        if(!(data[value] in req.body.formdata)){
             err += data[value] + ' ';
         }
     }
