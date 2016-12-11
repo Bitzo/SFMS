@@ -53,7 +53,7 @@ block content
                         td {{data.IsActive}}
                         td
 
-                          a(ng-click="show(x.RoleID,'/backrole')",href='#/backend/roleEdit/' )
+                          a(ng-click="show(data.RoleID,'/backrole')",href='#/backend/roleEdit/' )
                             i.icon.icon-edit 编辑 
                           a(ng-click="remove($index,'/backrole')")
                             i.icon.icon-trash 删除

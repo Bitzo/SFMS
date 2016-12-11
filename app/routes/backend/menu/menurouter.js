@@ -130,7 +130,6 @@ router.get('/tree',function (req,res) {
 });
 
 router.get('/plain',function (req,res) {
-
     var query = JSON.parse(req.query.f);
     var page = query.pageindex || 1,
         pageNum = query.pagesize || 20,
@@ -141,7 +140,6 @@ router.get('/plain',function (req,res) {
         menuName = query.MenuName || '',
         isActive = query.IsActive || '';
 
-console.log(query);
     page = page>0 ? page : 1;
 
     if (pageNum == ''){
@@ -669,5 +667,6 @@ router.delete('/',function(req,res) {
         }
     });
 });
+
 
 module.exports = router;

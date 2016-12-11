@@ -12,13 +12,14 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询角色功能点
 exports.queryRoleFunc = function (data, callback) {
-    var sql = 'select ID, RoleID, jit_rolefunction.FunctionID, FunctionName from jit_rolefunction,jit_function where 1=1 and jit_rolefunction.FunctionID = jit_function.FunctionID';
+    var sql = 'select jit_rolefunction.FunctionID, FunctionName from jit_rolefunction,jit_function where 1=1 and jit_rolefunction.FunctionID = jit_function.FunctionID';
 
     if (data !==undefined) {
         for (var key in data) {
             sql += ' and RoleID' + " = '" + data['RoleID'] + "' ";
         }
     }
+    sql += ' and jit_function.Isactive = 1'
 
     logger.writeInfo("查询角色功能点：" + sql);
 
