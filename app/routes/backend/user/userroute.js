@@ -187,9 +187,9 @@ router.post('/', function (req, res) {
 
 
 router.get('/', function (req, res) {
-    console.log(1234);
+   // console.log(1234);
     var query = JSON.parse(req.query.f);
-    console.log(1233);
+    //console.log(1233);
     console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
     logger.writeInfo("查询用户的记录");
     var data = {},
@@ -202,7 +202,7 @@ router.get('/', function (req, res) {
         classID = query.ClassID,
         createUserID = query.CreateUserID,
         editUserID = query.EditUserID,
-        isActive = query.IsActive,
+        isActive = 1,
         pageNum = req.query.pagesize;
 
     if (page == undefined || page.length == 0) {
@@ -232,9 +232,8 @@ router.get('/', function (req, res) {
     if (editUserID !== undefined && editUserID.length != 0) {
         data['EditUserID'] = editUserID;
     }
-    if (isActive !== undefined && isActive.length != 0) {
-        data['IsActive'] = isActive;
-    }
+         
+    data['IsActive'] = isActive;
     if (pageNum == undefined) {
         pageNum = config.pageCount;
     }
@@ -525,9 +524,52 @@ router.put('/', function (req, res) {
             logger.writeError("修改信息失败");
             return;
         }
-    })
+    });
 
-})
+});
 
+//逻辑删除角色
+router.delete('/',function (req , res)
+{
+    console.log(111111);
+    var query = JSON.parse(req.query.d);
+    accountID = query.AccountID;
+    var data = {
+        'AccountID' :accountID,
+        'IsActive' : 0
+    }
+    user.update(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            res.json(
+                {
+                    code: 500,
+                    isSuccess: false,
+                    msg: '修改信息失败，服务器出错'
+                });
+            logger.writeError("修改信息失败，服务器出错");
+            return;
+        }
+        if (results !== undefined && results.affectedRows != 0) {
+            res.json({
+                code: 200,
+                isSuccess: true,
+                msg: "修改信息成功"
+            })
+            logger.writeInfo("修改信息成功");
+            return;
+        } else {
+            res.status(400);
+            res.json({
+                code: 400,
+                isSuccess: false,
+                msg: "修改信息失败"
+            })
+            logger.writeError("修改信息失败");
+            return;
+        }
+
+});
+});
 
 module.exports = router;
