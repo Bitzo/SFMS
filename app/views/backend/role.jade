@@ -4,30 +4,23 @@ block content
         div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
                 div.modal-content
-                    div.modal-header
-                        button.close(type="button",data-dismiss="modal")
-                            span(aria-hidden="true")&times;
-                            span.sr-only Close
-                            h4.modal-title(id="myModalLabel") 角色对应功能点
-                    div.modal-body 
+                   div.modal-body 
+                        h4.modal-title(id="myModalLabel") 角色对应功能点
+                          button.close(type="button",data-dismiss="modal")
+                            span(aria-hidden="true")&times;                
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
-                                    th 应用ID
-                                    th 应用名称
+                                    th 功能点ID
+                                    th 功能点名称
                             tbody
-                                tr(ng-repeat="data in datas")
+                                tbody
+                                tr(ng-repeat="data in data")
                                     td {{data.FunctionID}}
                                     td {{data.FunctionName}}
 
-                    div.modal-footer
+
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
-                        button.btn.btn-primary(type="button") Save changes
-        div.page-header
-            div.buttons.text-right
-                a.btn.btn-success(href='#/backend/roleAdd')
-                    i.icon.icon-plus 新建
-                button(ng-click='search()' class='btn btn-default') 刷新
         div.page-content
             ng-form.form-inline
                 label.form-group.my-form-group
@@ -35,30 +28,37 @@ block content
                 label.form-group.my-form-group
                     input.form-control(placeholder='角色名称' ng-model="f.RoleName")
                 label.form-group.my-form-group
-                    button.btn.btn-primary(ng-click='search()') 确定
+                    button.btn.btn-sm.btn-primary(ng-click='search()') 查询
+                div.buttons.pull-right
+                  a.btn.btn-sm.btn-success(ng-click="addrole('/function')",href='#/backend/roleAdd')
+                    i.icon.icon-plus 新建
+                  button(ng-click='search()' class='btn btn-sm btn-default') 刷新
+             hr
             table.table.table-striped.table-bordered.text-center
                 thead
                     tr
+                        th 序号
                         th 应用ID
                         th 角色code
                         th 角色名称
                         th 是否有效
                         th 操作
-                        th 模态框
+
                 tbody
                     tr(ng-repeat="data in datas")
+                        td {{$index+1}}
                         td {{data.ApplicationID}}
                         td {{data.RoleCode}}
                         td {{data.RoleName}}
                         td {{data.IsActive}}
                         td
-                            a(href="#/backend/roleEdit")
-                                i.icon.icon-edit 编辑
-                            a(ng-click="del(data.RoleID)")
-                                i.icon.icon-trash 删除
-                        td
-                            button.btn(type="button",data-toggle="modal",data-target="#myModal",placehold="功能点模态框") 模态框
-                        
+
+                          a(ng-click="show(x.RoleID,'/backrole')",href='#/backend/roleEdit/' )
+                            i.icon.icon-edit 编辑 
+                          a(ng-click="remove($index,'/backrole')")
+                            i.icon.icon-trash 删除
+                          a(data-toggle="modal",data-target="#myModal",ng-click="morerole($index,'rolefunc/')") 
+                            i.icon.icon-zoom-in  更多
 
 
             div.pull-right

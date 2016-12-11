@@ -15,6 +15,10 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         templateUrl: '/userinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
+    when('/backend/useredit', {
+        templateUrl: '/useredit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
     when('/backend/role', {
         templateUrl: '/role'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
@@ -35,6 +39,10 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         templateUrl: '/applicationinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
+    when('/backend/applicationedit', {
+        templateUrl: '/applicationedit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
     when('/backend/menu', {
         templateUrl: '/menu'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
@@ -52,42 +60,6 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     });
 
 
-// when('/sfms/index', {
-//         templateUrl: '/sfms/index'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//             // controller: 'HomeController'
-//     }).
-//     when('/sfms/user', {
-//         templateUrl: '/sfms/user'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//         //controller: 'HomeController'
-//     }).
-//     when('/sfms/userinfo', {
-//         templateUrl: '/sfms/userinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//         //controller: 'HomeController'
-//     }).
-//     when('/sfms/role', {
-//         templateUrl: '/sfms/role'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//         //controller: 'HomeController'
-//     }).
-//     when('/sfms/roleAdd', {
-//         templateUrl: '/sfms/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//         //controller: 'HomeController'
-//     }).
-//      when('/sfms/roleEdit', {
-//         templateUrl: '/sfms/roleEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//         //controller: 'HomeController'
-//     }).
-//     when('/sfms/application', {
-//         templateUrl: '/sfms/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//         //controller: 'HomeController'
-//     }).
-//     when('/sfms/applicationinfo', {
-//         templateUrl: '/sfms/applicationinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//         //controller: 'HomeController'
-//     }).
-//     when('/sfms/menu', {
-//         templateUrl: '/sfms/menu'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-//         //controller: 'HomeController'
-//     }).
 //     when('/sfms/menuinfo', {
 //         templateUrl: '/sfms/menuinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
 //         //controller: 'HomeController'
@@ -124,7 +96,8 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         $log.log(arguments);
     }
 }]).controller('baseController', function($scope, $http) {
-    
+
+    //显示左侧菜单栏
    $scope.menus = [];
     function getList() {
         $http({
@@ -141,6 +114,9 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             console.log(response);
         });
     }
+
+
+    //分页初始化数据
    getList();
     $scope.paginationConf = {
         currentPage: 1,
@@ -148,6 +124,8 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         action: "1111"
     }
     
+
+    //应用角色菜单用户首页数据显示
     $scope.f={};
     function getInit(){
         $http({
@@ -170,11 +148,6 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             console.log($scope.f);
         });
     }
-
-
-    
-
-
     $scope.paginationConf = {
         currentPage: 1,
         itemsPerPage: 15
@@ -184,8 +157,6 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     $scope.search=function(){
         getInit();
     }
-
-
 
     
 //添加角色
@@ -216,23 +187,75 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         });
     }
 
-    //修改
+    //删除角色
+    $scope.del=function(RoleID){
+        var index=-1;
+        for(var i=0;i<$scope.datas.length;i++){
+            if($scope.datas[i]['RoleID']=RoleID){
+                index=i;
+                break;
+            };
+        }
+        $scope.datas.splice(index,1);
+    }
+    //编辑角色
+    $scope.update=function(RoleID){
+
+    }
+
+
+    //新增
+     $scope.formdata={};
+     $scope.addnew = function(formdata,action) {
+         console.log(formdata);
+         console.log(action);
+         $http({
+            method:'post',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata:$scope.formdata
+            }
+        }).
+        success(function(response) {
+            console.log($http.url)
+           console.log($scope.formdata);
+           console.log(response);
+           if(response.isSuccess){
+              alert(response.msg);
+           }else{
+              alert(response.msg);
+           }
+
+        }).
+        error(function(response) {
+           console.log(response);
+           console.log('no');
+        });
+    };
+
+
+ //修改
     $scope.show=function(index,action){
-            getInitmenu(index);
+            getInitmenu(index,action);
         };
     function getInitmenu(index,action){   
-            console.log(index);      
+            console.log(index);   
+            console.log(action);                  
         $http({
             method:'get',
-            url:"/menu/plain"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
-                f:{ MenuID:index}
+                f:{
+                     MenuID:index,
+                     RoleID:index,
+                     ID:index,
+                     AccountID:index,
+                  }
             }
         }).
         success(function(response) {
             $scope.formdata=response.data[0];
-            console.log($scope.item);            
-            console.log($scope.item.ApplicationID);
+            console.log($scope.formdata.ApplicationID);            
             console.log('修改成功');            
             console.log(response);
         }).
@@ -241,29 +264,76 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             console.log(response);
         });
     }
+     
+     //提交修改
+     $scope.formdata={};
+     $scope.newedit = function(formdata,action) {
+         console.log(formdata);
+         console.log(action);
+         $http({
+            method:'put',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata:$scope.formdata
+            }
+        }).
+        success(function(response) {
+            console.log($http.url)
+           console.log($scope.formdata);
+           console.log(response);
+           if(response.isSuccess){
+               console.log('提交成功'); 
+              alert(response.msg);
+           }else{
+              alert(response.msg);
+           }
+
+        }).
+        error(function(response) {
+            console.log('提交失败'); 
+            console.log(formdata);
+           console.log(response);
+           console.log('no');
+        });
+    };
    
+
     //删除
-     $scope.remove = function(index){
+     $scope.d={};
+     $scope.remove = function(index,action){
          console.log('delete');
-         $scope.f={
+         console.log(index);   
+         console.log(action);                        
+         $scope.d={
              "AccountID":$scope.datas[index].AccountID,
              "MenuID":$scope.datas[index].MenuID,
-             "ID":$scope.datas[index].ID,             
-             "IsActive":0,
+             "ID":$scope.datas[index].ID,   
+             "RoleID" : $scope.datas[index].RoleID    
          };
          $http({
-            method:'get',
-            url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            method:'delete',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
-                f:$scope.f
+                d:$scope.d 
             }
+        }).
+        success(function(response) {
+            console.log($scope.d);            
+            console.log('删除成功');            
+            console.log(response.msg);
+        }).
+        error(function(response) {
+            console.log($scope.d);
+            console.log('删除失败');                        
+            console.log(response.msg);
         });
         $scope.datas.splice(index,1);
-        console.log($scope.f);
+        console.log($scope.d);
       }
 
-      //显示模态框数据
-     $scope.more = function(index,action){
+
+      //显示用户模态框数据
+     $scope.moreuser = function(index,action){
          console.log('more');
          $scope.f={
              "userID":$scope.datas[index].AccountID,
@@ -283,148 +353,60 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         });
       }
 
-    //删除角色
-    $scope.del=function(RoleID){
-        var index=-1;
-        for(var i=0;i<$scope.datas.length;i++){
-            if($scope.datas[i]['RoleID']=RoleID){
-                index=i;
-                break;
-            };
-        }
-        $scope.datas.splice(index,1);
-    }
-    //编辑角色
-    $scope.update=function(RoleID){
 
-    }
+       //显示角色模态框
+        $scope.morerole = function(index,action){
+                console.log('more');
+                $scope.f={
+                    "RoleID":$scope.datas[index].RoleID,
+                };
+                $http({
+                    method:'get',
+                    url:action+$scope.f.RoleID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                }).
+                success(function(response) {
+                    console.log(response);
+                    $scope.data = response.data;
+                    console.log($scope.menus);
+
+                }).
+                error(function(response) {
+                    console.log(response);
+                });
+            }
+  
+
+       //显示角色新增页面
+        $scope.addrole=function(iaction){
+            getInitrole(action);
+        };
 
 
-    //  用户菜单应用添加
-     $scope.formdata={};
-     $scope.addnew = function(formdata,action) {
-         console.log(formdata);
-         console.log(action);
-         $http({
-            method:'post',
+    function getInitrole(action){   
+            console.log(action);                  
+        $http({
+            method:'get',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            data:{
-                formdata:$scope.formdata
+            params:{
+                f:{
+                     MenuID:index,
+                     RoleID:index,
+                     ID:index,
+                     AccountID:index,
+                  }
             }
         }).
         success(function(response) {
-            console.log($http.url)
-           console.log($scope.added);
-           console.log(response);
-           if(response.isSuccess){
-              alert(response.msg);
-           }else{
-              alert(response.msg);
-           }
-
+            $scope.formdata=response.data[0];
+            console.log($scope.formdata.ApplicationID);            
+            console.log('修改成功');            
+            console.log(response);
         }).
         error(function(response) {
-           console.log(response);
-           console.log('no');
+            console.log('修改失败');                        
+            console.log(response);
         });
-    };
-
-
-
-
-
-     //用户添加
-    //  $scope.submitusera = function(user) {
-    //      console.log('hhh');
-    //      $http({
-    //         method:'post',
-    //         url:"/backuser?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-    //         data:{
-    //             'ApplicationID':user.ApplicationID,
-    //             'Account':user.Account,
-    //             'UserName':user.UserName,
-    //             'Pwd':user.Pwd,
-    //             'CreateTime':user.CreateTime,
-    //             'CreateUserID':user.CreateUserID,
-    //             'IsActive':user.IsActive,
-    //         }
-    //     }).
-    //     success(function(response) {
-    //        console.log($scope.user);
-    //        console.log(response);
-    //        if(response.isSuccess){
-    //           alert(response.msg);
-    //        }else{
-    //           alert(response.msg);
-    //        }
-
-    //     }).
-    //     error(function(response) {
-    //        alert(response.msg);
-    //     });
-    // };
-
-
-     //菜单添加
-    //  $scope.submitmenua = function(menu) {
-    //      console.log('menu');
-    //      $http({
-    //         method:'post',
-    //         url:"/menu?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-    //         data:{
-    //             'ApplicationID':menu.ApplicationID,
-    //             'MenuLevel':menu.MenuLevel,
-    //             'ParentID':menu.ParentID,
-    //             'SortIndex':menu.SortIndex,
-    //             'MenuName':menu.MenuName,
-    //             'IconPath':menu.IconPath,
-    //             'Url':menu.Url,
-    //             'Memo':menu.Memo,                
-    //             'IsActive':menu.IsActive,
-    //         }
-    //     }).
-    //     success(function(response) {
-    //        if(response.isSuccess){
-    //           alert(response.msg);
-    //        }else{
-    //           alert(response.errorMsg);
-    //        }
-    //     }).
-    //     error(function(response) {
-    //         alert(response.msg);
-    //     });
-    // };
-
-       //应用添加
-    //  $scope.submitappa = function(app) {
-    //      console.log('app');
-    //      $http({
-    //         method:'post',
-    //         url:"/app?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-    //         data:{
-    //             'ID':app.ID,
-    //             'ApplicationCode':app.ApplicationCode,
-    //             'ApplicationName':app.ApplicationName,
-    //             'Memo':app.Memo,               
-    //             'IsActive':app.IsActive,
-    //         }
-    //     }).
-    //     success(function(response) {
-    //        console.log($scope.app);
-    //        console.log(response);
-    //        if(response.isSuccess){
-    //           console.log(app);
-    //           alert(response.msg);
-    //        }else{
-    //           alert(response.errorMsg);
-    //        }
-
-    //     }).
-    //     error(function(response) {
-    //        alert(response.msg);
-    //     });
-    // };
-    
+    }
 
     
 
