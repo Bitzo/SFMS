@@ -223,7 +223,7 @@ router.post('/',function (req, res) {
                                                     msg: "添加信息成功"
                                                 })
                                     } else {
-                                        res.status(404);
+                                        res.status(200);
                                         return res.json({
                                                     code: 404,
                                                     isSuccess: false,
@@ -233,7 +233,7 @@ router.post('/',function (req, res) {
                                 })
                             } else {
                                 //数据非法，重新输入
-                                res.status(400);
+                                res.status(200);
                                 return res.json({
                                             code: 400,
                                             isSuccess: false,
@@ -250,7 +250,7 @@ router.post('/',function (req, res) {
                                })
                     }
                 } else {
-                    res.status(404);
+                    res.status(400);
                     return res.json({
                                 code: 404,
                                 isSuccess: false,
@@ -383,7 +383,7 @@ router.put('/', function (req, res) {
                                                         msg: "修改信息成功"
                                                     });
                                         } else {
-                                            res.status(404);
+                                            res.status(200);
                                             return res.json({
                                                         code: 404,
                                                         isSuccess: false,
@@ -412,7 +412,7 @@ router.put('/', function (req, res) {
                         });
             }
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
                         code: 404,
                         isSuccess: false,
@@ -470,7 +470,7 @@ router.delete('/', function (req, res) {
                     res.json({
                         status: 400,
                         isSuccess: true,
-                        msg: "删除成功"
+                        msg: "删除失败"
                     })
                 }
             })
