@@ -32,7 +32,7 @@ router.post('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-            msg: err
+            errorMsg: err
         });
         logger.writeError("缺少key值");
         return;
@@ -80,7 +80,7 @@ router.post('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-            msg: requireValue
+            errorMsg: requireValue
         });
         logger.writeError(requireValue);
         return;
@@ -98,7 +98,7 @@ router.post('/', function (req, res) {
                 {
                     code: 500,
                     isSuccess: false,
-                    msg: key + ":" + intNum[key] + " 必须是数字"
+                    errorMsg: key + ":" + intNum[key] + " 必须是数字"
                 });
         }
     }
@@ -111,7 +111,7 @@ router.post('/', function (req, res) {
             res.json({
                 code: 400,
                 isSuccess: false,
-                msg: "查询账户失败"
+                errorMsg: "查询账户失败"
             })
             logger.writeError("查询账户失败");
             return;
@@ -121,7 +121,7 @@ router.post('/', function (req, res) {
             res.json({
                 code: 400,
                 isSuccess: false,
-                msg: "账户名已存在"
+                errorMsg: "账户名已存在"
             })
             logger.writeError("账户名已存在");
             return;
@@ -167,7 +167,7 @@ router.post('/', function (req, res) {
                 res.json({
                     code: 500,
                     isSuccess: false,
-                    msg: '插入失败'
+                    errorMsg: '插入失败'
                 });
                 logger.writeError("插入失败");
                 return;
@@ -248,7 +248,7 @@ router.get('/', function (req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "获取数量失败"
+                errorMsg: "获取数量失败"
             })
             logger.writeError("数量获取失败");
             return;
@@ -262,7 +262,7 @@ router.get('/', function (req, res) {
                     res.json({
                         code: 500,
                         isSuccess: true,
-                        msg: '查询失败'
+                        errorMsg: '查询失败'
                     });
                     logger.writeError("查询失败");
                     return;
@@ -291,7 +291,7 @@ router.get('/', function (req, res) {
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: "未查到数据"
+                        errorMsg: "未查到数据"
                     });
                     logger.writeWarn("未查到数据");
                     return;
@@ -303,7 +303,7 @@ router.get('/', function (req, res) {
             res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "未查询到相关信息"
+                errorMsg: "未查询到相关信息"
             });
             logger.writeError("为查询到相关的信息");
             return;
@@ -318,14 +318,14 @@ router.get('/:userID', function (req, res) {
         return res.json({
             code: 404,
             isSuccess: false,
-            msg: 'require userID'
+            errorMsg: 'require userID'
         });
     }
     if (isNaN(userID)) {
         return res.json({
             code: 500,
             isSuccess: false,
-            msg: 'userID不是数字'
+            errorMsg: 'userID不是数字'
         });
     }
     var uniqueData = {
@@ -338,7 +338,7 @@ router.get('/:userID', function (req, res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                errorMsg: '服务器出错'
             });
         }
         //user存在，则可以进行查询
@@ -348,7 +348,7 @@ router.get('/:userID', function (req, res) {
                     return res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        errorMsg: '服务器出错'
                     });
 
                 }
@@ -365,7 +365,7 @@ router.get('/:userID', function (req, res) {
                         return res.json({
                             code: 404,
                             isSuccess: false,
-                            msg: '未查到角色'
+                            errorMsg: '未查到角色'
                         });
                     }
 
@@ -373,7 +373,7 @@ router.get('/:userID', function (req, res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: '未查到菜单'
+                        errorMsg: '未查到菜单'
                     });
                 }
             });
@@ -381,7 +381,7 @@ router.get('/:userID', function (req, res) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: '用户不存在'
+                errorMsg: '用户不存在'
             });
         }
     });
@@ -405,7 +405,7 @@ router.put('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-            msg: err
+           errorMsg: err
         });
         logger.writeError(err);
         return;
@@ -457,7 +457,7 @@ router.put('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-            msg: requireValue
+           errorMsg: requireValue
         });
 
         logger.writeError(requireValue);
@@ -501,7 +501,7 @@ router.put('/', function (req, res) {
                 {
                     code: 500,
                     isSuccess: false,
-                    msg: '修改信息失败，服务器出错'
+                   errorMsg: '修改信息失败，服务器出错'
                 });
             logger.writeError("修改信息失败，服务器出错");
             return;
@@ -519,7 +519,7 @@ router.put('/', function (req, res) {
             res.json({
                 code: 400,
                 isSuccess: false,
-                msg: "修改信息失败"
+                errorMsg: "修改信息失败"
             })
             logger.writeError("修改信息失败");
             return;
@@ -545,7 +545,7 @@ router.delete('/',function (req , res)
                 {
                     code: 500,
                     isSuccess: false,
-                    msg: '修改信息失败，服务器出错'
+                    errorMsg: '修改信息失败，服务器出错'
                 });
             logger.writeError("修改信息失败，服务器出错");
             return;
@@ -563,7 +563,7 @@ router.delete('/',function (req , res)
             res.json({
                 code: 400,
                 isSuccess: false,
-                msg: "修改信息失败"
+                errorMsg: "修改信息失败"
             })
             logger.writeError("修改信息失败");
             return;
