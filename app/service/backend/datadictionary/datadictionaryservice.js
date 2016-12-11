@@ -6,7 +6,8 @@
  * @Function:
  */
 var datadictionaryDal = appRequire('dal/backend/datadictionary/datadictionarydal'),
-    logger = appRequire('util/loghelper').helper;
+    logger = appRequire('util/loghelper').helper,
+    getTree = appRequire('service/backend/datadictionary/gettreedatadict');
 
 exports.queryDatadictionary = function (data,callback) {
     datadictionaryDal.queryDatadictionary(data, function (err, results) {
@@ -17,9 +18,22 @@ exports.queryDatadictionary = function (data,callback) {
 
         logger.writeInfo('queryDatadictionary');
         callback(false, results);
-    })
+    });
 }
 
+exports.queryDatadictionaryFormTree = function (data, callback) {
+    datadictionaryDal.queryDatadictionary(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo('queryDatadictionaryFormTree');
+        //形成树形的字典结构
+        results = getTree.getTreeDatadict(results,0);
+        callback(false, results);
+    });
+}
 //查询对应项目的角色个数
 exports.countAllDataDicts = function (data, callback) {
     datadictionaryDal.countAllDataDicts(data, function (err, results) {
