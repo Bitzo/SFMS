@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/menu' conf='paginationConf' ng-controller="baseController")
+  div.container-fluid
     span 
       h2 菜单新增
     form(method="post",name="menuinfo" )
@@ -16,8 +16,8 @@ block content
         tr
           td(width="15%",class="tableleft") 菜单对应的层级
           td
-            select(id="search",value="",ng-model='formdata.MenuLevel',style="width:163px;height:30px",required)
-              option 1
+            select(type="textview",ng-model='formdata.MenuLevel',style="width:163px;height:30px",required)
+              option(selected = "selected") 1
               option 2
               
 
@@ -63,7 +63,7 @@ block content
         tr
           td(width="15%",class="tableleft") 备注(可选) 
           td
-            input(type="number",name="Memo",ng-model="formdata.Memo",ng-maxlength='200')
+            input(type="textview",name="Memo",ng-model="formdata.Memo",ng-maxlength='200')
             &nbsp&nbsp
             small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 备注最多200位
             
@@ -81,7 +81,7 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/menu')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(formdata,'/backmenu')") 添加
  
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/menu') 返回列表

@@ -282,6 +282,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
            console.log($scope.formdata);
            console.log(response);
            if(response.isSuccess){
+               console.log('提交成功'); 
               alert(response.msg);
            }else{
               alert(response.msg);
@@ -289,6 +290,8 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
 
         }).
         error(function(response) {
+            console.log('提交失败'); 
+            console.log(formdata);
            console.log(response);
            console.log('no');
         });
