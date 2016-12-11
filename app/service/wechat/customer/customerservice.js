@@ -11,18 +11,18 @@ var customerDAL = appRequire('dal/jinkebro/customer/customerdal');
 //一个微信的用户类
  var Customer = function()
  {
- 	
+ 	//问题:这些参数好像都没用到
  	//从微信端获取的数据
  	//必填的
- 	this.wechatUserCode = '';//微信的openid
- 	this.sex= 0;//性别默认为0 为男
- 	this.nickName = '';//昵称
+ 	//this.wechatUserCode = '';//微信的openid
+ 	//this.sex= 0;//性别默认为0 为男
+ 	//this.nickName = '';//昵称
  	//可为空的
- 	this.province = '';//省
- 	this.country = '';//国家
- 	this.city = '';//城市
+ 	//this.province = '';//省
+ 	//this.country = '';//国家
+ 	//this.city = '';//城市
  	this.createTime =  moment().format("YYYY-MM-DD HH:mm:ss"),//创建的时间
- 	this.memo = ''//备注
+ 	//this.memo = ''//备注
  	this.isActive =1;//是否为有效的用户
  	//从个人信息获取到的消息
  	// this.customerAccount ='';//用户的账户名
