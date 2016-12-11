@@ -160,6 +160,7 @@ wechat.eventMsg(function(msg) {
                             "NickName" : result.nickname,
                             "Sex" : result.sex
                         }
+                        //注释掉怕重复的插入
                     //  wechatCustomer.insert(data,function(err,result)
                     //  {
                     //     if(err)
