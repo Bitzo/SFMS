@@ -49,7 +49,7 @@ router.post('/', function (req, res) {
         classID = req.body.formdata.ClassID,
         memo = req.body.formdata.Memo,
         createTime = moment().format("YYYY-MM-DD HH:mm:ss"),
-        createUserID = 1,
+        createUserID = req.query.jitkey,
         editUserID = req.body.formdata.EditUserID,
         isActive = req.body.formdata.IsActive,
         email = req.body.formdata.Email,
@@ -185,11 +185,9 @@ router.post('/', function (req, res) {
     });
 });
 
-
+//查询用户的资料
 router.get('/', function (req, res) {
-   // console.log(1234);
     var query = JSON.parse(req.query.f);
-    //console.log(1233);
     console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
     logger.writeInfo("查询用户的记录");
     var data = {},
@@ -311,7 +309,7 @@ router.get('/', function (req, res) {
 
     });
 });
-
+//后端的菜单通过用户的ID来查询用户的信息
 router.get('/:userID', function (req, res) {
     var userID = req.params.userID;
     if (userID === undefined || userID === '') {
@@ -387,8 +385,8 @@ router.get('/:userID', function (req, res) {
     });
 });
 
+//用户的编辑功能
 router.put('/', function (req, res) {
-    //console.log(req.body.formdata.ApplicationID)
     var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
     var err = 'require: ';
     
@@ -408,7 +406,7 @@ router.put('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-           errorMsg: err
+            errorMsg: err
         });
         logger.writeError(err);
         return;
@@ -426,7 +424,7 @@ router.put('/', function (req, res) {
         classID = req.body.formdata.ClassID,
         memo = req.body.formdata.Memo,
         createUserID = req.body.formdata.CreateUserID,
-        editUserID = req.body.formdata.EditUserID,
+        editUserID = req.query.jitkey,
         editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
         isActive = req.body.formdata.IsActive,
         email = req.body.formdata.Email,
@@ -530,7 +528,6 @@ router.put('/', function (req, res) {
 //逻辑删除角色
 router.delete('/',function (req , res)
 {
-    console.log(111111);
     var query = JSON.parse(req.query.d);
     accountID = query.AccountID;
     var data = {
