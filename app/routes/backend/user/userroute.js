@@ -19,9 +19,9 @@ router.post('/', function (req, res) {
     var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
     var err = 'require: ';
 
-    for (var value in data.formdata) {
+    for (var value in data) {
 
-        if (!(data[value] in req.body)) {
+        if (!(data[value] in req.body.formdata)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
             err += data[value] + ' ';//检查post传输的数据
         }
@@ -387,7 +387,9 @@ router.get('/:userID', function (req, res) {
     });
 });
 
+//用户的编辑功能
 router.put('/', function (req, res) {
+    
     var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
     var err = 'require: ';
     for (var value in data) {
@@ -405,7 +407,7 @@ router.put('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-           errorMsg: err
+            errorMsg: err
         });
         logger.writeError(err);
         return;
