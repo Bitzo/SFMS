@@ -392,7 +392,7 @@ router.put('/', function (req, res) {
     var err = 'require: ';
     for (var value in data) {
 
-        if (!(data[value] in req.body)) {
+        if (!(data[value] in req.body.formdata)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
             err += data[value] + ' ';//检查post传输的数据
         }
@@ -412,22 +412,22 @@ router.put('/', function (req, res) {
     }
 
     //插入要传的参数
-    var applicationID = req.body.ApplicationID,
-        accountID = req.body.AccountID,
-        account = req.body.Account,
-        userName = req.body.UserName,
-        pwd = req.body.Pwd,
-        collegeID = req.body.CollegeID,
-        gradeYear = req.body.GradeYear,
-        phone = req.body.Phone,
-        classID = req.body.ClassID,
-        memo = req.body.Memo,
-        createUserID = req.body.CreateUserID,
-        editUserID = req.body.EditUserID,
+    var applicationID = req.body.formdata.ApplicationID,
+        accountID = req.body.formdata.AccountID,
+        account = req.body.formdata.Account,
+        userName = req.body.formdata.UserName,
+        pwd = req.body.formdata.Pwd,
+        collegeID = req.body.formdata.CollegeID,
+        gradeYear = req.body.formdata.GradeYear,
+        phone = req.body.formdata.Phone,
+        classID = req.body.formdata.ClassID,
+        memo = req.body.formdata.Memo,
+        createUserID = req.body.formdata.CreateUserID,
+        editUserID = req.body.formdata.EditUserID,
         editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
-        isActive = req.body.IsActive,
-        email = req.body.Email,
-        address = req.body.Address;
+        isActive = req.body.formdata.IsActive,
+        email = req.body.formdata.Email,
+        address = req.body.formdata.Address;
 
     data = {
         'ApplicationID': applicationID,
