@@ -185,11 +185,9 @@ router.post('/', function (req, res) {
     });
 });
 
-
+//查询用户的资料
 router.get('/', function (req, res) {
-    console.log(1234);
     var query = JSON.parse(req.query.f);
-    //console.log(1233);
     console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
     logger.writeInfo("查询用户的记录");
     var data = {},
@@ -311,7 +309,7 @@ router.get('/', function (req, res) {
 
     });
 });
-
+//后端的菜单通过用户的ID来查询用户的信息
 router.get('/:userID', function (req, res) {
     var userID = req.params.userID;
     if (userID === undefined || userID === '') {
@@ -530,7 +528,6 @@ router.put('/', function (req, res) {
 //逻辑删除角色
 router.delete('/',function (req , res)
 {
-    console.log(111111);
     var query = JSON.parse(req.query.d);
     accountID = query.AccountID;
     var data = {
