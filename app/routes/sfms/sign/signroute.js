@@ -57,6 +57,10 @@ router.get('/', function (req, res) {
                     })
                 }
                 if (results !== undefined && results.length > 0) {
+                    //格式化时间
+                    for(var i in results) {
+                        results[i].CreateTime = moment(results[i].CreateTime).format("YYYY-MM-DD HH:mm:ss");
+                    }
                     var result = {
                         status: 200,
                         isSuccess: true,
