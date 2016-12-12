@@ -22,7 +22,7 @@ exports.queryAllRoles = function (data, callback) {
         }
     }
 
-    var num = data.pageNum; //每页显示的个数
+    var num = data.pageNum || 20; //每页显示的个数
     var page = data.page || 1;
 
     sql += " LIMIT " + (page-1)*num + "," + num;

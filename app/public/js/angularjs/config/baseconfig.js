@@ -229,6 +229,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         }).
         error(function(response) {
            console.log(response);
+           alert(response.msg);
            console.log('no');
         });
     };
