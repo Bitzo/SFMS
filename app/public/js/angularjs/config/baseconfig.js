@@ -249,14 +249,14 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
                      MenuID:index,
                      RoleID:index,
                      ID:index,
-                     AccountID:index,
+                     AccountID:index
                   }
             }
         }).
         success(function(response) {
             $scope.formdata=response.data[0];
             console.log($scope.formdata.ApplicationID);            
-            console.log('修改成功');            
+            console.log('修改成功');
             console.log(response);
         }).
         error(function(response) {

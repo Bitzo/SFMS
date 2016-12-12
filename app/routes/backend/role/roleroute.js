@@ -37,7 +37,6 @@ router.get('/',function (req, res) {
         'RoleName': roleName,
         'IsActive': isActive
     };
-    console.log(data)
     //用于查询结果总数的计数
     var countNum = 0;
 
@@ -54,7 +53,6 @@ router.get('/',function (req, res) {
         }
         if (results !==undefined && results.length != 0) {
             countNum = results[0]['num'];
-
             //查询所需的详细数据
             roleservice.queryAllRoles(data, function (err, results) {
                 if (err) {
@@ -80,8 +78,28 @@ router.get('/',function (req, res) {
                     if(result.curPage == result.totalPage) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
-                    res.status(200);
-                    return res.json(result);
+                    //当查询结果数量仅为1时， 添加其功能点数据
+                    if (countNum == 1) {
+                        rolefuncservice.queryRoleFunc({'RoleID': roleID}, function (err, results) {
+                            if (err) {
+                                res.status(500);
+                                return res.json({
+                                    code: 500,
+                                    isSuccess: false,
+                                    msg: "查询失败，服务器内部错误"
+                                });
+                            }
+                            if(results !== undefined) {
+                                result.data[0].funcdata = results;
+                                res.status(200);
+                                return res.json(result);
+                            }
+                        })
+                    } else {
+                        res.status(200);
+                        return res.json(result);
+                    }
+
                 } else {
                     res.status(200);
                     return res.json({
@@ -108,12 +126,6 @@ router.post('/',function (req, res) {
     var data = ['ApplicationID', 'RoleCode', 'RoleName', 'IsActive'],
         err = 'required: ';
 
-    //增加角色所需要的参数
-    var applicationID = req.body.formdata.ApplicationID,
-        roleCode = req.body.formdata.RoleCode,
-        roleName = req.body.formdata.RoleName,
-        isActive = req.body.formdata.IsActive;
-
     //增加角色功能点所需要的数据
     var funcData = req.body.formdata.data;
 
@@ -135,6 +147,12 @@ router.post('/',function (req, res) {
                     msg: err
                 });
     };
+
+    //增加角色所需要的参数
+    var applicationID = req.body.formdata.ApplicationID,
+        roleCode = req.body.formdata.RoleCode,
+        roleName = req.body.formdata.RoleName,
+        isActive = req.body.formdata.IsActive;
 
     //先查询要增添的角色信息是否已经存在
     data = {
@@ -223,7 +241,7 @@ router.post('/',function (req, res) {
                                                     msg: "添加信息成功"
                                                 })
                                     } else {
-                                        res.status(404);
+                                        res.status(200);
                                         return res.json({
                                                     code: 404,
                                                     isSuccess: false,
@@ -233,7 +251,7 @@ router.post('/',function (req, res) {
                                 })
                             } else {
                                 //数据非法，重新输入
-                                res.status(400);
+                                res.status(200);
                                 return res.json({
                                             code: 400,
                                             isSuccess: false,
@@ -250,7 +268,7 @@ router.post('/',function (req, res) {
                                })
                     }
                 } else {
-                    res.status(404);
+                    res.status(400);
                     return res.json({
                                 code: 404,
                                 isSuccess: false,
@@ -273,16 +291,14 @@ router.post('/',function (req, res) {
 router.put('/', function (req, res) {
     var data = ['ApplicationID', 'RoleID', 'RoleCode', 'RoleName', 'IsActive'],
         err = 'required: ';
-
     //编辑角色基本信息所需要的数据
     var appID = req.body.formdata.ApplicationID,
         roleID = req.body.formdata.RoleID,
         roleCode = req.body.formdata.RoleCode,
         roleName = req.body.formdata.RoleName,
         isActive = req.body.formdata.IsActive;
-
     //增加角色功能点所需要的数据
-    var funcData = req.body.formdata.data;
+    var funcData = req.body.formdata.funcdata;
 
     for(var value in data)
     {
@@ -340,7 +356,7 @@ router.put('/', function (req, res) {
                     //验证传入的functionID是否都存在或有效
                     functionservice.queryFuncByID(queryData, function (err, results) {
                         if (err) {
-                            res.status(500);
+                            res.status(200);
                             return res.json({
                                         code: 500,
                                         isSuccess: false,
@@ -357,7 +373,7 @@ router.put('/', function (req, res) {
                             //先删除原先的功能点
                             rolefuncservice.delRoleFunc(data, function (err, results) {
                                 if (err) {
-                                    res.status(500);
+                                    res.status(200);
                                     return res.json({
                                                 code: 500,
                                                 isSuccess: false,
@@ -368,7 +384,7 @@ router.put('/', function (req, res) {
                                 if (results!==undefined) {
                                     rolefuncservice.updateRoleFunc(data, function (err, results) {
                                         if (err) {
-                                            res.status(500);
+                                            res.status(200);
                                             return res.json({
                                                         code: 500,
                                                         isSuccess: false,
@@ -383,7 +399,7 @@ router.put('/', function (req, res) {
                                                         msg: "修改信息成功"
                                                     });
                                         } else {
-                                            res.status(404);
+                                            res.status(200);
                                             return res.json({
                                                         code: 404,
                                                         isSuccess: false,
@@ -395,7 +411,7 @@ router.put('/', function (req, res) {
                             })
                         } else {
                             //数据非法，重新输入
-                            res.status(400);
+                            res.status(200);
                             return res.json({
                                         code: 400,
                                         isSuccess: false,
@@ -412,7 +428,7 @@ router.put('/', function (req, res) {
                         });
             }
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
                         code: 404,
                         isSuccess: false,
@@ -470,7 +486,7 @@ router.delete('/', function (req, res) {
                     res.json({
                         status: 400,
                         isSuccess: true,
-                        msg: "删除成功"
+                        msg: "删除失败"
                     })
                 }
             })

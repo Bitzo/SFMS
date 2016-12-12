@@ -131,8 +131,8 @@ exports.datadictionaryDeleteLogically = function (data, callback) {
         callback(false,results);
     });
 }
-exports.queryDatadictionaryByCode = function (data,callback) {
-    datadictionaryDal.queryDatadictionaryByCode(data, function (err, results) {
+exports.queryDatadictionaryByID = function (data,callback) {
+    datadictionaryDal.queryDatadictionaryByID(data, function (err, results) {
         if (err) {
             callback(true);
             return;

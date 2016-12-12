@@ -11,26 +11,7 @@ var customerDAL = appRequire('dal/jinkebro/customer/customerdal');
 //一个微信的用户类
  var Customer = function()
  {
- 	//问题:这些参数好像都没用到
- 	//用户操作可能要用到的数据
- 	//从微信端获取的数据
- 	//this.wechatUserCode = '';//微信的openid
- 	//this.sex= 0;//性别默认为0 为男
- 	//this.nickName = '';//昵称
- 	//this.province = '';//省
- 	//this.country = '';//国家
- 	//this.city = '';//城市
- 	//this.memo = ''//备注
- 	//从个人信息获取到的消息
- 	// this.customerAccount ='';//用户的账户名
- 	// this.areaID = 0;//用户所在的区
- 	// this.dormID = 0;//用户的楼栋
- 	// this.houseNum = 0;//用户的门号
- 	// this.balanceNum = 0;//用户的余额
- 	// this.creditPoint = 0;//用户的积分
- 	// this.memberLevelID = 0;//用户的会员等级
- 	// this.phone = '';//用户的电话号码
- 	// this.customerUserName = '';//用户的使用姓名
+ 	
  	this.createTime =  moment().format("YYYY-MM-DD HH:mm:ss"),//创建的时间
  	this.isActive =1;//是否为有效的用户
  }
@@ -39,6 +20,7 @@ var customerDAL = appRequire('dal/jinkebro/customer/customerdal');
 Customer.prototype.insert = function(data,callback) {
 	 data.CreateTime = this.createTime;
 	 data.IsActive = this.isActive;
+	 //查询是否存在用户
 	 this.query(data.WechatUserCode,function(err,result)
 	 {
 	 	if(err)

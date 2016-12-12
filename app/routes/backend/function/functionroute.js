@@ -49,7 +49,7 @@ router.get('/', function(req, res) {
 });
 
 //功能点的新增
-router.post('/insert', function(req, res) {
+router.post('/', function(req, res) {
 
     var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'Memo', 'IsActive'];
     var err = 'required: ';
@@ -113,7 +113,7 @@ router.post('/insert', function(req, res) {
 });
 
 //功能点的编辑
-router.post('/update', function(req, res) {
+router.put('/', function(req, res) {
 
     var data = ['ApplicationID', 'FunctionID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'Memo', 'IsActive'];
     var err = 'required: ';
@@ -182,7 +182,7 @@ router.post('/update', function(req, res) {
 });
 
 //功能点的删除
-router.post('/delete', function(req, res) {
+router.delete('/', function(req, res) {
     var FunctionID = req.body.FunctionID;
     console.log(FunctionID)
     if (FunctionID === undefined) {

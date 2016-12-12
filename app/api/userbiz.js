@@ -28,9 +28,9 @@ router.get('/:user_id', function(req, res) {
                 gradeYear = result.GradeYear,
                 className = result.ClassID;
             var query = {
-                'DictionaryCode': [collegeName, gradeYear, className]
+                'DictionaryID': [collegeName, gradeYear, className]
             }
-            dataservice.queryDatadictionaryByCode(query, function (err, results) {
+            dataservice.queryDatadictionaryByID(query, function (err, results) {
                 if (err) {
                     res.status(500);
                     res.json({
@@ -40,9 +40,16 @@ router.get('/:user_id', function(req, res) {
                     })
                     return;
                 }
-                collegeName = results[0].DictionaryValue;//'软件工程学院';
-                gradeYear = results[1].DictionaryValue;//'2015';
-                className = results[2].DictionaryValue;//'15软件工程（嵌入式培养）3班';
+                if(results.length == 3) {
+                    collegeName = results[0].DictionaryValue;//'软件工程学院';
+                    gradeYear = results[1].DictionaryValue;//'2015';
+                    className = results[2].DictionaryValue;//'15软件工程（嵌入式培养）3班';
+                } else {
+                    collegeName =  "数据有误";
+                    gradeYear = "数据有误";
+                    className = "数据有误";
+                }
+
                 var data = {
                     status: 200,
                     isSuccess: true,
@@ -62,7 +69,7 @@ router.get('/:user_id', function(req, res) {
                 res.json(data);
             })
         } else {
-            res.status(404);
+            res.status(200);
             res.json({
                 status: 404,
                 isSuccess: false,

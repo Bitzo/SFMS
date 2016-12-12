@@ -50,7 +50,7 @@ router.get('/:roleID',function (req, res) {
                         data: results
                     })
         } else {
-            res.status(404);
+            res.status(200);
             return res.json({
                         code: 404,
                         isSuccess: false,
@@ -149,7 +149,7 @@ router.post('/', function (req, res) {
                                         msg: "添加信息成功"
                                     })
                         } else {
-                            res.status(404);
+                            res.status(400);
                             return res.json({
                                         code: 404,
                                         isSuccess: false,
@@ -258,7 +258,7 @@ router.put('/',function (req, res) {
                                         msg: "修改信息成功"
                                     })
                         } else {
-                            res.status(404);
+                            res.status(400);
                             return res.json({
                                         code: 404,
                                         isSuccess: false,
@@ -312,7 +312,7 @@ router.delete('/', function (req, res) {
                         msg: "删除功能点成功"
                     })
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
                         code: 404,
                         isSuccess: false,

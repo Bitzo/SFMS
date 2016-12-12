@@ -12,22 +12,20 @@ var applicationMode = appRequire('model/backend/application/applicationmodel');
 //查询目前所有应用
 exports.queryAllApp = function (data, callback) {
     var query_sql = 'select ID,ApplicationCode,ApplicationName,Memo,IsActive from jit_application where 1=1';
-    var connection = '';
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'page' && key != 'pageNum') {
+            if (key != 'page' && key != 'pageNum' && data[key] != '') {
                 query_sql += ' and ' + key + " = '" + data[key] + "' ";
             }
         }
     }
 
-    var num = data.pageNum;
-    var page = data.page || 1;
+    var num = data.pageNum || 20,
+        page = data.page || 1;
 
     query_sql += " limit " + (page-1)*num + " , " + num;
     console.log("查询所有应用" + query_sql);
-
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -51,7 +49,7 @@ exports.countAllapps = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
@@ -61,7 +59,6 @@ exports.countAllapps = function (data, callback) {
             callback(true);
             return;
         }
-
 
         connection.query(sql, function (err, results) {
             if (err) {
@@ -112,18 +109,19 @@ exports.update = function (data, callback) {
     var upd_sql_length = upd_sql.length;
     if (data !== undefined) {
         for (var key in data) {
-            if (upd_sql.length == upd_sql_length) {
-                upd_sql += key + " = '" + data[key] + "' ";
-            } else {
-                upd_sql += ", " + key + " = '" + data[key] + "' ";
+            if (key != 'ID') {
+                if (upd_sql.length == upd_sql_length) {
+                    upd_sql += key + " = '" + data[key] + "' ";
+                } else {
+                    upd_sql += ", " + key + " = '" + data[key] + "' ";
+                }
             }
         }
     }
-    console.log("编辑应用: " + upd_sql);
 
     upd_sql += " WHERE " + applicationMode.PK + " = '" + data[applicationMode.PK] + "'";
 
-    console.log("修改用户: " + upd_sql);
+    console.log("修改应用: " + upd_sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {

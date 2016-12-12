@@ -5,13 +5,13 @@
  * @Last Modified time: 2016/11/20 15:04
  * @Function: 用户信息的插入,用户信息的查询，用户信息的更改,信息存入日志
  */
-var express = require('express');
-var router = express.Router();
-var url = require('url');
-var logger = appRequire('util/loghelper').helper;
+ var express = require('express');
+ var router = express.Router();
+ var url = require('url');
+ var logger = appRequire('util/loghelper').helper;
 //加载中间件
 var user = appRequire('service/backend/user/userservice'),
-    menuService = appRequire('service/backend/menu/menuservice');
+menuService = appRequire('service/backend/menu/menuservice');
 
 var config = appRequire('config/config');
 var moment = require('moment');
@@ -40,20 +40,20 @@ router.post('/', function (req, res) {
 
     //插入要传的参数
     var applicationID = req.body.formdata.ApplicationID,
-        account = req.body.formdata.Account,
-        userName = req.body.formdata.UserName,
-        pwd = req.body.formdata.Pwd,
-        collegeID = req.body.formdata.CollegeID,
-        gradeYear = req.body.formdata.GradeYear,
-        phone = req.body.formdata.Phone,
-        classID = req.body.formdata.ClassID,
-        memo = req.body.formdata.Memo,
-        createTime = moment().format("YYYY-MM-DD HH:mm:ss"),
-        createUserID = req.query.jitkey,
-        editUserID = req.body.formdata.EditUserID,
-        isActive = req.body.formdata.IsActive,
-        email = req.body.formdata.Email,
-        address = req.body.formdata.Address;
+    account = req.body.formdata.Account,
+    userName = req.body.formdata.UserName,
+    pwd = req.body.formdata.Pwd,
+    collegeID = req.body.formdata.CollegeID,
+    gradeYear = req.body.formdata.GradeYear,
+    phone = req.body.formdata.Phone,
+    classID = req.body.formdata.ClassID,
+    memo = req.body.formdata.Memo,
+    createTime = moment().format("YYYY-MM-DD HH:mm:ss"),
+    createUserID = req.query.jitkey,
+    editUserID = req.body.formdata.EditUserID,
+    isActive = req.body.formdata.IsActive,
+    email = req.body.formdata.Email,
+    address = req.body.formdata.Address;
 
     data = {
         'ApplicationID': applicationID,
@@ -95,11 +95,11 @@ router.post('/', function (req, res) {
     for (var key in intNum) {
         if (isNaN(intNum[key])) {
             return res.json(
-                {
-                    code: 500,
-                    isSuccess: false,
-                    errorMsg: key + ":" + intNum[key] + " 必须是数字"
-                });
+            {
+                code: 500,
+                isSuccess: false,
+                errorMsg: key + ":" + intNum[key] + " 必须是数字"
+            });
         }
     }
     //去除相同的账户名字
@@ -188,10 +188,10 @@ router.post('/', function (req, res) {
 //查询用户的资料
 router.get('/', function (req, res) {
     //var query = JSON.parse(req.query.f);
-    console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
+
     logger.writeInfo("查询用户的记录");
     var data = {},
-        allCount,
+    allCount,
         page = req.query.pageindex,//页数
         accountID = req.query.AccountID,
         applicationID = req.query.ApplicationID,
@@ -203,56 +203,56 @@ router.get('/', function (req, res) {
         isActive = 1,
         pageNum = req.query.pagesize;
 
-    if (page == undefined || page.length == 0) {
-        page = 1;
-    }
+        if (page == undefined || page.length == 0) {
+            page = 1;
+        }
 
-    if (accountID !== undefined && accountID.length != 0) {
-        data['AccountID'] = accountID;
-    }
+        if (accountID !== undefined && accountID.length != 0) {
+            data['AccountID'] = accountID;
+        }
 
-    if (applicationID !== undefined && applicationID.length != 0) {
-        data['ApplicationID'] = applicationID;
-    }
+        if (applicationID !== undefined && applicationID.length != 0) {
+            data['ApplicationID'] = applicationID;
+        }
 
-    if (account !== undefined && account.length != 0) {
-        data['Account'] = account;
-    }
-    if (userName !== undefined && userName.length != 0) {
-        data['UserName'] = userName;
-    }
-    if (classID !== undefined && classID.length != 0) {
-        data['ClassID'] = classID;
-    }
-    if (createUserID !== undefined && createUserID.length != 0) {
-        data['CreateUserID'] = createUserID;
-    }
-    if (editUserID !== undefined && editUserID.length != 0) {
-        data['EditUserID'] = editUserID;
-    }
-         
-    data['IsActive'] = isActive;
-    if (pageNum == undefined) {
-        pageNum = config.pageCount;
-    }
-    data['page'] = page;
-    data['pageNum'] = pageNum;
+        if (account !== undefined && account.length != 0) {
+            data['Account'] = account;
+        }
+        if (userName !== undefined && userName.length != 0) {
+            data['UserName'] = userName;
+        }
+        if (classID !== undefined && classID.length != 0) {
+            data['ClassID'] = classID;
+        }
+        if (createUserID !== undefined && createUserID.length != 0) {
+            data['CreateUserID'] = createUserID;
+        }
+        if (editUserID !== undefined && editUserID.length != 0) {
+            data['EditUserID'] = editUserID;
+        }
+
+        data['IsActive'] = isActive;
+        if (pageNum == undefined) {
+            pageNum = config.pageCount;
+        }
+        data['page'] = page;
+        data['pageNum'] = pageNum;
    // console.log(data);
 //获取所有用户的数量
 
-    user.countUser(data, function (err, result) {
-        if (err) {
-            res.status(500);
-            res.json({
-                code: 500,
-                isSuccess: false,
-                errorMsg: "获取数量失败"
-            })
-            logger.writeError("数量获取失败");
-            return;
-        }
-        if (result !== undefined && result.length != 0) {
-            allCount = result[0]['num'];
+user.countUser(data, function (err, result) {
+    if (err) {
+        res.status(500);
+        res.json({
+            code: 500,
+            isSuccess: false,
+            errorMsg: "获取数量失败"
+        })
+        logger.writeError("数量获取失败");
+        return;
+    }
+    if (result !== undefined && result.length != 0) {
+        allCount = result[0]['num'];
             //查询所需要的数据
             user.queryAllUsers(data, function (err, result) {
                 if (err) {
@@ -267,8 +267,40 @@ router.get('/', function (req, res) {
                 }
 
                 if (result != undefined && result.length != 0 && allCount != -1) {
-                    console.log(result);
-                    console.log(moment('result[0].CreateTime').format('YYYY-MM-DD HH:mm:ss'));
+                    var Test = {
+                            "Fruit" : "Apple"
+                        }
+                    var outputResult = {
+                       Test
+                    };
+                    console.log(outputResult);
+                   // outputResult = result;
+
+                    //console.log(outputResult[0]);
+                    for(var key in result)
+                    {
+                        result[key].CreateTime = moment(result[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');
+                        user.querySingleID(result[key].CreateUserID,function(err,resultCreate)
+                        {
+                            if(err)
+                            {
+                                res.status(500);
+                                res.json({
+                                    code: 500,
+                                    isSuccess: true,
+                                    errorMsg: '查询失败用户ID失败'
+                                });
+                                logger.writeError("查询失败");
+                                return;
+                            }
+                            //if (resultCreate != undefined && resultCreate.length != 0 )
+                            //{
+                                
+                                result[key].CreateUser = 'resultCreate[0].UserName';
+                            //}
+                        });
+                    }
+                   // console.log(result[0]);
                     var results = {
                         code: 200,
                         isSuccess: true,
@@ -297,19 +329,19 @@ router.get('/', function (req, res) {
                     return;
                 }
             });
-        }
-        else {
-            res.status(404);
-            res.json({
-                code: 404,
-                isSuccess: false,
-                errorMsg: "未查询到相关信息"
-            });
-            logger.writeError("为查询到相关的信息");
-            return;
-        }
-
+}
+else {
+    res.status(404);
+    res.json({
+        code: 404,
+        isSuccess: false,
+        errorMsg: "未查询到相关信息"
     });
+    logger.writeError("为查询到相关的信息");
+    return;
+}
+
+});
 });
 //后端的菜单通过用户的ID来查询用户的信息
 router.get('/:userID', function (req, res) {
@@ -377,14 +409,14 @@ router.get('/:userID', function (req, res) {
                     });
                 }
             });
-        } else {
-            return res.json({
-                code: 404,
-                isSuccess: false,
-                errorMsg: '用户不存在'
-            });
-        }
+} else {
+    return res.json({
+        code: 404,
+        isSuccess: false,
+        errorMsg: '用户不存在'
     });
+}
+});
 });
 
 //用户的编辑功能
@@ -416,21 +448,21 @@ router.put('/', function (req, res) {
 
     //插入要传的参数
     var applicationID = req.body.formdata.ApplicationID,
-        accountID = req.body.formdata.AccountID,
-        account = req.body.formdata.Account,
-        userName = req.body.formdata.UserName,
-        pwd = req.body.formdata.Pwd,
-        collegeID = req.body.formdata.CollegeID,
-        gradeYear = req.body.formdata.GradeYear,
-        phone = req.body.formdata.Phone,
-        classID = req.body.formdata.ClassID,
-        memo = req.body.formdata.Memo,
-        createUserID = req.body.formdata.CreateUserID,
-        editUserID = req.query.jitkey,
-        editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
-        isActive = req.body.formdata.IsActive,
-        email = req.body.formdata.Email,
-        address = req.body.formdata.Address;
+    accountID = req.body.formdata.AccountID,
+    account = req.body.formdata.Account,
+    userName = req.body.formdata.UserName,
+    pwd = req.body.formdata.Pwd,
+    collegeID = req.body.formdata.CollegeID,
+    gradeYear = req.body.formdata.GradeYear,
+    phone = req.body.formdata.Phone,
+    classID = req.body.formdata.ClassID,
+    memo = req.body.formdata.Memo,
+    createUserID = req.body.formdata.CreateUserID,
+    editUserID = req.query.jitkey,
+    editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
+    isActive = req.body.formdata.IsActive,
+    email = req.body.formdata.Email,
+    address = req.body.formdata.Address;
 
     data = {
         'ApplicationID': applicationID,
@@ -458,7 +490,7 @@ router.put('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-           errorMsg: requireValue
+            errorMsg: requireValue
         });
 
         logger.writeError(requireValue);
@@ -497,11 +529,11 @@ router.put('/', function (req, res) {
         if (err) {
             res.status(500);
             res.json(
-                {
-                    code: 500,
-                    isSuccess: false,
-                   errorMsg: '修改信息失败，服务器出错'
-                });
+            {
+                code: 500,
+                isSuccess: false,
+                errorMsg: '修改信息失败，服务器出错'
+            });
             logger.writeError("修改信息失败，服务器出错");
             return;
         }
@@ -540,11 +572,11 @@ router.delete('/',function (req , res)
         if (err) {
             res.status(500);
             res.json(
-                {
-                    code: 500,
-                    isSuccess: false,
-                    errorMsg: '修改信息失败，服务器出错'
-                });
+            {
+                code: 500,
+                isSuccess: false,
+                errorMsg: '修改信息失败，服务器出错'
+            });
             logger.writeError("修改信息失败，服务器出错");
             return;
         }
@@ -567,7 +599,7 @@ router.delete('/',function (req , res)
             return;
         }
 
-});
+    });
 });
 
 module.exports = router;

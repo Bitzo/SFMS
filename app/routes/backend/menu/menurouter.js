@@ -130,7 +130,6 @@ router.get('/tree',function (req,res) {
 });
 
 router.get('/plain',function (req,res) {
-
     var query = JSON.parse(req.query.f);
     var page = query.pageindex || 1,
         pageNum = query.pagesize || 20,
@@ -141,7 +140,6 @@ router.get('/plain',function (req,res) {
         menuName = query.MenuName || '',
         isActive = query.IsActive || '';
 
-console.log(query);
     page = page>0 ? page : 1;
 
     if (pageNum == ''){
@@ -326,7 +324,6 @@ router.get('/',function (req,res) {
 
 //新增菜单
 router.post('/',function(req,res,next) {
- console.log(req);
     // 检查所需要的字段是否都存在
     var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
     var err = 'require: ';
@@ -527,7 +524,9 @@ router.put('/',function (req,res) {
 
     // 修改MenuID之前，先判断是否存在这个MenuID,MenuID不可以更改
     var JudgeData = {
-        "MenuID" : menuID
+        "MenuID" : menuID,
+        "pageNum": 1,
+        "page": 1
     }
 
     menuService.queryAllMenus(JudgeData,function (err,result) {
@@ -537,7 +536,7 @@ router.put('/',function (req,res) {
                 code : 500,
                 isSuccess : false,
                 updateResult: result,
-                msg : '查询失败，服务器出错'
+                msg : '查询失败1，服务器出错'
             });
         }
         // 所要修改的菜单存在
