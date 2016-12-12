@@ -187,19 +187,19 @@ router.post('/', function (req, res) {
 
 //查询用户的资料
 router.get('/', function (req, res) {
-    var query = JSON.parse(req.query.f);
+    //var query = JSON.parse(req.query.f);
     console.log(moment().format('YYYY-MM-DD HH:mm:ss'));
     logger.writeInfo("查询用户的记录");
     var data = {},
         allCount,
         page = req.query.pageindex,//页数
-        accountID = query.AccountID,
-        applicationID = query.ApplicationID,
-        account = query.Account,
-        userName = query.UserName,
-        classID = query.ClassID,
-        createUserID = query.CreateUserID,
-        editUserID = query.EditUserID,
+        accountID = req.query.AccountID,
+        applicationID = req.query.ApplicationID,
+        account = req.query.Account,
+        userName = req.query.UserName,
+        classID = req.query.ClassID,
+        createUserID = req.query.CreateUserID,
+        editUserID = req.query.EditUserID,
         isActive = 1,
         pageNum = req.query.pagesize;
 
@@ -237,7 +237,7 @@ router.get('/', function (req, res) {
     }
     data['page'] = page;
     data['pageNum'] = pageNum;
-    console.log(data);
+   // console.log(data);
 //获取所有用户的数量
 
     user.countUser(data, function (err, result) {
@@ -267,6 +267,8 @@ router.get('/', function (req, res) {
                 }
 
                 if (result != undefined && result.length != 0 && allCount != -1) {
+                    console.log(result);
+                    console.log(moment('result[0].CreateTime').format('YYYY-MM-DD HH:mm:ss'));
                     var results = {
                         code: 200,
                         isSuccess: true,

@@ -13,7 +13,9 @@ var crypto = require("crypto");
 
 var config = appRequire("config/config");
 var logger = appRequire('util/loghelper').helper;
-
+//用来插入到log中的
+var logService = appRequire('service/backend/log/logservice');
+var logModel = appRequire('model/jinkebro/log/logmodel');
 //微信接收消息通用组件
 var wechat = appRequire("service/wechat/wechatservice");
 wechat.token = config.weChat.token;
@@ -144,7 +146,6 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
-   // console.log(JSON.stringify(msg));
     if(msg.eventKey.length==0)//是关注与取消关注的判断
     {
        wechat.getLocalAccessToken(1, function(issuccess, token) {
@@ -152,29 +153,57 @@ wechat.eventMsg(function(msg) {
             wechat.getCustomer(token,msg.fromUserName,function(result)
                 {
                     
-                    console.log(result.subscribe);
+                    console.log(result);
                     if(result.subscribe == 1)//关注的人
                     {
                         var data={
                             "WechatUserCode" : result.openid,
                             "NickName" : result.nickname,
-                            "Sex" : result.sex
+                            "Sex" : result.sex,
+                            "City" : result.city,
+                            "Province" : result.province,
+                            "Country" : result.country,
+                            "Memo" : result.remark
                         }
                         //注释掉怕重复的插入
-                    //  wechatCustomer.insert(data,function(err,result)
-                    //  {
-                    //     if(err)
-                    //     {
-                    //         console.log("插入失败");
-                    //         return;
-                    //     }
-                    //     if(result.insertId != 0)
-                    //     {
-                    //         console.log("插入成功");
-                    //         return;
-                    //     }
+                     wechatCustomer.insert(data,function(err,result)
+                     {
+                        if(err)
+                        {
+                            if(!result.IsActive)
+                            {
+                                data.IsActive = 1;   
+                                wechatCustomer.update(data,function(err,result)
+                                {
+                                    if(err)
+                                    {
+                                        console.log("再次关注微信失败");
+                                        return ;
+                                    }
+                                    if(result !== undefined && result.affectedRows != 0)
+                                    {
+                                        console.log(result);
+                                        console.log("再次关注微信成功");
+                                        logModel.OperationName = '再次关注微信成功';
+                                       
+                                        return ;
+                                    }
 
-                    // })
+                                });
+                            }
+                            else
+                            {
+                                console.log("插入数据失败");
+                            }                    
+                           return;
+                        }
+                        if(result.insertId != 0)
+                        {
+                            console.log("插入成功");
+                            return;
+                        }
+
+                    })
                     }else//取消关注
                     {
                         var data = {
