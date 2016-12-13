@@ -62,3 +62,15 @@ exports.countQuery = function (data, callback) {
         callback(false, results);
     })
 }
+
+//根据用户ID，查找所在的项目
+exports.queryProjectByUserID = function (data, callback) {
+    projectuserDAL.queryProjectByUserID(data, function (err, results) {
+        if (err) {
+            callback(true, '查询失败');
+            return;
+        }
+        logger.writeInfo('查询用户所在项目');
+        callback(false, results);
+    })
+}

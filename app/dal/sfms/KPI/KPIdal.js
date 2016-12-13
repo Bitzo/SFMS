@@ -98,7 +98,7 @@ exports.countQuery = function (data, callback) {
     var sql = 'select count(1) as num from jit_kpiinfo where 1=1 ';
     if (data !== undefined) {
         for (var key in data) {
-            if (data[key] != '' && key != 'StartTime' && key != 'EndTime') {
+            if (data[key] != '' && data[key] !== undefined && key != 'StartTime' && key != 'EndTime') {
                 sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
@@ -131,17 +131,17 @@ exports.countQuery = function (data, callback) {
 exports.queryKPI = function (data, callback) {
     var sql = 'select ID,KPIName,KPIType,KPIScore,ProjectID,UserID,UserName,CreateTime,OperateUser,CheckTime,CheckUser,KPIStatus,Remark from jit_kpiinfo where 1=1 ',
         page = data.page || 1,
-        num = data.pageNum;
+        num = data.pageNum || 20;
 
     if (data !== undefined) {
         for (var key in data) {
-            if ( key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'StartTime' && key != 'EndTime')
+            if ( key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'StartTime' && key != 'EndTime' && data[key] !== undefined )
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
 
-    if (data.StartTime != '') sql += "and CreateTime > '" + data.StartTime + "' ";
-    if (data.EndTime != '') sql += "and CreateTime < '" + data.EndTime + "' ";
+    if (data.StartTime != '' && data.StartTime !== undefined) sql += "and CreateTime > '" + data.StartTime + "' ";
+    if (data.EndTime != '' && data.EndTime !== undefined) sql += "and CreateTime < '" + data.EndTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
