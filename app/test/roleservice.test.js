@@ -14,7 +14,7 @@ var data = {
     "ApplicationID": 1,
     "RoleCode": "TestName",
     "RoleName": "单元测试角色",
-    "IsActive": 1,
+    "IsActive": 1
 }
 insertRoleID = -1;
 

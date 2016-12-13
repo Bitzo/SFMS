@@ -16,6 +16,7 @@ var iconv = require("iconv-lite");
 var config = appRequire('config/config');
 var logger = appRequire('util/loghelper').helper;
 var logService = appRequire('service/backend/log/logservice');
+var logModel = appRequire('model/jinkebro/log/logmodel');
 //日期组件
 var moment = require('moment');
 //redis缓存组件
@@ -118,25 +119,13 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         res.on("end", function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-
-            var logModel = {
-                ApplicationID: 1,
-                ApplicationName: '金科小哥',
-                OperationName: '获取微信AccessToken',
-                OldValue: '',
-                OperationUrl: '',
-                NewValue: result.access_token,
-                Action: '微信操作_获取AccessToken',
-                Type: 1,
-                ObjName: '',
-                Identifier: 1,
-                CmdStr: '',
-                Memo: 'AccessToken获取成功',
-                CreateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-                CreateUserID: operatorid,
-                PDate: moment().format('YYYY-MM-DD'),
-            };
-
+            logModel.OperationName= '获取微信AccessToken';
+            logModel.NewValue = result.access_token;
+            logModel.Action = '微信操作_获取AccessToken';
+            logModel.Memo = 'AccessToken获取成功';
+            logModel.CreateUserID = operatorid;
+            logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeErr('获取微信token成功，生成操作日志异常' + new Date());
@@ -155,7 +144,7 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
 
 //微信获取用户的列表
 Weixin.prototype.getCustomerList = function(accessToken, callback) {
-    var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken;
+    var getUrl = config.weChat.baseUrl + 'user/get?access_token=' + accessToken;
     console.log(getUrl);
     https.get(getUrl, function(res) {
         var datas = [];
@@ -168,8 +157,6 @@ Weixin.prototype.getCustomerList = function(accessToken, callback) {
         res.on('end', function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
-            console.log(result);
-
             if (callback && typeof callback === 'function') {
                 callback(result);
             }
@@ -180,7 +167,7 @@ Weixin.prototype.getCustomerList = function(accessToken, callback) {
     });
 }
 
-//微信获取到所有用户的列表，即所有用户的openid
+//微信获取到指定用户的的列表
 Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
         var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
         console.log(getUrl);
@@ -206,7 +193,8 @@ Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
             logger.writeErr('获取列表信息时异常' + new Date());
         });
     }
-    //微信获取用户信息
+    
+//微信获取用户信息
 Weixin.prototype.getCustomer = function(accessToken, openid, callback) {
     //get获取微信端的接口的url
     var getUrl = config.weChat.baseUrl + "user/info?access_token=" + accessToken + "&openid=" + openid;
@@ -222,7 +210,6 @@ Weixin.prototype.getCustomer = function(accessToken, openid, callback) {
         res.on('end', function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
-            console.log(result);
 
             if (callback && typeof callback === 'function') {
                 callback(result);

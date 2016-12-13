@@ -1,35 +1,27 @@
 /**
  * @Author: luozQ
- * @Date:   2016-11-13 20:42:38
+ * @Date:   2016-12-13 上午 11:42
  * @Last Modified by:   luozQ
- * @Last Modified time: 2016-11-14 20:41
- * @Function 功能点管理
+ * @Last Modified time: 2016-12-14 上午 11:45
+ * @Function 产品类别管理
  */
 
 var express = require('express');
 var router = express.Router();
+var proTypeService = appRequire('service/jinkebro/productype/productypeservice');
 
-var functionservice = appRequire('service/backend/function/functionservice');
-
-//得到所有树形功能点
+//得到所有产品类别
 router.get('/', function(req, res) {
-    var appID = req.query.appID || 1;
-
-    var data = {
-        'ApplicationID': appID,
-    };
-
-    functionservice.queryAllFunctions(data, function(err, results) {
-        if (err) {
+    proTypeService.queryAllProType(data, function(err, results) {
+        if (err) { 
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "查询失败，服务器内部错误"
+                msg: "查询失败，服务器内部错误",
             })
-            return;
         }
-
         if (results !== undefined && results.length != 0) {
+            console.log(results)
             var result = {
                 code: 200,
                 isSuccess: true,
@@ -47,11 +39,10 @@ router.get('/', function(req, res) {
     });
 
 });
-
 //功能点的新增
 router.post('/', function(req, res) {
 
-    var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'Memo', 'IsActive'];
+    var data = ['ProductTypeName'];
     var err = 'required: ';
     for (var value in data) {
         if (!(data[value] in req.body)) {
@@ -69,23 +60,11 @@ router.post('/', function(req, res) {
         return;
     };
 
-    var ApplicationID = req.body.ApplicationID;
-    var FunctionLevel = req.body.FunctionLevel;
-    var ParentID = req.body.ParentID;
-    var FunctionCode = req.body.FunctionCode;
-    var FunctionName = req.body.FunctionName;
-    var Memo = req.body.Memo;
-    var IsActive = req.body.IsActive;
+    var ProductTypeName = req.body.ProductTypeName;
     var data = {
-        'ApplicationID': ApplicationID,
-        'FunctionLevel': FunctionLevel,
-        'ParentID': ParentID,
-        'FunctionCode': FunctionCode,
-        'FunctionName': FunctionName,
-        'Memo': Memo,
-        'IsActive': IsActive
+        'ProductTypeName': ProductTypeName
     }
-    functionservice.insert(data, function(err,result) {
+    proTypeService.insert(data, function(err,result) {
         if (err) {
             res.json({
                 code: 500,
@@ -115,7 +94,7 @@ router.post('/', function(req, res) {
 //功能点的编辑
 router.put('/', function(req, res) {
 
-    var data = ['ApplicationID', 'FunctionID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'Memo', 'IsActive'];
+    var data = ['ID', 'ProductTypeName'];
     var err = 'required: ';
     for (var value in data) {
         if (!(data[value] in req.body)) {
@@ -133,27 +112,14 @@ router.put('/', function(req, res) {
         return;
     };
 
-    var ApplicationID = req.body.ApplicationID;
-    var FunctionID = req.body.FunctionID;
-    var FunctionLevel = req.body.FunctionLevel;
-    var ParentID = req.body.ParentID;
-    var FunctionCode = req.body.FunctionCode;
-    var FunctionName = req.body.FunctionName;
-    var Memo = req.body.Memo;
-    var IsActive = req.body.IsActive;
-
+    var ID = req.body.ID;
+    var ProductTypeName=req.body.ProductTypeName;
     var data = {
-        'ApplicationID': ApplicationID,
-        'FunctionID': FunctionID,
-        'FunctionLevel': FunctionLevel,
-        'ParentID': ParentID,
-        'FunctionCode': FunctionCode,
-        'FunctionName': FunctionName,
-        'Memo': Memo,
-        'IsActive': IsActive
+        'ID': ID,
+        'ProductTypeName': ProductTypeName,
     }
 
-    functionservice.update(data, function(err, results) {
+    proTypeService.update(data, function(err, results) {
         if (err) {
             res.json({
                 code: 500,
@@ -178,27 +144,26 @@ router.put('/', function(req, res) {
             })
         }
     })
-
 });
 
 //功能点的删除
 router.delete('/', function(req, res) {
-   var FunctionID = JSON.parse(req.query.d).FunctionID;
+   var ID = JSON.parse(req.query.d).ID;
 
-    if (FunctionID === undefined||FunctionID=='') {
+    if (ID === undefined||ID=='') {
         res.json({
             code: 404,
             isSuccess: false,
-            msg: 'require FunctionID'
+            msg: 'require ID'
         })
         return;
     }
 
     var data = {
-        'FunctionID': FunctionID
+        'ID': ID
     };
     console.log(data)
-    functionservice.delete(data, function(err, results) {
+    proTypeService.delete(data, function(err, results) {
         if (err) {
             res.json({
                 code: 500,
@@ -225,51 +190,6 @@ router.delete('/', function(req, res) {
             })
         }
     })
-
-});
-
-//根据FunctionID得到该功能点的值
-router.get('/getFuncByID', function(req, res) {
-    var functionID = JSON.parse(req.query.f).functionID;   
-
-      if (FunctionID === undefined||FunctionID=='') {
-        res.json({
-            code: 404,
-            isSuccess: false,
-            msg: 'require FunctionID'
-        })
-        return;
-    }
-    
-    var data = {
-        'FunctionID': functionID,
-    };
-
-    functionservice.getFuncByID(data, function(err, results) {
-        if (err) {
-            res.json({
-                code: 500,
-                isSuccess: false,
-                msg: "查询失败，服务器内部错误"
-            })
-            return;
-        }
-
-        if (results !== undefined && results.length != 0) {
-            var result = {
-                code: 200,
-                isSuccess: true,
-                data: results
-            };
-            res.json(result);
-        } else {
-            res.json({
-                code: 404,
-                isSuccess: false,
-                msg: "未查询到相关信息"
-            });
-        }
-    });
 });
 
 module.exports = router;
