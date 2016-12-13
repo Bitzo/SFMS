@@ -257,4 +257,47 @@ router.get('/', function (req, res) {
     })
 })
 
+//项目删除
+router.delete('/', function (req, res) {
+    var ID = req.body.ID;
+
+    if (ID == '' || ID === undefined) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: 'require: ID'
+        })
+    }
+    var data = {
+        'ID': ID,
+        'IsActive': 0
+    };
+
+    projectservice.updateProject(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "服务器出错"
+            });
+        }
+        if(results !== undefined && results.affectedRows > 0) {
+            res.status(200);
+            res.json({
+                status: 200,
+                isSuccess: true,
+                msg: "删除成功"
+            })
+        } else {
+            res.status(400);
+            res.json({
+                status: 400,
+                isSuccess: true,
+                msg: "删除失败"
+            })
+        }
+    })
+})
 module.exports = router;

@@ -49,11 +49,13 @@ exports.queryFinance = function (data, callback) {
 //财务查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'FiName': data.FiName,
+        'Username': data.Username,
         'InOutType': data.InOutType,
-        'ProjectID': data.ProjectID,
-        'UserName': data.UserName,
-        'FiStatus': data.FiStatus
+        'FIType': data.FIType,
+        'FIStatus': data.FIStatus,
+        'startTime': data.startTime,
+        'endTime': data.endTime,
+        'IsActive': 1
     }
     financeDAL.countQuery(queryData, function (err, results) {
         if (err) {

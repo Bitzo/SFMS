@@ -170,10 +170,11 @@ router.put('/', function (req, res) {
 //财务信息查询
 router.get('/', function (req, res) {
     var query = req.query,
-        fiName = query.fiName || '',
+        startTime = query.startTime || '',
+        endTime = query.endTime || '',
+        fiType = query.fiType || '',
         inOutType = query.inOutType || '',
-        projectID = query.projectID || '',
-        userName = query.userName || '',
+        username = query.username || '',
         fiStatus = query.fiStatus || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || config.pageCount,
@@ -181,11 +182,12 @@ router.get('/', function (req, res) {
     page = page > 0 ? page : 1;
 
     var data = {
-        'FiName': fiName,
+        'Username': username,
         'InOutType': inOutType,
-        'ProjectID': projectID,
-        'UserName': userName,
-        'FiStatus': fiStatus,
+        'FIType': fiType,
+        'FIStatus': fiStatus,
+        'startTime': startTime,
+        'endTime': endTime,
         'page': page,
         'pageNum': pageNum,
         'IsActive': 1
