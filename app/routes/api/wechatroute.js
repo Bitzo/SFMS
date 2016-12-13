@@ -21,7 +21,7 @@ var wechat = appRequire("service/wechat/wechatservice");
 wechat.token = config.weChat.token;
 
 //从微信端获取数据插入数据库
-var wechatCustomer = appRequire("service/wechat/customer/customerservice");
+var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
 //微信开发者认证
 router.get('/accesscheck', function(req, res, next) {
     var query = url.parse(req.url, true).query;
@@ -159,12 +159,30 @@ wechat.eventMsg(function(msg) {
                         var data={
                             "WechatUserCode" : result.openid,
                             "NickName" : result.nickname,
-                            "Sex" : result.sex,
-                            "City" : result.city,
-                            "Province" : result.province,
-                            "Country" : result.country,
-                            "Memo" : result.remark
+                            "Sex" : result.sex
                         }
+
+                        //判断微信自己填的记录是否为空
+                        if(result.province.length != 0)
+                        {
+                            data.Province = result.province;
+                        }
+                        if(result.country.length != 0)
+                        {
+                            data.Country = result.country;
+                        }
+                        if(result.city.length != 0)
+                        {
+                            data.City = result.city;
+                        }
+                        if(result.remark.length != 0)
+                        {
+                            data.Memo = result.remark;
+                        }
+                        console.log(data);
+                        
+
+
                         //注释掉怕重复的插入
                      wechatCustomer.insert(data,function(err,result)
                      {
@@ -237,7 +255,6 @@ wechat.eventMsg(function(msg) {
 
 //接受用户的消息
 router.post('/accesscheck', function(req, res) {
-
     wechat.handleCustomerMsg(req, res);
 });
 

@@ -8,6 +8,7 @@
 
 var customerDAL = appRequire('dal/jinkebro/customer/customerdal');
 	moment = require('moment');
+	logService = appRequire('service/backend/log/logservice');
 //一个微信的用户类
  var Customer = function()
  {
@@ -38,9 +39,11 @@ Customer.prototype.insert = function(data,callback) {
 	 	{
 	 		if(err)
 	 		{
+	 			console.log("插入失败");
 	 			callback(true);
 	 			return;
 	 		}
+	 		console.log("插入成功");
 	 		callback(false,results);
 	 	});
 	 });

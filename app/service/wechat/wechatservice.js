@@ -124,6 +124,8 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
             logModel.Action = '微信操作_获取AccessToken';
             logModel.Memo = 'AccessToken获取成功';
             logModel.CreateUserID = operatorid;
+            logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeErr('获取微信token成功，生成操作日志异常' + new Date());

@@ -20,8 +20,8 @@
     Identifier: 1,
     CmdStr: '',
     Memo: '',
-    CreateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+    CreateTime: '',
     CreateUserID: 0,
-    PDate: moment().format('YYYY-MM-DD'),
+    PDate: '',
 };
 module.exports = logModel;
