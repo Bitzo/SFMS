@@ -8,7 +8,7 @@
 
 require('../global_bootstrap')
 var should = require('should');
-var proTypeService = appRequire('service/wechat/productype/productypeservice');
+var proTypeService = appRequire('service/jinkebro/productype/productypeservice');
 
 var data={
     'ProductTypeName':'产中类别1'

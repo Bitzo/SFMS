@@ -8,26 +8,24 @@
 
 var express = require('express');
 var router = express.Router();
-var proTypeService = appRequire('service/wechat/productype/productypeservice');
+var proTypeService = appRequire('service/jinkebro/productype/productypeservice');
 
 //得到所有产品类别
 router.get('/', function(req, res) {
-
     proTypeService.queryAllProType(data, function(err, results) {
-        if (err) {
+        if (err) { 
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "查询失败，服务器内部错误"
+                msg: "查询失败，服务器内部错误",
             })
-            return;
         }
-
         if (results !== undefined && results.length != 0) {
+            console.log(results)
             var result = {
                 code: 200,
                 isSuccess: true,
-               // data: results
+                data: results
             };
             res.json(result);
         } else {

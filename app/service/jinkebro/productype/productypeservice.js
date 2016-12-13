@@ -6,7 +6,7 @@
  * @Function :产品类别增，删，改
  */
 
-var productypeDAL = appRequire('dal/jinkebro/productype/productypedal.js');
+var productypeDAL = appRequire('dal/jinkebro/productype/productypedal');
 
 var Productye = function () {
 }
