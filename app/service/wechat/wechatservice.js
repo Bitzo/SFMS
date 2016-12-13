@@ -167,7 +167,7 @@ Weixin.prototype.getCustomerList = function(accessToken, callback) {
     });
 }
 
-//微信获取到所有用户的列表，即所有用户的openid
+//微信获取到指定用户的的列表
 Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
         var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
         console.log(getUrl);
