@@ -66,6 +66,19 @@ describe("功能点单元测试", function () {
             done();
         });
     });
+     it("根据FunctionID得到该功能点的值", function (done) {
+         var data={
+            'FunctionID':insertFunctionID  
+         }
+        funcService.getFuncByID(data,function(err,result){
+            if(err){
+                return done(err);
+            }
+            console.log(result)
+            result.length.should.be.above(0).and.should.be.a.Number;
+            done();
+        });
+    });
     it("功能点逻辑删除", function (done) {
         data.FunctionID = insertFunctionID;
         funcService.delete(data, function (err, result) {

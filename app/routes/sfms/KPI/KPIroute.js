@@ -10,7 +10,7 @@ var express = require('express');
 var router = express.Router();
 var KPIservice = appRequire('service/sfms/KPI/KPIservice');
 var dataservice = appRequire('service/backend/datadictionary/datadictionaryservice');
-var roleuserservice = appRequire('service/backend/user/userroleservice');
+var projectuserservice = appRequire('service/sfms/project/projectuserservice');
 var userservice = appRequire('service/backend/user/userservice');
 var config = appRequire('config/config');
 
@@ -60,7 +60,7 @@ router.post('/', function (req, res) {
     };
 
     //验证绩效分用户userID是否属于项目projectID
-    roleuserservice.queryAppByUserID({'UserID': UserID}, function (err, results) {
+    projectuserservice.queryProjectByUserID({'UserID': UserID}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -69,9 +69,10 @@ router.post('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
+            console.log(results)
         if (results !== undefined && results.length>0) {
             for (var i in results) {
-                if (results[i].ApplicationID == ProjectID) isTrue = true;
+                if (results[i].ProjectID == ProjectID) isTrue = true;
             }
             if (isTrue == true) {
                 isTrue = false;
@@ -219,7 +220,7 @@ router.put('/', function (req, res) {
         })
     };
 
-    KPIservice.updateKPI(data, function (err, results) {
+    KPIservice.queryKPI({'ID':ID}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -228,13 +229,41 @@ router.put('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        if(results !== undefined && results.affectedRows > 0) {
-            res.status(200);
-            return res.json({
-                status: 200,
-                isSuccess: true,
-                msg: '更新成功'
-            })
+        if(results !== undefined && results.length>0) {
+            if (results[0].CheckStatus == '待审核') {
+                KPIservice.updateKPI(data, function (err, results) {
+                    if (err) {
+                        res.status(500);
+                        return res.json({
+                            status: 500,
+                            isSuccess: false,
+                            msg: '服务器出错'
+                        })
+                    }
+                    if(results !== undefined && results.affectedRows > 0) {
+                        res.status(200);
+                        return res.json({
+                            status: 200,
+                            isSuccess: true,
+                            msg: '更新成功'
+                        })
+                    } else {
+                        res.status(400);
+                        return res.json({
+                            status: 404,
+                            isSuccess: false,
+                            msg: results
+                        })
+                    }
+                })
+            } else {
+                res.status(400);
+                return res.json({
+                    status: 404,
+                    isSuccess: false,
+                    msg: '已审核的绩效不可编辑'
+                })
+            }
         } else {
             res.status(400);
             return res.json({
@@ -248,27 +277,104 @@ router.put('/', function (req, res) {
 
 //KPI查询，用于个人查询
 router.get('/:UserID', function (req, res) {
-    res.json('HI');
+    var UserID = req.params.UserID,
+        query = req.query,
+        ProjectID = query.ProjectID || '',
+        StartTime = query.StartTime || '',
+        EndTime = query.EndTime || '',
+        page = req.query.pageindex > 0 ? req.query.pageindex : 1,
+        pageNum = req.query.pagesize || config.pageCount,
+        totalNum = 0;
+
+    var data = {
+        'ProjectID': ProjectID,
+        'UserID': UserID,
+        'KPIStatus': '',
+        'StartTime': StartTime,
+        'EndTime': EndTime,
+        'page': page,
+        'pageNum': pageNum,
+        'IsActive': 1
+    }
+    KPIservice.countQuery(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '服务器出错'
+            })
+        }
+        totalNum = results[0].num;
+        if(totalNum > 0) {
+            //查询所需的详细数据
+            KPIservice.queryKPI(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '服务器出错'
+                    })
+                }
+                if (results !== undefined && results.length > 0) {
+                    for (var i in results) {
+                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:SS');
+                        if(results[i].CheckTime !== null)
+                            results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm:SS');
+                    }
+                    var result = {
+                        status: 200,
+                        isSuccess: true,
+                        dataNum: totalNum,
+                        curPage: page,
+                        totalPage: Math.ceil(totalNum/pageNum),
+                        curPageNum: pageNum,
+                        data: results
+                    };
+                    if(result.curPage == result.totalPage) {
+                        result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
+                    }
+                    res.status(200);
+                    return res.json(result);
+                } else {
+                    res.status(200);
+                    return res.json({
+                        status: 200,
+                        isSuccess: false,
+                        msg: '无数据'
+                    })
+                }
+            })
+        } else {
+            res.status(200);
+            return res.json({
+                status: 200,
+                isSuccess: false,
+                msg: '无数据'
+            })
+        }
+    })
 })
 
-//KPI查询,此查询用于可审核绩效的人查询
+//KPI查询,此查询用于可审核绩效的角色进行查询
 router.get('/', function (req, res) {
     var query = req.query,
-        KPIName = query.KPIName || '',
-        KPIType = query.KPIType || '',
+        UserID = query.UserID || '',
         ProjectID = query.ProjectID || '',
-        UserName = query.UserName || '',
+        StartTime = query.StartTime || '',
+        EndTime = query.EndTime || '',
         KPIStatus = query.KPIStatus || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
 
     var data = {
-        'KPIName': KPIName,
-        'KPIType': KPIType,
         'ProjectID': ProjectID,
-        'UserName': UserName,
+        'UserID': UserID,
         'KPIStatus': KPIStatus,
+        'StartTime': StartTime,
+        'EndTime': EndTime,
         'page': page,
         'pageNum': pageNum,
         'IsActive': 1
@@ -296,6 +402,11 @@ router.get('/', function (req, res) {
                     })
                 }
                 if (results !== undefined && results.length > 0) {
+                    for (var i in results) {
+                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:SS');
+                        if(results[i].CheckTime !== null)
+                        results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm:SS');
+                    }
                     var result = {
                         status: 200,
                         isSuccess: true,
@@ -350,6 +461,7 @@ router.put('/check', function (req, res) {
             msg: err
         })
     }
+    KPIservice.queryKPI()
     KPIservice.checkKPI(data, function (err, results) {
         if (err) {
             res.status(500);

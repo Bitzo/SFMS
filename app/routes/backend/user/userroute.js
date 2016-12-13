@@ -8,20 +8,24 @@
  var express = require('express');
  var router = express.Router();
  var url = require('url');
+ var moment = require('moment');
  var logger = appRequire('util/loghelper').helper;
-//加载中间件
-var user = appRequire('service/backend/user/userservice'),
-menuService = appRequire('service/backend/menu/menuservice');
+    //加载中间件
+    var user = appRequire('service/backend/user/userservice'),
+    //加载菜单的service
+    menuService = appRequire('service/backend/menu/menuservice'),
+    //加载应用的路由
+    application = appRequire('service/backend/application/applicationservice'),
+    config = appRequire('config/config');
 
-var config = appRequire('config/config');
-var moment = require('moment');
-router.post('/', function (req, res) {
-    var data = ['ApplicationID', 'Account', 'UserName', 'Pwd',  'IsActive'];
-    var err = 'require: ';
+    //插入用户
+    router.post('/', function (req, res) {
+        var data = ['ApplicationID', 'Account', 'UserName', 'Pwd',  'IsActive'];
+        var err = 'require: ';
 
-    for (var value in data) {
+        for (var value in data) {
 
-        if (!(data[value] in req.body.formdata)) {
+            if (!(data[value] in req.body.formdata)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
             err += data[value] + ' ';//检查post传输的数据
         }
@@ -262,73 +266,48 @@ user.countUser(data, function (err, result) {
                         isSuccess: true,
                         errorMsg: '查询失败'
                     });
+                    console.log("查询失败");
                     logger.writeError("查询失败");
                     return;
                 }
 
                 if (result != undefined && result.length != 0 && allCount != -1) {
-                    var Test = {
-                            "Fruit" : "Apple"
-                        }
-                    var outputResult = {
-                       Test
-                    };
-                    console.log(outputResult);
-                   // outputResult = result;
-
-                    //console.log(outputResult[0]);
+                    //将时间格式化，并且将CreateUser的名字改一下
+                    var dataApplication = {};
                     for(var key in result)
                     {
-                        result[key].CreateTime = moment(result[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');
-                        user.querySingleID(result[key].CreateUserID,function(err,resultCreate)
-                        {
-                            if(err)
-                            {
-                                res.status(500);
-                                res.json({
-                                    code: 500,
-                                    isSuccess: true,
-                                    errorMsg: '查询失败用户ID失败'
-                                });
-                                logger.writeError("查询失败");
-                                return;
-                            }
-                            //if (resultCreate != undefined && resultCreate.length != 0 )
-                            //{
-                                
-                                result[key].CreateUser = 'resultCreate[0].UserName';
-                            //}
-                        });
-                    }
-                   // console.log(result[0]);
+                        result[key].CreateTime = moment(result[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');                      
+                     }
+                
+                    console.log(result);
                     var results = {
-                        code: 200,
-                        isSuccess: true,
-                        msg: '查询成功',
-                        dataNum: allCount,
-                        curPage: page,
-                        curpageNum: pageNum,
-                        totalPage: Math.ceil(allCount / pageNum),
-                        data: result
-                    };
-                    if (results.curPage == results.totlePage) {
-                        results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
-                    }
-                    res.status(200);
-                    res.json(results);
-                    return;
+                    code: 200,
+                    isSuccess: true,
+                    msg: '查询成功',
+                    dataNum: allCount,
+                    curPage: page,
+                    curpageNum: pageNum,
+                    totalPage: Math.ceil(allCount / pageNum),
+                    data: result
+                };
+                if (results.curPage == results.totlePage) {
+                    results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
                 }
-                else {
-                    res.status(500);
-                    res.json({
-                        code: 500,
-                        isSuccess: false,
-                        errorMsg: "未查到数据"
-                    });
-                    logger.writeWarn("未查到数据");
-                    return;
-                }
-            });
+                res.status(200);
+                res.json(results);
+                return;
+            }
+            else {
+                res.status(500);
+                res.json({
+                    code: 500,
+                    isSuccess: false,
+                    errorMsg: "未查到数据"
+                });
+                logger.writeWarn("未查到数据");
+                return;
+            }
+        });
 }
 else {
     res.status(404);

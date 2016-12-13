@@ -6,9 +6,10 @@
  * @Function : 微信的用户相关
  */
 
-var customerDAL = appRequire('dal/jinkebro/customer/customerdal');
-	moment = require('moment');
-	logService = appRequire('service/backend/log/logservice');
+var customerDAL = appRequire('dal/jinkebro/customer/customerdal'),
+	moment = require('moment'),
+	logService = appRequire('service/backend/log/logservice'),
+	logModel = appRequire('model/jinkebro/log/logmodel');
 //一个微信的用户类
  var Customer = function()
  {
@@ -26,23 +27,75 @@ Customer.prototype.insert = function(data,callback) {
 	 {
 	 	if(err)
 	 	{
+	 		//生成操作的日志
 	 		console.log("查询出现错误");
+	 		logModel.OperationName= '查询存在的用户';
+            logModel.Action ='查询存在的用户';
+            logModel.Memo = '查询存在的用户失败';
+            logModel.CreateUserID = 1;
+            logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            logModel.PDate = moment().format('YYYY-MM-DD');
+            logService.insertOperationLog(logModel, function(err, insertId) {
+                if (err) {
+                    logger.writeErr('生成操作日志异常' + new Date());
+                }
+            });
 	 		return;
 	 	}
+
 	 	if(result != undefined && result.length != 0)
 	 	{
+	 		//生成操作的日志console.log
 	 		console.log("账户名已经存在了！");
+	 		logModel.OperationName= '查询存在的用户';
+            logModel.Action ='查询存在的用户';
+            logModel.Memo = '查询存在的用户成功';
+            logModel.CreateUserID = 1;
+            logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            logModel.PDate = moment().format('YYYY-MM-DD');
+            logService.insertOperationLog(logModel, function(err, insertId) {
+                if (err) {
+                    logger.writeErr('生成操作日志异常' + new Date());
+                }
+            });
 	 		callback(true,result);
 	 		return;
 	 	}
+
+	 	//插入
 	 	customerDAL.insert(data,function(err,results)
 	 	{
 	 		if(err)
 	 		{
-	 			console.log("插入失败");
+	 			//生成操作的日志
+	 		console.log("插入失败");
+	 		logModel.OperationName= '插入用户';
+            logModel.Action ='插入用户';
+            logModel.Memo = '插入用户失败';
+            logModel.CreateUserID = 1;
+            logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            logModel.PDate = moment().format('YYYY-MM-DD');
+            logService.insertOperationLog(logModel, function(err, insertId) {
+                if (err) {
+                    logger.writeErr('生成操作日志异常' + new Date());
+                }
+            });
 	 			callback(true);
 	 			return;
 	 		}
+	 		//生成操作的日志
+	 		console.log("插入成功");
+	 		logModel.OperationName= '插入用户';
+            logModel.Action ='插入用户';
+            logModel.Memo = '插入用户成功';
+            logModel.CreateUserID = 1;
+            logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            logModel.PDate = moment().format('YYYY-MM-DD');
+            logService.insertOperationLog(logModel, function(err, insertId) {
+                if (err) {
+                    logger.writeErr('生成操作日志异常' + new Date());
+                }
+            });
 	 		console.log("插入成功");
 	 		callback(false,results);
 	 	});

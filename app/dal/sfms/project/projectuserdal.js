@@ -161,3 +161,30 @@ exports.countQuery = function (data, callback) {
         });
     });
 }
+
+//根据用户ID，查找所在的项目
+exports.queryProjectByUserID = function (data, callback) {
+    var sql = 'select distinct ProjectID from jit_projectruser where UserID = ';
+
+    sql += data.UserID;
+
+    logger.writeInfo('根据用户ID，查找所在的项目：' + sql);
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '查询失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+
+}

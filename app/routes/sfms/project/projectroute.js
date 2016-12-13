@@ -174,21 +174,22 @@ router.put('/', function (req, res) {
 
 //项目基本信息查询
 router.get('/', function (req, res) {
-    var projectName = req.query.projectName,
-        projectManageName = req.query.projectManageName,
-        projectStatus = req.query.projectStatus,
+    var query = req.query,
+        projectName = query.projectName || '',
+        projectManageName = query.projectManageName || '',
+        startTime = query.startTime || '',
+        endTime = query.endTime || '',
         page = req.query.pageindex>0 ?req.query.pageindex:1,
-        pageNum = req.query.pagesize || 20,
+        pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
-
-    if (pageNum === undefined) pageNum = config.pageCount;
 
     var data = {
         'ProjectName': projectName,
         'ProjectManageName': projectManageName,
-        'ProjectStatus': projectStatus,
+        'CreateTime': startTime,
+        'ProjectEndTime': endTime,
         'page': page,
-        'pageNum': pageNum
+        'pageNum': pageNum,
     }
     
     //查询数据量
@@ -201,7 +202,6 @@ router.get('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        logger.writeInfo(results);
         totalNum = results[0].num;
         if(totalNum > 0) {
             //查询所需的详细数据
@@ -214,8 +214,15 @@ router.get('/', function (req, res) {
                         msg: '服务器出错'
                     })
                 }
-                logger.writeInfo(results);
                 if (results !== undefined && results.length > 0) {
+                    for (var i in results) {
+                        if (results[i].ProjectEndTime != null)
+                            results[i].ProjectEndTime = moment(results[i].ProjectEndTime).format('YYYY-MM-DD HH:mm:ss');
+                        if (results[i].CreateTime != null)
+                            results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:ss');
+                        if (results[i].EditTime != null)
+                            results[i].EditTime = moment(results[i].EditTime).format('YYYY-MM-DD HH:mm:ss');
+                    }
                     var result = {
                         status: 200,
                         isSuccess: true,

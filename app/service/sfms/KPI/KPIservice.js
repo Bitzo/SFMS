@@ -49,13 +49,14 @@ exports.queryKPI = function (data, callback) {
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'KPIName': data.KPIName,
-        'KPIType': data.KPIType,
         'ProjectID': data.ProjectID,
-        'UserName': data.UserName,
+        'UserID': data.UserID,
         'KPIStatus': data.KPIStatus,
+        'StartTime': data.StartTime,
+        'EndTime': data.EndTime,
         'IsActive': 1
     }
+    console.log(queryData);
     KPIdal.countQuery(queryData, function (err, results) {
         if (err) {
             callback(true, '失败');

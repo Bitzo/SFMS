@@ -42,20 +42,20 @@ block content
         thead
           tr 
             th 序号
-            th 账户ID
-            th 应用ID
+            th 账户
+            th 应用
             th 用户名
             th 创建时间
-            th 创建者ID
+            th 创建者
             th 操作
         tbody
           tr(ng-repeat="x in datas" )
             td {{$index+1}}
-            td {{x.AccountID}}
-            td {{x.ApplicationID}}
+            td {{x.Account}}
+            td {{x.ApplicationName}}
             td {{x.UserName}}
             td {{x.CreateTime}}
-            td {{x.CreateUserID}}
+            td {{x.CreateUserName}}
             td
               a(ng-click="show(x.AccountID,'/backuser')",href='#/backend/useredit/' )
                 i.icon.icon-edit 编辑 
