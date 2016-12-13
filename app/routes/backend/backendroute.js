@@ -106,6 +106,22 @@ router.get('/applicationedit', function(req, res, next) {
 
 });
 
+router.get('/function', function(req, res, next) {
+        res.render('backend/function', { title: 'Hi backend' });
+
+});
+
+router.get('/functionAdd', function(req, res, next) {
+        res.render('backend/functionAdd', { title: 'Hi backend' });
+
+});
+
+router.get('/functionEdit', function(req, res, next) {
+        res.render('backend/functionEdit', { title: 'Hi backend' });
+
+});
+
+
 //生成验证码
 router.get('/generatecode', code);
 
@@ -182,7 +198,7 @@ router.use('/backrole', roleroute);
 //角色功能点模块
 router.use('/rolefunc', rolefuncroute);
 //管理功能点
-router.use('/function', funcroute);
+router.use('/func', funcroute);
 //用户的模块
 router.use('/backuser', user);
 //用户添加角色模块
