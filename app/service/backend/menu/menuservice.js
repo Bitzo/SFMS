@@ -7,7 +7,7 @@
  */
 var menuDAl = appRequire('dal/backend/menu/menudal'),
     logger = appRequire('util/loghelper').helper;
-
+    getTree = appRequire('service/backend/menu/gettreemenu');
 exports.queryAllMenusFormTree = function(data, callback){
     menuDAl.queryMenuByUserID(data,function (err,results) {
         if(err){
@@ -71,6 +71,56 @@ exports.queryAllMenusFormTreeInTable = function(data, callback){
         logger.writeInfo('queryAllMenusFormTreeInTable func in service');
         //返回菜单树形JSON
         callback(false,tree);
+    });
+};
+
+exports.queryAllMenusFormTreeIByRecursion  = function(data, callback){
+    menuDAl.queryAllMenus(data,function (err,results) {
+        if(err){
+            callback(true);
+            return ;
+        }
+
+        //返回的结果
+        var returnResults = new Array();
+
+        var appIDs = [results[0].ApplicationID];
+        var k = 0;
+
+        for(var i=0; i< results.length; i++){
+            for(var j=0; j <= k; j++){
+                if(results[i].ApplicationID == appIDs[j])
+                    break;
+            }
+
+            if(j > k){
+                k++;
+                appIDs[k] = results[i].ApplicationID;
+            }
+        }
+
+        for(var i=0; i < appIDs.length; i++){
+            var appGroup = new Array();
+
+            for(var j=0; j < results.length; j++){
+                if(results[j].ApplicationID == appIDs[i]){
+                    appGroup.push(results[j]);
+                }
+            }
+
+            appGroup = getTree.getTreeMenu(appGroup,0);
+
+            var objOfApp = new Object();
+            objOfApp.appName = appGroup[0].ApplicationName;
+            objOfApp.menuData = appGroup;
+
+            returnResults.push(objOfApp);
+        }
+
+        console.log('queryAllMenusFormTreeIByRecursion func in service');
+        logger.writeInfo('queryAllMenusFormTreeIByRecursion func in service');
+        //返回菜单树形JSON
+        callback(false,returnResults);
     });
 };
 
