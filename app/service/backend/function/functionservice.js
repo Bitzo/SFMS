@@ -21,7 +21,6 @@ exports.queryAllFunctions = function (data, callback) {
     });
 };
 
-
 //新增功能点
 exports.insert = function (data, callback) {
     functionDAL.insert(data, function (err,results) {
@@ -58,6 +57,17 @@ exports.delete = function (data, callback) {
 //根据FunctionID判断该功能点是否存在
 exports.queryFuncByID=function(data,callback){
     functionDAL.queryFuncByID(data,function(err,results){
+        if(err){
+            callback(true);
+            return;
+        }
+        callback(false,results);
+    });
+}
+
+//根据FunctionID得到该功能点的值
+exports.getFuncByID=function(data,callback){
+    functionDAL.getFuncByID(data,function(err,results){
         if(err){
             callback(true);
             return;

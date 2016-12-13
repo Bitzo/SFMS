@@ -143,3 +143,26 @@ exports.queryFuncByID = function (data, callback) {
         });
     });
 };
+
+//根据FunctionID得到该功能点的值
+exports.getFuncByID = function (data, callback) {
+    var sql = 'select ApplicationID,FunctionID,FunctionLevel,ParentID,FunctionCode,FunctionName,Memo,IsActive from jit_function where IsActive=1';
+    sql += " and FunctionID= " + data['FunctionID'];
+    logger.writeInfo("根据FunctionID得到该功能点的值,sql:" + sql);
+
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            logger.writeError('功能点连接：err' + err);
+            callback(true);
+            return;
+        }
+        connection.query(sql, function (err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+};
