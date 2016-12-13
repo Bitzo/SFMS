@@ -251,24 +251,24 @@ router.get('/:UserID', function (req, res) {
     res.json('HI');
 })
 
-//KPI查询,此查询用于可审核绩效的人查询
+//KPI查询,此查询用于可审核绩效的角色进行查询
 router.get('/', function (req, res) {
     var query = req.query,
-        KPIName = query.KPIName || '',
-        KPIType = query.KPIType || '',
+        UserID = query.UserID || '',
         ProjectID = query.ProjectID || '',
-        UserName = query.UserName || '',
+        StartTime = query.StartTime || '',
+        EndTime = query.EndTime || '',
         KPIStatus = query.KPIStatus || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
 
     var data = {
-        'KPIName': KPIName,
-        'KPIType': KPIType,
         'ProjectID': ProjectID,
-        'UserName': UserName,
+        'UserID': UserID,
         'KPIStatus': KPIStatus,
+        'StartTime': StartTime,
+        'EndTime': EndTime,
         'page': page,
         'pageNum': pageNum,
         'IsActive': 1
@@ -296,6 +296,11 @@ router.get('/', function (req, res) {
                     })
                 }
                 if (results !== undefined && results.length > 0) {
+                    for (var i in results) {
+                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:SS');
+                        if(results[i].CheckTime !== null)
+                        results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm:SS');
+                    }
                     var result = {
                         status: 200,
                         isSuccess: true,
