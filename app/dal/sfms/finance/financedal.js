@@ -99,7 +99,7 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (data[key] !== undefined && key !== 'page' && key !== 'pageNum') {
+            if (data[key] != '' && key !== 'page' && key !== 'pageNum') {
                 sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
@@ -134,7 +134,7 @@ exports.queryFinance = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }

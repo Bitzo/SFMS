@@ -16,17 +16,19 @@ var logger = appRequire("util/loghelper").helper;
 
 //财务信息新增
 router.post('/', function (req, res) {
-    var fiName = req.body.fiName,
-        fiType = req.body.fiType,
-        inOutType = req.body.inOutType,
-        fiPrice = req.body.fiPrice,
-        projectID = req.body.projectID,
-        userID = req.body.userID,
-        userName = req.body.userName,
-        operateUser = req.body.operateUser,
-        remark = req.body.remark,
+    var query = req.body,
+        fiName = query.fiName,
+        fiType = query.fiType,
+        inOutType = query.inOutType,
+        fiPrice = query.fiPrice,
+        projectID = query.projectID,
+        userID = query.userID,
+        userName = query.userName,
+        operateUser = req.query.jitkey,
+        remark = query.remark || '',
+        isActive = 1,
         //前端需要传输的数据
-        temp = ['fiName', 'fiType', 'inOutType', 'fiPrice', 'projectID','userID','userName', 'operateUser', 'remark'],
+        temp = ['fiName', 'fiType', 'inOutType', 'fiPrice', 'projectID','userID','userName'],
         err = 'require: ';
     var data = {
         'FIName': fiName,
@@ -38,12 +40,13 @@ router.post('/', function (req, res) {
         'UserName': userName,
         'OperateUser': operateUser,
         'FIStatu': '待审核',
-        'Remark': remark
+        'Remark': remark,
+        'IsActive': isActive
     };
 
     for(var value in temp)
     {
-        if(!(temp[value] in req.body))
+        if(!(temp[value] in query))
         {
             logger.writeInfo("require " + temp[value]);
             err += temp[value] + ' ';
@@ -76,7 +79,7 @@ router.post('/', function (req, res) {
                 msg: '添加成功'
             })
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
                 status: 404,
                 isSuccess: false,
@@ -89,18 +92,20 @@ router.post('/', function (req, res) {
 
 //财务基本信息编辑
 router.put('/', function (req, res) {
-    var ID = req.body.ID,
-        fiName = req.body.fiName,
-        fiType = req.body.fiType,
-        inOutType = req.body.inOutType,
-        fiPrice = req.body.fiPrice,
-        projectID = req.body.projectID,
-        userID = req.body.userID,
-        userName = req.body.userName,
-        operateUser = req.body.operateUser,
-        remark = req.body.remark,
+    var query = req.body,
+        ID = query.ID,
+        fiName = query.fiName,
+        fiType = query.fiType,
+        inOutType = query.inOutType,
+        fiPrice = query.fiPrice,
+        projectID = query.projectID,
+        userID = query.userID,
+        userName = query.userName,
+        operateUser = req.query.jitkey,
+        remark = query.remark || '',
+        isActive = 1,
         //前端需要传输的数据
-        temp = ['ID', 'fiName', 'fiType', 'inOutType', 'fiPrice', 'projectID','userID','userName', 'operateUser', 'remark'],
+        temp = ['ID', 'fiName', 'fiType', 'inOutType', 'fiPrice', 'projectID','userID','userName'],
         err = 'require: ';
     var data = {
         'ID': ID,
@@ -113,12 +118,13 @@ router.put('/', function (req, res) {
         'UserName': userName,
         'OperateUser': operateUser,
         'FIStatu': '待审核',
-        'Remark': remark
+        'Remark': remark,
+        'IsActive': isActive
     };
 
     for(var value in temp)
     {
-        if(!(temp[value] in req.body))
+        if(!(temp[value] in query))
         {
             logger.writeInfo("require " + temp[value]);
             err += temp[value] + ' ';
@@ -151,7 +157,7 @@ router.put('/', function (req, res) {
                 msg: '更新成功'
             })
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
                 status: 404,
                 isSuccess: false,
@@ -163,17 +169,16 @@ router.put('/', function (req, res) {
 
 //财务信息查询
 router.get('/', function (req, res) {
-    var fiName = req.query.fiName,
-        inOutType = req.query.inOutType,
-        projectID = req.query.projectID,
-        userName = req.query.userName,
-        fiStatus = req.query.fiStatus,
+    var query = req.query,
+        fiName = query.fiName || '',
+        inOutType = query.inOutType || '',
+        projectID = query.projectID || '',
+        userName = query.userName || '',
+        fiStatus = query.fiStatus || '',
         page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize || 20,
+        pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
-
     page = page > 0 ? page : 1;
-    if (pageNum === undefined) pageNum = config.pageCount;
 
     var data = {
         'FiName': fiName,
@@ -182,7 +187,8 @@ router.get('/', function (req, res) {
         'UserName': userName,
         'FiStatus': fiStatus,
         'page': page,
-        'pageNum': pageNum
+        'pageNum': pageNum,
+        'IsActive': 1
     }
 
     financeService.countQuery(data, function (err, results) {
@@ -207,7 +213,6 @@ router.get('/', function (req, res) {
                         msg: '服务器出错'
                     })
                 }
-                logger.writeInfo(results);
                 if (results !== undefined && results.length > 0) {
                     var result = {
                         status: 200,
@@ -246,7 +251,7 @@ router.get('/', function (req, res) {
 //财务审核
 router.put('/check', function (req, res) {
     var data = req.body.data,
-        temp = ['ID', 'CheckUser', 'FIStatu', 'Remark'],
+        temp = ['ID', 'CheckUser', 'FIStatu'],
         err = 'require: ';
     logger.writeInfo(data);
     for (var key in temp) {
@@ -280,11 +285,55 @@ router.put('/check', function (req, res) {
                 msg: results
             })
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
                 status: 404,
                 isSuccess: false,
                 msg: results
+            })
+        }
+    })
+})
+
+//财务删除
+router.delete('/', function (req, res) {
+    var ID = req.body.ID;
+    if (ID == '' || ID === undefined) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: "require ID"
+        })
+    }
+
+    var data = {
+        'ID': ID,
+        'IsActive': 0
+    };
+
+    financeService.updateFinance(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "服务器出错"
+            });
+        }
+        if(results !== undefined && results.affectedRows > 0) {
+            res.status(200);
+            res.json({
+                status: 200,
+                isSuccess: true,
+                msg: "删除成功"
+            })
+        } else {
+            res.status(400);
+            res.json({
+                status: 400,
+                isSuccess: true,
+                msg: "删除失败"
             })
         }
     })

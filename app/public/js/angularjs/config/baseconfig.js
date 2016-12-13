@@ -229,6 +229,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         }).
         error(function(response) {
            console.log(response);
+           alert(response.msg);
            console.log('no');
         });
     };
@@ -241,9 +242,9 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     function getInitmenu(index,action){   
             console.log(index);   
             console.log(action);                  
-        $http({
+        $http({url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             method:'get',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+
             params:{
                 f:{
                      MenuID:index,

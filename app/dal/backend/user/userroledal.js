@@ -49,7 +49,6 @@
 
  exports.updateUserRole=function(data,callback)
  {
- 	
  	var sql='update jit_roleuser set ';
  	var i=0;
  	for(var key in data)
@@ -87,3 +86,31 @@
  	});
  	
  }
+
+ //查询用户所在的项目
+ exports.queryAppByUserID = function (data, callback) {
+	 var sql = 'select distinct ApplicationID from jit_role where RoleID in ( select distinct RoleID from jit_roleuser where AccountID = ';
+
+	 sql += data.UserID + ')';
+     console.log('查询用户所在项目' + sql);
+
+     db_backend.mysqlPool.getConnection(function(err,connection)
+     {
+         if(err)
+         {
+             callback(true);
+             connection.release();
+             return ;
+         }
+         connection.query(sql,function(err,results)
+         {
+             if(err)
+             {
+                 callback(true);
+                 return ;
+             }
+             callback(false,results);
+             connection.release();
+         });
+     });
+ } 
