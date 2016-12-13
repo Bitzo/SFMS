@@ -54,6 +54,7 @@ exports.countQuery = function (data, callback) {
         'ProjectID': data.ProjectID,
         'UserName': data.UserName,
         'KPIStatus': data.KPIStatus,
+        'IsActive': 1
     }
     KPIdal.countQuery(queryData, function (err, results) {
         if (err) {

@@ -6,6 +6,7 @@ body{
 }
 .login{
   padding: 20px;
+  height: 100%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-image: url(../../imgs/bg5.jpg);
   background-size: 100%;

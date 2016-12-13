@@ -96,10 +96,10 @@ exports.updateKPI = function (data, callback) {
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
     var sql = 'select count(1) as num from jit_kpiinfo where 1=1 ';
-
+console.log(data)
     if (data !== undefined) {
         for (var key in data) {
-            if (data[key] !== undefined && key !== 'page' && key !== 'pageNum') {
+            if (data[key] != '' && key !== 'page' && key !== 'pageNum') {
                 sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
@@ -134,7 +134,7 @@ exports.queryKPI = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined)
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
