@@ -58,7 +58,7 @@ exports.update = function(data,callback)
         }
     }
 
-    sql += " WHERE " + customer.PK + " = " +data[customer.PK];
+    sql += " WHERE " + customer.PK + " = '" + data[customer.PK] + "' ";
     console.log(sql);
     db_jinkebro.mysqlPool.getConnection(function(err,connection)
     {
@@ -77,5 +77,31 @@ exports.update = function(data,callback)
             callback(false,results);
             connection.release();
         }); 
+    });
+}
+
+//根据用户的wechatUserCode来查询用户的信息，以便用来验证用户的唯一性
+exports.query = function(wechatUserCode,callback)
+{
+    var sql = "select CustomerID,WechatUserCode,Phone,CustomerAccount,CustomerUserName,AreaID,DormID,HouseNum,BalanceNum,CreditPoint,Sex,NickName,MemberLevelID,Country,IsActive,CreateTime,City,Memo FROM jit_customer WHERE WechatUserCode = '" + wechatUserCode + "' ";
+    //链接数据库的操作
+    console.log(sql);
+    db_jinkebro.mysqlPool.getConnection(function(err,connection)
+    {
+        if(err)
+        {
+            callback(true);
+            return;
+        }
+        connection.query(sql,function(err , results)
+        {
+            if(err)
+            {
+                callback(true);
+                return;
+            }
+            callback(false,results);
+            connection.release();
+        });
     });
 }

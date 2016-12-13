@@ -16,6 +16,7 @@ var iconv = require("iconv-lite");
 var config = appRequire('config/config');
 var logger = appRequire('util/loghelper').helper;
 var logService = appRequire('service/backend/log/logservice');
+var logModel = appRequire('model/jinkebro/log/logmodel');
 //日期组件
 var moment = require('moment');
 //redis缓存组件
@@ -118,25 +119,11 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         res.on("end", function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-
-            var logModel = {
-                ApplicationID: 1,
-                ApplicationName: '金科小哥',
-                OperationName: '获取微信AccessToken',
-                OldValue: '',
-                OperationUrl: '',
-                NewValue: result.access_token,
-                Action: '微信操作_获取AccessToken',
-                Type: 1,
-                ObjName: '',
-                Identifier: 1,
-                CmdStr: '',
-                Memo: 'AccessToken获取成功',
-                CreateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-                CreateUserID: operatorid,
-                PDate: moment().format('YYYY-MM-DD'),
-            };
-
+            logModel.OperationName= '获取微信AccessToken';
+            logModel.NewValue = result.access_token;
+            logModel.Action = '微信操作_获取AccessToken';
+            logModel.Memo = 'AccessToken获取成功';
+            logModel.CreateUserID = operatorid;
             logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeErr('获取微信token成功，生成操作日志异常' + new Date());
