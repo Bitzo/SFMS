@@ -15,6 +15,7 @@ exports.queryAllFunctions = function (data, callback) {
             callback(true);
             return;
         }
+        console.log(results)
         //转成多层结构
         results=getTree.getTreeFunction(results,0);
         callback(false, results);

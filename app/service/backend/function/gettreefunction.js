@@ -8,7 +8,7 @@
 
 function treeNode(id, pId, name, children) {
     this.id = id;
-    this.pId = pId;
+    this.pId =pId;
     this.name = name;
     this.children = children;
 }

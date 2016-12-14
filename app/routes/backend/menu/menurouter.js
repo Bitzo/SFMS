@@ -43,7 +43,7 @@ router.get('/tree',function (req,res) {
         ParentID : parentID,
         MenuLevel : menuLevel,
         MenuName : menuName,
-        IsActive : isActive
+        "jit_menu.IsActive" : isActive
     };
 
     var intdata = {
@@ -53,7 +53,7 @@ router.get('/tree',function (req,res) {
         MenuID : menuID,
         ParentID : parentID,
         MenuLevel : menuLevel,
-        IsActive : isActive
+        "jit_menu.IsActive" : isActive
     };
 
     for (var key in intdata){
@@ -82,7 +82,7 @@ router.get('/tree',function (req,res) {
 
             //查询所需的详细数据
             console.log(data);
-            menuService.queryAllMenusFormTreeInTable(data, function (err, result) {
+            menuService.queryAllMenusFormTreeIByRecursion(data, function (err, result) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -101,6 +101,7 @@ router.get('/tree',function (req,res) {
                         curPage: page,
                         curPageNum:pageNum,
                         totalPage: Math.ceil(countNum/pageNum),
+                        appCount : result.length,
                         data: result
                     };
                     if(resultBack.curPage == resultBack.totlePage) {
@@ -161,7 +162,7 @@ router.get('/plain',function (req,res) {
         ParentID : parentID,
         MenuLevel : menuLevel,
         MenuName : menuName,
-        IsActive : isActive
+        "jit_menu.IsActive" : isActive
     };
 
     var intdata = {
@@ -171,7 +172,7 @@ router.get('/plain',function (req,res) {
         MenuID : menuID,
         ParentID : parentID,
         MenuLevel : menuLevel,
-        IsActive : isActive
+        "jit_menu.IsActive" : isActive
     };
 
     for (var key in intdata){

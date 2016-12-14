@@ -8,6 +8,10 @@
  */
 
 var operationConfig = {
+    operationType: {
+        error: 1, //异常
+        operation: 2 //操作
+    },
     backendApp: {
         applicationID: 1, //应用的唯一id
         applicationName: "jit后台", //应用的名称

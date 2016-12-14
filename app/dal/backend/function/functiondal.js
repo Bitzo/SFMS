@@ -14,8 +14,6 @@ var functionModel = appRequire('model/backend/function/functionmodel');
 exports.queryAllFunctions = function (data, callback) {
     var sql = 'select ApplicationID,FunctionID,FunctionLevel,ParentID,FunctionCode,FunctionName,Memo,IsActive from jit_function where IsActive=1';
 
-    sql += " and ApplicationID = " + data['ApplicationID'];
-
     logger.writeInfo("得到所有功能点:" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {

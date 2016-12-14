@@ -1,0 +1,31 @@
+link(rel='stylesheet' href="css/backend/role.css")
+block content
+   ng-form.form-inline
+      a.btn.btn-sm.btn-default(href='#/backend/functionAdd')
+        i.icon.icon-plus 新建
+      a.btn.btn-sm.btn-primary(ng-click="show(func.id,'/func')",href='#/backend/functionEdit/')
+        i.icon.icon-edit 编辑
+      a.btn.btn-sm.btn-success(ng-click="remove($index,'/func')")
+        i.icon.icon-trash 删除
+      button(ng-click='search()' class='btn btn-sm btn-default') 刷新
+  div.tree.well
+    ul(style="margin:0 auto;width:900px")
+      li(ng-repeat="func in functions",ng-class="{closed:func.closed}")
+        div(ng-click="func.closed=!func.closed")
+          span(class="glyphicon",ng-class="func.closed?'glyphicon-plus':'glyphicon-minus'")
+          i(class="icon-folder-open")
+          span{{func.text}}
+        ul(ng-class="{hidden:func.closed}")
+          li(ng-repeat="child_1 in func.children",ng-class="{closed:child_1.closed}")
+            div(ng-click="child_1.closed=!child_1.closed")
+              span(class="glyphicon",ng-class="child_1.closed?'glyphicon-plus':'glyphicon-minus'")
+              i(class="icon-folder-open")
+              span{{child_1.text}}
+            ul(ng-class="{hidden:child_1.closed}")
+              li(ng-repeat="child_2 in child_1.children")
+                 div(ng-click="child_2.closed=!child_2.closed")
+                  span(class="glyphicon",ng-class="child_2.closed?'glyphicon-plus':'glyphicon-minus'")
+                  i(class="icon-folder-open")
+                  span{{child_2.text}}
+
+ script(src="js/function.js")
