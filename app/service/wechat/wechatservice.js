@@ -124,6 +124,8 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
             logModel.Action = '微信操作_获取AccessToken';
             logModel.Memo = 'AccessToken获取成功';
             logModel.CreateUserID = operatorid;
+            logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeErr('获取微信token成功，生成操作日志异常' + new Date());
@@ -142,7 +144,7 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
 
 //微信获取用户的列表
 Weixin.prototype.getCustomerList = function(accessToken, callback) {
-    var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken;
+    var getUrl = config.weChat.baseUrl + 'user/get?access_token=' + accessToken;
     console.log(getUrl);
     https.get(getUrl, function(res) {
         var datas = [];
@@ -155,8 +157,6 @@ Weixin.prototype.getCustomerList = function(accessToken, callback) {
         res.on('end', function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
-            console.log(result);
-
             if (callback && typeof callback === 'function') {
                 callback(result);
             }
@@ -167,7 +167,7 @@ Weixin.prototype.getCustomerList = function(accessToken, callback) {
     });
 }
 
-//微信获取到所有用户的列表，即所有用户的openid
+//微信获取到指定用户的的列表
 Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
         var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
         console.log(getUrl);
@@ -193,7 +193,8 @@ Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
             logger.writeErr('获取列表信息时异常' + new Date());
         });
     }
-    //微信获取用户信息
+    
+//微信获取用户信息
 Weixin.prototype.getCustomer = function(accessToken, openid, callback) {
     //get获取微信端的接口的url
     var getUrl = config.weChat.baseUrl + "user/info?access_token=" + accessToken + "&openid=" + openid;
@@ -209,7 +210,6 @@ Weixin.prototype.getCustomer = function(accessToken, openid, callback) {
         res.on('end', function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
-            console.log(result);
 
             if (callback && typeof callback === 'function') {
                 callback(result);
