@@ -8,7 +8,7 @@ block content
         tr
           td(width="15%",class="tableleft") 应用ID  
           td
-            select(id="search",value="",ng-model='formdata.ApplicationId',style="width:163px;height:30px",required)
+            select(id="search",value="",ng-model='formdata.ApplicationID',style="width:163px;height:30px",required)
               option 1
               option 2
               
@@ -22,7 +22,7 @@ block content
         tr
           td(width="15%",class="tableleft") 	对应的父级ID 
           td
-            select(id="search",value="",ng-model='formdata.ParentId',style="width:163px;height:30px",required)
+            select(id="search",value="",ng-model='formdata.ParentID',style="width:163px;height:30px",required)
               option 1
               option 2 
            
@@ -30,22 +30,24 @@ block content
         tr
           td(width="15%",class="tableleft") 功能点号 
           td
-            input(type="textview",name="FunctionCode",ng-model='formdata.FunctionCode',ng-maxlength='8',required)
+            input(type="text",name="FunctionCode",ng-model='formdata.FunctionCode',ng-maxlength='8',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.FunctionCode.$error.maxlength && formdata.FunctionCode.$touched") 对应的功能点号最多11位
+            span.error(ng-show="functionAdd.FunctionCode.$dirty &&functionAdd.FunctionCode.$invalid")
+              small.error(ng-show="functionAdd.FunctionCode.$error.minlength") 角色名称至少三位
+              small.error(ng-show="functionAdd.FunctionCode.$error.maxlength") 角色名称最多十位
           
            
         tr
           td(width="15%",class="tableleft") 	功能点名称 
           td
-            input(type="textview",name="FunctionName",ng-model='formdata.FunctionName',ng-maxlength='50',required)
+            input(type="text",name="FunctionName",ng-model='formdata.FunctionName',ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.FunctionName.$error.maxlength && formdata.FunctionName.$touched") 功能点名称最多50位
+            small.error(ng-show="functionAdd.FunctionName.$error.maxlength && functionAdd.FunctionName.$touched") 功能点名称最多50位
 
         tr
           td(width="15%",class="tableleft") 备注(可选) 
           td
-            textarea(rows="10",cols="30")     
+            textarea(rows="10",cols="30",name="Memo",ng-model='formdata.Memo')     
 
 
         tr
