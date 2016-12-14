@@ -99,11 +99,13 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (data[key] != '' && key !== 'page' && key !== 'pageNum') {
+            if (data[key] != '' && key !== 'startTime' && key !== 'endTime') {
                 sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
+    if (data.startTime != '') sql += "and CreateTime > '" + data.startTime + "' ";
+    if (data.endTime != '') sql += "and CreateTime < '" + data.endTime + "' ";
 
     logger.writeInfo('财务查询统计：' + sql);
 
@@ -128,16 +130,19 @@ exports.countQuery = function (data, callback) {
 
 //财务查询
 exports.queryFinance = function (data, callback) {
-    var sql = 'select ID,FIName,FIType,InOutType,FIPrice,ProjectId,UserID,UserName,CreateTime,OperateUser,CheckTime,CheckUser,FIStatu,Remark from jit_financeinfo where 1=1 ',
+    var sql = 'select ID,FIName,FIType,InOutType,FIPrice,ProjectId,UserID,UserName,CreateTime,' +
+            'OperateUser,CheckTime,CheckUser,FIStatu,Remark from jit_financeinfo where 1=1 ',
         page = data.page || 1,
         num = data.pageNum;
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'startTime' && key !== 'endTime')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
+    if (data.startTime != '') sql += "and CreateTime > '" + data.startTime + "' ";
+    if (data.endTime != '') sql += "and CreateTime < '" + data.endTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
