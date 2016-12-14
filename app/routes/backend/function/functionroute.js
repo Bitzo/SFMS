@@ -13,12 +13,7 @@ var functionservice = appRequire('service/backend/function/functionservice');
 
 //得到所有树形功能点
 router.get('/', function(req, res) {
-    var appID = req.query.appID || 1;
-
-    var data = {
-        'ApplicationID': appID,
-    };
-
+    data={};
     functionservice.queryAllFunctions(data, function(err, results) {
         if (err) {
             res.json({
@@ -51,10 +46,11 @@ router.get('/', function(req, res) {
 //功能点的新增
 router.post('/', function(req, res) {
 
-    var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'Memo', 'IsActive'];
+    var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'IsActive'];
     var err = 'required: ';
+    var formdata= req.body.formdata;
     for (var value in data) {
-        if (!(data[value] in req.body)) {
+        if (!(data[value] in formdata)) {
             console.log("require " + data[value]);
             err += data[value] + ' ';
         }
@@ -62,20 +58,21 @@ router.post('/', function(req, res) {
 
     if (err != 'required: ') {
         res.json({
-            code: 400,
+            code: 404,
             isSuccess: false,
             msg: err
         });
         return;
     };
 
-    var ApplicationID = req.body.ApplicationID;
-    var FunctionLevel = req.body.FunctionLevel;
-    var ParentID = req.body.ParentID;
-    var FunctionCode = req.body.FunctionCode;
-    var FunctionName = req.body.FunctionName;
-    var Memo = req.body.Memo;
-    var IsActive = req.body.IsActive;
+    data.push('Memo');
+    var ApplicationID = formdata.ApplicationID;
+    var FunctionLevel = formdata.FunctionLevel;
+    var ParentID = formdata.ParentID;
+    var FunctionCode =formdata.FunctionCode;
+    var FunctionName =formdata.FunctionName;
+    var Memo = formdata.Memo;
+    var IsActive =formdata.IsActive;
     var data = {
         'ApplicationID': ApplicationID,
         'FunctionLevel': FunctionLevel,
@@ -99,13 +96,13 @@ router.post('/', function(req, res) {
                 code: 200,
                 isSuccess: true,
                 data: data,
-                msg: "添加信息成功"
+                msg: "添加功能点成功"
             })
         } else {
             res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
-                msg: "添加信息失败"
+                msg: "添加信息失败,服务器出错"
             })
         }
     })
@@ -115,10 +112,11 @@ router.post('/', function(req, res) {
 //功能点的编辑
 router.put('/', function(req, res) {
 
-    var data = ['ApplicationID', 'FunctionID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'Memo', 'IsActive'];
+    var data = ['ApplicationID', 'FunctionID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'IsActive'];
     var err = 'required: ';
+    var formdata=req.body.formdata;
     for (var value in data) {
-        if (!(data[value] in req.body)) {
+        if (!(data[value] in formdata)) {
             console.log("require " + data[value]);
             err += data[value] + ' ';
         }
@@ -132,15 +130,15 @@ router.put('/', function(req, res) {
         });
         return;
     };
-
-    var ApplicationID = req.body.ApplicationID;
-    var FunctionID = req.body.FunctionID;
-    var FunctionLevel = req.body.FunctionLevel;
-    var ParentID = req.body.ParentID;
-    var FunctionCode = req.body.FunctionCode;
-    var FunctionName = req.body.FunctionName;
-    var Memo = req.body.Memo;
-    var IsActive = req.body.IsActive;
+    data.push('Memo');
+    var ApplicationID = formdata.ApplicationID;
+    var FunctionID = formdata.FunctionID;
+    var FunctionLevel =formdata.FunctionLevel;
+    var ParentID = formdata.ParentID;
+    var FunctionCode =formdata.FunctionCode;
+    var FunctionName = formdata.FunctionName;
+    var Memo = formdata.Memo;
+    var IsActive =formdata.IsActive;
 
     var data = {
         'ApplicationID': ApplicationID,
@@ -158,7 +156,7 @@ router.put('/', function(req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "添加失败，服务器出错"
+                msg: "修改失败，服务器出错"
             })
             return;
         }
@@ -172,7 +170,7 @@ router.put('/', function(req, res) {
             })
         } else {
             res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
                 msg: '修改信息失败'
             })
@@ -213,15 +211,13 @@ router.delete('/', function(req, res) {
             res.json({
                 code: 200,
                 isSuccess: true,
-                msg: '删除成功',
-                dataNum: results.length,
-                data: results
+                msg: '删除成功'
             })
         } else {
             res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
-                msg: '删除失败！请刷新！'
+                msg: '删除失败，请选删除其子功能点。'
             })
         }
     })

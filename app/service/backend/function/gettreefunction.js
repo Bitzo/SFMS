@@ -6,10 +6,10 @@
  *  @Function: 将功能点转成多层树形结构
  */
 
-function treeNode(id, pid, text, children) {
+function treeNode(id, pId, name, children) {
     this.id = id;
-    this.pid = pid;
-    this.text = text;
+    this.pId =pId;
+    this.name = name;
     this.children = children;
 }
 //递归生成多层树结构
