@@ -46,7 +46,6 @@ Customer.prototype.insert = function(data,callback) {
 	 	if(result != undefined && result.length != 0)
 	 	{
 	 		//生成操作的日志console.log
-	 		console.log("账户名已经存在了！");
 	 		logModel.OperationName= '查询存在的用户';
             logModel.Action ='查询存在的用户';
             logModel.Memo = '查询存在的用户成功';

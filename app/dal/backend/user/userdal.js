@@ -63,12 +63,16 @@ exports.queryAllUsers = function(data, callback) {
             if(key == 'ApplicationName')
             {
                sql += ' and C.' + key + " = '" + data[key] + "' " ;
+               continue;
             }
-            if(key == 'UserName')
+            else if(key == 'CreateUserName')
             {
-                 sql += ' and C.' + key + " = '" + data[key] + "' ";
+                 sql += ' and B.UserName' +" = '" + data[key] + "' ";
+                 
+            }else 
+            {
+                sql += ' and A.' + key + " = '" + data[key] + "' ";
             }
-            sql += ' and A.' + key + " = '" + data[key] + "' ";
         }
     }
     // console.log(data['page']);
@@ -83,10 +87,12 @@ exports.queryAllUsers = function(data, callback) {
                 return;
             }
             connection.query(sql, function(err, results) {
+               // console.log("sdasdasdas");
                 if (err) {
                     callback(true);
                     return;
                 }
+                console.log(results.length);
                 callback(false, results);
                 connection.release();
             });
@@ -191,11 +197,11 @@ db_backend.mysqlPool.getConnection(function(err, connection) {
 });
 };
 
-
+//获取数量
 exports.countUser = function(data, callback) {
     var sql = 'select count(1) as num from jit_user where 1=1';
     for (var key in data) {
-        if (key != 'page'&&key!='pageNum')
+        if (key != 'page' && key != 'pageNum' && key != 'CreateUserName' && key != 'ApplicationName')
             sql += " and " + key + " = '" + data[key] + "' ";
     }
     db_backend.mysqlPool.getConnection(function(err, connection) {
@@ -206,7 +212,7 @@ exports.countUser = function(data, callback) {
         console.log(sql);
         connection.query(sql, function(err, results) {
             if (err) {
-                cllback(true);
+                callback(true);
                 return;
             };
             callback(false, results);

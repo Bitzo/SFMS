@@ -146,7 +146,7 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
-    if(msg.eventKey.length==0)//是关注与取消关注的判断
+    if(msg.eventKey.length == 0)//是关注与取消关注的判断
     {
         //解决服务器在关注坏掉的情况
         wechat.getLocalAccessToken(1, function(issuccess, token) {
