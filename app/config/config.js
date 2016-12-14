@@ -17,7 +17,7 @@ var config = {
     jwt_secret: 'j1i3t20', //jwt
     isdev: false, //true:开发环境 false:生产环境
     secretsalt: 'what1r2u3nong7sha5lei4', //盐值
-    port: 1320, // 程序运行的端口
+    port: 80, // 程序运行的端口
     host: '127.0.0.1',
     mysql: {
         host: '139.224.51.160',
