@@ -3,19 +3,19 @@
  * Description :page context
  */
 
-
-angular.module('jason.pagination',[]).directive('jasonPagecontent',[function(){
+var jasonapp=angular.module('jason.pagination', []);
+jasonapp.directive('jasonPagecontent',function (jasonService) {
     return {
         restrict: 'EA',
-        template:"<div class='page-content'><div ng-transclude=''></div></div>",
+        template: "<div class='page-content'><div ng-transclude=''></div></div>",
         scope: {
             conf: '='
         },
-        replace:true,
-        transclude:true,
+        replace: true,
+        transclude: true,
         link: function (scope, element, attrs) {
             scope.conf.action = attrs.action;
             scope.conf.actiontype = attrs.type;
         }
     }
-}]);
+});

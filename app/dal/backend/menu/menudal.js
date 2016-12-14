@@ -6,13 +6,21 @@
  * @Function: 查询所有菜单，菜单新增，菜单编辑，菜单删除，通过UserID(AccountID)查询所拥有的菜单、角色
  */
 
-var db_backend = appRequire('db/db_backend');
-var menuModel = appRequire('model/backend/menu/menumodel');
-var logger = appRequire('util/loghelper').helper;
+var db_backend = appRequire('db/db_backend'),
+    menuModel = appRequire('model/backend/menu/menumodel'),
+    logger = appRequire('util/loghelper').helper;
 
 //查询目前所有菜单，提供所有菜单的信息，菜单属性展示
 exports.queryAllMenus = function(data, callback) {
-    var sql = 'select ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName,IconPath,Url,Memo,IsActive from jit_menu where 1=1';
+    var arr = new Array();
+
+    arr.push(" select jit_application.ApplicationName,jit_menu.ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName, ");
+    arr.push(" IconPath,Url,jit_menu.Memo,jit_menu.IsActive ");
+    arr.push(" from jit_menu left join jit_application on jit_menu.ApplicationID = jit_application.ID ");
+    arr.push(" where 1=1 ");
+
+    var sql = arr.join(' ');
+
     if(data !== undefined){
         for(var key in data){
             if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
@@ -25,21 +33,22 @@ exports.queryAllMenus = function(data, callback) {
             }
         }
     }
+
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-
-
     sql += " LIMIT " + (page-1)*num + "," + num;
 
-
     logger.writeInfo("[queryAllMenus func in menudal]查询所有菜单：" + sql);
+    console.log("in dal,查询所有的菜单：" + sql);
+
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
             logger.writeError("[menudal]数据库连接错误：" + err);
             callback(true);
             return;
         }
+
         connection.query(sql, function(err, results) {
             if (err) {
                 callback(true);
@@ -71,6 +80,7 @@ exports.countAllMenus = function (data, callback) {
 
         logger.writeInfo("连接成功");
         logger.writeInfo(sql);
+        console.log(sql);
 
         connection.query(sql, function (err, results) {
             if (err) {
@@ -101,6 +111,7 @@ exports.menuInsert = function (data,callback) {
     insert_sql += sql;
 
     logger.writeInfo("[menuInsert func in menudal]菜单新增：" +insert_sql);
+    console.log("in dal, 菜单新增：" + insert_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -142,6 +153,7 @@ exports.menuUpdate = function(data, callback) {
     update_sql = update_sql + sql;
 
     logger.writeInfo("[menuUpdate func in menudal]菜单编辑:" + update_sql);
+    console.log("in dal,菜单编辑：" + update_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err) {
@@ -171,6 +183,7 @@ exports.menuDelete = function (data, callback) {
 
 
     logger.writeInfo("[menuDelete func in menudal]菜单删除：" + update_sql);
+    console.log("in dal,菜单删除：" + update_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -206,6 +219,7 @@ exports.queryRoleByUserID = function (data,callback) {
     sql = sql + data.userID;
 
     logger.writeInfo("[queryRoleByUserID func in menudal]根据UserID查询角色: " + sql);
+    console.log("[queryRoleByUserID func in menudal]根据UserID查询角色: " + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -230,16 +244,18 @@ exports.queryRoleByUserID = function (data,callback) {
 //根据UserID,获取用户相应地菜单
 exports.queryMenuByUserID = function (data,callback) {
     var arr = new Array();
-    arr.push(' select  jit_menu.ApplicationID,jit_menu.MenuID,jit_menu.MenuLevel,jit_menu.ParentID, ');
+    arr.push(' select  jit_menu.ApplicationID,jit_application.ApplicationName,jit_menu.MenuID,jit_menu.MenuLevel,jit_menu.ParentID, ');
     arr.push(' jit_menu.SortIndex,jit_menu.MenuName,jit_menu.IconPath,jit_menu.Url,jit_menu.Memo ');
     arr.push(' from jit_menu ');
     arr.push(' left join jit_usermenu on jit_menu.MenuID = jit_usermenu.menuID ');
+    arr.push(' left join jit_application on jit_menu.ApplicationID = jit_application.ID ')
     arr.push(' where jit_usermenu.userID =  ');
 
     var sql = arr.join(' ');
     sql = sql + data.userID;
 
     logger.writeInfo("[queryMenuByUserID func in menudal]根据UserID查询菜单: : " + sql);
+    console.log("[queryMenuByUserID func in menudal]根据UserID查询菜单: : " + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){

@@ -1,58 +1,73 @@
 /**
  * Created by Administrator on 2016/11/21.
  */
-var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(function($routeProvider) {
+var accesstokenstring = localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key');
+var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']);
+
+myApp.config(function($routeProvider) {
     $routeProvider.
     when('/backend/index', {
-        templateUrl: '/index'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/index?access_token='+accesstokenstring,
             // controller: 'HomeController'
     }).
     when('/backend/user', {
-        templateUrl: '/user'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/user?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/userinfo', {
-        templateUrl: '/userinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/userinfo?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/useredit', {
-        templateUrl: '/useredit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/useredit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/role', {
-        templateUrl: '/role'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/role?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/roleAdd', {
-        templateUrl: '/roleAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/roleAdd?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
      when('/backend/roleEdit', {
-        templateUrl: '/roleEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/roleEdit?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+     when('/backend/function', {
+        templateUrl: '/function'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
+    when('/backend/functionAdd', {
+        templateUrl: '/functionAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        //controller: 'HomeController'
+    }).
+    when('/backend/functionEdit', {
+        templateUrl: '/functionEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
         //controller: 'HomeController'
     }).
     when('/backend/application', {
-        templateUrl: '/application'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/application?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/applicationinfo', {
-        templateUrl: '/applicationinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/applicationinfo?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/applicationedit', {
-        templateUrl: '/applicationedit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/applicationedit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/menu', {
-        templateUrl: '/menu'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/menu?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/menuinfo', {
-        templateUrl: '/menuinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/menuinfo?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/menuedit', {
-        templateUrl: '/menuedit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/menuedit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     otherwise({
@@ -61,7 +76,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
 
 
 //     when('/sfms/menuinfo', {
-//         templateUrl: '/sfms/menuinfo'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+//         templateUrl: '/sfms/menuinfo?access_token='+accesstokenstring,
 //         //controller: 'HomeController'
 //     }).
 
@@ -158,51 +173,6 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         getInit();
     }
 
-    
-//添加角色
-    $scope.roleSubmit=function(role){
-         $http({
-            method: 'POST',
-            url: "/role",
-            data: {
-                'ApplicationID':role.applicationID,
-                'RoleName':role.roleName,
-                'RoleCode':role.roleCode,
-                'IsActive':role.isActive,
-                'roleFunck':role.Funck,
-                'access_token':localStorage.getItem('jit_token'),
-                'jitkey':localStorage.getItem('jit_key')
-            }
-            
-        }).
-        success(function(response) {
-        
-        }).
-        error(function(response) {
-            if (response && response.data && !response.isSuccess) {
-                alert(response.data.msg);
-            } else {
-                alert('提交失败!');
-            }
-        });
-    }
-
-    //删除角色
-    $scope.del=function(RoleID){
-        var index=-1;
-        for(var i=0;i<$scope.datas.length;i++){
-            if($scope.datas[i]['RoleID']=RoleID){
-                index=i;
-                break;
-            };
-        }
-        $scope.datas.splice(index,1);
-    }
-    //编辑角色
-    $scope.update=function(RoleID){
-
-    }
-
 
     //新增
      $scope.formdata={};
@@ -243,7 +213,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             console.log(index);   
             console.log(action);                  
         $http({url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            method:'get',
+            method:'put',
 
             params:{
                 f:{
@@ -309,7 +279,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
              "AccountID":$scope.datas[index].AccountID,
              "MenuID":$scope.datas[index].MenuID,
              "ID":$scope.datas[index].ID,   
-             "RoleID" : $scope.datas[index].RoleID    
+             "RoleID" : $scope.datas[index].RoleID   
          };
          $http({
             method:'delete',
@@ -378,7 +348,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
   
 
        //显示角色新增页面
-        $scope.addrole=function(iaction){
+      $scope.addrole=function(action){
             getInitrole(action);
         };
 
@@ -409,9 +379,31 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         });
     }
 
+
+
+
+//显示功能点页面 
+ /*$scope.functions = [];
+    function getFunction() {
+        $http({
+            method: 'get',
+            url: "/func?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+
+        }).
+        success(function(response) {
+
+            $scope.functions = response.data;
+            console.log($scope.functions);
+        }).
+        error(function(response) {
+            console.log(response);
+        });
+    }
+    getFunction();*/
+
+
+
+
     
-
-
-
     
 })
