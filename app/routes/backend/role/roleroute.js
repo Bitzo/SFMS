@@ -126,12 +126,6 @@ router.post('/',function (req, res) {
     var data = ['ApplicationID', 'RoleCode', 'RoleName', 'IsActive'],
         err = 'required: ';
 
-    //增加角色所需要的参数
-    var applicationID = req.body.formdata.ApplicationID,
-        roleCode = req.body.formdata.RoleCode,
-        roleName = req.body.formdata.RoleName,
-        isActive = req.body.formdata.IsActive;
-
     //增加角色功能点所需要的数据
     var funcData = req.body.formdata.data;
 
@@ -153,6 +147,12 @@ router.post('/',function (req, res) {
                     msg: err
                 });
     };
+
+    //增加角色所需要的参数
+    var applicationID = req.body.formdata.ApplicationID,
+        roleCode = req.body.formdata.RoleCode,
+        roleName = req.body.formdata.RoleName,
+        isActive = req.body.formdata.IsActive;
 
     //先查询要增添的角色信息是否已经存在
     data = {

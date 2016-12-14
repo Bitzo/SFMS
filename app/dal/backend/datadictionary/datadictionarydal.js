@@ -201,15 +201,15 @@ exports.countAllDataDicts = function (data, callback) {
     })
 };
 
-exports.queryDatadictionaryByCode = function (data,callback) {
+exports.queryDatadictionaryByID = function (data,callback) {
     var sql = 'select DictionaryCode,DictionaryValue from jit_datadictionary where 1=0 ';
 
     if (data !== undefined) {
-        for(var i in data.DictionaryCode)
-            sql += "or DictionaryCode" + " = '" + data.DictionaryCode[i] + "' ";
+        for(var i in data.DictionaryID)
+            sql += "or DictionaryID" + " = '" + data.DictionaryID[i] + "' ";
     }
 
-    logger.writeInfo("查询字典信息 by Code：" + sql);
+    logger.writeInfo("查询字典信息 by ID：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {

@@ -183,9 +183,9 @@ router.put('/', function(req, res) {
 
 //功能点的删除
 router.delete('/', function(req, res) {
-    var FunctionID = req.body.FunctionID;
-    console.log(FunctionID)
-    if (FunctionID === undefined) {
+   var FunctionID = JSON.parse(req.query.d).FunctionID;
+
+    if (FunctionID === undefined||FunctionID=='') {
         res.json({
             code: 404,
             isSuccess: false,
@@ -226,6 +226,50 @@ router.delete('/', function(req, res) {
         }
     })
 
+});
+
+//根据FunctionID得到该功能点的值
+router.get('/getFuncByID', function(req, res) {
+    var functionID = JSON.parse(req.query.f).functionID;   
+
+      if (FunctionID === undefined||FunctionID=='') {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require FunctionID'
+        })
+        return;
+    }
+    
+    var data = {
+        'FunctionID': functionID,
+    };
+
+    functionservice.getFuncByID(data, function(err, results) {
+        if (err) {
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
+            })
+            return;
+        }
+
+        if (results !== undefined && results.length != 0) {
+            var result = {
+                code: 200,
+                isSuccess: true,
+                data: results
+            };
+            res.json(result);
+        } else {
+            res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相关信息"
+            });
+        }
+    });
 });
 
 module.exports = router;

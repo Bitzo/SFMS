@@ -6,20 +6,22 @@
  * 微信相关的操作
  */
 
-var express = require('express');
-var router = express.Router();
-var url = require("url");
-var crypto = require("crypto");
+ var express = require('express');
+ var router = express.Router();
+ var url = require("url");
+ var crypto = require("crypto");
 
-var config = appRequire("config/config");
-var logger = appRequire('util/loghelper').helper;
-
+ var config = appRequire("config/config");
+ var logger = appRequire('util/loghelper').helper;
+//用来插入到log中的
+var logService = appRequire('service/backend/log/logservice');
+var logModel = appRequire('model/jinkebro/log/logmodel');
 //微信接收消息通用组件
 var wechat = appRequire("service/wechat/wechatservice");
 wechat.token = config.weChat.token;
 
 //从微信端获取数据插入数据库
-var wechatCustomer = appRequire("service/wechat/customer/customerservice");
+var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
 //微信开发者认证
 router.get('/accesscheck', function(req, res, next) {
     var query = url.parse(req.url, true).query;
@@ -63,7 +65,7 @@ wechat.textMsg(function(msg) {
             };
             break;
 
-        case "音乐":
+            case "音乐":
             // 返回音乐消息
             resMsg = {
                 fromUserName: msg.toUserName,
@@ -77,7 +79,7 @@ wechat.textMsg(function(msg) {
             };
             break;
 
-        case "图文":
+            case "图文":
             // 返回图文消息
             var articles = [];
             articles[0] = {
@@ -95,8 +97,8 @@ wechat.textMsg(function(msg) {
                 articles: articles,
                 funcFlag: 0
             }
-    }
-     wechat.sendMsg(resMsg);
+        }
+        wechat.sendMsg(resMsg);
 
     //测试获取token
     
@@ -119,9 +121,9 @@ wechat.imageMsg(function(msg) {
                 funcFlag: 1
             }
             break;
-    }
-    wechat.sendMsg(resMsg);
-});
+        }
+        wechat.sendMsg(resMsg);
+    });
 
 // 监听语音消息
 wechat.voiceMsg(function(msg) {
@@ -144,15 +146,55 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
-   // console.log(JSON.stringify(msg));
     if(msg.eventKey.length==0)//是关注与取消关注的判断
     {
-       wechat.getLocalAccessToken(1, function(issuccess, token) {
-        if (issuccess) {
-            wechat.getCustomer(token,msg.fromUserName,function(result)
+        //解决服务器在关注坏掉的情况
+        wechat.getLocalAccessToken(1, function(issuccess, token) {
+            if (issuccess) {
+                wechat.getCustomerList(token,function(results)
                 {
-                    
-                    console.log(result.subscribe);
+                    for(var x in results['data']['openid'])
+                    {
+                        wechat.getCustomer(token,results['data']['openid'][x],function(result)
+                        {
+                        //获取到信息
+                        var data={
+                            "WechatUserCode" : result.openid,
+                            "NickName" : result.nickname,
+                            "Sex" : result.sex
+                        }
+
+                        //判断微信自己填的记录是否为空
+                        if(result.province.length != 0)
+                        {
+                            data.Province = result.province;
+                        }
+                        if(result.country.length != 0)
+                        {
+                            data.Country = result.country;
+                        }
+                        if(result.city.length != 0)
+                        {
+                            data.City = result.city;
+                        }
+                        if(result.remark.length != 0)
+                        {
+                            data.Memo = result.remark;
+                        }
+                        wechatCustomer.insert(data,function(err,resultInsert)
+                        {
+                            if(err)
+                            {
+                                console.log("未出现服务器坏掉导致用户信息丢失");
+                                return;
+                            }
+
+                        });
+                    });
+}
+});
+wechat.getCustomer(token,msg.fromUserName,function(result)
+{                    
                     if(result.subscribe == 1)//关注的人
                     {
                         var data={
@@ -160,21 +202,62 @@ wechat.eventMsg(function(msg) {
                             "NickName" : result.nickname,
                             "Sex" : result.sex
                         }
-                        //注释掉怕重复的插入
-                    //  wechatCustomer.insert(data,function(err,result)
-                    //  {
-                    //     if(err)
-                    //     {
-                    //         console.log("插入失败");
-                    //         return;
-                    //     }
-                    //     if(result.insertId != 0)
-                    //     {
-                    //         console.log("插入成功");
-                    //         return;
-                    //     }
 
-                    // })
+                        //判断微信自己填的记录是否为空
+                        if(result.province.length != 0)
+                        {
+                            data.Province = result.province;
+                        }
+                        if(result.country.length != 0)
+                        {
+                            data.Country = result.country;
+                        }
+                        if(result.city.length != 0)
+                        {
+                            data.City = result.city;
+                        }
+                        if(result.remark.length != 0)
+                        {
+                            data.Memo = result.remark;
+                        }
+                        
+                        //注释掉怕重复的插入
+                        wechatCustomer.insert(data,function(err,result)
+                        {
+                            if(err)
+                            {
+                                if(!result.IsActive)
+                                {
+                                    data.IsActive = 1;   
+                                    wechatCustomer.update(data,function(err,result)
+                                    {
+                                        if(err)
+                                        {
+                                            console.log("再次关注微信失败");
+                                            return ;
+                                        }
+                                        if(result !== undefined && result.affectedRows != 0)
+                                        {
+                                            console.log("再次关注微信成功");
+                                            logModel.OperationName = '再次关注微信成功';                                       
+                                            return ;
+                                        }
+
+                                    });
+                                }
+                                else
+                                {
+                                    console.log("插入数据失败");
+                                }                    
+                                return;
+                            }
+                            if(result.insertId != 0)
+                            {
+                                console.log("插入成功");
+                                return;
+                            }
+
+                        })
                     }else//取消关注
                     {
                         var data = {
@@ -196,19 +279,18 @@ wechat.eventMsg(function(msg) {
                         });
                     }
                 });
-            }
-         }); 
-       }
-        else
-        {
-            console.log("获取失败");    
-        }
-    });
+}
+}); 
+}
+else
+{
+    console.log("获取失败");    
+}
+});
 
 
 //接受用户的消息
 router.post('/accesscheck', function(req, res) {
-
     wechat.handleCustomerMsg(req, res);
 });
 

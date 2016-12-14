@@ -138,7 +138,6 @@ router.post('/login', function(req, res) {
   var username = req.body.username || '';
   var password = req.body.password || '';
   var code = req.body.code || '';
-
   //验证码判断
   if (req.session.code.toString() !== req.body.code.toString()) {
     resultData.data.isSuccess = false;
@@ -146,6 +145,7 @@ router.post('/login', function(req, res) {
     return res.json(resultData);
   }
 
+  // console.log(username+ " " +password);
   if (username == '' || password == '') {
     res.status(401);
     resultData.data.isSuccess = false;

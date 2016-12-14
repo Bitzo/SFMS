@@ -196,6 +196,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
         }).
         error(function(response) {
            console.log(response);
+           alert(response.msg);
            console.log('no');
         });
     };
@@ -208,9 +209,9 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
     function getInitmenu(index,action){   
             console.log(index);   
             console.log(action);                  
-        $http({
-            method:'get',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+        $http({url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            method:'put',
+
             params:{
                 f:{
                      MenuID:index,
@@ -275,7 +276,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
              "AccountID":$scope.datas[index].AccountID,
              "MenuID":$scope.datas[index].MenuID,
              "ID":$scope.datas[index].ID,   
-             "RoleID" : $scope.datas[index].RoleID    
+             "RoleID" : $scope.datas[index].RoleID   
          };
          $http({
             method:'delete',
@@ -344,7 +345,7 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
   
 
        //显示角色新增页面
-      /* $scope.addrole=function(action){
+      $scope.addrole=function(action){
             getInitrole(action);
         };
 
@@ -373,13 +374,13 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             console.log('修改失败');                        
             console.log(response);
         });
-    }*/
+    }
 
 
 
 
 //显示功能点页面 
- $scope.functions = [];
+ /*$scope.functions = [];
     function getFunction() {
         $http({
             method: 'get',
@@ -395,56 +396,11 @@ var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination']).config(func
             console.log(response);
         });
     }
-    getFunction();
+    getFunction();*/
 
 
-    //树形结构
-    $scope.functionChanged=function(func){
-        // 自动选中所有下级
-    _.each(func.func.children, function(child_1) {
-      child_1.checked = func.checked;
-      _.each(child_1.child_1.children, function(child_2) {
-        child_2.checked = func.checked;
-      });
-    });
-    }
 
-    $scope.functionchildChanged=function(child1,func) {
-    // 自动选中所有下级
-    _.each(child1.child1.children, function(child2) {
-      child2.checked = child1.checked;
-    });
-    // 如果有任何一个子节点被选中，则让上级节点也选中
-    // 注意！checkbox的ng-model只能绑定到逻辑型值，所以不能直接把findWhere的结果赋值过去
-    func.checked = !!_.findWhere(func.func.children, {checked: true})
-  };
-  $scope.functionchildChanged= function(child2,child1,func) {
-    // 如果有任何一个子节点被选中，则让上级节点也选中
-    // 注意！checkbox的ng-model只能绑定到逻辑型值，所以不能直接把findWhere的结果赋值过去
-    child1.checked = !!_.findWhere(child1.child1.children, {checked: true});
-    func.checked = !!_.findWhere(func.func.children, {checked: true});
-  };
 
-  $scope.isIntermediateFunction=function(func) {
-    // 是否有任何被选中的节点
-    var hasChecked = _.find(func.func.children, function(child1) {
-      return child1.checked && _.findWhere(child1.child1.children, {checked: true});
-    });
-    // 是否有任何没有选中的节点
-    var hasNoChecked = _.find(func.func.children, function(child1) {
-      return !child1.checked || _.findWhere(child1.child1.children, {checked: false});
-    });
-    // 如果同时有选中状态和非选中的节点，则为中间状态
-    return hasChecked && hasNoChecked;
-  };
-  $scope.isIntermediateFunctionChild=function(child1) {
-    var hasChecked = _.findWhere(child1.child1.children, {checked: true});
-    var hasNoChecked = _.findWhere(child1.child1.children, {checked: false});
-    return hasChecked && hasNoChecked;
-  };
     
-
-
-
     
 })

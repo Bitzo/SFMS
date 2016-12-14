@@ -38,3 +38,20 @@ exports.updateUserRole=function(data,callback)
 		callback(false,results);
 	})
 }
+
+//根据用户ID 查询所在的项目
+exports.queryAppByUserID = function (data, callback) {
+    /**
+	 * data = {
+	 * 	  UserID: id
+	 * }
+     */
+	userRoleDAL.queryAppByUserID(data, function (err, results) {
+		if (err) {
+			callback(true, '查询失败');
+			return;
+		}
+		console.log("查询用户所在的项目");
+        callback(false, results);
+    })
+}

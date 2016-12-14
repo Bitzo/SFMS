@@ -42,7 +42,7 @@ describe("角色功能点单元测试", function() {
     it("角色功能点查询", function (done) {
         rolefuncService.queryRoleFunc(data, function (err, result) {
             if (err) return done(err);
-            result[0].RoleID.should.be.equal(data.RoleID).and.should.be.a.Number;
+            result[0].FunctionID.should.above(0).and.should.be.a.Number;
             done();
         });
     });

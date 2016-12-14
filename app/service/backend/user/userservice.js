@@ -5,7 +5,7 @@
  * @Last Modified time: 2016-11-17 20:00
  */
 var userDAL = appRequire('dal/backend/user/userdal');
-var logger = appRequire('util/loghelper').helper;
+    logger = appRequire('util/loghelper').helper;
 
 //根据Account,密码查询单一有效用户
 exports.querySingleUser = function(accountid, pwd, callback) {

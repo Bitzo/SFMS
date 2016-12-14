@@ -1,5 +1,9 @@
 /**
- *配置文件
+ * @Author: snail
+ * @Date: 2016-12-13
+ * @Last Modified by: 
+ * @Last Modified time: 
+ * @Function:配置
  */
 var path = require('path');
 var config = {
@@ -37,8 +41,8 @@ var config = {
     weChat: {
         token: 'snail',
         appid: 'wx844d9a89f533f63d',
-        rediskey:'jit_jkbro_wechat_token',
-        expiretime:7200,
+        rediskey: 'jit_jkbro_wechat_token',
+        expiretime: 7200,
         secret: 'e668e2f31c16fac4528be7f82692085d',
         host: 'api.weixin.qq.com',
         baseUrl: 'https://api.weixin.qq.com/cgi-bin/',

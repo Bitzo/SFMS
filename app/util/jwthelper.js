@@ -20,7 +20,7 @@ exports.genToken = function(user) {
     }, config.jwt_secret);
 
     return {
-        token: token,
+        access_token: token,
         data: user,
         expires: expires,
     };
