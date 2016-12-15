@@ -33,6 +33,7 @@ exports.queryAllFunctions = function (data, callback) {
     });
 };
 
+
 //新增功能点
 exports.insert = function (data, callback) {
     var insert_sql = 'insert into `jit_function` set ?';
@@ -93,6 +94,7 @@ exports.delete = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
+            connection.release();
             return;
         }
 
@@ -100,6 +102,8 @@ exports.delete = function (data, callback) {
             if (err) {
                 callback(true);
                 logger.writeError('删除功能点，出错信息：' + err)
+                connection.release();
+                return;
             }
             callback(false, results);
             connection.release();
@@ -157,29 +161,6 @@ exports.getFuncByID = function (data, callback) {
             }
             callback(false, results);
             connection.release();
-        });
-    });
-};
-//根据FunctionID得到该功能点的子节点的个数
-exports.HasChildernByID=function(data,callback){
-  var sql = 'select count(*) as count from jit_function where IsActive=1';
-    sql += " and ParentID= " + data['FunctionID'];
-    logger.writeInfo("根据FunctionID得到该功能点的子节点的个数,sql:" + sql);
-
-    db_backend.mysqlPool.getConnection(function (err, connection) {
-        if (err) {
-            logger.writeError('功能点连接：err' + err);
-            callback(true);
-            return;
-        }
-        connection.query(sql, function (err, results) {
-            if (err) {
-                callback(true);
-                return;
-            }
-           callback(false, results);  
-           connection.release();
-           return;
         });
     });
 };

@@ -12,9 +12,9 @@ var router = express.Router();
 var functionservice = appRequire('service/backend/function/functionservice');
 
 //得到所有树形功能点
-router.get('/', function (req, res) {
-    data = {};
-    functionservice.queryAllFunctions(data, function (err, results) {
+router.get('/', function(req, res) {
+    data={};
+    functionservice.queryAllFunctions(data, function(err, results) {
         if (err) {
             res.json({
                 code: 500,
@@ -38,15 +38,17 @@ router.get('/', function (req, res) {
                 msg: "未查询到相关信息"
             });
         }
+
     });
+
 });
 
 //功能点的新增
-router.post('/', function (req, res) {
+router.post('/', function(req, res) {
 
-    var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName'];
+    var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'IsActive'];
     var err = 'required: ';
-    var formdata = req.body.formdata;
+    var formdata= req.body.formdata;
     for (var value in data) {
         if (!(data[value] in formdata)) {
             console.log("require " + data[value]);
@@ -67,10 +69,10 @@ router.post('/', function (req, res) {
     var ApplicationID = formdata.ApplicationID;
     var FunctionLevel = formdata.FunctionLevel;
     var ParentID = formdata.ParentID;
-    var FunctionCode = formdata.FunctionCode;
-    var FunctionName = formdata.FunctionName;
+    var FunctionCode =formdata.FunctionCode;
+    var FunctionName =formdata.FunctionName;
     var Memo = formdata.Memo;
-    var IsActive = formdata.IsActive;
+    var IsActive =formdata.IsActive;
     var data = {
         'ApplicationID': ApplicationID,
         'FunctionLevel': FunctionLevel,
@@ -78,9 +80,9 @@ router.post('/', function (req, res) {
         'FunctionCode': FunctionCode,
         'FunctionName': FunctionName,
         'Memo': Memo,
-        'IsActive': 1
+        'IsActive': IsActive
     }
-    functionservice.insert(data, function (err, result) {
+    functionservice.insert(data, function(err,result) {
         if (err) {
             res.json({
                 code: 500,
@@ -108,11 +110,11 @@ router.post('/', function (req, res) {
 });
 
 //功能点的编辑
-router.put('/', function (req, res) {
+router.put('/', function(req, res) {
 
-    var data = ['ApplicationID', 'FunctionID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName'];
+    var data = ['ApplicationID', 'FunctionID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'IsActive'];
     var err = 'required: ';
-    var formdata = req.body.formdata;
+    var formdata=req.body.formdata;
     for (var value in data) {
         if (!(data[value] in formdata)) {
             console.log("require " + data[value]);
@@ -131,11 +133,12 @@ router.put('/', function (req, res) {
     data.push('Memo');
     var ApplicationID = formdata.ApplicationID;
     var FunctionID = formdata.FunctionID;
-    var FunctionLevel = formdata.FunctionLevel;
+    var FunctionLevel =formdata.FunctionLevel;
     var ParentID = formdata.ParentID;
-    var FunctionCode = formdata.FunctionCode;
+    var FunctionCode =formdata.FunctionCode;
     var FunctionName = formdata.FunctionName;
     var Memo = formdata.Memo;
+    var IsActive =formdata.IsActive;
 
     var data = {
         'ApplicationID': ApplicationID,
@@ -145,9 +148,10 @@ router.put('/', function (req, res) {
         'FunctionCode': FunctionCode,
         'FunctionName': FunctionName,
         'Memo': Memo,
+        'IsActive': IsActive
     }
 
-    functionservice.update(data, function (err, results) {
+    functionservice.update(data, function(err, results) {
         if (err) {
             res.json({
                 code: 500,
@@ -176,73 +180,68 @@ router.put('/', function (req, res) {
 });
 
 //功能点的删除
-router.delete('/', function (req, res) {
-    var FunctionID = JSON.parse(req.query.d).FunctionID;
+router.delete('/', function(req, res) {
+   var FunctionID = JSON.parse(req.query.d).FunctionID;
 
-    console.log('FunctionID' + FunctionID)
-    if (FunctionID === undefined || FunctionID == '') {
+    if (FunctionID === undefined||FunctionID=='') {
         res.json({
             code: 404,
             isSuccess: false,
             msg: 'require FunctionID'
-        });
-    }
-    var data = {
-        'FunctionID': FunctionID
-    };
-
-    functionservice.delete(data, function (err, results) {
-        if (err) {
-            if (results > 0) {
-                res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: '请选删除其子功能点。'
-                });
-            } else {
-                res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: '删除失败，服务器出错'
-                });
-            }
-        }
-
-        if (results !== undefined && results.length != 0) {
-            res.status('200');
-            res.json({
-                code: 200,
-                isSuccess: true,
-                msg: '删除成功'
-            });
-        } else {
-            res.json({
-                code: 404,
-                isSuccess: false,
-                msg: '删除失败'
-            });
-        }
-    })
-});
-
-//根据FunctionID得到该功能点的值
-router.put('/getFuncByID', function (req, res) {
-    var functionID = JSON.parse(req.query.f).functionID;
-
-    if (FunctionID === undefined || FunctionID == '') {
-        res.json({
-            code: 404,
-            isSuccess: false,
-            msg: 'require FunctionID'
-        });
+        })
         return;
     }
 
     var data = {
+        'FunctionID': FunctionID
+    };
+    console.log(data)
+    functionservice.delete(data, function(err, results) {
+        if (err) {
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '删除失败，服务器出错'
+            })
+            return;
+        }
+
+        if (results !== undefined && results.length != 0) {
+
+            res.json({
+                code: 200,
+                isSuccess: true,
+                msg: '删除成功'
+            })
+        } else {
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '删除失败，请选删除其子功能点。'
+            })
+        }
+    })
+
+});
+
+//根据FunctionID得到该功能点的值
+router.get('/getFuncByID', function(req, res) {
+    var functionID = JSON.parse(req.query.f).functionID;   
+
+      if (FunctionID === undefined||FunctionID=='') {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'require FunctionID'
+        })
+        return;
+    }
+    
+    var data = {
         'FunctionID': functionID,
     };
 
-    functionservice.getFuncByID(data, function (err, results) {
+    functionservice.getFuncByID(data, function(err, results) {
         if (err) {
             res.json({
                 code: 500,
