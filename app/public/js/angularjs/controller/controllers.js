@@ -24,7 +24,7 @@ myApp.controller('formController', ['$scope', '$http', function($scope, $http) {
         }).
         success(function(response) {
             if (response !== undefined && response.data !== undefined && response.data.isSuccess) {
-                localStorage.setItem('jit_token',response.token);
+                localStorage.setItem('jit_token',response.access_token);
                 localStorage.setItem('jit_key',response.data.accountId);
                 location.href = './index';
             } else {
