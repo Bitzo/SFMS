@@ -146,16 +146,16 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
-    if(msg.eventKey.length==0)//是关注与取消关注的判断
+    if(msg.eventKey.length == 0)//是关注与取消关注的判断
     {
         //解决服务器在关注坏掉的情况
         wechat.getLocalAccessToken(1, function(issuccess, token) {
             if (issuccess) {
                 wechat.getCustomerList(token,function(results)
                 {
-                    for(var x in results['data']['openid'])
+                    for(var x in results.data.openid)
                     {
-                        wechat.getCustomer(token,results['data']['openid'][x],function(result)
+                        wechat.getCustomerInfo(token,results.data.openid[x],function(result)
                         {
                         //获取到信息
                         var data={
@@ -193,9 +193,9 @@ wechat.eventMsg(function(msg) {
                     });
 }
 });
-wechat.getCustomer(token,msg.fromUserName,function(result)
+wechat.getCustomerInfo(token,msg.fromUserName,function(result)
 {                    
-                    if(result.subscribe == 1)//关注的人
+                    if(result.subscribe == 1)//已经关注的人
                     {
                         var data={
                             "WechatUserCode" : result.openid,
