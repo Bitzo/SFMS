@@ -191,21 +191,22 @@
 
 //查询用户的资料
 router.get('/', function (req, res) {
-    //var query = JSON.parse(req.query.f);
-
+    var query = JSON.parse(req.query.f);
     logger.writeInfo("查询用户的记录");
     var data = {},
-    allCount,
+        allCount,
         page = req.query.pageindex,//页数
-        accountID = req.query.AccountID,
-        applicationID = req.query.ApplicationID,
-        account = req.query.Account,
-        userName = req.query.UserName,
-        classID = req.query.ClassID,
-        createUserID = req.query.CreateUserID,
-        editUserID = req.query.EditUserID,
+        accountID = query.AccountID,
+        applicationID = query.ApplicationID,
+        account = query.Account,
+        userName = query.UserName,
+        classID = query.ClassID,
+        createUserID = query.CreateUserID,
+        editUserID = query.EditUserID,
         isActive = 1,
-        pageNum = req.query.pagesize;
+        pageNum = req.query.pagesize,
+        applicationName = query.ApplicationName,
+        createUserName = query.CreateUserName;
 
         if (page == undefined || page.length == 0) {
             page = 1;
@@ -213,6 +214,14 @@ router.get('/', function (req, res) {
 
         if (accountID !== undefined && accountID.length != 0) {
             data['AccountID'] = accountID;
+        }
+
+        if (applicationName !== undefined && applicationName.length != 0) {
+            data['ApplicationName'] = applicationName;
+        }
+
+        if (createUserName !== undefined && createUserName.length != 0) {
+            data['CreateUserName'] = createUserName;
         }
 
         if (applicationID !== undefined && applicationID.length != 0) {
@@ -241,7 +250,7 @@ router.get('/', function (req, res) {
         }
         data['page'] = page;
         data['pageNum'] = pageNum;
-   // console.log(data);
+        console.log(data);
 //获取所有用户的数量
 
 user.countUser(data, function (err, result) {
@@ -257,8 +266,8 @@ user.countUser(data, function (err, result) {
     }
     if (result !== undefined && result.length != 0) {
         allCount = result[0]['num'];
-            //查询所需要的数据
-            user.queryAllUsers(data, function (err, result) {
+            //查询所需要的数据          
+            user.queryAllUsers(data, function (err, results1) {
                 if (err) {
                     res.status(500);
                     res.json({
@@ -271,15 +280,14 @@ user.countUser(data, function (err, result) {
                     return;
                 }
 
-                if (result != undefined && result.length != 0 && allCount != -1) {
+                if (results1 != undefined && results1.length != 0 && allCount != -1) {
                     //将时间格式化，并且将CreateUser的名字改一下
                     var dataApplication = {};
-                    for(var key in result)
+                    for(var key in results1)
                     {
-                        result[key].CreateTime = moment(result[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');                      
+                        results1[key].CreateTime = moment(results1[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');                      
                      }
-                
-                    console.log(result);
+                    console.log("查询成功");
                     var results = {
                     code: 200,
                     isSuccess: true,
@@ -288,7 +296,7 @@ user.countUser(data, function (err, result) {
                     curPage: page,
                     curpageNum: pageNum,
                     totalPage: Math.ceil(allCount / pageNum),
-                    data: result
+                    data: results1
                 };
                 if (results.curPage == results.totlePage) {
                     results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
@@ -298,7 +306,7 @@ user.countUser(data, function (err, result) {
                 return;
             }
             else {
-                res.status(500);
+                res.status(200);
                 res.json({
                     code: 500,
                     isSuccess: false,

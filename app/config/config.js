@@ -17,7 +17,7 @@ var config = {
     jwt_secret: 'j1i3t20', //jwt
     isdev: false, //true:开发环境 false:生产环境
     secretsalt: 'what1r2u3nong7sha5lei4', //盐值
-    port: 1320, // 程序运行的端口
+    port: 80, // 程序运行的端口
     host: '127.0.0.1',
     mysql: {
         host: '139.224.51.160',
@@ -48,6 +48,7 @@ var config = {
         baseUrl: 'https://api.weixin.qq.com/cgi-bin/',
         accessTokenUrl: 'token?grant_type=client_credential&', //获取token
         createMenu: '/cgi-bin/menu/create?access_token=', //创建菜单
+        userIndo:'/user/info?access_token=',//获取用户信息
     },
     redis_prd: {
         host: '120.27.38.175',
