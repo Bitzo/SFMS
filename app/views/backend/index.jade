@@ -84,7 +84,7 @@ html(lang='en')
               a.dropdown-toggle(href='{{menu.Url}}') 
                 i(class='{{menu.icon}}')
                 span.menu-text  {{menu.MenuName}}
-                b.arrow.icon-angle-down
+               // b.arrow.icon-angle-down
               ul.submenu
                 li(ng-repeat='menuchid in menu.children')
                   a(href='{{menuchid.Url}}')

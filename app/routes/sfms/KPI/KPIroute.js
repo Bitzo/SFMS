@@ -28,7 +28,7 @@ var logger = appRequire("util/loghelper").helper;
  */
 router.post('/', function (req, res) {
     var query = req.body,
-        ProjectID = query.ProjectID,
+        ID = query.ID,
         KPIType = query.KPIType,//字典表的ID
         KPIScore = query.KPIScore,
         OperateUser = req.query.jitkey,
@@ -72,7 +72,7 @@ router.post('/', function (req, res) {
             console.log(results)
         if (results !== undefined && results.length>0) {
             for (var i in results) {
-                if (results[i].ProjectID == ProjectID) isTrue = true;
+                if (results[i].ID == ID) isTrue = true;
             }
             if (isTrue == true) {
                 isTrue = false;
@@ -230,7 +230,7 @@ router.put('/', function (req, res) {
             })
         }
         if(results !== undefined && results.length>0) {
-            if (results[0].CheckStatus == '待审核') {
+            if (results[0].KPIStatus == '待审核') {
                 KPIservice.updateKPI(data, function (err, results) {
                     if (err) {
                         res.status(500);

@@ -19,7 +19,6 @@ var logger = appRequire("util/loghelper").helper;
 router.post('/', function (req, res) {
     var projectName = req.body.projectName,
         projectDesc = req.body.projectDesc,
-        projectID = req.body.projectID,
         projectManageID = req.body.projectManageID,
         projectManageName = req.body.projectManageName,
         projectEndTime = req.body.projectEndTime,
@@ -31,7 +30,6 @@ router.post('/', function (req, res) {
     var data = {
         'ProjectName': projectName,
         'ProjectDesc': projectDesc,
-        'ProjectID': projectID,
         'ProjectManageID': projectManageID,
         'ProjectManageName': projectManageName,
         'ProjectEndTime': projectEndTime,
@@ -45,7 +43,7 @@ router.post('/', function (req, res) {
     }
 
     //检查所需要的参数是否齐全
-    var temp = ['projectName', 'projectDesc', 'projectID', 'jitkey', 'projectStatus', 'projectPrice',
+    var temp = ['projectName', 'projectDesc', 'jitkey', 'projectStatus', 'projectPrice',
             'projectManageID', 'projectManageName', 'projectEndTime', 'projectTimeLine'],
         err = 'required: ';
     for(var value in temp)
@@ -98,7 +96,6 @@ router.put('/', function (req, res) {
     var ID = req.body.ID,
         projectName = req.body.projectName,
         projectDesc = req.body.projectDesc,
-        projectID = req.body.projectID,
         projectManageID = req.body.projectManageID,
         projectManageName = req.body.projectManageName,
         projectEndTime = req.body.projectEndTime,
@@ -111,7 +108,6 @@ router.put('/', function (req, res) {
     var data = {
         'ID': ID,
         'ProjectDesc': projectDesc,
-        'ProjectID': projectID,
         'ProjectName': projectName,
         'ProjectManageID': projectManageID,
         'ProjectManageName': projectManageName,
@@ -125,7 +121,7 @@ router.put('/', function (req, res) {
     }
 
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'projectName', 'projectDesc', 'projectID', 'jitkey', 'projectStatus', 'projectPrice', 'projectManageID', 'projectManageName', 'projectEndTime', 'projectTimeLine'],
+    var temp = ['ID', 'projectName', 'projectDesc', 'jitkey', 'projectStatus', 'projectPrice', 'projectManageID', 'projectManageName', 'projectEndTime', 'projectTimeLine'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -257,4 +253,47 @@ router.get('/', function (req, res) {
     })
 })
 
+//项目删除
+router.delete('/', function (req, res) {
+    var ID = req.body.ID;
+
+    if (ID == '' || ID === undefined) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: 'require: ID'
+        })
+    }
+    var data = {
+        'ID': ID,
+        'IsActive': 0
+    };
+
+    projectservice.updateProject(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "服务器出错"
+            });
+        }
+        if(results !== undefined && results.affectedRows > 0) {
+            res.status(200);
+            res.json({
+                status: 200,
+                isSuccess: true,
+                msg: "删除成功"
+            })
+        } else {
+            res.status(400);
+            res.json({
+                status: 400,
+                isSuccess: true,
+                msg: "删除失败"
+            })
+        }
+    })
+})
 module.exports = router;

@@ -71,6 +71,15 @@ exports.countQuery = function (data, callback) {
 
 //项目信息查询
 exports.queryProject = function (data, callback) {
+    data = {
+        'ID': data.ID || '',
+        'ProjectName': data.projectName || '',
+        'ProjectManageName': data.projectManageName || '',
+        'CreateTime': data.startTime || '',
+        'ProjectEndTime': data.endTime || '',
+        'page': data.page || 1,
+        'pageNum': data.pageNum || 20,
+    }
     projectDAL.queryProject(data, function (err, results) {
         if (err) {
             callback(true, '查询失败');

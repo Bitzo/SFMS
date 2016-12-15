@@ -28,6 +28,7 @@ describe("功能点单元测试", function () {
         funcService.insert(data, function (err, result) {
             if (err) return done(err);
             result.insertId.should.be.above(0).and.should.be.a.Number;
+            console.log(insertFunctionID);
             insertFunctionID = result.insertId;
             done();
         });
@@ -42,8 +43,8 @@ describe("功能点单元测试", function () {
     });
     it("功能点修改", function (done) {
         data.FunctionID = insertFunctionID;
-        data.Memo = '功能点修改描述';
-        data.FunctionName = "功能点修改名称！";
+        data.Memo = '功能点修改描述1';
+        data.FunctionName = "功能点修改名称！2";
 
         funcService.update(data, function (err, result) {
             if (err) return done(err);

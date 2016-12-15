@@ -125,11 +125,11 @@ exports.countQuery = function (data, callback) {
 }
 //查询项目信息
 exports.queryProject = function (data, callback) {
-    var sql = 'select ID,ProjectName,ProjectDesc,ProjectID,ProjectManageID,ProjectManageName,ProjectEndTime,' +
+    var sql = 'select ID,ProjectName,ProjectDesc,ProjectManageID,ProjectManageName,ProjectEndTime,' +
             'ProjectTimeLine,CreateTime,OperateUser,EditTime,EditUser,ProjectStatus,ProjectPrice ' +
             'from jit_projectbaseinfo where 1=1 and IsActive = 1 ',
         page = data.page || 1,
-        num = data.pageNum;
+        num = data.pageNum || 20;
 
     if (data !== undefined) {
         for (var key in data) {

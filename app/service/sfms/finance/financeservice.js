@@ -36,12 +36,24 @@ exports.updateFinance = function(data, callback) {
 
 //财务信息查询
 exports.queryFinance = function (data, callback) {
-    financeDAL.queryFinance(data, function (err, results) {
+    var queryData = {
+        'ID': data.ID || '',
+        'Username': data.Username || '',
+        'InOutType': data.InOutType || '',
+        'FIType': data.FIType || '',
+        'FIStatus': data.FIStatus || '',
+        'startTime': data.startTime || '',
+        'endTime': data.endTime || '',
+        'page': data.page || 1,
+        'pageNum': data.pageNum || 20,
+        'IsActive': 1
+    }
+    financeDAL.queryFinance(queryData, function (err, results) {
         if (err) {
             callback(true, '查询失败');
             return;
         }
-        logger.writeInfo('查询KPI信息');
+        logger.writeInfo('查询财务信息');
         callback(false, results);
     })
 }
@@ -49,18 +61,20 @@ exports.queryFinance = function (data, callback) {
 //财务查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'FiName': data.FiName,
+        'Username': data.Username,
         'InOutType': data.InOutType,
-        'ProjectID': data.ProjectID,
-        'UserName': data.UserName,
-        'FiStatus': data.FiStatus
+        'FIType': data.FIType,
+        'FIStatus': data.FIStatus,
+        'startTime': data.startTime,
+        'endTime': data.endTime,
+        'IsActive': 1
     }
     financeDAL.countQuery(queryData, function (err, results) {
         if (err) {
             callback(true, '失败');
             return;
         }
-        logger.writeInfo('统计KPI数据量');
+        logger.writeInfo('统计财务信息数据量');
         callback(false, results);
     })
 }
