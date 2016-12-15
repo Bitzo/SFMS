@@ -153,9 +153,9 @@ wechat.eventMsg(function(msg) {
             if (issuccess) {
                 wechat.getCustomerList(token,function(results)
                 {
-                    for(var x in results['data']['openid'])
+                    for(var x in results.data.openid)
                     {
-                        wechat.getCustomer(token,results['data']['openid'][x],function(result)
+                        wechat.getCustomerInfo(token,results.data.openid[x],function(result)
                         {
                         //获取到信息
                         var data={
@@ -193,9 +193,9 @@ wechat.eventMsg(function(msg) {
                     });
 }
 });
-wechat.getCustomer(token,msg.fromUserName,function(result)
+wechat.getCustomerInfo(token,msg.fromUserName,function(result)
 {                    
-                    if(result.subscribe == 1)//关注的人
+                    if(result.subscribe == 1)//已经关注的人
                     {
                         var data={
                             "WechatUserCode" : result.openid,

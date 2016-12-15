@@ -79,7 +79,6 @@ Customer.prototype.insert = function(data,callback) {
                     logger.writeErr('生成操作日志异常' + new Date());
                 }
             });
-	 			callback(true);
 	 			return;
 	 		}
 	 		//生成操作的日志
