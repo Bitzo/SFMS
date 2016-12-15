@@ -478,9 +478,8 @@ router.get('/', function (req, res) {
 //KPI审核
 router.put('/check', function (req, res) {
     var data = req.body.data,
-        temp = ['ID', 'CheckUser', 'KPIStatus'],
-        err = 'require: '
-    logger.writeInfo(data);
+        temp = ['ID', 'KPIStatus'],
+        err = 'require: ';
     for (var key in temp) {
         if (!(temp[key] in data[0])) {
             logger.writeInfo("require: " + temp[key]);
@@ -495,8 +494,22 @@ router.put('/check', function (req, res) {
             msg: err
         })
     }
-    KPIservice.queryKPI()
-    KPIservice.checkKPI(data, function (err, results) {
+
+    var ID = [];
+    for (var i in data) {
+        if(data[i].KPIStatus == '不通过' && (data[i].Remark === undefined || data[i].Remark.trim()=='')) {
+            res.status(400);
+            return res.json({
+                status: 400,
+                isSuccess: false,
+                msg: '不通过的审核需填写备注信息'
+            })
+        }
+        data[i].CheckUser = req.query.jitkey;
+        ID[i] = data[i].ID;
+    }
+    //查看该绩效信息是否已经被审核
+    KPIservice.queryKPIForCheck(ID, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -505,17 +518,36 @@ router.put('/check', function (req, res) {
                 msg: results
             })
         }
-        if(results !== undefined && results.length > 0) {
-            res.status(200);
-            return res.json({
-                status: 200,
-                isSuccess: true,
-                msg: results
-            })
+        if (results !== undefined && results === true) {
+                KPIservice.checkKPI(data, function (err, results) {
+                    if (err) {
+                        res.status(500);
+                        return res.json({
+                            status: 500,
+                            isSuccess: false,
+                            msg: results
+                        })
+                    }
+                    if (results !== undefined && results.length > 0) {
+                        res.status(200);
+                        return res.json({
+                            status: 200,
+                            isSuccess: true,
+                            msg: '审核成功'
+                        })
+                    } else {
+                        res.status(400);
+                        return res.json({
+                            status: 404,
+                            isSuccess: false,
+                            msg: '审核失败'
+                        })
+                    }
+                })
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
-                status: 404,
+                status: 400,
                 isSuccess: false,
                 msg: results
             })

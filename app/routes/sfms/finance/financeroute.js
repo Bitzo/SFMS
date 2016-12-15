@@ -447,10 +447,22 @@ router.put('/check', function (req, res) {
             msg: err
         })
     }
+
+    var ID = [];
     for (var i in data) {
+        if(data[i].FIStatu == '不通过' && (data[i].Remark === undefined || data[i].Remark.trim()=='')) {
+            res.status(400);
+            return res.json({
+                status: 400,
+                isSuccess: false,
+                msg: '不通过的审核需填写备注信息'
+            })
+        }
         data[i].CheckUser = req.query.jitkey;
+        ID[i] = data[i].ID;
     }
-    financeService.checkFinance(data, function (err, results) {
+    //查看该财务信息是否已经被审核
+    financeService.queryFinanceForCheck(ID, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -459,17 +471,37 @@ router.put('/check', function (req, res) {
                 msg: results
             })
         }
-        if(results !== undefined && results.length > 0) {
-            res.status(200);
-            return res.json({
-                status: 200,
-                isSuccess: true,
-                msg: results
+        if (results !== undefined && results === true) {
+            //所有结果均为未审核状态
+            financeService.checkFinance(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: results
+                    })
+                }
+                if(results !== undefined && results.length > 0) {
+                    res.status(200);
+                    return res.json({
+                        status: 200,
+                        isSuccess: true,
+                        msg: '审核成功'
+                    })
+                } else {
+                    res.status(400);
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: '审核失败'
+                    })
+                }
             })
         } else {
             res.status(400);
             return res.json({
-                status: 404,
+                status: 400,
                 isSuccess: false,
                 msg: results
             })
