@@ -112,7 +112,7 @@ exports.login = function(data, callback) {
     callback(false, userObj);
 };
 
-
+//查询数量的service
 exports.countUser = function(data, callback) {
     userDAL.countUser(data, function(err, results) {
         if (err) {

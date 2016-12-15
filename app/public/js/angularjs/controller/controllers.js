@@ -26,7 +26,7 @@ myApp.controller('formController', ['$scope', '$http', function($scope, $http) {
             if (response !== undefined && response.data !== undefined && response.data.isSuccess) {
                 localStorage.setItem('jit_token',response.access_token);
                 localStorage.setItem('jit_key',response.data.accountId);
-                location.href = './index?access_token='+response.access_token+"&jitkey="+response.data.accountId;
+                location.href = './index';
             } else {
                 alert(response.msg);
                 location.reload();
