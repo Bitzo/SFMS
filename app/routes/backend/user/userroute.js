@@ -306,7 +306,7 @@ user.countUser(data, function (err, result) {
                 return;
             }
             else {
-                res.status(500);
+                res.status(200);
                 res.json({
                     code: 500,
                     isSuccess: false,
