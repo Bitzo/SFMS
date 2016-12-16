@@ -1,17 +1,12 @@
+link(rel='stylesheet', href='css/backend/backend.css')   
 block content
   jason-pagecontent(action='/backmenu/plain' conf='paginationConf' style='button{height:20px;}')
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
-          input.form-control(placeholder='应用ID'  style="width:100px;" ng-model='f.ApplicationID')
+           jason-select.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName' source='/backmenu/plain')
         label.form-group.my-form-group
-          input.form-control(placeholder='菜单ID' style="width:100px;" ng-model='f.MenuID')
-        label.form-group.my-form-group
-          input.form-control(placeholder='菜单名称'  style="width:100px;" ng-model='f.MenuName')
-        label.form-group.my-form-group
-          jason-select.form-control(placeholder='菜单名称1'  style="width:100px;" ng-model='f.aaa' source='/backmenu/plain')
-        label.form-group.my-form-group
-          jason-select.form-control(placeholder='菜单名称2'  style="width:100px;" ng-model='f.bbb' source='/app')
+          jason-select.form-control(placeholder='菜单名称'  style="width:100px;" ng-model='f.MenuName' source='/app')
         label.form-group.my-form-group
           button.btn.btn-sm.btn-primary(ng-click='search()') 查询
         div.buttons.pull-right
@@ -21,20 +16,19 @@ block content
       hr
       table.table.table-striped.table-bordered.text-center
         thead.text-center 
-          tr
-            th 序号
-            th 应用ID
-            th 菜单ID
+          tr   
+            th 应用名称
             th 菜单名称
+            th 菜单路径
             th 操作
         tbody
           tr(ng-repeat="x in datas")
-            td {{$index+1}}
             td {{x.ApplicationID}}
-            td {{x.MenuID}}
             td {{x.MenuName}}
+            td {{x.Url}}
+            
             td
-              a(ng-click="show(x.MenuID,'/backmenu/plain')",href='#/backend/menuedit/' )
+              a(href='#/backend/menuedit/?MenuID={{x.MenuID}}' )
                 i.icon.icon-edit 编辑
               a(ng-click="remove($index,'/backmenu')")
                 i.icon.icon-trash 删除
