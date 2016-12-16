@@ -125,8 +125,22 @@ exports.countUser = function(data, callback) {
 
 exports.queryAccount=function(data,callback)
 {
-    
+
     userDAL.queryAccount(data,function(err,results)
+    {
+        if(err)
+        {
+            callback(true);
+            return;
+        }
+        callback(false,results);
+    });
+}
+
+exports.queryAccountByID=function(data,callback)
+{
+
+    userDAL.queryAccountByID(data,function(err,results)
     {
         if(err)
         {

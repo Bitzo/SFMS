@@ -8,6 +8,7 @@
 var express = require('express');
 var router = express.Router();
 var signservice = appRequire('service/sfms/sign/signservice');
+var userservice = appRequire('service/backend/user/userservice');
 var config = appRequire('config/config');
 var moment = require('moment');
 //引入日志中间件
@@ -15,15 +16,13 @@ var logger = appRequire("util/loghelper").helper;
 
 //签到信息记录查询
 router.get('/', function (req, res) {
-    var userID = req.query.userID,
-        userAgent = req.query.userAgent,
-        createTime = req.query.createTime,
-        signType = req.query.signType,
+    var userID = req.query.userID || '',
+        userAgent = req.query.userAgent || '',
+        createTime = req.query.createTime || '',
+        signType = req.query.signType || '',
         totalNum = 0,
-        page = req.query.page > 0 ? req.query.pageindex : 1,
-        pageNum = req.query.pagesize || 20;
-
-    if (pageNum === undefined) pageNum = config.pageCount;
+        page = req.query.pageindex > 0 ? req.query.pageindex : 1,
+        pageNum = req.query.pagesize || config.pageCount;
 
     var data = {
         'UserID': userID,
@@ -73,8 +72,39 @@ router.get('/', function (req, res) {
                     if(result.curPage == result.totalPage) {
                         result.curNum = result.totalNum - (result.totalPage-1)*pageNum;
                     }
-                    res.status(200);
-                    return res.json(result);
+                    //获取用户名
+                    var ID = [];
+                    for (var i=0;i<results.length;++i) {
+                        results[i].UserName = "无效用户";
+                        if (i==0) ID[i] = results[i].UserID;
+                        else {
+                            var j = 0;
+                            for (j=0;j<ID.length;++j) {
+                                if (ID[j] == results[i].UserID) break;
+                            }
+                            if (j == ID.length) ID[j] = results[i].UserID;
+                        }
+                    }
+                    userservice.queryAccountByID(ID, function (err, data) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '服务器出错'
+                            })
+                        }
+                        for (var i in results) {
+                            for (var j in data) {
+                                if (results[i].UserID == data[j].AccountID) {
+                                    results[i].UserName = data[j].UserName;
+                                    break;
+                                }
+                            }
+                        }
+                        res.status(200);
+                        return res.json(result);
+                    })
                 } else {
                     res.status(404);
                     return res.json({
@@ -125,6 +155,7 @@ router.get('/count', function (req, res) {
             var userInfo = [],k=0;
             userInfo[k] = {
                 userID: results[0].UserID,
+                userName: '',
                 inTime: 0,
                 outTime: 0,
                 signNum: 0
@@ -133,6 +164,7 @@ router.get('/count', function (req, res) {
                 if(userInfo[k].userID != results[i].UserID) {
                     userInfo[++k] = {
                         userID: results[i].UserID,
+                        userName: '无效用户',
                         inTime: 0,
                         outTime: 0,
                         signNum: 0
@@ -150,21 +182,52 @@ router.get('/count', function (req, res) {
                     userInfo[k].outTime += moment(results[i].CreateTime).unix();
                 }
             }
-            //获取完所有用户ID，对数据遍历，算出用户的签到总时长
-            for(var i in userInfo) {
-                //取得签到时常总秒数，换算成小时
-                var second = userInfo[i].outTime - userInfo[i].inTime,
-                    h = Math.floor(second/3600),
-                    m = Math.floor((second - h*3600)/60),
-                    s = (second - h*3600 - m*60);
-                userInfo[i].signTime = h+':'+m+':'+s ;
-                delete userInfo[i].inTime;
-                delete userInfo[i].outTime;
+            var ID = [];
+            for (var i in userInfo) {
+                ID[i] = userInfo[i].userID;
             }
-            res.status(200);
-            return res.json({
-                dataNum: results.length,
-                results: userInfo
+            userservice.queryAccountByID(ID, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '服务器出错'
+                    })
+                }
+                if (results!==undefined && results.length>0) {
+                    for (var i in results) {
+                        for(var j in userInfo) {
+                            if (userInfo[j].userID == results[i].AccountID) {
+                                userInfo[j].userName = results[i].UserName;
+                                break;
+                            }
+                        }
+                    }
+                    //获取完所有用户数据，对数据遍历，算出用户的签到总时长
+                    for(var i in userInfo) {
+                        //取得签到时常总秒数，换算成小时
+                        var second = userInfo[i].outTime - userInfo[i].inTime,
+                            h = Math.floor(second/3600),
+                            m = Math.floor((second - h*3600)/60),
+                            s = (second - h*3600 - m*60);
+                        userInfo[i].signTime = h+':'+m+':'+s ;
+                        delete userInfo[i].inTime;
+                        delete userInfo[i].outTime;
+                    }
+                    res.status(200);
+                    return res.json({
+                        dataNum: results.length,
+                        results: userInfo
+                    })
+                } else {
+                    res.status(200);
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: '无数据'
+                    })
+                }
             })
         } else {
             res.status(200);
