@@ -15,7 +15,7 @@
     OperationUrl: '',
     NewValue:'',
     Action: '',
-    Type: 1,
+    Type: 2,
     ObjName: '',
     Identifier: 1,
     CmdStr: '',

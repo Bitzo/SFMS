@@ -81,9 +81,13 @@ exports.update = function(data,callback)
 }
 
 //根据用户的wechatUserCode来查询用户的信息，以便用来验证用户的唯一性
-exports.query = function(wechatUserCode,callback)
+exports.query = function(data,callback)
 {
-    var sql = "select CustomerID,WechatUserCode,Phone,CustomerAccount,CustomerUserName,AreaID,DormID,HouseNum,BalanceNum,CreditPoint,Sex,NickName,MemberLevelID,Country,IsActive,CreateTime,City,Memo FROM jit_customer WHERE WechatUserCode = '" + wechatUserCode + "' ";
+    var sql = "select CustomerID,WechatUserCode,Phone,CustomerAccount,CustomerUserName,AreaID,DormID,HouseNum,BalanceNum,CreditPoint,Sex,NickName,MemberLevelID,Country,IsActive,CreateTime,City,Memo FROM jit_customer WHERE 1=1 ";
+    for(var key in data)
+    {
+        sql += " and "+key +" = '" + data[key]+"' ";
+    }
     //链接数据库的操作
     console.log(sql);
     db_jinkebro.mysqlPool.getConnection(function(err,connection)

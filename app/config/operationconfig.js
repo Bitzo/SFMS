@@ -65,124 +65,124 @@ var operationConfig = {
                 actionName: "客户新增",
                 identifier: 2001
             },
-            customerUpd{
+            customerUpd:{
                 actionName:'客户修改',
                 identifier:2002
             },
-            customerDel{
+            customerDel:{
                 actionName:'客户的删除',
                 identifier:2003
             }
-        }
+        },
         orderManger:{
             module:"订单模块",
             orderAdd:{
                 actionName:"订单的新增",
                 identifier:2101
-            }
+            },
             orderUpd:{
                 actionName:"订单的更新",
                 identifier:2102
-            }
+            },
             orderDel:{
                 actionName:"订单的删除",
                 identifier:2103
-            }
+            },
             orderQuery:{
                 actionName:"订单的查询",
                 identifier:2104
             }
-        }
+        },
         orderDelivery:{
             module:"订单配送情况的模块",
             orderdeliveryAdd:{
                 actionName:"配送情况单的新增",
                 identifier:2201
-            }
-            orderdeliveryUpd：{
+            },
+            orderdeliveryUpd:{
                 actionName:"配送情况单的更新",
                 identifier:2202
-            }
+            },
             orderdeliveryDel:{
                 actionName:"配送情况单的删除",
                 identifier:2203
-            }
+            },
             orderdeliveryQuery:{
                 actionName:"配送员情况单的查询",
                 identifier:2204
             }
-        }
+        },
         orderProduct:{
             module:"订单商品情况的模块",
             orderProductAdd:{
                 actionName:"配送商品情况的新增",
                 identifier:2301
-            }
-            orderProductUpd：{
+            },
+            orderProductUpd:{
                 actionName:"配送商品情况的更新",
                 identifier:2302
-            }
+            },
             orderProductDel:{
                 actionName:"配送商品情况的删除",
                 identifier:2303
-            }
+            },
             orderProductQuery:{
                 actionName:"配送员商品情况的查询",
                 identifier:2304
             }
-        }
+        },
        product:{
             module:"商品模块",
            productAdd:{
                 actionName:"商品新增",
                 identifier:2401
-            }
-           productUpd：{
+            },
+           productUpd:{
                 actionName:"商品更新",
                 identifier:2402
-            }
+            },
            productDel:{
                 actionName:"商品删除",
                 identifier:2403
-            }
+            },
            productQuery:{
                 actionName:"商品查询",
                 identifier:2304
             }
-        }
+        },
         productStock:{
             module:"商品库存模块",
             productStockAdd:{
                 actionName:"商品库存新增",
                 identifier:2501
-            }
-            productStockUpd：{
+            },
+            productStockUpd:{
                 actionName:"商品库存更新",
                 identifier:2502
-            }
+            },
             productStockDel:{
                 actionName:"商品库存删除",
                 identifier:2503
-            }
+            },
             productStockQuery:{
                 actionName:"商品库存查询",
                 identifier:2504
             }
-        }
+        },
         productType:{
             module:"商品种类模块",
             productTypeAdd:{
                 actionName:"商品种类新增",
                 identifier:2601
-            }
-            productTypeUpd：{
+            },
+            productTypeUpd:{
                 actionName:"商品种类更新",
                 identifier:2602
-            }
+            },
             productTypeDel:{
                 actionName:"商品种类删除",
                 identifier:2603
-            }
+            },
             productTypeQuery:{
                 actionName:"商品种类查询",
                 identifier:2604
@@ -200,7 +200,32 @@ var operationConfig = {
                 identifier: 3001
             },
         }
+    },
+    weChat:{
+        applicationName:4,
+        applicationName:"微信端",
+        infoManage:{
+            module:"获取信息模块",
+            access_tokenGet:{
+                actionName:"获取token",
+                identifier:4001
+            },
+            customerInfo:{
+                actionName:"消费者信息获取",
+                identifier:4002
+            },
+            customerList:{
+                actionName:"消费者列表的获取",
+                identifier:4003
+            },
+            customerNextList:{
+                actionName:"指定消费者列表的获取",
+                identifier:4004
+            }
+        }
     }
 
-
 };
+
+
+module.exports = operationConfig;

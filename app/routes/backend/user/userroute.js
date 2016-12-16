@@ -9,6 +9,7 @@
  var router = express.Router();
  var url = require('url');
  var moment = require('moment');
+ var operateconfig = appRequire("config/operationconfig");
  var logger = appRequire('util/loghelper').helper;
     //加载中间件
     var user = appRequire('service/backend/user/userservice'),
