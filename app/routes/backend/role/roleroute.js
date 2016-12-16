@@ -120,7 +120,6 @@ router.get('/',function (req, res) {
 
 //增加角色信息
 router.post('/',function (req, res) {
-    console.log(req.body);
     var data = ['ApplicationID', 'RoleCode', 'RoleName', 'IsActive'],
         err = 'required: ';
 

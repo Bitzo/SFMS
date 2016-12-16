@@ -98,6 +98,7 @@ router.post('/', function (req, res) {
                         query = {
                             'ProjectID': ProjectID,
                             'KPIType': KPIType,
+                            'UserID': UserID,
                             'IsActive': 1
                         }
                         KPIservice.queryKPI(query, function (err, results) {
@@ -174,7 +175,7 @@ router.post('/', function (req, res) {
                                 return res.json({
                                     status: 400,
                                     isSuccess: false,
-                                    msg: '在当前项目中，该绩效类型已被申请，不可重复申请'
+                                    msg: '当前项目，该用户已申请过此类型的绩效，不可重复申请'
                                 })
                             }
                         })
