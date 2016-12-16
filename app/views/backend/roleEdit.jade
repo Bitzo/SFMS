@@ -4,12 +4,10 @@ block content
     form(method="post",name="roleAddForm") 
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") 应用ID
+          td(width="15%",class="tableleft") 应用名称
           td
-            select(id="search",value="",ng-model="formdata.ApplicationID",style="width:163px;height:30px",)
-              option SfmsID
-              option JinkeBroID 
-              option xxxID
+            jason-select.input(placeholder='应用名称' ng-model='f.ApplicationName' source='/backmenu/plain')
+
          tr
           td(width="15%",class="tableleft") 角色名称
           td
@@ -19,7 +17,7 @@ block content
               small.error(ng-show="roleAddForm.roleName.$error.minlength") 角色名称至少三位
               small.error(ng-show="roleAddForm.roleName.$error.maxlength") 角色名称最多十位
         tr
-          td(width="15%",class="tableleft") 角色号
+          td(width="15%",class="tableleft") 角色代码
           td
             input(type="text",name="roleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=10,required)
             &nbsp&nbsp
