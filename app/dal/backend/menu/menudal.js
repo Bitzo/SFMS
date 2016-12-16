@@ -14,9 +14,12 @@ var db_backend = appRequire('db/db_backend'),
 exports.queryAllMenus = function(data, callback) {
     var arr = new Array();
 
-    arr.push(" select jit_application.ApplicationName,jit_menu.ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName, ");
-    arr.push(" IconPath,Url,jit_menu.Memo,jit_menu.IsActive ");
-    arr.push(" from jit_menu left join jit_application on jit_menu.ApplicationID = jit_application.ID ");
+    arr.push(" select C.ApplicationName,jit_menu.ApplicationID,jit_menu.MenuID,jit_menu.MenuLevel, ");
+    arr.push(" jit_menu.ParentID,B.MenuName as ParentMenuName,jit_menu.SortIndex,jit_menu.MenuName, ")
+    arr.push(" jit_menu.IconPath,jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ");
+    arr.push(" from jit_menu ");
+    arr.push(" left join jit_application C on jit_menu.ApplicationID = C.ID ");
+    arr.push(" left join jit_menu B on jit_menu.ParentID = B.MenuID ");
     arr.push(" where 1=1 ");
 
     var sql = arr.join(' ');

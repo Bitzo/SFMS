@@ -1,3 +1,4 @@
+link(rel='stylesheet', href='css/backend/backend.css')   
 block content
   jason-pagecontent(action='/backuser' conf='paginationConf')
     div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
@@ -22,14 +23,11 @@ block content
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
-          input.form-control(placeholder='账户' style="width:100px;" ng-model='f.Account')
+          jason-select.form-control(placeholder='账户名称' style="width:100px;" ng-model='f.Account' source='/backmenu/plain')
         label.form-group.my-form-group
-          input.form-control(placeholder='应用'  style="width:100px;" ng-model='f.ApplicationName')
+          jason-select.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName' source='/backmenu/plain')
         label.form-group.my-form-group
-          input.form-control(placeholder='用户名'  style="width:100px;" ng-model='f.UserName')
-        label.form-group.my-form-group
-          input.form-control(placeholder='创建者'  style="width:100px;" ng-model='f.CreateUserName')
-        
+          jason-select.form-control(placeholder='用户名'  style="width:100px;" ng-model='f.UserName' source='/backmenu/plain')
         
         label.form-group.my-form-group
           button.btn.btn-sm.btn-primary(ng-click='search()') 查询
@@ -42,11 +40,12 @@ block content
         thead
           tr 
             th 序号
-            th 账户
-            th 应用
+            th 账户名称
+            th 应用名称
             th 用户名
-            th 创建时间
-            th 创建者
+            th 所在学院
+            th 所在班级
+            th 手机号码
             th 操作
         tbody
           tr(ng-repeat="x in datas" )
@@ -54,9 +53,10 @@ block content
             td {{x.Account}}
             td {{x.ApplicationName}}
             td {{x.UserName}}
-            td {{x.CreateTime}}
-            td {{x.CreateUserName}}
-            td
+            td {{x.CollegeID}}
+            td {{x.ClassID}}
+            td {{x.Phone}}
+            td 
               a(ng-click="show(x.AccountID,'/backuser')",href='#/backend/useredit/' )
                 i.icon.icon-edit 编辑 
               a(ng-click="remove($index,'/backuser')")

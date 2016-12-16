@@ -1,3 +1,4 @@
+link(rel='stylesheet', href='css/backend/role.css') 
 block content
     //div(ng-controller="sfmsIndexController")
     jason-pagecontent(action='/backrole' conf='paginationConf')
@@ -24,9 +25,9 @@ block content
         div.page-content
             ng-form.form-inline
                 label.form-group.my-form-group
-                    input.form-control(placeholder='应用ID' ng-model='f.ApplicationID')
+                    jason-select.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName' source='/backmenu/plain')
                 label.form-group.my-form-group
-                    input.form-control(placeholder='角色名称' ng-model="f.RoleName")
+                     jason-select.form-control(placeholder='角色名称' style="width:100px;" ng-model="f.RoleName"  source='/app')
                 label.form-group.my-form-group
                     button.btn.btn-sm.btn-primary(ng-click='search()') 查询
                 div.buttons.pull-right
@@ -38,8 +39,8 @@ block content
                 thead
                     tr
                         th 序号
-                        th 应用ID
-                        th 角色code
+                        th 应用名称
+                        th 角色代码
                         th 角色名称
                         th 是否有效
                         th 操作
@@ -47,7 +48,7 @@ block content
                 tbody
                     tr(ng-repeat="data in datas")
                         td {{$index+1}}
-                        td {{data.ApplicationID}}
+                        td {{data.ApplicationName}}
                         td {{data.RoleCode}}
                         td {{data.RoleName}}
                         td {{data.IsActive}}

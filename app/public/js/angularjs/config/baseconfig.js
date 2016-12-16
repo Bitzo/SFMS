@@ -351,8 +351,6 @@ myApp.config(function($routeProvider) {
       $scope.addrole=function(action){
             getInitrole(action);
         };
-
-
     function getInitrole(action){   
             console.log(action);                  
         $http({

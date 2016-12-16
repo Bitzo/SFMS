@@ -6,9 +6,9 @@ block content
     form(method="post",name="menuinfo" )
      table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") 应用ID  
+          td(width="15%",class="tableleft") 应用名称
           td
-            input(type="textview",name="ApplicationID",ng-model='formdata.ApplicationID',ng-maxlength='11',required)
+            input(type="textview",name="ApplicationID",ng-model='formdata.ApplicationName',ng-maxlength='11',required)
             &nbsp&nbsp
             small.error(ng-show="formdata.ApplicationID.$error.maxlength && formdata.ApplicationID.$touched") 应用ID最多11位
             
@@ -22,7 +22,7 @@ block content
               
 
         tr
-          td(width="15%",class="tableleft") 	对应的父级ID 
+          td(width="15%",class="tableleft") 	对应的父级ID
           td
             input(type="textview",name="ParentID",ng-model="formdata.ParentID",ng-maxlength='11',required)
             &nbsp&nbsp
@@ -31,9 +31,9 @@ block content
            
 
         tr
-          td(width="15%",class="tableleft") 对应的菜单排序顺序  
+          td(width="15%",class="tableleft")  对应的菜单排序顺序  
           td
-            input(type="textview",name="SortIndex",ng-model='formdata.SortIndex',ng-maxlength='11',required)
+            input(type="number",name="SortIndex",ng-model='formdata.SortIndex',ng-maxlength='11',required)
             &nbsp&nbsp
             small.error(ng-show="formdata.SortIndex.$error.maxlength && formdata.SortIndex.$touched") 对应的菜单排序顺序最多11位
           
