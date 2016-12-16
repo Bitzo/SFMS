@@ -28,7 +28,7 @@ block content
             td {{x.Url}}
             
             td
-              a(ng-click="show(x.MenuID,'/backmenu/plain')",href='#/backend/menuedit/' )
+              a(href='#/backend/menuedit/?MenuID={{x.MenuID}}' )
                 i.icon.icon-edit 编辑
               a(ng-click="remove($index,'/backmenu')")
                 i.icon.icon-trash 删除

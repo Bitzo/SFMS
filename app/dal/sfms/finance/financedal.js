@@ -220,3 +220,30 @@ exports.checkFinance = function (data, callback) {
         });
     });
 }
+
+exports.queryFinanceForCheck = function (ID, callback) {
+    var sql = 'select FIStatu from jit_financeinfo where 1=0'
+
+    for (var i in ID) {
+        sql += ' or ID = ' + ID[i];
+    }
+
+    logger.writeInfo('查询FOR审核财务：'+ sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '修改失败 ');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
