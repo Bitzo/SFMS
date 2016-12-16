@@ -24,7 +24,6 @@ router.get('/',function (req, res) {
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || 20,
         roleName = query.RoleName || '',
-        isActive = query.IsActive || 1;
     page = page>0?page:1;
 
     if (pageNum == '') pageNum = config.pageCount;
@@ -35,7 +34,6 @@ router.get('/',function (req, res) {
         'page': page,
         'pageNum': pageNum,
         'RoleName': roleName,
-        'IsActive': isActive
     };
     //用于查询结果总数的计数
     var countNum = 0;
