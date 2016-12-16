@@ -3,7 +3,7 @@
  * Version: 0.0.2
  */
 jasonapp.service('jasonService', function ($http, $q) {
-    this.IintGrid = function (url) {
+    this.IintSelect = function (url) {
         return $http({
             method: 'get',
             url: url + accesstokenstring,
@@ -19,7 +19,7 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
     return {
         restrict: 'EA',
         template: '<select>'+
-            '<option ng-repeat="item in options" value={{item.MenuID}}>{{item.Memo}}</option>'+
+            '<option ng-repeat="item in options" value={{item.value}}>{{item.text}}</option>'+
         '</select>',
         replace: true,
         scope: {
@@ -27,13 +27,14 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
         },
         link: function(scope, element, attrs){
            var url= attrs.source+"?access_token=";
-
-            jasonService.IintGrid(url).then(function(reponse){
-              scope.options=reponse.data.data;
+            jasonService.IintSelect(url).then(function(reponse){
+                scope.options=reponse.data.data;
+                scope.options.forEach(
+                    function(o){
+                        Object.assign(o,{text: o[attrs.stext],value:o[attrs.svalue]});
+                    }
+                );
             });
-        },
-        controller: function ($http) {
-          var aaa;
         }
     };
 });
