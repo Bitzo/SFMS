@@ -153,6 +153,21 @@ exports.queryAllMenus = function(data, callback){
     });
 };
 
+//查询所有父级菜单，平面展示
+exports.queryAllParentMenus = function(data, callback){
+    menuDAl.queryAllParentMenus(data,function (err,results) {
+        if(err){
+            callback(true);
+            return ;
+        }
+
+        console.log('queryAllParentMenus func in service');
+        logger.writeInfo('queryAllParentMenus func in service');
+        callback(false,results);
+    });
+};
+
+
 //菜单新增
 exports.menuInsert = function (data,callback) {
 

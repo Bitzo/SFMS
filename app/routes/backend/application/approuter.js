@@ -40,7 +40,7 @@ router.post('/', function (req, res) {
     var ApplicationCode = query.ApplicationCode,
         ApplicationName = query.ApplicationName,
         IsActive = query.IsActive,
-        memo = query.memo;
+        memo = query.Memo;
 
     var data = {
         'ApplicationName': ApplicationName,

@@ -70,6 +70,22 @@ myApp.config(function($routeProvider) {
         templateUrl: '/menuedit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
+    when('/sfms/project', {
+        templateUrl: '/sfms/project?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+     when('/sfms/kpi', {
+        templateUrl: '/sfms/kpi?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+     when('/sfms/finance', {
+        templateUrl: '/sfms/finance?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+     when('/sfms/sign', {
+        templateUrl: '/sfms/sign?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
     otherwise({
         redirectTo: '/'
     });
@@ -102,7 +118,7 @@ myApp.config(function($routeProvider) {
         $log.log(arguments);
     }
 }]).controller('baseController', function($scope, $http) {
-
+    console.log('controller')
     //显示左侧菜单栏
    $scope.menus = [];
     function getList() {
@@ -147,6 +163,7 @@ myApp.config(function($routeProvider) {
         success(function(response) {
             $scope.datas=response.data;
             $scope.paginationConf.totalItems= response.dataNum;
+            console.log('hhh'+$scope.datas);
             console.log($scope.f);
             console.log(response);
 
@@ -394,9 +411,5 @@ myApp.config(function($routeProvider) {
     }
     getFunction();*/
 
-
-
-
-    
-    
+        
 })

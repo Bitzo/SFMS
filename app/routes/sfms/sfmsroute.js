@@ -53,9 +53,20 @@ router.get('/appedit', function(req, res, next) {
         });
 
 });
-// router.get('/project', function(req, res, next) {
-//         res.render('sfms/project', { title: 'Hi sfms' });
 
+
+router.get('/project', function(req, res, next) {
+        res.render('sfms/project', { title: 'Hi sfms' });
+});
+router.get('/kpi', function(req, res, next) {
+        res.render('sfms/kpi', { title: 'Hi sfms' });
+});
+router.get('/sign', function(req, res, next) {
+        res.render('sfms/sign', { title: 'Hi sfms' });
+});
+router.get('/finance', function(req, res, next) {
+        res.render('sfms/finance', { title: 'Hi sfms' });
+});
 
 
 router.get('/getmenu', function(req, res, next) {
@@ -136,13 +147,13 @@ router.get('/getappbyid', function (req, res) {
 
 });
 //项目用户 有关路由
-router.use('/projectuser', projectuser);
+router.use('/api/projectuser', projectuser);
 //项目管理 路由
-router.use('/project', project);
+router.use('/api/project', project);
 //签到管理 路由
-router.use('/sign', sign);
+router.use('/api/sign', sign);
 //绩效管理 路由
-router.use('/kpi',kpi);
+router.use('/api/kpi',kpi);
 //财务管理 路由
-router.use('/finance', finance);
+router.use('/api/finance', finance);
 module.exports = router;
