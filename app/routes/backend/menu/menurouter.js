@@ -226,7 +226,7 @@ router.get('/plain',function (req,res) {
                     res.status(200);
                     return res.json(resultBack);
                 } else {
-                    res.status(404);
+                    res.status(200);
                     return res.json({
                         code: 404,
                         isSuccess: false,
@@ -235,7 +235,7 @@ router.get('/plain',function (req,res) {
                 }
             });
         } else {
-            res.status(404);
+            res.status(200);
             return res.json({
                 code: 404,
                 isSuccess: false,

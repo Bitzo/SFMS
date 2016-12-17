@@ -23,11 +23,11 @@ block content
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
-          jason-select.form-control(placeholder='账户名称' style="width:100px;" ng-model='f.Account' source='/backmenu/plain')
+          jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ApplicationName' source='/app' stext='ApplicationName' svalue='ApplicationName')
         label.form-group.my-form-group
-          jason-select.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName' source='/backmenu/plain')
+          jason-select.form-control(placeholder='账户名称' style="width:120px;" ng-model='f.Account' source='/backuser' stext='Account' svalue='Account')
         label.form-group.my-form-group
-          jason-select.form-control(placeholder='用户名'  style="width:100px;" ng-model='f.UserName' source='/backmenu/plain')
+          jason-select.form-control(placeholder='用户名'  style="width:120px;" ng-model='f.UserName' source='/backuser' stext='UserName' svalue='UserName')
         
         label.form-group.my-form-group
           button.btn.btn-sm.btn-primary(ng-click='search()') 查询
@@ -40,8 +40,8 @@ block content
         thead
           tr 
             th 序号
-            th 账户名称
             th 应用名称
+            th 账户名称       
             th 用户名
             th 所在学院
             th 所在班级
@@ -50,8 +50,8 @@ block content
         tbody
           tr(ng-repeat="x in datas" )
             td {{$index+1}}
-            td {{x.Account}}
             td {{x.ApplicationName}}
+            td {{x.Account}}
             td {{x.UserName}}
             td {{x.CollegeID}}
             td {{x.ClassID}}

@@ -1,12 +1,12 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-  jason-pagecontent(action='/backmenu/plain' conf='paginationConf' style='button{height:20px;}')
+  jason-pagecontent(action='/backmenu/plain' conf='paginationConf')
     div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
-           jason-select.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName' source='/backmenu/plain')
+          jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
         label.form-group.my-form-group
-          jason-select.form-control(placeholder='菜单名称'  style="width:100px;" ng-model='f.MenuName' source='/app')
+          jason-select.form-control(placeholder='菜单名称'  style="width:120px;" ng-model='f.MenuID' source='/backmenu/plain' stext='MenuName' svalue='MenuID')
         label.form-group.my-form-group
           button.btn.btn-sm.btn-primary(ng-click='search()') 查询
         div.buttons.pull-right
@@ -16,17 +16,18 @@ block content
       hr
       table.table.table-striped.table-bordered.text-center
         thead.text-center 
-          tr   
+          tr  
+            th 序号 
             th 应用名称
             th 菜单名称
             th 菜单路径
             th 操作
         tbody
           tr(ng-repeat="x in datas")
-            td {{x.ApplicationID}}
+            td {{$index+1}}
+            td {{x.ApplicationName}}
             td {{x.MenuName}}
-            td {{x.Url}}
-            
+            td {{x.Url}} 
             td
               a(href='#/backend/menuedit/?MenuID={{x.MenuID}}' )
                 i.icon.icon-edit 编辑

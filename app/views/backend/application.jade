@@ -1,12 +1,10 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
-
 block content
-
   jason-pagecontent(action='/app' conf='paginationConf')
-    div.page-content(stule="button {height :30px;}")
+    div.page-content
       ng-form.form-inline
         label.form-group.my-form-group
-          jason-select.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName' source='/app')
+           jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
         label.form-group.my-form-group
           button.btn.btn-sm.btn-primary(ng-click='search()') 查询
         div.buttons.pull-right
@@ -17,19 +15,17 @@ block content
       table.table.table-striped.table-bordered.text-center
         thead
           tr
-           
             th 应用ID
-            th 应用代码
+            th 应用代码          
             th 应用名称
             th 应用备注
             th 操作
         tbody
-          tr(ng-repeat="x in datas")
-            
+          tr(ng-repeat="x in datas") 
             td {{x.ID}}
-            td {{x.ApplicationCode}}    
-            td {{x.Memo}}
+            td {{x.ApplicationCode}}            
             td {{x.ApplicationName}}
+            td {{x.Memo}}
             td
               a(ng-click="show(x.ID,'/app')",href='#/backend/applicationedit/' )
                 i.icon.icon-edit 编辑
