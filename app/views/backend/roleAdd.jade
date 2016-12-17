@@ -1,17 +1,19 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
   div.container-fluid
+    span 
+      h2 角色新增
     form(method="post",name="roleAddForm") 
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(placeholder='应用名称' ng-model='f.ApplicationName' source='/backmenu/plain')
+            jason-select.input(placeholder='应用名称' ng-model='f.ApplicationName' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
 
          tr
           td(width="15%",class="tableleft") 角色名称
           td
-            input(type="text",name="RoleName",ng-model="formdata.RoleName ",ng-minlength="3",ng-maxlength=10,required)
+            input(type="text",name="RoleName",ng-model="formdata.",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
             &nbsp&nbsp
             span.error(ng-show="roleAddForm.RoleName.$dirty &&roleAddForm.RoleName.$invalid")
               small.error(ng-show="roleAddForm.RoleName.$error.minlength") 角色名称至少三位
@@ -19,7 +21,7 @@ block content
         tr
           td(width="15%",class="tableleft") 角色代码
           td
-            input(type="text",name="RoleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=10,required)
+            input(type="text",name="RoleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
             &nbsp&nbsp
             span.error(ng-show="roleAddForm.RoleCode.$dirty &&roleAddForm.RoleCode.$invalid")
               small.error(ng-show="roleAddForm.RoleCode.$error.minlength") 角色号至少三位

@@ -1,6 +1,5 @@
 link(rel='stylesheet', href='css/backend/role.css') 
 block content
-    //div(ng-controller="sfmsIndexController")
     jason-pagecontent(action='/backrole' conf='paginationConf')
         div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
@@ -25,9 +24,9 @@ block content
         div.page-content
             ng-form.form-inline
                 label.form-group.my-form-group
-                    jason-select.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName' source='/backmenu/plain')
+                     jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ApplicationName' source='/app' stext='ApplicationName' svalue='ApplicationName')
                 label.form-group.my-form-group
-                     jason-select.form-control(placeholder='角色名称' style="width:100px;" ng-model="f.RoleName"  source='/app')
+                     jason-select.form-control(placeholder='角色名称' style="width:120px;" ng-model="f.RoleName"  source='/backrole' stext='RoleName' svalue='RoleName')
                 label.form-group.my-form-group
                     button.btn.btn-sm.btn-primary(ng-click='search()') 查询
                 div.buttons.pull-right

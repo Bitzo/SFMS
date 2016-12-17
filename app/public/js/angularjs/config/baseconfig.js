@@ -73,15 +73,6 @@ myApp.config(function($routeProvider) {
     otherwise({
         redirectTo: '/'
     });
-
-
-//     when('/sfms/menuinfo', {
-//         templateUrl: '/sfms/menuinfo?access_token='+accesstokenstring,
-//         //controller: 'HomeController'
-//     }).
-
-
-
 }).run(['$rootScope', '$window', '$location', '$log', function($rootScope, $window, $location, $log) {
     var locationChangeStartOff = $rootScope.$on('$locationChangeStart', locationChangeStart);
     var locationChangeSuccessOff = $rootScope.$on('$locationChangeSuccess', locationChangeSuccess);
@@ -143,6 +134,7 @@ myApp.config(function($routeProvider) {
     //应用角色菜单用户首页数据显示
     $scope.f={};
     function getInit(){
+        
         $http({
             method:'get',
             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -169,8 +161,11 @@ myApp.config(function($routeProvider) {
     }
     $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
     $scope.$watch( 'paginationConf.action',getInit);
+
+    //查询
     $scope.search=function(){
         getInit();
+        
     }
 
 
@@ -205,7 +200,7 @@ myApp.config(function($routeProvider) {
     };
 
 
- //修改
+ //获取编辑信息
     $scope.show=function(index,action){
             getInitmenu(index,action);
         };
@@ -214,7 +209,6 @@ myApp.config(function($routeProvider) {
             console.log(action);                  
         $http({url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             method:'put',
-
             params:{
                 f:{
                      MenuID:index,
@@ -236,7 +230,7 @@ myApp.config(function($routeProvider) {
         });
     }
      
-     //提交修改
+     //编辑完成提交信息
      $scope.formdata={};
      $scope.newedit = function(formdata,action) {
          console.log(formdata);
@@ -263,6 +257,7 @@ myApp.config(function($routeProvider) {
         error(function(response) {
             console.log('提交失败'); 
             console.log(formdata);
+            alert(response.msg);
            console.log(response);
            console.log('no');
         });
@@ -290,12 +285,12 @@ myApp.config(function($routeProvider) {
         }).
         success(function(response) {
             console.log($scope.d);            
-            console.log('删除成功');            
+            alert.log('删除成功');            
             console.log(response.msg);
         }).
         error(function(response) {
             console.log($scope.d);
-            console.log('删除失败');                        
+            alert.log('删除失败');                        
             console.log(response.msg);
         });
         $scope.datas.splice(index,1);
