@@ -129,8 +129,11 @@ router.get('/', function (req, res) {
 router.get('/count', function (req, res) {
     var userID = req.query.accountID || '',
         startTime = req.query.startTime || '',
-        endTime = req.query.endTime || '';
+        endTime = req.query.endTime || '',
+        page = req.query.pageindex || 1,
+        pagesize = req.query.pagesize || config.pageCount;
 
+    page > 0? page : 1;
     if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
     if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
 
@@ -215,9 +218,23 @@ router.get('/count', function (req, res) {
                         delete userInfo[i].inTime;
                         delete userInfo[i].outTime;
                     }
+                    //根据分页量传数据
+                    var totalNum = userInfo.length,
+                        curPage = page,
+                        totalPage = Math.ceil(totalNum/pagesize),
+                        curNum = totalNum - (totalPage-1)*pagesize;
+                    data = [];
+                    for (var i = 0;i<pagesize;++i) {
+                        if((page-1)*pagesize+i>userInfo.length) break;
+                        data[i] = userInfo[(page-1)*pagesize+i];
+                    }
                     res.status(200);
                     return res.json({
-                        dataNum: results.length,
+                        curPage: curPage,
+                        curNum: curNum,
+                        totalNum: totalNum,
+                        totalPage: totalPage,
+                        dataNum: userInfo.length,
                         results: userInfo
                     })
                 } else {
