@@ -19,7 +19,7 @@ exports.queryAllRoles = function (data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != '')
-            sql += "and " + key + " = '" + data[key] + "' ";
+            sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
 
@@ -53,12 +53,12 @@ exports.queryAllRoles = function (data, callback) {
 
 //计数，统计对应数据总个数
 exports.countAllRoles = function (data, callback) {
-    var sql =  'select count(1) AS num from jit_role where 1=1 ';
+    var sql =  'select count(1) AS num from jit_role where 1=1 and IsActive = 1 ';
 
     if (data !== undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != '')
-                sql += "and " + key + " = '" + data[key] + "' ";
+                sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
 

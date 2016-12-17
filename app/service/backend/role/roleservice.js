@@ -11,7 +11,6 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询所有的角色
 exports.queryAllRoles = function (data, callback) {
-
     roleDAL.queryAllRoles(data, function (err, results) {
         if (err) {
             callback(true);

@@ -18,6 +18,7 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询角色信息
 router.get('/',function (req, res) {
+    console.log(req.query)
     var query = JSON.parse(req.query.f);
     var appID = query.ApplicationID || '',
         roleID = query.RoleID || '',
@@ -35,6 +36,7 @@ router.get('/',function (req, res) {
         'pageNum': pageNum,
         'RoleName': roleName,
     };
+    console.log(data)
     //用于查询结果总数的计数
     var countNum = 0;
 

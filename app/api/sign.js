@@ -70,12 +70,14 @@ router.post('/', function (req, res) {
         }
         logger.writeInfo('前一次签到信息：' + results);
         if (results[0] === undefined) results[0] = {SignType: 1};
+        var signStatus = results[0].SignType==1?0:1;
         if (results[0].SignType == data.SignType) {
             res.status(400);
             res.json({
                 code: 400,
                 isSuccess: false,
                 signType: results[0].SignType,
+                signStatus:signStatus,
                 msg: '记录失败,签到信息有误'
             })
         } else {
@@ -107,6 +109,8 @@ router.post('/', function (req, res) {
                         code:200,
                         isSuccess: true,
                         signTime: result.time,
+                        signType: signType,
+                        signStatus: signType==1?0:1,
                         msg: "sign success"
                     });
                 }
