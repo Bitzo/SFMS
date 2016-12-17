@@ -15,7 +15,12 @@ var moment = require('moment');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
 
-//项目用户信息新增
+/**
+ * 项目用户信息新增
+ * 1. 查询项目ID的项目名称
+ * 2. 查询editID的username并赋值给EditName、OperateName
+ * 3. 查询所有UserID的UserName
+ */
 router.post('/', function (req, res) {
     /**
      * data:[
@@ -31,19 +36,6 @@ router.post('/', function (req, res) {
      */
     var data = req.body.data,
         operateID = req.query.jitkey;
-
-    // var data = {
-    //     'ProjectName': projectName,
-    //     'ProjectID': projectID,
-    //     'UserID': userID,
-    //     'UserName': userName,
-    //     'OperateUser': operateUser,
-    //     'EditName': editName,
-    //     'Duty': duty,
-    //     'IsActive': isActive,
-    //     'EditTime': '',
-    //     'CreateTime': ''
-    // }
     //检查所需要的参数是否齐全
     var temp = ['projectID', 'userID', 'editID', 'isActive'],
         err = 'required: ';
@@ -65,12 +57,6 @@ router.post('/', function (req, res) {
             msg: err
         })
     };
-    /**
-     * 1. 查询项目ID的项目名称
-     * 2. 查询editID的username并赋值给EditName、OperateName
-     * 3. 查询所有UserID的UserName
-     */
-    console.log(1)
     projectservice.queryProject({ID:data[0].projectID}, function (err, results) {
         if (err) {
             res.status(500);
@@ -80,12 +66,10 @@ router.post('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        console.log(2)
         if(results!==undefined && results.length > 0) {
             for (var i in data) {
                 data[i].ProjectName = results[0].ProjectName;
             }
-            console.log(3)
             userservice.querySingleID(operateID, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -95,7 +79,6 @@ router.post('/', function (req, res) {
                         msg: '服务器出错'
                     })
                 }
-                console.log(4)
                 if (results!==undefined && results.length>0) {
                     for (var i in data) {
                         data[i].editName = results[0].UserName;
@@ -114,7 +97,6 @@ router.post('/', function (req, res) {
                             }
                         }
                     }
-                    console.log(5)
                     userservice.queryAccountByID(ID, function (err, results) {
                         if (err) {
                             res.status(500);
@@ -142,7 +124,6 @@ router.post('/', function (req, res) {
                                     })
                                 }
                             }
-                            console.log(7)
                             projectuserservice.addProjectUser(data, function (err, results) {
                                 if (err) {
                                     res.status(500);

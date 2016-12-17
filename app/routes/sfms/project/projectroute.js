@@ -10,6 +10,7 @@ var express = require('express');
 var router = express.Router();
 var projectservice = appRequire('service/sfms/project/projectservice');
 var userservice = appRequire('service/backend/user/userservice');
+var projectuserservice = appRequire('service/sfms/project/projectuserservice');
 var config = appRequire('config/config');
 var moment = require('moment');
 
@@ -22,16 +23,17 @@ router.post('/', function (req, res) {
     var projectName = query.projectName,
         projectDesc = query.projectDesc,
         projectManageID = query.projectManageID,
-        projectManageName = query.projectManageName,
         projectEndTime = query.projectEndTime,
         projectTimeLine = query.projectTimeLine,
         projectStatus = query.projectStatus,
         projectPrice = query.projectPrice,
-        accountID = query.jitkey;
+        accountID = query.jitkey,
+        isActive = query.isActive,
+        userData = query.data;
 
     //检查所需要的参数是否齐全
     var temp = ['projectName', 'projectDesc', 'jitkey', 'projectStatus', 'projectPrice',
-            'projectManageID', 'projectEndTime', 'projectTimeLine'],
+            'projectManageID', 'projectEndTime', 'projectTimeLine','isActive'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -61,7 +63,7 @@ router.post('/', function (req, res) {
             })
         }
         if (results!==undefined && results.length>0) {
-            projectManageName = results[0].UserName;
+            var projectManageName = results[0].UserName;
             var data = {
                 'ProjectName': projectName,
                 'ProjectDesc': projectDesc,
@@ -73,10 +75,10 @@ router.post('/', function (req, res) {
                 'ProjectPrice': projectPrice,
                 'OperateUser': accountID,
                 'EditUser': accountID,
+                'IsActive': isActive,
                 'EditTime': '',
                 'CreateTime': ''
             }
-
             projectservice.addProject(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -87,12 +89,96 @@ router.post('/', function (req, res) {
                     })
                 }
                 if(results !== undefined && results.insertId > 0) {
-                    res.status(200);
-                    return res.json({
-                        status: 200,
-                        isSuccess: true,
-                        msg: '添加项目成功'
-                    })
+                    //如果有项目人员信息，则添加
+                    if (userData!==undefined&&userData.length>0) {
+                        for (var i in userData) {
+                            userData[i].projectName = projectName;
+                            userData[i].projectID = results.insertId;
+                            userData[i].editName = projectManageName;
+                            userData[i].OperateUser = projectManageName;
+                        }
+                        //获取所有项目用户的username
+                        var ID = [];
+                        for (var i in userData) {
+                            if (i==0) ID[i] = userData[i].userID;
+                            else {
+                                var j = 0;
+                                for(j=0;j<ID.length;++j) {
+                                    if (userData[i] == ID[j]) break;
+                                }
+                                if (j == ID.length) {
+                                    ID[j] = userData[i].userID;
+                                }
+                            }
+                        }
+                        userservice.queryAccountByID(ID, function (err, results) {
+                            if (err) {
+                                res.status(500);
+                                return res.json({
+                                    status: 500,
+                                    isSuccess: false,
+                                    msg: '服务器出错'
+                                })
+                            }
+                            if (results!==undefined && results.length>0) {
+                                for (var i = 0; i < userData.length; ++i) {
+                                    var k = false;
+                                    for (var j = 0; j < results.length; ++j) {
+                                        if (userData[i].userID == results[j].AccountID) {
+                                            k = true;
+                                            userData[i].UserName = results[j].UserName;
+                                        }
+                                    }
+                                    if (k == false) {
+                                        res.status(400);
+                                        return res.json({
+                                            status: 400,
+                                            isSuccess: false,
+                                            msg: '添加的用户 ' + userData[i].ID + ' 信息有误！'
+                                        })
+                                    }
+                                }
+                                projectuserservice.addProjectUser(userData, function (err, results) {
+                                    if (err) {
+                                        res.status(500);
+                                        return res.json({
+                                            status: 500,
+                                            isSuccess: false,
+                                            msg: '服务器出错'
+                                        })
+                                    }
+                                    if(results !== undefined && results.insertId > 0) {
+                                        res.status(200);
+                                        return res.json({
+                                            status: 200,
+                                            isSuccess: true,
+                                            msg: '添加成功'
+                                        })
+                                    } else {
+                                        res.status(404);
+                                        return res.json({
+                                            status: 404,
+                                            isSuccess: false,
+                                            msg: results
+                                        })}
+                                })
+                            } else {
+                                res.status(400);
+                                return res.json({
+                                    status: 400,
+                                    isSuccess: false,
+                                    msg: '添加的用户信息有误！'
+                                })
+                            }
+                        })
+                    } else {
+                        res.status(200);
+                        return res.json({
+                            status: 200,
+                            isSuccess: true,
+                            msg: '添加项目成功'
+                        })
+                    }
                 } else {
                     res.status(404);
                     return res.json({

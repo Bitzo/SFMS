@@ -259,7 +259,7 @@ exports.queryAccountByID=function(data,callback)
     for(var key in data)
         sql+='or AccountID = "'+data[key]+'" ';
 
-    console.log('查询多个用户：'+sql);
+    logger.writeInfo('查询多个用户：'+sql);
     db_backend.mysqlPool.getConnection(function(err,connection)
     {
         if(err)
