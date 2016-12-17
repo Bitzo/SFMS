@@ -342,8 +342,6 @@ router.post('/',function(req,res,next) {
             isSuccess: false,
             msg: '存在未填写的必填字段' + err
         });
-
-
     }
 
     var applicationID = req.body.formdata.ApplicationID;

@@ -9,6 +9,7 @@
 var express = require('express');
 var router = express.Router();
 var projectservice = appRequire('service/sfms/project/projectservice');
+var userservice = appRequire('service/backend/user/userservice');
 var config = appRequire('config/config');
 var moment = require('moment');
 
@@ -17,34 +18,20 @@ var logger = appRequire("util/loghelper").helper;
 
 //项目基本信息新增
 router.post('/', function (req, res) {
-    var projectName = req.body.projectName,
-        projectDesc = req.body.projectDesc,
-        projectManageID = req.body.projectManageID,
-        projectManageName = req.body.projectManageName,
-        projectEndTime = req.body.projectEndTime,
-        projectTimeLine = req.body.projectTimeLine,
-        projectStatus = req.body.projectStatus,
-        projectPrice = req.body.projectPrice,
-        accountID = req.body.jitkey;
-
-    var data = {
-        'ProjectName': projectName,
-        'ProjectDesc': projectDesc,
-        'ProjectManageID': projectManageID,
-        'ProjectManageName': projectManageName,
-        'ProjectEndTime': projectEndTime,
-        'ProjectTimeLine': projectTimeLine,
-        'ProjectStatus': projectStatus,
-        'ProjectPrice': projectPrice,
-        'OperateUser': accountID,
-        'EditUser': accountID,
-        'EditTime': '',
-        'CreateTime': ''
-    }
+    var query = req.body;
+    var projectName = query.projectName,
+        projectDesc = query.projectDesc,
+        projectManageID = query.projectManageID,
+        projectManageName = query.projectManageName,
+        projectEndTime = query.projectEndTime,
+        projectTimeLine = query.projectTimeLine,
+        projectStatus = query.projectStatus,
+        projectPrice = query.projectPrice,
+        accountID = query.jitkey;
 
     //检查所需要的参数是否齐全
     var temp = ['projectName', 'projectDesc', 'jitkey', 'projectStatus', 'projectPrice',
-            'projectManageID', 'projectManageName', 'projectEndTime', 'projectTimeLine'],
+            'projectManageID', 'projectEndTime', 'projectTimeLine'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -64,7 +51,7 @@ router.post('/', function (req, res) {
         })
     };
 
-    projectservice.addProject(data, function (err, results) {
+    userservice.querySingleID(projectManageID, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -73,19 +60,54 @@ router.post('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        if(results !== undefined && results.insertId > 0) {
-            res.status(200);
-            return res.json({
-                status: 200,
-                isSuccess: true,
-                msg: '添加项目成功'
+        if (results!==undefined && results.length>0) {
+            projectManageName = results[0].UserName;
+            var data = {
+                'ProjectName': projectName,
+                'ProjectDesc': projectDesc,
+                'ProjectManageID': projectManageID,
+                'ProjectManageName': projectManageName,
+                'ProjectEndTime': projectEndTime,
+                'ProjectTimeLine': projectTimeLine,
+                'ProjectStatus': projectStatus,
+                'ProjectPrice': projectPrice,
+                'OperateUser': accountID,
+                'EditUser': accountID,
+                'EditTime': '',
+                'CreateTime': ''
+            }
+
+            projectservice.addProject(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '服务器出错'
+                    })
+                }
+                if(results !== undefined && results.insertId > 0) {
+                    res.status(200);
+                    return res.json({
+                        status: 200,
+                        isSuccess: true,
+                        msg: '添加项目成功'
+                    })
+                } else {
+                    res.status(404);
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: results
+                    })
+                }
             })
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
-                status: 404,
+                status: 400,
                 isSuccess: false,
-                msg: results
+                msg: '项目负责人信息有误'
             })
         }
     })
@@ -93,35 +115,21 @@ router.post('/', function (req, res) {
 
 //项目基本信息修改
 router.put('/', function (req, res) {
-    var ID = req.body.ID,
-        projectName = req.body.projectName,
-        projectDesc = req.body.projectDesc,
-        projectManageID = req.body.projectManageID,
-        projectManageName = req.body.projectManageName,
-        projectEndTime = req.body.projectEndTime,
-        projectTimeLine = req.body.projectTimeLine,
-        projectStatus = req.body.projectStatus,
-        projectPrice = req.body.projectPrice,
-        accountID = req.body.jitkey,
+    var query = req.body;
+    var ID = query.ID,
+        projectName = query.projectName,
+        projectDesc = query.projectDesc,
+        projectManageID = query.projectManageID,
+        projectManageName = query.projectManageName,
+        projectEndTime = query.projectEndTime,
+        projectTimeLine = query.projectTimeLine,
+        projectStatus = query.projectStatus,
+        projectPrice = query.projectPrice,
+        accountID = query.jitkey,
         time = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    var data = {
-        'ID': ID,
-        'ProjectDesc': projectDesc,
-        'ProjectName': projectName,
-        'ProjectManageID': projectManageID,
-        'ProjectManageName': projectManageName,
-        'ProjectEndTime': projectEndTime,
-        'ProjectTimeLine': projectTimeLine,
-        'ProjectStatus': projectStatus,
-        'ProjectPrice': projectPrice,
-        'OperateUser': accountID,
-        'EditUser': accountID,
-        'EditTime': time
-    }
-
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'projectName', 'projectDesc', 'jitkey', 'projectStatus', 'projectPrice', 'projectManageID', 'projectManageName', 'projectEndTime', 'projectTimeLine'],
+    var temp = ['ID', 'projectName', 'projectDesc', 'jitkey', 'projectStatus', 'projectPrice', 'projectManageID', 'projectEndTime', 'projectTimeLine'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -140,7 +148,8 @@ router.put('/', function (req, res) {
             msg: err
         })
     };
-    projectservice.updateProject(data, function (err, results) {
+
+    userservice.querySingleID(projectManageID, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -149,30 +158,65 @@ router.put('/', function (req, res) {
                 msg: '服务器出错'
             })
         }
-        logger.writeInfo(results);
-        if(results !== undefined && results.affectedRows > 0) {
-            res.status(200);
-            return res.json({
-                status: 200,
-                isSuccess: true,
-                msg: '修改项目成功'
+        if (results!==undefined && results.length>0) {
+            projectManageName = results[0].UserName;
+            var data = {
+                'ID': ID,
+                'ProjectDesc': projectDesc,
+                'ProjectName': projectName,
+                'ProjectManageID': projectManageID,
+                'ProjectManageName': projectManageName,
+                'ProjectEndTime': projectEndTime,
+                'ProjectTimeLine': projectTimeLine,
+                'ProjectStatus': projectStatus,
+                'ProjectPrice': projectPrice,
+                'OperateUser': accountID,
+                'EditUser': accountID,
+                'EditTime': time
+            }
+            projectservice.updateProject(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '服务器出错'
+                    })
+                }
+                logger.writeInfo(results);
+                if(results !== undefined && results.affectedRows > 0) {
+                    res.status(200);
+                    return res.json({
+                        status: 200,
+                        isSuccess: true,
+                        msg: '修改项目成功'
+                    })
+                } else {
+                    res.status(404);
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: results
+                    })
+                }
             })
         } else {
-            res.status(404);
+            res.status(400);
             return res.json({
-                status: 404,
+                status: 400,
                 isSuccess: false,
-                msg: results
+                msg: '项目负责人信息有误'
             })
         }
     })
+
 })
 
 //项目基本信息查询
 router.get('/', function (req, res) {
     var query = req.query,
-        projectName = query.projectName || '',
-        projectManageName = query.projectManageName || '',
+        ID = query.ID || '',
+        projectManageID = query.projectManageID || '',
         startTime = query.startTime || '',
         endTime = query.endTime || '',
         page = req.query.pageindex>0 ?req.query.pageindex:1,
@@ -180,8 +224,8 @@ router.get('/', function (req, res) {
         totalNum = 0;
 
     var data = {
-        'ProjectName': projectName,
-        'ProjectManageName': projectManageName,
+        'ID': ID,
+        'ProjectManageID': projectManageID,
         'CreateTime': startTime,
         'ProjectEndTime': endTime,
         'page': page,

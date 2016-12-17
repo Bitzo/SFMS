@@ -54,8 +54,8 @@ exports.updateProject = function(data, callback) {
 //项目信息查询-统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'ProjectName': data.ProjectName,
-        'ProjectManageName': data.ProjectManageName,
+        'ID': data.ID,
+        'ProjectManageID': data.ProjectManageID,
         'CreateTime': data.CreateTime,
         'ProjectEndTime': data.ProjectEndTime,
     }
@@ -73,8 +73,7 @@ exports.countQuery = function (data, callback) {
 exports.queryProject = function (data, callback) {
     data = {
         'ID': data.ID || '',
-        'ProjectName': data.projectName || '',
-        'ProjectManageName': data.projectManageName || '',
+        'ProjectManageID': data.projectManageID || '',
         'CreateTime': data.startTime || '',
         'ProjectEndTime': data.endTime || '',
         'page': data.page || 1,

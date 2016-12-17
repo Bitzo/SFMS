@@ -111,8 +111,11 @@ exports.queryAllMenusFormTreeIByRecursion  = function(data, callback){
             appGroup = getTree.getTreeMenu(appGroup,0);
 
             var objOfApp = new Object();
-            objOfApp.appName = appGroup[0].ApplicationName;
-            objOfApp.menuData = appGroup;
+
+            if(appGroup[0] !== undefined && appGroup[0].ApplicationName !== undefined){
+                objOfApp.appName = appGroup[0].ApplicationName;
+                objOfApp.menuData = appGroup;
+            }
 
             returnResults.push(objOfApp);
         }
