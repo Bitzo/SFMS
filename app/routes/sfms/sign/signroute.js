@@ -218,7 +218,7 @@ router.get('/count', function (req, res) {
                     res.status(200);
                     return res.json({
                         dataNum: results.length,
-                        results: userInfo
+                        data: userInfo
                     })
                 } else {
                     res.status(200);

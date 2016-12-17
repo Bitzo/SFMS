@@ -15,7 +15,7 @@ block content
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationName',source='/app', stext='ApplicationName',svalue='ID',style="width:160px;height:30px",required)
+            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationID',source='/app', stext='ApplicationName',svalue='ID',style="width:160px;height:30px",required)
             &nbsp&nbsp
             small.error(ng-show="formdata.ApplicationName.$error.maxlength && formdata.ApplicationName.$touched") 应用名称最多50位
             
@@ -30,7 +30,7 @@ block content
         tr
           td(width="15%",class="tableleft") 	对应的父级名称
           td
-            jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="formdata.ParentID", source='/backmenu/plain', stext='ParentID' svalue='ParentID',ng-maxlength='11',style="width:160px;height:30px",required)
+            jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="formdata.ParentID", source='/backmenu/parent', stext='ParentMenuName' svalue='ParentID',ng-maxlength='11',style="width:160px;height:30px",required)
             &nbsp&nbsp
             small.error(ng-show="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级名称最多11位
            

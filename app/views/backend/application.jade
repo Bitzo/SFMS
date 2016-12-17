@@ -3,14 +3,17 @@ block content
   jason-pagecontent(action='/app' conf='paginationConf')
     div.page-content
       ng-form.form-inline
-        label.form-group.my-form-group
-           jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
-        label.form-group.my-form-group
-          button.btn.btn-sm.btn-primary(ng-click='search()') 查询
+        span(style='font-size: 24px;') 应用显示
         div.buttons.pull-right
-          a.btn.btn-sm.btn-success(ng-href='#/backend/applicationinfo')
-            i.icon.icon-plus 新建
-          button(ng-click='search()' class='btn btn-sm btn-default') 刷新
+          label.form-group.my-form-group
+            jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
+          label.form-group.my-form-group
+            a.btn.btn-sm.btn-primary(ng-click='search()')
+                            i.icon.icon-search   查询
+            a.btn.btn-sm.btn-success(ng-href='#/backend/applicationinfo')
+              i.icon.icon-plus 新建
+            button(ng-click='search()' class='btn btn-sm btn-default') 
+              i.icon.icon-repeat  刷新
       hr
       table.table.table-striped.table-bordered.text-center
         thead

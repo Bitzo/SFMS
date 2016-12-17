@@ -23,16 +23,19 @@ block content
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.page-content
             ng-form.form-inline
-                label.form-group.my-form-group
-                     jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ApplicationName' source='/app' stext='ApplicationName' svalue='ApplicationName')
-                label.form-group.my-form-group
-                     jason-select.form-control(placeholder='角色名称' style="width:120px;" ng-model="f.RoleName"  source='/backrole' stext='RoleName' svalue='RoleName')
-                label.form-group.my-form-group
-                    button.btn.btn-sm.btn-primary(ng-click='search()') 查询
+                span(style='font-size: 24px;') 角色显示
                 div.buttons.pull-right
-                  a.btn.btn-sm.btn-success(ng-click="addrole('/function')",href='#/backend/roleAdd')
-                    i.icon.icon-plus 新建
-                  button(ng-click='search()' class='btn btn-sm btn-default') 刷新
+                    label.form-group.my-form-group
+                        jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ApplicationName' source='/app' stext='ApplicationName' svalue='ApplicationName')
+                    label.form-group.my-form-group
+                        jason-select.form-control(placeholder='角色名称' style="width:120px;" ng-model="f.RoleName"  source='/backrole' stext='RoleName' svalue='RoleName')
+                    label.form-group.my-form-group
+                        a.btn.btn-sm.btn-primary(ng-click='search()')
+                          i.icon.icon-search   查询
+                    a.btn.btn-sm.btn-success(ng-click="addrole('/function')",href='#/backend/roleAdd')
+                        i.icon.icon-plus 新建
+                    button(ng-click='search()' class='btn btn-sm btn-default') 
+                        i.icon.icon-repeat  刷新
              hr
             table.table.table-striped.table-bordered.text-center
                 thead
@@ -52,7 +55,6 @@ block content
                         td {{data.RoleName}}
                         td {{data.IsActive}}
                         td
-
                           a(ng-click="show(data.RoleID,'/backrole')",href='#/backend/roleEdit/' )
                             i.icon.icon-edit 编辑 
                           a(ng-click="remove($index,'/backrole')")
