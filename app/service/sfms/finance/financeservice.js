@@ -46,7 +46,6 @@ exports.queryFinance = function (data, callback) {
         'endTime': data.endTime || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || 20,
-        'IsActive': 1
     }
     financeDAL.queryFinance(queryData, function (err, results) {
         if (err) {
