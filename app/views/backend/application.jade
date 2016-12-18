@@ -5,8 +5,8 @@ block content
       ng-form.form-inline
         span(style='font-size: 24px;') 应用显示
         div.buttons.pull-right
-          label.form-group.my-form-group
-            jason-select.form-control(placeholder='应用名称'  style="width:120px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
+          label.form-group.my-form-group 
+            jason-select(placeholder='应用名称' style="width:120px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
                             i.icon.icon-search   查询

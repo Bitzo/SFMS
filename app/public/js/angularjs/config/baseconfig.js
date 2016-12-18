@@ -125,10 +125,8 @@ myApp.config(function($routeProvider) {
         $http({
             method: 'get',
             url: "/backmenu?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
-
         }).
         success(function(response) {
-
             $scope.menus = response.data.Menu;
             console.log($scope.menus);
         }).
@@ -199,19 +197,19 @@ myApp.config(function($routeProvider) {
             }
         }).
         success(function(response) {
-            console.log($http.url)
            console.log($scope.formdata);
-           console.log(response);
+           console.log($scope.datas);
            if(response.isSuccess){
               alert(response.msg);
+              $scope.datas.push($scope.formdata);
            }else{
               alert(response.msg);
            }
 
         }).
         error(function(response) {
-           console.log(response);
            alert(response.msg);
+           console.log(response);
            console.log('no');
         });
     };
