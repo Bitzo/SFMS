@@ -1,1 +1,52 @@
-p project add
+link(rel='stylesheet' href="css/backend/role.css")
+block content
+  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
+    span 
+      h2 项目新增
+    form(method="post",name="appinfo" )
+      table.table.table-bordered.table-hover.definedwidth.m10
+        tr
+          td(width="15%",class="tableleft") 项目负责人
+          td
+            jason-select.form-control(placeholder='用户名'  style="width:120px;height:34px;" ng-model='f.UserName' source='/backuser' stext='UserName' svalue='UserName')
+
+           
+        tr
+          td(width="15%",class="tableleft") 项目名称
+          td
+            input(type="textview",name="ProjectName",ng-model="formdata.ProjectName",ng-maxlength='50',style="width:160px;height:30px",required)
+            &nbsp&nbsp
+            small.error(ng-show="formdata.ProjectName.$error.maxlength && formdata.ProjectName.$touched") 应用名称最多50位
+        
+        tr
+          td(width="15%",class="tableleft") 项目截止时间
+          td
+            input(type="date",name="ProjectEndTime",ng-model="formdata.ProjectEndTime",ng-maxlength='50',style="width:160px;height:30px",required)
+            &nbsp&nbsp
+            small.error(ng-show="formdata.ProjectEndTime.$error.maxlength && formdata.ProjectEndTime.$touched") 应用名称最多50位
+        
+        tr
+          td(width="15%",class="tableleft") 项目经费预算
+          td
+            input(type="number",name="ProjectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='50',style="width:160px;height:30px",required)
+            &nbsp&nbsp
+            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 应用名称最多50位
+        
+        tr
+          td(width="15%",class="tableleft") 项目描述 
+          td
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Memo',ng-maxlength='200',required)
+            &nbsp&nbsp
+            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 备注最多200位
+
+        tr
+          td(class="tableleft")
+          td
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/app')") 添加
+            &nbsp&nbsp&nbsp&nbsp
+            a.btn.btn-sm.btn-success(href='#backend/Project') 返回列表
+
+
+
+
+      

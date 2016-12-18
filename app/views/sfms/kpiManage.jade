@@ -1,6 +1,6 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-  jason-pagecontent(action='/sfms/api/kpi/person' conf='paginationConf')
+  jason-pagecontent(action='/sfms/api/kpi' conf='paginationConf')
     div.page-content
       ng-form.form-inline
         span(style='font-size: 24px;')  绩效管理 管理员
@@ -47,7 +47,7 @@ block content
             td {{x.KPIName}}            
             td {{x.KPIType}}
             td {{x.KPIScore}}
-            td {{x.ProjectName}}            
+            td {{x.projectName}}            
             td {{x.UserName}}
             td {{x.CreateTime}}
             td {{x.KPIStatus}}
