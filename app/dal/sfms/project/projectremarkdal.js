@@ -55,7 +55,7 @@ exports.updateRemark = function (data, callback) {
             }
         }
     }
-
+    update += " and EditTime = '" + time + "'";
     sql += update + ' where ID = ' + data.ID;
 
     logger.writeInfo('编辑项目用户备注' + sql);
@@ -77,3 +77,96 @@ exports.updateRemark = function (data, callback) {
         });
     });
 }
+
+//项目用户备注查询
+exports.queryRemark = function (data, callback) {
+    var sql = 'select ID,ProjectID,ProjectName,UserID,UserName,Remark,CreateTime,EditTime from jit_projectremark where 1=1 ';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+                sql += " and " + key + " = '" + data[key] + "' ";
+        }
+    }
+
+    var num = data.pageNum || 20; //每页显示的个数
+    var page = data.page || 1;
+
+    sql += " LIMIT " + (page-1)*num + "," + num;
+
+    logger.writeInfo("项目用户备注查询：" + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '编辑失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
+
+
+//计数，统计对应数据总个数
+exports.countRemark = function (data, callback) {
+    var sql =  'select count(1) AS num from jit_projectremark where 1=1 ';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+                sql += " and " + key + " = '" + data[key] + "' ";
+        }
+    }
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '查询失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+};
+
+//删除用户备注的项目信息
+exports.countRemark = function (data, callback) {
+    var sql = 'delete from jit_projectremark where ID = ' + data.ID;
+
+    logger.writeInfo("删除备注信息: " + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '删除失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+};

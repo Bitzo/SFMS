@@ -34,3 +34,38 @@ exports.updateRemark = function(data, callback) {
     })
 }
 
+//项目用户备注信息查询
+exports.queryRemark = function(data, callback) {
+    projectremarkDAL.queryRemark(data, function (err, results) {
+        if (err) {
+            callback(true, '查询失败');
+            return;
+        }
+        logger.writeInfo('查询项目用户备注');
+        callback(false, results);
+    })
+}
+
+//项目用户备注信息查询统计
+exports.countRemark = function (data, callback) {
+    projectremarkDAL.countRemark(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        logger.writeInfo('查询项目用户备注数量');
+        callback(false, results);
+    })
+}
+
+//项目用户备注信息删除
+exports.delRemark = function (data, callback) {
+    projectremarkDAL.delRemark(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        logger.writeInfo('查询项目用户备注删除');
+        callback(false, results);
+    })
+}

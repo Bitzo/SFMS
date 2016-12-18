@@ -35,7 +35,6 @@ router.get('/',function (req, res) {
         'pageNum': pageNum,
         'RoleName': roleName,
     };
-    console.log(data)
     //用于查询结果总数的计数
     var countNum = 0;
 

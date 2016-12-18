@@ -291,4 +291,119 @@ router.put('/', function (req, res) {
         }
     })
 })
+
+//项目备注信息查询
+router.get('/', function (req, res) {
+    var query = JSON.parse(req.query.f);
+    console.log(JSON.parse(req.query.f).projectID)
+    var projectID = query.projectID || '',
+        userID = query.userID || '',
+        page = req.query.pageindex || 1,
+        pageNum = req.query.pagesize || config.pageCount,
+        countNum = 0;
+    page > 0? page :1;
+
+    var data = {
+        'userID': userID,
+        'projectID': projectID,
+        'page': page,
+        'pageNum': pageNum
+    }
+    console.log(data)
+    projectRemarkservice.countRemark(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
+            });
+            return;
+        }
+        if (results !==undefined && results.length != 0) {
+            countNum = results[0]['num'];
+            projectRemarkservice.queryRemark(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                    return;
+                }
+                if (results!==undefined && results.length > 0) {
+                    var result = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        curPageNum:pageNum,
+                        totalPage: Math.ceil(countNum/pageNum),
+                        data: results
+                    };
+                    if(result.curPage == result.totalPage) {
+                        result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
+                    }
+                    res.status(200);
+                    return res.json(result);
+                } else {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                }
+            })
+        } else {
+            res.status(200);
+            return res.json({
+                code: 200,
+                isSuccess: false,
+                msg: "未查询到相关信息"
+            });
+        }
+    })
+})
+
+//删除项目用户备注信息
+router.delete('/', function (req, res) {
+    var ID = JSON.parse(req.query.d).ID;
+    if (ID == '' || ID == undefined) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: "require ID"
+        })
+    }
+
+    projectuserservice.delRemark({ID:ID}, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "服务器出错"
+            });
+        }
+        if (results!==undefined && results.affectedRows > 0) {
+            res.status(200);
+            res.json({
+                status: 200,
+                isSuccess: true,
+                msg: "删除成功"
+            })
+        } else {
+            res.status(400);
+            res.json({
+                status: 400,
+                isSuccess: true,
+                msg: "删除失败"
+            })
+        }
+    })
+})
 module.exports = router;
