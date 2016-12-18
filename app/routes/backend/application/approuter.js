@@ -72,7 +72,7 @@ router.post('/', function (req, res) {
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '插入失败， 服务器失败'
+                        msg: '操作失败， 服务器失败'
                     });
                     logger.writeError('新增应用,出错信息: ' + err);
                     return;
@@ -88,7 +88,7 @@ router.post('/', function (req, res) {
                         Memo: data.Memo,
                         IsActive: data.IsActive
                     },
-                    msg: '插入成功'
+                    msg: '操作成功'
                 });
                 console.log(results.insertId);
             });
@@ -169,13 +169,13 @@ router.get('/', function (req, res) {
                     msg: '查找成功'
                 });
             } else {
-                res.status(400);
+                res.status(200);
                 res.json({
                     code: 404,
                     isSuccess: false,
                     msg: '应用不存在'
                 });
-                logger.writeError('查询应用,出错信息: 查询用户不存在');
+                logger.writeError('查询应用,出错信息: 查询应用不存在');
                 return;
             }
         });
@@ -242,7 +242,7 @@ router.put('/', function(req, res) {
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '更新失败,服务器失败'
+                        msg: '操作失败,服务器失败'
                     });
                     logger.writeError('编辑应用,出错信息: ' + err);
                     return;
@@ -258,7 +258,7 @@ router.put('/', function(req, res) {
                         Memo: data.Memo,
                         IsActive: data.IsActive
                     },
-                    msg: '更新成功'
+                    msg: '操作成功'
                 });
             });
         } else {
@@ -310,7 +310,7 @@ router.delete('/', function (req, res) {
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '更新失败,服务器失败'
+                        msg: '操作失败,服务器失败'
                     });
                     logger.writeError('删除应用,出错信息: ' + err);
                     return;
@@ -327,14 +327,14 @@ router.delete('/', function (req, res) {
                             Memo: data.Memo,
                             IsActive: data.IsActive
                         },
-                        msg: '删除成功'
+                        msg: '操作成功'
                     });
                 } else {
                     res.status(400);
                     return res.json({
                         code: 400,
                         isSuccess: false,
-                        msg: "删除失败"
+                        msg: "操作失败，应用信息有误"
                     })
                 }
             });
@@ -343,7 +343,7 @@ router.delete('/', function (req, res) {
             res.json({
                 code: 400,
                 isSuccess: false,
-                msg: '应用不存在'
+                msg: '操作失败，应用不存在'
             });
             logger.writeError('删除应用,出错信息: 删除应用不存在');
             return;

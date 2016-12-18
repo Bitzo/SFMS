@@ -63,7 +63,7 @@ router.post('/', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: '操作失败，服务器出错'
             })
         }
         if(results!==undefined && results.length > 0) {
@@ -76,7 +76,7 @@ router.post('/', function (req, res) {
                     return res.json({
                         status: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        msg: '操作失败，服务器出错'
                     })
                 }
                 if (results!==undefined && results.length>0) {
@@ -103,7 +103,7 @@ router.post('/', function (req, res) {
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
-                                msg: '服务器出错'
+                                msg: '操作失败，服务器出错'
                             })
                         }
                         if (results!==undefined&&results.length>0) {
@@ -120,7 +120,7 @@ router.post('/', function (req, res) {
                                     return res.json({
                                         status: 400,
                                         isSuccess: false,
-                                        msg: '添加的用户 '+ data[i].ID +' 信息有误！'
+                                        msg: '操作失败，添加的用户 '+ data[i].ID +' 信息有误！'
                                     })
                                 }
                             }
@@ -130,7 +130,7 @@ router.post('/', function (req, res) {
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
-                                        msg: '服务器出错'
+                                        msg: '操作失败，服务器出错'
                                     })
                                 }
                                 if(results !== undefined && results.insertId > 0) {
@@ -138,7 +138,7 @@ router.post('/', function (req, res) {
                                     return res.json({
                                         status: 200,
                                         isSuccess: true,
-                                        msg: '添加成功'
+                                        msg: '操作成功'
                                     })
                                 } else {
                                     res.status(404);
@@ -154,7 +154,7 @@ router.post('/', function (req, res) {
                             return res.json({
                                 status: 400,
                                 isSuccess: false,
-                                msg: '添加的用户信息有误！'
+                                msg: '操作失败，添加的用户信息有误！'
                             })
                         }
                     })
@@ -163,7 +163,7 @@ router.post('/', function (req, res) {
                     return res.json({
                         status: 400,
                         isSuccess: false,
-                        msg: '操作用户有误'
+                        msg: '操作失败，操作用户有误'
                     })
                 }
             })
@@ -172,7 +172,7 @@ router.post('/', function (req, res) {
             return res.json({
                 status: 404,
                 isSuccess: false,
-                msg: '项目信息有误！'
+                msg: '操作失败，项目信息有误！'
             })
         }
     })
@@ -229,7 +229,7 @@ router.put('/', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: '操作失败，服务器出错'
             })
         }
         if(results !== undefined && results.affectedRows > 0) {
@@ -237,7 +237,7 @@ router.put('/', function (req, res) {
             return res.json({
                 status: 200,
                 isSuccess: true,
-                msg: '修改成功'
+                msg: '操作成功'
             })
         } else {
             res.status(404);
@@ -276,7 +276,7 @@ router.get('/', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: '操作失败，服务器出错'
             })
         }
         logger.writeInfo(results);
@@ -289,7 +289,7 @@ router.get('/', function (req, res) {
                     return res.json({
                         status: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        msg: '操作失败，服务器出错'
                     })
                 }
                 logger.writeInfo(results);

@@ -107,7 +107,7 @@ router.post('/', function (req, res) {
             return res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: "功能点增加失败，服务器出错"
+                        msg: "功能点增加操作失败，服务器出错"
                     })
         }
         var count = results[0]['count'];
@@ -125,7 +125,7 @@ router.post('/', function (req, res) {
                     return res.json({
                                 code: 500,
                                 isSuccess: false,
-                                msg: "添加失败，服务器出错"
+                                msg: "操作失败，服务器出错"
                             })
                 }
                 //删除角色功能点成功
@@ -138,7 +138,7 @@ router.post('/', function (req, res) {
                             return res.json({
                                         code: 500,
                                         isSuccess: false,
-                                        msg: "添加失败，服务器出错"
+                                        msg: "操作失败，服务器出错"
                                     })
                         }
                         if (results !== undefined && results.affectedRows != 0) {
@@ -146,14 +146,14 @@ router.post('/', function (req, res) {
                             return res.json({
                                         code: 200,
                                         isSuccess: true,
-                                        msg: "添加信息成功"
+                                        msg: "操作成功"
                                     })
                         } else {
                             res.status(400);
                             return res.json({
                                         code: 404,
                                         isSuccess: false,
-                                        msg: "添加信息失败"
+                                        msg: "操作失败"
                                     })
                         }
                     })
@@ -217,7 +217,7 @@ router.put('/',function (req, res) {
             return res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: "功能点修改失败，服务器出错"
+                        msg: "功能点修改操作失败，服务器出错"
                     })
         }
         var count = results[0]['count'];
@@ -235,7 +235,7 @@ router.put('/',function (req, res) {
                     return res.json({
                                 code: 500,
                                 isSuccess: false,
-                                msg: "修改失败，服务器出错"
+                                msg: "操作失败，服务器出错"
                             })
                 }
                 //删除成功，开始修改
@@ -247,7 +247,7 @@ router.put('/',function (req, res) {
                             return res.json({
                                         code: 500,
                                         isSuccess: false,
-                                        msg: "修改失败，服务器出错"
+                                        msg: "操作失败，服务器出错"
                                     })
                         }
                         if (results !== undefined && results.affectedRows != 0) {
@@ -255,14 +255,14 @@ router.put('/',function (req, res) {
                             return res.json({
                                         code: 200,
                                         isSuccess: true,
-                                        msg: "修改信息成功"
+                                        msg: "操作成功"
                                     })
                         } else {
                             res.status(400);
                             return res.json({
                                         code: 404,
                                         isSuccess: false,
-                                        msg: "修改信息失败"
+                                        msg: "操作失败"
                                     })
                         }
                     })
@@ -301,7 +301,7 @@ router.delete('/', function (req, res) {
             return res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: "删除失败，服务器出错"
+                        msg: "操作失败，服务器出错"
                     })
         }
         if (results !== undefined && results.affectedRows != 0) {
@@ -309,14 +309,14 @@ router.delete('/', function (req, res) {
             return res.json({
                         code: 200,
                         isSuccess: true,
-                        msg: "删除功能点成功"
+                        msg: "操作成功"
                     })
         } else {
             res.status(400);
             return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "删除功能点失败"
+                        msg: "操作失败"
                     })
         }
     })

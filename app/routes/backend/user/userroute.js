@@ -5,27 +5,27 @@
  * @Last Modified time: 2016/11/20 15:04
  * @Function: 用户信息的插入,用户信息的查询，用户信息的更改,信息存入日志
  */
- var express = require('express');
- var router = express.Router();
- var url = require('url');
- var moment = require('moment');
- var logger = appRequire('util/loghelper').helper;
-    //加载中间件
-    var user = appRequire('service/backend/user/userservice'),
+var express = require('express');
+var router = express.Router();
+var url = require('url');
+var moment = require('moment');
+var logger = appRequire('util/loghelper').helper;
+//加载中间件
+var user = appRequire('service/backend/user/userservice'),
     //加载菜单的service
     menuService = appRequire('service/backend/menu/menuservice'),
     //加载应用的路由
     application = appRequire('service/backend/application/applicationservice'),
     config = appRequire('config/config');
 
-    //插入用户
-    router.post('/', function (req, res) {
-        var data = ['ApplicationID', 'Account', 'UserName', 'Pwd',  'IsActive'];
-        var err = 'require: ';
+//插入用户
+router.post('/', function (req, res) {
+    var data = ['ApplicationID', 'Account', 'UserName', 'Pwd',  'IsActive'];
+    var err = 'require: ';
 
-        for (var value in data) {
+    for (var value in data) {
 
-            if (!(data[value] in req.body.formdata)) {
+        if (!(data[value] in req.body.formdata)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
             err += data[value] + ' ';//检查post传输的数据
         }
@@ -36,7 +36,7 @@
         res.json({
             code: 400,
             isSuccess: false,
-            errorMsg: err
+            msg: err
         });
         logger.writeError("缺少key值");
         return;
@@ -66,10 +66,8 @@
         'Pwd': pwd,
         'CreateTime': createTime,
         'CreateUserID': createUserID,
-        'IsActive': isActive,
-
+        'IsActive': isActive
     }
-
 
     var requireValue = '缺少值：';
 
@@ -84,13 +82,12 @@
         res.json({
             code: 400,
             isSuccess: false,
-            errorMsg: requireValue
+            msg: requireValue
         });
         logger.writeError(requireValue);
         return;
     }
     //用来检验是否是数字
-
     var intNum = {
         "ApplicationID": applicationID,
         "CreateUserID": createUserID,
@@ -98,24 +95,24 @@
     }
     for (var key in intNum) {
         if (isNaN(intNum[key])) {
+            res.status(400);
             return res.json(
             {
-                code: 500,
+                code: 400,
                 isSuccess: false,
-                errorMsg: key + ":" + intNum[key] + " 必须是数字"
+                msg: key + ":" + intNum[key] + " 必须是数字"
             });
         }
     }
     //去除相同的账户名字
     var sameAccount = {'Account': account};
     user.queryAccount(sameAccount, function (err, result) {
-        console.log(111);
         if (err) {
             res.status(400);
             res.json({
                 code: 400,
                 isSuccess: false,
-                errorMsg: "查询账户失败"
+                msg: "查询账户失败"
             })
             logger.writeError("查询账户失败");
             return;
@@ -125,7 +122,7 @@
             res.json({
                 code: 400,
                 isSuccess: false,
-                errorMsg: "账户名已存在"
+                msg: "账户名已存在"
             })
             logger.writeError("账户名已存在");
             return;
@@ -171,7 +168,7 @@
                 res.json({
                     code: 500,
                     isSuccess: false,
-                    errorMsg: '插入失败'
+                    msg: '操作失败，服务器出错'
                 });
                 logger.writeError("插入失败");
                 return;
@@ -180,7 +177,7 @@
                 res.json({
                     code: 200,
                     isSuccess: true,
-                    msg: '插入成功'
+                    msg: '操作成功'
                 });
                 logger.writeInfo("插入成功");
                 return;
@@ -208,143 +205,136 @@ router.get('/', function (req, res) {
         applicationName = query.ApplicationName,
         createUserName = query.CreateUserName;
 
-        if (page == undefined || page.length == 0) {
-            page = 1;
-        }
-
-        if (accountID !== undefined && accountID.length != 0) {
-            data['AccountID'] = accountID;
-        }
-
-        if (applicationName !== undefined && applicationName.length != 0) {
-            data['ApplicationName'] = applicationName;
-        }
-
-        if (createUserName !== undefined && createUserName.length != 0) {
-            data['CreateUserName'] = createUserName;
-        }
-
-        if (applicationID !== undefined && applicationID.length != 0) {
-            data['ApplicationID'] = applicationID;
-        }
-
-        if (account !== undefined && account.length != 0) {
-            data['Account'] = account;
-        }
-        if (userName !== undefined && userName.length != 0) {
-            data['UserName'] = userName;
-        }
-        if (classID !== undefined && classID.length != 0) {
-            data['ClassID'] = classID;
-        }
-        if (createUserID !== undefined && createUserID.length != 0) {
-            data['CreateUserID'] = createUserID;
-        }
-        if (editUserID !== undefined && editUserID.length != 0) {
-            data['EditUserID'] = editUserID;
-        }
-
-        data['IsActive'] = isActive;
-        if (pageNum == undefined) {
-            pageNum = config.pageCount;
-        }
-        data['page'] = page;
-        data['pageNum'] = pageNum;
-        console.log(data);
-//获取所有用户的数量
-
-user.countUser(data, function (err, result) {
-    if (err) {
-        res.status(500);
-        res.json({
-            code: 500,
-            isSuccess: false,
-            errorMsg: "获取数量失败"
-        })
-        logger.writeError("数量获取失败");
-        return;
+    if (page == undefined || page.length == 0) {
+        page = 1;
     }
-    if (result !== undefined && result.length != 0) {
-        allCount = result[0]['num'];
-            //查询所需要的数据          
+    if (accountID !== undefined && accountID.length != 0) {
+        data['AccountID'] = accountID;
+    }
+    if (applicationName !== undefined && applicationName.length != 0) {
+        data['ApplicationName'] = applicationName;
+    }
+    if (createUserName !== undefined && createUserName.length != 0) {
+        data['CreateUserName'] = createUserName;
+    }
+    if (applicationID !== undefined && applicationID.length != 0) {
+        data['ApplicationID'] = applicationID;
+    }
+    if (account !== undefined && account.length != 0) {
+        data['Account'] = account;
+    }
+    if (userName !== undefined && userName.length != 0) {
+        data['UserName'] = userName;
+    }
+    if (classID !== undefined && classID.length != 0) {
+        data['ClassID'] = classID;
+    }
+    if (createUserID !== undefined && createUserID.length != 0) {
+        data['CreateUserID'] = createUserID;
+    }
+    if (editUserID !== undefined && editUserID.length != 0) {
+        data['EditUserID'] = editUserID;
+    }
+    data['IsActive'] = isActive;
+    if (pageNum == undefined) {
+        pageNum = config.pageCount;
+    }
+
+    data['page'] = page;
+    data['pageNum'] = pageNum;
+    console.log(data);
+
+    //获取所有用户的数量
+    user.countUser(data, function (err, result) {
+        if (err) {
+            res.status(500);
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "获取数量失败，服务器出错"
+            })
+            logger.writeError("数量获取失败");
+            return;
+        }
+        if (result !== undefined && result.length != 0) {
+            allCount = result[0]['num'];
+            //查询所需要的数据
             user.queryAllUsers(data, function (err, results1) {
                 if (err) {
                     res.status(500);
                     res.json({
                         code: 500,
                         isSuccess: true,
-                        errorMsg: '查询失败'
+                        msg: '查询失败'
                     });
                     console.log("查询失败");
                     logger.writeError("查询失败");
                     return;
                 }
-
                 if (results1 != undefined && results1.length != 0 && allCount != -1) {
                     //将时间格式化，并且将CreateUser的名字改一下
                     var dataApplication = {};
-                    for(var key in results1)
-                    {
-                        results1[key].CreateTime = moment(results1[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');                      
-                     }
+                    for(var key in results1) {
+                        results1[key].CreateTime = moment(results1[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');
+                    }
                     console.log("查询成功");
                     var results = {
-                    code: 200,
-                    isSuccess: true,
-                    msg: '查询成功',
-                    dataNum: allCount,
-                    curPage: page,
-                    curpageNum: pageNum,
-                    totalPage: Math.ceil(allCount / pageNum),
-                    data: results1
-                };
-                if (results.curPage == results.totlePage) {
-                    results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: allCount,
+                        curPage: page,
+                        curpageNum: pageNum,
+                        totalPage: Math.ceil(allCount / pageNum),
+                        data: results1
+                    };
+                    if (results.curPage == results.totlePage) {
+                        results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
+                    }
+                    res.status(200);
+                    res.json(results);
+                    return;
+                } else {
+                    res.status(200);
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "未查到数据"
+                    });
+                    logger.writeWarn("未查到数据");
+                    return;
                 }
-                res.status(200);
-                res.json(results);
-                return;
-            }
-            else {
-                res.status(200);
-                res.json({
-                    code: 500,
-                    isSuccess: false,
-                    errorMsg: "未查到数据"
-                });
-                logger.writeWarn("未查到数据");
-                return;
-            }
-        });
-}
-else {
-    res.status(404);
-    res.json({
-        code: 404,
-        isSuccess: false,
-        errorMsg: "未查询到相关信息"
+            });
+        } else {
+            res.status(200);
+            res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相关信息"
+            });
+            logger.writeError("为查询到相关的信息");
+            return;
+        }
     });
-    logger.writeError("为查询到相关的信息");
-    return;
-}
+})
 
-});
-});
 //后端的菜单通过用户的ID来查询用户的信息
 router.get('/:userID', function (req, res) {
     var userID = req.params.userID;
     if (userID === undefined || userID === '') {
+        res.status(400);
         return res.json({
-            code: 404,
+            code: 400,
             isSuccess: false,
-            errorMsg: 'require userID'
+            msg: 'require userID'
         });
     }
     if (isNaN(userID)) {
+        res.status(400);
         return res.json({
-            code: 500,
+            code: 400,
             isSuccess: false,
-            errorMsg: 'userID不是数字'
+            msg: 'userID不是数字'
         });
     }
     var uniqueData = {
@@ -354,22 +344,23 @@ router.get('/:userID', function (req, res) {
     //判断user是否存在
     user.querySingleID(userID, function (err, result) {
         if (err) {
+            res.status(500);
             return res.json({
                 code: 500,
                 isSuccess: false,
-                errorMsg: '服务器出错'
+                msg: '服务器出错'
             });
         }
         //user存在，则可以进行查询
         if (result !== undefined && result.length != 0) {
             menuService.queryMenuAndRoleByUserID(uniqueData, function (err, results) {
                 if (err) {
+                    res.status(500);
                     return res.json({
                         code: 500,
                         isSuccess: false,
-                        errorMsg: '服务器出错'
+                        msg: '服务器出错'
                     });
-
                 }
 
                 if (results.Menu !== undefined && results.Menu.length != 0) {
@@ -384,7 +375,7 @@ router.get('/:userID', function (req, res) {
                         return res.json({
                             code: 404,
                             isSuccess: false,
-                            errorMsg: '未查到角色'
+                            msg: '未查到角色'
                         });
                     }
 
@@ -392,18 +383,18 @@ router.get('/:userID', function (req, res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        errorMsg: '未查到菜单'
+                        msg: '未查到菜单'
                     });
                 }
             });
-} else {
-    return res.json({
-        code: 404,
-        isSuccess: false,
-        errorMsg: '用户不存在'
+        } else {
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: '用户不存在'
+            });
+        }
     });
-}
-});
 });
 
 //用户的编辑功能
@@ -412,14 +403,10 @@ router.put('/', function (req, res) {
     var err = 'require: ';
     
     for (var value in data) {
-
         if (!(data[value] in req.body.formdata)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
-            
             err += data[value] + ' ';//检查post传输的数据
         }
-
-
     }
 
     if (err != 'require: ') {
@@ -427,7 +414,7 @@ router.put('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-            errorMsg: err
+            msg: err
         });
         logger.writeError(err);
         return;
@@ -462,9 +449,7 @@ router.put('/', function (req, res) {
         'IsActive': isActive,
         'EditUserID': 1
     }
-    //console.log(Email);
-    //console.log(typeof(data[ApplicationID]));
-    
+
     var requireValue = '缺少值：';
     for (var value in data) {
         if (data[value].length == 0) {
@@ -477,7 +462,7 @@ router.put('/', function (req, res) {
         res.json({
             code: 400,
             isSuccess: false,
-            errorMsg: requireValue
+            msg: requireValue
         });
 
         logger.writeError(requireValue);
@@ -511,7 +496,6 @@ router.put('/', function (req, res) {
         data['Memo'] = memo;
     }
 
-
     user.update(data, function (err, results) {
         if (err) {
             res.status(500);
@@ -519,7 +503,7 @@ router.put('/', function (req, res) {
             {
                 code: 500,
                 isSuccess: false,
-                errorMsg: '修改信息失败，服务器出错'
+                msg: '修改信息失败，服务器出错'
             });
             logger.writeError("修改信息失败，服务器出错");
             return;
@@ -537,19 +521,18 @@ router.put('/', function (req, res) {
             res.json({
                 code: 400,
                 isSuccess: false,
-                errorMsg: "修改信息失败"
+                msg: "修改信息失败"
             })
             logger.writeError("修改信息失败");
             return;
         }
     });
-
 });
 
 //逻辑删除角色
 router.delete('/',function (req , res)
 {
-    var query = JSON.parse(req.query.d);
+    var query = JSON.parse(req.query.d),
     accountID = query.AccountID;
     var data = {
         'AccountID' :accountID,
@@ -562,7 +545,7 @@ router.delete('/',function (req , res)
             {
                 code: 500,
                 isSuccess: false,
-                errorMsg: '修改信息失败，服务器出错'
+                msg: '操作失败，服务器出错'
             });
             logger.writeError("修改信息失败，服务器出错");
             return;
@@ -571,7 +554,7 @@ router.delete('/',function (req , res)
             res.json({
                 code: 200,
                 isSuccess: true,
-                msg: "修改信息成功"
+                msg: "操作成功"
             })
             logger.writeInfo("修改信息成功");
             return;
@@ -580,12 +563,11 @@ router.delete('/',function (req , res)
             res.json({
                 code: 400,
                 isSuccess: false,
-                errorMsg: "修改信息失败"
+                msg: "操作失败"
             })
             logger.writeError("修改信息失败");
             return;
         }
-
     });
 });
 

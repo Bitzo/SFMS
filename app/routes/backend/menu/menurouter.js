@@ -535,7 +535,7 @@ router.post('/',function(req,res,next) {
                 code : 500,
                 isSuccess : false,
                 addMenuResult:result,
-                msg : '菜单新增失败，服务器出错'
+                msg : '菜单新增操作失败，服务器出错'
             });
         }
 
@@ -553,7 +553,7 @@ router.post('/',function(req,res,next) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "菜单添加失败"
+                msg: "菜单添加操作失败"
             });
         }
     });
@@ -655,7 +655,7 @@ router.put('/',function (req,res) {
                 code : 500,
                 isSuccess : false,
                 updateResult: result,
-                msg : '查询失败1，服务器出错'
+                msg : '操作失败，服务器出错'
             });
         }
         // 所要修改的菜单存在
@@ -667,7 +667,7 @@ router.put('/',function (req,res) {
                         code :500,
                         isSuccess : false,
                         updateResults:results,
-                        msg : '服务器出错'
+                        msg : '操作失败，服务器出错'
                     });
                 }
 
@@ -678,7 +678,7 @@ router.put('/',function (req,res) {
                         code : 200,
                         isSuccess : true,
                         updateResults : results,
-                        msg : '菜单修改成功'
+                        msg : '菜单修改操作成功'
                     });
 
                 }else {
@@ -686,7 +686,7 @@ router.put('/',function (req,res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "菜单修改失败"
+                        msg: "菜单修改操作失败"
                     });
                 }
             });
@@ -697,7 +697,7 @@ router.put('/',function (req,res) {
                 code :404,
                 isSuccess : false,
                 updateResult:result,
-                msg : '所要修改的菜单不存在'
+                msg : '操作失败，所要修改的菜单不存在'
             });
         }
     });
@@ -740,7 +740,7 @@ router.delete('/',function(req,res) {
                 code : 500,
                 isSuccess : false,
                 deleteResult:result,
-                msg : '服务器出错'
+                msg : '操作失败，服务器出错'
             });
         }
         //所要删除的菜单存在，执行删除操作
@@ -752,7 +752,7 @@ router.delete('/',function(req,res) {
                         code :500,
                         isSuccess : false,
                         deleteResults: results,
-                        msg : '服务器出错'
+                        msg : '操作失败，服务器出错'
                     });
                 }
 
@@ -763,14 +763,14 @@ router.delete('/',function(req,res) {
                         code : 200,
                         isSuccess : true,
                         deleteResult : results,
-                        msg : '菜单删除成功'
+                        msg : '菜单删除操作成功'
                     });
                 }else {
                     res.status(404);
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "菜单删除失败"
+                        msg: "菜单删除操作失败"
                     });
                 }
             });
@@ -781,7 +781,7 @@ router.delete('/',function(req,res) {
                 code :404,
                 isSuccess : false,
                 deleteResult:result,
-                msg : '所要删除的菜单不存在'
+                msg : '操作失败，所要删除的菜单不存在'
             });
         }
     });
