@@ -16,10 +16,11 @@ var logger = appRequire("util/loghelper").helper;
 
 //签到信息记录查询
 router.get('/', function (req, res) {
-    var userID = req.query.userID || '',
-        userAgent = req.query.userAgent || '',
-        createTime = req.query.createTime || '',
-        signType = req.query.signType || '',
+    var query = JSON.parse(req.query.f);
+    var userID = query.userID || '',
+        userAgent = query.userAgent || '',
+        createTime = query.createTime || '',
+        signType = query.signType || '',
         totalNum = 0,
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount;
@@ -127,9 +128,10 @@ router.get('/', function (req, res) {
 
 //签到记录的统计
 router.get('/count', function (req, res) {
-    var userID = req.query.accountID || '',
-        startTime = req.query.startTime || '',
-        endTime = req.query.endTime || '',
+    var query = JSON.parse(req.query.f);
+    var userID = query.accountID || '',
+        startTime = query.startTime || '',
+        endTime = query.endTime || '',
         page = req.query.pageindex || 1,
         pagesize = req.query.pagesize || config.pageCount;
 

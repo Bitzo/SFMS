@@ -5,6 +5,7 @@ var url = require("url");
 //实验室管理系统 项目管理路由
 var project = appRequire('routes/sfms/project/projectroute');
 var projectuser = appRequire('routes/sfms/project/projectuserroute');
+var projectremark = appRequire('routes/sfms/project/projectremarkroute');
 //实验室管理系统 签到信息管理路由
 var sign = appRequire('routes/sfms/sign/signroute');
 //实验室管理系统 KPI管理路由
@@ -150,6 +151,8 @@ router.get('/getappbyid', function (req, res) {
 router.use('/api/projectuser', projectuser);
 //项目管理 路由
 router.use('/api/project', project);
+//项目用户对项目备注 路由
+router.use('/api/projectremark', projectremark);
 //签到管理 路由
 router.use('/api/sign', sign);
 //绩效管理 路由

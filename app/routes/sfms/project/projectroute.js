@@ -19,7 +19,7 @@ var logger = appRequire("util/loghelper").helper;
 
 //项目基本信息新增
 router.post('/', function (req, res) {
-    var query = req.body;
+    var query = req.body.formdata;
     var projectName = query.projectName,
         projectDesc = query.projectDesc,
         projectManageID = query.projectManageID,
@@ -92,7 +92,7 @@ router.post('/', function (req, res) {
                     //如果有项目人员信息，则添加
                     if (userData!==undefined&&userData.length>0) {
                         for (var i in userData) {
-                            userData[i].projectName = projectName;
+                            userData[i].ProjectName = projectName;
                             userData[i].projectID = results.insertId;
                             userData[i].editName = projectManageName;
                             userData[i].OperateUser = projectManageName;
@@ -160,7 +160,8 @@ router.post('/', function (req, res) {
                                             status: 404,
                                             isSuccess: false,
                                             msg: results
-                                        })}
+                                        })
+                                    }
                                 })
                             } else {
                                 res.status(400);
@@ -201,7 +202,7 @@ router.post('/', function (req, res) {
 
 //项目基本信息修改
 router.put('/', function (req, res) {
-    var query = req.body;
+    var query = req.body.formdata;
     var ID = query.ID,
         projectName = query.projectName,
         projectDesc = query.projectDesc,
@@ -300,7 +301,7 @@ router.put('/', function (req, res) {
 
 //项目基本信息查询
 router.get('/', function (req, res) {
-    var query = req.query,
+    var query =  JSON.parse(req.query.f),
         ID = query.ID || '',
         projectManageID = query.projectManageID || '',
         startTime = query.startTime || '',
@@ -385,7 +386,7 @@ router.get('/', function (req, res) {
 
 //项目删除
 router.delete('/', function (req, res) {
-    var ID = req.body.ID;
+    var ID = JSON.parse(req.query.d).ID;
 
     if (ID == '' || ID === undefined) {
         res.status(400);
