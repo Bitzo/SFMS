@@ -129,7 +129,7 @@ exports.countQuery = function (data, callback) {
 
 //KPI查询
 exports.queryKPI = function (data, callback) {
-    var sql = 'select ID,KPIName,KPIType,KPIScore,ProjectID,UserID,UserName,CreateTime,OperateUser,CheckTime,CheckUser,KPIStatus,Remark from jit_kpiinfo where 1=1 ',
+    var sql = 'select jit_kpiinfo.ID,KPIName,KPIType,KPIScore,ProjectID,projectName,UserID,UserName,jit_kpiinfo.CreateTime,jit_kpiinfo.OperateUser,CheckTime,CheckUser,KPIStatus,Remark from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_kpiinfo.IsActive = 1 and jit_kpiinfo.projectID = jit_projectbaseinfo.ID ',
         page = data.page || 1,
         num = data.pageNum || config.pageCount;
 
@@ -140,8 +140,8 @@ exports.queryKPI = function (data, callback) {
         }
     }
 
-    if (data.StartTime != '') sql += "and CreateTime > '" + data.StartTime + "' ";
-    if (data.EndTime != '') sql += "and CreateTime < '" + data.EndTime + "' ";
+    if (data.StartTime != '') sql += "and jit_kpiinfo.CreateTime > '" + data.StartTime + "' ";
+    if (data.EndTime != '') sql += "and jit_kpiinfo.CreateTime < '" + data.EndTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 

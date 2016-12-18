@@ -311,8 +311,8 @@ router.put('/', function (req, res) {
 })
 
 //KPI查询，用于个人查询
-router.get('/:UserID', function (req, res) {
-    var UserID = req.params.UserID,
+router.get('/person', function (req, res) {
+    var UserID = req.query.jitkey,
         query =  JSON.parse(req.query.f),
         ProjectID = query.ProjectID || '',
         StartTime = query.StartTime || '',
@@ -329,7 +329,6 @@ router.get('/:UserID', function (req, res) {
         'EndTime': EndTime,
         'page': page,
         'pageNum': pageNum,
-        'IsActive': 1
     }
     KPIservice.countQuery(data, function (err, results) {
         if (err) {
