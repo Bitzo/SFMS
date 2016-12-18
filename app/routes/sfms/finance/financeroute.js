@@ -25,7 +25,7 @@ var logger = appRequire("util/loghelper").helper;
  *  4. 存入数据
  */
 router.post('/', function (req, res) {
-    var query = req.body,
+    var query = req.body.formdata,
         fiName = query.fiName,
         fiType = query.fiType,
         inOutType = query.inOutType,
@@ -178,7 +178,7 @@ router.post('/', function (req, res) {
  * 5. 全部核实并查询完，存入数据
  */
 router.put('/', function (req, res) {
-    var query = req.body,
+    var query = req.body.formdata,
         ID = query.ID,
         fiName = query.fiName,
         fiType = query.fiType,
@@ -346,7 +346,7 @@ router.put('/', function (req, res) {
 
 //财务信息查询
 router.get('/', function (req, res) {
-    var query = req.query,
+    var query = JSON.parse(req.query.f);
         startTime = query.startTime || '',
         endTime = query.endTime || '',
         fiType = query.fiType || '',
@@ -429,7 +429,7 @@ router.get('/', function (req, res) {
 
 //财务审核
 router.put('/check', function (req, res) {
-    var data = req.body.data,
+    var data = req.body.formdata,
         temp = ['ID', 'FIStatu'],
         err = 'require: ';
     logger.writeInfo(data);
@@ -511,7 +511,7 @@ router.put('/check', function (req, res) {
 
 //财务删除
 router.delete('/', function (req, res) {
-    var ID = req.body.ID;
+    var ID = JSON.parse(req.query.d).ID;
     if (ID == '' || ID === undefined) {
         res.status(400);
         return res.json({

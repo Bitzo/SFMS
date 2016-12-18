@@ -34,7 +34,7 @@ router.post('/', function (req, res) {
      *   ...
      * ]
      */
-    var data = req.body.data,
+    var data = req.body.data.formdata,
         operateID = req.query.jitkey;
     //检查所需要的参数是否齐全
     var temp = ['projectID', 'userID', 'editID', 'isActive'],
@@ -180,15 +180,15 @@ router.post('/', function (req, res) {
 
 //项目用户信息修改
 router.put('/', function (req, res) {
-    var ID = req.body.ID,
-        projectName = req.body.projectName,
-        projectID = req.body.projectID,
-        userID = req.body.userID,
-        userName = req.body.userName,
-        operateUser = req.body.operateUser,
-        editName = req.body.editName,
-        duty = req.body.duty,
-        isActive = req.body.isActive;
+    var ID = req.body.formdata.ID,
+        projectName = req.body.formdata.projectName,
+        projectID = req.body.formdata.projectID,
+        userID = req.body.formdata.userID,
+        userName = req.body.formdata.userName,
+        operateUser = req.body.formdata.operateUser,
+        editName = req.body.formdata.editName,
+        duty = req.body.formdata.duty,
+        isActive = req.body.formdata.isActive;
 
     var data = {
         'ID': ID,
@@ -203,7 +203,7 @@ router.put('/', function (req, res) {
         'EditTime': ''
     }
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'projectName', 'projectID', 'userID', 'userName', 'operateUser', 'editName', 'duty', 'isActive']
+    var temp = ['ID', 'projectName', 'projectID', 'userID', 'userName', 'operateUser', 'editName', 'duty', 'isActive'],
     err = 'required: ';
     for(var value in temp)
     {
@@ -252,17 +252,16 @@ router.put('/', function (req, res) {
 
 //项目用户信息查询
 router.get('/', function (req, res) {
-    var projectName = req.query.projectName,
-        userName = req.query.userName,
-        isActive = req.query.isActive,
+    var query = JSON.parse(req.query.f);
+    var projectID = query.projectID || '',
+        userName = query.userName || '',
+        isActive = query.isActive || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1 ,
-        pageNum = req.query.pagesize,
+        pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
 
-    if (pageNum === undefined) pageNum = config.pageCount;
-
     var data = {
-        'ProjectName': projectName,
+        'ProjectID': projectID,
         'UserName': userName,
         'IsActive': isActive,
         'page': page,

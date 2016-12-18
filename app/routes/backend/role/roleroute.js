@@ -18,7 +18,6 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询角色信息
 router.get('/',function (req, res) {
-    console.log(req.query)
     var query = JSON.parse(req.query.f);
     var appID = query.ApplicationID || '',
         roleID = query.RoleID || '',

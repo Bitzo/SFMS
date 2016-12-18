@@ -52,7 +52,7 @@ exports.queryProjectUser = function (data, callback) {
 //项目用户信息查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'ProjectName': data.ProjectName,
+        'ProjectID': data.ProjectID,
         'UserName': data.UserName,
         'IsActive': data.IsActive
     }

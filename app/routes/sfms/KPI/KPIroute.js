@@ -29,7 +29,7 @@ var logger = appRequire("util/loghelper").helper;
  *  5、数据获取并验证完毕后再存入KPI数据
  */
 router.post('/', function (req, res) {
-    var query = req.body,
+    var query = req.body.formdata,
         ProjectID = query.ProjectID,
         KPIType = query.KPIType,//字典表的ID
         KPIScore = query.KPIScore,
@@ -209,7 +209,7 @@ router.post('/', function (req, res) {
 
 //KPI基本信息编辑
 router.put('/', function (req, res) {
-    var query = req.body,
+    var query = req.body.formdata,
         ID = query.ID,
         KPIName = query.KPIName,
         KPIType = query.KPIType,
@@ -313,7 +313,7 @@ router.put('/', function (req, res) {
 //KPI查询，用于个人查询
 router.get('/:UserID', function (req, res) {
     var UserID = req.params.UserID,
-        query = req.query,
+        query =  JSON.parse(req.query.f),
         ProjectID = query.ProjectID || '',
         StartTime = query.StartTime || '',
         EndTime = query.EndTime || '',
@@ -394,7 +394,7 @@ router.get('/:UserID', function (req, res) {
 
 //KPI查询,此查询用于可审核绩效的角色进行查询
 router.get('/', function (req, res) {
-    var query = req.query,
+    var query =  JSON.parse(req.query.f),
         UserID = query.UserID || '',
         ProjectID = query.ProjectID || '',
         StartTime = query.StartTime || '',
@@ -478,7 +478,7 @@ router.get('/', function (req, res) {
 
 //KPI审核
 router.put('/check', function (req, res) {
-    var data = req.body.data,
+    var data = req.body.formdata,
         temp = ['ID', 'KPIStatus'],
         err = 'require: ';
     for (var key in temp) {
@@ -558,7 +558,7 @@ router.put('/check', function (req, res) {
 
 //KPI删除
 router.delete('/', function (req, res) {
-    var ID = req.body.ID;
+    var ID = JSON.parse(req.query.d).ID;
     if (ID == '' || ID === undefined) {
         res.status(400);
         return res.json({
