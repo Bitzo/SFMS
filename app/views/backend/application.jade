@@ -3,7 +3,7 @@ block content
   jason-pagecontent(action='/app' conf='paginationConf')
     div.page-content
       ng-form.form-inline
-        span(style='font-size: 24px;') 应用显示
+        span(style='font-size: 24px;') 应用管理
         div.buttons.pull-right
           label.form-group.my-form-group 
             jason-select(placeholder='应用名称' style="width:120px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
@@ -18,14 +18,14 @@ block content
       table.table.table-striped.table-bordered.text-center
         thead
           tr
-            th 应用ID
+            th 序号
             th 应用代码          
             th 应用名称
             th 应用备注
             th 操作
         tbody
           tr(ng-repeat="x in datas") 
-            td {{x.ID}}
+            td {{$index+1}}
             td {{x.ApplicationCode}}            
             td {{x.ApplicationName}}
             td {{x.Memo}}

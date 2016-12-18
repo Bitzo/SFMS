@@ -252,17 +252,16 @@ router.put('/', function (req, res) {
 
 //项目用户信息查询
 router.get('/', function (req, res) {
-    var projectName = req.query.projectName,
-        userName = req.query.userName,
-        isActive = req.query.isActive,
+    console.log(req.query);
+    var projectID = req.query.projectID || '',
+        userName = req.query.userName || '',
+        isActive = req.query.isActive || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1 ,
-        pageNum = req.query.pagesize,
+        pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
 
-    if (pageNum === undefined) pageNum = config.pageCount;
-
     var data = {
-        'ProjectName': projectName,
+        'ProjectID': projectID,
         'UserName': userName,
         'IsActive': isActive,
         'page': page,
