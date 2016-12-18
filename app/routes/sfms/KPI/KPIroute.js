@@ -438,9 +438,9 @@ router.get('/', function (req, res) {
                 }
                 if (results !== undefined && results.length > 0) {
                     for (var i in results) {
-                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:SS');
+                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
                         if(results[i].CheckTime !== null)
-                        results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm:SS');
+                        results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
                     }
                     var result = {
                         status: 200,

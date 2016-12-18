@@ -14,120 +14,9 @@ var moment = require('moment');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
 
-//签到信息记录查询
-router.get('/', function (req, res) {
-    var query = JSON.parse(req.query.f);
-    var userID = query.userID || '',
-        userAgent = query.userAgent || '',
-        createTime = query.createTime || '',
-        signType = query.signType || '',
-        totalNum = 0,
-        page = req.query.pageindex > 0 ? req.query.pageindex : 1,
-        pageNum = req.query.pagesize || config.pageCount;
-
-    var data = {
-        'UserID': userID,
-        'UserAgent': userAgent,
-        'CreateTime': createTime,
-        'SignType': signType,
-        'page': page,
-        'pageNum': pageNum
-    }
-
-    signservice.countQuery(data, function (err, results) {
-        if (err) {
-            res.status(500);
-            return res.json({
-                status: 500,
-                isSuccess: false,
-                msg: '操作失败，服务器出错'
-            })
-        }
-        logger.writeInfo(results);
-        totalNum = results[0].num;
-        if(totalNum > 0) {
-            //查询所需的详细数据
-            signservice.querySign(data, function (err, results) {
-                if (err) {
-                    res.status(500);
-                    return res.json({
-                        status: 500,
-                        isSuccess: false,
-                        msg: '操作失败，服务器出错'
-                    })
-                }
-                if (results !== undefined && results.length > 0) {
-                    //格式化时间
-                    for(var i in results) {
-                        results[i].CreateTime = moment(results[i].CreateTime).format("YYYY-MM-DD HH:mm:ss");
-                    }
-                    var result = {
-                        status: 200,
-                        isSuccess: true,
-                        totalNum: totalNum,
-                        curPage: page,
-                        totalPage: Math.ceil(totalNum/pageNum),
-                        curNum: pageNum,
-                        data: results
-                    };
-                    if(result.curPage == result.totalPage) {
-                        result.curNum = result.totalNum - (result.totalPage-1)*pageNum;
-                    }
-                    //获取用户名
-                    var ID = [];
-                    for (var i=0;i<results.length;++i) {
-                        results[i].UserName = "无效用户";
-                        if (i==0) ID[i] = results[i].UserID;
-                        else {
-                            var j = 0;
-                            for (j=0;j<ID.length;++j) {
-                                if (ID[j] == results[i].UserID) break;
-                            }
-                            if (j == ID.length) ID[j] = results[i].UserID;
-                        }
-                    }
-                    userservice.queryAccountByID(ID, function (err, data) {
-                        if (err) {
-                            res.status(500);
-                            return res.json({
-                                status: 500,
-                                isSuccess: false,
-                                msg: '操作失败，服务器出错'
-                            })
-                        }
-                        for (var i in results) {
-                            for (var j in data) {
-                                if (results[i].UserID == data[j].AccountID) {
-                                    results[i].UserName = data[j].UserName;
-                                    break;
-                                }
-                            }
-                        }
-                        res.status(200);
-                        return res.json(result);
-                    })
-                } else {
-                    res.status(404);
-                    return res.json({
-                        status: 404,
-                        isSuccess: false,
-                        msg: '无数据'
-                    })
-                }
-            })
-        } else {
-            res.status(200);
-            return res.json({
-                status: 200,
-                isSuccess: false,
-                msg: '无数据'
-            })
-        }
-    })
-})
-
 //签到记录的统计
 router.get('/count', function (req, res) {
+    console.log(req.query)
     var query = JSON.parse(req.query.f);
     var userID = query.accountID || '',
         startTime = query.startTime || '',
@@ -238,7 +127,7 @@ router.get('/count', function (req, res) {
                         totalNum: totalNum,
                         totalPage: totalPage,
                         dataNum: userInfo.length,
-                        results: data
+                        data: data
                     })
                 } else {
                     res.status(200);
@@ -259,5 +148,120 @@ router.get('/count', function (req, res) {
         }
     })
 })
+
+//签到信息记录查询
+router.get('/:userID', function (req, res) {
+    var query = req.query;
+    var userID = req.params.userID || '',
+        userAgent = query.userAgent || '',
+        createTime = query.createTime || '',
+        signType = query.signType || '',
+        totalNum = 0,
+        page = req.query.pageindex > 0 ? req.query.pageindex : 1,
+        pageNum = req.query.pagesize || config.pageCount;
+
+    var data = {
+        'UserID': userID,
+        'UserAgent': userAgent,
+        'CreateTime': createTime,
+        'SignType': signType,
+        'page': page,
+        'pageNum': pageNum
+    }
+
+    signservice.countQuery(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '操作失败，服务器出错'
+            })
+        }
+        logger.writeInfo(results);
+        totalNum = results[0].num;
+        if(totalNum > 0) {
+            //查询所需的详细数据
+            signservice.querySign(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '操作失败，服务器出错'
+                    })
+                }
+                if (results !== undefined && results.length > 0) {
+                    //格式化时间
+                    for(var i in results) {
+                        results[i].CreateTime = moment(results[i].CreateTime).format("YYYY-MM-DD HH:mm:ss");
+                    }
+                    var result = {
+                        status: 200,
+                        isSuccess: true,
+                        totalNum: totalNum,
+                        curPage: page,
+                        totalPage: Math.ceil(totalNum/pageNum),
+                        curNum: pageNum,
+                        data: results
+                    };
+                    if(result.curPage == result.totalPage) {
+                        result.curNum = result.totalNum - (result.totalPage-1)*pageNum;
+                    }
+                    //获取用户名
+                    var ID = [];
+                    for (var i=0;i<results.length;++i) {
+                        results[i].UserName = "无效用户";
+                        if (i==0) ID[i] = results[i].UserID;
+                        else {
+                            var j = 0;
+                            for (j=0;j<ID.length;++j) {
+                                if (ID[j] == results[i].UserID) break;
+                            }
+                            if (j == ID.length) ID[j] = results[i].UserID;
+                        }
+                    }
+                    userservice.queryAccountByID(ID, function (err, data) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            })
+                        }
+                        for (var i in results) {
+                            if(results[i].SignType == 0) results[i].SignType = '签入';
+                            else results[i].SignType = '签出'; 
+                            for (var j in data) {
+                                if (results[i].UserID == data[j].AccountID) {
+                                    results[i].UserName = data[j].UserName;
+                                    break;
+                                }
+                            }
+                        }
+                        res.status(200);
+                        return res.json(result);
+                    })
+                } else {
+                    res.status(404);
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: '无数据'
+                    })
+                }
+            })
+        } else {
+            res.status(200);
+            return res.json({
+                status: 200,
+                isSuccess: false,
+                msg: '无数据'
+            })
+        }
+    })
+})
+
 
 module.exports = router;
