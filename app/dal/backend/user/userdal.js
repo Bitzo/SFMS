@@ -228,7 +228,6 @@ exports.queryAccount=function(data,callback)
     var sql = 'select ApplicationID,AccountID,Account,UserName,Pwd,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime,IsActive from jit_user where 1=1 ';
     for(var key in data)
     sql+=' and Account = "'+data[key]+'" ';
-    console.log(111);
     console.log(sql);
     db_backend.mysqlPool.getConnection(function(err,connection)
     {

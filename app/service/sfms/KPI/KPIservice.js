@@ -46,7 +46,6 @@ exports.queryKPI = function (data, callback) {
         'KPIType': data.KPIType || '',
         'page': data.page,
         'pageNum': data.pageNum,
-        'IsActive': 1
     }
     KPIdal.queryKPI(data, function (err, results) {
         if (err) {
