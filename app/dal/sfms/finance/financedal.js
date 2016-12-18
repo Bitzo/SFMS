@@ -130,8 +130,7 @@ exports.countQuery = function (data, callback) {
 
 //财务查询
 exports.queryFinance = function (data, callback) {
-    var sql = 'select ID,FIName,FIType,InOutType,FIPrice,ProjectId,UserID,UserName,CreateTime,' +
-            'OperateUser,CheckTime,CheckUser,FIStatu,Remark from jit_financeinfo where 1=1 ',
+    var sql = 'select jit_financeinfo.ID,FIName,FIType,InOutType,FIPrice,ProjectId,ProjectName,UserID,UserName,jit_financeinfo.CreateTime,jit_financeinfo.OperateUser,CheckTime,CheckUser,FIStatu,Remark from jit_financeinfo,jit_projectbaseinfo where 1=1 and jit_financeinfo.IsActive = 1 and jit_projectbaseinfo.ID = jit_financeinfo.ProjectID ',
         page = data.page || 1,
         num = data.pageNum;
 
