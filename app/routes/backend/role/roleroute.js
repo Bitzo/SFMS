@@ -164,7 +164,7 @@ router.post('/',function (req, res) {
             return res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: "增加失败，服务器内部错误"
+                        msg: "操作失败，服务器内部错误"
                     });
         }
         //没有查询重复的相关信息,则可以添加用户
@@ -183,7 +183,7 @@ router.post('/',function (req, res) {
                     return res.json({
                                 code: 500,
                                 isSuccess: false,
-                                msg: "添加失败，服务器出错"
+                                msg: "操作失败，服务器出错"
                             })
                 }
                 //角色信息增添成功
@@ -210,7 +210,7 @@ router.post('/',function (req, res) {
                                 return res.json({
                                             code: 500,
                                             isSuccess: false,
-                                            msg: "用户添加成功，功能点添加成功，服务器出错"
+                                            msg: "角色添加成功，功能点添加失败，服务器出错"
                                         })
                             }
                             var count = results[0]['count'];
@@ -228,7 +228,7 @@ router.post('/',function (req, res) {
                                         return res.json({
                                                     code: 500,
                                                     isSuccess: false,
-                                                    msg: "用户添加成功，功能点添加失败，服务器出错"
+                                                    msg: "角色添加成功，功能点添加失败，服务器出错"
                                                 })
                                     }
                                     //增添成功
@@ -237,14 +237,14 @@ router.post('/',function (req, res) {
                                         return res.json({
                                                     code: 200,
                                                     isSuccess: true,
-                                                    msg: "添加信息成功"
+                                                    msg: "操作成功"
                                                 })
                                     } else {
                                         res.status(200);
                                         return res.json({
                                                     code: 404,
                                                     isSuccess: false,
-                                                    msg: "用户已添加，功能点添加失败"
+                                                    msg: "角色已添加，功能点添加失败"
                                                 })
                                     }
                                 })
@@ -263,7 +263,7 @@ router.post('/',function (req, res) {
                         return res.json({
                                    code: 200,
                                    isSuccess: true,
-                                   msg: "添加用户成功"
+                                   msg: "操作成功"
                                })
                     }
                 } else {
@@ -271,16 +271,16 @@ router.post('/',function (req, res) {
                     return res.json({
                                 code: 404,
                                 isSuccess: false,
-                                msg: "添加用户失败"
+                                msg: "添加角色失败"
                             })
                 }
-        })
+            })
         }else {
             res.status(400);
             return res.json({
                         code: 400,
                         isSuccess: false,
-                        msg: "用户数据重复，添加失败"
+                        msg: "角色数据重复，添加失败"
                     })
         }
     })
@@ -332,7 +332,7 @@ router.put('/', function (req, res) {
             return res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: "修改信息失败，服务器内部错误"
+                        msg: "操作失败，服务器内部错误"
                     });
         }
         //完成角色基本信息修改
@@ -359,7 +359,7 @@ router.put('/', function (req, res) {
                             return res.json({
                                         code: 500,
                                         isSuccess: false,
-                                        msg: "角色修改成功，功能点添加成功，服务器出错"
+                                        msg: "角色修改成功，功能点添加失败，服务器出错"
                                     })
                         }
                         var count = results[0]['count'];
@@ -395,7 +395,7 @@ router.put('/', function (req, res) {
                                             return res.json({
                                                         code: 200,
                                                         isSuccess: true,
-                                                        msg: "修改信息成功"
+                                                        msg: "操作成功"
                                                     });
                                         } else {
                                             res.status(200);
@@ -423,7 +423,7 @@ router.put('/', function (req, res) {
                 return res.json({
                             code: 200,
                             isSuccess: true,
-                            msg: "修改信息成功"
+                            msg: "操作成功"
                         });
             }
         } else {
@@ -431,7 +431,7 @@ router.put('/', function (req, res) {
             return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "修改信息失败"
+                        msg: "操作失败"
                     });
         }
     })

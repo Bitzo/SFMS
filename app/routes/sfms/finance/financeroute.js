@@ -68,7 +68,7 @@ router.post('/', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: '操作失败，服务器出错'
             })
         }
         if (results !== undefined && results.length > 0) {
@@ -82,7 +82,7 @@ router.post('/', function (req, res) {
                     return res.json({
                         status: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        msg: '操作失败，服务器出错'
                     })
                 }
                 if (results !== undefined && results.length == DicID.DictionaryID.length) {
@@ -96,7 +96,7 @@ router.post('/', function (req, res) {
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
-                                msg: '服务器出错'
+                                msg: '操作失败，服务器出错'
                             })
                         }
                         if (results !== undefined && results.length > 0) {
@@ -121,7 +121,7 @@ router.post('/', function (req, res) {
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
-                                        msg: '服务器出错'
+                                        msg: '操作失败，服务器出错'
                                     })
                                 }
                                 if(results !== undefined && results.insertId > 0) {
@@ -129,7 +129,7 @@ router.post('/', function (req, res) {
                                     return res.json({
                                         status: 200,
                                         isSuccess: true,
-                                        msg: '添加成功'
+                                        msg: '操作成功'
                                     })
                                 } else {
                                     res.status(400);
@@ -145,7 +145,7 @@ router.post('/', function (req, res) {
                             return res.json({
                                 status: 404,
                                 isSuccess: false,
-                                msg: '用户无效'
+                                msg: '操作失败，用户无效'
                             })
                         }
                     })
@@ -154,7 +154,7 @@ router.post('/', function (req, res) {
                     return res.json({
                         status: 404,
                         isSuccess: false,
-                        msg: '财务类型或财务名称有误'
+                        msg: '操作失败，财务类型或财务名称有误'
                     })
                 }
             })
@@ -217,7 +217,7 @@ router.put('/', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: '操作失败，服务器出错'
             })
         }
         if (results !== undefined && results.length>0 && results[0].FIStatu == '待审核') {
@@ -232,7 +232,7 @@ router.put('/', function (req, res) {
                     return res.json({
                         status: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        msg: '操作失败，服务器出错'
                     })
                 }
                 if (results !== undefined && results.length > 0) {
@@ -246,7 +246,7 @@ router.put('/', function (req, res) {
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
-                                msg: '服务器出错'
+                                msg: '操作失败，服务器出错'
                             })
                         }
                         if (results !== undefined && results.length == DicID.DictionaryID.length) {
@@ -260,7 +260,7 @@ router.put('/', function (req, res) {
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
-                                        msg: '服务器出错'
+                                        msg: '操作失败，服务器出错'
                                     })
                                 }
                                 if (results !== undefined && results.length > 0) {
@@ -287,7 +287,7 @@ router.put('/', function (req, res) {
                                             return res.json({
                                                 status: 500,
                                                 isSuccess: false,
-                                                msg: '服务器出错'
+                                                msg: '操作失败，服务器出错'
                                             })
                                         }
                                         if(results !== undefined && results.affectedRows > 0) {
@@ -295,7 +295,7 @@ router.put('/', function (req, res) {
                                             return res.json({
                                                 status: 200,
                                                 isSuccess: true,
-                                                msg: '更新成功'
+                                                msg: '操作成功'
                                             })
                                         } else {
                                             res.status(400);
@@ -311,7 +311,7 @@ router.put('/', function (req, res) {
                                     return res.json({
                                         status: 404,
                                         isSuccess: false,
-                                        msg: '用户无效'
+                                        msg: '操作失败，用户无效'
                                     })
                                 }
                             })
@@ -320,7 +320,7 @@ router.put('/', function (req, res) {
                             return res.json({
                                 status: 404,
                                 isSuccess: false,
-                                msg: '财务类型或财务名称有误'
+                                msg: '操作失败，财务类型或财务名称有误'
                             })
                         }
                     })
@@ -329,7 +329,7 @@ router.put('/', function (req, res) {
                     return res.json({
                         status: 404,
                         isSuccess: false,
-                        msg: '项目信息有误'
+                        msg: '操作失败，项目信息有误'
                     })
                 }
             })
@@ -338,7 +338,7 @@ router.put('/', function (req, res) {
             return res.json({
                 status: 404,
                 isSuccess: false,
-                msg: '项目已审核或无效，不可编辑'
+                msg: '操作失败，项目已审核或无效，不可编辑'
             })
         }
     })
@@ -376,7 +376,7 @@ router.get('/', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: '操作失败，服务器出错'
             })
         }
         logger.writeInfo(results);
@@ -389,7 +389,7 @@ router.get('/', function (req, res) {
                     return res.json({
                         status: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        msg: '操作失败，服务器出错'
                     })
                 }
                 if (results !== undefined && results.length > 0) {
@@ -455,7 +455,7 @@ router.put('/check', function (req, res) {
             return res.json({
                 status: 400,
                 isSuccess: false,
-                msg: '不通过的审核需填写备注信息'
+                msg: '操作失败，不通过的审核需填写备注信息'
             })
         }
         data[i].CheckUser = req.query.jitkey;
@@ -487,14 +487,14 @@ router.put('/check', function (req, res) {
                     return res.json({
                         status: 200,
                         isSuccess: true,
-                        msg: '审核成功'
+                        msg: '操作成功'
                     })
                 } else {
                     res.status(400);
                     return res.json({
                         status: 404,
                         isSuccess: false,
-                        msg: '审核失败'
+                        msg: '操作失败'
                     })
                 }
             })
@@ -532,7 +532,7 @@ router.delete('/', function (req, res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "服务器出错"
+                msg: "操作失败，服务器出错"
             });
         }
         if(results !== undefined && results.affectedRows > 0) {
@@ -540,14 +540,14 @@ router.delete('/', function (req, res) {
             res.json({
                 status: 200,
                 isSuccess: true,
-                msg: "删除成功"
+                msg: "操作成功"
             })
         } else {
             res.status(400);
             res.json({
                 status: 400,
                 isSuccess: true,
-                msg: "删除失败"
+                msg: "操作失败"
             })
         }
     })

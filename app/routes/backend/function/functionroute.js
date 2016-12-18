@@ -19,7 +19,7 @@ router.get('/', function (req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "查询失败，服务器内部错误"
+                msg: "操作失败，服务器内部错误"
             })
             return;
         }
@@ -57,6 +57,7 @@ router.post('/', function (req, res) {
     }
 
     if (err != 'required: ') {
+        res.status(400);
         res.json({
             code: 404,
             isSuccess: false,
@@ -87,7 +88,7 @@ router.post('/', function (req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "添加失败，服务器出错"
+                msg: "操作失败，服务器出错"
             })
             return;
         }
@@ -96,13 +97,13 @@ router.post('/', function (req, res) {
                 code: 200,
                 isSuccess: true,
                 data: data,
-                msg: "添加功能点成功"
+                msg: "操作成功"
             })
         } else {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "添加信息失败,服务器出错"
+                msg: "操作失败,服务器出错"
             })
         }
     })
@@ -154,7 +155,7 @@ router.put('/', function (req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "修改失败，服务器出错"
+                msg: "操作失败，服务器出错"
             })
             return;
         }
@@ -164,13 +165,13 @@ router.put('/', function (req, res) {
                 code: 200,
                 isSuccess: true,
                 data: data,
-                msg: '修改信息成功'
+                msg: '操作成功'
             })
         } else {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: '修改信息失败'
+                msg: '操作失败'
             })
         }
     })
@@ -205,7 +206,7 @@ router.delete('/', function (req, res) {
                 res.json({
                     code: 500,
                     isSuccess: false,
-                    msg: '删除失败，服务器出错'
+                    msg: '操作失败，服务器出错'
                 });
             }
         }
@@ -215,13 +216,13 @@ router.delete('/', function (req, res) {
             res.json({
                 code: 200,
                 isSuccess: true,
-                msg: '删除成功'
+                msg: '操作成功'
             })
         } else {
             res.json({
                 code: 404,
                 isSuccess: false,
-                msg: '删除失败！'
+                msg: '操作失败！'
             })
         }
     })

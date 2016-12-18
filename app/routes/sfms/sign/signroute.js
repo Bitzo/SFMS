@@ -39,7 +39,7 @@ router.get('/', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: '操作失败，服务器出错'
             })
         }
         logger.writeInfo(results);
@@ -52,7 +52,7 @@ router.get('/', function (req, res) {
                     return res.json({
                         status: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        msg: '操作失败，服务器出错'
                     })
                 }
                 if (results !== undefined && results.length > 0) {
@@ -91,7 +91,7 @@ router.get('/', function (req, res) {
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
-                                msg: '服务器出错'
+                                msg: '操作失败，服务器出错'
                             })
                         }
                         for (var i in results) {
@@ -149,7 +149,7 @@ router.get('/count', function (req, res) {
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: '服务器出错'
+                msg: '操作失败，服务器出错'
             })
         }
         if (results!==undefined && results.length > 0) {
@@ -195,7 +195,7 @@ router.get('/count', function (req, res) {
                     return res.json({
                         status: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        msg: '操作失败，服务器出错'
                     })
                 }
                 if (results!==undefined && results.length>0) {
