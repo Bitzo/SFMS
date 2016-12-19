@@ -14,6 +14,14 @@ var userRoleDAL= appRequire('dal/backend/user/userroledal');
 exports.insert=function(data,callback){
 	userRoleDAL.insert(data,function(err,results)
 	{
+		for(var key in data)
+   		{
+       		 if(key == undefined)
+        	{
+           		 console.log("传来的值有部分为空");
+            	 return ;
+        	}
+    }
 		if(err)
 		{
 			callback(true);

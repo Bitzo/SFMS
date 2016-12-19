@@ -15,7 +15,7 @@ var customerDAL = appRequire('dal/jinkebro/customer/customerdal'),
  var Customer = function()
  {
  	
- 	this.createTime =  moment().format("YYYY-MM-DD HH:mm:ss"),//创建的时间
+ 	this.createTime =  moment().format("YYYY-MM-DD HH:mm:ss");//创建的时间
  }
 
 //用户的插入service

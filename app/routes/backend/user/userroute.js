@@ -17,7 +17,8 @@
     menuService = appRequire('service/backend/menu/menuservice'),
     //加载应用的路由
     application = appRequire('service/backend/application/applicationservice'),
-    config = appRequire('config/config');
+    config = appRequire('config/config'),
+    userRole = appRequire('service/backend/user/userroleservice');
 
     //插入用户
     router.post('/', function (req, res) {
@@ -59,6 +60,16 @@
     isActive = req.body.formdata.IsActive,
     email = req.body.formdata.Email,
     address = req.body.formdata.Address;
+
+    //添加角色的部分
+    var  roleID = req.body.formdata.RoleID;
+
+    var roledata = {};
+    if(roleID != undefined && roleID.length != 0)
+    {
+        roledata.RoleID = roleID;
+    }
+    
 
     data = {
         'ApplicationID': applicationID,
@@ -177,13 +188,41 @@
                 logger.writeError("插入失败");
                 return;
             }
-            if (result.insertId != 0) {
+            if (results.insertId != 0) {
                 res.json({
                     code: 200,
                     isSuccess: true,
                     msg: '插入成功'
                 });
                 logger.writeInfo("插入成功");
+                console.log(results.insertId);
+                if(roledata.RoleID != undefined && roledata.RoleID !=0)
+                {
+                    roledata.AccountID=results.insertId;
+                    userRole.insert(roledata,function(err, resultInsert)
+                    {
+                        if(err)
+                        {
+                            res.status(400);
+                            res.json({
+                                code:400,
+                                isSuccess:false,
+                                errorMsg:'插入角色失败'
+                            });
+                            logger.writeError("插入角色失败");
+                            return ;
+                        }
+                        if(resultInsert.insertId != 0)
+                        {
+                            res.json({
+                                code:200,
+                                isSuccess: true,
+                                msg:'插入成功'                  
+                               });
+                            return;
+                        }
+                    });
+                }
                 return;
             }
         });
@@ -451,7 +490,6 @@ router.put('/', function (req, res) {
     isActive = req.body.formdata.IsActive,
     email = req.body.formdata.Email,
     address = req.body.formdata.Address;
-
     data = {
         'ApplicationID': applicationID,
         'AccountID': accountID,
