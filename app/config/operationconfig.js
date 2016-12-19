@@ -72,7 +72,7 @@ var operationConfig = {
             customerDel: {
                 actionName:'客户的删除',
                 identifier:2003
-            },
+            }
         },
         orderManger:{
             module:"订单模块",
@@ -91,7 +91,7 @@ var operationConfig = {
             orderQuery:{
                 actionName:"订单的查询",
                 identifier:2104
-            },
+            }
         },
         orderDelivery:{
             module:"订单配送情况的模块",
@@ -110,7 +110,7 @@ var operationConfig = {
             orderdeliveryQuery:{
                 actionName:"配送员情况单的查询",
                 identifier:2204
-            },
+            }
         },
         orderProduct:{
             module:"订单商品情况的模块",
@@ -129,8 +129,8 @@ var operationConfig = {
             orderProductQuery:{
                 actionName:"配送员商品情况的查询",
                 identifier:2304
-            },
-        },
+            }
+        },        
        product:{
             module:"商品模块",
            productAdd:{
@@ -148,7 +148,7 @@ var operationConfig = {
            productQuery:{
                 actionName:"商品查询",
                 identifier:2304
-            },
+            }
         },
         productStock:{
             module:"商品库存模块",
@@ -167,7 +167,7 @@ var operationConfig = {
             productStockQuery:{
                 actionName:"商品库存查询",
                 identifier:2504
-            },
+            }
         },
         productType:{
             module:"商品种类模块",
@@ -197,7 +197,7 @@ var operationConfig = {
             projectAdd: {
                 actionName: "项目新增",
                 identifier: 3001
-            },
+            },   
             projectUpdete: {
                 actionName: "项目编辑",
                 identifier: 3002
@@ -252,7 +252,7 @@ var operationConfig = {
             financeCheck: {
                 actionName: "财务审核",
                 identifier: 3106
-            },
+            }
         },
         KPIManage: {
             module: "绩效模块",
@@ -301,6 +301,30 @@ var operationConfig = {
             },
         },
     },
-
-
+    weChat:{
+        applicationName:4,
+        applicationName:"微信端",
+        infoManage:{
+            module:"获取信息模块",
+            access_tokenGet:{
+                actionName:"获取token",
+                identifier:4001
+            },
+            customerInfo:{
+                actionName:"消费者信息获取",
+                identifier:4002
+            },
+            customerList:{
+                actionName:"消费者列表的获取",
+                identifier:4003
+            },
+            customerNextList:{
+                actionName:"指定消费者列表的获取",
+                identifier:4004
+            }
+        }
+    }
 };
+
+
+module.exports = operationConfig;

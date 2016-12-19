@@ -170,7 +170,7 @@ Weixin.prototype.getCustomerList = function(accessToken, callback) {
 //微信获取到指定用户的的列表
 Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
         var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
-        console.log(getUrl);
+       // console.log(getUrl);
         https.get(getUrl, function(res) {
             var datas = [];
             var size = 0;
@@ -198,7 +198,7 @@ Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
 Weixin.prototype.getCustomerInfo = function(accessToken, openid, callback) {
     //get获取微信端的接口的url
     var getUrl = config.weChat.baseUrl + config.weChat.userInfo + accessToken + "&openid=" + openid;
-   // console.log(getUrl);
+    //console.log(getUrl);
     https.get(getUrl, function(res) {
         var datas = [];
         var size = 0;
@@ -210,7 +210,6 @@ Weixin.prototype.getCustomerInfo = function(accessToken, openid, callback) {
         res.on('end', function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
-
             if (callback && typeof callback === 'function') {
                 callback(result);
             }
@@ -495,21 +494,25 @@ Weixin.prototype.parseLinkMsg = function() {
  * EventKey 事件KEY值，与自定义菜单接口中KEY值对应
  */
 Weixin.prototype.parseEventMsg = function() {
-    var eventKey = '';
-    if (this.data.EventKey) {
-        eventKey = this.data.EventKey[0];
-    }
+    // var eventKey = '';
+    // if (this.data.EventKey) {
+    //     eventKey = this.data.EventKey[0];
+    // }
 
-    var msg = {
-        "toUserName": this.data.ToUserName[0],
-        "fromUserName": this.data.FromUserName[0],
-        "createTime": this.data.CreateTime[0],
-        "msgType": this.data.MsgType[0],
-        "event": this.data.Event[0],
-        "eventKey": eventKey
+    // var msg = {
+    //     "toUserName": this.data.ToUserName[0],
+    //     "fromUserName": this.data.FromUserName[0],
+    //     "createTime": this.data.CreateTime[0],
+    //     "msgType": this.data.MsgType[0],
+    //     "event": this.data.Event[0],
+    //     "eventKey": eventKey
+    // }
+    var msg = {};
+    for(var key in this.data)
+    {
+        msg[key] = this.data[key][0];
     }
-
-    emitter.emit("weixinEventMsg", msg);
+    emitter.emit("weixinEventMsg",msg);
 
     return this;
 }

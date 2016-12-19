@@ -5,6 +5,13 @@
  * @Last Modified time: 2016/11/20 15:04
  * @Function: 用户信息的插入,用户信息的查询，用户信息的更改,信息存入日志
  */
+ var express = require('express');
+ var router = express.Router();
+ var url = require('url');
+ var moment = require('moment');
+ var operateconfig = appRequire("config/operationconfig");
+ var logger = appRequire('util/loghelper').helper;
+    //加载中间件
 var express = require('express');
 var router = express.Router();
 var url = require('url');
@@ -12,11 +19,13 @@ var moment = require('moment');
 var logger = appRequire('util/loghelper').helper;
 //加载中间件
 var user = appRequire('service/backend/user/userservice'),
+
     //加载菜单的service
     menuService = appRequire('service/backend/menu/menuservice'),
     //加载应用的路由
     application = appRequire('service/backend/application/applicationservice'),
-    config = appRequire('config/config');
+    config = appRequire('config/config'),
+    userRole = appRequire('service/backend/user/userroleservice');
 
 //插入用户
 router.post('/', function (req, res) {
@@ -58,6 +67,16 @@ router.post('/', function (req, res) {
     isActive = req.body.formdata.IsActive,
     email = req.body.formdata.Email,
     address = req.body.formdata.Address;
+
+    //添加角色的部分
+    var  roleID = req.body.formdata.RoleID;
+
+    var roledata = {};
+    if(roleID != undefined && roleID.length != 0)
+    {
+        roledata.RoleID = roleID;
+    }
+    
 
     data = {
         'ApplicationID': applicationID,
@@ -173,13 +192,41 @@ router.post('/', function (req, res) {
                 logger.writeError("插入失败");
                 return;
             }
-            if (result.insertId != 0) {
+            if (results.insertId != 0) {
                 res.json({
                     code: 200,
                     isSuccess: true,
                     msg: '操作成功'
                 });
                 logger.writeInfo("插入成功");
+                console.log(results.insertId);
+                if(roledata.RoleID != undefined && roledata.RoleID !=0)
+                {
+                    roledata.AccountID=results.insertId;
+                    userRole.insert(roledata,function(err, resultInsert)
+                    {
+                        if(err)
+                        {
+                            res.status(400);
+                            res.json({
+                                code:400,
+                                isSuccess:false,
+                                errorMsg:'插入角色失败'
+                            });
+                            logger.writeError("插入角色失败");
+                            return ;
+                        }
+                        if(resultInsert.insertId != 0)
+                        {
+                            res.json({
+                                code:200,
+                                isSuccess: true,
+                                msg:'插入成功'                  
+                               });
+                            return;
+                        }
+                    });
+                }
                 return;
             }
         });
@@ -437,7 +484,6 @@ router.put('/', function (req, res) {
     isActive = req.body.formdata.IsActive,
     email = req.body.formdata.Email,
     address = req.body.formdata.Address;
-
     data = {
         'ApplicationID': applicationID,
         'AccountID': accountID,

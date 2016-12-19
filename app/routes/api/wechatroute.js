@@ -10,7 +10,7 @@
  var router = express.Router();
  var url = require("url");
  var crypto = require("crypto");
-
+ var operateconfig = appRequire("config/operationconfig");
  var config = appRequire("config/config");
  var logger = appRequire('util/loghelper').helper;
 //用来插入到log中的
@@ -146,146 +146,144 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
-    if(msg.eventKey.length == 0)//是关注与取消关注的判断
+    console.log(msg);
+    //判断是否是订阅以及取消的判断条件
+    if(msg.Event == "subscribe" ||msg.Event == "unsubscribe")
     {
-        //解决服务器在关注坏掉的情况
-        wechat.getLocalAccessToken(1, function(issuccess, token) {
-            if (issuccess) {
-                wechat.getCustomerList(token,function(results)
+        console.log("关注成功");
+        //获取token
+        wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
+        {
+            if(isSussess)
+            {
+                // console.log(msg.fromUserName);
+                //获取用户的信息
+                wechat.getCustomerInfo(token,msg.FromUserName,function(info)
                 {
-                    for(var x in results.data.openid)
+                    console.log(info);
+                    var data = {
+                        'WechatUserCode':info.openid
+                    };
+
+                    if(info.subscribe == 1)//关注的人
                     {
-                        wechat.getCustomerInfo(token,results.data.openid[x],function(result)
+                        //获取用户的信息
+                        data.Sex=info.sex;
+                        data.NickName=info.nickname;
+                        data.IsActive = 1;
+                        if(info.city.length !=0)
                         {
-                        //获取到信息
-                        var data={
-                            "WechatUserCode" : result.openid,
-                            "NickName" : result.nickname,
-                            "Sex" : result.sex
+                            data.City = info.city;
+                        }                      
+                        if(info.province.length !=0)
+                        {
+                            data.Province = info.province; 
+                        }
+                        if(info.country.length !=0)
+                        {
+                            data.Country=info.country;
+                        }
+                        if(info.remark.length !=0)
+                        {
+                            data.Memo = info.remark;
                         }
 
-                        //判断微信自己填的记录是否为空
-                        if(result.province.length != 0)
-                        {
-                            data.Province = result.province;
-                        }
-                        if(result.country.length != 0)
-                        {
-                            data.Country = result.country;
-                        }
-                        if(result.city.length != 0)
-                        {
-                            data.City = result.city;
-                        }
-                        if(result.remark.length != 0)
-                        {
-                            data.Memo = result.remark;
-                        }
-                        wechatCustomer.insert(data,function(err,resultInsert)
-                        {
+                         //根据WechatUserCode来查询是否存在这个用户
+                         var queryInfo = {
+                            'WechatUserCode':info.openid
+                        };
+                        console.log(queryInfo);
+                         //开始查询是否存在用户
+                         wechatCustomer.query(queryInfo,function(err,resultInfo)
+                         {
                             if(err)
                             {
-                                console.log("未出现服务器坏掉导致用户信息丢失");
-                                return;
+                                console.log("查询失败");
+                                return ;
                             }
-
-                        });
-                    });
-}
-});
-wechat.getCustomerInfo(token,msg.fromUserName,function(result)
-{                    
-                    if(result.subscribe == 1)//已经关注的人
-                    {
-                        var data={
-                            "WechatUserCode" : result.openid,
-                            "NickName" : result.nickname,
-                            "Sex" : result.sex
-                        }
-
-                        //判断微信自己填的记录是否为空
-                        if(result.province.length != 0)
-                        {
-                            data.Province = result.province;
-                        }
-                        if(result.country.length != 0)
-                        {
-                            data.Country = result.country;
-                        }
-                        if(result.city.length != 0)
-                        {
-                            data.City = result.city;
-                        }
-                        if(result.remark.length != 0)
-                        {
-                            data.Memo = result.remark;
-                        }
-                        
-                        //注释掉怕重复的插入
-                        wechatCustomer.insert(data,function(err,result)
-                        {
-                            if(err)
+                            if(resultInfo != undefined && resultInfo.length != 0)
                             {
-                                if(!result.IsActive)
+                                console.log("用户名已经存在");
+                                //当用户名存在做更新操作
+                                wechatCustomer.update(data,function(err,updataInfo)
                                 {
-                                    data.IsActive = 1;   
-                                    wechatCustomer.update(data,function(err,result)
+                                    if(err)
                                     {
-                                        if(err)
-                                        {
-                                            console.log("再次关注微信失败");
-                                            return ;
-                                        }
-                                        if(result !== undefined && result.affectedRows != 0)
-                                        {
-                                            console.log("再次关注微信成功");
-                                            logModel.OperationName = '再次关注微信成功';                                       
-                                            return ;
-                                        }
-
-                                    });
-                                }
-                                else
-                                {
-                                    console.log("插入数据失败");
-                                }                    
-                                return;
+                                        console.log("更新失败");
+                                        return;
+                                    }
+                                    if(updataInfo != undefined &&updataInfo.affectedRows !=0)
+                                    {
+                                        console.log("更新成功");
+                                        return;
+                                    }
+                                });
                             }
-                            if(result.insertId != 0)
+                            else
                             {
-                                console.log("插入成功");
-                                return;
+                                //用户名不存在的时候做插入的操作
+                                wechatCustomer.insert(data,function(err,insertInfo)
+                                {
+                                   if(err)
+                                   {
+                                    console.log("插入失败");
+                                    return;
+                                }
+                                if(insertInfo != undefined &&insertInfo.affectedRows !=0)
+                                {
+                                    console.log("插入成功");
+                                    return;
+                                }
+                            });
                             }
+                        });
 
-                        })
-                    }else//取消关注
+}
+                    else//取消关注的人
                     {
-                        var data = {
-                            "WechatUserCode" :result.openid,
-                            "IsActive" : 0
-                        }
-                        wechatCustomer.update(data,function(err,results)
+                        data.IsActive = 0;
+                        wechatCustomer.update(data,function(err,updataInfo)
                         {
                             if(err)
                             {
-                                console.log("修改失败");
+                                console.log("更新失败");
                                 return;
                             }
-                            if(results !== undefined && results.affectedRows != 0)
+                            if(updataInfo != undefined &&updataInfo.affectedRows !=0)
                             {
-                                console.log("修改成功");
+                                console.log("更新成功");
                                 return;
                             }
                         });
                     }
                 });
 }
-}); 
+});
 }
-else
+if(msg.Event == "LOCATION")
 {
-    console.log("获取失败");    
-}
+        //获取地址事件者的openid
+        var locationData = {
+            'WechatUserCode':msg.FromUserName,
+            'Lon':msg.Longitude,
+            'Lat':msg.Latitude
+        }
+        wechatCustomer.update(locationData,function(err,updataInfo)
+        {
+            if(err)
+            {
+                console.log("更新失败");
+                return;
+            }
+            if(updataInfo != undefined &&updataInfo.affectedRows !=0)
+            {
+                console.log("更新成功");
+                return;
+            }
+        });
+        console.log("获取地址成功");
+
+    }
 });
 
 
