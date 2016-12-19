@@ -73,9 +73,10 @@ exports.countQuery = function (data, callback) {
 exports.queryProject = function (data, callback) {
     data = {
         'ID': data.ID || '',
-        'ProjectManageID': data.projectManageID || '',
-        'CreateTime': data.startTime || '',
-        'ProjectEndTime': data.endTime || '',
+        'ProjectManageID': data.ProjectManageID || '',
+        'ProjectName': data.projectName || '',
+        'CreateTime': data.CreateTime || '',
+        'ProjectEndTime': data.ProjectEndTime || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || 20,
     }
