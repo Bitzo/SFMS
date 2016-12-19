@@ -46,7 +46,6 @@ exports.queryFinance = function (data, callback) {
         'endTime': data.endTime || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || 20,
-        'IsActive': 1
     }
     financeDAL.queryFinance(queryData, function (err, results) {
         if (err) {
@@ -88,5 +87,31 @@ exports.checkFinance = function (data, callback) {
         }
         logger.writeInfo('审核财务');
         callback(false, results);
+    })
+}
+
+//多财务查询信息
+exports.queryFinanceForCheck = function (ID, callback) {
+    if (ID.length == 0) callback(true, '数据有误');
+    for (var i in ID) {
+        if (ID[i] <= 0) callback(true, '数据有误');
+    }
+    financeDAL.queryFinanceForCheck(ID, function (err, results) {
+        if (err) {
+            callback(true, results);
+            return;
+        }
+        logger.writeInfo('查询财务状态');
+        console.log(results)
+        if (results!==undefined && results.length>0 && results.length == ID.length) {
+            var t = 0;
+            for (var i in results) {
+                if (results[i].FIStatu == '待审核') ++t;
+            }
+            if (t == results.length) callback(false, true);
+            else callback(false, '有财务已被审核，无需再次审核');
+        } else {
+            callback(false, '未查询到相关的财务信息');
+        }
     })
 }

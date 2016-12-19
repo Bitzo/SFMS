@@ -2,87 +2,86 @@ link(rel='stylesheet' href="css/backend/role.css")
 block content
   div.container-fluid
     span 
-      h2 用户修改
+      h2 用户编辑
     form(method="post" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") 应用ID 
+          td(width="15%",class="tableleft") 应用名称
           td
-            select(id="search",value="",type="textview",ng-model='formdata.ApplicationID',style="width:153px;height:30px",required)
-              option 1
-              option 2
+            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationName',source='/app', stext='ApplicationName',svalue='ID',style="width:160px;height:30px",required)
             
         tr
           td(width="15%",class="tableleft") 用户姓名 
           td
-            input(type="textview",name="UserName",ng-model='formdata.UserName',ng-maxlength='11')
+            input(type="textview",name="UserName",ng-model='formdata.UserName',style="width:160px;height:30px",ng-maxlength='11'，,required)
             &nbsp&nbsp
             small.error(ng-show="formdata.UserName.$error.maxlength && formdata.UserName.$touched") 用户姓名最多11位
            
         tr
           td(width="15%",class="tableleft") 密码 
           td
-            input(type="textview",name="Pwd",ng-model="formdata.Pwd",ng-maxlength='50')
+            input(type="password",name="Pwd",ng-model="formdata.Pwd",ng-maxlength='50',style="width:160px;height:30px",required)
             &nbsp&nbsp
             small.error(ng-show="formdata.Pwd.$error.maxlength && formdata.Pwd.$touched") 密码最多50位
            
         tr
           td(width="15%",class="tableleft") 账户名 
           td
-            input(type="textview",name="Account",ng-model="formdata.Account",ng-maxlength='50')
+            input(type="textview",name="Account",ng-model="formdata.Account",ng-maxlength='50',style="width:160px;height:30px",required)
             &nbsp&nbsp
             small.error(ng-show="formdata.Account.$error.maxlength && formdata.Account.$touched") 账户最多50位
 
-              
         tr
-          td(width="15%",class="tableleft") 班级 (可选)  
+          td(width="15%",class="tableleft") 角色名称
           td
-            select(id="search",type="textview",value="",ng-model='formdata.ClassID',style="width:153px;height:30px",required)
-              option 3
-              option 4
+            jason-select.input(placeholder='角色名称' ng-model='formdata.RoleName' source='/backrole' stext='RoleName' svalue='RoleName',style="width:160px;height:30px",required)
+
         tr
-          td(width="15%",class="tableleft") 电话号码 (可选) 
+          td(class="tableleft") 是否有效
           td
-            input(type="textview",name="Phone",ng-model="formdata.Phone",ng-maxlength='11',style="width:153px;height:30px")
+            input(type="radio",name="IsActive",value="1",ng-model="formdata.IsActive",checked)
+            &nbsp有效
+            &nbsp&nbsp          
+            input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="0")
+            &nbsp无效
+        
+        tr
+          td(width="15%",class="tableleft") 手机号码 (可选) 
+          td
+            input(type="phone",name="Phone",ng-model="formdata.Phone",ng-maxlength='11',style="width:160px;height:30px")
             &nbsp&nbsp
             small.error(ng-show="formdata.Phone.$error.maxlength && formdata.Phone.$touched") 电话号码11位
-            
+
+        tr
+          td(width="15%",class="tableleft") 邮箱 (可选)
+          td
+            input(type="textview",name="roleCode",ng-model='formdata.Email',ng-maxlength='50',style="width:160px;height:30px")
+            &nbsp&nbsp
+            small.error(ng-show="formdata.Email.$error.maxlength && formdata.Email.$touched") 请填写正确的邮箱地址   
+           
+        tr
+          td(width="15%",class="tableleft") 所在学院 (可选) 
+          td
+            jason-select.input(placeholder='选择学院' ng-model='formdata.CollegeID',source='/backuser', stext='CollegeID',svalue='CollegeID',style="width:160px;height:30px",required)
+
+        tr
+          td(width="15%",class="tableleft") 所在班级 (可选)  
+          td
+            jason-select.input(placeholder='选择班级' ng-model='formdata.ClassID',source='/backuser', stext='ClassID',svalue='ClassID',style="width:160px;height:30px",required)
+
         tr
           td(width="15%",class="tableleft") 地址 (可选) 
           td
-            input(type="textview",name="Address",ng-model="formdata.Address",ng-maxlength='200')
+            textarea(type="textview",rows="2",cols="30",name="Address",ng-model="formdata.Address",ng-maxlength='200')
             &nbsp&nbsp
             small.error(ng-show="formdata.Address.$error.maxlength && formdata.Address.$touched") 填写地址
-           
-        tr
-          td(width="15%",class="tableleft") 大学ID (可选) 
-          td
-            select(id="search",value="",type="textview",ng-model='formdata.CollegeID',style="width:153px;height:30px",required)
-              option f
-              option g
 
         tr
           td(width="15%",class="tableleft") 备注 (可选)  
           td
-            input(type="textview",name="Memo",ng-model='formdata.Memo',ng-maxlength='200')
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Memo',ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 填写备注
-            
-        tr
-          td(width="15%",class="tableleft") 邮箱 (可选)
-          td
-            input(type="textview",name="roleCode",ng-model='formdata.Email',ng-maxlength='50')
-            &nbsp&nbsp
-            small.error(ng-show="formdata.Email.$error.maxlength && formdata.Email.$touched") 请填写正确的邮箱地址
-           
-        tr
-          td(class="tableleft") 是否有效
-          td
-            input(type="radio",name="isActive",value="1",ng-model="formdata.IsActive",checked)
-            有效
-            &nbsp&nbsp            
-            input(type="radio",name="isActive",ng-model="formdata.IsActive",value="0")
-            无效
+            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 填写备注    
 
         tr
           td(class="tableleft")
@@ -93,6 +92,5 @@ block content
             a.btn.btn-sm.btn-success(href='#backend/user') 返回列表
 
 
-
- include ../shared/footer.jade  
+include ../shared/footer.jade  
       

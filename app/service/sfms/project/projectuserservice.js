@@ -12,6 +12,9 @@ var logger = appRequire("util/loghelper").helper;
 
 //项目用户基本信息新增
 exports.addProjectUser = function(data, callback) {
+    for (var i in data) {
+        data[i].duty = data[i].duty || '';
+    }
     projectuserDAL.addProjectUser(data, function (err, results) {
         if (err) {
             callback(true, '新增失败');
@@ -49,7 +52,7 @@ exports.queryProjectUser = function (data, callback) {
 //项目用户信息查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'ProjectName': data.ProjectName,
+        'ProjectID': data.ProjectID,
         'UserName': data.UserName,
         'IsActive': data.IsActive
     }

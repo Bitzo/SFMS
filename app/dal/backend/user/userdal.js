@@ -228,7 +228,6 @@ exports.queryAccount=function(data,callback)
     var sql = 'select ApplicationID,AccountID,Account,UserName,Pwd,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime,IsActive from jit_user where 1=1 ';
     for(var key in data)
     sql+=' and Account = "'+data[key]+'" ';
-    console.log(111);
     console.log(sql);
     db_backend.mysqlPool.getConnection(function(err,connection)
     {
@@ -249,5 +248,35 @@ exports.queryAccount=function(data,callback)
             connection.release();
         });
        
+    });
+}
+//根据AccountID 多用户查询
+exports.queryAccountByID=function(data,callback)
+{
+
+    var sql = 'select ApplicationID,AccountID,Account,UserName,Pwd,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime,IsActive from jit_user where 1=0 ';
+    for(var key in data)
+        sql+='or AccountID = "'+data[key]+'" ';
+
+    logger.writeInfo('查询多个用户：'+sql);
+    db_backend.mysqlPool.getConnection(function(err,connection)
+    {
+        if(err)
+        {
+            logger.writeError("数据库链接的错误");
+            callback(true);
+            return;
+        }
+        connection.query(sql,function(err,results)
+        {
+            if(err)
+            {
+                callback(true);
+                return ;
+            }
+            callback(false,results);
+            connection.release();
+        });
+
     });
 }

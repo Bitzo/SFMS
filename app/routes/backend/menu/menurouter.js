@@ -43,7 +43,7 @@ router.get('/tree',function (req,res) {
         ParentID : parentID,
         MenuLevel : menuLevel,
         MenuName : menuName,
-        "jit_menu.IsActive" : isActive
+        IsActive : isActive
     };
 
     var intdata = {
@@ -53,7 +53,7 @@ router.get('/tree',function (req,res) {
         MenuID : menuID,
         ParentID : parentID,
         MenuLevel : menuLevel,
-        "jit_menu.IsActive" : isActive
+        IsActive : isActive
     };
 
     for (var key in intdata){
@@ -132,8 +132,8 @@ router.get('/tree',function (req,res) {
 
 router.get('/plain',function (req,res) {
     var query = JSON.parse(req.query.f);
-    var page = query.pageindex || 1,
-        pageNum = query.pagesize || 20,
+    var page = req.query.pageindex || 1,
+        pageNum = req.query.pagesize || 20,
         applicationID = query.ApplicationID || '',
         menuID = query.MenuID || '',
         parentID = query.ParentID || '',
@@ -162,7 +162,7 @@ router.get('/plain',function (req,res) {
         ParentID : parentID,
         MenuLevel : menuLevel,
         MenuName : menuName,
-        "jit_menu.IsActive" : isActive
+        IsActive : isActive
     };
 
     var intdata = {
@@ -172,7 +172,7 @@ router.get('/plain',function (req,res) {
         MenuID : menuID,
         ParentID : parentID,
         MenuLevel : menuLevel,
-        "jit_menu.IsActive" : isActive
+        IsActive : isActive
     };
 
     for (var key in intdata){
@@ -224,9 +224,10 @@ router.get('/plain',function (req,res) {
                         resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
                     }
                     res.status(200);
+                    //console.log(resultBack);
                     return res.json(resultBack);
                 } else {
-                    res.status(404);
+                    res.status(200);
                     return res.json({
                         code: 404,
                         isSuccess: false,
@@ -235,7 +236,7 @@ router.get('/plain',function (req,res) {
                 }
             });
         } else {
-            res.status(404);
+            res.status(200);
             return res.json({
                 code: 404,
                 isSuccess: false,
@@ -245,6 +246,124 @@ router.get('/plain',function (req,res) {
     });
 
 });
+
+router.get('/parent',function (req,res) {
+    var query = JSON.parse(req.query.f);
+    var page = req.query.pageindex || 1,
+        pageNum = req.query.pagesize || 20,
+        applicationID = query.ApplicationID || '',
+        menuID = query.MenuID || '',
+        parentID = query.ParentID || '',
+        menuLevel = query.MenuLevel || '',
+        menuName = query.MenuName || '',
+        isActive = query.IsActive || '';
+
+    page = page>0 ? page : 1;
+
+    if (pageNum == ''){
+        pageNum = config.pageCount;
+    }
+
+    if(isActive === undefined || isActive == ''){
+        isActive = 1;
+    }
+
+    //用于查询结果总数的计数
+    var countNum = 0;
+
+    var data = {
+        page : page,
+        pageNum : pageNum,
+        ApplicationID : applicationID,
+        MenuID : menuID,
+        ParentID : parentID,
+        MenuLevel : menuLevel,
+        MenuName : menuName,
+        IsActive : isActive
+    };
+
+    var intdata = {
+        page : page,
+        pageNum : pageNum,
+        ApplicationID : applicationID,
+        MenuID : menuID,
+        ParentID : parentID,
+        MenuLevel : menuLevel,
+        IsActive : isActive
+    };
+
+    for (var key in intdata){
+        if(isNaN(intdata[key]) && intdata[key] != ''){
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intdata[key] + '不是数字'
+            });
+        }
+    }
+
+    menuService.countAllMenus(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                errorMsg: "查询失败，服务器内部错误"
+            });
+        }
+        if (results !==undefined && results.length != 0) {
+            countNum = results[0]['num'];
+
+            //查询所需的详细数据
+            menuService.queryAllParentMenus(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                }
+
+                if (result !== undefined && result.length != 0 && countNum != -1) {
+                    var resultBack = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        curPageNum:pageNum,
+                        totalPage: Math.ceil(countNum/pageNum),
+                        data: result
+                    };
+                    if(resultBack.curPage == resultBack.totlePage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    }
+                    res.status(200);
+                    //console.log(resultBack);
+                    return res.json(resultBack);
+                } else {
+                    res.status(200);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相应菜单"
+                    });
+                }
+            });
+        } else {
+            res.status(200);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相应菜单"
+            });
+        }
+    });
+
+});
+
 
 //获得树形Menu结构
 router.get('/',function (req,res) {
@@ -325,6 +444,7 @@ router.get('/',function (req,res) {
 
 //新增菜单
 router.post('/',function(req,res,next) {
+    console.log(req.body);
     // 检查所需要的字段是否都存在
     var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
     var err = 'require: ';
@@ -342,8 +462,6 @@ router.post('/',function(req,res,next) {
             isSuccess: false,
             msg: '存在未填写的必填字段' + err
         });
-
-
     }
 
     var applicationID = req.body.formdata.ApplicationID;
@@ -417,7 +535,7 @@ router.post('/',function(req,res,next) {
                 code : 500,
                 isSuccess : false,
                 addMenuResult:result,
-                msg : '菜单新增失败，服务器出错'
+                msg : '菜单新增操作失败，服务器出错'
             });
         }
 
@@ -435,7 +553,7 @@ router.post('/',function(req,res,next) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "菜单添加失败"
+                msg: "菜单添加操作失败"
             });
         }
     });
@@ -537,7 +655,7 @@ router.put('/',function (req,res) {
                 code : 500,
                 isSuccess : false,
                 updateResult: result,
-                msg : '查询失败1，服务器出错'
+                msg : '操作失败，服务器出错'
             });
         }
         // 所要修改的菜单存在
@@ -549,7 +667,7 @@ router.put('/',function (req,res) {
                         code :500,
                         isSuccess : false,
                         updateResults:results,
-                        msg : '服务器出错'
+                        msg : '操作失败，服务器出错'
                     });
                 }
 
@@ -560,7 +678,7 @@ router.put('/',function (req,res) {
                         code : 200,
                         isSuccess : true,
                         updateResults : results,
-                        msg : '菜单修改成功'
+                        msg : '菜单修改操作成功'
                     });
 
                 }else {
@@ -568,7 +686,7 @@ router.put('/',function (req,res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "菜单修改失败"
+                        msg: "菜单修改操作失败"
                     });
                 }
             });
@@ -579,7 +697,7 @@ router.put('/',function (req,res) {
                 code :404,
                 isSuccess : false,
                 updateResult:result,
-                msg : '所要修改的菜单不存在'
+                msg : '操作失败，所要修改的菜单不存在'
             });
         }
     });
@@ -622,7 +740,7 @@ router.delete('/',function(req,res) {
                 code : 500,
                 isSuccess : false,
                 deleteResult:result,
-                msg : '服务器出错'
+                msg : '操作失败，服务器出错'
             });
         }
         //所要删除的菜单存在，执行删除操作
@@ -634,7 +752,7 @@ router.delete('/',function(req,res) {
                         code :500,
                         isSuccess : false,
                         deleteResults: results,
-                        msg : '服务器出错'
+                        msg : '操作失败，服务器出错'
                     });
                 }
 
@@ -645,14 +763,14 @@ router.delete('/',function(req,res) {
                         code : 200,
                         isSuccess : true,
                         deleteResult : results,
-                        msg : '菜单删除成功'
+                        msg : '菜单删除操作成功'
                     });
                 }else {
                     res.status(404);
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "菜单删除失败"
+                        msg: "菜单删除操作失败"
                     });
                 }
             });
@@ -663,7 +781,7 @@ router.delete('/',function(req,res) {
                 code :404,
                 isSuccess : false,
                 deleteResult:result,
-                msg : '所要删除的菜单不存在'
+                msg : '操作失败，所要删除的菜单不存在'
             });
         }
     });

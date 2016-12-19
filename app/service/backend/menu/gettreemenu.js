@@ -5,11 +5,12 @@
  * @Last Modified time: 2016/12/12 20:23
  * @Function:
  */
-function treeNode(appName,appID,menuID, parentID, menuLevel,sortIndex,menuName, iconPath,url,memo,isActive,children) {
+function treeNode(appName,appID,menuID, parentID,parentMenuName, menuLevel,sortIndex,menuName, iconPath,url,memo,isActive,children) {
     this.ApplicationName = appName;
     this.ApplicationID = appID;
     this.MenuID = menuID;
     this.ParentID = parentID;
+    this.ParentMenuName = parentMenuName;
     this.MenuLevel = menuLevel;
     this.SortIndex = sortIndex;
     this.MenuName = menuName;
@@ -28,6 +29,7 @@ function getTreeMenu(data, pid) {
                                     data[i].ApplicationID,
                                     data[i].MenuID,
                                     data[i].ParentID,
+                                    data[i].ParentMenuName,
                                     data[i].MenuLevel,
                                     data[i].SortIndex,
                                     data[i].MenuName,

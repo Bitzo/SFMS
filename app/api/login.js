@@ -79,6 +79,8 @@ router.post('/', function(req, res) {
                 } else {
                     resultData.data.signType = 1;
                 }
+                var signStatus = resultData.data.signType==0?1:0;
+                resultData.data.signStatus = signStatus;
                 return res.json(jwtHelper.genToken(resultData.data));
             })
         } else {

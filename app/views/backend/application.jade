@@ -1,36 +1,34 @@
+link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-
   jason-pagecontent(action='/app' conf='paginationConf')
-    div.page-content(stule="button {height :30px;}")
+    div.page-content
       ng-form.form-inline
-        label.form-group.my-form-group
-          input.form-control(placeholder='ID' style="width:100px;" ng-model='f.ID')
-        label.form-group.my-form-group
-          input.form-control(placeholder='应用名称'  style="width:100px;" ng-model='f.ApplicationName')
-        //- label.form-group.my-form-group
-        //-   input.form-control(placeholder='Is Active'  style="width:100px;" ng-model='f.IsActive')
-
-        label.form-group.my-form-group
-          button.btn.btn-sm.btn-primary(ng-click='search()') 查询
+        span(style='font-size: 24px;') 应用管理
         div.buttons.pull-right
-          a.btn.btn-sm.btn-success(ng-href='#/backend/applicationinfo')
-            i.icon.icon-plus 新建
-          button(ng-click='search()' class='btn btn-sm btn-default') 刷新
+          label.form-group.my-form-group 
+            jason-select(placeholder='应用名称' style="width:120px;height:34px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
+          label.form-group.my-form-group
+            a.btn.btn-sm.btn-primary(ng-click='search()')
+                            i.icon.icon-search   查询
+            a.btn.btn-sm.btn-success(ng-href='#/backend/applicationinfo')
+              i.icon.icon-plus 新建
+            button(ng-click='search()' class='btn btn-sm btn-default') 
+              i.icon.icon-repeat  刷新
       hr
       table.table.table-striped.table-bordered.text-center
         thead
           tr
             th 序号
-            th ID
-            th 应用代码
+            th 应用代码          
             th 应用名称
+            th 应用备注
             th 操作
         tbody
-          tr(ng-repeat="x in datas")
+          tr(ng-repeat="x in datas") 
             td {{$index+1}}
-            td {{x.ID}}
-            td {{x.ApplicationCode}}
+            td {{x.ApplicationCode}}            
             td {{x.ApplicationName}}
+            td {{x.Memo}}
             td
               a(ng-click="show(x.ID,'/app')",href='#/backend/applicationedit/' )
                 i.icon.icon-edit 编辑

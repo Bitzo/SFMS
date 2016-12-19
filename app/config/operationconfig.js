@@ -42,16 +42,16 @@ var operationConfig = {
                 actionName: "角色新增",
                 identifier: 101
             },
-            userDel: {
+            roleDel: {
                 actionName: "角色删除",
                 identifier: 102
             },
-            userSingleQuery: {
-                actionName: "用户单个查询",
+            roleSingleQuery: {
+                actionName: "角色单个查询",
                 identifier: 103
             },
-            userMultiQuery: {
-                actionName: "用户批量查询",
+            roleMultiQuery: {
+                actionName: "角色批量查询",
                 identifier: 104
             },
         },
@@ -65,11 +65,11 @@ var operationConfig = {
                 actionName: "客户新增",
                 identifier: 2001
             },
-            customerUpd:{
+            customerUpd: {
                 actionName:'客户修改',
                 identifier:2002
             },
-            customerDel:{
+            customerDel: {
                 actionName:'客户的删除',
                 identifier:2003
             }
@@ -104,8 +104,8 @@ var operationConfig = {
                 identifier:2202
             },
             orderdeliveryDel:{
-                actionName:"配送情况单的删除",
-                identifier:2203
+                actionName: "配送情况单的删除",
+                identifier: 2203
             },
             orderdeliveryQuery:{
                 actionName:"配送员情况单的查询",
@@ -130,7 +130,7 @@ var operationConfig = {
                 actionName:"配送员商品情况的查询",
                 identifier:2304
             }
-        },
+        },        
        product:{
             module:"商品模块",
            productAdd:{
@@ -186,9 +186,8 @@ var operationConfig = {
             productTypeQuery:{
                 actionName:"商品种类查询",
                 identifier:2604
-            }
-        }
-
+            },
+        },
     },
     sfmsApp: {
         applicationID: 3,
@@ -198,8 +197,109 @@ var operationConfig = {
             projectAdd: {
                 actionName: "项目新增",
                 identifier: 3001
+            },   
+            projectUpdete: {
+                actionName: "项目编辑",
+                identifier: 3002
             },
-        }
+            projectQuery: {
+                actionName: "项目查询",
+                identifier: 3003
+            },
+            projectDelete: {
+                actionName: "项目删除",
+                identifier: 3004
+            },
+            projectUserAdd: {
+                actionName: "项目人员新增",
+                identifier: 3005
+            },
+            projectUserUpdate: {
+                actionName: "项目人员编辑",
+                identifier: 3006
+            },
+            projectUserQuery: {
+                actionName: "项目人员查询",
+                identifier: 3001
+            },
+            projectUserDelete: {
+                actionName: "项目人员删除",
+                identifier: 3001
+            },
+        },
+        financeManage: {
+            module: "财务模块",
+            financeAdd: {
+                actionName: "财务新增",
+                identifier: 3101
+            },
+            financeUpdete: {
+                actionName: "财务编辑",
+                identifier: 3102
+            },
+            financeSingleQuery: {
+                actionName: "财务单个查询",
+                identifier: 3103
+            },
+            financeMultiQuery: {
+                actionName: "财务批量查询",
+                identifier: 3104
+            },
+            financeDelete: {
+                actionName: "财务删除",
+                identifier: 3105
+            },
+            financeCheck: {
+                actionName: "财务审核",
+                identifier: 3106
+            }
+        },
+        KPIManage: {
+            module: "绩效模块",
+            KPIAdd: {
+                actionName: "绩效新增",
+                identifier: 3201
+            },
+            KPIUpdete: {
+                actionName: "绩效编辑",
+                identifier: 3202
+            },
+            KPISingleQuery: {
+                actionName: "绩效单个查询",
+                identifier: 3203
+            },
+            KPIMultiQuery: {
+                actionName: "绩效批量查询",
+                identifier: 3204
+            },
+            KPIDelete: {
+                actionName: "绩效删除",
+                identifier: 3205
+            },
+            KPICheck: {
+                actionName: "绩效审核",
+                identifier: 3206
+            },
+        },
+        SignManage: {
+            module: "签到模块",
+            SignIn: {
+                actionName: "签到",
+                identifier: 3301
+            },
+            SignOut: {
+                actionName: "签出",
+                identifier: 3302
+            },
+            SignQuery: {
+                actionName: "签到查询",
+                identifier: 3303
+            },
+            SignCount: {
+                actionName: "签到统计",
+                identifier: 3304
+            },
+        },
     },
     weChat:{
         applicationName:4,
@@ -224,7 +324,6 @@ var operationConfig = {
             }
         }
     }
-
 };
 
 

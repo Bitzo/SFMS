@@ -111,8 +111,11 @@ exports.queryAllMenusFormTreeIByRecursion  = function(data, callback){
             appGroup = getTree.getTreeMenu(appGroup,0);
 
             var objOfApp = new Object();
-            objOfApp.appName = appGroup[0].ApplicationName;
-            objOfApp.menuData = appGroup;
+
+            if(appGroup[0] !== undefined && appGroup[0].ApplicationName !== undefined){
+                objOfApp.appName = appGroup[0].ApplicationName;
+                objOfApp.menuData = appGroup;
+            }
 
             returnResults.push(objOfApp);
         }
@@ -149,6 +152,21 @@ exports.queryAllMenus = function(data, callback){
         callback(false,results);
     });
 };
+
+//查询所有父级菜单，平面展示
+exports.queryAllParentMenus = function(data, callback){
+    menuDAl.queryAllParentMenus(data,function (err,results) {
+        if(err){
+            callback(true);
+            return ;
+        }
+
+        console.log('queryAllParentMenus func in service');
+        logger.writeInfo('queryAllParentMenus func in service');
+        callback(false,results);
+    });
+};
+
 
 //菜单新增
 exports.menuInsert = function (data,callback) {

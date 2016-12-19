@@ -129,19 +129,19 @@ exports.countQuery = function (data, callback) {
 
 //KPI查询
 exports.queryKPI = function (data, callback) {
-    var sql = 'select ID,KPIName,KPIType,KPIScore,ProjectID,UserID,UserName,CreateTime,OperateUser,CheckTime,CheckUser,KPIStatus,Remark from jit_kpiinfo where 1=1 ',
+    var sql = 'select jit_kpiinfo.ID,KPIName,KPIType,KPIScore,ProjectID,projectName,UserID,UserName,jit_kpiinfo.CreateTime,jit_kpiinfo.OperateUser,CheckTime,CheckUser,KPIStatus,Remark from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_kpiinfo.IsActive = 1 and jit_kpiinfo.projectID = jit_projectbaseinfo.ID ',
         page = data.page || 1,
-        num = data.pageNum || 20;
+        num = data.pageNum || config.pageCount;
 
     if (data !== undefined) {
         for (var key in data) {
-            if ( key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'StartTime' && key != 'EndTime' && data[key] !== undefined )
+            if ( key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'StartTime' && key != 'EndTime' )
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
 
-    if (data.StartTime != '' && data.StartTime !== undefined) sql += "and CreateTime > '" + data.StartTime + "' ";
-    if (data.EndTime != '' && data.EndTime !== undefined) sql += "and CreateTime < '" + data.EndTime + "' ";
+    if (data.StartTime != '') sql += "and jit_kpiinfo.CreateTime > '" + data.StartTime + "' ";
+    if (data.EndTime != '') sql += "and jit_kpiinfo.CreateTime < '" + data.EndTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
@@ -216,6 +216,33 @@ exports.checkKPI = function (data, callback) {
                 status[0].isSuccess = results.affectedRows?true:false;
             }
             callback(false, status);
+            connection.release();
+        });
+    });
+}
+
+exports.queryKPIForCheck = function (ID, callback) {
+    var sql = 'select KPIStatus from jit_kpiinfo where 1=0'
+
+    for (var i in ID) {
+        sql += ' or ID = ' + ID[i];
+    }
+
+    logger.writeInfo('查询FOR绩效审核：'+ sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '修改失败 ');
+                return;
+            }
+            callback(false, results);
             connection.release();
         });
     });

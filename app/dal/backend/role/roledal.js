@@ -13,12 +13,13 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询所有角色信息
 exports.queryAllRoles = function (data, callback) {
-    var sql = 'select ApplicationID, RoleID, RoleCode, RoleName, IsActive from jit_role where 1=1 ';
+    var sql = 'select ApplicationID,ApplicationName,RoleID, RoleCode, RoleName, jit_role.IsActive from jit_role,jit_application ' +
+        'where 1=1 and jit_role.ApplicationID = jit_application.ID and jit_role.IsActive = 1';
 
     if (data !== undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != '')
-            sql += "and " + key + " = '" + data[key] + "' ";
+            sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
 
@@ -52,12 +53,12 @@ exports.queryAllRoles = function (data, callback) {
 
 //计数，统计对应数据总个数
 exports.countAllRoles = function (data, callback) {
-    var sql =  'select count(1) AS num from jit_role where 1=1 ';
+    var sql =  'select count(1) AS num from jit_role where 1=1 and IsActive = 1 ';
 
     if (data !== undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != '')
-                sql += "and " + key + " = '" + data[key] + "' ";
+                sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
 

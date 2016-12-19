@@ -41,53 +41,11 @@ myApp.controller('baseController', function($scope, $http,baseService) {
     }
     $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
     $scope.$watch( 'paginationConf.action',getInit);
+    
+    //查询
     $scope.search=function(){
         getInit();
-    }
-
-
-//添加角色
-    $scope.roleSubmit=function(role){
-        $http({
-            method: 'POST',
-            url: "/role",
-            data: {
-                'ApplicationID':role.applicationID,
-                'RoleName':role.roleName,
-                'RoleCode':role.roleCode,
-                'IsActive':role.isActive,
-                'roleFunck':role.Funck,
-                'access_token':localStorage.getItem('jit_token'),
-                'jitkey':localStorage.getItem('jit_key')
-            }
-
-        }).
-        success(function(response) {
-
-        }).
-        error(function(response) {
-            if (response && response.data && !response.isSuccess) {
-                alert(response.data.msg);
-            } else {
-                alert('提交失败!');
-            }
-        });
-    }
-
-    //删除角色
-    $scope.del=function(RoleID){
-        var index=-1;
-        for(var i=0;i<$scope.datas.length;i++){
-            if($scope.datas[i]['RoleID']=RoleID){
-                index=i;
-                break;
-            };
-        }
-        $scope.datas.splice(index,1);
-    }
-    //编辑角色
-    $scope.update=function(RoleID){
-
+        console.log($scope.f)
     }
 
 
@@ -109,19 +67,21 @@ myApp.controller('baseController', function($scope, $http,baseService) {
             console.log(response);
             if(response.isSuccess){
                 alert(response.msg);
+                $scope.datas.push($scope.formdata);
             }else{
                 alert(response.msg);
             }
 
         }).
         error(function(response) {
+            alert(response.msg);
             console.log(response);
             console.log('no');
         });
     };
 
 
-    //修改
+    //获取编辑信息
     $scope.show=function(index,action){
         getInitmenu(index,action);
     };
@@ -141,7 +101,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
             }
         }).
         success(function(response) {
-            $scope.formdata=response.data[0];
+            $scope.paginationConf.formdata=response.data[0];
             console.log($scope.formdata.ApplicationID);
             console.log('修改成功');
             console.log(response);
@@ -152,7 +112,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
         });
     }
 
-    //提交修改
+    //编辑完成提交信息
     $scope.formdata={};
     $scope.newedit = function(formdata,action) {
         console.log(formdata);
@@ -178,6 +138,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
         }).
         error(function(response) {
             console.log('提交失败');
+            alert(response.msg);
             console.log(formdata);
             console.log(response);
             console.log('no');
@@ -294,5 +255,53 @@ myApp.controller('baseController', function($scope, $http,baseService) {
             console.log(response);
         });
     }
+    
+
+     //显示项目模态框
+        $scope.moreproject = function(index,action){
+                console.log(action);
+                console.log('more');
+                $scope.f={
+                    "projectID":$scope.datas[index].ID,
+                };
+                $http({
+                    method:'get',
+                    url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                }).
+                success(function(response) {
+                    console.log(response);
+                    $scope.data = response.data;
+                    console.log($scope.menus);
+
+                }).
+                error(function(response) {
+                    console.log(response);
+                });
+            }
+
+    //显示用户模态框数据
+    $scope.moresign = function(index,action){
+        console.log(index);
+        console.log(action);        
+                
+        console.log('more');
+        $scope.f={
+            "userID":index,
+        };
+        $http({
+            method:'get',
+            url:action+$scope.f.userID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            
+        }).
+        success(function(response) {
+            console.log(response);
+            $scope.data = response.data;
+        }).
+        error(function(response) {
+            console.log(response);
+        });
+    }
+    
+    
 
 })

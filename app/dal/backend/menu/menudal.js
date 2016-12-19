@@ -14,9 +14,12 @@ var db_backend = appRequire('db/db_backend'),
 exports.queryAllMenus = function(data, callback) {
     var arr = new Array();
 
-    arr.push(" select jit_application.ApplicationName,jit_menu.ApplicationID,MenuID,MenuLevel,ParentID,SortIndex,MenuName, ");
-    arr.push(" IconPath,Url,jit_menu.Memo,jit_menu.IsActive ");
-    arr.push(" from jit_menu left join jit_application on jit_menu.ApplicationID = jit_application.ID ");
+    arr.push(" select C.ApplicationName,jit_menu.ApplicationID,jit_menu.MenuID,jit_menu.MenuLevel, ");
+    arr.push(" jit_menu.ParentID,B.MenuName as ParentMenuName,jit_menu.SortIndex,jit_menu.MenuName, ")
+    arr.push(" jit_menu.IconPath,jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ");
+    arr.push(" from jit_menu ");
+    arr.push(" left join jit_application C on jit_menu.ApplicationID = C.ID ");
+    arr.push(" left join jit_menu B on jit_menu.ParentID = B.MenuID ");
     arr.push(" where 1=1 ");
 
     var sql = arr.join(' ');
@@ -26,9 +29,9 @@ exports.queryAllMenus = function(data, callback) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
                 //判断data[key]是否是数值类型
                 if(!isNaN(data[key])){
-                    sql += ' and ' + key + ' = '+ data[key] + ' ';
+                    sql += ' and ' + 'jit_menu.' + key + ' = '+ data[key] + ' ';
                 }else {
-                    sql += ' and ' + key + ' = "'+ data[key] + '" ';
+                    sql += ' and ' + 'jit_menu.' + key + ' = "'+ data[key] + '" ';
                 }
             }
         }
@@ -60,6 +63,57 @@ exports.queryAllMenus = function(data, callback) {
         });
     })
 }
+
+exports.queryAllParentMenus = function(data, callback) {
+    var arr = new Array();
+
+    arr.push(" select  DISTINCT B.MenuName as ParentMenuName, B.MenuID as ParentID ");
+    arr.push(" from jit_menu ")
+    arr.push(" left join jit_menu B on jit_menu.ParentID = B.MenuID ");
+    arr.push(" where 1=1 ");
+    
+    var sql = arr.join(' ');
+
+    if(data !== undefined){
+        for(var key in data){
+            if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
+                //判断data[key]是否是数值类型
+                if(!isNaN(data[key])){
+                    sql += ' and ' + 'jit_menu.' + key + ' = '+ data[key] + ' ';
+                }else {
+                    sql += ' and ' + 'jit_menu.' + key + ' = "'+ data[key] + '" ';
+                }
+            }
+        }
+    }
+
+    var num = data.pageNum; //每页显示的个数
+    var page = data.page || 1;
+
+    sql += " LIMIT " + (page-1)*num + "," + num;
+
+    logger.writeInfo("[queryAllParentMenus func in menudal]查询所有父级菜单：" + sql);
+    console.log("in dal,查询所有的父级菜单：" + sql);
+
+    db_backend.mysqlPool.getConnection(function (err,connection) {
+        if(err){
+            logger.writeError("[menudal]数据库连接错误：" + err);
+            callback(true);
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+
+            callback(false, results);
+            connection.release();
+        });
+    })
+}
+
 
 //计数，查询菜单表的总个数
 exports.countAllMenus = function (data, callback) {

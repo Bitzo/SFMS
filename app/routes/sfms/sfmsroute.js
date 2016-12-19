@@ -5,6 +5,7 @@ var url = require("url");
 //实验室管理系统 项目管理路由
 var project = appRequire('routes/sfms/project/projectroute');
 var projectuser = appRequire('routes/sfms/project/projectuserroute');
+var projectremark = appRequire('routes/sfms/project/projectremarkroute');
 //实验室管理系统 签到信息管理路由
 var sign = appRequire('routes/sfms/sign/signroute');
 //实验室管理系统 KPI管理路由
@@ -15,26 +16,9 @@ var finance = appRequire('routes/sfms/finance/financeroute');
 var userSpring = appRequire('service/backend/application/applicationservice');
 var logger = appRequire('util/loghelper').helper;
 
-// router.get('/index', function(req, res, next) {
-//         res.render('sfms/index', { title: 'Hi sfms' });
-
-// });
-
-// router.get('/user', function(req, res, next) {
-//         res.render('sfms/user', { title: 'Hi sfms' });
-
-// });
-
-// router.get('/role', function(req, res, next) {
-//         res.render('sfms/role', { title: 'Hi sfms' });
 
 
-// });
 
-// router.get('/roleAdd', function(req, res, next) {
-//     res.render('sfms/roleAdd', { title: 'Hi sfms' });
-
-//});
 router.get('/appedit', function(req, res, next) {
         console.log("here");
         var data = {
@@ -70,39 +54,45 @@ router.get('/appedit', function(req, res, next) {
         });
 
 });
-router.get('/roleAdd', function(req, res, next) {
-    res.render('sfms/roleAdd', { title: 'Hi sfms' });
+
+
+router.get('/projectLead', function(req, res, next) {
+        res.render('sfms/projectLead', { title: 'Hi sfms' });
+});
+router.get('/projectManage', function(req, res, next) {
+        res.render('sfms/projectManage', { title: 'Hi sfms' });
+});
+router.get('/projectAdd', function(req, res, next) {
+        res.render('sfms/projectAdd', { title: 'Hi sfms' });
+});
+router.get('/projectEdit', function(req, res, next) {
+        res.render('sfms/projectEdit', { title: 'Hi sfms' });
+});
+router.get('/kpi', function(req, res, next) {
+        res.render('sfms/kpi', { title: 'Hi sfms' });
+});
+router.get('/kpiAdd', function(req, res, next) {
+        res.render('sfms/kpiAdd', { title: 'Hi sfms' });
+});
+router.get('/kpiEdit', function(req, res, next) {
+        res.render('sfms/kpiEdit', { title: 'Hi sfms' });
+});
+router.get('/kpiManage', function(req, res, next) {
+        res.render('sfms/kpiManage', { title: 'Hi sfms' });
+});
+router.get('/sign', function(req, res, next) {
+        res.render('sfms/sign', { title: 'Hi sfms' });
+});
+router.get('/finance', function(req, res, next) {
+        res.render('sfms/finance', { title: 'Hi sfms' });
+});
+router.get('/financetAdd', function(req, res, next) {
+        res.render('sfms/financetAdd', { title: 'Hi sfms' });
+});
+router.get('/financetCheck', function(req, res, next) {
+        res.render('sfms/financetCheck', { title: 'Hi sfms' });
 });
 
-// router.get('/roleEdit', function(req, res, next) {
-//     res.render('sfms/roleEdit', { title: 'Hi sfms' });
-
-// });
-
-// router.get('/userinfo', function(req, res, next) {
-//         res.render('sfms/userinfo', { title: 'Hi sfms' });
-
-// });
-
-// router.get('/menu', function(req, res, next) {
-//         res.render('sfms/menu', { title: 'Hi sfms' });
-
-// });
-
-// router.get('/menuinfo', function(req, res, next) {
-//         res.render('sfms/menuinfo', { title: 'Hi sfms' });
-
-// });
-
-// router.get('/application', function(req, res, next) {
-//         res.render('sfms/application', { title: 'Hi sfms' });
-
-// });
-
-// router.get('/applicationinfo', function(req, res, next) {
-//         res.render('sfms/applicationinfo', { title: 'Hi sfms' });
-
-// });
 
 router.get('/getmenu', function(req, res, next) {
         //res.render('sfms/index', { title: 'Hi gemeun' });
@@ -182,13 +172,15 @@ router.get('/getappbyid', function (req, res) {
 
 });
 //项目用户 有关路由
-router.use('/projectuser', projectuser);
+router.use('/api/projectuser', projectuser);
 //项目管理 路由
-router.use('/project', project);
+router.use('/api/project', project);
+//项目用户对项目备注 路由
+router.use('/api/projectremark', projectremark);
 //签到管理 路由
-router.use('/sign', sign);
+router.use('/api/sign', sign);
 //绩效管理 路由
-router.use('/kpi',kpi);
+router.use('/api/kpi',kpi);
 //财务管理 路由
-router.use('/finance', finance);
+router.use('/api/finance', finance);
 module.exports = router;

@@ -2,91 +2,82 @@ link(rel='stylesheet' href="css/backend/role.css")
 block content
   div.container-fluid
     span 
-      h2 菜单修改
-    form(method="post",name="menuinfo" )
-     table.table.table-bordered.table-hover.definedwidth.m10
-        tr
-          td(width="15%",class="tableleft") 应用ID  
-          td
-            input(type="textview",name="ApplicationID",ng-model='formdata.ApplicationID',ng-maxlength='11',required)
-            &nbsp&nbsp
-            small.error(ng-show="formdata.ApplicationID.$error.maxlength && formdata.ApplicationID.$touched") 应用ID最多11位
+      h2 菜单编辑
+    jason-form(method="post",source='/backmenu/plain' conf='paginationConf')
+      table.table.table-bordered.table-hover.definedwidth.m10
+          tr
+            td(width="15%",class="tableleft") 	菜单名称 
+            td
+              input(type="textview",name="MenuName",ng-model='paginationConf.formdata.MenuName',ng-maxlength='50',style="width:160px;height:30px",required)
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.MenuName.$error.maxlength && paginationConf.formdata.MenuName.$touched") 菜单名称最多50位     
+        
+          tr
+            td(width="15%",class="tableleft") 应用名称 
+            td
+              jason-select.input(placeholder='应用名称',ng-model='paginationConf.formdata.ApplicationName', source='/app' stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required) 
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.ApplicationID.$error.maxlength && paginationConf.formdata.ApplicationID.$touched") 应用ID最多11位
+          
+          tr
+            td(width="15%",class="tableleft") 菜单对应的层级
+            td
+              select(type="textview",ng-model='paginationConf.formdata.MenuLevel',style="width:160px;height:30px",required)
+                option(selected = "selected") 1
+                option 2          
+
+          tr
+            td(width="15%",class="tableleft") 	对应的父级ID
+            td
+              jason-select.input(placeholder='对应的父级名称',ng-model="paginationConf.formdata.ParentID",source='/backmenu/plain', stext='ParentID' svalue='ParentID',ng-maxlength='11',style="width:160px;height:30px",required)
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.ParentID.$error.maxlength && paginationConf.formdata.ParentID.$touched") 对应的父级ID最多11位
             
-      
-        tr
-          td(width="15%",class="tableleft") 菜单对应的层级
-          td
-            select(type="textview",ng-model='formdata.MenuLevel',style="width:163px;height:30px",required)
-              option(selected = "selected") 1
-              option 2
+          tr
+            td(class="tableleft") 是否有效
+            td
+              input(type="radio",name="IsActive",value="1",ng-model="formdata.IsActive",checked)
+              &nbsp有效
+              &nbsp&nbsp          
+              input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="0")
+              &nbsp无效  
+
+          tr
+            td(width="15%",class="tableleft") 对应的菜单排序顺序  
+            td
+              input(type="number",name="SortIndex",ng-model='paginationConf.formdata.SortIndex',ng-maxlength='11',style="width:160px;height:30px",required)
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.SortIndex.$error.maxlength && paginationConf.formdata.SortIndex.$touched") 对应的菜单排序顺序最多11位
+          
+          tr
+            td(width="15%",class="tableleft") 	对应菜单的icon路径 
+            td
+              input(type="textview",name="IconPath",ng-model='paginationConf.formdata.IconPath',ng-maxlength='100',style="width:160px;height:30px",required)
+              &nbsp&nbsp 
+              small.error(ng-show="paginationConf.formdata.IconPath.$error.maxlength && paginationConf.formdata.IconPath.$touched") 对应菜单的icon路径最多100位
               
-
-        tr
-          td(width="15%",class="tableleft") 	对应的父级ID 
-          td
-            input(type="textview",name="ParentID",ng-model="formdata.ParentID",ng-maxlength='11',required)
-            &nbsp&nbsp
-            small.error(ng-show="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级ID最多11位
-           
-           
-
-        tr
-          td(width="15%",class="tableleft") 对应的菜单排序顺序  
-          td
-            input(type="textview",name="SortIndex",ng-model='formdata.SortIndex',ng-maxlength='11',required)
-            &nbsp&nbsp
-            small.error(ng-show="formdata.SortIndex.$error.maxlength && formdata.SortIndex.$touched") 对应的菜单排序顺序最多11位
-          
-           
-        tr
-          td(width="15%",class="tableleft") 	菜单名称 
-          td
-            input(type="textview",name="MenuName",ng-model='formdata.MenuName',ng-maxlength='50',required)
-            &nbsp&nbsp
-            small.error(ng-show="formdata.MenuName.$error.maxlength && formdata.MenuName.$touched") 菜单名称最多50位
-
-        tr
-          td(width="15%",class="tableleft") 	对应菜单的icon路径 
-          td
-            input(type="textview",name="IconPath",ng-model='formdata.IconPath',ng-maxlength='100',required)
-            &nbsp&nbsp 
-            small.error(ng-show="formdata.IconPath.$error.maxlength && formdata.IconPath.$touched") 对应菜单的icon路径最多100位
+          tr
+            td(width="15%",class="tableleft") 菜单对应的url 
+            td
+              input(type="textview",name="Url",ng-model='paginationConf.formdata.Url',ng-maxlength='50',style="width:160px;height:30px",required)
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.Url.$error.maxlength && paginationConf.formdata.Url.$touched") 菜单对应的url最多50位
             
-        tr
-          td(width="15%",class="tableleft") 菜单对应的url 
-          td
-            input(type="textview",name="Url",ng-model='formdata.Url',ng-maxlength='50',required)
-            &nbsp&nbsp
-            small.error(ng-show="formdata.Url.$error.maxlength && formdata.Url.$touched") 菜单对应的url最多50位
-           
-          
-        tr
-          td(width="15%",class="tableleft") 备注(可选) 
-          td
-            input(type="textview",name="Memo",ng-model="formdata.Memo",ng-maxlength='200')
-            &nbsp&nbsp
-            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 备注最多200位
-            
-            
-        tr
-          td(class="tableleft") 是否有效
-          td
-            input(type="radio",name="IsActive",value="1",ng-model="formdata.IsActive",checked)
-            有效
-            &nbsp&nbsp            
-            input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="0")
-            无效
+          tr
+            td(width="15%",class="tableleft") 备注(可选) 
+            td
+              textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Memo',ng-maxlength='200')
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 备注最多200位
 
-
-        tr
-          td(class="tableleft")
-          td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(formdata,'/backmenu')") 确认修改
- 
-            &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-sm.btn-success(href='#backend/menu') 返回列表
+          tr
+            td(class="tableleft")
+            td
+              button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/backmenu')") 确认修改
+              &nbsp&nbsp&nbsp&nbsp
+              a.btn.btn-sm.btn-success(href='#sfms/menu') 返回列表
 
 
 
- include ../shared/footer.jade  
+
       

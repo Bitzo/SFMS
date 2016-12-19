@@ -13,20 +13,17 @@ var moment = require('moment');
 
 //项目用户新增
 exports.addProjectUser = function (data, callback) {
-    var insert_sql = 'insert into jit_projectruser set ',
+    var insert_sql = 'insert into jit_projectruser (ProjectName,ProjectID,UserID,UserName,CreateTime,OperateUser,EditName,EditTime,Duty,IsActive) Value ',
         sql = '',
-        time = moment().format('YYYY-MM-DD HH:mm:ss');
-
-    data.CreateTime = time;
-    data.EditTime = time;
+        time = moment().format("YYYY-MM-DD HH:mm:ss");
 
     if (data !== undefined) {
-        for (var key in data) {
-            if (sql.length == 0) {
-                sql += " " + key + " = '" + data[key] + "' ";
-            } else {
-                sql += ", " + key + " = '" + data[key] + "' ";
-            }
+        for (var i in data) {
+            if(sql.length == 0)
+                sql += "('"+ data[i].ProjectName +"',"+ data[i].projectID +","+ data[i].userID +",'"+ data[i].UserName + "','"
+                    + time + "','"+ data[i].OperateUser +"','"+ data[i].editName +"','"+ time +"','"+ data[i].duty +"',"+ "1)";
+            else  sql += ",('"+ data[i].ProjectName +"',"+ data[i].projectID +","+ data[i].userID +",'"+ data[i].UserName + "','"
+                + time + "','"+ data[i].OperateUser +"','"+ data[i].editName +"','"+ time +"','"+ data[i].duty +"',"+ "1)";
         }
     }
 
@@ -102,7 +99,7 @@ exports.queryProjectUser = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== undefined) {
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '') {
                 sql += "and " + key + "= '" + data[key] + "' ";
             }
         }
@@ -136,7 +133,7 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] !== undefined && key !== 'page' && key !== 'pageNum')
+            if(data[key] != '' && key !== 'page' && key !== 'pageNum')
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }
