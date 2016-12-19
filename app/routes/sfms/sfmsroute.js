@@ -80,8 +80,14 @@ router.get('/kpiEdit', function(req, res, next) {
 router.get('/kpiManage', function(req, res, next) {
         res.render('sfms/kpiManage', { title: 'Hi sfms' });
 });
-router.get('/sign', function(req, res, next) {
-        res.render('sfms/sign', { title: 'Hi sfms' });
+router.get('/kpiCheck', function(req, res, next) {
+        res.render('sfms/kpiCheck', { title: 'Hi sfms' });
+});
+router.get('/signManage', function(req, res, next) {
+        res.render('sfms/signManage', { title: 'Hi sfms' });
+});
+router.get('/signPersonal', function(req, res, next) {
+        res.render('sfms/signPersonal', { title: 'Hi sfms' });
 });
 router.get('/finance', function(req, res, next) {
         res.render('sfms/finance', { title: 'Hi sfms' });

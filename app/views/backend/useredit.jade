@@ -13,10 +13,10 @@ block content
         tr
           td(width="15%",class="tableleft") 用户姓名 
           td
-            input(type="textview",name="UserName",ng-model='formdata.UserName',style="width:160px;height:30px",ng-maxlength='11'，,required)
+            input(type="textview",name="UserName",ng-model='formdata.UserName',ng-maxlength='11',style="width:160px;height:30px",required)
             &nbsp&nbsp
             small.error(ng-show="formdata.UserName.$error.maxlength && formdata.UserName.$touched") 用户姓名最多11位
-           
+            
         tr
           td(width="15%",class="tableleft") 密码 
           td

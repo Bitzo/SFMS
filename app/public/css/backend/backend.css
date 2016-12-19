@@ -2,3 +2,20 @@
     vertical-align: middle;
     text-align: center;
 }
+.dropdown-menu{
+    position: relative;
+    top: 30px;
+    left: 120px;
+}
+.tip{
+    height: 50px;
+}
+.tip1{
+    position: fixed;
+    font-size: 2px;
+    height: 1000px;
+    z-index: 10;
+}
+.tip:hover{
+    color: white;
+}

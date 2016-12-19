@@ -23,10 +23,10 @@ block content
                         
     div.page-content
       ng-form.form-inline
-        span(style='font-size: 24px;') 项目管理员
+        span(style='font-size: 24px;') 项目管理
         div.buttons.pull-right
           label.form-group.my-form-group 
-            jason-select(placeholder='项目名称' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select.selectpicker(placeholder='项目名称' multiple data-max-options='2' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
           label.form-group.my-form-group 
             input.form-control(type='date' ng-model='f.startTime')
           label.form-group.my-form-group 
@@ -42,7 +42,7 @@ block content
       table.table.table-striped.table-bordered.text-center
         thead
           tr
-            th ID
+            th 序号
             th 项目名称         
             th 项目描述
             th 项目负责人
@@ -53,7 +53,7 @@ block content
             th 操作
         tbody
           tr(ng-repeat="x in datas") 
-            td {{x.ID}}
+            td {{$index+1}}
             td {{x.ProjectName}}           
             td {{x.ProjectDesc}}
             td {{x.ProjectManageName}}

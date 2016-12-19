@@ -102,6 +102,10 @@ myApp.config(function($routeProvider) {
         templateUrl: '/sfms/kpiEdit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
+    when('/sfms/kpiCheck', {
+        templateUrl: '/sfms/kpiCheck?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
      when('/sfms/finance', {
         templateUrl: '/sfms/finance?access_token='+accesstokenstring,
         //controller: 'HomeController'
@@ -114,8 +118,12 @@ myApp.config(function($routeProvider) {
         templateUrl: '/sfms/financeCheck?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
-     when('/sfms/sign', {
-        templateUrl: '/sfms/sign?access_token='+accesstokenstring,
+    when('/sfms/signManage', {
+        templateUrl: '/sfms/signManage?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/signPersonal', {
+        templateUrl: '/sfms/signPersonal?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     otherwise({

@@ -15,16 +15,18 @@ var moment = require('moment');
 var logger = appRequire("util/loghelper").helper;
 
 //签到记录的统计
-router.get('/count', function (req, res) {
-    console.log(req.query)
+router.get('/count/:type', function (req, res) {
+    var type = req.params.type;
     var query = JSON.parse(req.query.f);
     var userID = query.accountID || '',
         startTime = query.startTime || '',
         endTime = query.endTime || '',
         page = req.query.pageindex || 1,
         pagesize = req.query.pagesize || config.pageCount;
-
     page > 0? page : 1;
+    
+    if (type == 'person') userID = req.query.jitkey; 
+    
     if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
     if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
 
@@ -160,6 +162,9 @@ router.get('/:userID', function (req, res) {
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount;
 
+    if (userID == 0) {
+        userID = req.query.jitkey;
+    }
     var data = {
         'UserID': userID,
         'UserAgent': userAgent,

@@ -6,9 +6,11 @@ block content
         span(style='font-size: 24px;') 菜单管理
         div.buttons.pull-right
           label.form-group.my-form-group
-            jason-select.form-control(placeholder='应用名称'  style="width:120px;height:34px;" ng-model='f.ApplicationID' source='/app' stext='ApplicationName' svalue='ID')
+            span.tip1 应用查询
+            jason-select.form-control(placeholder='应用名称'  style="width:120px;height:50px;" ng-model='f.ApplicationID' source='/app' stext='ApplicationName' svalue='ID')
           label.form-group.my-form-group
-            jason-select.form-control(placeholder='菜单名称'  style="width:120px;height:34px;" ng-model='f.MenuID' source='/backmenu/plain' stext='MenuName' svalue='MenuID')
+            span.tip1 菜单查询
+            jason-select.form-control(placeholder='菜单名称'  style="width:120px;height:50px;" ng-model='f.MenuID' source='/backmenu/plain' stext='MenuName' svalue='MenuID')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询

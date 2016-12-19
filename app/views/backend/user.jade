@@ -25,11 +25,14 @@ block content
         span(style='font-size: 24px;') 用户管理
         div.buttons.pull-right
           label.form-group.my-form-group
-            jason-select.form-control(placeholder='应用名称'  style="width:120px;height:34px;" ng-model='f.ApplicationID' source='/app' stext='ApplicationName' svalue='ID')
+            span.tip1 应用查询
+            jason-select.form-control(placeholder='应用名称'  style="width:120px;height:50px;" ng-model='f.ApplicationID' source='/app' stext='ApplicationName' svalue='ID')
           label.form-group.my-form-group
-            jason-select.form-control(placeholder='账户名称' style="width:120px;height:34px;" ng-model='f.Account' source='/backuser' stext='Account' svalue='Account')
+            span.tip1 账户查询
+            jason-select.form-control(placeholder='账户名称' style="width:120px;height:50px;" ng-model='f.Account' source='/backuser' stext='Account' svalue='Account')
           label.form-group.my-form-group
-            jason-select.form-control(placeholder='用户名'  style="width:120px;height:34px;" ng-model='f.UserName' source='/backuser' stext='UserName' svalue='UserName')
+            span.tip1 用户查询
+            jason-select.form-control(placeholder='用户名'  style="width:120px;height:50px;" ng-model='f.UserName' source='/backuser' stext='UserName' svalue='UserName')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询

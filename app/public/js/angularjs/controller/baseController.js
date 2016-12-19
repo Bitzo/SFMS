@@ -279,7 +279,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
                 });
             }
 
-    //显示用户模态框数据
+    //显示签到模态框数据
     $scope.moresign = function(index,action){
         console.log(index);
         console.log(action);        
@@ -291,7 +291,14 @@ myApp.controller('baseController', function($scope, $http,baseService) {
         $http({
             method:'get',
             url:action+$scope.f.userID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            
+            params:{
+                f:{
+                    MenuID:index,
+                    RoleID:index,
+                    ID:index,
+                    AccountID:index,
+                }
+            }
         }).
         success(function(response) {
             console.log(response);
