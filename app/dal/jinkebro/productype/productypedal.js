@@ -12,7 +12,7 @@ var logger = appRequire("util/loghelper").helper,
 //得到所有产品类别
 exports.queryAllProType = function (data, callback) {
     var sql = 'select ID,ProductTypeName from `jit_productype`';
-    console.log(sql)
+
     logger.writeInfo("得到所有产品类别得到所有产品类别:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
@@ -23,6 +23,7 @@ exports.queryAllProType = function (data, callback) {
         }
         connection.query(sql, function (err, results) {
             if (err) {
+                logger.writeError('得到产品类别，出错信息：' + err)
                 callback(true);
                 return;
             }

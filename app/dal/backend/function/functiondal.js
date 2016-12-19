@@ -24,6 +24,7 @@ exports.queryAllFunctions = function (data, callback) {
         }
         connection.query(sql, function (err, results) {
             if (err) {
+                logger.writeError('得到所有功能点，出错信息：' + err)
                 callback(true);
                 return;
             }
@@ -133,6 +134,7 @@ exports.queryFuncByID = function (data, callback) {
         }
         connection.query(sql, function (err, results) {
             if (err) {
+                  logger.writeError('根据FunctionID判断该功能点是否存在err:' + err);
                 callback(true);
                 return;
             }
@@ -156,6 +158,7 @@ exports.getFuncByID = function (data, callback) {
         }
         connection.query(sql, function (err, results) {
             if (err) {
+                 logger.writeError('根据FunctionID得到该功能点的值：err' + err);
                 callback(true);
                 return;
             }
@@ -179,6 +182,7 @@ exports.HasChildernByID=function(data,callback){
         }
         connection.query(sql, function (err, results) {
             if (err) {
+                 logger.writeError('根据FunctionID得到该功能点的子节点的个数：err' + err);
                 callback(true);
                 return;
             }

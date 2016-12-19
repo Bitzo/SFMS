@@ -83,7 +83,12 @@ describe("功能点单元测试", function () {
         data.FunctionID = insertFunctionID;
         funcService.delete(data, function (err, result) {
             if (err) {
-                return done(err);
+                 if(result>0){
+                  console.log('功能点下有子节点，不可删除!');
+                  done();
+                }else{
+                 return done(err);
+             }
             }
             result.affectedRows.should.be.above(0).and.should.be.a.Number;
             done();

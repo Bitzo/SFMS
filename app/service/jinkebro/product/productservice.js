@@ -14,51 +14,65 @@ var Product = function () {
 
 }
 
-Product.prototype.insertProduct = function (data,callback) {
-    productDAL.insertProduct(data,function (err,result) {
-        if(err){
+Product.prototype.insertProduct = function (data, callback) {
+    productDAL.insertProduct(data, function (err, result) {
+        if (err) {
             callback(true);
-            return ;
+            return;
         }
 
-        callback(false,result);
+        callback(false, result);
     });
 }
 
-Product.prototype.updateProduct = function (data,callback) {
-    productDAL.updateProduct(data,function (err,result) {
-        if(err){
+Product.prototype.updateProduct = function (data, callback) {
+    productDAL.updateProduct(data, function (err, result) {
+        if (err) {
             callback(true);
-            return ;
+            return;
         }
 
-        callback(false,result);
+        callback(false, result);
     });
 }
 
-Product.prototype.queryProducts = function (data,callback) {
+Product.prototype.queryProducts = function (data, callback) {
 
     var formData = {
-        ProductID : data.ProductID,
-        SKU : data.SKU,
-        ProductName : data.ProductName,
-        ProductDesc : data.ProductDesc,
-        ProductImgPath : data.ProductImgPath,
-        ExpireTime : data.ExpireTime,
-        ProducTime : data.ProducTime,
-        SupplierID : data.SupplierID,
-        ProductTypeID : data.ProductTypeID
+        ProductID: data.ProductID,
+        SKU: data.SKU,
+        ProductName: data.ProductName,
+        ProductDesc: data.ProductDesc,
+        ProductImgPath: data.ProductImgPath,
+        ExpireTime: data.ExpireTime,
+        ProducTime: data.ProducTime,
+        SupplierID: data.SupplierID,
+        ProductTypeID: data.ProductTypeID
 
     };
 
-    productDAL.queryProducts(formData,function (err,result) {
-        if(err){
+    productDAL.queryProducts(formData, function (err, result) {
+        if (err) {
             callback(true);
-            return ;
+            return;
         }
 
-        callback(false,result);
+        callback(false, result);
     });
 }
 
+//根据商品类型ID得到该商品类型下商品的个数
+Product.prototype.getProCountByID = function (data, callback) {
+    if (data == undefined || data.ID == '') {
+        callback(true);
+        return;
+    }
+    productDAL.getProCountByID(data, function (err, result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        callback(false, result);
+    });
+}
 module.exports = new Product();

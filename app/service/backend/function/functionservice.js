@@ -18,8 +18,12 @@ exports.queryAllFunctions = function (data, callback) {
         }
         logger.writeInfo('queryAllFunctions')
         //转成多层结构 
-        results = getTree.getTreeFunction(results, 0);
-        callback(false, results);
+        getTree.getTreeFunction(results, function (err, list) {
+            if (err) {
+                callback(true);
+            }
+            callback(false, list);
+        });
     });
 };
 

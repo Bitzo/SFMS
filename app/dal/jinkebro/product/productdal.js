@@ -143,3 +143,28 @@ exports.queryProducts = function (data,callback) {
     });
 }
 
+//根据ID得到该商品类型的个数
+exports.getProCountByID=function(data,callback){
+  var sql = 'select count(*) as count from jit_product';
+    sql += " where ProductTypeID= " + data['ID'];
+
+    logger.writeInfo("根据ID得到该商品类型的个数,sql:" + sql);
+
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            logger.writeError('商品类型个数：err' + err);
+            callback(true);
+            return;
+        }
+        connection.query(sql, function (err, results) {
+            if (err) {
+                logger.writeError('查询：' + err);
+                callback(true);
+                return;
+            }
+           callback(false, results);  
+           connection.release();
+           return;
+        });
+    });
+}

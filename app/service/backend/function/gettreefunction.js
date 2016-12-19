@@ -5,6 +5,8 @@
  * @Last Modified time: 2016-11-15 10:12:38
  *  @Function: 将功能点转成多层树形结构
  */
+var appService = appRequire('service/backend/application/applicationservice');
+var logger = appRequire("util/loghelper").helper;
 
 function treeNode(appid, id, pId, name, children) {
     this.appid = appid;
@@ -25,20 +27,30 @@ function getMultiTree(data, pid) {
     return treelist;
 }
 //将应用名称作为功能点的根节点
-function getTreeFunction(data, pid) {
-    var treelist = getMultiTree(data, pid);
-    //此处从应用表中查出所有应用
-    var applist = [{ 'appid': 1, 'appname': '金科小哥', isParent: true }, { 'appid': 2, 'appname': '实验室管理', isParent: true }];
-    var list = [];
-    for (var j = 0; j < applist.length; j++) {
-        var tree = { 'id': -1, 'pId': -1, 'name': applist[j].appname, children: [] };
-        for (var i = 0; i < treelist.length; i++) {
-            if (treelist[i].appid == applist[j].appid) {
-                tree.children.push(treelist[i]);
-            }
+function getTreeFunction(data, callback) {
+    var treelist = getMultiTree(data, 0);
+    var d = {};
+    //从应用表中查出所有应用
+    l = appService.queryAllApp(d, function (err, results) {
+        if (err) {
+            console.log('queryAllApperr');
+            callback(true);
+            return;
         }
-        list.push(tree);
-    }
-    return list;
+        if (results != undefined && results.length > 0) {
+            var list = [];
+            //将应用作用应用的根节点
+            for (var j = 0; j < results.length; j++) {
+                var tree = { 'id': -1, 'pId': -1, 'name': results[j].ApplicationName, children: [] };
+                for (var i = 0; i < treelist.length; i++) {
+                    if (treelist[i].appid == results[j].ID) {
+                        tree.children.push(treelist[i]);
+                    }
+                }
+                list.push(tree);
+            }
+            callback(false, list);
+        }
+    });
 }
 exports.getTreeFunction = getTreeFunction;

@@ -10,11 +10,11 @@ require('../global_bootstrap')
 var should = require('should');
 var proTypeService = appRequire('service/jinkebro/productype/productypeservice');
 
-var data={
-    'ProductTypeName':'产中类别1'
+var data = {
+    'ProductTypeName': '产中类别1'
 };
- 
-insertProTypeID=-1;
+
+insertProTypeID = -1;
 
 describe("产品类别单元测试", function () {
 
@@ -30,7 +30,6 @@ describe("产品类别单元测试", function () {
     it("产品类别查询", function (done) {
         proTypeService.queryAllProType(data, function (err, result) {
             if (err) return done(err);
-            console.log(result);
             result.length.should.be.above(0).and.should.be.a.Number;
             done();
         });
@@ -46,12 +45,17 @@ describe("产品类别单元测试", function () {
             done();
         });
     });
- 
+
     it("产品类别删除", function (done) {
         data.ID = insertProTypeID;
         proTypeService.delete(data, function (err, result) {
             if (err) {
-                return done(err);
+                if (result > 0) {
+                    console.log('当前产品类别下有商品，不可删除！');
+                    done();
+                } else {
+                    return done(err);
+                }
             }
             result.affectedRows.should.be.above(0).and.should.be.a.Number;
             done();
