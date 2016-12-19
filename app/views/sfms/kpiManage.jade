@@ -1,9 +1,9 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-  jason-pagecontent(action='/sfms/api/kpi/person' conf='paginationConf')
+  jason-pagecontent(action='/sfms/api/kpi' conf='paginationConf')
     div.page-content
       ng-form.form-inline
-        span(style='font-size: 24px;')  绩效管理 普通用户
+        span(style='font-size: 24px;')  绩效管理 管理员
         div.buttons.pull-right
           label.form-group.my-form-group 
             select(ng-model='f.KPIStatus')
@@ -55,8 +55,8 @@ block content
             td {{x.CheckTime}}
             td {{x.Remark}}            
             td
-              a(ng-click="show(x.ID,'/app')",href='#/sfms/kpiEdit/' )
-                i.icon.icon-edit 修改
+              a(ng-click="show(x.ID,'/app')",href='#/sfms/kpiCheck/' )
+                i.icon.icon-edit 审核
 
             
       div.pull-right

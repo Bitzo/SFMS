@@ -35,15 +35,15 @@ myApp.config(function($routeProvider) {
         //controller: 'HomeController'
     }).
      when('/backend/function', {
-        templateUrl: '/function'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/function'+"?access_token=" +accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/functionAdd', {
-        templateUrl: '/functionAdd'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/functionAdd'+"?access_token=" +accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/functionEdit', {
-        templateUrl: '/functionEdit'+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        templateUrl: '/functionEdit'+"?access_token=" +accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/backend/application', {
@@ -70,16 +70,48 @@ myApp.config(function($routeProvider) {
         templateUrl: '/menuedit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
-    when('/sfms/project', {
-        templateUrl: '/sfms/project?access_token='+accesstokenstring,
+    when('/sfms/projectLead', {
+        templateUrl: '/sfms/projectLead?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/projectManage', {
+        templateUrl: '/sfms/projectManage?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/projectAdd', {
+        templateUrl: '/sfms/projectAdd?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/projectEdit', {
+        templateUrl: '/sfms/projectEdit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
      when('/sfms/kpi', {
         templateUrl: '/sfms/kpi?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
+    when('/sfms/kpiManage', {
+        templateUrl: '/sfms/kpiManage?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/kpiAdd', {
+        templateUrl: '/sfms/kpiAdd?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/kpiEdit', {
+        templateUrl: '/sfms/kpiEdit?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
      when('/sfms/finance', {
         templateUrl: '/sfms/finance?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/financeAdd', {
+        templateUrl: '/sfms/financeAdd?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/financeCheck', {
+        templateUrl: '/sfms/financeCheck?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
      when('/sfms/sign', {
@@ -120,10 +152,10 @@ myApp.config(function($routeProvider) {
 }]).controller('baseController', function($scope, $http) {
     //显示左侧菜单栏
    $scope.menus = [];
-    function getList() {
+    function getList() {        
         $http({
             method: 'get',
-            url: "/backmenu?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            url: "/backmenu?access_token="+accesstokenstring,
         }).
         success(function(response) {
             $scope.menus = response.data.Menu;
@@ -150,7 +182,7 @@ myApp.config(function($routeProvider) {
         
 //         $http({
 //             method:'get',
-//             url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//             url:$scope.paginationConf.action+"?access_token="+accesstokenstring,
 //             params:{
 //                 pageindex:$scope.paginationConf.currentPage,
 //                 pagesize:$scope.paginationConf.itemsPerPage,
@@ -191,7 +223,7 @@ myApp.config(function($routeProvider) {
 //          console.log(action);
 //          $http({
 //             method:'post',
-//             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//             url:action+"?access_token="+accesstokenstring,
 //             data:{
 //                 formdata:$scope.formdata
 //             }
@@ -222,7 +254,7 @@ myApp.config(function($routeProvider) {
 //     function getInitmenu(index,action){   
 //             console.log(index);   
 //             console.log(action);                  
-//         $http({url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//         $http({url:action+"?access_token="+accesstokenstring,
 //             method:'put',
 //             params:{
 //                 f:{
@@ -252,7 +284,7 @@ myApp.config(function($routeProvider) {
 //          console.log(action);
 //          $http({
 //             method:'put',
-//             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//             url:action+"?access_token="+accesstokenstring,
 //             data:{
 //                 formdata:$scope.formdata
 //             }
@@ -293,7 +325,7 @@ myApp.config(function($routeProvider) {
 //          };
 //          $http({
 //             method:'delete',
-//             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//             url:action+"?access_token="+accesstokenstring,
 //             params:{
 //                 d:$scope.d 
 //             }
@@ -321,7 +353,7 @@ myApp.config(function($routeProvider) {
 //          };
 //          $http({
 //             method:'get',
-//             url:action+$scope.f.userID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//             url:action+$scope.f.userID+"?access_token="+accesstokenstring,
 //         }).
 //         success(function(response) {
 //             console.log(response);
@@ -344,7 +376,7 @@ myApp.config(function($routeProvider) {
 //                 };
 //                 $http({
 //                     method:'get',
-//                     url:action+$scope.f.RoleID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//                     url:action+$scope.f.RoleID+"?access_token="+accesstokenstring,
 //                 }).
 //                 success(function(response) {
 //                     console.log(response);
@@ -366,7 +398,7 @@ myApp.config(function($routeProvider) {
 //             console.log(action);                  
 //         $http({
 //             method:'get',
-//             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//             url:action+"?access_token="+accesstokenstring,
 //             params:{
 //                 f:{
 //                      MenuID:index,
@@ -397,7 +429,7 @@ myApp.config(function($routeProvider) {
 //                 };
 //                 $http({
 //                     method:'get',
-//                     url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+//                     url:action+"?access_token="+accesstokenstring,
 //                 }).
 //                 success(function(response) {
 //                     console.log(response);

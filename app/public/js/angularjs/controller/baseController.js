@@ -45,6 +45,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
     //查询
     $scope.search=function(){
         getInit();
+        console.log($scope.f)
     }
 
 
@@ -277,6 +278,29 @@ myApp.controller('baseController', function($scope, $http,baseService) {
                     console.log(response);
                 });
             }
+
+    //显示用户模态框数据
+    $scope.moresign = function(index,action){
+        console.log(index);
+        console.log(action);        
+                
+        console.log('more');
+        $scope.f={
+            "userID":index,
+        };
+        $http({
+            method:'get',
+            url:action+$scope.f.userID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            
+        }).
+        success(function(response) {
+            console.log(response);
+            $scope.data = response.data;
+        }).
+        error(function(response) {
+            console.log(response);
+        });
+    }
     
     
 
