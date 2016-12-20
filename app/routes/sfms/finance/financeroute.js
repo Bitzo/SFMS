@@ -13,6 +13,7 @@ var projectservice = appRequire('service/sfms/project/projectservice');
 var dataservice = appRequire('service/backend/datadictionary/datadictionaryservice');
 var userservice = appRequire('service/backend/user/userservice');
 var config = appRequire('config/config');
+var moment = require('moment');
 
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
@@ -370,6 +371,10 @@ router.get('/', function (req, res) {
         'pageNum': pageNum,
         'IsActive': 1
     }
+    if (moment(data.startTime).isValid())
+        data.startTime = moment(data.startTime).format("YYYY-MM-DD HH:mm:ss");
+    if (moment(data.endTime).isValid())
+        data.endTime = moment(data.endTime).format("YYYY-MM-DD HH:mm:ss");
 
     financeService.countQuery(data, function (err, results) {
         if (err) {
