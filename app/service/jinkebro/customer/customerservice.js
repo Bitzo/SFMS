@@ -222,6 +222,7 @@ Customer.prototype.addSubscibe=function(token,msg,callback)
                             'WechatUserCode':info.openid
                         };
                         console.log(queryInfo);
+
                          //开始查询是否存在用户
                          me.query(queryInfo,function(err,resultInfo)
                          {
@@ -232,6 +233,7 @@ Customer.prototype.addSubscibe=function(token,msg,callback)
                                 callback(true,errinfo);
                                 return ;
                             }
+
                             if(resultInfo != undefined && resultInfo.length != 0)
                             {
                                 console.log("用户名已经存在");
@@ -341,6 +343,46 @@ Customer.prototype.addLocation = function(msg,callback)
                 return;
             }
         });
+}
+
+//关于添加微信的所有列表
+Customer.prototype.addAllList = function(token,callback)
+{
+    me = this;
+    //获取所有的列表
+    wechat.getCustomerList(token,function(infoList)
+    {
+        for(var key in infoList.data.openid)
+        {
+            //查询是否存在这个微信号
+            var queryInfo = {
+                'WechatUserCode':infoList.data.openid[key]
+            };
+
+            //查询用户是否出错
+            me.query(queryInfo,function(err,resultInfo)
+            {
+                if(err)
+                {
+                    console.log("查询失败");
+                    var errinfo = '在添加用户的时候查询失败';
+                    callback(true,errinfo);
+                    return ;
+                }
+
+                if(resultInfo != undefined && resultInfo.length != 0)
+                {
+                    console.log("用户名已经存在");
+                    return;
+                }
+
+                wechat.getCustomerInfo(token,infoList.data.openid[key],function(info)
+                {
+
+                });
+            });
+        }
+    });
 }
 
 module.exports = new Customer();

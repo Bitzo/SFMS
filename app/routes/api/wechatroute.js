@@ -22,6 +22,10 @@ wechat.token = config.weChat.token;
 
 //从微信端获取数据插入数据库
 var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
+
+//微信的开发时因为服务器是而导致未存入信息时的开关
+var flag =0 ;
+
 //微信开发者认证
 router.get('/accesscheck', function(req, res, next) {
     var query = url.parse(req.url, true).query;
@@ -56,6 +60,7 @@ wechat.textMsg(function(msg) {
     switch (msg.msgType) {
         case "text":
             // 返回文本消息
+            
             resMsg = {
                 fromUserName: msg.toUserName,
                 toUserName: msg.fromUserName,
@@ -63,6 +68,7 @@ wechat.textMsg(function(msg) {
                 content: "这是文本回复" + new Date(),
                 funcFlag: 0
             };
+
             break;
 
             case "音乐":
@@ -154,10 +160,21 @@ wechat.eventMsg(function(msg) {
         //订阅的事件
         case 'subscribe':
 
-        //获取token
-     wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
+        //开关自增
+        flag++;
+
+        //开关的打开与应用
+        if(flag == 3)
         {
-            
+            console.log("开关启动");
+            //写关于服务器坏掉的检查
+
+            flag = 0;
+        }
+        //获取token
+        wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
+        {
+            //如果成功  
             if(isSussess)
             {
                 wechatCustomer.addSubscibe(token,msg,function(err,errinfo)
@@ -181,7 +198,7 @@ wechat.eventMsg(function(msg) {
         case 'unsubscribe':
 
         //获取token
-     
+        console.log(flag);
         wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
         {
             if(isSussess)
@@ -229,6 +246,9 @@ wechat.eventMsg(function(msg) {
     }
          
 });
+
+
+
 
 //接受用户的消息
 router.post('/accesscheck', function(req, res) {
