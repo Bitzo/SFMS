@@ -40,7 +40,7 @@ block content
       table.table.table-striped.table-bordered.text-center
         thead
           tr
-            th ID
+            th 序号
             th 项目名称         
             th 项目描述
             th 项目负责人
@@ -51,7 +51,7 @@ block content
             th 操作
         tbody
           tr(ng-repeat="x in datas") 
-            td {{x.ID}}
+            td {{$index+1}}
             td {{x.ProjectName}}           
             td {{x.ProjectDesc}}
             td {{x.ProjectManageName}}
@@ -60,11 +60,11 @@ block content
             td {{x.ProjectStatus}}    
             td {{x.ProjectPrice}}                                                                                                                                                                
             td
-              a(ng-click="show(x.ID,'/app')",href='#/sfms/projectEdit/' )
+              a(ng-click="show(x.ID,'/sfms/api/project')",href='#/sfms/projectEdit/' )
                 i.icon.icon-edit 编辑
-              a(ng-click="remove($index,'/app')")
+              a(ng-click="remove($index,'/sfms/api/project')")
                 i.icon.icon-trash 删除
-              a(data-toggle="modal",data-target="#myModal",ng-click="moreproject($index,'/sfms/api/projectuser')") 
+              a(data-toggle="modal",data-target="#myModal",ng-click="moreproject($index,'/sfms/api/projectuser/')")
                 i.icon.icon-zoom-in  更多
 
 

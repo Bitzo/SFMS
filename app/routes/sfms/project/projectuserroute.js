@@ -11,6 +11,7 @@ var projectuserservice = appRequire('service/sfms/project/projectuserservice');
 var projectservice = appRequire('service/sfms/project/projectservice');
 var userservice = appRequire('service/backend/user/userservice');
 var moment = require('moment');
+var config = appRequire('config/config');
 
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
@@ -251,9 +252,9 @@ router.put('/', function (req, res) {
 })
 
 //项目用户信息查询
-router.get('/', function (req, res) {
-    var query = JSON.parse(req.query.f);
-    var projectID = query.projectID || '',
+router.get('/:projectID', function (req, res) {
+    var query = req.query;
+    var projectID = req.params.projectID || '',
         userName = query.userName || '',
         isActive = query.isActive || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1 ,

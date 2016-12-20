@@ -266,7 +266,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
                 };
                 $http({
                     method:'get',
-                    url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                    url:action+$scope.f.projectID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
                 }).
                 success(function(response) {
                     console.log(response);

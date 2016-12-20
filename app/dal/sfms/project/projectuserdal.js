@@ -59,7 +59,7 @@ exports.updateProjectUser = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'ID') {
+            if (key != 'ID' && key != 'ProjectID') {
                 if(update_sql.length == 0) {
                     update_sql += ' ' + key + " = '" + data[key] +"'";
                 } else {
@@ -69,7 +69,8 @@ exports.updateProjectUser = function (data, callback) {
         }
     }
     sql += update_sql;
-    sql += ' where ID = ' + data.ID;
+    if (data.ID!=''&&data.ID!==undefined) sql += ' where ID = ' + data.ID;
+    if (data.ProjectID!=''&&data.ProjectID!==undefined) sql += ' where ProjectID = ' + data.ProjectID;
     logger.writeInfo('更新项目基本信息' + sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {

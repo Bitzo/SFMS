@@ -8,40 +8,40 @@ block content
         tr
           td(width="15%",class="tableleft") 项目负责人
           td
-            jason-select.form-control(placeholder='用户名'  style="width:120px;height:34px;" ng-model='f.UserName' source='/backuser' stext='UserName' svalue='UserName')
+            jason-select.form-control(placeholder='用户名'  style="width:120px;height:34px;" ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
 
            
         tr
           td(width="15%",class="tableleft") 项目名称
           td
-            input(type="textview",name="projectName",ng-model="formdata.projectName",ng-maxlength='50',style="width:160px;height:30px",required)
+            input(type="textview",name="projectName",ng-model="formdata.ProjectName",ng-maxlength='50',style="width:160px;height:30px",required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.projectName.$error.maxlength && formdata.projectName.$touched") 应用名称最多50位
+            small.error(ng-show="formdata.ProjectName.$error.maxlength && formdata.ProjectName.$touched") 应用名称最多50位
         
         tr
           td(width="15%",class="tableleft") 项目截止时间
           td
-            input(type="date",name="projectEndTime",ng-model="formdata.projectEndTime",ng-maxlength='50',style="width:160px;height:30px",required)
+            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",ng-maxlength='50',style="width:160px;height:30px",required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.projectEndTime.$error.maxlength && formdata.projectEndTime.$touched") 应用名称最多50位
+            small.error(ng-show="formdata.ProjectEndTime.$error.maxlength && formdata.ProjectEndTime.$touched") 应用名称最多50位
         
         tr
           td(width="15%",class="tableleft") 项目经费预算
           td
-            input(type="number",name="projectPrice",ng-model="formdata.projectPrice",ng-maxlength='50',style="width:160px;height:30px",required)
+            input(type="number",name="projectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='50',style="width:160px;height:30px",required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.projectPrice.$error.maxlength && formdata.projectPrice.$touched") 应用名称最多50位
+            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 应用名称最多50位
         
         tr
           td(width="15%",class="tableleft") 项目描述 
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Memo',ng-maxlength='200',required)
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.ProjectDesc',ng-maxlength='200',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 备注最多200位
+            small.error(ng-show="formdata.ProjectDesc.$error.maxlength && formdata.ProjectDesc.$touched") 备注最多200位
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/app')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/sfms/api/project')") 添加
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-sm.btn-success(href='#sfms/project') 返回列表    
+            a.btn.btn-sm.btn-success(href='#sfms/projectManage') 返回列表
