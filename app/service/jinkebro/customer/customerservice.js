@@ -32,7 +32,7 @@ Customer.prototype.insert = function(data,callback) {
             logModel.Action ='插入客户';
             logModel.Memo = '插入客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = 2,
+            logModel.Type = 2;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
@@ -55,7 +55,7 @@ Customer.prototype.insert = function(data,callback) {
             logModel.Action ='插入客户';
             logModel.Memo = '插入客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = 2,
+            logModel.Type = 2;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
@@ -91,7 +91,7 @@ for (var key in data)
             logModel.Action ='更新客户';
             logModel.Memo = '更新客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = 2,
+            logModel.Type = 2;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
@@ -112,7 +112,7 @@ for (var key in data)
             logModel.Action ='更新客户';
             logModel.Memo = '更新客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = 2,
+            logModel.Type = 2;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
