@@ -69,8 +69,8 @@ var operationConfig = {
                 actionName:'客户修改',
                 identifier:2002
             },
-            customerDel: {
-                actionName:'客户的删除',
+            customerQuery: {
+                actionName:'客户的查询',
                 identifier:2003
             }
         },

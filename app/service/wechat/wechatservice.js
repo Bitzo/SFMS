@@ -80,14 +80,14 @@ Weixin.prototype.getLocalAccessToken = function(operatorid, callback) {
                         //放到redis
                         redisCache.set(config.weChat.rediskey, wehcattoken.access_token, function(err, result) {
                             if (err) {
-                                logger.writeErr('redis插入键异常' + new Date());
+                                logger.writeError('redis插入键异常' + new Date());
                             }
                             logger.writeInfo('将access_token插入到redis成功');
                         });
 
                         redisCache.expire(config.weChat.rediskey, config.weChat.expiretime, function(err, result) {
                             if (err) {
-                                logger.writeErr('redis设置键过期异常' + new Date());
+                                logger.writeError('redis设置键过期异常' + new Date());
                             }
                             logger.writeInfo('将redis中access_token设置过期成功');
                             callback(true, wehcattoken);
@@ -128,7 +128,7 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
             logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
-                    logger.writeErr('获取微信token成功，生成操作日志异常' + new Date());
+                    logger.writeError('获取微信token成功，生成操作日志异常' + new Date());
                 }
             });
 
@@ -138,7 +138,7 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         });
 
     }).on('error', function(e) {
-        logger.writeErr('获取微信token时异常' + new Date());
+        logger.writeError('获取微信token时异常' + new Date());
     });
 };
 
@@ -163,7 +163,7 @@ Weixin.prototype.getCustomerList = function(accessToken, callback) {
 
         })
     }).on('error', function(e) {
-        logger.writeErr('获取列表信息时异常' + new Date());
+        logger.writeError('获取列表信息时异常' + new Date());
     });
 }
 
@@ -190,7 +190,7 @@ Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
 
             })
         }).on('error', function(e) {
-            logger.writeErr('获取列表信息时异常' + new Date());
+            logger.writeError('获取列表信息时异常' + new Date());
         });
     }
     
@@ -216,7 +216,7 @@ Weixin.prototype.getCustomerInfo = function(accessToken, openid, callback) {
 
         })
     }).on('error', function(e) {
-        logger.writeErr('获取用户信息时异常' + new Date());
+        logger.writeError('获取用户信息时异常' + new Date());
     });
 
 }
