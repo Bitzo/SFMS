@@ -19,24 +19,34 @@ var logger = appRequire("util/loghelper").helper;
 
 //项目基本信息新增
 router.post('/', function (req, res) {
+    console.log(req.body);
     var query = req.body.formdata;
-    var projectName = query.projectName,
-        projectDesc = query.projectDesc,
-        projectManageID = query.projectManageID,
-        projectEndTime = query.projectEndTime,
-        projectTimeLine = query.projectTimeLine || '待完成',
-        projectStatus = query.projectStatus || '待完成',
-        projectPrice = query.projectPrice,
-        accountID = query.jitkey,
+    var projectName = query.ProjectName,
+        projectDesc = query.ProjectDesc,
+        projectManageID = query.ProjectManageID,
+        projectEndTime = query.ProjectEndTime,
+        projectTimeLine = query.ProjectTimeLine || '待完成',
+        projectStatus = query.ProjectStatus || '待完成',
+        projectPrice = query.ProjectPrice,
+        accountID = req.query.jitkey,
         isActive = query.isActive || 1,
         userData = query.data;
 
+    projectEndTime = moment(projectEndTime).format("YYYY-MM-DD HH:mm:ss");
+    if (moment(projectEndTime).isBefore()) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: '项目截止时间不能比当前日期早'
+        })
+    }
     //检查所需要的参数是否齐全
-    var temp = ['projectName', 'projectDesc', 'projectPrice', 'projectManageID', 'projectEndTime'],
+    var temp = ['ProjectName', 'ProjectDesc', 'ProjectPrice', 'ProjectManageID', 'ProjectEndTime'],
         err = 'required: ';
     for(var value in temp)
     {
-        if(!(temp[value] in req.body))
+        if(!(temp[value] in query))
         {
             logger.writeInfo("require " + temp[value]);
             err += temp[value] + ' ';
@@ -502,7 +512,7 @@ router.delete('/', function (req, res) {
         'IsActive': 0
     };
 
-    projectservice.updateProject(data, function (err, results) {
+    projectuserservice.updateProjectUser({ProjectID: ID, IsActive:0}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -511,19 +521,31 @@ router.delete('/', function (req, res) {
                 msg: "操作失败，服务器出错"
             });
         }
-        if(results !== undefined && results.affectedRows > 0) {
-            res.status(200);
-            res.json({
-                status: 200,
-                isSuccess: true,
-                msg: "操作成功"
-            })
-        } else {
-            res.status(400);
-            res.json({
-                status: 400,
-                isSuccess: true,
-                msg: "操作失败"
+        if (results!==undefined) {
+            projectservice.updateProject(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "操作失败，服务器出错"
+                    });
+                }
+                if(results !== undefined && results.affectedRows > 0) {
+                    res.status(200);
+                    res.json({
+                        status: 200,
+                        isSuccess: true,
+                        msg: "操作成功"
+                    })
+                } else {
+                    res.status(400);
+                    res.json({
+                        status: 400,
+                        isSuccess: true,
+                        msg: "操作失败"
+                    })
+                }
             })
         }
     })

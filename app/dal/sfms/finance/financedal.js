@@ -140,8 +140,8 @@ exports.queryFinance = function (data, callback) {
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
-    if (data.startTime != '') sql += "and CreateTime > '" + data.startTime + "' ";
-    if (data.endTime != '') sql += "and CreateTime < '" + data.endTime + "' ";
+    if (data.startTime != '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
+    if (data.endTime != '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
