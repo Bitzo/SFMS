@@ -113,7 +113,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
     }
 
     //编辑完成提交信息
-    $scope.formdata={};
+    var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
         console.log(formdata);
         console.log(action);
@@ -121,7 +121,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
             method:'put',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:{
-                formdata:$scope.formdata
+                formdata:$scope.paginationConf.formdata
             }
         }).
         success(function(response) {

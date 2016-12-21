@@ -230,25 +230,27 @@ router.post('/', function (req, res) {
 
 //项目基本信息修改
 router.put('/', function (req, res) {
+    
+    console.log(req)
     var query = req.body.formdata;
     var ID = query.ID,
-        projectName = query.projectName,
-        projectDesc = query.projectDesc,
-        projectManageID = query.projectManageID,
-        projectManageName = query.projectManageName,
-        projectEndTime = query.projectEndTime,
-        projectTimeLine = query.projectTimeLine,
-        projectStatus = query.projectStatus,
-        projectPrice = query.projectPrice,
+        projectName = query.ProjectName,
+        projectDesc = query.ProjectDesc,
+        projectManageID = query.ProjectManageID,
+        projectManageName = query.ProjectManageName,
+        projectEndTime = query.ProjectEndTime,
+        projectTimeLine = query.ProjectTimeLine,
+        projectStatus = query.ProjectStatus,
+        projectPrice = query.ProjectPrice,
         accountID = query.jitkey,
         time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'projectName', 'projectDesc', 'jitkey', 'projectStatus', 'projectPrice', 'projectManageID', 'projectEndTime', 'projectTimeLine'],
+    var temp = ['ID', 'ProjectName', 'ProjectDesc', 'ProjectStatus', 'ProjectPrice', 'ProjectManageID', 'ProjectEndTime', 'ProjectTimeLine'],
         err = 'required: ';
     for(var value in temp)
     {
-        if(!(temp[value] in req.body))
+        if(!(temp[value] in query))
         {
             logger.writeInfo("require " + temp[value]);
             err += temp[value] + ' ';
