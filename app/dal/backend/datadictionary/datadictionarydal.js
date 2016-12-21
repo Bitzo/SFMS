@@ -8,6 +8,7 @@
 var db_backend = appRequire('db/db_backend'),
     logger = appRequire("util/loghelper").helper;
 
+//字典新增
 exports.datadictionaryInsert = function (data,callback) {
     var insert_sql = "insert into jit_datadictionary set ";
     var sql = "";
@@ -51,6 +52,7 @@ exports.datadictionaryInsert = function (data,callback) {
     })
 }
 
+//字典编辑
 exports.datadictionaryUpdate = function (data,callback) {
     var update_sql = "update jit_datadictionary set ";
     var sql = "";
@@ -102,6 +104,7 @@ exports.datadictionaryUpdate = function (data,callback) {
     });
 }
 
+//字典物理删除
 exports.datadictionaryDelete = function (data,callback) {
     var sql = 'delete from jit_datadictionary where 1=1 and DictionaryID = ';
     sql = sql + data.DictionaryID;
@@ -128,13 +131,14 @@ exports.datadictionaryDelete = function (data,callback) {
     })
 }
 
+//字典查询
 exports.queryDatadictionary = function (data,callback) {
     var sql = 'select ApplicationID, DictionaryID, DictionaryLevel, ParentID,Category,DictionaryCode,DictionaryValue,Memo, IsActive from jit_datadictionary where 1=1 ';
 
     if (data !== undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != '')
-                sql += "and " + key + " = '" + data[key] + "' ";
+                sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
 
@@ -201,6 +205,94 @@ exports.countAllDataDicts = function (data, callback) {
     })
 };
 
+//计数，统计对应数据总个数
+exports.countAllDataDictsBySubcode = function (data, callback) {
+
+    var code = data.DictionaryCode;
+
+    var sql =  'select count(1) AS num from jit_datadictionary where 1=1 ';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'DictionaryCode' && key !== 'pageNum' && data[key] != '')
+                sql += " and " + key + " = '" + data[key] + "' ";
+        }
+    }
+
+    sql = sql + " and SUBSTRING(DictionaryCode,1,2) = '" +code.substring(0,2) + "' ";
+
+    console.log(sql);
+
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo("连接成功");
+        logger.writeInfo(sql);
+
+        connection.query(sql, function (err, results) {
+            if (err) {
+                callback(true);
+                return;
+            };
+            logger.writeInfo("查询成功");
+            callback(false, results);
+            connection.release();
+        })
+    })
+};
+
+exports.queryDatadictionaryBySubcode = function (data,callback) {
+    var arr = new Array();
+    var code = data.DictionaryCode;
+    arr.push(' select ApplicationID,DictionaryID,DictionaryLevel,ParentID,Category,DictionaryCode,DictionaryValue,Memo,IsActive ');
+    arr.push(' from jit_datadictionary ');
+    arr.push(' WHERE 1=1 ');
+
+    var sql = arr.join(' ');
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'DictionaryCode' && key !== 'pageNum' && data[key] != '')
+                sql += " and " + key + " = '" + data[key] + "' ";
+        }
+    }
+
+    sql = sql + " and SUBSTRING(DictionaryCode,1,2) = '" +code.substring(0,2) + "' ";
+
+    var num = data.pageNum; //每页显示的个数
+    var page = data.page || 1;
+
+    sql += " LIMIT " + (page-1)*num + "," + num;
+
+    logger.writeInfo("查询字典信息 by subCode：" + sql);
+    console.log("查询字典信息 by subCode：" + sql);
+
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo("连接成功");
+
+        connection.query(sql, function (err, results) {
+            if (err) {
+                console.log(err);
+                callback(true);
+                return;
+            };
+
+            logger.writeInfo("查询成功");
+            callback(false, results);
+            connection.release();
+        })
+    })
+
+
+}
 exports.queryDatadictionaryByID = function (data,callback) {
     var sql = 'select DictionaryCode,DictionaryValue from jit_datadictionary where 1=0 ';
 

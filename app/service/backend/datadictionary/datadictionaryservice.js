@@ -9,6 +9,7 @@ var datadictionaryDal = appRequire('dal/backend/datadictionary/datadictionarydal
     logger = appRequire('util/loghelper').helper,
     getTree = appRequire('service/backend/datadictionary/gettreedatadict');
 
+//字典平面展示
 exports.queryDatadictionary = function (data,callback) {
     datadictionaryDal.queryDatadictionary(data, function (err, results) {
         if (err) {
@@ -21,6 +22,7 @@ exports.queryDatadictionary = function (data,callback) {
     });
 }
 
+//字典树
 exports.queryDatadictionaryFormTree = function (data, callback) {
     datadictionaryDal.queryDatadictionary(data, function (err, results) {
         if (err) {
@@ -34,7 +36,8 @@ exports.queryDatadictionaryFormTree = function (data, callback) {
         callback(false, results);
     });
 }
-//查询对应项目的角色个数
+
+//查询对应字典的角色个数
 exports.countAllDataDicts = function (data, callback) {
     datadictionaryDal.countAllDataDicts(data, function (err, results) {
         if (err) {
@@ -47,6 +50,20 @@ exports.countAllDataDicts = function (data, callback) {
     })
 }
 
+//查询对应字典的角色个数
+exports.countAllDataDictsBySubcode = function (data, callback) {
+    datadictionaryDal.countAllDataDictsBySubcode(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        logger.writeInfo('countAllDataDictsBySubcode func in service ');
+        console.log('countAllDataDictsBySubcode func in service ');
+        callback(false, results);
+    })
+}
+
+//字典新增
 exports.datadictionaryInsert = function (data,callback) {
     function checkData(data) {
         for(var key in data){
@@ -76,6 +93,7 @@ exports.datadictionaryInsert = function (data,callback) {
     });
 }
 
+//字典编辑
 exports.datadictionaryUpdate = function (data,callback) {
     function checkData(data) {
         for(var key in data){
@@ -106,6 +124,7 @@ exports.datadictionaryUpdate = function (data,callback) {
     });
 }
 
+//物理删除字典
 exports.datadictionaryDelete = function (data,callback) {
     datadictionaryDal.datadictionaryDelete(data,function (err,results) {
         if(err){
@@ -119,6 +138,7 @@ exports.datadictionaryDelete = function (data,callback) {
     });
 }
 
+//逻辑删除字典
 exports.datadictionaryDeleteLogically = function (data, callback) {
     datadictionaryDal.datadictionaryUpdate(data,function (err, results) {
         if(err){
@@ -130,6 +150,21 @@ exports.datadictionaryDeleteLogically = function (data, callback) {
         logger.writeInfo('datadictionaryDeleteLogically func in service');
         callback(false,results);
     });
+}
+
+exports.queryDatadictionaryBySubcode = function (data,callback) {
+
+    datadictionaryDal.queryDatadictionaryBySubcode(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo('queryDatadictionaryBySubcode func in service ');
+        console.log('queryDatadictionaryBySubcode func in service ');
+
+        callback(false, results);
+    })
 }
 exports.queryDatadictionaryByID = function (data,callback) {
     /**
