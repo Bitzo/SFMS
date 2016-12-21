@@ -37,7 +37,7 @@ exports.updateFinance = function(data, callback) {
 //财务信息查询
 exports.queryFinance = function (data, callback) {
     var queryData = {
-        'ID': data.ID || '',
+        'jit_financeinfo.ID': data.ID || '',
         'Username': data.Username || '',
         'InOutType': data.InOutType || '',
         'FIType': data.FIType || '',
