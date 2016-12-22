@@ -19,7 +19,7 @@ var logger = appRequire("util/loghelper").helper;
 
 //项目基本信息新增
 router.post('/', function (req, res) {
-    console.log(req.body);
+    console.log(req.body)
     var query = req.body.formdata;
     var projectName = query.ProjectName,
         projectDesc = query.ProjectDesc,
@@ -230,8 +230,7 @@ router.post('/', function (req, res) {
 
 //项目基本信息修改
 router.put('/', function (req, res) {
-    
-    console.log(req)
+    console.log(req.body)
     var query = req.body.formdata;
     var ID = query.ID,
         projectName = query.ProjectName,
@@ -242,7 +241,7 @@ router.put('/', function (req, res) {
         projectTimeLine = query.ProjectTimeLine,
         projectStatus = query.ProjectStatus,
         projectPrice = query.ProjectPrice,
-        accountID = query.jitkey,
+        accountID = req.query.jitkey,
         time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     //检查所需要的参数是否齐全
@@ -265,6 +264,16 @@ router.put('/', function (req, res) {
             msg: err
         })
     };
+
+    projectEndTime = moment(projectEndTime).format("YYYY-MM-DD HH:mm:ss");
+    if (moment(projectEndTime).isBefore()) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: '项目截止时间不能比当前日期早'
+        })
+    }
 
     userservice.querySingleID(projectManageID, function (err, results) {
         if (err) {

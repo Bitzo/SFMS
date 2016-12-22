@@ -256,7 +256,7 @@ router.get('/:projectID', function (req, res) {
     var query = req.query;
     var projectID = req.params.projectID || '',
         userName = query.userName || '',
-        isActive = query.isActive || '',
+        isActive = query.isActive || 1,
         page = req.query.pageindex > 0 ? req.query.pageindex : 1 ,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
