@@ -256,7 +256,7 @@ router.get('/:projectID', function (req, res) {
     var query = req.query;
     var projectID = req.params.projectID || '',
         userName = query.userName || '',
-        isActive = query.isActive || '',
+        isActive = query.isActive || 1,
         page = req.query.pageindex > 0 ? req.query.pageindex : 1 ,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -324,6 +324,42 @@ router.get('/:projectID', function (req, res) {
                 isSuccess: false,
                 msg: '无数据'
             })
+        }
+    })
+})
+
+router.delete('/', function (req, res) {
+    var ID = JSON.parse(req.query.d).ID;
+
+    if (ID == '' || ID === undefined) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: 'require: ID'
+        })
+    }
+    var data = {
+        'ID': ID,
+        'IsActive': 0
+    };
+
+    projectuserservice.updateProjectUser(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "操作失败，服务器出错"
+            });
+        }
+        if (results!==undefined) {
+            res.status(200);
+            return res.json({
+                code: 200,
+                isSuccess: false,
+                msg: "操作成功"
+            });
         }
     })
 })

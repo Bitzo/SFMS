@@ -3,34 +3,34 @@ block content
   div.container-fluid(action='/func' conf='paginationConf' ng-controller="baseController")
     span 
       h2 功能点新增
-    form(method="post",name="functionAdd" )
+   jason-form(method="post",source='/backmenu/plain' conf='paginationConf')
      table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用ID  
           td
-            select(id="search",value="",ng-model='formdata.FunctionLevel',style="width:163px;height:30px",required)
+            select(id="search",value="",ng-model='paginationConf.formdata.FunctionLevel',style="width:163px;height:30px",required)
               option 1
               option 2 
         tr
           td(width="15%",class="tableleft") 功能点对应的层级
           td
-            select(id="search",value="",ng-model='formdata.FunctionLevel',style="width:163px;height:30px",required)
+            select(id="search",value="",ng-model='paginationConf.formdata.FunctionLevel',style="width:163px;height:30px",required)
               option 1
               option 2
         tr
           td(width="15%",class="tableleft") 功能点号 
           td
-            input(type="textview",name="FunctionCode",ng-model='formdata.FunctionCode',ng-maxlength='8',required)
+            input(type="textview",name="FunctionCode",ng-model='paginationConf.formdata.FunctionCode',ng-maxlength='8',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.FunctionCode.$error.maxlength && formdata.FunctionCode.$touched") 对应的功能点号最多11位
+            small.error(ng-show="paginationConf.formdata.FunctionCode.$error.maxlength && paginationConf.formdata.FunctionCode.$touched") 对应的功能点号最多11位
           
            
         tr
           td(width="15%",class="tableleft") 	功能点名称 
           td
-            input(type="textview",name="FunctionName",ng-model='formdata.FunctionName',ng-maxlength='50',required)
+            input(type="textview",name="FunctionName",ng-model='paginationConf.formdata.FunctionName',ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.FunctionName.$error.maxlength && formdata.FunctionName.$touched") 功能点名称最多50位
+            small.error(ng-show="paginationConf.formdata.FunctionName.$error.maxlength && paginationConf.formdata.FunctionName.$touched") 功能点名称最多50位
 
         tr
           td(width="15%",class="tableleft") 备注(可选) 
@@ -40,7 +40,7 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/backmenu')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(paginationConf.formdata,'/backmenu')") 添加
  
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/function') 返回列表

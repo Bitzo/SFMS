@@ -27,6 +27,9 @@ exports.addProjectUser = function(data, callback) {
 
 //项目用户基本信息修改
 exports.updateProjectUser = function(data, callback) {
+    for (var i in data) {
+        data[i].duty = data[i].duty || '';
+    }
     projectuserDAL.updateProjectUser(data, function (err, results) {
         if (err) {
             callback(true, '修改失败');
@@ -54,7 +57,7 @@ exports.countQuery = function (data, callback) {
     var queryData = {
         'ProjectID': data.ProjectID,
         'UserName': data.UserName,
-        'IsActive': data.IsActive
+        'IsActive': 1
     }
     projectuserDAL.countQuery(queryData, function (err, results) {
         if (err) {

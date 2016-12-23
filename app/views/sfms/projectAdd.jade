@@ -1,4 +1,5 @@
 link(rel='stylesheet' href="css/backend/role.css")
+link(rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.css")
 block content
   div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
     span 
@@ -8,7 +9,7 @@ block content
         tr
           td(width="15%",class="tableleft") 项目负责人
           td
-            jason-select.form-control(placeholder='用户名'  style="width:120px;height:34px;" ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
+            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
 
            
         tr
@@ -17,7 +18,29 @@ block content
             input(type="textview",name="projectName",ng-model="formdata.ProjectName",ng-maxlength='50',style="width:160px;height:30px",required)
             &nbsp&nbsp
             small.error(ng-show="formdata.ProjectName.$error.maxlength && formdata.ProjectName.$touched") 应用名称最多50位
-        
+         tr
+          td(width="15%",class="tableleft") 项目成员 
+          td
+            table.table-bordered.table-hover
+             tr
+               td(style="width:160px;height:30px") 成员职责
+               td(style="width:160px;height:30px") 成员姓名
+             tr 
+               td
+                 input(type="textview",name="projectPrice",ng-model="formdata.data.Duty1",ng-maxlength='50',style="width:160px;height:30px",required)
+               td
+                 jason-select.form-control(data-am-selected multiple placeholder='用户名' style="width:120px;height:34px;" ng-model='formdata.data.UserName1' source='/backuser' stext='UserName' svalue='AccountID')
+             tr 
+               td
+                 input(type="textview",name="projectPrice",ng-model="formdata.data.Duty2",ng-maxlength='50',style="width:160px;height:30px",required)
+               td
+                 jason-select.form-control(data-am-selected multiple placeholder='用户名'  style="width:120px;height:34px;" ng-model='formdata.data.UserName2' source='/backuser' stext='UserName' svalue='AccountID')
+             tr 
+               td
+                 input(type="textview",name="projectPrice",ng-model="formdata.data.Duty3",ng-maxlength='50',style="width:160px;height:30px",required)
+               td
+                 jason-select.form-control(data-am-selected multiple placeholder='用户名'  style="width:120px;height:34px;" ng-model='formdata.data.UserName3' source='/backuser' stext='UserName' svalue='AccountID')
+     
         tr
           td(width="15%",class="tableleft") 项目截止时间
           td
@@ -45,3 +68,5 @@ block content
             button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/sfms/api/project')") 添加
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/projectManage') 返回列表
+
+            script(src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.js")

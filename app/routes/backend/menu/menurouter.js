@@ -499,6 +499,7 @@ router.post('/',function(req,res,next) {
         "SortIndex" : sortIndex,
         "IsActive" : isActive
     };
+
     for (var key in intdata){
         if(isNaN(intdata[key])){
             res.status(400);
@@ -525,6 +526,15 @@ router.post('/',function(req,res,next) {
             }
         }
 
+    }
+
+    if (menuLevel == 1 && parentID != 0){
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '1级菜单的父菜单必须为0'
+        });
     }
 
     //执行插入操作

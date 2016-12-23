@@ -26,7 +26,7 @@ var logger = appRequire("util/loghelper").helper;
  *  4. 存入数据
  */
 router.post('/', function (req, res) {
-    var query = req.body.formdata,
+    var query = req.body,
         fiName = query.fiName,
         fiType = query.fiType,
         inOutType = query.inOutType,
@@ -102,21 +102,7 @@ router.post('/', function (req, res) {
                         }
                         if (results !== undefined && results.length > 0) {
                             userName = results[0].UserName;
-                            //数据全部验证完毕后存入数据
-                            var data = {
-                                'FIName': fiName,
-                                'FIType': fiType,
-                                'InOutType': inOutType,
-                                'FIPrice': fiPrice,
-                                'projectID': projectID,
-                                'UserID': userID,
-                                'UserName': userName,
-                                'OperateUser': operateUser,
-                                'FIStatu': '待审核',
-                                'Remark': remark,
-                                'IsActive': isActive
-                            };
-                            financeService.addFinance(data, function (err, results) {
+                            userservice.querySingleID(userID, function (err, results) {
                                 if (err) {
                                     res.status(500);
                                     return res.json({
@@ -125,19 +111,53 @@ router.post('/', function (req, res) {
                                         msg: '操作失败，服务器出错'
                                     })
                                 }
-                                if(results !== undefined && results.insertId > 0) {
-                                    res.status(200);
-                                    return res.json({
-                                        status: 200,
-                                        isSuccess: true,
-                                        msg: '操作成功'
+                                if (results !== undefined && results.length > 0) {
+                                    operateUser = results[0].UserName;
+                                    //数据全部验证完毕后存入数据
+                                    var data = {
+                                        'FIName': fiName,
+                                        'FIType': fiType,
+                                        'InOutType': inOutType,
+                                        'FIPrice': fiPrice,
+                                        'projectID': projectID,
+                                        'UserID': userID,
+                                        'UserName': userName,
+                                        'OperateUser': operateUser,
+                                        'FIStatu': '待审核',
+                                        'Remark': remark,
+                                        'IsActive': isActive
+                                    };
+                                    financeService.addFinance(data, function (err, results) {
+                                        if (err) {
+                                            res.status(500);
+                                            return res.json({
+                                                status: 500,
+                                                isSuccess: false,
+                                                msg: '操作失败，服务器出错'
+                                            })
+                                        }
+                                        if(results !== undefined && results.insertId > 0) {
+                                            res.status(200);
+                                            return res.json({
+                                                status: 200,
+                                                isSuccess: true,
+                                                msg: '操作成功'
+                                            })
+                                        } else {
+                                            res.status(400);
+                                            return res.json({
+                                                status: 404,
+                                                isSuccess: false,
+                                                msg: results
+                                            })
+                                        }
                                     })
                                 } else {
                                     res.status(400);
                                     return res.json({
                                         status: 404,
                                         isSuccess: false,
-                                        msg: results
+                                        msg: '操作失败，用户无效'
                                     })
                                 }
                             })
@@ -179,7 +199,7 @@ router.post('/', function (req, res) {
  * 5. 全部核实并查询完，存入数据
  */
 router.put('/', function (req, res) {
-    var query = req.body.formdata,
+    var query = req.body,
         ID = query.ID,
         fiName = query.fiName,
         fiType = query.fiType,
@@ -266,23 +286,7 @@ router.put('/', function (req, res) {
                                 }
                                 if (results !== undefined && results.length > 0) {
                                     userName = results[0].UserName;
-                                    //数据全部验证完毕后存入数据
-                                    var data = {
-                                        'ID': ID,
-                                        'FIName': fiName,
-                                        'FIType': fiType,
-                                        'InOutType': inOutType,
-                                        'FIPrice': fiPrice,
-                                        'ProjectID': projectID,
-                                        'UserID': userID,
-                                        'UserName': userName,
-                                        'OperateUser': operateUser,
-                                        'FIStatu': '待审核',
-                                        'Remark': remark,
-                                        'IsActive': isActive
-                                    };
-                                    console.log(data)
-                                    financeService.updateFinance(data, function (err, results) {
+                                    userservice.querySingleID(operateUser, function (err, results) {
                                         if (err) {
                                             res.status(500);
                                             return res.json({
@@ -291,19 +295,54 @@ router.put('/', function (req, res) {
                                                 msg: '操作失败，服务器出错'
                                             })
                                         }
-                                        if(results !== undefined && results.affectedRows > 0) {
-                                            res.status(200);
-                                            return res.json({
-                                                status: 200,
-                                                isSuccess: true,
-                                                msg: '操作成功'
+                                        if (results !== undefined && results.length > 0) {
+                                            operateUser = results[0].UserName;
+                                            //数据全部验证完毕后存入数据
+                                            var data = {
+                                                'ID': ID,
+                                                'FIName': fiName,
+                                                'FIType': fiType,
+                                                'InOutType': inOutType,
+                                                'FIPrice': fiPrice,
+                                                'ProjectID': projectID,
+                                                'UserID': userID,
+                                                'UserName': userName,
+                                                'OperateUser': operateUser,
+                                                'FIStatu': '待审核',
+                                                'Remark': remark,
+                                                'IsActive': isActive
+                                            };
+                                            financeService.updateFinance(data, function (err, results) {
+                                                if (err) {
+                                                    res.status(500);
+                                                    return res.json({
+                                                        status: 500,
+                                                        isSuccess: false,
+                                                        msg: '操作失败，服务器出错'
+                                                    })
+                                                }
+                                                if(results !== undefined && results.affectedRows > 0) {
+                                                    res.status(200);
+                                                    return res.json({
+                                                        status: 200,
+                                                        isSuccess: true,
+                                                        msg: '操作成功'
+                                                    })
+                                                } else {
+                                                    res.status(400);
+                                                    return res.json({
+                                                        status: 404,
+                                                        isSuccess: false,
+                                                        msg: results
+                                                    })
+                                                }
                                             })
                                         } else {
                                             res.status(400);
                                             return res.json({
                                                 status: 404,
                                                 isSuccess: false,
-                                                msg: results
+                                                msg: '操作失败，用户无效'
                                             })
                                         }
                                     })
@@ -411,8 +450,39 @@ router.get('/', function (req, res) {
                     if(result.curPage == result.totalPage) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
-                    res.status(200);
-                    return res.json(result);
+                    //替换用户名
+                    var ID = [];
+                    for (var i=0;i<results.length;++i) {
+                        if (results[i].CheckUser == null) continue;
+                        if (i==0) ID[i] = results[i].UserID;
+                        else {
+                            var j = 0;
+                            for (j=0;j<ID.length;++j) {
+                                if (ID[j] == results[i].CheckUser) break;
+                            }
+                            if (j == ID.length) ID[j] = results[i].CheckUser;
+                        }
+                    }
+                    userservice.queryAccountByID(ID, function (err, data) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            })
+                        }
+                        for (var i in results) {
+                            for (var j in data) {
+                                if (results[i].CheckUser == data[j].AccountID) {
+                                    results[i].CheckUser = data[j].UserName;
+                                    break;
+                                }
+                            }
+                        }
+                        res.status(200);
+                        return res.json(result);
+                    })
                 } else {
                     res.status(200);
                     return res.json({

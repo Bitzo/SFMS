@@ -24,10 +24,9 @@ exports.addProject = function(data, callback) {
 
 //项目基本信息修改
 exports.updateProject = function(data, callback) {
-
     function checkData(data) {
         for (var key in data) {
-            if(data[key] === undefined) {
+            if(data[key] === '') {
                 logger.writeInfo(key);
                 return false;
             }

@@ -45,7 +45,6 @@ myApp.controller('baseController', function($scope, $http,baseService) {
     //查询
     $scope.search=function(){
         getInit();
-        console.log($scope.f)
     }
 
 
@@ -113,7 +112,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
     }
 
     //编辑完成提交信息
-    $scope.formdata={};
+    var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
         console.log(formdata);
         console.log(action);
@@ -121,7 +120,7 @@ myApp.controller('baseController', function($scope, $http,baseService) {
             method:'put',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:{
-                formdata:$scope.formdata
+                formdata:$scope.paginationConf.formdata
             }
         }).
         success(function(response) {
@@ -278,6 +277,13 @@ myApp.controller('baseController', function($scope, $http,baseService) {
                     console.log(response);
                 });
             }
+
+
+
+    //删除项目模态框中的用户
+   
+
+    
 
     //显示签到模态框数据
     $scope.moresign = function(index,action){

@@ -369,8 +369,39 @@ router.get('/person', function (req, res) {
                     if(result.curPage == result.totalPage) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
-                    res.status(200);
-                    return res.json(result);
+                    //替换用户名
+                    var ID = [];
+                    for (var i=0;i<results.length;++i) {
+                        if (results[i].CheckUser == null) continue;
+                        if (i==0) ID[i] = results[i].UserID;
+                        else {
+                            var j = 0;
+                            for (j=0;j<ID.length;++j) {
+                                if (ID[j] == results[i].CheckUser) break;
+                            }
+                            if (j == ID.length) ID[j] = results[i].CheckUser;
+                        }
+                    }
+                    userservice.queryAccountByID(ID, function (err, data) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            })
+                        }
+                        for (var i in results) {
+                            for (var j in data) {
+                                if (results[i].CheckUser == data[j].AccountID) {
+                                    results[i].CheckUser = data[j].UserName;
+                                    break;
+                                }
+                            }
+                        }
+                        res.status(200);
+                        return res.json(result);
+                    })
                 } else {
                     res.status(200);
                     return res.json({
@@ -453,8 +484,39 @@ router.get('/', function (req, res) {
                     if(result.curPage == result.totalPage) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
-                    res.status(200);
-                    return res.json(result);
+                    //替换用户名
+                    var ID = [];
+                    for (var i=0;i<results.length;++i) {
+                        if (results[i].CheckUser == null) continue;
+                        if (i==0) ID[i] = results[i].UserID;
+                        else {
+                            var j = 0;
+                            for (j=0;j<ID.length;++j) {
+                                if (ID[j] == results[i].CheckUser) break;
+                            }
+                            if (j == ID.length) ID[j] = results[i].CheckUser;
+                        }
+                    }
+                    userservice.queryAccountByID(ID, function (err, data) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            })
+                        }
+                        for (var i in results) {
+                            for (var j in data) {
+                                if (results[i].CheckUser == data[j].AccountID) {
+                                    results[i].CheckUser = data[j].UserName;
+                                    break;
+                                }
+                            }
+                        }
+                        res.status(200);
+                        return res.json(result);
+                    })
                 } else {
                     res.status(200);
                     return res.json({
