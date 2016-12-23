@@ -14,11 +14,16 @@ block content
                                 tr
                                     th 成员姓名
                                     th 成员职能
+                                    th 操作
                             tbody
                                 tbody
                                 tr(ng-repeat="data in data")
                                     td {{data.UserName}}
                                     td {{data.Duty}}
+                                    td
+                                      a(ng-click="delect($index,'/sfms/api/projectuser/')")
+                                        i.icon.icon-trash 删除
+
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
                         
     div.page-content
