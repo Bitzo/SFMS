@@ -64,7 +64,7 @@ block content
             td {{x.ProjectStatus}}    
             td {{x.ProjectPrice}}                                                                                                                                                                
             td
-              a(href='#/sfms/projectEdit/' )
+              a(href='#/sfms/projectEdit/ID={{x.ID}}' )
                 i.icon.icon-edit 编辑
               a(ng-click="remove($index,'/sfms/api/project')")
                 i.icon.icon-trash 删除
