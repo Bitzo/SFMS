@@ -59,10 +59,8 @@ block content
             td {{x.CheckTime}}
             td {{x.Remark}}            
             td
-              a(ng-click="show(x.ID,'/app')",href='#/sfms/financeCheck/' )
-                i.icon.icon-edit 审核
-
-            
+              a(href='#/sfms/financeCheck?ID={{x.ID}}' )
+                i.icon.icon-edit 审核            
       div.pull-right
         jason-pagination(conf='paginationConf')
 

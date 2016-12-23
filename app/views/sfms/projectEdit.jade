@@ -4,7 +4,7 @@ block content
   div.container-fluid(conf='paginationConf' ng-controller="baseController")
     span 
       h2 项目编辑
-   jason-form(method="post",name="appinfo" )
+    jason-form(method="post",source='/sfms/api/project' conf='paginationConf')
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 项目负责人

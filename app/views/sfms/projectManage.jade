@@ -11,17 +11,19 @@ block content
                         br                
                         table.table.table-striped.table-bordered.text-center
                             thead
-                                tr
+                                tr 
+                                    th 序号
                                     th 成员姓名
                                     th 成员职能
                                     th 操作
                             tbody
                                 tbody
-                                tr(ng-repeat="data in data")
-                                    td {{data.UserName}}
-                                    td {{data.Duty}}
+                                tr(ng-repeat="x in data")
+                                    td {{$index+1}}
+                                    td {{x.UserName}}
+                                    td {{x.Duty}}
                                     td
-                                      a(ng-click="delect($index,'/sfms/api/projectuser/')")
+                                      a(ng-click="remove(this,'/sfms/api/projectuser/')")
                                         i.icon.icon-trash 删除
 
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
@@ -69,7 +71,7 @@ block content
             td
               a(href='#/sfms/projectEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑
-              a(ng-click="remove($index,'/sfms/api/project')")
+              a(ng-click="remove(this,'/sfms/api/project')")
                 i.icon.icon-trash 删除
               a(data-toggle="modal",data-target="#myModal",ng-click="moreproject($index,'/sfms/api/projectuser/')")
                 i.icon.icon-zoom-in  更多
