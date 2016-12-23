@@ -54,7 +54,7 @@ exports.countQuery = function (data, callback) {
     var queryData = {
         'ProjectID': data.ProjectID,
         'UserName': data.UserName,
-        'IsActive': data.IsActive
+        'IsActive': 1
     }
     projectuserDAL.countQuery(queryData, function (err, results) {
         if (err) {
