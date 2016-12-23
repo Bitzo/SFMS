@@ -45,7 +45,6 @@ myApp.controller('baseController', function($scope, $http,baseService) {
     //查询
     $scope.search=function(){
         getInit();
-        console.log($scope.f)
     }
 
 

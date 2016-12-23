@@ -14,11 +14,15 @@ block content
                                 tr
                                     th 成员姓名
                                     th 成员职能
+                                    th 删除
                             tbody
                                 tbody
                                 tr(ng-repeat="data in data")
                                     td {{data.UserName}}
                                     td {{data.Duty}}
+                                    td 
+                                      a(ng-click="remove($index,'/sfms/api/project')")
+                                       i.icon.icon-trash 删除
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
                         
     div.page-content
@@ -33,8 +37,8 @@ block content
             input.form-control(type='date' ng-model='f.endTime')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
-                            i.icon.icon-search   查询
-            button(ng-click='search()' class='btn btn-sm btn-default') 
+              i.icon.icon-search   查询
+            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
               i.icon.icon-repeat  刷新
       hr
       table.table.table-striped.table-bordered.text-center

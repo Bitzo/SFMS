@@ -92,11 +92,11 @@ router.get('/signPersonal', function(req, res, next) {
 router.get('/finance', function(req, res, next) {
         res.render('sfms/finance', { title: 'Hi sfms' });
 });
-router.get('/financetAdd', function(req, res, next) {
-        res.render('sfms/financetAdd', { title: 'Hi sfms' });
+router.get('/financeAdd', function(req, res, next) {
+        res.render('sfms/financeAdd', { title: 'Hi sfms' });
 });
-router.get('/financetCheck', function(req, res, next) {
-        res.render('sfms/financetCheck', { title: 'Hi sfms' });
+router.get('/financeCheck', function(req, res, next) {
+        res.render('sfms/financeCheck', { title: 'Hi sfms' });
 });
 
 
