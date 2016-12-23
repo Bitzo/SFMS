@@ -51,14 +51,15 @@ exports.addProjectUser = function (data, callback) {
 
 //项目用户信息修改
 exports.updateProjectUser = function (data, callback) {
-    var sql = 'update jit_projectruser set',
-        update_sql = '',
+    var sql = '',
         time = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    data.EditTime = time;
+    for (var i in data) {
+        sql += 'update jit_projectruser set';
+        var update_sql = '';
 
-    if (data !== undefined) {
-        for (var key in data) {
+        for (var key in data[i]) {
+            data[i].EditTime = time;
             if (key != 'ID' && key != 'ProjectID') {
                 if(update_sql.length == 0) {
                     update_sql += ' ' + key + " = '" + data[key] +"'";
@@ -67,11 +68,12 @@ exports.updateProjectUser = function (data, callback) {
                 }
             }
         }
+        sql += update_sql;
+        if (data.ID!=''&&data.ID!==undefined) sql += ' where ID = ' + data.ID;
+        if (data.ProjectID!=''&&data.ProjectID!==undefined) sql += ' where ProjectID = ' + data.ProjectID;
     }
-    sql += update_sql;
-    if (data.ID!=''&&data.ID!==undefined) sql += ' where ID = ' + data.ID;
-    if (data.ProjectID!=''&&data.ProjectID!==undefined) sql += ' where ProjectID = ' + data.ProjectID;
-    logger.writeInfo('更新项目基本信息' + sql);
+
+    logger.writeInfo('更新项目用户信息' + sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -95,8 +97,8 @@ exports.updateProjectUser = function (data, callback) {
 //项目用户信息查询
 exports.queryProjectUser = function (data, callback) {
     var sql = 'select ID,ProjectName,ProjectID,UserID,UserName,CreateTime,OperateUser,EditTime,EditName,Duty,IsActive from jit_projectruser where 1=1 ',
-        page = data.page,
-        num = data.pageNum;
+        page = data.page || 1,
+        num = data.pageNum || config.pageCount;
 
     if (data !== undefined) {
         for (var key in data) {

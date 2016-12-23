@@ -55,7 +55,7 @@ block content
             td {{x.CheckTime}}
             td {{x.Remark}}            
             td
-              a(ng-click="show(x.ID,'/app')",href='#/sfms/kpiCheck/' )
+              a(href='#/sfms/kpiCheck/?ID={{x.ID}}' )
                 i.icon.icon-edit 审核
 
             

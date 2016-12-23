@@ -18,10 +18,11 @@ jasonapp.service('jasonService', function ($http, $q) {
 angular.module('jason.pagination').directive('jasonSelect',function($http,jasonService){
     return {
         restrict: 'EA',
-         template: '<select>'+
-              '<option>全部显示</option>'+
+         template: 
+         '<select>'+
+            '<option value="">全部显示</option>'+
             '<option ng-repeat="item in options" value={{item.value}}>{{item.text}}</option>'+
-        '</select>',
+         '</select>',
         replace: true,
         scope: {
             conf: '='

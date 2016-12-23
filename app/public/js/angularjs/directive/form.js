@@ -1,6 +1,3 @@
-/**
- * Created by Administrator on 2016/12/6.
- */
 jasonapp.service('jasonformService', function ($http, $q) {
     this.IintGrid = function (url,params) {
         return $http({
@@ -27,6 +24,11 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
             var params={f:$location.search()};
             jasonformService.IintGrid(url,params).then(function(response){
                 scope.conf.formdata=response.data.data[0];
+                var toCharColArr= attrs.tocc==null?[]:attrs.tocc.split(',');
+                toCharColArr.forEach(function(o){
+                    scope.conf.formdata[o]+='';
+                });
+
             });
             scope.submit=function(){
 
