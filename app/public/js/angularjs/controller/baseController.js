@@ -1,7 +1,121 @@
 /**
  * Created by Administrator on 2016/12/14.
  */
-myApp.controller('baseController', function($scope, $http,baseService) {
+myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreetableParams) {
+var data = [
+        {
+            ApplicationID:'',
+            name:'应用名称1',
+            FunctionID: 0,
+            FunctionLevel: 0,
+            ParentID:0,
+            FunctionCode:'',
+            Memo:'',
+            type: 'folder',
+            children: [
+                {
+                    ApplicationID:'',
+                    name:'功能点名称1',
+                    FunctionID: 0,
+                    FunctionLevel: 0,
+                    ParentID:0,
+                    FunctionCode:'00001',
+                    Memo:'aaaaaa',
+                    
+                },
+                {
+                    ApplicationID:'',
+                    name:'功能点名称2',
+                    FunctionID: 0,
+                    FunctionLevel: 0,
+                    ParentID:0,
+                    FunctionCode:'00001',
+                    Memo:'aaaaaa',
+                }
+            ]
+            
+        },
+          {
+            ApplicationID:'',
+            name:'应用名称2',
+            FunctionID: 0,
+            FunctionLevel: 0,
+            ParentID:0,
+            FunctionCode:'',
+            Memo:'',
+            type: 'folder',
+            children: [
+                {
+                    ApplicationID:'',
+                    name:'功能点名称1',
+                    FunctionID: 0,
+                    FunctionLevel: 0,
+                    ParentID:0,
+                    FunctionCode:'00001',
+                    Memo:'aaaaaa',
+                    children:[
+                        {
+                            ApplicationID:'',
+                            name:'功能点名称11',
+                            FunctionID: 0,
+                            FunctionLevel: 0,
+                            ParentID:0,
+                            FunctionCode:'00001',
+                            Memo:'aaaaaa',
+                        },
+                        {
+                            ApplicationID:'',
+                            name:'功能点名称12',
+                            FunctionID: 0,
+                            FunctionLevel: 0,
+                            ParentID:0,
+                            FunctionCode:'00001',
+                            Memo:'aaaaaa',
+                        },
+
+
+                    ]                    
+                },
+                {
+                    ApplicationID:'',
+                    name:'功能点名称2',
+                    FunctionID: 0,
+                    FunctionLevel: 0,
+                    ParentID:0,
+                    FunctionCode:'00001',
+                    Memo:'aaaaaa',
+                }
+            ]
+            
+        },
+    ];
+
+    $scope.expanded_params = new ngTreetableParams({
+       getNodes: function(parent) {
+            return parent ? parent.children : data;
+        },
+        /*getNodes: function(parent) {
+        var deferred = $q.defer();
+        $http({
+            method:'get',
+            url:"/func?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+        }).
+        success(function(response) {
+           deferred.resolve(response.data);
+           return response.data;
+        }).
+        error(function(response) {
+        });
+        return deferred.promise;
+    },*/
+        getTemplate: function(node) {
+            return 'tree_node';
+        },
+        options: {
+            initialState: 'expanded'
+        }
+    });
+
 
     //显示左侧菜单栏
     $scope.menus =baseService.InitMenu().then(function(response){
@@ -101,7 +215,6 @@ myApp.controller('baseController', function($scope, $http,baseService) {
         }).
         success(function(response) {
             $scope.paginationConf.formdata=response.data[0];
-            console.log($scope.formdata.ApplicationID);
             console.log('修改成功');
             console.log(response);
         }).

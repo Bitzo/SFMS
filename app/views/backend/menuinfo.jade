@@ -19,20 +19,25 @@ block content
             &nbsp&nbsp
             small.error(ng-show="formdata.ApplicationName.$error.maxlength && formdata.ApplicationName.$touched") 应用名称最多50位
             
-
-        tr
-          td(width="15%",class="tableleft") 菜单对应的层级
-          td
-            select(type="textview",name='MenuLevel',ng-model='formdata.MenuLevel',style="width:160px;height:30px",required)
-              option 1
-              option 2
-              
         tr
           td(width="15%",class="tableleft") 	对应的父级名称
           td
             jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="formdata.ParentID", source='/backmenu/parent', stext='ParentMenuName' svalue='ParentID',ng-maxlength='11',style="width:160px;height:30px",required)
             &nbsp&nbsp
             small.error(ng-show="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级名称最多11位
+
+
+        tr
+          td(width="15%",class="tableleft") 菜单对应的层级
+          td
+            input(type="radio",name="MenuLevel",value="1",ng-model="formdata.MenuLevel",checked)
+            &nbsp 1
+            &nbsp&nbsp&nbsp           
+            input(type="radio",name="MenuLevel",ng-model="formdata.MenuLevel",value="2")
+            &nbsp2          
+
+              
+        
            
         tr
           td(class="tableleft") 是否有效
