@@ -19,7 +19,6 @@ var logger = appRequire("util/loghelper").helper;
 
 //项目基本信息新增
 router.post('/', function (req, res) {
-    console.log(req.body)
     var query = req.body.formdata;
     var projectName = query.ProjectName,
         projectDesc = query.ProjectDesc,
@@ -31,7 +30,6 @@ router.post('/', function (req, res) {
         accountID = req.query.jitkey,
         isActive = query.isActive || 1,
         userData = query.data;
-
     projectEndTime = moment(projectEndTime).format("YYYY-MM-DD HH:mm:ss");
     if (moment(projectEndTime).isBefore()) {
         res.status(400);
@@ -109,6 +107,52 @@ router.post('/', function (req, res) {
                         }
                         if(results !== undefined && results.insertId > 0) {
                             //如果有项目人员信息，则添加
+                            //转换数据格式
+                            var temp = userData;
+                            userData = [];
+                            userData.push({
+                                projectID: results.insertId,
+                                userID: projectManageID,
+                                editID: accountID,
+                                duty: '项目负责人',
+                                isActive: 1
+                            });
+                            var l = temp.UserName1.length;
+                            if (temp.Duty1 !== undefined && temp.Duty1 != '') {
+                                for(var i=0;i<l;++i) {
+                                    userData.push({
+                                        projectID: results.insertId,
+                                        userID: temp.UserName1[i],
+                                        editID: accountID,
+                                        duty: temp.Duty1,
+                                        isActive: 1
+                                    })
+                                }
+                            }
+                            l = temp.UserName2.length;
+                            if (temp.Duty2 !== undefined && temp.Duty2 != '') {
+                                for(var i=0;i<l;++i) {
+                                    userData.push({
+                                        projectID: results.insertId,
+                                        userID: temp.UserName2[i],
+                                        editID: accountID,
+                                        duty: temp.Duty2,
+                                        isActive: 1
+                                    })
+                                }
+                            }
+                            l = temp.UserName3.length;
+                            if (temp.Duty2 !== undefined && temp.Duty2 != '') {
+                                for (var i = 0; i < l; ++i) {
+                                    userData.push({
+                                        projectID: results.insertId,
+                                        userID: temp.UserName3[i],
+                                        editID: accountID,
+                                        duty: temp.Duty3,
+                                        isActive: 1
+                                    })
+                                }
+                            }
                             if (userData!==undefined&&userData.length>0) {
                                 for (var i in userData) {
                                     userData[i].ProjectName = projectName;
