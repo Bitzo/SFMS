@@ -24,7 +24,6 @@ exports.addProject = function(data, callback) {
 
 //项目基本信息修改
 exports.updateProject = function(data, callback) {
-    console.log(data)
     function checkData(data) {
         for (var key in data) {
             if(data[key] === '') {
