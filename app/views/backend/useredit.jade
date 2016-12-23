@@ -3,12 +3,12 @@ block content
   div.container-fluid
     span 
       h2 用户编辑
-   jason-form(method="post",source='/backuser' conf='paginationConf')
+   jason-form(method="post",source='/backuser' conf='paginationConf' tocc="ApplicationID,ApplicationName,RoleName")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(placeholder='应用名称' ng-model='paginationConf.formdata.ApplicationName',source='/app', stext='ApplicationName',svalue='ApplicationName',style="width:160px;height:30px",required)
+            jason-select.input(ng-model='paginationConf.formdata.ApplicationID', source='/app' stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required) 
             
         tr
           td(width="15%",class="tableleft") 用户姓名 
@@ -34,7 +34,7 @@ block content
         tr
           td(width="15%",class="tableleft") 角色名称
           td
-            jason-select.input(placeholder='角色名称' ng-model='paginationConf.formdata.RoleName' source='/backrole' stext='RoleName' svalue='RoleName',style="width:160px;height:30px",required)
+            jason-select.input(ng-model='paginationConf.formdata.RoleName' source='/backrole' stext='RoleName' svalue='roleName',style="width:160px;height:30px",required)
 
         tr
           td(class="tableleft") 是否有效
@@ -62,12 +62,12 @@ block content
         tr
           td(width="15%",class="tableleft") 所在学院 (可选) 
           td
-            jason-select.input(placeholder='选择学院' ng-model='paginationConf.formdata.CollegeID',source='/datadict/plain', stext='Category',svalue='Category',style="width:160px;height:30px",required)
+            jason-select.input(ng-model='paginationConf.formdata.CollegeID',source='/datadict/plain', stext='dc_academy',svalue='dc_academy',style="width:160px;height:30px",required)
 
         tr
           td(width="15%",class="tableleft") 所在班级 (可选)  
           td
-            jason-select.input(placeholder='选择班级' ng-model='paginationConf.formdata.ClassID',source='/datadict/plain', stext='Category',svalue='Category',style="width:160px;height:30px",required)
+            jason-select.input(ng-model='paginationConf.formdata.ClassID',source='/datadict/plain', stext='Category',svalue='Category',style="width:160px;height:30px",required)
 
         tr
           td(width="15%",class="tableleft") 地址 (可选) 
@@ -87,7 +87,6 @@ block content
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/backuser')") 确认修改
- 
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#backend/user') 返回列表
 

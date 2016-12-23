@@ -101,7 +101,6 @@ myApp.controller('baseController', function($scope, $http,baseService) {
         }).
         success(function(response) {
             $scope.paginationConf.formdata=response.data[0];
-            console.log($scope.formdata.ApplicationID);
             console.log('修改成功');
             console.log(response);
         }).

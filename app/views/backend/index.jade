@@ -66,19 +66,7 @@ html(lang='en')
               span.btn.btn-info
               span.btn.btn-warning
               span.btn.btn-danger
-          // #sidebar-shortcuts
-          //- ul.nav.nav-list
-          //-   li(ng-repeat='menu in menus')
-          //-     a.dropdown-toggle(href='{{menu.url}}')
-          //-       i(class='{{menu.icon}}')
-          //-       span.menu-text  {{menu.text}}
-          //-       b.arrow.icon-angle-down
-          //-     ul.submenu
-          //-       li(ng-repeat='menuchid in menu.children')
-          //-         a(href='{{menuchid.url}}')
-          //-           i.icon-double-angle-right
-          //-           span{{menuchid.text}}
-
+ 
          
           ul.nav.nav-list
             li(ng-repeat='menu in menus') 
@@ -96,6 +84,9 @@ html(lang='en')
             i.icon-double-angle-left(data-icon1='icon-double-angle-left', data-icon2='icon-double-angle-right')
         .main-content
           .page-content(ng-view='')
+             img(src='imgs/login_pic.png',style="width:800px;height:500px;")
+          
+           
   // /.page-content
 // /.main-content
 // /.main-container-inner
