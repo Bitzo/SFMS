@@ -258,7 +258,7 @@ Customer.prototype.addSubscibe=function(token,msg,callback)
                             else
                             {
                                 //用户名不存在的时候做插入的操作
-                                wechatCustomer.insert(data,function(err,insertInfo)
+                                me.insert(data,function(err,insertInfo)
                                 {
                                    if(err)
                                    {
@@ -362,9 +362,10 @@ Customer.prototype.addAllList = function(token,callback)
             //查询用户是否出错
             me.query(queryInfo,function(err,resultInfo)
             {
+
                 if(err)
                 {
-                    console.log("查询失败");
+                    console.log("查询失败sadsadsads");
                     var errinfo = '在添加用户的时候查询失败';
                     callback(true,errinfo);
                     return ;
@@ -372,17 +373,61 @@ Customer.prototype.addAllList = function(token,callback)
 
                 if(resultInfo != undefined && resultInfo.length != 0)
                 {
-                    console.log("用户名已经存在");
+                    console.log("用户名已经存在sdasdsadsa");
+                    var errinfo = '用户名已经存在，不需要重复插入';
+                    callback(true,errinfo);
                     return;
                 }
-
+                else{
+                    console.log("用户名不存在"+queryInfo.WechatUserCode);
                 wechat.getCustomerInfo(token,infoList.data.openid[key],function(info)
                 {
+                    var data = {
+                        'WechatUserCode':info.openid
+                    };
+                        //获取用户的信息
+                        data.Sex=info.sex;
+                        data.NickName=info.nickname;
+                        data.IsActive = 1;
+                        if(info.city.length !=0)
+                        {
+                            data.City = info.city;
+                        }                      
+                        if(info.province.length !=0)
+                        {
+                            data.Province = info.province; 
+                        }
+                        if(info.country.length !=0)
+                        {
+                            data.Country=info.country;
+                        }
+                        if(info.remark.length !=0)
+                        {
+                            data.Memo = info.remark;
+                        }
 
+                        //当用户不存在的时候做插入的操作
+                       me.insert(data,function(err,insertInfo)
+                                {
+                                   if(err)
+                                   {
+                                    console.log("插入失败");
+                                    var errinfo = '当插入客户信息失败';
+                                    callback(true,errinfo);
+                                    return;
+                                }
+                                if(insertInfo != undefined &&insertInfo.affectedRows !=0)
+                                {
+                                    console.log("插入成功");
+                                    callback(false,'');
+                                    return;
+                                }
+                         });
                 });
-            });
-        }
-    });
-}
+            };
+             });
+         }
+     });
+ }
 
 module.exports = new Customer();
