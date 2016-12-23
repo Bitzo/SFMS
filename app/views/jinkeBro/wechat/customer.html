@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<title>金科小哥的地址栏</title>
+	<link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<form class="form-horizontal" role="form">
+	<div class="form-group">
+		<label for="truename" class="col-sm-2 control-label">真实姓名</label>
+		<div class="col-sm-10"  >
+			<input type="text" class="form-control" id="truename" 
+				   placeholder="请输入名字" style="width:500px"> 
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="phone" class="col-sm-2 control-label">手机号码</label>
+		<div class="col-sm-10"  >
+			<input type="text" class="form-control" id="phone" 
+				   placeholder="手机号码" style="width:500px">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="school" class="col-sm-2 control-label">学校</label>
+		<div class="col-sm-10">
+		<select class="form-control" style="width:100px" id = "school">
+			<option>金陵科技学院</option>
+			<option>南京晓庄学院</option>
+			<option>南京大学</option>
+			<option>南航</option>
+			<option>南广</option>
+		</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="Area" class="col-sm-2 control-label">区域</label>
+		<div class="col-sm-10">
+		<select class="form-control" style="width:100px" id= "area">
+			<option>南区</option>
+			<option>北区</option>
+		</select>
+	</div>
+	</div>
+	<div class="form-group">
+		<label for="House" class="col-sm-2 control-label">楼栋</label>
+		<div class="col-sm-10">
+		<select class="form-control" style="width:100px" id="House">
+			<option>01栋</option>
+			<option>02栋</option>
+			<option>。。</option>
+		</select>
+	</div>
+	</div>
+	<div class="form-group">
+		<label for="DromNum" class="col-sm-2 control-label">门牌号</label>
+		<div class="col-sm-10">
+		<select class="form-control" style="width:100px" id="DromNum">
+			<option>A417</option>
+			<option>A307</option>
+			<option>B411</option>
+			<option>B411</option>
+			<option>B617</option>
+		</select>
+	</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-default">保存地址</button>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>
