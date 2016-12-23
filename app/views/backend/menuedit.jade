@@ -13,11 +13,17 @@ block content
               small.error(ng-show="paginationConf.formdata.MenuName.$error.maxlength && paginationConf.formdata.MenuName.$touched") 菜单名称最多50位     
         
           tr
+            td(width="15%",class="tableleft") 应用ID 
+            td
+              jason-select.input(placeholder='应用名称',ng-model='paginationConf.formdata.ApplicationID', source='/app' stext='ID' svalue='ID',style="width:160px;height:30px",required) 
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.ApplicationID.$error.maxlength && paginationConf.formdata.ApplicationID.$touched") 应用ID最多11位
+          tr
             td(width="15%",class="tableleft") 应用名称 
             td
               jason-select.input(placeholder='应用名称',ng-model='paginationConf.formdata.ApplicationName', source='/app' stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required) 
               &nbsp&nbsp
-              small.error(ng-show="paginationConf.formdata.ApplicationID.$error.maxlength && paginationConf.formdata.ApplicationID.$touched") 应用ID最多11位
+              small.error(ng-show="paginationConf.formdata.ApplicationName.$error.maxlength && paginationConf.formdata.ApplicationName.$touched") 应用ID最多11位
           
           tr
             td(width="15%",class="tableleft") 菜单对应的层级
@@ -36,10 +42,10 @@ block content
           tr
             td(class="tableleft") 是否有效
             td
-              input(type="radio",name="IsActive",value="1",ng-model="formdata.IsActive",checked)
+              input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive",checked)
               &nbsp有效
               &nbsp&nbsp          
-              input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="0")
+              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.IsActive",value="0")
               &nbsp无效  
 
           tr
@@ -66,7 +72,7 @@ block content
           tr
             td(width="15%",class="tableleft") 备注(可选) 
             td
-              textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Memo',ng-maxlength='200')
+              textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='200')
               &nbsp&nbsp
               small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 备注最多200位
 

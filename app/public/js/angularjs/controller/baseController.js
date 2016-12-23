@@ -279,6 +279,13 @@ myApp.controller('baseController', function($scope, $http,baseService) {
                 });
             }
 
+
+
+    //删除项目模态框中的用户
+   
+
+    
+
     //显示签到模态框数据
     $scope.moresign = function(index,action){
         console.log(index);
