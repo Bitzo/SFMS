@@ -41,7 +41,7 @@ block content
               i.icon.icon-search   查询
             a.btn.btn-sm.btn-success(ng-href='#/sfms/projectAdd')
               i.icon.icon-plus 新增项目
-            button(ng-click='search()' class='btn btn-sm btn-default') 
+            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
               i.icon.icon-repeat  刷新
       hr
       table.table.table-striped.table-bordered.text-center
@@ -67,7 +67,7 @@ block content
             td {{x.ProjectStatus}}    
             td {{x.ProjectPrice}}                                                                                                                                                                
             td
-              a(ng-click="show(x.ID,'/sfms/api/project')",href='#/sfms/projectEdit/?ID={{x.ID}}' )
+              a(href='#/sfms/projectEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑
               a(ng-click="remove($index,'/sfms/api/project')")
                 i.icon.icon-trash 删除
