@@ -68,6 +68,7 @@ router.post('/', function (req, res) {
     email = req.body.formdata.Email,
     address = req.body.formdata.Address;
 
+
     //添加角色的部分
     var  roleID = req.body.formdata.RoleID;
 
@@ -484,6 +485,8 @@ router.put('/', function (req, res) {
     isActive = req.body.formdata.IsActive,
     email = req.body.formdata.Email,
     address = req.body.formdata.Address;
+    roleID = req.body.formdata.RoleID;
+
     data = {
         'ApplicationID': applicationID,
         'AccountID': accountID,
@@ -494,6 +497,11 @@ router.put('/', function (req, res) {
         'CreateUserID': createUserID,
         'IsActive': isActive,
         'EditUserID': 1
+    }
+
+    var roledata = {
+        'AccountID':accountID,
+        'RoleID':roleID
     }
 
     var requireValue = '缺少值：';
@@ -541,6 +549,41 @@ router.put('/', function (req, res) {
     if (memo != undefined && memo.length != 0) {
         data['Memo'] = memo;
     }
+
+    userRole.updateUserRole(roledata,function(err,updatinfo)
+    {
+        if(err)
+        {
+            res.status(500);
+            res.json(
+            {
+                code: 500,
+                isSuccess: false,
+                msg: '修改信息失败，服务器出错'
+            });
+            logger.writeError("修改信息失败，服务器出错");
+            return;
+        }
+
+          if (updatinfo !== undefined && updatinfo.affectedRows != 0) {
+            res.json({
+                code: 200,
+                isSuccess: true,
+                msg: "修改信息成功"
+            })
+            logger.writeInfo("修改信息成功");
+            return;
+        } else {
+            res.status(400);
+            res.json({
+                code: 400,
+                isSuccess: false,
+                msg: "修改信息失败"
+            })
+            logger.writeError("修改信息失败");
+            return;
+        }
+    });
 
     user.update(data, function (err, results) {
         if (err) {
