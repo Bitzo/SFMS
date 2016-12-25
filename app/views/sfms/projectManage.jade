@@ -23,7 +23,7 @@ block content
                                     td {{x.UserName}}
                                     td {{x.Duty}}
                                     td
-                                      a(ng-click="remove(this,'/sfms/api/projectuser/')")
+                                      a(ng-click="removeUser($index,'/sfms/api/projectuser')")
                                         i.icon.icon-trash 删除
 
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
@@ -71,7 +71,7 @@ block content
             td
               a(ng-click="show(x.ID,'/sfms/api/project')",href='#/sfms/projectEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑
-              a(ng-click="remove(this,'/sfms/api/project')")
+              a(ng-click="remove($index,'/sfms/api/project')")
                 i.icon.icon-trash 删除
               a(data-toggle="modal",data-target="#myModal",ng-click="moreproject($index,'/sfms/api/projectuser/')")
                 i.icon.icon-zoom-in  更多

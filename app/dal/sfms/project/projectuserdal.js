@@ -53,7 +53,7 @@ exports.addProjectUser = function (data, callback) {
 exports.updateProjectUser = function (data, callback) {
     var sql = '',
         time = moment().format('YYYY-MM-DD HH:mm:ss');
-
+console.log(data)
     for (var i in data) {
         sql += 'update jit_projectruser set';
         var update_sql = '';
@@ -62,15 +62,15 @@ exports.updateProjectUser = function (data, callback) {
             data[i].EditTime = time;
             if (key != 'ID' && key != 'ProjectID') {
                 if(update_sql.length == 0) {
-                    update_sql += ' ' + key + " = '" + data[key] +"'";
+                    update_sql += ' ' + key + " = '" + data[i].key +"'";
                 } else {
-                    update_sql += ", " + key + " = '" + data[key] +"'";
+                    update_sql += ", " + key + " = '" + data[i].key +"'";
                 }
             }
         }
         sql += update_sql;
-        if (data.ID!=''&&data.ID!==undefined) sql += ' where ID = ' + data.ID;
-        if (data.ProjectID!=''&&data.ProjectID!==undefined) sql += ' where ProjectID = ' + data.ProjectID;
+        if (data[i].ID!=''&&data[i].ID!==undefined) sql += ' where ID = ' + data[i].ID;
+        if (data[i].ProjectID!=''&&data[i].ProjectID!==undefined) sql += ' where ProjectID = ' + data[i].ProjectID;
     }
 
     logger.writeInfo('更新项目用户信息' + sql);
