@@ -330,7 +330,6 @@ router.get('/:projectID', function (req, res) {
 
 router.delete('/', function (req, res) {
     var ID = JSON.parse(req.query.d).ID;
-
     if (ID == '' || ID === undefined) {
         res.status(400);
         return res.json({
@@ -339,10 +338,12 @@ router.delete('/', function (req, res) {
             msg: 'require: ID'
         })
     }
-    var data = {
-        'ID': ID,
-        'IsActive': 0
-    };
+    var data = [
+        {
+            'ID': ID,
+            'IsActive': 0
+        }
+    ]
 
     projectuserservice.updateProjectUser(data, function (err, results) {
         if (err) {

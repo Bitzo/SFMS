@@ -390,10 +390,51 @@ var data = [
                     console.log(response);
                 });
             }
-
+    
+     //新增项目管理中的用户列表
+    $scope.user=[];
+    $scope.addUser = function(item){
+        console.log('addUser');
+        $scope.user.push($scope.formdata.data);
+        $scope.formdata.data={};
+    }
+    //重置项目管理中的用户列表
+    $scope.resetUser = function(item){
+        console.log(item.$index);
+        $scope.user.splice(item.$index,1);
+    }
+   
 
 
     //删除项目模态框中的用户
+    $scope.d={};
+    $scope.removeUser = function(index,action){
+        console.log('delete');
+        console.log(index);
+        console.log(action);
+        $scope.d={
+            "ID":$scope.data[index].ID,
+        };
+        $http({
+            method:'delete',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                d:$scope.d
+            }
+        }).
+        success(function(response) {
+            console.log($scope.d);
+            console.log('删除成功');
+            console.log(response.msg);
+        }).
+        error(function(response) {
+            console.log($scope.d);
+            console.log('删除失败');
+            console.log(response.msg);
+        });
+        $scope.data.splice(index,1);
+        console.log($scope.d);
+    }
    
 
     
