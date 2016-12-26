@@ -6,13 +6,13 @@ block content
         span(style='font-size: 24px;')  财务管理
         div.buttons.pull-right
           label.form-group.my-form-group 
-            input.form-control(type='date'  style="width:120px;height:34px;" ng-model='f.startTime')
+            input.form-control(type='date' style="width:120px;height:34px;" ng-model='f.startTime')
           label.form-group.my-form-group 
-            jason-select(placeholder='项目名称' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select(placeholder='财务名称' style="width:120px;height:34px;" ng-model='f.projectID' source='/datadict/plainnof?Category=dc_finame' stext='DictionaryValue' svalue='DictionaryID')
           label.form-group.my-form-group 
-            jason-select(placeholder='财务类型' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select(placeholder='财务类型' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/datadict/plainnof?Category=dc_fitype' stext='DictionaryValue' svalue='DictionaryID')
           label.form-group.my-form-group 
-            jason-select(placeholder='收入支出类型' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select(placeholder='收入支出类型' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/datadict/plainnof?Category=dc_fiinouttype' stext='DictionaryValue' svalue='DictionaryID')
           label.form-group.my-form-group 
             jason-select(placeholder='' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
           label.form-group.my-form-group 

@@ -19,6 +19,7 @@ var logger = appRequire("util/loghelper").helper;
 
 //项目基本信息新增
 router.post('/', function (req, res) {
+    console.log(req.body.formdata)
     var query = req.body.formdata;
     var projectName = query.ProjectName,
         projectDesc = query.ProjectDesc,
@@ -109,8 +110,6 @@ router.post('/', function (req, res) {
                             //如果有项目人员信息，则添加
                             if (userData!==undefined) {
                                 //转换数据格式
-                                var temp = userData;
-                                userData = [];
                                 userData.push({
                                     projectID: results.insertId,
                                     userID: projectManageID,
@@ -118,51 +117,12 @@ router.post('/', function (req, res) {
                                     duty: '项目负责人',
                                     isActive: 1
                                 });
-                                var l = temp.UserName1.length;
-                                if (temp.Duty1 !== undefined && temp.Duty1 != '') {
-                                    for(var i=0;i<l;++i) {
-                                        userData.push({
-                                            projectID: results.insertId,
-                                            userID: temp.UserName1[i],
-                                            editID: accountID,
-                                            duty: temp.Duty1,
-                                            isActive: 1
-                                        })
-                                    }
-                                }
-                                l = temp.UserName2.length;
-                                if (temp.Duty2 !== undefined && temp.Duty2 != '') {
-                                    for(var i=0;i<l;++i) {
-                                        userData.push({
-                                            projectID: results.insertId,
-                                            userID: temp.UserName2[i],
-                                            editID: accountID,
-                                            duty: temp.Duty2,
-                                            isActive: 1
-                                        })
-                                    }
-                                }
-                                l = temp.UserName3.length;
-                                if (temp.Duty2 !== undefined && temp.Duty2 != '') {
-                                    for (var i = 0; i < l; ++i) {
-                                        userData.push({
-                                            projectID: results.insertId,
-                                            userID: temp.UserName3[i],
-                                            editID: accountID,
-                                            duty: temp.Duty3,
-                                            isActive: 1
-                                        })
-                                    }
-                                }
-                                for (var i in userData) {
-                                    userData[i].ProjectName = projectName;
-                                    userData[i].projectID = results.insertId;
-                                    userData[i].editName = projectManageName;
-                                    userData[i].OperateUser = projectManageName;
-                                }
                                 //获取所有项目用户的username
                                 var ID = [];
                                 for (var i in userData) {
+                                    userData[i].projectID = results.insertId;
+                                    userData[i].editID = accountID;
+                                    userData[i].isActive = 1;
                                     if (i==0) ID[i] = userData[i].userID;
                                     else {
                                         var j = 0;
@@ -197,7 +157,7 @@ router.post('/', function (req, res) {
                                                 return res.json({
                                                     status: 400,
                                                     isSuccess: false,
-                                                    msg: '操作失败，添加的用户 ' + userData[i].ID + ' 信息有误！'
+                                                    msg: '操作失败，添加的用户 ' + userData[i].userID + ' 信息有误！'
                                                 })
                                             }
                                         }
@@ -349,8 +309,6 @@ router.put('/', function (req, res) {
                     //如果有项目人员信息，则修改
                     if (userData!==undefined&&userData.length>0) {
                         //转换数据格式
-                        var temp = userData;
-                        userData = [];
                         userData.push({
                             projectID: ID,
                             userID: projectManageID,
@@ -358,42 +316,6 @@ router.put('/', function (req, res) {
                             duty: '项目负责人',
                             isActive: 1
                         });
-                        var l = temp.UserName1.length;
-                        if (temp.Duty1 !== undefined && temp.Duty1 != '') {
-                            for(var i=0;i<l;++i) {
-                                userData.push({
-                                    projectID: ID,
-                                    userID: temp.UserName1[i],
-                                    editID: accountID,
-                                    duty: temp.Duty1,
-                                    isActive: 1
-                                })
-                            }
-                        }
-                        l = temp.UserName2.length;
-                        if (temp.Duty2 !== undefined && temp.Duty2 != '') {
-                            for(var i=0;i<l;++i) {
-                                userData.push({
-                                    projectID: ID,
-                                    userID: temp.UserName2[i],
-                                    editID: accountID,
-                                    duty: temp.Duty2,
-                                    isActive: 1
-                                })
-                            }
-                        }
-                        l = temp.UserName3.length;
-                        if (temp.Duty2 !== undefined && temp.Duty2 != '') {
-                            for (var i = 0; i < l; ++i) {
-                                userData.push({
-                                    projectID: ID,
-                                    userID: temp.UserName3[i],
-                                    editID: accountID,
-                                    duty: temp.Duty3,
-                                    isActive: 1
-                                })
-                            }
-                        }
                         if (userData!==undefined&&userData.length>0) {
                             for (var i in userData) {
                                 userData[i].ProjectName = projectName;
