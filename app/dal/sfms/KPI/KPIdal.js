@@ -139,7 +139,6 @@ exports.queryKPI = function (data, callback) {
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
-    console.log(data)
 
     if (data.StartTime != '') sql += "and jit_kpiinfo.CreateTime > '" + data.StartTime + "' ";
     if (data.EndTime != '') sql += "and jit_kpiinfo.CreateTime < '" + data.EndTime + "' ";

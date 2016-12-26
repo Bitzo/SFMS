@@ -70,7 +70,6 @@ exports.countQuery = function (data, callback) {
         'EndTime': data.EndTime,
         'IsActive': 1
     }
-    console.log(queryData);
     KPIdal.countQuery(queryData, function (err, results) {
         if (err) {
             callback(true, '失败');
