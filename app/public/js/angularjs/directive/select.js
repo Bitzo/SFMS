@@ -1,39 +1,30 @@
-/**
- * name: jason.select
- * Version: 0.0.2
- */
 jasonapp.service('jasonService', function ($http, $q) {
-    this.IintSelect = function (url) {
+    this.IintSelect = function (url,params) {
         return $http({
             method: 'get',
             url: url + accesstokenstring,
-            params:{
-                pageindex:1,
-                pagesize:10,
-                f:{}
-            }
+            params:params
         })
     }
 });
 angular.module('jason.pagination').directive('jasonSelect',function($http,jasonService){
     return {
         restrict: 'EA',
-         template: 
-         '<select>'+
-            '<option value="">全部显示</option>'+
-            '<option ng-repeat="item in options" value={{item.value}}>{{item.text}}</option>'+
-         '</select>',
+        template:
+        '<select>'+
+        '<option value="">全部显示</option>'+
+        '<option ng-repeat="item in options" value={{item.value}}>{{item.text}}</option>'+
+        '</select>',
         replace: true,
         scope: {
             conf: '='
         },
         link: function(scope, element, attrs){
-            if(attrs.source.indexOf("?")>=0){
-              var url= attrs.source+"&access_token=";
-            }else{
-              var url= attrs.source+"?access_token=";
+            var url= attrs.source+"?access_token=";
+            var params={pageindex:1, pagesize:10,
+                    f:JSON.parse(attrs.selectparams)
             }
-            jasonService.IintSelect(url).then(function(reponse){
+            jasonService.IintSelect(url,params).then(function(reponse){
                 scope.options=reponse.data.data;
                 scope.options.forEach(
                     function(o){
