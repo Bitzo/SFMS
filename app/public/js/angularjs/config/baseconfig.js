@@ -74,24 +74,24 @@ myApp.config(function($routeProvider) {
         templateUrl: '/sfms/projectLead?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
+    when('/sfms/projectLeadEdit', {
+        templateUrl: '/sfms/projectLeadEdit?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
     when('/sfms/projectManage', {
         templateUrl: '/sfms/projectManage?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
-    when('/sfms/projectAdd', {
-        templateUrl: '/sfms/projectAdd?access_token='+accesstokenstring,
+    when('/sfms/projectManageAdd', {
+        templateUrl: '/sfms/projectManageAdd?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
-    when('/sfms/projectEdit', {
-        templateUrl: '/sfms/projectEdit?access_token='+accesstokenstring,
+    when('/sfms/projectManageEdit', {
+        templateUrl: '/sfms/projectManageEdit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
      when('/sfms/kpi', {
         templateUrl: '/sfms/kpi?access_token='+accesstokenstring,
-        //controller: 'HomeController'
-    }).
-    when('/sfms/kpiManage', {
-        templateUrl: '/sfms/kpiManage?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/sfms/kpiAdd', {
@@ -102,20 +102,28 @@ myApp.config(function($routeProvider) {
         templateUrl: '/sfms/kpiEdit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
-    when('/sfms/kpiCheck', {
-        templateUrl: '/sfms/kpiCheck?access_token='+accesstokenstring,
+    when('/sfms/kpiManage', {
+        templateUrl: '/sfms/kpiManage?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
-     when('/sfms/finance', {
-        templateUrl: '/sfms/finance?access_token='+accesstokenstring,
+    when('/sfms/kpiManageAdd', {
+        templateUrl: '/sfms/kpiManageAdd?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
-    when('/sfms/financeAdd', {
-        templateUrl: '/sfms/financeAdd?access_token='+accesstokenstring,
+    when('/sfms/kpiManageCheck', {
+        templateUrl: '/sfms/kpiManageCheck?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
-    when('/sfms/financeCheck', {
-        templateUrl: '/sfms/financeCheck?access_token='+accesstokenstring,
+     when('/sfms/financeManage', {
+        templateUrl: '/sfms/financeManage?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/financeManageAdd', {
+        templateUrl: '/sfms/financeManageAdd?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/financeManageCheck', {
+        templateUrl: '/sfms/financeManageCheck?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     when('/sfms/signManage', {

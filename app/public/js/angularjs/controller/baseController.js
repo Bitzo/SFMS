@@ -392,16 +392,17 @@ var data = [
             }
     
      //新增项目管理中的用户列表
-    $scope.user=[];
+    $scope.formdata.data=[];
     $scope.addUser = function(item){
         console.log('addUser');
-        $scope.user.push($scope.formdata.data);
-        $scope.formdata.data={};
+        console.log(item.AccountID);
+        $scope.formdata.data.push($scope.user);
+        $scope.user={};
     }
     //重置项目管理中的用户列表
     $scope.resetUser = function(item){
         console.log(item.$index);
-        $scope.user.splice(item.$index,1);
+        $scope.formdata.data.splice(item.$index,1);
     }
    
 

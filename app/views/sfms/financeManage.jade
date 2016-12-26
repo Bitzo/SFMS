@@ -23,7 +23,7 @@ block content
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询
-            a.btn.btn-sm.btn-success(ng-href='#/sfms/financeAdd')
+            a.btn.btn-sm.btn-success(ng-href='#/sfms/financeManageAdd')
               i.icon.icon-plus 新建
             a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
               i.icon.icon-repeat  刷新
@@ -59,7 +59,7 @@ block content
             td {{x.CheckTime}}
             td {{x.Remark}}            
             td
-              a(href='#/sfms/financeCheck?ID={{x.ID}}' )
+              a(href='#/sfms/financeManageCheck?ID={{x.ID}}' )
                 i.icon.icon-edit 审核            
       div.pull-right
         jason-pagination(conf='paginationConf')
