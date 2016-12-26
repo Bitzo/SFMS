@@ -2,8 +2,8 @@ link(rel='stylesheet' href="css/backend/role.css")
 block content
   div.container-fluid
     span 
-      h2 绩效编辑
-    jason-form(method="post",source='/sfms/api/kpi/person' conf='paginationConf')
+      h2 绩效审核
+    jason-form(method="post",source='/sfms/api/kpi' conf='paginationConf')
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
@@ -33,6 +33,14 @@ block content
             small.error(ng-show="paginationConf.formdata.projectName.$error.maxlength && paginationConf.formdata.projectName.$touched") 应用名称最多50位
         
         tr
+          td(width="15%",class="tableleft") 申请时间
+          td
+            input(placeholder='用户名'  style="width:160px;height:34px;" ng-model='paginationConf.formdata.CreateTime' source='/backuser' stext='UserName' svalue='AccountID')
+            &nbsp&nbsp
+            small.error(ng-show="paginationConf.formdata.projectName.$error.maxlength && paginationConf.formdata.projectName.$touched") 应用名称最多50位
+        
+
+        tr
           td(width="15%",class="tableleft") 绩效备注
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required)
@@ -40,12 +48,21 @@ block content
             small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 备注最多200位
 
         tr
+            td(class="tableleft") 审核结果
+            td
+              input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive",checked)
+              &nbsp 通过
+              &nbsp         
+              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.IsActive",value="0")
+              &nbsp不通过
+
+        tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/sfms/api/kpi')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/app')") 添加
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-sm.btn-success(href='#sfms/kpi') 返回列表
-
+            a.btn.btn-sm.btn-success(href='#sfms/kpiManage') 返回列表
+       
 
 
 

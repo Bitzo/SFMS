@@ -28,7 +28,11 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
             conf: '='
         },
         link: function(scope, element, attrs){
-           var url= attrs.source+"?access_token=";
+            if(attrs.source.indexOf("?")>=0){
+              var url= attrs.source+"&access_token=";
+            }else{
+              var url= attrs.source+"?access_token=";
+            }
             jasonService.IintSelect(url).then(function(reponse){
                 scope.options=reponse.data.data;
                 scope.options.forEach(

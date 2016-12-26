@@ -59,14 +59,17 @@ router.get('/appedit', function(req, res, next) {
 router.get('/projectLead', function(req, res, next) {
         res.render('sfms/projectLead', { title: 'Hi sfms' });
 });
+router.get('/projectLeadEdit', function(req, res, next) {
+        res.render('sfms/projectLeadEdit', { title: 'Hi sfms' });
+});
 router.get('/projectManage', function(req, res, next) {
         res.render('sfms/projectManage', { title: 'Hi sfms' });
 });
-router.get('/projectAdd', function(req, res, next) {
-        res.render('sfms/projectAdd', { title: 'Hi sfms' });
+router.get('/projectManageAdd', function(req, res, next) {
+        res.render('sfms/projectManageAdd', { title: 'Hi sfms' });
 });
-router.get('/projectEdit', function(req, res, next) {
-        res.render('sfms/projectEdit', { title: 'Hi sfms' });
+router.get('/projectManageEdit', function(req, res, next) {
+        res.render('sfms/projectManageEdit', { title: 'Hi sfms' });
 });
 router.get('/kpi', function(req, res, next) {
         res.render('sfms/kpi', { title: 'Hi sfms' });
@@ -80,8 +83,11 @@ router.get('/kpiEdit', function(req, res, next) {
 router.get('/kpiManage', function(req, res, next) {
         res.render('sfms/kpiManage', { title: 'Hi sfms' });
 });
-router.get('/kpiCheck', function(req, res, next) {
-        res.render('sfms/kpiCheck', { title: 'Hi sfms' });
+router.get('/kpiManageAdd', function(req, res, next) {
+        res.render('sfms/kpiManageAdd', { title: 'Hi sfms' });
+});
+router.get('/kpiManageCheck', function(req, res, next) {
+        res.render('sfms/kpiManageCheck', { title: 'Hi sfms' });
 });
 router.get('/signManage', function(req, res, next) {
         res.render('sfms/signManage', { title: 'Hi sfms' });
@@ -89,14 +95,14 @@ router.get('/signManage', function(req, res, next) {
 router.get('/signPersonal', function(req, res, next) {
         res.render('sfms/signPersonal', { title: 'Hi sfms' });
 });
-router.get('/finance', function(req, res, next) {
-        res.render('sfms/finance', { title: 'Hi sfms' });
+router.get('/financeManage', function(req, res, next) {
+        res.render('sfms/financeManage', { title: 'Hi sfms' });
 });
-router.get('/financeAdd', function(req, res, next) {
-        res.render('sfms/financeAdd', { title: 'Hi sfms' });
+router.get('/financeManageAdd', function(req, res, next) {
+        res.render('sfms/financeManageAdd', { title: 'Hi sfms' });
 });
-router.get('/financeCheck', function(req, res, next) {
-        res.render('sfms/financeCheck', { title: 'Hi sfms' });
+router.get('/financeManageCheck', function(req, res, next) {
+        res.render('sfms/financeManageCheck', { title: 'Hi sfms' });
 });
 
 
