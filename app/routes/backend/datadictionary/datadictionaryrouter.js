@@ -19,16 +19,16 @@ var datadictionaryService = appRequire('service/backend/datadictionary/datadicti
 router.get('/plain',function (req,res) {
     var query = JSON.parse(req.query.f);
 
-    var page = query.pageindex || 1,
-        pageNum = query.pagesize || 20,
-        applicationID = query.ApplicationID || '',
-        dictionaryID = query.DictionaryID || '',
-        dictionaryLevel = query.DictionaryLevel || '',
-        parentID = query.ParentID || '',
-        category = query.Category || '',
-        dictionaryCode = query.DictionaryCode || '',
-        dictionaryValue = query.DictionaryValue || '',
-        isActive = query.IsActive || '';
+     var page = query.pageindex || 1,
+         pageNum = query.pagesize || 20,
+         applicationID = query.ApplicationID || '',
+         dictionaryID = query.DictionaryID || '',
+         dictionaryLevel = query.DictionaryLevel || '',
+         parentID = query.ParentID || '',
+         category = query.Category || '',
+         dictionaryCode = query.DictionaryCode || '',
+         dictionaryValue = query.DictionaryValue || '',
+         isActive = query.IsActive || '';
 
     page = page>0 ? page : 1;
 

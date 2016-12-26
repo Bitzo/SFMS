@@ -9,7 +9,7 @@
 var customerDAL = appRequire('dal/jinkebro/customer/customerdal'),
 	moment = require('moment'),
 	logService = appRequire('service/backend/log/logservice'),
-	operationConfig = appRequire('config/operationConfig'),
+	operationConfig = appRequire('config/operationconfig'),
     config = appRequire('config/config'),
 	logModel = appRequire('model/jinkebro/log/logmodel');
 var wechat = appRequire("service/wechat/wechatservice");
