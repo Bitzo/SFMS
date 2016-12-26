@@ -1,7 +1,7 @@
 var express=require('express');
 var router=express.Router();
 //添加客户时的路由
-var customer = appRequire('router/jinkebro/customer/customer');
+var customer = appRequire('routes/jinkebro/customer/customerroute');
 
 //产品类别路由
 //var proTyperoute = appRequire('routes/jinkebro/productype/productyperoute');
