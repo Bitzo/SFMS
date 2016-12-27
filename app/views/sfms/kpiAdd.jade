@@ -8,29 +8,26 @@ block content
         tr
           td(width="15%",class="tableleft") 绩效名称
           td
-            jason-select.form-control(style="width:120px;height:34px;" ng-model='formdata.KPIName' source='/datadict/plain' selectparams='{"Category":"dc_kpiname"}' stext='DictionaryValue' svalue='DictionaryID')
-
+            jason-select.form-control(style="width:160px;height:34px;" ng-model='formdata.KPIName' source='/datadict/plain' selectparams='{"Category":"dc_kpiname"}' stext='DictionaryValue' svalue='DictionaryID')
            
         tr
           td(width="15%",class="tableleft") 绩效类型
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.KPIType' source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
-            &nbsp&nbsp
-            small.error(ng-show="formdata.projectName.$error.maxlength && formdata.projectName.$touched") 应用名称最多50位
+            jason-select.form-control(style="width:160px;height:34px;" ng-model='formdata.KPIType' source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
+           
         
         tr
           td(width="15%",class="tableleft") 绩效分
           td
-            input(type="number",name="projectEndTime",ng-model="formdata.KPIScore",ng-maxlength='50',style="width:160px;height:30px",required)
+            input(type="number",name="projectEndTime",ng-model="formdata.KPIScore",ng-maxlength='10',style="width:160px;height:30px",required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.projectEndTime.$error.maxlength && formdata.projectEndTime.$touched") 应用名称最多50位
+            small.error(ng-show="formdata.projectEndTime.$error.maxlength && formdata.projectEndTime.$touched") 绩效分最多10位
         
         tr
           td(width="15%",class="tableleft") 用户名
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID')
-            &nbsp&nbsp
-            small.error(ng-show="formdata.projectName.$error.maxlength && formdata.projectName.$touched") 应用名称最多50位
+            jason-select.form-control(style="width:160px;height:34px;" ng-model='formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID')
+            
         
         tr
           td(width="15%",class="tableleft") 绩效备注

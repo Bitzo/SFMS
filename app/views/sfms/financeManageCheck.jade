@@ -3,47 +3,45 @@ block content
   div.container-fluid
     span 
       h2 财务审核
-    jason-form(method="post",source='/sfms/api/finance' conf='paginationConf')
+    jason-form(method="post",source='/sfms/api/finance' conf='paginationConf' tocc="FIName,FIType,InOutType,ProjectID,UserID")
       table.table.table-bordered.table-hover.definedwidth.m10      
         tr
           td(width="15%",class="tableleft") 财务名称
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='paginationConf.formdata.FIName' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='Category',)
+            jason-select.form-control(style="width:160px;height:34px;" ng-model='paginationConf.formdata.FIName' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='DictionaryID')
             
         tr
           td(width="15%",class="tableleft") 财务类型
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='paginationConf.formdata.FIType' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='Category',))
+            jason-select.form-control(style="width:160px;height:34px;" ng-model='paginationConf.formdata.FIType' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='DictionaryID')
             
         tr
           td(width="15%",class="tableleft") 财务收支
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='paginationConf.formdata.InOutType' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='Category',))
+            jason-select.form-control(style="width:160px;height:34px;" ng-model='paginationConf.formdata.InOutType' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='DictionaryID')
             
         tr
           td(width="15%",class="tableleft") 财务金额 
           td
-            input(type="number",name="projectPrice",ng-model="paginationConf.formdata.FIPrice",ng-maxlength='50',style="width:160px;height:30px",required)
+            input(type="number",name="projectPrice",ng-model="paginationConf.formdata.FIPrice",ng-maxlength='10',style="width:160px;height:30px",required)
             &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 备注最多200位
+            small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 金额最多10位
 
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            jason-select.form-control(placeholder='用户名'  style="width:120px;height:34px;" ng-model='paginationConf.formdata.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select.form-control(style="width:120px;height:34px;" ng-model='paginationConf.formdata.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
 
         tr
           td(width="15%",class="tableleft") 相关用户
           td
-            jason-select.form-control(placeholder='用户名'  style="width:120px;height:34px;" ng-model='paginationConf.formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID')
+            jason-select.form-control(style="width:120px;height:34px;" ng-model='paginationConf.formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID')
      
         tr
           td(width="15%",class="tableleft") 申请时间
           td
             input(placeholder='用户名'  style="width:160px;height:34px;" ng-model='paginationConf.formdata.CreateTime' source='/backuser' stext='UserName' svalue='AccountID')
-            &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.projectName.$error.maxlength && paginationConf.formdata.projectName.$touched") 应用名称最多50位
-        
+            
         tr
           td(width="15%",class="tableleft") 财务描述 
           td

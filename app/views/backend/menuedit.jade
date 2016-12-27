@@ -26,12 +26,13 @@ block content
               small.error(ng-show="paginationConf.formdata.ApplicationName.$error.maxlength && paginationConf.formdata.ApplicationName.$touched") 应用ID最多11位
           
           tr
-            td(width="15%",class="tableleft") 对应的父级ID
-            td
-              jason-select.input(ng-model="paginationConf.formdata.ParentID",source='/backmenu/plain', stext='ParentID' svalue='ParentID',ng-maxlength='11',style="width:160px;height:30px",required)
-              &nbsp&nbsp
-              small.error(ng-show="paginationConf.formdata.ParentID.$error.maxlength && paginationConf.formdata.ParentID.$touched") 对应的父级ID最多11位
-            
+          td(width="15%",class="tableleft") 	对应的父级名称
+          td
+            jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="paginationConf.formdata.ParentID", source='/backmenu/parent', stext='ParentMenuName' svalue='ParentID',style="width:160px;height:30px",required)
+            &nbsp&nbsp
+            small.error(ng-show="paginationConf.formdata.ParentID.$error.maxlength && paginationConf.formdata.ParentID.$touched") 对应的父级名称最多11位
+
+
           tr
             td(width="15%",class="tableleft") 菜单对应的层级
             td
