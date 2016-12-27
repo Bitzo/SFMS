@@ -42,7 +42,7 @@ exports.updateUserRole=function(data,callback)
 			callback(true);
 			return;
 		}
-		console.log('updateUserRole');
+	
 		callback(false,results);
 	})
 }
@@ -62,4 +62,38 @@ exports.queryAppByUserID = function (data, callback) {
 		console.log("查询用户所在的项目");
         callback(false, results);
     })
+};
+
+//根据用户的AccountID 来获取用户角色的ID号
+exports.query = function (data, callback)
+{
+	//用来判断是否存在AccountID
+	var k = 0;
+	for(var key in data)
+	{
+		if(key == 'AccountID')
+		{
+			k++;
+		}
+	}
+
+	if(k != 1)
+	{
+		console.log("不存在AccountID");
+		return ;
+	}
+
+	
+	userRoleDAL.query(data,function(err,results)
+	{
+		if(err)
+		{
+			console.log("查询出错");
+			return;
+		}
+
+		callback(false,results);
+	})
+
+
 }

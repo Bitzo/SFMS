@@ -487,6 +487,7 @@ router.put('/', function (req, res) {
     address = req.body.formdata.Address;
     roleID = req.body.formdata.RoleID;
 
+console.log(req.body.formdata);
     data = {
         'ApplicationID': applicationID,
         'AccountID': accountID,
@@ -550,8 +551,9 @@ router.put('/', function (req, res) {
         data['Memo'] = memo;
     }
 
-    userRole.updateUserRole(roledata,function(err,updatinfo)
+    userRole.query(roledata,function(err,queryinfo)
     {
+
         if(err)
         {
             res.status(500);
@@ -565,25 +567,49 @@ router.put('/', function (req, res) {
             return;
         }
 
-          if (updatinfo !== undefined && updatinfo.affectedRows != 0) {
-            res.json({
-                code: 200,
-                isSuccess: true,
-                msg: "修改信息成功"
-            })
-            logger.writeInfo("修改信息成功");
-            return;
-        } else {
-            res.status(400);
-            res.json({
-                code: 400,
-                isSuccess: false,
-                msg: "修改信息失败"
-            })
-            logger.writeError("修改信息失败");
-            return;
-        }
-    });
+        if(queryinfo != undefined && queryinfo.length != 0)
+        {
+
+            roledata.ID = queryinfo[0].ID;
+            
+            userRole.updateUserRole(roledata,function(err,updatinfo)
+            {
+                if(err)
+                {
+                    res.status(500);
+                    res.json(
+                    {
+                        code: 500,
+                        isSuccess: false,
+                        msg: '修改信息失败，服务器出错'
+                    });
+
+                     console.log("修改角色失败");
+                    logger.writeError("修改信息失败，服务器出错");
+                    return;
+                }
+
+              
+                if (updatinfo !== undefined && updatinfo.affectedRows != 0) {
+
+                    console.log("检查错误");
+                    console.log("修改角色成功");
+                    logger.writeInfo("修改信息成功");
+                    return;
+                } else {
+                    res.status(400);
+                    res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: "修改信息失败"
+                    })
+                    logger.writeError("修改信息失败");
+                    return;
+                }
+            });
+}
+});
+
 
     user.update(data, function (err, results) {
         if (err) {
