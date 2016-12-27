@@ -155,12 +155,7 @@ var data = [
     }
     $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
     $scope.$watch( 'paginationConf.action',getInit);
-    $scope.$watch( 'formdata.CollegeID',change);
-     function change(){
-        console.log(formdata.CollegeID)
-    }
-
-
+    $scope.$watch( 'paginationConf.action',getInit);
     
     //查询
     $scope.search=function(){
@@ -407,7 +402,7 @@ var data = [
     $scope.formdata.data=[];
     $scope.addUser = function(item){
         console.log('addUser');
-        console.log(item.UserName);
+        console.log(item.AccountID);
         $scope.formdata.data.push($scope.user);
         $scope.user={};
     }

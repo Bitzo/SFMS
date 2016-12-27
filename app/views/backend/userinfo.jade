@@ -62,13 +62,13 @@ block content
         tr
           td(width="15%",class="tableleft") 所在学院 (可选) 
           td
-            jason-select.input(placeholder='选择学院' ng-model='formdata.CollegeID' source='/datadict/plain' selectparams='{"Category":"dc_academy"}' stext='DictionaryValue' svalue='Category', style="width:160px;height:30px",required)
+            jason-select.input(placeholder='选择学院' ng-model='formdata.CollegeID' source='/datadict/plain' selectparams='{"Category":"dc_academy"}' stext='DictionaryValue' svalue='DictionaryID', style="width:160px;height:30px",required)
 
 
         tr
           td(width="15%",class="tableleft") 所在班级 (可选)  
           td
-            jason-select.input(placeholder='选择班级' ng-model='formdata.ClassID',source='/datadict/plain' selectparams='{"Category":"dc_cls"}' stext='DictionaryValue' svalue='Category',style="width:160px;height:30px",required)
+            jason-select.input(placeholder='选择班级' ng-model='formdata.ClassID',source='/datadict/plain' selectparams='{"Category":"dc_cls"}' stext='DictionaryValue' svalue='DictionaryID',style="width:160px;height:30px",required)
 
         tr
           td(width="15%",class="tableleft") 地址 (可选) 
