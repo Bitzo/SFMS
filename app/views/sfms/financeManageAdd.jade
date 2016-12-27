@@ -8,19 +8,19 @@ block content
         tr
           td(width="15%",class="tableleft") 财务名称
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.fiName' source='/datadict/plainnof?Category=dc_finame' stext='DictionaryValue' svalue='DictionaryID')
+            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.fiName' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='DictionaryID')
             
         
         tr
           td(width="15%",class="tableleft") 财务类型
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.fiType' source='/datadict/plainnof?Category=dc_fitype' stext='DictionaryValue' svalue='DictionaryID')
+            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.fiType' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='DictionaryID')
            
         
         tr
           td(width="15%",class="tableleft") 财务收支
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.inOutType' source='/datadict/plainnof?Category=dc_fiinouttype' stext='DictionaryValue' svalue='DictionaryID')
+            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.inOutType' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='DictionaryID')
            
         
         tr

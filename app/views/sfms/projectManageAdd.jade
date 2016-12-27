@@ -56,10 +56,11 @@ block content
                   td(style="width:160px;height:30px") 成员职责
                   td(style="width:160px;height:30px") 成员姓名
                   td(style="width:80px;height:30px") 成员账号
+                  td(style="width:80px;height:30px") 操作
              tbody
                 tr(ng-repeat="a in formdata.data")
                   td(ng-model="formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
-                  td(ng-model="formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
+                  td(ng-model="formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userName}}
                   td(ng-model="formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
                   td 
                     button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
@@ -68,7 +69,9 @@ block content
                   td
                     input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:160px;height:34px")
                   td
-                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='AccountID')
+                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='UserName')
+                  td
+                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='AccountID' svalue='AccountID')
                   td 
                     button(ng-click="addUser(user)" style="width:80px;height:34px") 添加
 
