@@ -32,7 +32,6 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
         },
         link: function(scope, element, attrs){
             if(attrs.selectparams){
-
                 var url= attrs.source+"?access_token=";
                     var params={pageindex:1, pagesize:10,
                             f:JSON.parse(attrs.selectparams)
@@ -45,9 +44,6 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
                             }
                         );
                     });
-
-                   
-
             }else{
                  var url= attrs.source+"?access_token=";
                 jasonService.IintSelectParams(url).then(function(reponse){

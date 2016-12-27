@@ -194,11 +194,11 @@ router.post('/', function (req, res) {
                 return;
             }
             if (results.insertId != 0) {
-                res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: '操作成功'
-                });
+                // res.json({
+                //     code: 200,
+                //     isSuccess: true,
+                //     msg: '操作成功'
+                // });
                 logger.writeInfo("插入成功");
                 console.log(results.insertId);
                 if(roledata.RoleID != undefined && roledata.RoleID !=0)
@@ -487,7 +487,7 @@ router.put('/', function (req, res) {
     address = req.body.formdata.Address;
     roleID = req.body.formdata.RoleID;
 
-console.log(req.body.formdata);
+
     data = {
         'ApplicationID': applicationID,
         'AccountID': accountID,
@@ -607,7 +607,33 @@ console.log(req.body.formdata);
                     return;
                 }
             });
-}
+    }
+    else
+    {
+        userRole.insert(roledata,function(err, resultInsert)
+                    {
+                        if(err)
+                        {
+                            res.status(400);
+                            res.json({
+                                code:400,
+                                isSuccess:false,
+                                errorMsg:'插入角色失败'
+                            });
+                            logger.writeError("插入角色失败");
+                            return ;
+                        }
+                        if(resultInsert.insertId != 0)
+                        {
+                            // res.json({
+                            //     code:200,
+                            //     isSuccess: true,
+                            //     msg:'插入成功'                  
+                            //    });
+                            return;
+                        }
+             });
+    }
 });
 
 

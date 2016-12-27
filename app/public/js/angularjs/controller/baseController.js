@@ -155,6 +155,12 @@ var data = [
     }
     $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
     $scope.$watch( 'paginationConf.action',getInit);
+    $scope.$watch( 'formdata.CollegeID',change);
+     function change(){
+        console.log(formdata.CollegeID)
+    }
+
+
     
     //查询
     $scope.search=function(){
@@ -261,6 +267,8 @@ var data = [
     //删除
     $scope.d={};
     $scope.remove = function(index,action){
+        var mymessage=confirm("是否确认删除此项");  
+        if(mymessage==true){
         console.log('delete');
         console.log(index);
         console.log(action);
@@ -289,6 +297,10 @@ var data = [
         });
         $scope.datas.splice(index,1);
         console.log($scope.d);
+        }else{
+
+        }
+
     }
 
 
@@ -395,7 +407,7 @@ var data = [
     $scope.formdata.data=[];
     $scope.addUser = function(item){
         console.log('addUser');
-        console.log(item.AccountID);
+        console.log(item.UserName);
         $scope.formdata.data.push($scope.user);
         $scope.user={};
     }
