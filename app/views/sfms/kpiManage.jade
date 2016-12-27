@@ -9,13 +9,13 @@ block content
             select(ng-model='f.KPIStatus' style="width:120px;height:34px;")
               option 待审核
               option 已审核              
-              option 全部
-          label.form-group.my-form-group 
-            jason-select(placeholder='项目名称' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
-          label.form-group.my-form-group 
-            jason-select(placeholder='项目名称' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
-          label.form-group.my-form-group 
-            jason-select(placeholder='项目名称' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+              option
+          label.form-group.my-form-group  
+           jason-select(placeholder='绩效名称' style="width:120px;height:34px;" ng-model='f.KPIName'  source='/datadict/plain' selectparams='{"Category":"dc_kpiname"}' stext='DictionaryValue' svalue='DictionaryValue')
+          label.form-group.my-form-group
+           jason-select(placeholder='绩效类型' style="width:120px;height:34px;" ng-model='f.KPIType'  source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryValue')
+          label.form-group.my-form-group
+           jason-select(placeholder='所属项目' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
           label.form-group.my-form-group 
             input.form-control(type='date' ng-model='f.StartTime')
           label.form-group.my-form-group

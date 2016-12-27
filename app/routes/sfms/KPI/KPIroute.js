@@ -35,13 +35,12 @@ router.post('/', function (req, res) {
         KPIScore = query.KPIScore,
         OperateUser = req.query.jitkey,
         UserID = query.UserID,
-        UserName = query.UserName,
         KPIName = query.KPIName,//字典表ID
         Remark = query.Remark || '',
         isTrue = false; //用于逻辑上的判断
 
     //检查所需要的参数是否齐全
-    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'UserName'],
+    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -71,7 +70,6 @@ router.post('/', function (req, res) {
                 msg: '操作失败，服务器出错'
             })
         }
-        console.log(results)
         if (results !== undefined && results.length>0) {
             for (var i in results) {
                 if (results[i].ProjectID == ProjectID) isTrue = true;
@@ -430,6 +428,8 @@ router.get('/', function (req, res) {
         StartTime = query.StartTime || '',
         EndTime = query.EndTime || '',
         KPIStatus = query.KPIStatus || '',
+        KPIType =  query.KPIType || '',
+        KPIName = query.KPIName || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -438,6 +438,8 @@ router.get('/', function (req, res) {
         'ProjectID': ProjectID,
         'UserID': UserID,
         'KPIStatus': KPIStatus,
+        'KPIType': KPIType,
+        'KPIName': KPIName,
         'StartTime': StartTime,
         'EndTime': EndTime,
         'page': page,

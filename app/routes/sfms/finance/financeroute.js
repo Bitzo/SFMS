@@ -26,7 +26,7 @@ var logger = appRequire("util/loghelper").helper;
  *  4. 存入数据
  */
 router.post('/', function (req, res) {
-    var query = req.body,
+    var query = req.body.formdata,
         fiName = query.fiName,
         fiType = query.fiType,
         inOutType = query.inOutType,
@@ -38,7 +38,7 @@ router.post('/', function (req, res) {
         remark = query.remark,
         isActive = 1,
         //前端需要传输的数据
-        temp = ['fiName', 'fiType', 'inOutType', 'fiPrice', 'projectID','userID','userName','remark'],
+        temp = ['fiName', 'fiType', 'inOutType', 'fiPrice', 'projectID','userID','remark'],
         err = 'require: ';
 
     for(var value in temp)

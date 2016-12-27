@@ -9,6 +9,7 @@
 var KPIdal = appRequire('dal/sfms/KPI/KPIdal.js');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
+var config = appRequire('config/config');
 
 //KPI新增
 exports.addKPI = function(data, callback) {
@@ -41,11 +42,13 @@ exports.queryKPI = function (data, callback) {
         'ProjectID': data.ProjectID || '',
         'UserID': data.UserID || '',
         'KPIStatus': data.KPIStatus || '',
+        'KPIType': data.KPIType || '',
+        'KPIName': data.KPIName || '',
         'StartTime': data.StartTime || '',
         'EndTime': data.EndTime || '',
         'KPIType': data.KPIType || '',
-        'page': data.page,
-        'pageNum': data.pageNum,
+        'page': data.page || 1,
+        'pageNum': data.pageNum || config.pageCount,
     }
     KPIdal.queryKPI(data, function (err, results) {
         if (err) {
@@ -67,7 +70,6 @@ exports.countQuery = function (data, callback) {
         'EndTime': data.EndTime,
         'IsActive': 1
     }
-    console.log(queryData);
     KPIdal.countQuery(queryData, function (err, results) {
         if (err) {
             callback(true, '失败');
