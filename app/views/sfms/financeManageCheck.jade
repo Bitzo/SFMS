@@ -45,22 +45,22 @@ block content
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.remark',ng-maxlength='200',required)
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required)
             &nbsp&nbsp
             small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 备注最多200位
 
         tr
           td(class="tableleft") 是否通过
           td
-            input(type="radio",name="FIStatus",value="1",ng-model="paginationConf.formdata.FIStatus",checked)
+            input(type="radio",name="FIStatus",value="通过",ng-model="paginationConf.formdata.FIStatu",checked)
             &nbsp通过
             &nbsp&nbsp          
-            input(type="radio",name="FIStatus",ng-model="paginationConf.formdata.FIStatus",value="0")
+            input(type="radio",name="FIStatus",ng-model="paginationConf.formdata.FIStatu",value="不通过")
             &nbsp不通过
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/finance/check')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/finance/check')") 添加
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/financeManage') 返回列表
 

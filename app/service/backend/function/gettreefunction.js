@@ -12,8 +12,7 @@ function treeNode(funcModel, children) {
     this.ApplicationID = funcModel.ApplicationID;
     this.FunctionID = funcModel.FunctionID;
     this.ParentID = funcModel.ParentID;
-    this.name = funcModel.name;
-    this.FunctionName=funcModel.FUnctionName;
+    this.FunctionName=funcModel.FunctionName;
     this.Memo=funcModel.Memo;
     this.children = children;
 }
@@ -43,7 +42,7 @@ function getTreeFunction(data, callback) {
             var list = [];
             //将应用作为功能点的根节点
             for (var j = 0; j < results.length; j++) {
-                var tree = { 'ApplicationID':results[j].ID,'FunctionID': 0, 'ParentID': -1, 'name': results[j].ApplicationName,'FunctionLevel':'0',children: [] };
+                var tree = { 'ApplicationID':results[j].ID,'FunctionID': 0, 'ParentID': -1, 'FunctionName': results[j].ApplicationName,'FunctionLevel':'0',children: [] };
                 for (var i = 0; i < treelist.length; i++) {
                     if (treelist[i].ApplicationID == results[j].ID) {
                         tree.children.push(treelist[i]);

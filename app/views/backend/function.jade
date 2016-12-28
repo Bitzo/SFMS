@@ -8,7 +8,7 @@ block content
         tr(tt-node is-branch="node.type=='folder'")
             td
                 span(ng-bind="node.name")
-            td(ng-bind="node.FunctionCode")
+            td(ng-bind="node.FunctionID")
             td(ng-bind="node.Memo")
             td
                 a(href='#/backend/functionEdit/?FunctionID={{node.FunctionID}}' )

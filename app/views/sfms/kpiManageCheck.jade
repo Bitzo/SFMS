@@ -41,16 +41,16 @@ block content
         tr
             td(class="tableleft") 审核结果
             td
-              input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive",checked)
+              input(type="radio",name="IsActive",value="通过",ng-model="paginationConf.formdata.KPIStatus",checked)
               &nbsp 通过
               &nbsp         
-              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.IsActive",value="0")
+              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.KPIStatus",value="不通过")
               &nbsp不通过
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/app')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 添加
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/kpiManage') 返回列表
        
