@@ -1,5 +1,4 @@
 link(rel='stylesheet' href="css/backend/role.css")
-link(rel="stylesheet" href="bower_components/amazeui/amazeui.css")
 block content
   div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
     span 
@@ -9,7 +8,7 @@ block content
         tr
           td(width="15%",class="tableleft") 项目负责人
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
+            jason-select.form-control(style="width:160px;height:34px;" ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
 
            
         tr
@@ -19,43 +18,16 @@ block content
             &nbsp&nbsp
             small.error(ng-show="formdata.ProjectName.$error.maxlength && formdata.ProjectName.$touched") 应用名称最多50位
 
-        //-  tr
-        //-   td(width="15%",class="tableleft") 项目成员 
-        //-   td
-        //-     table.table-bordered.table-hover
-        //-      tr
-        //-        td(style="width:160px;height:30px") 成员职责
-        //-        td(style="width:160px;height:30px") 成员姓名
-        //-      tr 
-        //-        td
-        //-          input(type="textview",name="projectPrice",ng-model="formdata.data.Duty1",ng-maxlength='50',style="width:160px;height:30px")
-        //-        td
-        //-          jason-select.form-control(data-am-selected multiple placeholder='用户名' style="width:120px;height:34px;" ng-model='formdata.data.UserName1' source='/backuser' stext='UserName' svalue='AccountID')
-        //-      tr 
-        //-        td
-        //-          input(type="textview",name="projectPrice",ng-model="formdata.data.Duty2",ng-maxlength='50',style="width:160px;height:30px")
-        //-        td
-        //-          jason-select.form-control(data-am-selected multiple placeholder='用户名'  style="width:120px;height:34px;" ng-model='formdata.data.UserName2' source='/backuser' stext='UserName' svalue='AccountID')
-        //-      tr 
-        //-        td
-        //-          input(type="textview",name="projectPrice",ng-model="formdata.data.Duty3",ng-maxlength='50',style="width:160px;height:30px")
-        //-        td
-        //-          jason-select.form-control(data-am-selected multiple placeholder='用户名'  style="width:120px;height:34px;" ng-model='formdata.data.UserName3' source='/backuser' stext='UserName' svalue='AccountID')
-        //-     br
-        //-     button 新增职责
-
-
-
-
         tr
           td(width="15%",class="tableleft") 项目成员 
           td
             table.table-bordered.table-hover
-             thead 
+             tbody 
                 tr
-                  td(style="width:160px;height:30px") 成员职责
-                  td(style="width:160px;height:30px") 成员姓名
+                  td(style="width:150px;height:30px") 成员职责
+                  td(style="width:150px;height:30px") 成员姓名
                   td(style="width:80px;height:30px") 成员账号
+                  td(style="width:80px;height:30px") 操作
              tbody
                 tr(ng-repeat="a in formdata.data")
                   td(ng-model="formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
@@ -63,63 +35,36 @@ block content
                   td(ng-model="formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
                   td 
                     button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
-
                 tr 
                   td
-                    input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:160px;height:34px")
+                    input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
                   td
                     jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='AccountID')
+                  td
+                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='AccountID' svalue='AccountID')
                   td 
                     button(ng-click="addUser(user)" style="width:80px;height:34px") 添加
 
-        //- tr
-        //-   td(width="15%",class="tableleft") 项目成员 
-        //-   td
-        //-     table.table-bordered.table-hover
-        //-      thead 
-        //-         tr
-        //-           td(style="width:160px;height:30px") 成员职责
-        //-           td(style="width:160px;height:30px") 成员姓名
-        //-           td(style="width:160px;height:30px") 操作
-        //-      tbody
-        //-         tr(ng-repeat="a in formdata.data")
-        //-           td(ng-model="formdata.data.Duty")  {{a.Duty}}
-        //-           td(ng-model="formdata.data.UserName" text='formdata.data.UserName' value='formdata.data.AccountID')  {{a.UserName}}
-        //-           td 
-        //-             button(ng-click="resetUser(this)") 重置
-
-        //-         tr 
-        //-           td
-        //-             input(type="textview",name="projectPrice",ng-model="user.Duty",ng-maxlength='50',style="width:160px;height:30px")
-        //-           td
-        //-             jason-select.form-control(data-am-selected multiple placeholder='用户名' style="width:120px;height:34px;" ng-model='user.UserName' source='/backuser' stext='UserName' svalue='AccountID')
-        //-           td 
-        //-             button(ng-click="addUser(user)") 添加
-
-        
-         
 
 
         tr
           td(width="15%",class="tableleft") 项目截止时间
           td
-            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",ng-maxlength='50',style="width:160px;height:30px")
-            &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectEndTime.$error.maxlength && formdata.ProjectEndTime.$touched") 应用名称最多50位
-        
+            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",style="width:160px;height:30px")
+           
         tr
           td(width="15%",class="tableleft") 项目经费预算
           td
-            input(type="number",name="projectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='50',style="width:160px;height:30px")
+            input(type="number",name="projectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='10',style="width:160px;height:30px")
             &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 应用名称最多50位
+            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 预算最多50位
         
         tr
           td(width="15%",class="tableleft") 项目描述 
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.ProjectDesc',ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectDesc.$error.maxlength && formdata.ProjectDesc.$touched") 备注最多200位
+            small.error(ng-show="formdata.ProjectDesc.$error.maxlength && formdata.ProjectDesc.$touched") 描述最多200位
 
         tr
           td(class="tableleft")
@@ -128,4 +73,4 @@ block content
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/projectManage') 返回列表
 
-            script(src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.js")
+    

@@ -8,7 +8,7 @@ block content
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationName',source='/app', stext='ApplicationName',svalue='ID',style="width:160px;height:30px",required)
+            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationID',source='/app' stext='ApplicationName',svalue='ID',style="width:160px;height:30px",required)
             
         tr
           td(width="15%",class="tableleft") 用户姓名 
@@ -34,7 +34,7 @@ block content
          tr
           td(width="15%",class="tableleft") 角色名称
           td
-            jason-select.input(placeholder='角色名称' ng-model='formdata.RoleName' source='/backrole' stext='RoleName' svalue='RoleName',style="width:160px;height:30px",required)
+            jason-select.input(placeholder='角色名称' ng-model='formdata.RoleID' source='/backrole' stext='RoleName' svalue='RoleID',style="width:160px;height:30px",required)
 
         tr
           td(class="tableleft") 是否有效
@@ -62,13 +62,13 @@ block content
         tr
           td(width="15%",class="tableleft") 所在学院 (可选) 
           td
-            jason-select.input(placeholder='选择学院' ng-model='formdata.CollegeID' source='/datadict/plain' selectparams='{"Category":"dc_academy"}' stext='DictionaryValue' svalue='Category', style="width:160px;height:30px",required)
+            jason-select.input(placeholder='选择学院' ng-model='formdata.CollegeID' source='/datadict/plain' selectparams='{"Category":"dc_academy"}' stext='DictionaryValue' svalue='DictionaryID', style="width:160px;height:30px",required)
 
 
         tr
           td(width="15%",class="tableleft") 所在班级 (可选)  
           td
-            jason-select.input(placeholder='选择班级' ng-model='formdata.ClassID',style="width:160px;height:30px",required)
+            jason-select.input(placeholder='选择班级' ng-model='formdata.ClassID',source='/datadict/plain' selectparams='{"Category":"dc_cls"}' stext='DictionaryValue' svalue='DictionaryID',style="width:160px;height:30px",required)
 
         tr
           td(width="15%",class="tableleft") 地址 (可选) 

@@ -63,7 +63,7 @@
  			sql+=", "+key+" = '"+data[key]+"' ";
  		}
  	}
- 	sql +=" where " + userModel.PK +" = ' "+data[userModel.PK]+"' ";
+ 	sql +=" where " + userModel.PK +" = '"+data[userModel.PK]+"' ";
  	console.log(sql);
  	db_backend.mysqlPool.getConnection(function(err,connection)
  	{
@@ -114,3 +114,33 @@
          });
      });
  } 
+
+//查询用户角色表的ID
+ exports.query = function(data ,callback)
+ {
+    var sql = 'Select distinct ID from jit_roleuser where AccountID = ' + data.AccountID;
+
+     console.log('查询用户所在项目' + sql);
+
+     db_backend.mysqlPool.getConnection(function(err,connection)
+     {
+        if(err)
+        {
+            callback(true);
+            connection.release();
+            return ;
+        }
+
+        connection.query(sql,function(err,results)
+        {
+            if(err)
+            {
+                callback(true);
+                return ;
+            }
+            callback(false,results);
+            connection.release();
+        });
+     });
+
+ }

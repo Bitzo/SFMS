@@ -66,6 +66,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
     }
     $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
     $scope.$watch( 'paginationConf.action',getInit);
+    $scope.$watch( 'paginationConf.action',getInit);
     
     //查询
     $scope.search=function(){
@@ -172,6 +173,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
     //删除
     $scope.d={};
     $scope.remove = function(index,action){
+        var mymessage=confirm("是否确认删除此项");  
+        if(mymessage==true){
         console.log('delete');
         console.log(index);
         console.log(action);
@@ -200,6 +203,10 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
         });
         $scope.datas.splice(index,1);
         console.log($scope.d);
+        }else{
+
+        }
+
     }
 
 

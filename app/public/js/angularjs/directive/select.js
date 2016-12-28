@@ -1,10 +1,23 @@
 jasonapp.service('jasonService', function ($http, $q) {
     this.IintSelect = function (url,params) {
-        return $http({
+        if(params){
+            return $http({
             method: 'get',
             url: url + accesstokenstring,
             params:params
         })
+      }else{
+          return $http({
+            method: 'get',
+            url: url + accesstokenstring,
+            params:{
+                pageindex:1,
+                pagesize:10,
+                f:{}
+            }
+        })
+      }
+        
     }
 });
 angular.module('jason.pagination').directive('jasonSelect',function($http,jasonService){
@@ -20,10 +33,15 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
             conf: '='
         },
         link: function(scope, element, attrs){
-            var url= attrs.source+"?access_token=";
-            var params={pageindex:1, pagesize:10,
-                    f:JSON.parse(attrs.selectparams)
+            if(attrs.selectparams){
+                var url= attrs.source+"?access_token=";
+                    var params={pageindex:1, pagesize:10,
+                            f:JSON.parse(attrs.selectparams)
+                    }                
+            }else{
+                 var url= attrs.source+"?access_token=";              
             }
+
             jasonService.IintSelect(url,params).then(function(reponse){
                 scope.options=reponse.data.data;
                 scope.options.forEach(
@@ -32,6 +50,9 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
                     }
                 );
             });
+
+
+
         }
     };
 });
