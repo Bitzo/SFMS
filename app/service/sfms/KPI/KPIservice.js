@@ -38,7 +38,7 @@ exports.updateKPI = function(data, callback) {
 //KPI信息查询
 exports.queryKPI = function (data, callback) {
     data = {
-        'ID': data.ID || '',
+        'jit_kpiinfo.ID': data.ID || '',
         'ProjectID': data.ProjectID || '',
         'UserID': data.UserID || '',
         'KPIStatus': data.KPIStatus || '',
@@ -63,6 +63,7 @@ exports.queryKPI = function (data, callback) {
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
+        'ID': data.ID,
         'ProjectID': data.ProjectID,
         'UserID': data.UserID,
         'KPIStatus': data.KPIStatus,
@@ -82,6 +83,12 @@ exports.countQuery = function (data, callback) {
 
 //KPI审核
 exports.checkKPI = function (data, callback) {
+    data = {
+        ID: data.ID,
+        KPIStatus: data.KPIStatus,
+        CheckUser: data.CheckUser,
+        Remark: data.Remark
+    }
     KPIdal.checkKPI(data, function (err, results) {
         if (err) {
             callback(true, results);

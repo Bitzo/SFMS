@@ -423,6 +423,7 @@ router.get('/person', function (req, res) {
 //KPI查询,此查询用于可审核绩效的角色进行查询
 router.get('/', function (req, res) {
     var query =  JSON.parse(req.query.f),
+        ID = query.ID || '',
         UserID = query.UserID || '',
         ProjectID = query.ProjectID || '',
         StartTime = query.StartTime || '',
@@ -435,6 +436,7 @@ router.get('/', function (req, res) {
         totalNum = 0;
 
     var data = {
+        'ID': ID,
         'ProjectID': ProjectID,
         'UserID': UserID,
         'KPIStatus': KPIStatus,
@@ -545,7 +547,7 @@ router.put('/check', function (req, res) {
         temp = ['ID', 'KPIStatus'],
         err = 'require: ';
     for (var key in temp) {
-        if (!(temp[key] in data[0])) {
+        if (!(temp[key] in data)) {
             logger.writeInfo("require: " + temp[key]);
             err += temp[key];
         }
@@ -559,40 +561,45 @@ router.put('/check', function (req, res) {
         })
     }
 
-    var ID = [];
-    for (var i in data) {
-        if(data[i].KPIStatus == '不通过' && (data[i].Remark === undefined || data[i].Remark.trim()=='')) {
-            res.status(400);
-            return res.json({
-                status: 400,
-                isSuccess: false,
-                msg: '操作失败，不通过的审核需填写备注信息'
-            })
-        }
-        data[i].CheckUser = req.query.jitkey;
-        ID[i] = data[i].ID;
+    if(data.KPIStatus == '不通过' && (data.Memo === undefined || data.Memo.trim()==='')) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: '操作失败，不通过的审核需填写备注信息'
+        })
     }
+    if(data.KPIStatus == '不通过') {
+        data.Remark = data.Memo;
+    }
+
+    data.CheckUser = req.query.jitkey;
+    var ID = data.ID;
+
     //查看该绩效信息是否已经被审核
-    KPIservice.queryKPIForCheck(ID, function (err, results) {
+    KPIservice.queryKPI({ID:ID}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
                 status: 500,
                 isSuccess: false,
-                msg: results
+                msg: '操作失败，服务器出错'
             })
         }
-        if (results !== undefined && results === true) {
+        if (results !== undefined && results.length>0) {
+            console.log(1111)
+            console.log(results)
+            if (results[0].KPIStatus == '待审核') {
                 KPIservice.checkKPI(data, function (err, results) {
                     if (err) {
                         res.status(500);
                         return res.json({
                             status: 500,
                             isSuccess: false,
-                            msg: results
+                            msg: '操作失败，服务器出错'
                         })
                     }
-                    if (results !== undefined && results.length > 0) {
+                    if (results !== undefined && results.affectedRows > 0) {
                         res.status(200);
                         return res.json({
                             status: 200,
@@ -608,12 +615,20 @@ router.put('/check', function (req, res) {
                         })
                     }
                 })
+            } else {
+                res.status(400);
+                return res.json({
+                    status: 400,
+                    isSuccess: false,
+                    msg: '当前绩效已审核！'
+                })
+            }
         } else {
             res.status(400);
             return res.json({
                 status: 400,
                 isSuccess: false,
-                msg: results
+                msg: '审核的绩效信息不存在'
             })
         }
     })

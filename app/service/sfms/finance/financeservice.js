@@ -60,6 +60,7 @@ exports.queryFinance = function (data, callback) {
 //财务查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
+        'ID': data.ID,
         'Username': data.Username,
         'InOutType': data.InOutType,
         'FIType': data.FIType,
@@ -80,6 +81,12 @@ exports.countQuery = function (data, callback) {
 
 //财务审核
 exports.checkFinance = function (data, callback) {
+    data = {
+        ID: data.ID,
+        FIStatu: data.FIStatu,
+        CheckUser: data.CheckUser,
+        Remark: data.Remark
+    }
     financeDAL.checkFinance(data, function (err, results) {
         if (err) {
             callback(true, results);
