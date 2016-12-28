@@ -547,7 +547,9 @@ router.get('/', function (req, res) {
         page = req.query.pageindex>0 ?req.query.pageindex:1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
-
+console.log(11111);
+        
+console.log(query);
     var data = {
         'ID': ID,
         'ProjectManageID': projectManageID,

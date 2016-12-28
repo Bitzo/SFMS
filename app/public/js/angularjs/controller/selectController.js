@@ -52,36 +52,30 @@ myApp.controller('sfmsIndexController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             $scope.college=response.data;
-            
         }).
         error(function(response) {
         });
 
         //所在班级
-        $scope.collegeChanged = function() {
-            console.log($scope.formdata.CollegeID)
-            $http({
-                method:'get',
-                url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                params:{
-                    pageindex:1,
-                    pagesize:10,
-                    f:{
-                        ParentID:$scope.formdata.CollegeID
-                    }
+        $http({
+            method:'get',
+            url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                pageindex:1,
+                pagesize:10,
+                f:{
+                    Category:"dc_cls"
                 }
-            }).
-            success(function(response) {
-                console.log(response)
-                $scope.cls=response.data;
-            }).
-            error(function(response) {
-                console.log(response)
-            });
-
             }
+        }).
+        success(function(response) {
+            console.log(response)
+            $scope.cls=response.data;
+        }).
+        error(function(response) {
+            console.log(response)
+        });
 
-        
       
 
 })

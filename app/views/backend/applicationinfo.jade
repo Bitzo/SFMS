@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
+  div.container-fluid(action='/backmenu' conf='paginationConf')
     span 
       h2 应用新增
     form(method="post",name="appinfo" )
@@ -8,7 +8,7 @@ block content
         tr
           td(width="15%",class="tableleft") 应用代码
           td
-            input(type="textview",name="ApplicationCode",ng-model='formdata.ApplicationCode',ng-maxlength='50',style="width:160px;height:30px",required)
+            input(type="textview",name="ApplicationCode",ng-model='formdata.ApplicationCode',ng-maxlength='50',required)
             &nbsp&nbsp
             small.error(ng-show="formdata.ApplicationCode.$error.maxlength && formdata.ApplicationCode.$touched") 应用代码最多50位
 
@@ -16,17 +16,17 @@ block content
         tr
           td(width="15%",class="tableleft") 	应用名称 
           td
-            input(type="textview",name="ApplicationName",ng-model="formdata.ApplicationName",ng-maxlength='50',style="width:160px;height:30px",required)
+            input(type="textview",name="ApplicationName",ng-model="formdata.ApplicationName",ng-maxlength='50',required)
             &nbsp&nbsp
             small.error(ng-show="formdata.ApplicationName.$error.maxlength && formdata.ApplicationName.$touched") 应用名称最多50位
         
         tr
           td(class="tableleft") 是否有效
           td
-            input(type="radio",name="IsActive",value="1",ng-model="formdata.IsActive",checked)
+            input(type="radio",name="IsActive",value="1",style="width:15px;height:15px",ng-model="formdata.IsActive",checked)
             &nbsp有效
             &nbsp&nbsp          
-            input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="0")
+            input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="0",style="width:15px;height:15px")
             &nbsp无效  
 
         tr

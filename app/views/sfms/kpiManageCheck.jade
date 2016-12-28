@@ -8,49 +8,52 @@ block content
         tr
           td(width="15%",class="tableleft") 绩效名称
           td
-            jason-select.form-control(style="width:160px;height:34px;" ng-model='paginationConf.formdata.KPIName' source='/datadict/plain' selectparams='{"Category":"dc_kpiname"}' stext='DictionaryValue' svalue='DictionaryID')
+            span( ng-model='paginationConf.formdata.KPIName' ) {{paginationConf.formdata.KPIName}}
 
-           
         tr
           td(width="15%",class="tableleft") 绩效类型
           td
-            jason-select.form-control(style="width:160px;height:34px;" ng-model='paginationConf.formdata.KPIType' source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
+            span( ng-model='paginationConf.formdata.KPIType') {{paginationConf.formdata.KPIType}}
            
         tr
           td(width="15%",class="tableleft") 绩效分
           td
-            input(type="number",name="projectEndTime",ng-model="paginationConf.formdata.KPIScore",ng-maxlength='50',style="width:160px;height:30px",required)
+            span(type="number",name="projectEndTime",ng-model="paginationConf.formdata.KPIScore") {{paginationConf.formdata.KPIScore}}
             
         tr
           td(width="15%",class="tableleft") 用户名
           td
-            jason-select.form-control(style="width:160px;height:34px;" ng-model='paginationConf.formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID')
+            span( ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserID}}
             
         tr
           td(width="15%",class="tableleft") 申请时间
           td
-            input(style="width:160px;height:34px;" ng-model='paginationConf.formdata.CreateTime' source='/backuser' stext='UserName' svalue='AccountID')
+            span( ng-model='paginationConf.formdata.CreateTime') {{paginationConf.formdata.CreateTime}}
             
         tr
           td(width="15%",class="tableleft") 绩效备注
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required)
-            &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 备注最多200位
+            span(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Remark') {{paginationConf.formdata.Remark}}
 
         tr
             td(class="tableleft") 审核结果
             td
-              input(type="radio",name="IsActive",value="通过",ng-model="paginationConf.formdata.KPIStatus",checked)
+              input(type="radio",name="IsActive",value="通过",ng-model="paginationConf.formdata.KPIStatus",checked,style="width:15px;height:15px")
               &nbsp 通过
               &nbsp         
-              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.KPIStatus",value="不通过")
+              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.KPIStatus",value="不通过",style="width:15px;height:15px")
               &nbsp不通过
+
+        tr
+          td(width="15%",class="tableleft") 绩效备注
+          td
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',required) {{paginationConf.formdata.Remark}}
+
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 确认
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/kpiManage') 返回列表
        

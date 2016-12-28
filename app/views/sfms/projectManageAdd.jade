@@ -8,13 +8,13 @@ block content
         tr
           td(width="15%",class="tableleft") 项目负责人
           td
-            jason-select.form-control(style="width:160px;height:34px;" ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
+            jason-select.input( ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
 
            
         tr
           td(width="15%",class="tableleft") 项目名称
           td
-            input(type="textview",name="projectName",ng-model="formdata.ProjectName",ng-maxlength='50',style="width:160px;height:30px")
+            input(type="textview",name="projectName",ng-model="formdata.ProjectName",ng-maxlength='50',)
             &nbsp&nbsp
             small.error(ng-show="formdata.ProjectName.$error.maxlength && formdata.ProjectName.$touched") 应用名称最多50位
 
@@ -39,9 +39,9 @@ block content
                   td
                     input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
                   td
-                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='AccountID')
+                    jason-select.input( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='AccountID')
                   td
-                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='AccountID' svalue='AccountID')
+                    jason-select.input( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='AccountID' svalue='AccountID')
                   td 
                     button(ng-click="addUser(user)" style="width:80px;height:34px") 添加
 
@@ -50,12 +50,12 @@ block content
         tr
           td(width="15%",class="tableleft") 项目截止时间
           td
-            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",style="width:160px;height:30px")
+            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",)
            
         tr
           td(width="15%",class="tableleft") 项目经费预算
           td
-            input(type="number",name="projectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='10',style="width:160px;height:30px")
+            input(type="number",name="projectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='10',)
             &nbsp&nbsp
             small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 预算最多50位
         

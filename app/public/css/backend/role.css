@@ -6,6 +6,18 @@
     vertical-align: middle;
     text-align: center;
 }
+table tr td input{
+    width:160px;
+    height:30px;
+}
+table tr td select{
+    width:160px;
+    height:30px;
+}
+table tr td .input{
+    width:160px;
+    height:30px;
+}
 
 .definewidth{
 	width:80%;
