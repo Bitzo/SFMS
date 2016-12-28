@@ -31,8 +31,8 @@ block content
              tbody
                 tr(ng-repeat="a in formdata.data")
                   td(ng-model="formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
-                  td(ng-model="formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
-                  td(ng-model="formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
+                  td(ng-model="formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userID[0]}}
+                  td(ng-model="formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID[1]}}
                   td 
                     button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
 
@@ -40,7 +40,7 @@ block content
                   td
                     input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
                   td
-                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='AccountID')
+                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='UserName')
                   td
                     jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='AccountID' svalue='AccountID')
                   td 
