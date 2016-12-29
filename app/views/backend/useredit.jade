@@ -1,16 +1,16 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid
+  div.container-fluid(ng-controller="selectController")
     span 
       h2 用户新增
-    jason-form(method="post" source='/backuser' conf='paginationConf' ng-controller="sfmsIndexController")
+    jason-form(method="post" source='/backuser' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用名称
           td      
             select(ng-model='formdata.ApplicationID')
               option   
-              option(ng-repeat="item in applicationNames" value='{{item.ID}}') {{item.ApplicationName}}
+              option(ng-repeat="item in applicationNames" value='{{item.ApplicationID}}') {{item.ApplicationName}}
             
         tr
           td(width="15%",class="tableleft") 用户姓名 
