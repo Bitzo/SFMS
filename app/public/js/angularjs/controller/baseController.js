@@ -1,9 +1,9 @@
 /**
  * Created by Administrator on 2016/12/14.
  */
-myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreetableParams) {
+myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
-    $scope.expanded_params = new ngTreetableParams({
+    /*$scope.expanded_params = new ngTreetableParams({
 
        getNodes: function(parent) {
             if(parent==null) {
@@ -25,9 +25,35 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
         options: {
             initialState: 'expanded'
         }
-    });
+    });*/
+    $http.get("/func?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
+        .success(function (response) {
+            $scope.tree_data =response.data;
+        });
 
-
+    $scope.col_defs = [
+        {
+            field: "FunctionName",
+            sortable: true,
+            sortingType: "string",
+            displayName:"功能名字",
+            cellTemplate: "<input type='checkbox'><strong>{{row.branch[col.field]}}</strong>"
+        },
+        {
+            field: "ApplicationID",
+            sortable: true,
+            sortingType: "number",
+            filterable: true
+        },
+        {
+            field: "FunctionID",
+            sortable: true,
+            sortingType: "number"
+        },
+        {
+            field: "ParentID"
+        }
+    ];
     //显示左侧菜单栏
     $scope.menus =baseService.InitMenu().then(function(response){
         $scope.menus = response.data.data.Menu;
