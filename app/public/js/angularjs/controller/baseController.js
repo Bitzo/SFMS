@@ -285,23 +285,23 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
             }
     
      //新增项目管理中的用户列表
-    $scope.formdata.data=[];
-    $scope.addUser = function(item){
-        console.log('addUser');
-        console.log(item);
-        if(item.duty) {
-           $scope.formdata.data.push($scope.user);
-           $scope.user={};
-        }else{
-            alert('请填写相关信息')
-        }
+    // $scope.formdata.data=[];
+    // $scope.addUser = function(item){
+    //     console.log('addUser');
+    //     console.log(item);
+    //     if(item.duty) {
+    //        $scope.formdata.data.push($scope.user);
+    //        $scope.user={};
+    //     }else{
+    //         alert('请填写相关信息')
+    //     }
         
-    }
+    // }
     //重置项目管理中的用户列表
-    $scope.resetUser = function(item){
-        console.log(item.$index);
-        $scope.formdata.data.splice(item.$index,1);
-    }
+    // $scope.resetUser = function(item){
+    //     console.log(item.$index);
+    //     $scope.formdata.data.splice(item.$index,1);
+    // }
    
 
 

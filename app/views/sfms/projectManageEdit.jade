@@ -1,15 +1,14 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid
+  div.container-fluid(ng-controller="selectController")
     span 
       h2 项目编辑
-   jason-form(method="post",name="appinfo" source='/sfms/api/project'  conf='paginationConf' tocc="ProjectManageID,ApplicationName,RoleName")
+   jason-form(method="post"  source='/sfms/api/project' conf='paginationConf'  tocc="ProjectManageID,ApplicationName,RoleName,ClassID")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 项目负责人
           td
             jason-select.input( ng-model='paginationConf.formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
-
            
         tr
           td(width="15%",class="tableleft") 项目名称
@@ -18,10 +17,12 @@ block content
             &nbsp&nbsp
             small.error(ng-show="paginationConf.formdata.ProjectName.$error.maxlength && paginationConf.formdata.ProjectName.$touched") 应用名称最多50位
         
+        
+              
          tr
           td(width="15%",class="tableleft") 项目成员 
           td
-            table.table-bordered.table-hover
+            table.table-bordered.table-hover(ng-model="paginationConf.formdata.data")
              tbody 
                 tr
                   td(style="width:150px;height:30px") 成员职责
@@ -30,10 +31,9 @@ block content
                   td(style="width:80px;height:30px") 操作
              tbody
                 tr(ng-repeat="a in paginationConf.formdata.data")
-                  td(ng-repeat="a in paginationConf.formdata.data")
-                  td(ng-model="formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
-                  td(ng-model="formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
-                  td(ng-model="formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
+                  td(ng-model="paginationConf.formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
+                  td(ng-model="paginationConf.formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
+                  td(ng-model="paginationConf.formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
                   td 
                     button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
                 tr 

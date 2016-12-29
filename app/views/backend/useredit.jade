@@ -2,9 +2,14 @@ link(rel='stylesheet' href="css/backend/role.css")
 block content
   div.container-fluid(ng-controller="selectController")
     span 
-      h2 用户新增
+      h2 用户编辑
     jason-form(method="post" source='/backuser' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
       table.table.table-bordered.table-hover.definedwidth.m10
+        tr
+          td(width="15%",class="tableleft") 所在班级 (可选)  
+          td
+            select(ng-model='paginationConf.formdata.ClassID')
+              option(ng-repeat="item in cls" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
         tr
           td(width="15%",class="tableleft") 应用名称
           td      

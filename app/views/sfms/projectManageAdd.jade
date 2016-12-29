@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="sfmsIndexController")
+  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="selectController")
     span 
       h2 项目新增
     form(method="post",name="appinfo" )
@@ -37,7 +37,7 @@ block content
                     button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
                 tr 
                   td
-                    input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
+                    input(type="textview",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
                   td
                     select(ng-model='user.userIndex' ng-change= "userChanged()") 
                       option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}

@@ -1,9 +1,9 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid
+  div.container-fluid(ng-controller="selectController")
     span 
       h2 项目编辑
-   jason-form(method="post",name="appinfo" source='/sfms/api/project' conf='paginationConf' tocc="ProjectManageID,ApplicationName,RoleName")
+   jason-form(method="post",name="appinfo" source='/sfms/api/project'  ng-controller="selectController" conf='paginationConf' tocc="ProjectManageID,ApplicationName,RoleName")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 项目负责人
@@ -18,11 +18,11 @@ block content
             &nbsp&nbsp
             small.error(ng-show="paginationConf.formdata.ProjectName.$error.maxlength && paginationConf.formdata.ProjectName.$touched") 应用名称最多50位
         
-        tr
+         tr
           td(width="15%",class="tableleft") 项目成员 
           td
             table.table-bordered.table-hover
-             tbody
+             tbody 
                 tr
                   td(style="width:150px;height:30px") 成员职责
                   td(style="width:150px;height:30px") 成员姓名
@@ -35,14 +35,14 @@ block content
                   td(ng-model="paginationConf.formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
                   td 
                     button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
-
                 tr 
                   td
                     input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
                   td
-                    jason-select.input( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='AccountID')
+                    select(ng-model='user.userIndex' ng-change= "userChanged()") 
+                      option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}
                   td
-                    jason-select.input( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='AccountID' svalue='AccountID')
+                    input(ng-model='user.userID')  
                   td 
                     button(ng-click="addUser(user)" style="width:80px;height:34px") 添加
 
@@ -54,7 +54,7 @@ block content
         tr
           td(width="15%",class="tableleft") 项目经费预算
           td
-            input(type="number",name="projectPrice",ng-model="paginationConf.formdata.ProjectPrice",ng-maxlength='10',required)
+            input(type="textview",name="projectPrice",ng-model="paginationConf.formdata.ProjectPrice",ng-maxlength='10',required)
             &nbsp&nbsp
             small.error(ng-show="paginationConf.formdata.ProjectPrice.$error.maxlength && paginationConf.formdata.ProjectPrice.$touched") 预算最多10位
         
@@ -74,6 +74,7 @@ block content
              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.IsActive",value="0",style="width:15px;height:15px")
              &nbsp待完成
       
+     
         tr
           td(width="15%",class="tableleft") 项目描述 
           td
