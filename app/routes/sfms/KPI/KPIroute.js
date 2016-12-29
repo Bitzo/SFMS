@@ -587,8 +587,6 @@ router.put('/check', function (req, res) {
             })
         }
         if (results !== undefined && results.length>0) {
-            console.log(1111)
-            console.log(results)
             if (results[0].KPIStatus == '待审核') {
                 KPIservice.checkKPI(data, function (err, results) {
                     if (err) {

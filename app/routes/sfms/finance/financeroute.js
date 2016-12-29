@@ -40,7 +40,6 @@ router.post('/', function (req, res) {
         //前端需要传输的数据
         temp = ['FIName', 'FIType', 'InOutType', 'FIPrice', 'ProjectID','UserID','Remark'],
         err = 'require: ';
-console.log(query)
     for(var value in temp)
     {
         if(!(temp[value] in query))
@@ -531,6 +530,7 @@ router.put('/check', function (req, res) {
             msg: '操作失败，不通过的审核需填写备注信息'
         })
     }
+    if(data.FIStatu == '不通过') data.Remark = data.Memo;
     data.CheckUser = req.query.jitkey;
     var ID = data.ID;
     //查看该财务信息是否已经被审核

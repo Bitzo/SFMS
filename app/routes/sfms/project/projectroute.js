@@ -261,9 +261,8 @@ router.put('/', function (req, res) {
         projectStatus = query.ProjectStatus,
         projectPrice = query.ProjectPrice,
         accountID = req.query.jitkey,
-        userData = query.data;
-    time = moment().format('YYYY-MM-DD HH:mm:ss');
-console.log(req.body)
+        userData = query.data,
+        time = moment().format('YYYY-MM-DD HH:mm:ss');
     //检查所需要的参数是否齐全
     var temp = ['ID', 'ProjectName', 'ProjectDesc', 'ProjectStatus', 'ProjectPrice', 'ProjectManageID', 'ProjectEndTime', 'ProjectTimeLine'],
         err = 'required: ';
@@ -623,7 +622,6 @@ router.get('/', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     if (totalNum == 1) {
-                        console.log(results)
                         projectuserservice.queryProjectUser({ProjectID: results[0].ID}, function (err, results) {
                             if (err) {
                                 res.status(500);
@@ -637,12 +635,9 @@ router.get('/', function (req, res) {
                             if (results !== undefined && results.length > 0) {
                                 result.data.data = results;
                                 res.status(200);
-                                console.log(result)
-                                console.log(result.data)
                                 return res.json(result);
                             } else {
                                 res.status(200);
-                                console.log(result)
                                 return res.json(result);
                             }
                         })
