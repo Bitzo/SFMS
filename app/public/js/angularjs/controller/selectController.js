@@ -13,11 +13,9 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
-            console.log(response)
             $scope.applicationNames=response.data;
         }).
         error(function(response) {
-            console.log(response)
         });
 
        //角色名称
@@ -31,11 +29,9 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
-            console.log(response)
             $scope.roleNames=response.data;
         }).
         error(function(response) {
-            console.log(response)
         });
 
        //所在学院
@@ -56,26 +52,6 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
         error(function(response) {
         });
 
-        //所在班级
-        $http({
-            method:'get',
-            url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                pageindex:1,
-                pagesize:10,
-                f:{
-                    Category:"dc_cls"
-                }
-            }
-        }).
-        success(function(response) {
-            console.log(response)
-            $scope.cls=response.data;
-        }).
-        error(function(response) {
-            console.log(response)
-        });
-
     //所在班级
     $scope.collegeChanged = function() {
         console.log($scope.formdata.CollegeID)
@@ -92,16 +68,13 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
-            console.log(response)
             $scope.cls=response.data;
         }).
         error(function(response) {
-            console.log(response)
         });
 
     }
 
-    
             //项目成员新增姓名
             $http({
                 method:'get',
@@ -124,7 +97,7 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
 
             //项目成员新增ID
             $scope.userChanged = function() {
-                console.log($scope.user.userIndex) 
+                console.log($scope.user) 
                 var index =  $scope.user.userIndex;
                 $http({
                 method:'get',
@@ -151,11 +124,9 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
                 $scope.addUser = function(item){
                     console.log('addUser');
                     console.log(item);
-                    console.log($scope.user)   
+                    console.log($scope.user)  
                     if(item.duty) {
                     $scope.formdata.data.push($scope.user);
-                    $scope.paginationConf.formdata.data.push($scope.user);
-                    console.log($scope.paginationConf.formdata.data)
                     $scope.user={};
                     }else{
                         alert('请填写相关信息')

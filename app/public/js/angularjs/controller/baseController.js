@@ -1,9 +1,9 @@
 /**
  * Created by Administrator on 2016/12/14.
  */
-myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreetableParams) {
+myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
-    $scope.expanded_params = new ngTreetableParams({
+    /*$scope.expanded_params = new ngTreetableParams({
 
        getNodes: function(parent) {
             if(parent==null) {
@@ -25,9 +25,35 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
         options: {
             initialState: 'expanded'
         }
-    });
+    });*/
+    $http.get("/func?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
+        .success(function (response) {
+            $scope.tree_data =response.data;
+        });
 
-
+    $scope.col_defs = [
+        {
+            field: "FunctionName",
+            sortable: true,
+            sortingType: "string",
+            displayName:"功能名字",
+            cellTemplate: "<input type='checkbox'><strong>{{row.branch[col.field]}}</strong>"
+        },
+        {
+            field: "ApplicationID",
+            sortable: true,
+            sortingType: "number",
+            filterable: true
+        },
+        {
+            field: "FunctionID",
+            sortable: true,
+            sortingType: "number"
+        },
+        {
+            field: "ParentID"
+        }
+    ];
     //显示左侧菜单栏
     $scope.menus =baseService.InitMenu().then(function(response){
         $scope.menus = response.data.data.Menu;
@@ -107,13 +133,10 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
     };
 
 
-    //获取编辑信息
-
-
     //编辑完成提交信息
 
+    var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
-        var formdata=$scope.paginationConf.formdata={};
         console.log(formdata);
         console.log(action);
         $http({
@@ -133,7 +156,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
             }else{
                 alert(response.msg);
             }
-
         }).
         error(function(response) {
             console.log('提交失败');
@@ -143,6 +165,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
             console.log('no');
         });
     };
+
 
 
     //删除
@@ -284,26 +307,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
                 });
             }
     
-     //新增项目管理中的用户列表
-    // $scope.formdata.data=[];
-    // $scope.addUser = function(item){
-    //     console.log('addUser');
-    //     console.log(item);
-    //     if(item.duty) {
-    //        $scope.formdata.data.push($scope.user);
-    //        $scope.user={};
-    //     }else{
-    //         alert('请填写相关信息')
-    //     }
-        
-    // }
-    //重置项目管理中的用户列表
-    // $scope.resetUser = function(item){
-    //     console.log(item.$index);
-    //     $scope.formdata.data.splice(item.$index,1);
-    // }
-   
-
 
     //删除项目模态框中的用户
     $scope.d={};
