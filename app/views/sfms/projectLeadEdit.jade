@@ -1,84 +1,90 @@
 link(rel='stylesheet' href="css/backend/role.css")
-link(rel="stylesheet" href="bower_components/amazeui/amazeui.css")
- 
 block content
-  div.container-fluid(conf='paginationConf' ng-controller="baseController")
+  div.container-fluid(ng-controller="selectController")
     span 
       h2 项目编辑
-   jason-form(method="post",name="appinfo" source='/sfms/api/project' conf='paginationConf')
+   jason-form(method="post",name="appinfo" source='/sfms/api/project'  ng-controller="selectController" conf='paginationConf' tocc="ProjectManageID,ApplicationName,RoleName")
       table.table.table-bordered.table-hover.definedwidth.m10
-        tr
-          td(width="15%",class="tableleft") 项目负责人
-          td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='paginationConf.formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
-
-           
-        tr
-          td(width="15%",class="tableleft") 项目名称
-          td
-            input(type="textview",name="projectName",ng-model="paginationConf.formdata.ProjectName",ng-maxlength='50',style="width:160px;height:30px",required)
-            &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.ProjectName.$error.maxlength && paginationConf.formdata.ProjectName.$touched") 应用名称最多50位
-        
-        tr
-          td(width="15%",class="tableleft") 项目成员 
-          td
-            table.table-bordered.table-hover
-             thead 
                 tr
-                  td(style="width:160px;height:30px") 成员职责
-                  td(style="width:160px;height:30px") 成员姓名
-                  td(style="width:160px;height:30px") 操作
-             tbody
-                tr(ng-repeat="a in formdata.data")
-                  td(ng-model="formdata.data.Duty")  {{a.Duty}}
-                  td(ng-model="formdata.data.UserName")  {{a.UserName}}
-                  td 
-                    button(ng-click="resetUser(this)") 重置
+            td(width="15%",class="tableleft") 项目负责人
+            td
+              jason-select.input( ng-model='paginationConf.formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
+            
+          tr
+            td(width="15%",class="tableleft") 项目名称
+            td
+              input(type="textview",name="projectName",ng-model="paginationConf.formdata.ProjectName",ng-maxlength='50',required)
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.ProjectName.$error.maxlength && paginationConf.formdata.ProjectName.$touched") 应用名称最多50位              
 
-                tr 
-                  td
-                    input(type="textview",name="projectPrice",ng-model="user.Duty",ng-maxlength='50',style="width:160px;height:30px")
-                  td
-                    jason-select.form-control(data-am-selected multiple placeholder='用户名' style="width:120px;height:34px;" ng-model='user.UserName' source='/backuser' stext='UserName' svalue='AccountID')
-                  td 
-                    button(ng-click="addUser(user)") 添加
+          tr
+            td(width="15%",class="tableleft") 项目成员信息
+            td
+              input(type="textview",name="projectName",ng-model="paginationConf.formdata.ProjectName",ng-maxlength='50',required)
+                
+          tr(ng-controller="selectController")
+            td(width="15%",class="tableleft") 项目成员 
+            td
+              table.table-bordered.table-hover
+                tbody 
+                    tr
+                      td(style="width:150px;height:30px") 成员职责
+                      td(style="width:150px;height:30px") 成员姓名
+                      td(style="width:80px;height:30px") 成员账号
+                      td(style="width:80px;height:30px") 操作
+                tbody
+                    tr(ng-repeat="a in formdata.data")
+                      td(ng-model=" formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
+                      td(ng-model=" formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
+                      td(ng-model=" formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
+                      td 
+                        button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置                  
+                    tr 
+                      td
+                        input(type="textview",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
+                      td
+                        select(ng-model='user.userIndex' ng-change= "userChanged()") 
+                          option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}
+                      td
+                        input(ng-model='user.userID')  
+                      td 
+                        button(ng-click="addUser(user)" style="width:80px;height:34px") 添加
 
-        tr
-          td(width="15%",class="tableleft") 项目截止时间
-          td
-            input(type="date",name="projectEndTime",ng-model="paginationConf.formdata.ProjectEndTime",ng-maxlength='50',style="width:160px;height:30px",required)
-            &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.ProjectEndTime.$error.maxlength && paginationConf.formdata.ProjectEndTime.$touched") 应用名称最多50位
+          tr
+            td(width="15%",class="tableleft") 项目截止时间
+            td
+              input(type="date",name="projectEndTime",ng-model="paginationConf.formdata.ProjectEndTime",ng-maxlength='50',required)
+            
+          tr
+            td(width="15%",class="tableleft") 项目经费预算
+            td
+              input(type="textview",name="projectPrice",ng-model="paginationConf.formdata.ProjectPrice",ng-maxlength='10',required)
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.ProjectPrice.$error.maxlength && paginationConf.formdata.ProjectPrice.$touched") 预算最多10位
+          
+          tr
+            td(width="15%",class="tableleft") 项目进度
+            td
+              input(type="textview",name="projectPrice",ng-model="paginationConf.formdata.ProjectTimeLine",ng-maxlength='10',required)
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.ProjectPrice.$error.maxlength && paginationConf.formdata.ProjectPrice.$touched") 进度最多10位
+          
+          tr
+            td(width="15%",class="tableleft") 项目状态
+            td
+              input(type="radio",name="IsActive",value="1",ng-model='paginationConf.formdata.ProjectStatus',checked,style="width:15px;height:15px")
+              &nbsp结项
+              &nbsp&nbsp          
+              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.IsActive",value="0",style="width:15px;height:15px")
+              &nbsp待完成
         
-        tr
-          td(width="15%",class="tableleft") 项目经费预算
-          td
-            input(type="number",name="projectPrice",ng-model="paginationConf.formdata.ProjectPrice",ng-maxlength='50',style="width:160px;height:30px",required)
-            &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.ProjectPrice.$error.maxlength && paginationConf.formdata.ProjectPrice.$touched") 应用名称最多50位
-        
-        tr
-          td(width="15%",class="tableleft") 项目进度
-          td
-            input(type="textview",name="projectPrice",ng-model="paginationConf.formdata.ProjectTimeLine",ng-maxlength='50',style="width:160px;height:30px",required)
-            &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.ProjectPrice.$error.maxlength && paginationConf.formdata.ProjectPrice.$touched") 应用名称最多50位
-        
-        tr
-          td(width="15%",class="tableleft") 项目状态
-          td
-             select(type="textview",ng-model='paginationConf.formdata.ProjectStatus',style="width:160px;height:30px",required)
-                option(selected = "selected") 待完成
-                option 结项
-     
-     
-        tr
-          td(width="15%",class="tableleft") 项目描述 
-          td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.ProjectDesc',ng-maxlength='200',required)
-            &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.ProjectDesc.$error.maxlength && paginationConf.formdata.ProjectDesc.$touched") 备注最多200位
+      
+          tr
+            td(width="15%",class="tableleft") 项目描述 
+            td
+              textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.ProjectDesc',ng-maxlength='200',required)
+              &nbsp&nbsp
+              small.error(ng-show="paginationConf.formdata.ProjectDesc.$error.maxlength && paginationConf.formdata.ProjectDesc.$touched") 描述最多200位
 
         tr
           td(class="tableleft")
@@ -86,8 +92,6 @@ block content
             button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/project')") 确认修改
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/projectLead') 返回列表
-
-script(src="http://cdn.amazeui.org/amazeui/2.7.2/js/amazeui.js")
 
 
 

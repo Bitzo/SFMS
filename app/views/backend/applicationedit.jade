@@ -8,7 +8,7 @@ block content
         tr
           td(width="15%",class="tableleft") 应用代码
           td
-            input(type="textview",name="ApplicationCode",ng-model='paginationConf.formdata.ApplicationCode',style="width:160px;height:30px",ng-maxlength='50',required)
+            input(type="textview",name="ApplicationCode",ng-model='paginationConf.formdata.ApplicationCode',ng-maxlength='50',required)
             &nbsp&nbsp
             small.error(ng-show="paginationConf.formdata.ApplicationCode.$error.maxlength && paginationConf.formdata.ApplicationCode.$touched") 应用代码最多50位
 
@@ -16,17 +16,17 @@ block content
         tr
           td(width="15%",class="tableleft") 	应用名称 
           td
-            input(type="textview",name="ApplicationName",ng-model="paginationConf.formdata.ApplicationName",style="width:160px;height:30px",ng-maxlength='50',required)
+            input(type="textview",name="ApplicationName",ng-model="paginationConf.formdata.ApplicationName",ng-maxlength='50',required)
             &nbsp&nbsp
             small.error(ng-show="paginationConf.formdata.ApplicationName.$error.maxlength && paginationConf.formdata.ApplicationName.$touched") 应用名称最多50位
 
         tr
           td(class="tableleft") 是否有效
           td
-            input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive",checked)
+            input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive",style="width:15px;height:15px",checked)
             &nbsp有效
             &nbsp&nbsp          
-            input(type="radio",name="IsActive",ng-model="paginationConf.formdata.IsActive",value="0")
+            input(type="radio",name="IsActive",ng-model="paginationConf.formdata.IsActive",style="width:15px;height:15px",value="0")
             &nbsp无效   
 
         tr

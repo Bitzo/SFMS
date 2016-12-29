@@ -2,7 +2,7 @@
  * Created by Administrator on 2016/11/21.
  */
 var accesstokenstring = localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key');
-var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination','ngTreetable']);
+var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination','treeGrid']);
 
 myApp.config(function($routeProvider) {
     $routeProvider.

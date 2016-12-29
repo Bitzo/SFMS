@@ -95,7 +95,7 @@ exports.updateKPI = function (data, callback) {
 
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
-    var sql = 'select count(1) as num from jit_kpiinfo where 1=1 ';
+    var sql = 'select count(1) as num from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_kpiinfo.projectID and jit_projectbaseinfo.IsActive = 1 ';
     if (data !== undefined) {
         for (var key in data) {
             if (data[key] != '' && data[key] !== undefined && key != 'StartTime' && key != 'EndTime') {
@@ -103,8 +103,8 @@ exports.countQuery = function (data, callback) {
             }
         }
     }
-    if (data.StartTime != '') sql += "and CreateTime > '" + data.StartTime + "' ";
-    if (data.EndTime != '') sql += "and CreateTime < '" + data.EndTime + "' ";
+    if (data.StartTime != '') sql += "and jit_kpiinfo.CreateTime > '" + data.StartTime + "' ";
+    if (data.EndTime != '') sql += "and jit_kpiinfo.CreateTime < '" + data.EndTime + "' ";
 
     logger.writeInfo('KPI查询统计：' + sql);
 
@@ -168,25 +168,41 @@ exports.queryKPI = function (data, callback) {
 
 //KPI审核
 exports.checkKPI = function (data, callback) {
-    var time = moment().format('YYYY-MM-DD HH:mm:ss'),
-        sql = '';
+    // var time = moment().format('YYYY-MM-DD HH:mm:ss'),
+    //     sql = '';
+    //
+    // for(var i in data) {
+    //     sql += 'update jit_kpiinfo set';
+    //     var update_sql = '';
+    //     for(var key in data[i]) {
+    //         if(key != 'ID') {
+    //             if(update_sql.length == 0) {
+    //                 update_sql += ' ' + key + " = '" + data[i][key] +"'";
+    //             } else {
+    //                 update_sql += ", " + key + " = '" + data[i][key] +"'";
+    //             }
+    //         }
+    //     }
+    //     sql += update_sql + ", CheckTime = '" + time + "'";
+    //     sql += ' where ID = ' + data[i].ID;
+    //     sql += ';'
+    // }
 
-    for(var i in data) {
-        sql += 'update jit_kpiinfo set';
-        var update_sql = '';
-        for(var key in data[i]) {
-            if(key != 'ID') {
-                if(update_sql.length == 0) {
-                    update_sql += ' ' + key + " = '" + data[i][key] +"'";
-                } else {
-                    update_sql += ", " + key + " = '" + data[i][key] +"'";
-                }
+    var time = moment().format('YYYY-MM-DD HH:mm:ss'),
+        sql = 'update jit_kpiinfo set',
+        update_sql = '';
+
+    for(var key in data) {
+        if(key != 'ID') {
+            if(update_sql.length == 0) {
+                update_sql += ' ' + key + " = '" + data[key] +"'";
+            } else {
+                update_sql += ", " + key + " = '" + data[key] +"'";
             }
         }
-        sql += update_sql + ", CheckTime = '" + time + "'";
-        sql += ' where ID = ' + data[i].ID;
-        sql += ';'
     }
+    sql += update_sql + ", CheckTime = '" + time + "'";
+    sql += ' where ID = ' + data.ID;
 
     logger.writeInfo('审核KPI： ' + sql);
 
@@ -202,20 +218,21 @@ exports.checkKPI = function (data, callback) {
                 callback(true, '修改失败');
                 return;
             }
-            var status = [];
-            logger.writeInfo(data);
-            if (results.length > 1) {
-                for(var i in results) {
-                    status[i] = {};
-                    status[i].ID = data[i].ID;
-                    status[i].isSuccess = results[i].affectedRows?true:false;
-                }
-            } else {
-                status[0] = {};
-                status[0].ID = data[0].ID;
-                status[0].isSuccess = results.affectedRows?true:false;
-            }
-            callback(false, status);
+            // var status = [];
+            // logger.writeInfo(data);
+            // if (results.length > 1) {
+            //     for(var i in results) {
+            //         status[i] = {};
+            //         status[i].ID = data[i].ID;
+            //         status[i].isSuccess = results[i].affectedRows?true:false;
+            //     }
+            // } else {
+            //     status[0] = {};
+            //     status[0].ID = data[0].ID;
+            //     status[0].isSuccess = results.affectedRows?true:false;
+            // }
+            // callback(false, status);
+            callback(false, results);
             connection.release();
         });
     });

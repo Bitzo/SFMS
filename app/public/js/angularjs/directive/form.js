@@ -31,8 +31,6 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
                 toCharColArr.forEach(function(o){
                     scope.conf.formdata[o]+='';    
                 });
-                scope.formdata.ApplicationID='1';
-
             });
             scope.submit=function(){
 

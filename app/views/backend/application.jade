@@ -6,7 +6,7 @@ block content
         span(style='font-size: 24px;') 应用管理
         div.buttons.pull-right
           label.form-group.my-form-group 应用名称：
-            jason-select.tip2(style="width:120px;height:34px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
+            jason-select(style="width:120px;height:34px;" ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
                             i.icon.icon-search   查询

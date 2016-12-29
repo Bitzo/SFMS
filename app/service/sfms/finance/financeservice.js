@@ -60,13 +60,14 @@ exports.queryFinance = function (data, callback) {
 //财务查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
+        'jit_financeinfo.ID': data.ID,
         'Username': data.Username,
         'InOutType': data.InOutType,
         'FIType': data.FIType,
         'FIStatus': data.FIStatus,
         'startTime': data.startTime,
         'endTime': data.endTime,
-        'IsActive': 1
+        'jit_financeinfo.IsActive': 1
     }
     financeDAL.countQuery(queryData, function (err, results) {
         if (err) {
@@ -80,6 +81,12 @@ exports.countQuery = function (data, callback) {
 
 //财务审核
 exports.checkFinance = function (data, callback) {
+    data = {
+        ID: data.ID,
+        FIStatu: data.FIStatu,
+        CheckUser: data.CheckUser,
+        Remark: data.Remark
+    }
     financeDAL.checkFinance(data, function (err, results) {
         if (err) {
             callback(true, results);
@@ -102,7 +109,6 @@ exports.queryFinanceForCheck = function (ID, callback) {
             return;
         }
         logger.writeInfo('查询财务状态');
-        console.log(results)
         if (results!==undefined && results.length>0 && results.length == ID.length) {
             var t = 0;
             for (var i in results) {

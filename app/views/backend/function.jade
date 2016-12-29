@@ -1,30 +1,4 @@
-link(rel="stylesheet",href="/css/treetable/jquery.treetable.theme.default.css",style="text/css")
-link(rel="stylesheet",href="/css/treetable/jquery.treetable.css",style="text/css")
-link(rel="stylesheet",href="css/backend/role.css")
-script(type="text/javascript" src="js/angularjs/directive/angular-treetable.js")
-script(type="text/javascript" src="/bower_components/jquery/dist/jquery.treetable.js")
 block content
-    script(type="text/ng-template" id="tree_node")
-        tr(tt-node is-branch="node.type=='folder'")
-            td
-                span(ng-bind="node.name")
-            td(ng-bind="node.FunctionCode")
-            td(ng-bind="node.Memo")
-            td
-                a(href='#/backend/functionEdit/?FunctionID={{node.FunctionID}}' )
-                    i.icon.icon-edit 编辑
-                a(ng-click="remove($index,'/backendfunc')")
-                    i.icon.icon-trash 删除
-                a(href='#/backend/functionAdd/')
-                    i.icon.icon-trash 增加
-
-    table(tt-table tt-params="expanded_params")
-        thead
-            tr
-                th 应用/功能点名称
-                th 功能点号
-                th 备注
-                th 操作
-        tbody
+     tree-grid(tree-data="tree_data" col_defs='col_defs')
 
     

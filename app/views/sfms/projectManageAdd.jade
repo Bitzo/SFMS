@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
+  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="selectController")
     span 
       h2 项目新增
     form(method="post",name="appinfo" )
@@ -8,13 +8,13 @@ block content
         tr
           td(width="15%",class="tableleft") 项目负责人
           td
-            jason-select.form-control(placeholder='用户名'  style="width:160px;height:34px;" ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
+            jason-select.input( ng-model='formdata.ProjectManageID' source='/backuser' stext='UserName' svalue='AccountID')
 
            
         tr
           td(width="15%",class="tableleft") 项目名称
           td
-            input(type="textview",name="projectName",ng-model="formdata.ProjectName",ng-maxlength='50',style="width:160px;height:30px")
+            input(type="textview",name="projectName",ng-model="formdata.ProjectName",ng-maxlength='50',)
             &nbsp&nbsp
             small.error(ng-show="formdata.ProjectName.$error.maxlength && formdata.ProjectName.$touched") 应用名称最多50位
 
@@ -22,52 +22,67 @@ block content
           td(width="15%",class="tableleft") 项目成员 
           td
             table.table-bordered.table-hover
-             thead 
-                tr
-                  td(style="width:160px;height:30px") 成员职责
-                  td(style="width:160px;height:30px") 成员姓名
-                  td(style="width:80px;height:30px") 成员账号
-                  td(style="width:80px;height:30px") 操作
-             tbody
-                tr(ng-repeat="a in formdata.data")
-                  td(ng-model="formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
-                  td(ng-model="formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
-                  td(ng-model="formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
-                  td 
-                    button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
-
-                tr 
-                  td
-                    input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:160px;height:34px")
-                  td
-                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='UserName' svalue='AccountID')
-                  td
-                    jason-select.form-control( style="width:120px;height:30px;" ng-model='user.userID' source='/backuser' stext='AccountID' svalue='AccountID')
-                  td 
-                    button(ng-click="addUser(user)" style="width:80px;height:34px") 添加
+              tbody 
+                  tr
+                    td(style="width:150px;height:30px") 成员职责
+                    td(style="width:150px;height:30px") 成员姓名
+                    td(style="width:80px;height:30px") 成员账号
+                    td(style="width:80px;height:30px") 操作
+              tbody
+                  tr(ng-repeat="a in formdata.data")
+                    td(ng-model="formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
+                    td(ng-model="formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
+                    td(ng-model="formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
+                    td 
+                      button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
+                  tr 
+                    td
+                      input(type="textview",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
+                    td
+                      select(ng-model='user.userIndex' ng-change= "userChanged()") 
+                        option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}
+                    td
+                      input(ng-model='user.userID')  
+                    td 
+                      button(ng-click="addUser(user)" style="width:80px;height:34px") 添加
 
 
 
         tr
           td(width="15%",class="tableleft") 项目截止时间
           td
-            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",ng-maxlength='50',style="width:160px;height:30px")
-            &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectEndTime.$error.maxlength && formdata.ProjectEndTime.$touched") 应用名称最多50位
-        
+            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",)
+           
         tr
           td(width="15%",class="tableleft") 项目经费预算
           td
-            input(type="number",name="projectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='50',style="width:160px;height:30px")
+            input(type="number",name="projectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='10',)
             &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 应用名称最多50位
+            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 预算最多50位
+            
+        tr
+          td(width="15%",class="tableleft") 项目进度
+          td
+            input(type="textview",name="projectPrice",ng-model="formdata.ProjectTimeLine",ng-maxlength='10')
+            &nbsp&nbsp
+            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 进度最多10位
+        
+        tr
+          td(width="15%",class="tableleft") 项目状态
+          td
+             input(type="radio",name="IsActive",value="结项",ng-model='formdata.ProjectStatus',checked,style="width:15px;height:15px")
+             &nbsp结项
+             &nbsp&nbsp          
+             input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="待完成",style="width:15px;height:15px")
+             &nbsp待完成
+      
         
         tr
           td(width="15%",class="tableleft") 项目描述 
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.ProjectDesc',ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectDesc.$error.maxlength && formdata.ProjectDesc.$touched") 备注最多200位
+            small.error(ng-show="formdata.ProjectDesc.$error.maxlength && formdata.ProjectDesc.$touched") 描述最多200位
 
         tr
           td(class="tableleft")

@@ -95,7 +95,7 @@ exports.updateFinance = function (data, callback) {
 
 //财务查询数据量统计
 exports.countQuery = function (data, callback) {
-    var sql = 'select count(1) as num from jit_financeinfo where 1=1 ';
+    var sql = 'select count(1) as num from jit_financeinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_financeinfo.projectID and jit_projectbaseinfo.IsActive = 1 ';
 
     if (data !== undefined) {
         for (var key in data) {
@@ -104,8 +104,8 @@ exports.countQuery = function (data, callback) {
             }
         }
     }
-    if (data.startTime != '') sql += "and CreateTime > '" + data.startTime + "' ";
-    if (data.endTime != '') sql += "and CreateTime < '" + data.endTime + "' ";
+    if (data.startTime != '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
+    if (data.endTime != '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
 
     logger.writeInfo('财务查询统计：' + sql);
 
@@ -130,7 +130,7 @@ exports.countQuery = function (data, callback) {
 
 //财务查询
 exports.queryFinance = function (data, callback) {
-    var sql = 'select jit_financeinfo.ID,FIName,FIType,InOutType,FIPrice,ProjectId,ProjectName,UserID,UserName,jit_financeinfo.CreateTime,jit_financeinfo.OperateUser,CheckTime,CheckUser,FIStatu,Remark from jit_financeinfo,jit_projectbaseinfo where 1=1 and jit_financeinfo.IsActive = 1 and jit_projectbaseinfo.ID = jit_financeinfo.ProjectID ',
+    var sql = 'select jit_financeinfo.ID,FIName,FIType,InOutType,FIPrice,ProjectId,ProjectName,UserID,UserName,jit_financeinfo.CreateTime,jit_financeinfo.OperateUser,CheckTime,CheckUser,FIStatu,Remark from jit_financeinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.IsActive = 1 and jit_financeinfo.IsActive = 1 and jit_projectbaseinfo.ID = jit_financeinfo.ProjectID ',
         page = data.page || 1,
         num = data.pageNum;
 
@@ -167,25 +167,40 @@ exports.queryFinance = function (data, callback) {
 }
 //财务审核
 exports.checkFinance = function (data, callback) {
-    var time = moment().format('YYYY-MM-DD HH:mm:ss'),
-        sql = '';
+    // var time = moment().format('YYYY-MM-DD HH:mm:ss'),
+    //     sql = '';
 
-    for(var i in data) {
-        sql += 'update jit_financeinfo set';
-        var update_sql = '';
-        for(var key in data[i]) {
-            if(key != 'ID') {
-                if(update_sql.length == 0) {
-                    update_sql += ' ' + key + " = '" + data[i][key] +"'";
-                } else {
-                    update_sql += ", " + key + " = '" + data[i][key] +"'";
-                }
+    // for(var i in data) {
+    //     sql += 'update jit_financeinfo set';
+    //     var update_sql = '';
+    //     for(var key in data[i]) {
+    //         if(key != 'ID') {
+    //             if(update_sql.length == 0) {
+    //                 update_sql += ' ' + key + " = '" + data[i][key] +"'";
+    //             } else {
+    //                 update_sql += ", " + key + " = '" + data[i][key] +"'";
+    //             }
+    //         }
+    //     }
+    //     sql += update_sql + ", CheckTime = '" + time + "'";
+    //     sql += ' where ID = ' + data[i].ID;
+    //     sql += ';'
+    // }
+    var time = moment().format('YYYY-MM-DD HH:mm:ss'),
+        sql = 'update jit_financeinfo set',
+        update_sql = '';
+
+    for(var key in data) {
+        if(key != 'ID') {
+            if(update_sql.length == 0) {
+                update_sql += ' ' + key + " = '" + data[key] +"'";
+            } else {
+                update_sql += ", " + key + " = '" + data[key] +"'";
             }
         }
-        sql += update_sql + ", CheckTime = '" + time + "'";
-        sql += ' where ID = ' + data[i].ID;
-        sql += ';'
     }
+    sql += update_sql + ", CheckTime = '" + time + "'";
+    sql += ' where ID = ' + data.ID;
 
     logger.writeInfo('审核财务： ' + sql);
 
@@ -201,20 +216,21 @@ exports.checkFinance = function (data, callback) {
                 callback(true, '修改失败');
                 return;
             }
-            var status = [];
-            logger.writeInfo(data);
-            if (results.length > 1) {
-                for(var i in results) {
-                    status[i] = {};
-                    status[i].ID = data[i].ID;
-                    status[i].isSuccess = results[i].affectedRows?true:false;
-                }
-            } else {
-                status[0] = {};
-                status[0].ID = data[0].ID;
-                status[0].isSuccess = results.affectedRows?true:false;
-            }
-            callback(false, status);
+            // var status = [];
+            // logger.writeInfo(data);
+            // if (results.length > 1) {
+            //     for(var i in results) {
+            //         status[i] = {};
+            //         status[i].ID = data[i].ID;
+            //         status[i].isSuccess = results[i].affectedRows?true:false;
+            //     }
+            // } else {
+            //     status[0] = {};
+            //     status[0].ID = data[0].ID;
+            //     status[0].isSuccess = results.affectedRows?true:false;
+            // }
+            // callback(false, status);
+            callback(false, results);
             connection.release();
         });
     });
