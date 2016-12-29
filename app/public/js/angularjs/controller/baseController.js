@@ -93,6 +93,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
             if(response.isSuccess){
                 alert(response.msg);
                 $scope.datas.push($scope.formdata);
+                $scope.formdata={};
             }else{
                 alert(response.msg);
             }

@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/12/14.
  */
-myApp.controller('sfmsIndexController', function($scope, $http,$q,baseService) {
+myApp.controller('selectIndexController', function($scope, $http,$q,baseService) {
        //应用名称
         $http({
             method:'get',
