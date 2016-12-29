@@ -40,8 +40,9 @@ block content
                   td
                     input(type="textview",name="projectPrice",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
                   td
-                    select(ng-model='user.userIndex' ng-change= "userChanged()") 
-                      option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}
+                    jason-select.input( ng-model='user.userIndex' source='/backuser' stext='UserName' svalue='AccountID')
+                    //select(ng-model='user.userIndex' ng-change= "userChanged()")
+                      //option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}
                   td
                     input(ng-model='user.userID')  
                   td 
