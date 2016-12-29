@@ -107,13 +107,10 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
     };
 
 
-    //获取编辑信息
-
-
     //编辑完成提交信息
 
+    var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
-        var formdata=$scope.paginationConf.formdata={};
         console.log(formdata);
         console.log(action);
         $http({
@@ -133,7 +130,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
             }else{
                 alert(response.msg);
             }
-
         }).
         error(function(response) {
             console.log('提交失败');
@@ -143,6 +139,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
             console.log('no');
         });
     };
+
 
 
     //删除
@@ -284,26 +281,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,ngTreet
                 });
             }
     
-     //新增项目管理中的用户列表
-    // $scope.formdata.data=[];
-    // $scope.addUser = function(item){
-    //     console.log('addUser');
-    //     console.log(item);
-    //     if(item.duty) {
-    //        $scope.formdata.data.push($scope.user);
-    //        $scope.user={};
-    //     }else{
-    //         alert('请填写相关信息')
-    //     }
-        
-    // }
-    //重置项目管理中的用户列表
-    // $scope.resetUser = function(item){
-    //     console.log(item.$index);
-    //     $scope.formdata.data.splice(item.$index,1);
-    // }
-   
-
 
     //删除项目模态框中的用户
     $scope.d={};
