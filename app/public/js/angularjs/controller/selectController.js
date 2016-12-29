@@ -75,7 +75,6 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
 
     }
 
-    
             //项目成员新增姓名
             $http({
                 method:'get',
