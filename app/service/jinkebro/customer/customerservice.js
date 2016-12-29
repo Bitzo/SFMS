@@ -182,6 +182,7 @@ Customer.prototype.query = function(data,callback)
 }
 
 
+
 // //用户添加的时候，订阅的时候的增加数据
 Customer.prototype.addSubscibe=function(token,msg,callback)
 {
@@ -192,7 +193,6 @@ Customer.prototype.addSubscibe=function(token,msg,callback)
 	//获取用户的信息
 	 wechat.getCustomerInfo(token,msg.FromUserName,function(info)
                 {
-                    console.log(info);
                     var data = {
                         'WechatUserCode':info.openid
                     };
@@ -221,8 +221,7 @@ Customer.prototype.addSubscibe=function(token,msg,callback)
                          var queryInfo = {
                             'WechatUserCode':info.openid
                         };
-                        console.log(queryInfo);
-
+                       
                          //开始查询是否存在用户
                          me.query(queryInfo,function(err,resultInfo)
                          {
@@ -236,8 +235,10 @@ Customer.prototype.addSubscibe=function(token,msg,callback)
 
                             if(resultInfo != undefined && resultInfo.length != 0)
                             {
-                                console.log("用户名已经存在");
+                               // console.log("用户名已经存在");
                                 //当用户名存在做更新操作
+                                data.CustomerID = resultInfo[0].CustomerID;
+
                                 me.update(data,function(err,updataInfo)
                                 {
                                     if(err)
@@ -286,40 +287,55 @@ Customer.prototype.unsubscribe =function(token,msg,callback)
 
     //用类中的函数
     me = this;
-    console.log(me.createTime);
-    console.log(token);
     wechat.getCustomerInfo(token,msg.FromUserName,function(info)
     {
         console.log(me.createTime);
         var data = {
             'WechatUserCode':info.openid
         }
-        data.IsActive = 0;
-
-        //直接更新
-        me.update(data,function(err,updataInfo)
+       
+        me.query(data,function(err,resultInfo)
         {
             if(err)
             {
-                console.log("更新失败");
-                var errinfo = '取消关注时更新失败';
+                console.log("查询失败");
+                var errinfo = '在取消用户的时候查询失败';
                 callback(true,errinfo);
-                return;
+                return ;
             }
 
-            if(updataInfo != undefined &&updataInfo.affectedRows !=0)
+            if(resultInfo != undefined && resultInfo.length != 0)
             {
-                console.log("更新成功");
-                callback(false);
-                return;
+                 //当用户名存在做更新操作
+                 data.CustomerID = resultInfo[0].CustomerID;
+                 data.IsActive = 0;
+        
+                 me.update(data,function(err,updataInfo)
+                    {
+                        if(err)
+                         {
+                            console.log("更新失败");
+                            var errinfo = '取消关注时更新失败';
+                            callback(true,errinfo);
+                            return;
+                         }
+
+                        if(updataInfo != undefined &&updataInfo.affectedRows !=0)
+                         {
+                              console.log("更新成功");
+                              callback(false,'');
+                             return;
+                         }
+                      });
             }
-        });
     });
+ });
 }
 
 //添加获取地址的模块
 Customer.prototype.addLocation = function(msg,callback)
 {
+    me = this;
     //获取地址事件者的openid
         var locationData = {
             'WechatUserCode':msg.FromUserName,
@@ -327,90 +343,137 @@ Customer.prototype.addLocation = function(msg,callback)
             'Lat':msg.Latitude
         }
 
-        this.update(locationData,function(err,updataInfo)
+        var queryData = {
+            'WechatUserCode' : msg.FromUserName
+        }
+
+        this.query(queryData,function(err,queryInfo)
         {
             if(err)
             {
-                console.log("更新失败");
-                var errinfo = "获取地址时出错";
+                console.log("查询失败");
+                var errinfo = '在获取地址的时候查询失败';
                 callback(true,errinfo);
-                return;
+                return ;
             }
-            if(updataInfo != undefined &&updataInfo.affectedRows !=0)
+
+            if(queryInfo != undefined && queryInfo.length != 0)
             {
-                console.log("更新成功");
-                callback(false);
-                return;
+                locationData.CustomerID = queryInfo[0].CustomerID;
+                me.update(locationData,function(err,updataInfo)
+                {
+                        if(err)
+                        {
+                            console.log("更新失败");
+                            var errinfo = "获取地址时出错";
+                            callback(true,errinfo);
+                            return;
+                        }
+                        if(updataInfo != undefined &&updataInfo.affectedRows !=0)
+                        {
+                            console.log("更新成功");
+                            callback(false);
+                            return;
+                         }
+                });
             }
         });
+        
 }
 
 //关于添加微信的所有列表
 Customer.prototype.addAllList = function(token,callback)
 {
+    //用来记录总共有多少的openi   
+    var k = 0;
+
     me = this;
     //获取所有的列表
     wechat.getCustomerList(token,function(infoList)
     {
+        var list = new Array();
         for(var key in infoList.data.openid)
         {
-            //查询是否存在这个微信号
-            var queryInfo = {
-                'WechatUserCode':infoList.data.openid[key]
-            };
+            list[k] = infoList.data.openid[key];
+            k++;
+        }
 
-            //查询用户是否出错
-            me.query(queryInfo,function(err,resultInfo)
+        for(var i = 0;i < k;++i)
+        {
+              var queryInfo = {
+                'WechatUserCode': list[i]
+            };
+           
+              me.addListFunction(token,queryInfo,function(err,result)
+              {
+                if(err)
+                {
+                    callback(true,result);
+                    return ;
+                }
+                callback(false,result);
+
+              });
+        }
+            
+     });
+ }
+
+//1、当获取所有的列表的时候，for的循环的时候，解决异步问题
+//2、具体的方法：查询openid，如果存在就不填加信息，，如果不存在就添加用户的信息
+Customer.prototype.addListFunction = function(token,data,callback)
+{
+         me = this;
+         this.query(data,function(err,resultInfo)
             {
 
                 if(err)
                 {
-                    console.log("查询失败sadsadsads");
                     var errinfo = '在添加用户的时候查询失败';
                     callback(true,errinfo);
                     return ;
                 }
 
+                 //console.log(resultInfo);
+                 
                 if(resultInfo != undefined && resultInfo.length != 0)
                 {
-                    console.log("用户名已经存在sdasdsadsa");
                     var errinfo = '用户名已经存在，不需要重复插入';
                     callback(true,errinfo);
                     return;
                 }
-                else{
-                    console.log("用户名不存在"+queryInfo.WechatUserCode);
-                wechat.getCustomerInfo(token,infoList.data.openid[key],function(info)
-                {
-                    var data = {
-                        'WechatUserCode':info.openid
-                    };
+                  else
+                  {
+                    wechat.getCustomerInfo(token,data.WechatUserCode,function(info)
+                    {
+                        var insertData = {
+                            'WechatUserCode':info.openid
+                        };
                         //获取用户的信息
-                        data.Sex=info.sex;
-                        data.NickName=info.nickname;
-                        data.IsActive = 1;
+                        insertData.Sex=info.sex;
+                        insertData.NickName=info.nickname;
+                        insertData.IsActive = 1;
                         if(info.city.length !=0)
                         {
-                            data.City = info.city;
+                            insertData.City = info.city;
                         }                      
                         if(info.province.length !=0)
                         {
-                            data.Province = info.province; 
+                            insertData.Province = info.province; 
                         }
                         if(info.country.length !=0)
                         {
-                            data.Country=info.country;
+                            insertData.Country=info.country;
                         }
                         if(info.remark.length !=0)
                         {
-                            data.Memo = info.remark;
+                            insertData.Memo = info.remark;
                         }
 
-                        //当用户不存在的时候做插入的操作
-                       me.insert(data,function(err,insertInfo)
+                        me.insert(insertData,function(err,insertInfo)
+                        {
+                                if(err)
                                 {
-                                   if(err)
-                                   {
                                     console.log("插入失败");
                                     var errinfo = '当插入客户信息失败';
                                     callback(true,errinfo);
@@ -419,15 +482,15 @@ Customer.prototype.addAllList = function(token,callback)
                                 if(insertInfo != undefined &&insertInfo.affectedRows !=0)
                                 {
                                     console.log("插入成功");
-                                    callback(false,'');
+                                    callback(false,'获取所有列表的填补成功');
                                     return;
                                 }
-                         });
-                });
-            };
-             });
-         }
-     });
- }
+                        });
+                        
+                    
+               });
+    }
+});
+}
 
 module.exports = new Customer();

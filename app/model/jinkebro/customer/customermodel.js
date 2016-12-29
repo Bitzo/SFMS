@@ -20,6 +20,6 @@ var customermodel = {
     Sex: 0,
     NickName: '',
     MemberLevelID: 0,
-    PK: 'WechatUserCode'
+    PK: 'CustomerID'
 }
 module.exports = customermodel;
