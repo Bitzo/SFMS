@@ -1,30 +1,28 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="baseController")
+  div.container-fluid(action='/backmenu' conf='paginationConf')
     span 
       h2 菜单新增
-    form(method="post",name="menuinfo" )
+    form(method="post",name="menuInfo" )
      table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") 	菜单名称 
+          td(width="15%",class="tableleft") 菜单名称 
           td
             input(type="textview",name="MenuName",ng-model='formdata.MenuName',ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.MenuName.$error.maxlength && paginationConf.formdata.MenuName.$touched") 菜单名称最多50位
+            small.error(ng-if="menuInfo.MenuName.$error.maxlength && menuInfo.MenuName.$touched") 菜单名称最多50位
 
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationID',source='/app', stext='ApplicationName',svalue='ID',required)
-            &nbsp&nbsp
-            small.error(ng-show="formdata.ApplicationName.$error.maxlength && formdata.ApplicationName.$touched") 应用名称最多50位
-            
+            jason-select.input(placeholder='应用名称' name='ApplicationID' ng-model='formdata.ApplicationID',source='/app', stext='ApplicationName',svalue='ID',required)
+      
         tr
           td(width="15%",class="tableleft") 	对应的父级名称
           td
             jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="formdata.ParentID", source='/backmenu/parent', stext='ParentMenuName' svalue='ParentID',ng-maxlength='11',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级名称最多11位
+            small.error(ng-if="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级名称最多11位
 
 
         tr
@@ -51,30 +49,30 @@ block content
         tr
           td(width="15%",class="tableleft")  对应的菜单排序顺序  
           td
-            input(type="number",name="SortIndex",ng-model='formdata.SortIndex',ng-maxlength='11')
+            input(type="number",name="SortIndex",ng-model='formdata.SortIndex',ng-maxlength='11',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.SortIndex.$error.maxlength && formdata.SortIndex.$touched") 对应的菜单排序顺序最多11位
+            small.error(ng-if="menuInfo.SortIndex.$error.maxlength && menuInfo.SortIndex.$touched") 对应的菜单排序顺序最多11位
           
         tr
           td(width="15%",class="tableleft") 	对应菜单的icon路径 
           td
-            input(type="textview",name="IconPath",ng-model='formdata.IconPath',ng-maxlength='100')
+            input(type="textview",name="IconPath",ng-model='formdata.IconPath',ng-maxlength='100',required)
             &nbsp&nbsp 
-            small.error(ng-show="formdata.IconPath.$error.maxlength && formdata.IconPath.$touched") 对应菜单的icon路径最多100位
+            small.error(ng-if="menuInfo.IconPath.$error.maxlength && menuInfo.IconPath.$touched") 对应菜单的icon路径最多100位
             
         tr
           td(width="15%",class="tableleft") 菜单对应的url 
           td
-            input(type="textview",ng-model='formdata.Url',ng-maxlength='50')
+            input(type="textview",name='Url',ng-model='formdata.Url',ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.Url.$error.maxlength && formdata.Url.$touched") 菜单对应的url最多50位
+            small.error(ng-if="menuInfo.Url.$error.maxlength && menuInfo.Url.$touched") 菜单对应的url最多50位
            
           
         tr
           td(width="15%",class="tableleft") 备注(可选) 
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Memo',ng-maxlength='200')
-            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 备注最多200位
+            small.error(ng-if="menuInfo.Memo.$error.maxlength && menuInfo.Memo.$touched") 备注最多200位
 
 
         tr

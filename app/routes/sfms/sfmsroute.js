@@ -71,6 +71,24 @@ router.get('/projectManageAdd', function(req, res, next) {
 router.get('/projectManageEdit', function(req, res, next) {
         res.render('sfms/projectManageEdit', { title: 'Hi sfms' });
 });
+router.get('/projectRemark', function(req, res, next) {
+        res.render('sfms/projectRemark', { title: 'Hi sfms' });
+});
+router.get('/projectRemarkAdd', function(req, res, next) {
+        res.render('sfms/projectRemarkAdd', { title: 'Hi sfms' });
+});
+router.get('/projectRemarkEdit', function(req, res, next) {
+        res.render('sfms/projectRemarkEdit', { title: 'Hi sfms' });
+});
+router.get('/projectManageRemark', function(req, res, next) {
+        res.render('sfms/projectManageRemark', { title: 'Hi sfms' });
+});
+router.get('/projectManageRemarkAdd', function(req, res, next) {
+        res.render('sfms/projectManageRemarkAdd', { title: 'Hi sfms' });
+});
+router.get('/projectManageRemarkEdit', function(req, res, next) {
+        res.render('sfms/projectManageRemarkEdit', { title: 'Hi sfms' });
+});
 router.get('/kpi', function(req, res, next) {
         res.render('sfms/kpi', { title: 'Hi sfms' });
 });

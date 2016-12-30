@@ -1,9 +1,9 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid
+  div.container-fluid(ng-controller="selectController")
     span 
       h2 绩效编辑
-    jason-form(method="post",source='/sfms/api/kpi/person' conf='paginationConf' tocc="KPIName,KPIType,UserID")
+    jason-form(method="post",source='/sfms/api/kpi/person' name='kpiEdit' conf='paginationConf' tocc="KPIName,KPIType,UserID")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
@@ -14,13 +14,18 @@ block content
           td(width="15%",class="tableleft") 绩效类型
           td
             jason-select.input( ng-model='paginationConf.formdata.KPIType' ource='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
-            
+
+        tr
+          td(width="15%",class="tableleft") 所属项目
+          td
+            jason-select.input( ng-model='paginationConf.formdata.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+
         tr
           td(width="15%",class="tableleft") 绩效分
           td
-            input(type="number",name="projectEndTime",ng-model="paginationConf.formdata.KPIScore",ng-maxlength='10',style="width:160px;height:30px",required)
+            input(type="number",name="KPIScore",ng-model="paginationConf.formdata.KPIScore",ng-maxlength='10',required)
             &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.projectEndTime.$error.maxlength && paginationConf.formdata.projectEndTime.$touched") 绩效分最多10位
+            small.error(ng-if="kpiEdit.KPIScore.$error.maxlength && kpiEdit.KPIScore.$touched") 绩效分最多10位
         
         tr
           td(width="15%",class="tableleft") 用户名
@@ -30,9 +35,9 @@ block content
         tr
           td(width="15%",class="tableleft") 绩效备注
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required)
+            textarea(type="textview",rows="5",cols="30",name="Remark",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required)
             &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 备注最多200位
+            small.error(ng-if="kpiEdit.Remark.$error.maxlength && kpiEdit.Remark.$touched") 备注最多200位
 
         tr
           td(class="tableleft")

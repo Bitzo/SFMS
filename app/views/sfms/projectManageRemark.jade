@@ -1,0 +1,44 @@
+link(rel='stylesheet', href='css/backend/backend.css')   
+link(rel='stylesheet')   
+block content
+  jason-pagecontent(action='/sfms/api/projectremark' conf='paginationConf')                        
+    div.page-content
+      ng-form.form-inline
+        span(style='font-size: 24px;') 项目备注查看(管理)
+        div.buttons.pull-right
+          label.form-group.my-form-group 项目名称: 
+            jason-select.select.ext(data-max-options='2' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+          label.form-group.my-form-group
+            a.btn.btn-sm.btn-primary(ng-click='search()')
+              i.icon.icon-search   查询
+            a.btn.btn-sm.btn-success(ng-href='#/sfms/projectManageRemarkAdd')
+              i.icon.icon-plus  新增备注
+            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
+              i.icon.icon-repeat  刷新
+      hr
+      table.table.table-striped.table-bordered.text-center
+        thead
+          tr
+            th 序号
+            th 项目名称         
+            th 用户名
+            th 项目备注
+            th 备注时间                        
+            th 操作
+        tbody
+          tr(ng-repeat="x in datas") 
+            td {{$index+1}}
+            td {{x.ProjectName}}           
+            td {{x.UserName}}
+            td {{x.Remark}}
+            td {{x.EditTime}}                                                                                                                                                                
+            td
+              a(ng-click="remove($index,'/sfms/api/projectremark')")
+                i.icon.icon-trash 删除
+
+
+            
+      div.pull-right
+        jason-pagination(conf='paginationConf')
+
+

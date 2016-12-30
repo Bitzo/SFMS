@@ -3,14 +3,14 @@ block content
   div.container-fluid
     span 
       h2 应用编辑
-   jason-form(method="post",source='/app' conf='paginationConf')
+   jason-form(method="post",source='/app' name="appEdit" conf='paginationConf')
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用代码
           td
-            input(type="textview",name="ApplicationCode",ng-model='paginationConf.formdata.ApplicationCode',ng-maxlength='50',required)
+            input(type="textview",name="ApplicationCode",ng-model='paginationConf.formdata.ApplicationCode',ng-maxlength='5',required)
             &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.ApplicationCode.$error.maxlength && paginationConf.formdata.ApplicationCode.$touched") 应用代码最多50位
+            small.error(ng-show="appEdit.ApplicationCode.$error.maxlength && appEdit.ApplicationCode.$touched") 应用代码最多50位
 
            
         tr
@@ -18,7 +18,7 @@ block content
           td
             input(type="textview",name="ApplicationName",ng-model="paginationConf.formdata.ApplicationName",ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.ApplicationName.$error.maxlength && paginationConf.formdata.ApplicationName.$touched") 应用名称最多50位
+            small.error(ng-show="appEdit.ApplicationName.$error.maxlength && appEdit.ApplicationName.$touched") 应用名称最多50位
 
         tr
           td(class="tableleft") 是否有效
@@ -34,12 +34,12 @@ block content
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-show="paginationConf.formdata.Memo.$error.maxlength && paginationConf.formdata.Memo.$touched") 备注最多200位
+            small.error(ng-show="appEdit.Memo.$error.maxlength && appEdit.Memo.$touched") 备注最多200位
          
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/app')") 确认修改
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="newEdit(paginationConf.formdata,'/app')") 确认修改
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#backend/application') 返回列表
 

@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 绩效新增
-    form(method="post",name="appinfo" )
+    form(method="post",name="financeAdd" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
@@ -18,9 +18,9 @@ block content
         tr
           td(width="15%",class="tableleft") 绩效分
           td
-            input(type="number",name="projectEndTime",ng-model="formdata.KPIScore",ng-maxlength='10',style="width:160px;height:30px",required)
+            input(type="number",name="KPIScore",ng-model="formdata.KPIScore",ng-maxlength='10',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.projectEndTime.$error.maxlength && formdata.projectEndTime.$touched") 绩效分最多50位
+            small.error(ng-if="financeAdd.KPIScore.$error.maxlength && financeAdd.KPIScore.$touched") 绩效分最多50位
 
         tr
           td(width="15%",class="tableleft") 所属项目
@@ -35,9 +35,9 @@ block content
         tr
           td(width="15%",class="tableleft") 绩效备注
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Remark',ng-maxlength='200',required)
+            textarea(type="textview",rows="5",cols="30",name="Remark",ng-model='formdata.Remark',ng-maxlength='200',required)
             &nbsp&nbsp
-            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 备注最多200位
+            small.error(ng-if="financeAdd.Remark.$error.maxlength && financeAdd.Remark.$touched") 备注最多200位
 
         tr
           td(class="tableleft")

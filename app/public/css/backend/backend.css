@@ -7,15 +7,15 @@
     top: 30px;
     left: 120px;
 }
-.tip{
-    height: 50px;
+jason-select{
+    width:120px;height:34px;
 }
-.tip1{
-    position: fixed;
-    font-size: 2px;
-    height: 1000px;
-    z-index: 10;
+.title{
+    font-size: 24px;
 }
-.tip:hover{
-    color: white;
+.ext{
+    width:120px;height:34px;
+}
+.est{
+     width:90px;height:34px;
 }
