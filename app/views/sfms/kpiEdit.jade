@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid
+  div.container-fluid(ng-controller="selectController")
     span 
       h2 绩效编辑
     jason-form(method="post",source='/sfms/api/kpi/person' name='kpiEdit' conf='paginationConf' tocc="KPIName,KPIType,UserID")
@@ -14,7 +14,12 @@ block content
           td(width="15%",class="tableleft") 绩效类型
           td
             jason-select.input( ng-model='paginationConf.formdata.KPIType' ource='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
-            
+
+        tr
+          td(width="15%",class="tableleft") 所属项目
+          td
+            jason-select.input( ng-model='paginationConf.formdata.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+
         tr
           td(width="15%",class="tableleft") 绩效分
           td

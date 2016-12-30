@@ -15,7 +15,11 @@ block content
           td
             jason-select.input( ng-model='formdata.KPIType' source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
            
-        
+        tr
+          td(width="15%",class="tableleft") 所属项目
+          td
+            jason-select.input( ng-model='formdata.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            
         tr
           td(width="15%",class="tableleft") 绩效分
           td

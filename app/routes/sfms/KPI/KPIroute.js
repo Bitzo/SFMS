@@ -346,6 +346,7 @@ router.get('/person', function (req, res) {
         ProjectID = query.ProjectID || '',
         StartTime = query.StartTime || '',
         EndTime = query.EndTime || '',
+        KPIStatus = query.KPIStatus || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;

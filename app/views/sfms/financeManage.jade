@@ -5,18 +5,16 @@ block content
       ng-form.form-inline
         span.title  财务管理
         div.buttons.pull-right
-          label.form-group.my-form-group 
-            input.form-control.ext(type='date' ng-model='f.startTime')
-          label.form-group.my-form-group 
-            jason-select.ext(placeholder='财务名称' ng-model='f.projectID' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='Category')
-          label.form-group.my-form-group 
-            jason-select.ext(placeholder='财务类型' ng-model='f.ProjectID' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='Category')
-          label.form-group.my-form-group 
-            jason-select.ext(placeholder='收入支出类型' ng-model='f.ProjectID' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='Category')
-          label.form-group.my-form-group 
-            jason-select.ext(placeholder='' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
-          label.form-group.my-form-group 
-            select(placeholder='审核状态' ng-model='f.fiStatus')
+          label.form-group.my-form-group    名称  
+            jason-select.est(placeholder='财务名称' ng-model='f.FIName' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='DictionaryValue')
+          label.form-group.my-form-group   类型  
+            jason-select.est(placeholder='财务类型' ng-model='f.FIType' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='DictionaryValue')
+          label.form-group.my-form-group  收支类型  
+            jason-select.est(placeholder='收入支出类型' ng-model='f.InOutType' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='DictionaryValue')
+          label.form-group.my-form-group   项目  
+            jason-select.est(placeholder='' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+          label.form-group.my-form-group  状态 
+            select.est(placeholder='审核状态' ng-model='f.fiStatus')
               option 待审核
               option 已审核              
               option 全部
