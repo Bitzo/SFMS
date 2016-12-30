@@ -16,7 +16,7 @@ var productmodel = {
     SupplierID : 0,      //SupplierID
     ProductTypeID : 0,   //ProductTypeID
     PK : 'ProductID',
-    snackExpTime: 30000
+    snackExpTime: 1296000 //即15*24*60*60秒
 };
 
 module.exports = productmodel;
