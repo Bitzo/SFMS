@@ -12,6 +12,9 @@ var apiRoute = appRequire('routes/api/apiroute');
 //微信相关
 var weChatRoute = appRequire('routes/api/wechatroute');
 
+//用来测试添加那customer的详细信息
+//var customerInfo = appRequire('views/jinkeBro/wechat/customer.html')
+
 module.exports = function(app) {
     //主站
     app.use('/', backendRoute);
@@ -23,4 +26,10 @@ module.exports = function(app) {
     app.use('/sfms', sfmsRoute);
     //金科小哥子系统
     app.use('/jkbro', jinkeBroRoute);
+
+    // app.get('jkbro/book',function(req,res)
+    // {
+    //     res.set('Content-Type',text)
+    // })
+
 };

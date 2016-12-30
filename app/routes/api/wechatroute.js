@@ -158,25 +158,25 @@ wechat.eventMsg(function(msg) {
         case 'subscribe':  
 
         /*这个部分有点问题：一直解决不了*/
-        // wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
-        // {
-        //     //如果成功  
-        //     if(isSussess)
-        //     {
-        //         //当服务器出错的时候的补过
-        //         wechatCustomer.addAllList(token,function(err,errinfo)
-        //         {
-        //             if(err)
-        //             {
-        //                 console.log(errinfo);
-        //                 return ;
-        //             }
+        wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
+        {
+            //如果成功  
+            if(isSussess)
+            {
+                //当服务器出错的时候的补过
+                wechatCustomer.addAllList(token,function(err,errinfo)
+                {
+                    if(err)
+                    {
+                        console.log(errinfo);
+                        return ;
+                    }
 
-        //             console.log("由服务器导致的错误，添加成功");
-        //             return ;
-        //         });
-        //     }
-        // });
+                    console.log("由服务器导致的错误，添加成功");
+                    return ;
+                });
+            }
+        });
    
         //获取token
         wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)

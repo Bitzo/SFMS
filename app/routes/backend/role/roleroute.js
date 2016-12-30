@@ -174,7 +174,22 @@ router.post('/',function (req, res) {
                 'RoleName': roleName,
                 'IsActive': isActive
             };
-
+            if (data.RoleName.length>50) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '角色名称过长'
+                });
+            }
+            if (data.RoleCode.length>50) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '角色代码过长'
+                });
+            }
             roleservice.addRole(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -323,7 +338,22 @@ router.put('/', function (req, res) {
         'RoleName': roleName,
         'IsActive': isActive
     };
-
+    if (data.RoleName.length>50) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '角色名称过长'
+        });
+    }
+    if (data.RoleCode.length>50) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '角色代码过长'
+        });
+    }
     roleservice.updateRole(data, function (err, results) {
         if (err) {
             res.status(500);
