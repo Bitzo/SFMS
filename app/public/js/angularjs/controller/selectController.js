@@ -87,7 +87,7 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
                 pagesize:10,
                 f:{
                     Category:"dc_cls",
-                    ParentID:$scope.formdata.CollegeID
+                    ParentID:$scope.paginationConf.formdata.CollegeID
                 }
             }
         }).
@@ -166,11 +166,5 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
                     console.log(item.$index);
                     $scope.formdata.data.splice(item.$index,1);
                 }
-
-                
-
-        
-      
-      
 
 })

@@ -30,14 +30,20 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         .success(function (response) {
             $scope.tree_data =response.data;
         });
-
+    $scope.expanding_property = {
+        field: "FunctionName",
+        displayName: "功能名字",
+        sortable: true,
+        filterable: true,
+        cellTemplate: "<input type='checkbox'><i>{{row.branch[expandingProperty.field]}}</i>"
+    };
     $scope.col_defs = [
         {
             field: "FunctionName",
             sortable: true,
             sortingType: "string",
             displayName:"功能名字",
-            cellTemplate: "<input type='checkbox'><strong>{{row.branch[col.field]}}</strong>"
+            cellTemplate: "{{row.branch[col.field]}}</strong>"
         },
         {
             field: "ApplicationID",
