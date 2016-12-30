@@ -256,8 +256,10 @@ $scope.show=function(index,action){
         }).
         success(function(response) {
             console.log(response);
-            $scope.data = response.data.Role;
-            console.log($scope.data);
+            $scope.dataRole = response.data.Role;
+            console.log($scope.dataRole);
+            $scope.dataMenu = response.data.Menu;
+            console.log($scope.dataMenu);
 
         }).
         error(function(response) {
