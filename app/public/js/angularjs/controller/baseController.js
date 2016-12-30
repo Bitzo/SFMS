@@ -227,7 +227,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         success(function(response) {
             console.log(response);
             $scope.data = response.data.Role;
-            console.log($scope.menus);
+            console.log($scope.data);
 
         }).
         error(function(response) {

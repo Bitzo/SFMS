@@ -1,6 +1,7 @@
 var express=require('express');
 var fs = require('fs');
 var router=express.Router();
+var url = require("url");
 //添加客户时的路由
 var customer = appRequire('routes/jinkebro/customer/customerroute');
 
@@ -9,9 +10,13 @@ var customer = appRequire('routes/jinkebro/customer/customerroute');
 //金科小哥主站点
 
 router.get('/', function(req, res, next) {
-        res.render('sfms', { title: 'Hi jkbro' });
-
+	res.render('sfms', { title: 'Hi jkbro' });
 });
+
+router.get('/jitinfo', function(req, res, next) {
+    res.render('jinkeBro/jitinfo', { title: 'Hi jkbro' });
+});
+
 //管理产品类别
 //router.use('/proType', proTyperoute);
 
@@ -36,5 +41,9 @@ router.get('/book',function(req,res)
 	
 	//res.render('jinkeBro/wechat/customer.html',{title:'Hi jkbro'});
 });
-module.exports=router;
+
+
+
+
+module.exports = router;
 

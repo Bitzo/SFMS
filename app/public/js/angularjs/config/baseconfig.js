@@ -134,6 +134,18 @@ myApp.config(function($routeProvider) {
         templateUrl: '/sfms/signPersonal?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
+    when('/jinkeBro/jitorder', {
+        templateUrl: '/jinkeBro/jitorder',
+        //controller: 'HomeController'
+    }).
+    when('/jinkeBro/jitgoods', {
+        templateUrl: '/jinkeBro/jitgoods',
+        //controller: 'HomeController'
+    }).
+    when('/jinkeBro/jitinfo', {
+        templateUrl: '/jinkeBro/jitinfo',
+        //controller: 'HomeController'
+    }).
     otherwise({
         redirectTo: '/'
     });
