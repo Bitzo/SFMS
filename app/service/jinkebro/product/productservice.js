@@ -14,6 +14,7 @@ var Product = function () {
 
 }
 
+//新增商品
 Product.prototype.insertProduct = function (data, callback) {
     productDAL.insertProduct(data, function (err, result) {
         if (err) {
@@ -25,6 +26,7 @@ Product.prototype.insertProduct = function (data, callback) {
     });
 }
 
+//编辑商品信息
 Product.prototype.updateProduct = function (data, callback) {
     productDAL.updateProduct(data, function (err, result) {
         if (err) {
@@ -36,6 +38,7 @@ Product.prototype.updateProduct = function (data, callback) {
     });
 }
 
+//查询商品信息
 Product.prototype.queryProducts = function (data, callback) {
 
     var formData = {
@@ -75,4 +78,5 @@ Product.prototype.getProCountByID = function (data, callback) {
         callback(false, result);
     });
 }
+
 module.exports = new Product();
