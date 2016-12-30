@@ -20,12 +20,12 @@ var logger = appRequire("util/loghelper").helper;
 //项目备注信息新增
 router.post('/', function (req, res) {
     var query = req.body.formdata,
-        projectID = query.projectID,
+        projectID = query.ProjectID,
         userID = req.query.jitkey,
-        remark = query.remark,
+        remark = query.Remark,
         userName = '',
         projectName = '';
-    var temp = ['projectID','remark'],
+    var temp = ['ProjectID','Remark'],
         err = 'required: ';
 
     for(var value in temp)
@@ -89,6 +89,14 @@ router.post('/', function (req, res) {
                                     'userID': userID,
                                     'userName': userName,
                                     'remark': remark
+                                }
+                                if (data.remark.length > 200) {
+                                    res.status(400);
+                                    return res.json({
+                                        status: 400,
+                                        isSuccess: false,
+                                        msg: '备注信息过长'
+                                    })
                                 }
                                 projectRemarkservice.addRemark(data, function (err, results) {
                                     if (err) {
@@ -157,12 +165,12 @@ router.post('/', function (req, res) {
 router.put('/', function (req, res) {
     var query = req.body.formdata,
         ID = query.ID,
-        projectID = query.projectID,
+        projectID = query.ProjectID,
         userID = req.query.jitkey,
-        remark = query.remark,
+        remark = query.Remark,
         userName = '',
-        projectName = '';
-    var temp = ['ID', 'projectID','remark'],
+        projectName = '',
+        temp = ['ID', 'ProjectID','Remark'],
         err = 'required: ';
 
     for(var value in temp)
@@ -209,7 +217,6 @@ router.put('/', function (req, res) {
                         if (projectID == results[i].ProjectID) isIn = true;
                     }
                     if (isIn == true) {
-                        console.log(projectID)
                         projectservice.queryProject({ID: projectID}, function (err, results) {
                             if (err) {
                                 res.status(500);
@@ -229,6 +236,14 @@ router.put('/', function (req, res) {
                                     'userID': userID,
                                     'userName': userName,
                                     'remark': remark
+                                }
+                                if (data.remark.length > 200) {
+                                    res.status(400);
+                                    return res.json({
+                                        status: 400,
+                                        isSuccess: false,
+                                        msg: '备注信息过长'
+                                    })
                                 }
                                 projectRemarkservice.updateRemark(data, function (err, results) {
                                     if (err) {
@@ -292,10 +307,83 @@ router.put('/', function (req, res) {
     })
 })
 
+//项目备注信息查询 普通用户
+router.get('/person', function (req, res) {
+    var query = JSON.parse(req.query.f);
+    var projectID = query.projectID || '',
+        userID = req.query.jitkey,
+        page = req.query.pageindex || 1,
+        pageNum = req.query.pagesize || config.pageCount,
+        countNum = 0;
+    page > 0? page :1;
+
+    var data = {
+        'userID': userID,
+        'projectID': projectID,
+        'page': page,
+        'pageNum': pageNum
+    }
+    projectRemarkservice.countRemark(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
+            });
+            return;
+        }
+        if (results !==undefined && results.length != 0) {
+            countNum = results[0]['num'];
+            projectRemarkservice.queryRemark(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                    return;
+                }
+                if (results!==undefined && results.length > 0) {
+                    var result = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        curPageNum:pageNum,
+                        totalPage: Math.ceil(countNum/pageNum),
+                        data: results
+                    };
+                    if(result.curPage == result.totalPage) {
+                        result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
+                    }
+                    res.status(200);
+                    return res.json(result);
+                } else {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                }
+            })
+        } else {
+            res.status(200);
+            return res.json({
+                code: 200,
+                isSuccess: false,
+                msg: "未查询到相关信息"
+            });
+        }
+    })
+})
+
 //项目备注信息查询
 router.get('/', function (req, res) {
     var query = JSON.parse(req.query.f);
-    console.log(JSON.parse(req.query.f).projectID)
     var projectID = query.projectID || '',
         userID = query.userID || '',
         page = req.query.pageindex || 1,
@@ -309,7 +397,6 @@ router.get('/', function (req, res) {
         'page': page,
         'pageNum': pageNum
     }
-    console.log(data)
     projectRemarkservice.countRemark(data, function (err, results) {
         if (err) {
             res.status(500);

@@ -700,9 +700,11 @@ router.get('/', function (req, res) {
                             if (results !== undefined && results.length > 0) {
                                 result.data.data = results;
                                 res.status(200);
+                                console.log(result)
                                 return res.json(result);
                             } else {
                                 res.status(200);
+                                console.log(result)
                                 return res.json(result);
                             }
                         })
