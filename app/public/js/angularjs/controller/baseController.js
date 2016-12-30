@@ -139,35 +139,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     };
 
 
-$scope.show=function(index,action){
-        getInitmenu(index,action);
-    };
-    function getInitmenu(index,action){
-        console.log(index);
-        console.log(action);
-        $http({
-            method:'get',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                f:{
-                    MenuID:index,
-                    RoleID:index,
-                    ID:index,
-                    AccountID:index
-                }
-            }
-        }).
-        success(function(response) {
-            // $scope.formdata=response.data[0];
-            // console.log($scope.formdata.ApplicationID);
-            // console.log('修改成功');
-            console.log(response);
-        }).
-        error(function(response) {
-            console.log('修改失败');
-            console.log(response);
-        });
-    }
 
     //编辑完成提交信息
 
@@ -351,7 +322,7 @@ $scope.show=function(index,action){
         console.log(index);
         console.log(action);
         $scope.d={
-            "ID":$scope.data[index].ID,
+            "ID":$scope.paginationConf.formdata.data[index].ID,
         };
         $http({
             method:'delete',
@@ -370,7 +341,7 @@ $scope.show=function(index,action){
             console.log('删除失败');
             console.log(response.msg);
         });
-        $scope.data.splice(index,1);
+        $scope.paginationConf.formdata.data.splice(index,1);
         console.log($scope.d);
     }
    
