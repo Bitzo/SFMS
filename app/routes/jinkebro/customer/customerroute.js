@@ -45,12 +45,12 @@ router.post('/',function(req,res)
     }
 
     //插入要传入的值
-    var truename = req.body.truename,
-    phone = req.body.phone,
-    school = req.body.school,
-    area = req.body.area,
-    dromNum = req.body.house,
-    roomNum = req.body.dormNum;
+    var truename = req.body.formdata.truename,
+    phone = req.body.formdata.phone,
+    school = req.body.formdata.school,
+    area = req.body.formdata.area,
+    dromNum = req.body.formdata.house,
+    roomNum = req.body.formdata.dormNum;
 
     data = {
     	'CustomerUserName' : truename,

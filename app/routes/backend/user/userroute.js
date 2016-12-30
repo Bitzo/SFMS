@@ -113,6 +113,7 @@ router.post('/', function (req, res) {
         "CreateUserID": createUserID,
         "IsActive": isActive
     }
+
     for (var key in intNum) {
         if (isNaN(intNum[key])) {
             res.status(400);
@@ -124,6 +125,33 @@ router.post('/', function (req, res) {
             });
         }
     }
+
+    //用来用户名判断长度
+    if(userName.length > 50)
+    {
+        res.status(400);
+        return res.json(
+        {
+            code: 400,
+            isSuccess: false,
+            msg: "username的字符长度超过的50"
+        });
+
+    }
+
+    //用来账户名判断长度
+    if(account.length >50)
+    {
+        res.status(400);
+        return res.json(
+        {
+            code: 400,
+            isSuccess: false,
+            msg: "account的字符长度超过的50"
+        });
+
+    }
+
     //去除相同的账户名字
     var sameAccount = {'Account': account};
     user.queryAccount(sameAccount, function (err, result) {
@@ -150,11 +178,44 @@ router.post('/', function (req, res) {
 
 
         if (email != undefined && email.length != 0) {
+            if(email.length > 50)
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "email的字符长度超过的50"
+                });
+
+            }
+
+            if(!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)))
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "请输入正确的邮箱号"
+                });
+            }
             data['Email'] = email;
         }
 
 
         if (address != undefined && address.length != 0) {
+            if(address.length > 200)
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "address的字符长度超过的200"
+                });
+
+            }
             data['Address'] = address;
         }
 
@@ -168,6 +229,16 @@ router.post('/', function (req, res) {
         }
 
         if (phone != undefined && phone.length != 0) {
+            if(!(/^1(3|4|5|7|8)\d{9}$/.test(phone)))
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "请输入正确的电话号码"
+                });
+            }
             data['Phone'] = phone;
         }
 
@@ -175,6 +246,16 @@ router.post('/', function (req, res) {
             data['ClassID'] = classID;
         }
         if (memo != undefined && memo.length != 0) {
+            if(memo.length > 200)
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "memo的字符长度超过200"
+                });
+            }
             data['Memo'] = memo;
         }
         if (editUserID != undefined && editUserID.length != 0) {
@@ -212,7 +293,7 @@ router.post('/', function (req, res) {
                             res.json({
                                 code:400,
                                 isSuccess:false,
-                                errorMsg:'插入角色失败'
+                                msg:'插入角色失败'
                             });
                             logger.writeError("插入角色失败");
                             return ;
@@ -256,6 +337,7 @@ router.get('/', function (req, res) {
     if (page == undefined || page.length == 0) {
         page = 1;
     }
+    //选定筛选的条件
     if (accountID !== undefined && accountID.length != 0) {
         data['AccountID'] = accountID;
     }
@@ -497,7 +579,7 @@ router.put('/', function (req, res) {
         'EditTime': editTime,
         'CreateUserID': createUserID,
         'IsActive': isActive,
-        'EditUserID': 1
+        'EditUserID': editUserID
     }
 
     var roledata = {
@@ -523,11 +605,107 @@ router.put('/', function (req, res) {
         logger.writeError(requireValue);
         return;
     }
-    if (email != undefined&& email.length != 0 ) {
+
+    //判断是数字
+    var intNum = {
+        'ApplicationID': applicationID,
+        'AccountID': accountID,
+        'CreateUserID': createUserID,
+        'IsActive': isActive,
+        'EditUserID': editUserID,
+        'AccountID':accountID,
+        'RoleID':roleID
+    }
+
+    for (var key in intNum) {
+        if (isNaN(intNum[key])) {
+            res.status(400);
+            return res.json(
+            {
+                code: 400,
+                isSuccess: false,
+                msg: key + ":" + intNum[key] + " 必须是数字"
+            });
+        }
+    }
+
+    //用来判断密码的长度
+    if(pwd.length > 50)
+    {
+        res.status(400);
+        return res.json(
+        {
+            code: 400,
+            isSuccess: false,
+            msg: "密码的字符长度超过的50"
+        });
+
+    }
+
+     //用来用户名判断长度
+    if(userName.length > 50)
+    {
+        res.status(400);
+        return res.json(
+        {
+            code: 400,
+            isSuccess: false,
+            msg: "username的字符长度超过的50"
+        });
+
+    }
+
+    //用来账户名判断长度
+    if(account.length >50)
+    {
+        res.status(400);
+        return res.json(
+        {
+            code: 400,
+            isSuccess: false,
+            msg: "account的字符长度超过的50"
+        });
+
+    }
+
+    if (email != undefined&& email.length != 0 ) {       
+         if(email.length > 50)
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "email的字符长度超过的50"
+                });
+
+            }
+
+            if(!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)))
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "请输入正确的邮箱号"
+                });
+            }
         data['Email'] = email;
     }
 
     if (address != undefined && address.length != 0) {
+        if(address.length > 200)
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "address的字符长度超过的200"
+                });
+
+            }
         data['Address'] = address;
     }
 
@@ -541,6 +719,16 @@ router.put('/', function (req, res) {
     }
 
     if (phone != undefined && phone.length != 0) {
+         if(!(/^1(3|4|5|7|8)\d{9}$/.test(phone)))
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "请输入正确的电话号码"
+                });
+            }
         data['Phone'] = phone;
     }
 
@@ -548,6 +736,16 @@ router.put('/', function (req, res) {
         data['ClassID'] = classID;
     }
     if (memo != undefined && memo.length != 0) {
+        if(memo.length > 200)
+            {
+                res.status(400);
+                return res.json(
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: "memo的字符长度超过200"
+                });
+            }
         data['Memo'] = memo;
     }
 
