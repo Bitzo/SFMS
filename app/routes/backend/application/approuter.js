@@ -12,17 +12,14 @@ var express = require('express'),
     logger = appRequire('util/loghelper').helper,
     config = appRequire('config/config');
 
-
 router.post('/', function (req, res) {
     var query = req.body.formdata;
         data = ['ApplicationCode', 'ApplicationName', 'IsActive'],
         err = 'required: ';
-
     for(var value in data)
     {
         if(!(data[value] in query))
         {
-            console.log("require " + data[value]);
             err += data[value] + ' ';
         }
     }
@@ -46,6 +43,7 @@ router.post('/', function (req, res) {
         'ApplicationName': ApplicationName,
         'pageNum': config.pageCount
     };
+
     //检查是否有该应用
     userSpring.queryAllApp(data, function (err, results) {
         if (err) {
@@ -66,13 +64,37 @@ router.post('/', function (req, res) {
                 'Memo': memo,
                 'IsActive': IsActive
             }
+            if (data.ApplicationCode.length>50) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '应用代码过长'
+                });
+            }
+            if (data.ApplicationName.length>50) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '应用名称过长'
+                });
+            }
+            if (data.Memo.length>200) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '备注过长'
+                });
+            }
             userSpring.insert(data, function (err, results) {
                 if (err) {
                     res.status(500);
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '操作失败， 服务器失败'
+                        msg: '服务器出错'
                     });
                     logger.writeError('新增应用,出错信息: ' + err);
                     return;
@@ -90,7 +112,6 @@ router.post('/', function (req, res) {
                     },
                     msg: '操作成功'
                 });
-                console.log(results.insertId);
             });
         } else {
             res.status(400);
@@ -138,7 +159,6 @@ router.get('/', function (req, res) {
 
         if (results !==undefined && results.length != 0) {
             countNum = results[0]['num'];
-            console.log(countNum);
         }
         userSpring.queryAllApp(data, function (err, results) {
             if (err) {
@@ -196,7 +216,6 @@ router.put('/', function(req, res) {
 
     for (var index in data) {
         if (!(data[index] in query)) {
-            console.log(data[index]);
             err += data[index] + ' ';
         }
     }
@@ -235,6 +254,30 @@ router.put('/', function(req, res) {
                 'ApplicationName': ApplicationName,
                 'Memo': Memo,
                 'IsActive': IsActive
+            }
+            if (data.ApplicationCode.length>50) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '应用代码过长'
+                });
+            }
+            if (data.ApplicationName.length>50) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '应用名称过长'
+                });
+            }
+            if (data.Memo.length>200) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '备注过长'
+                });
             }
             userSpring.update(data, function (err, results) {
                 if (err) {

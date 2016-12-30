@@ -1,4 +1,5 @@
 var express=require('express');
+var fs = require('fs');
 var router=express.Router();
 //添加客户时的路由
 var customer = appRequire('routes/jinkebro/customer/customerroute');
@@ -17,5 +18,23 @@ router.get('/', function(req, res, next) {
 //完善客户的信息
 router.use('/customer',customer);
 
+router.get('/book',function(req,res)
+{  
+	fs.readFile(__dirname+'/index.html','utf-8',function(err,data)
+	{
+		if(err)
+		{
+			console.log('读取文件的时候出错');
+		}
+		else
+		{
+			console.log('sdada');
+			res.set('Content-Type','text/html');
+			res.send(new Buffer(data));
+		}
+	})
+	
+	//res.render('jinkeBro/wechat/customer.html',{title:'Hi jkbro'});
+});
 module.exports=router;
 

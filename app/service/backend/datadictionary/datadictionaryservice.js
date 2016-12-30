@@ -45,7 +45,7 @@ exports.countAllDataDicts = function (data, callback) {
             return;
         }
         logger.writeInfo('countAllDataDicts');
-        console.log('countAllDataDicts');
+        logger.writeInfo('countAllDataDicts');
         callback(false, results);
     })
 }
@@ -58,7 +58,7 @@ exports.countAllDataDictsBySubcode = function (data, callback) {
             return;
         }
         logger.writeInfo('countAllDataDictsBySubcode func in service ');
-        console.log('countAllDataDictsBySubcode func in service ');
+        logger.writeInfo('countAllDataDictsBySubcode func in service ');
         callback(false, results);
     })
 }
@@ -68,7 +68,7 @@ exports.datadictionaryInsert = function (data,callback) {
     function checkData(data) {
         for(var key in data){
             if(data[key] === undefined){
-                console.log("[service]menu insert 传入的值存在空值");
+                logger.writeInfo("[service]menu insert 传入的值存在空值");
                 return false;
             }
         }
@@ -87,7 +87,7 @@ exports.datadictionaryInsert = function (data,callback) {
             return ;
         }
 
-        console.log('datadictionaryInsert func in service');
+        logger.writeInfo('datadictionaryInsert func in service');
         logger.writeInfo('datadictionaryInsert func in service');
         callback(false,results);
     });
@@ -98,8 +98,8 @@ exports.datadictionaryUpdate = function (data,callback) {
     function checkData(data) {
         for(var key in data){
             if(data[key] === undefined){
-                console.log("[service]datadictionaryUpdate func 传入的值存在空值");
-                console.log(data[key]);
+                logger.writeInfo("[service]datadictionaryUpdate func 传入的值存在空值");
+                logger.writeInfo(data[key]);
                 return false;
             }
         }
@@ -118,7 +118,7 @@ exports.datadictionaryUpdate = function (data,callback) {
             return ;
         }
 
-        console.log('datadictionaryUpdate func in service');
+        logger.writeInfo('datadictionaryUpdate func in service');
         logger.writeInfo('datadictionaryUpdate func in service');
         callback(false,results);
     });
@@ -132,7 +132,6 @@ exports.datadictionaryDelete = function (data,callback) {
             return ;
         }
 
-        console.log('datadictionaryDelete func in service');
         logger.writeInfo('datadictionaryDelete func in service');
         callback(false,results);
     });
@@ -146,7 +145,6 @@ exports.datadictionaryDeleteLogically = function (data, callback) {
             return ;
         }
 
-        console.log('datadictionaryDeleteLogically func in service');
         logger.writeInfo('datadictionaryDeleteLogically func in service');
         callback(false,results);
     });
@@ -161,7 +159,6 @@ exports.queryDatadictionaryBySubcode = function (data,callback) {
         }
 
         logger.writeInfo('queryDatadictionaryBySubcode func in service ');
-        console.log('queryDatadictionaryBySubcode func in service ');
 
         callback(false, results);
     })

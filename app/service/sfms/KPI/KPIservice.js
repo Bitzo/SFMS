@@ -63,13 +63,13 @@ exports.queryKPI = function (data, callback) {
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'ID': data.ID,
+        'jit_kpiinfo.ID': data.ID,
         'ProjectID': data.ProjectID,
         'UserID': data.UserID,
         'KPIStatus': data.KPIStatus,
         'StartTime': data.StartTime,
         'EndTime': data.EndTime,
-        'IsActive': 1
+        'jit_kpiinfo.IsActive': 1
     }
     KPIdal.countQuery(queryData, function (err, results) {
         if (err) {
@@ -111,7 +111,6 @@ exports.queryKPIForCheck = function (ID, callback) {
             return;
         }
         logger.writeInfo('查询KPI审核状态');
-        console.log(results)
         if (results!==undefined && results.length>0 && results.length == ID.length) {
             var t = 0;
             for (var i in results) {

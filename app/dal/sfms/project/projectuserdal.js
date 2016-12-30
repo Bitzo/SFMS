@@ -16,14 +16,13 @@ exports.addProjectUser = function (data, callback) {
     var insert_sql = 'insert into jit_projectruser (ProjectName,ProjectID,UserID,UserName,CreateTime,OperateUser,EditName,EditTime,Duty,IsActive) Value ',
         sql = '',
         time = moment().format("YYYY-MM-DD HH:mm:ss");
-
     if (data !== undefined) {
         for (var i in data) {
             if(sql.length == 0)
-                sql += "('"+ data[i].ProjectName +"',"+ data[i].projectID +","+ data[i].userID +",'"+ data[i].UserName + "','"
-                    + time + "','"+ data[i].OperateUser +"','"+ data[i].editName +"','"+ time +"','"+ data[i].duty +"',"+ "1)";
-            else  sql += ",('"+ data[i].ProjectName +"',"+ data[i].projectID +","+ data[i].userID +",'"+ data[i].UserName + "','"
-                + time + "','"+ data[i].OperateUser +"','"+ data[i].editName +"','"+ time +"','"+ data[i].duty +"',"+ "1)";
+                sql += "('"+ data[i].projectName +"',"+ data[i].projectID +","+ data[i].userID +",'"+ data[i].userName + "','"
+                    + time + "','"+ data[i].operateUser +"','"+ data[i].editName +"','"+ time +"','"+ data[i].duty +"',"+ "1)";
+            else  sql += ",('"+ data[i].projectName +"',"+ data[i].projectID +","+ data[i].userID +",'"+ data[i].userName + "','"
+                + time + "','"+ data[i].operateUser +"','"+ data[i].editName +"','"+ time +"','"+ data[i].duty +"',"+ "1)";
         }
     }
 
@@ -53,18 +52,16 @@ exports.addProjectUser = function (data, callback) {
 exports.updateProjectUser = function (data, callback) {
     var sql = '',
         time = moment().format('YYYY-MM-DD HH:mm:ss');
-console.log(data)
     for (var i in data) {
         sql += 'update jit_projectruser set';
         var update_sql = '';
-
+        data[i].EditTime = time;
         for (var key in data[i]) {
-            data[i].EditTime = time;
             if (key != 'ID' && key != 'ProjectID') {
                 if(update_sql.length == 0) {
-                    update_sql += ' ' + key + " = '" + data[i].key +"'";
+                    update_sql += ' ' + key + " = '" + data[i][key] +"'";
                 } else {
-                    update_sql += ", " + key + " = '" + data[i].key +"'";
+                    update_sql += ", " + key + " = '" + data[i][key] +"'";
                 }
             }
         }
