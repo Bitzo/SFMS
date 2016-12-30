@@ -57,7 +57,6 @@ wechat.textMsg(function(msg) {
     switch (msg.msgType) {
         case "text":
             // 返回文本消息
-            
             resMsg = {
                 fromUserName: msg.toUserName,
                 toUserName: msg.fromUserName,
@@ -157,9 +156,15 @@ wechat.eventMsg(function(msg) {
         //订阅的事件
         case 'subscribe':  
 
-        /*这个部分有点问题：一直解决不了*/
         wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
         {
+            // if(isSussess)
+            // {
+            // wechat.createMenu(token,function()
+            // {
+            //     console.log("创建菜单");
+            // });
+
             //如果成功  
             if(isSussess)
             {
@@ -249,6 +254,10 @@ wechat.eventMsg(function(msg) {
 
         //菜单点击的事件
         case 'CLICK':
+        break;
+
+        //菜单的链接的事件
+        case 'VIEW':
         break;
 
     }
