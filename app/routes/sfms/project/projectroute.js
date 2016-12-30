@@ -696,9 +696,9 @@ router.get('/', function (req, res) {
                                 })
                             }
                             logger.writeInfo(results);
-                            result.data.data = {};
+                            result.data[0].data = {};
                             if (results !== undefined && results.length > 0) {
-                                result.data.data = results;
+                                result.data[0].data = results;
                                 res.status(200);
                                 console.log(result)
                                 return res.json(result);

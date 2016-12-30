@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 财务新增
-    form(method="post",name="appinfo" )
+    form(method="post",name="financeAdd" )
       table.table.table-bordered.table-hover.definedwidth.m10      
         tr
           td(width="15%",class="tableleft") 财务名称
@@ -26,9 +26,10 @@ block content
         tr
           td(width="15%",class="tableleft") 财务金额 
           td
-            input(type="number",name="projectPrice",ng-model="formdata.FIPrice",ng-maxlength='10',style="width:160px;height:30px",required)
+            input(type="number",name="FIPrice",ng-model="formdata.FIPrice",ng-maxlength='10',required)
+
             &nbsp&nbsp
-            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 金额最多10位
+            small.error(ng-if="financeAdd.FIPrice.$error.maxlength && financeAdd.FIPrice.$touched") 金额最多10位
 
         tr
           td(width="15%",class="tableleft") 所属项目
@@ -43,9 +44,13 @@ block content
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
+<<<<<<< HEAD
+            textarea(type="textview",rows="5",cols="30",name="remark",ng-model='formdata.remark',ng-maxlength='200',required)
+=======
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Remark',ng-maxlength='200',required)
+>>>>>>> 2de4d35aad5387d054da3140cf5c09d59e52abd1
             &nbsp&nbsp
-            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 描述最多200位
+            small.error(ng-if="financeAdd.remark.$error.maxlength && financeAdd.remark.$touched") 描述最多200位
         tr
           td(class="tableleft")
           td

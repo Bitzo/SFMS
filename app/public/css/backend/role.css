@@ -37,10 +37,11 @@ table tr td .input{
 }
 ul{list-style:none;}
 .error{
-	font-size:12pt;
-	color:red;
-	font-weight:bold;
+	position: relative;
+  color: #d06666;
+  height: 15px;
 }
+
 
 /*tree*/
 .tree {
