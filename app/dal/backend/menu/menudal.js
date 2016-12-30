@@ -67,10 +67,9 @@ exports.queryAllMenus = function(data, callback) {
 exports.queryAllParentMenus = function(data, callback) {
     var arr = new Array();
 
-    arr.push(" select  DISTINCT B.MenuName as ParentMenuName, B.MenuID as ParentID ");
+    arr.push(" select DISTINCT MenuName as ParentMenuName, MenuID as ParentID ");
     arr.push(" from jit_menu ")
-    arr.push(" left join jit_menu B on jit_menu.ParentID = B.MenuID ");
-    arr.push(" where 1=1 ");
+    arr.push(" where 1= 1 and MenuLevel = 1 and ParentID = 0  ");
     
     var sql = arr.join(' ');
 
@@ -79,9 +78,9 @@ exports.queryAllParentMenus = function(data, callback) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
                 //判断data[key]是否是数值类型
                 if(!isNaN(data[key])){
-                    sql += ' and ' + 'jit_menu.' + key + ' = '+ data[key] + ' ';
+                    sql += ' and ' + key + ' = '+ data[key] + ' ';
                 }else {
-                    sql += ' and ' + 'jit_menu.' + key + ' = "'+ data[key] + '" ';
+                    sql += ' and ' + key + ' = "'+ data[key] + '" ';
                 }
             }
         }
@@ -90,7 +89,7 @@ exports.queryAllParentMenus = function(data, callback) {
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    sql += " LIMIT " + (page-1)*num + "," + num + " ;";
 
     logger.writeInfo("[queryAllParentMenus func in menudal]查询所有父级菜单：" + sql);
     console.log("in dal,查询所有的父级菜单：" + sql);

@@ -6,7 +6,7 @@
  * @Function:
  */
 var db_jinkebro = appRequire('db/db_jinkebro'),
-    customer = appRequire('model/jinkebro/product/productmodel'),
+    product = appRequire('model/jinkebro/product/productmodel'),
     logger = appRequire("util/loghelper").helper;
 
 //新增商品
@@ -143,16 +143,56 @@ exports.queryProducts = function (data,callback) {
     });
 }
 
+//查询指定条件商品的个数
+exports.CountProducts = function (data,callback) {
+    var sql = ' select count(1) as num from jit_product where 1=1 ';
+
+    if(data !== undefined){
+        for(var key in data){
+            if(data[key] != ''){
+                //如果data[key]是数字
+                if(!isNaN(data[key])){
+                    sql += " and " + key + " = " + data[key] + " ";
+                }else {
+                    sql += " and " + key + " = '" + data[key] + "' ";
+                }
+            }
+        }
+    }
+
+    logger.writeInfo("查询指定条件的商品个数,sql:" + sql);
+    console.log("查询指定条件的商品个数,sql:" + sql);
+
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            logger.writeError('数据库连接错误：' + err);
+            callback(true);
+            return;
+        }
+        connection.query(sql, function (err, results) {
+            if (err) {
+                logger.writeError('查询指定条件的商品个数：' + err);
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+            return;
+        });
+    });
+}
+
 //根据ID得到该商品类型的个数
-exports.getProCountByID=function(data,callback){
-  var sql = 'select count(*) as count from jit_product';
+exports.getProCountByID = function (data, callback) {
+    var sql = 'select count(1) as count from jit_product';
+
     sql += " where ProductTypeID= " + data['ID'];
 
     logger.writeInfo("根据ID得到该商品类型的个数,sql:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
-            logger.writeError('商品类型个数：err' + err);
+            logger.writeError('数据库连接错误：' + err);
             callback(true);
             return;
         }
@@ -162,9 +202,9 @@ exports.getProCountByID=function(data,callback){
                 callback(true);
                 return;
             }
-           callback(false, results);  
-           connection.release();
-           return;
+            callback(false, results);
+            connection.release();
+            return;
         });
     });
 }

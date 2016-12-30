@@ -17,8 +17,8 @@ var menuService = appRequire('service/backend/menu/menuservice'),
 
 router.get('/tree',function (req,res) {
     var query = JSON.parse(req.query.f);
-    var page = query.pageindex || 1,
-        pageNum = query.pagesize || 20,
+    var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
+        pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
         applicationID = query.ApplicationID || '',
         menuID = query.MenuID || '',
         parentID = query.ParentID || '',
@@ -132,8 +132,8 @@ router.get('/tree',function (req,res) {
 
 router.get('/plain',function (req,res) {
     var query = JSON.parse(req.query.f);
-    var page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize || 20,
+    var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
+        pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
         applicationID = query.ApplicationID || '',
         menuID = query.MenuID || '',
         parentID = query.ParentID || '',
@@ -249,8 +249,8 @@ router.get('/plain',function (req,res) {
 
 router.get('/parent',function (req,res) {
     var query = JSON.parse(req.query.f);
-    var page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize || 20,
+    var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
+        pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 500,
         applicationID = query.ApplicationID || '',
         menuID = query.MenuID || '',
         parentID = query.ParentID || '',

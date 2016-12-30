@@ -257,7 +257,7 @@ $scope.show=function(index,action){
         success(function(response) {
             console.log(response);
             $scope.data = response.data.Role;
-            console.log($scope.menus);
+            console.log($scope.data);
 
         }).
         error(function(response) {
