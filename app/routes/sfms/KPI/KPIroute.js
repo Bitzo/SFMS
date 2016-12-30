@@ -134,7 +134,7 @@ router.post('/', function (req, res) {
                                             'Remark': Remark,
                                             'IsActive': 1
                                         }
-                                        if (!isNaN(data.KPIScore)) {
+                                        if (isNaN(data.KPIScore)) {
                                             res.status(400);
                                             return res.json({
                                                 code: 400,
@@ -247,7 +247,7 @@ router.put('/', function (req, res) {
         'Remark': Remark,
         'IsActive': 1
     }
-    if (!isNaN(data.KPIScore)) {
+    if (isNaN(data.KPIScore)) {
         res.status(400);
         return res.json({
             code: 400,

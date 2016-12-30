@@ -34,7 +34,7 @@ block content
         span(style='font-size: 24px;') 项目管理
         div.buttons.pull-right
           label.form-group.my-form-group 项目名称: 
-            jason-select.select.ext(data-max-options='2' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select.select.ext(data-max-options='2' ng-model='f.ID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
           label.form-group.my-form-group  创建时间:
             input.form-control.ext(type='date' ng-model='f.startTime')
           label.form-group.my-form-group  结项时间：
@@ -55,7 +55,7 @@ block content
             th 项目描述
             th 项目负责人
             th 项目进度
-            th 项目完成时间
+            th 项目预计完成时间
             th 项目状态       
             th 项目预算                            
             th 操作
