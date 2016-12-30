@@ -95,7 +95,7 @@ exports.updateKPI = function (data, callback) {
 
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
-    var sql = 'select count(1) as num from jit_kpiinfo where 1=1 ';
+    var sql = 'select count(1) as num from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_kpiinfo.projectID and jit_projectbaseinfo.IsActive = 1 ';
     if (data !== undefined) {
         for (var key in data) {
             if (data[key] != '' && data[key] !== undefined && key != 'StartTime' && key != 'EndTime') {
@@ -103,8 +103,8 @@ exports.countQuery = function (data, callback) {
             }
         }
     }
-    if (data.StartTime != '') sql += "and CreateTime > '" + data.StartTime + "' ";
-    if (data.EndTime != '') sql += "and CreateTime < '" + data.EndTime + "' ";
+    if (data.StartTime != '') sql += "and jit_kpiinfo.CreateTime > '" + data.StartTime + "' ";
+    if (data.EndTime != '') sql += "and jit_kpiinfo.CreateTime < '" + data.EndTime + "' ";
 
     logger.writeInfo('KPI查询统计：' + sql);
 

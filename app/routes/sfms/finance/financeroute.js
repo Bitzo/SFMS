@@ -27,20 +27,19 @@ var logger = appRequire("util/loghelper").helper;
  */
 router.post('/', function (req, res) {
     var query = req.body.formdata,
-        fiName = query.fiName,
-        fiType = query.fiType,
-        inOutType = query.inOutType,
-        fiPrice = query.fiPrice,
-        projectID = query.projectID,
-        userID = query.userID,
-        userName = query.userName,
+        fiName = query.FIName,
+        fiType = query.FIType,
+        inOutType = query.InOutType,
+        fiPrice = query.FIPrice,
+        projectID = query.ProjectID,
+        userID = query.UserID,
+        userName = query.UserName,
         operateUser = req.query.jitkey,
-        remark = query.remark,
+        remark = query.Remark,
         isActive = 1,
         //前端需要传输的数据
-        temp = ['fiName', 'fiType', 'inOutType', 'fiPrice', 'projectID','userID','remark'],
+        temp = ['FIName', 'FIType', 'InOutType', 'FIPrice', 'ProjectID','UserID','Remark'],
         err = 'require: ';
-
     for(var value in temp)
     {
         if(!(temp[value] in query))
@@ -531,6 +530,7 @@ router.put('/check', function (req, res) {
             msg: '操作失败，不通过的审核需填写备注信息'
         })
     }
+    if(data.FIStatu == '不通过') data.Remark = data.Memo;
     data.CheckUser = req.query.jitkey;
     var ID = data.ID;
     //查看该财务信息是否已经被审核

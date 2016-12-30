@@ -8,42 +8,42 @@ block content
         tr
           td(width="15%",class="tableleft") 财务名称
           td
-            jason-select.input( ng-model='formdata.fiName' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='DictionaryID')
+            jason-select.input( ng-model='formdata.FIName' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='DictionaryID')
             
         
         tr
           td(width="15%",class="tableleft") 财务类型
           td
-            jason-select.input( ng-model='formdata.fiType' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='DictionaryID')
+            jason-select.input( ng-model='formdata.FIType' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='DictionaryID')
            
         
         tr
           td(width="15%",class="tableleft") 财务收支
           td
-            jason-select.input( ng-model='formdata.inOutType' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='DictionaryID')
+            jason-select.input( ng-model='formdata.InOutType' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='DictionaryID')
            
         
         tr
           td(width="15%",class="tableleft") 财务金额 
           td
-            input(type="number",name="projectPrice",ng-model="formdata.fiPrice",ng-maxlength='10',style="width:160px;height:30px",required)
+            input(type="number",name="projectPrice",ng-model="formdata.FIPrice",ng-maxlength='10',style="width:160px;height:30px",required)
             &nbsp&nbsp
             small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 金额最多10位
 
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            jason-select.input( ng-model='formdata.projectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select.input( ng-model='formdata.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
 
         tr
           td(width="15%",class="tableleft") 相关用户
           td
-            jason-select.input( ng-model='formdata.userID' source='/backuser' stext='UserName' svalue='AccountID')
+            jason-select.input( ng-model='formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID')
      
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.remark',ng-maxlength='200',required)
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Remark',ng-maxlength='200',required)
             &nbsp&nbsp
             small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 描述最多200位
         tr
