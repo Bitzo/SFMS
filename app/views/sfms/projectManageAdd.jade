@@ -1,9 +1,9 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/backmenu' conf='paginationConf' ng-controller="selectController")
+  div.container-fluid(ng-controller="selectController")
     span 
       h2 项目新增
-    form(method="post",name="appinfo" )
+    form(method="post",name="projectAdd" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 项目负责人
@@ -14,9 +14,9 @@ block content
         tr
           td(width="15%",class="tableleft") 项目名称
           td
-            input(type="textview",name="projectName",ng-model="formdata.ProjectName",ng-maxlength='50',)
+            input(type="textview",name="ProjectName",ng-model="formdata.ProjectName",ng-maxlength='50',)
             &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectName.$error.maxlength && formdata.ProjectName.$touched") 应用名称最多50位
+            small.error(ng-show="projectAdd.ProjectName.$error.maxlength && projectAdd.ProjectName.$touched") 应用名称最多50位
 
         tr
           td(width="15%",class="tableleft") 项目成员 
@@ -51,21 +51,21 @@ block content
         tr
           td(width="15%",class="tableleft") 项目截止时间
           td
-            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",)
-           
+            input(type="date",name="projectEndTime",ng-model="formdata.ProjectEndTime",ng-maxlength='10')
+            
         tr
           td(width="15%",class="tableleft") 项目经费预算
           td
-            input(type="number",name="projectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='10',)
+            input(type="number",name="ProjectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='10')
             &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 预算最多50位
+            small.error(ng-show="projectAdd.ProjectPrice.$error.maxlength && projectAdd.ProjectPrice.$touched") 预算最多50位
             
         tr
           td(width="15%",class="tableleft") 项目进度
           td
-            input(type="textview",name="projectPrice",ng-model="formdata.ProjectTimeLine",ng-maxlength='10')
+            input(type="textview",name="ProjectTimeLine",ng-model="formdata.ProjectTimeLine",ng-maxlength='10')
             &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectPrice.$error.maxlength && formdata.ProjectPrice.$touched") 进度最多10位
+            small.error(ng-show="projectAdd.ProjectTimeLine.$error.maxlength && projectAdd.ProjectTimeLine.$touched") 进度最多10位
         
         tr
           td(width="15%",class="tableleft") 项目状态
@@ -73,16 +73,16 @@ block content
              input(type="radio",name="IsActive",value="结项",ng-model='formdata.ProjectStatus',checked,style="width:15px;height:15px")
              &nbsp结项
              &nbsp&nbsp          
-             input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="待完成",style="width:15px;height:15px")
+             input(type="radio",name="IsActive",ng-model="formdata.ProjectStatus",value="待完成",style="width:15px;height:15px")
              &nbsp待完成
       
         
         tr
           td(width="15%",class="tableleft") 项目描述 
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.ProjectDesc',ng-maxlength='200')
+            textarea(type="textview",rows="5",cols="30",name="ProjectDesc",ng-model='formdata.ProjectDesc',ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-show="formdata.ProjectDesc.$error.maxlength && formdata.ProjectDesc.$touched") 描述最多200位
+            small.error(ng-show="projectAdd.ProjectDesc.$error.maxlength && projectAdd.ProjectDesc.$touched") 描述最多200位
 
         tr
           td(class="tableleft")

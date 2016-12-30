@@ -3,20 +3,20 @@ block content
   jason-pagecontent(action='/sfms/api/finance' conf='paginationConf')
     div.page-content
       ng-form.form-inline
-        span(style='font-size: 24px;')  财务管理
+        span.title  财务管理
         div.buttons.pull-right
           label.form-group.my-form-group 
-            input.form-control(type='date' style="width:120px;height:34px;" ng-model='f.startTime')
+            input.form-control.ext(type='date' ng-model='f.startTime')
           label.form-group.my-form-group 
-            jason-select(placeholder='财务名称' style="width:120px;height:34px;" ng-model='f.projectID' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='Category')
+            jason-select.ext(placeholder='财务名称' ng-model='f.projectID' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='Category')
           label.form-group.my-form-group 
-            jason-select(placeholder='财务类型' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='Category')
+            jason-select.ext(placeholder='财务类型' ng-model='f.ProjectID' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='Category')
           label.form-group.my-form-group 
-            jason-select(placeholder='收入支出类型' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='Category')
+            jason-select.ext(placeholder='收入支出类型' ng-model='f.ProjectID' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='Category')
           label.form-group.my-form-group 
-            jason-select(placeholder='' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select.ext(placeholder='' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
           label.form-group.my-form-group 
-            select(placeholder='审核状态' style="width:120px;height:34px;" ng-model='f.fiStatus')
+            select(placeholder='审核状态' ng-model='f.fiStatus')
               option 待审核
               option 已审核              
               option 全部
