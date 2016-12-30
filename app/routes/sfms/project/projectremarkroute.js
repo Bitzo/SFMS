@@ -310,7 +310,7 @@ router.put('/', function (req, res) {
 //项目备注信息查询 普通用户
 router.get('/person', function (req, res) {
     var query = JSON.parse(req.query.f);
-    var projectID = query.projectID || '',
+    var projectID = query.ProjectID || '',
         userID = req.query.jitkey,
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || config.pageCount,
@@ -323,6 +323,7 @@ router.get('/person', function (req, res) {
         'page': page,
         'pageNum': pageNum
     }
+    console.log(req.query)
     projectRemarkservice.countRemark(data, function (err, results) {
         if (err) {
             res.status(500);
@@ -383,8 +384,10 @@ router.get('/person', function (req, res) {
 
 //项目备注信息查询
 router.get('/', function (req, res) {
+    console.log(req.query)
     var query = JSON.parse(req.query.f);
-    var projectID = query.projectID || '',
+    var projectID = query.ProjectID || '',
+        ID = query.ID || '',
         userID = query.userID || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || config.pageCount,
@@ -392,6 +395,7 @@ router.get('/', function (req, res) {
     page > 0? page :1;
 
     var data = {
+        'ID': ID,
         'userID': userID,
         'projectID': projectID,
         'page': page,
@@ -403,7 +407,7 @@ router.get('/', function (req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "查询失败，服务器内部错误"
+                msg: "查询失败，服务器内部错误1"
             });
             return;
         }
@@ -415,7 +419,7 @@ router.get('/', function (req, res) {
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: "查询失败，服务器内部错误"
+                        msg: "查询失败，服务器内部错误2"
                     });
                     return;
                 }
