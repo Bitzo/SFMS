@@ -23,17 +23,17 @@ block content
               table.table-bordered.table-hover
                 tbody 
                     tr
-                      td(style="width:150px;height:30px") 成员职责
-                      td(style="width:150px;height:30px") 成员姓名
-                      td(style="width:80px;height:30px") 成员账号
+                      td(style="width:170px;height:30px") 成员职责
+                      td(style="width:170px;height:30px") 成员姓名
+                      td(style="width:170px;height:30px") 成员账号
                       td(style="width:80px;height:30px") 操作
                 tbody
-                    tr(ng-repeat="a in paginationConf.formdata.data")
-                      td(style="line-height:34px;font-size:18px;")  {{a.ID}}
-                      td( style="line-height:34px;font-size:18px;")  {{a.userName}}
-                      td( style="line-height:34px;font-size:18px;")  {{a.userID}}
+                    tr(ng-repeat="a in paginationConf.formdata.userdata")
+                      td(style="line-height:34px;font-size:18px;")  {{a.Duty}}
+                      td( style="line-height:34px;font-size:18px;")  {{a.UserName}}
+                      td( style="line-height:34px;font-size:18px;")  {{a.UserID}}
                       td 
-                        button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置                 
+                        button(ng-click="removeUser($index,'/sfms/api/projectuser')" style="width:80px;height:34px") 删除                 
                 
           tr(ng-controller="selectController")
             td(width="15%",class="tableleft") 项目成员新增 
@@ -46,10 +46,10 @@ block content
                       td(style="width:80px;height:30px") 成员账号
                       td(style="width:80px;height:30px") 操作
                 tbody
-                    tr(ng-repeat="a in formdata.data")
-                      td(ng-model=" formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
-                      td(ng-model=" formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
-                      td(ng-model=" formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
+                    tr(ng-repeat="a in paginationConf.formdata.data")
+                      td(ng-model=" paginationConf.formdata.data.duty" style="line-height:34px;font-size:18px;")  {{a.duty}}
+                      td(ng-model=" paginationConf.formdata.data.userName" style="line-height:34px;font-size:18px;")  {{a.userName}}
+                      td(ng-model=" paginationConf.formdata.data.userID" style="line-height:34px;font-size:18px;")  {{a.userID}}
                       td 
                         button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置                  
                     tr 
