@@ -26,6 +26,18 @@ Product.prototype.insertProduct = function (data, callback) {
     });
 }
 
+//删除商品
+Product.prototype.deleteProduct = function (data, callback) {
+    productDAL.deleteProduct(data, function (err, result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        callback(false, result);
+    });
+}
+
 //编辑商品信息
 Product.prototype.updateProduct = function (data, callback) {
     productDAL.updateProduct(data, function (err, result) {
@@ -41,20 +53,20 @@ Product.prototype.updateProduct = function (data, callback) {
 //查询商品信息
 Product.prototype.queryProducts = function (data, callback) {
 
-    var formData = {
-        ProductID: data.ProductID,
-        SKU: data.SKU,
-        ProductName: data.ProductName,
-        ProductDesc: data.ProductDesc,
-        ProductImgPath: data.ProductImgPath,
-        ExpireTime: data.ExpireTime,
-        ProducTime: data.ProducTime,
-        SupplierID: data.SupplierID,
-        ProductTypeID: data.ProductTypeID
+    productDAL.queryProducts(data, function (err, result) {
+        if (err) {
+            callback(true);
+            return;
+        }
 
-    };
+        callback(false, result);
+    });
+}
 
-    productDAL.queryProducts(formData, function (err, result) {
+//查询商品信息
+Product.prototype.CountProducts = function (data, callback) {
+
+    productDAL.CountProducts(data, function (err, result) {
         if (err) {
             callback(true);
             return;
