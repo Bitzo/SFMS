@@ -58,7 +58,13 @@ Product.prototype.queryProducts = function (data, callback) {
             callback(true);
             return;
         }
-
+        var tempTimeStamp,temp;
+        var days = 60*60*24*1000;
+        for(var i=0;i<result.length; i++){
+            tempTimeStamp = (Date.parse(new Date()) - Date.parse(result[i].ExpireTime)) / days;
+            temp = Math.ceil(tempTimeStamp.toFixed(4));
+            result[i]['remainTime'] = temp;
+        }
         callback(false, result);
     });
 }

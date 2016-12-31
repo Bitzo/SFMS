@@ -355,8 +355,6 @@ router.get('/',function (req,res) {
         pageNum = config.pageCount;
     }
 
-
-
     //用于查询结果总数的计数
     var countNum = 0;
 
