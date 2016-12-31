@@ -354,7 +354,7 @@ router.get('/person', function (req, res) {
     var data = {
         'ProjectID': ProjectID,
         'UserID': UserID,
-        'KPIStatus': '',
+        'KPIStatus': KPIStatus.trim(),
         'StartTime': StartTime,
         'EndTime': EndTime,
         'page': page,
@@ -472,7 +472,7 @@ router.get('/', function (req, res) {
         'ID': ID,
         'ProjectID': ProjectID,
         'UserID': UserID,
-        'KPIStatus': KPIStatus,
+        'KPIStatus': KPIStatus.trim(),
         'KPIType': KPIType,
         'KPIName': KPIName,
         'StartTime': StartTime,

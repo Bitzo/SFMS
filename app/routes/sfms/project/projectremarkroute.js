@@ -66,7 +66,6 @@ router.post('/', function (req, res) {
                     })
                 }
                 if (results!==undefined&&results.length>0) {
-                    console.log(results);
                     var isIn = false;
                     for (var i in results) {
                         if (projectID == results[i].ProjectID) isIn = true;
@@ -226,7 +225,6 @@ router.put('/', function (req, res) {
                                     msg: '操作失败，服务器出错'
                                 })
                             }
-                            console.log(results)
                             if (results!==undefined&& results.length>0) {
                                 projectName = results[0].ProjectName;
                                 var data = {
@@ -323,7 +321,6 @@ router.get('/person', function (req, res) {
         'page': page,
         'pageNum': pageNum
     }
-    console.log(req.query)
     projectRemarkservice.countRemark(data, function (err, results) {
         if (err) {
             res.status(500);
@@ -384,7 +381,6 @@ router.get('/person', function (req, res) {
 
 //项目备注信息查询
 router.get('/', function (req, res) {
-    console.log(req.query)
     var query = JSON.parse(req.query.f);
     var projectID = query.ProjectID || '',
         ID = query.ID || '',
@@ -471,7 +467,7 @@ router.delete('/', function (req, res) {
         })
     }
 
-    projectuserservice.delRemark({ID:ID}, function (err, results) {
+    projectRemarkservice.delRemark({ID:ID}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({

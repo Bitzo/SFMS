@@ -99,7 +99,8 @@ exports.countQuery = function (data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (data[key] != '' && data[key] !== undefined && key != 'StartTime' && key != 'EndTime') {
-                sql += 'and ' + key + "= '" + data[key] + "' ";
+                if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
+                else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
@@ -135,8 +136,10 @@ exports.queryKPI = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if ( key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'StartTime' && key != 'EndTime' )
-                sql += "and " + key + " = '" + data[key] + "' ";
+            if ( key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'StartTime' && key != 'EndTime' ) {
+                if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
+                else sql += 'and ' + key + "= '" + data[key] + "' ";
+            }
         }
     }
 
