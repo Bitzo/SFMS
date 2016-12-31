@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 财务审核
-    jason-form(method="post",source='/sfms/api/finance' conf='paginationConf' tocc="FIName,FIType,InOutType,ProjectID,UserID")
+    jason-form(method="post",source='/sfms/api/finance' name="financeCheck" conf='paginationConf' tocc="FIName,FIType,InOutType,ProjectID,UserID")
       table.table.table-bordered.table-hover.definedwidth.m10      
         tr
           td(width="15%",class="tableleft") 财务名称
@@ -57,10 +57,11 @@ block content
             &nbsp不通过
 
         tr
-          td(width="15%",class="tableleft") 备注
+          td(width="15%",class="tableleft") 审核意见 
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='200',required) 
-            
+            &nbsp&nbsp
+            small.error(ng-if="financeCheck.Memo.$error.maxlength && financeCheck.Memo.$touched") 描述最多200位
 
 
 

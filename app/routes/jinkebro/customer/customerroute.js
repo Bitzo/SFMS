@@ -14,10 +14,12 @@ var router = express.Router();
 var url = require('url');
 var moment = require('moment');
 var logger = appRequire('util/loghelper').helper;
+
+
 //加载中间件
 
-var customer = appRequire('service/jinkebro/customer/customerservice');
-
+    
+    //res.render('jinkeBro/wechat/customer.html',{title:'Hi jkbro'})
 
 router.post('/',function(req,res)
 {

@@ -45,9 +45,11 @@ block content
               &nbsp不通过
 
         tr
-          td(width="15%",class="tableleft") 绩效备注
+          td(width="15%",class="tableleft") 审核意见
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',required) {{paginationConf.formdata.Remark}}
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',required) 
+            &nbsp&nbsp
+            small.error(ng-if="financeAdd.Memo.$error.maxlength && financeAdd.Memo.$touched") 备注最多200位
 
 
         tr

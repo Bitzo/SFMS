@@ -134,6 +134,22 @@ router.post('/', function (req, res) {
                                             'Remark': Remark,
                                             'IsActive': 1
                                         }
+                                        if (!isNaN(data.KPIScore)) {
+                                            res.status(400);
+                                            return res.json({
+                                                code: 400,
+                                                isSuccess: false,
+                                                msg: '绩效分不是正确的数值'
+                                            });
+                                        }
+                                        if (data.Remark.length>45) {
+                                            res.status(400);
+                                            return res.json({
+                                                code: 400,
+                                                isSuccess: false,
+                                                msg: '备注过长'
+                                            });
+                                        }
                                         KPIservice.addKPI(data, function (err, results) {
                                             if (err) {
                                                 res.status(500);
@@ -231,7 +247,22 @@ router.put('/', function (req, res) {
         'Remark': Remark,
         'IsActive': 1
     }
-
+    if (!isNaN(data.KPIScore)) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '绩效分不是正确的数值'
+        });
+    }
+    if (data.Remark.length>45) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '备注过长'
+        });
+    }
     //检查所需要的参数是否齐全
     var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'UserName',],
         err = 'required: ';
@@ -315,6 +346,7 @@ router.get('/person', function (req, res) {
         ProjectID = query.ProjectID || '',
         StartTime = query.StartTime || '',
         EndTime = query.EndTime || '',
+        KPIStatus = query.KPIStatus || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -398,6 +430,7 @@ router.get('/person', function (req, res) {
                             }
                         }
                         res.status(200);
+                        console.log(result)
                         return res.json(result);
                     })
                 } else {
@@ -571,6 +604,15 @@ router.put('/check', function (req, res) {
     }
     if(data.KPIStatus == '不通过') {
         data.Remark = data.Memo;
+    }
+
+    if (data.Remark.length>45) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '备注过长'
+        });
     }
 
     data.CheckUser = req.query.jitkey;

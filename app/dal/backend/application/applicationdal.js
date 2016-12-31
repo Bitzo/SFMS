@@ -8,6 +8,7 @@
 
 var db_backend= appRequire('db/db_backend');
 var applicationMode = appRequire('model/backend/application/applicationmodel');
+var logger = appRequire('util/loghelper').helper;
 
 //查询目前所有应用
 exports.queryAllApp = function (data, callback) {
@@ -25,7 +26,7 @@ exports.queryAllApp = function (data, callback) {
         page = data.page || 1;
 
     query_sql += " limit " + (page-1)*num + " , " + num;
-    console.log("查询所有应用" + query_sql);
+    logger.writeInfo("查询所有应用" + query_sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -85,7 +86,7 @@ exports.insert = function(data, callback) {
             }
         }
     }
-    console.log("新增应用: " + insert_sql);
+    logger.writeInfo("新增应用: " + insert_sql)
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -121,7 +122,7 @@ exports.update = function (data, callback) {
 
     upd_sql += " WHERE " + applicationMode.PK + " = '" + data[applicationMode.PK] + "'";
 
-    console.log("修改应用: " + upd_sql);
+    logger.writeInfo("修改应用: " + upd_sql)
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -146,7 +147,7 @@ exports.delete = function (data, callback) {
         del_sql += 'and ID = ' + data['ID'];
     }
 
-    console.log("删除用户" + del_sql);
+    logger.writeInfo("删除用户" + del_sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {

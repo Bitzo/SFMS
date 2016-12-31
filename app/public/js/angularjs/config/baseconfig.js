@@ -90,6 +90,31 @@ myApp.config(function($routeProvider) {
         templateUrl: '/sfms/projectManageEdit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
+    when('/sfms/projectRemark', {
+        templateUrl: '/sfms/projectRemark?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/projectRemarkAdd', {
+        templateUrl: '/sfms/projectRemarkAdd?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/projectRemarkEdit', {
+        templateUrl: '/sfms/projectRemarkEdit?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/projectManageRemark', {
+        templateUrl: '/sfms/projectManageRemark?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/projectManageRemarkAdd', {
+        templateUrl: '/sfms/projectManageRemarkAdd?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/sfms/projectManageRemarkEdit', {
+        templateUrl: '/sfms/projectManageRemarkEdit?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    
      when('/sfms/kpi', {
         templateUrl: '/sfms/kpi?access_token='+accesstokenstring,
         //controller: 'HomeController'
@@ -132,6 +157,18 @@ myApp.config(function($routeProvider) {
     }).
     when('/sfms/signPersonal', {
         templateUrl: '/sfms/signPersonal?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/jinkeBro/jitorder', {
+        templateUrl: '/jinkeBro/jitorder',
+        //controller: 'HomeController'
+    }).
+    when('/jinkeBro/jitgoods', {
+        templateUrl: '/jinkeBro/jitgoods',
+        //controller: 'HomeController'
+    }).
+    when('/jinkeBro/jitinfo', {
+        templateUrl: '/jinkeBro/jitinfo',
         //controller: 'HomeController'
     }).
     otherwise({

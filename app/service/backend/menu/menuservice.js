@@ -161,6 +161,8 @@ exports.queryAllParentMenus = function(data, callback){
             return ;
         }
 
+        results.unshift({"ParentMenuName" : "无","ParentID":0});
+
         console.log('queryAllParentMenus func in service');
         logger.writeInfo('queryAllParentMenus func in service');
         callback(false,results);

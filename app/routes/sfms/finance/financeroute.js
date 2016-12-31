@@ -126,6 +126,22 @@ router.post('/', function (req, res) {
                                         'Remark': remark,
                                         'IsActive': isActive
                                     };
+                                    if (!isNaN(data.FIPrice)) {
+                                        res.status(400);
+                                        return res.json({
+                                            code: 400,
+                                            isSuccess: false,
+                                            msg: '财务金额不是正确的数值'
+                                        });
+                                    }
+                                    if (data.Remark.length>45) {
+                                        res.status(400);
+                                        return res.json({
+                                            code: 400,
+                                            isSuccess: false,
+                                            msg: '备注过长'
+                                        });
+                                    }
                                     financeService.addFinance(data, function (err, results) {
                                         if (err) {
                                             res.status(500);
@@ -311,6 +327,22 @@ router.put('/', function (req, res) {
                                                 'Remark': remark,
                                                 'IsActive': isActive
                                             };
+                                            if (!isNaN(data.FIPrice)) {
+                                                res.status(400);
+                                                return res.json({
+                                                    code: 400,
+                                                    isSuccess: false,
+                                                    msg: '财务金额不是正确的数值'
+                                                });
+                                            }
+                                            if (data.Remark.length>45) {
+                                                res.status(400);
+                                                return res.json({
+                                                    code: 400,
+                                                    isSuccess: false,
+                                                    msg: '备注过长'
+                                                });
+                                            }
                                             financeService.updateFinance(data, function (err, results) {
                                                 if (err) {
                                                     res.status(500);
@@ -531,6 +563,14 @@ router.put('/check', function (req, res) {
         })
     }
     if(data.FIStatu == '不通过') data.Remark = data.Memo;
+    if (data.Remark.length>45) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '备注过长'
+        });
+    }
     data.CheckUser = req.query.jitkey;
     var ID = data.ID;
     //查看该财务信息是否已经被审核

@@ -107,6 +107,38 @@ router.post('/', function (req, res) {
                                 'EditTime': '',
                                 'CreateTime': ''
                             }
+                            if (data.ProjectName.length>45) {
+                                res.status(400);
+                                return res.json({
+                                    code: 400,
+                                    isSuccess: false,
+                                    msg: '项目名称过长'
+                                });
+                            }
+                            if (data.ProjectDesc.length>45) {
+                                res.status(400);
+                                return res.json({
+                                    code: 400,
+                                    isSuccess: false,
+                                    msg: '项目描述过长'
+                                });
+                            }
+                            if (!isNaN(data.ProjectPrice)) {
+                                res.status(400);
+                                return res.json({
+                                    code: 400,
+                                    isSuccess: false,
+                                    msg: '项目预算不是正确的数值'
+                                });
+                            }
+                            if (data.ProjectTimeLine.length>45) {
+                                res.status(400);
+                                return res.json({
+                                    code: 400,
+                                    isSuccess: false,
+                                    msg: '项目进度描述过长'
+                                });
+                            }
                             projectservice.addProject(data, function (err, results) {
                                 if (err) {
                                     res.status(500);
@@ -132,6 +164,14 @@ router.post('/', function (req, res) {
                                         //获取所有项目用户的username
                                         var ID = [];
                                         for (var i in userData) {
+                                            if (userData[i].duty.length>45) {
+                                                res.status(400);
+                                                return res.json({
+                                                    status: 400,
+                                                    isSuccess: false,
+                                                    msg: '人员职责描述过长'
+                                                })
+                                            }
                                             userData[i].projectID = results.insertId;
                                             userData[i].projectName = projectName;
                                             userData[i].editName = operateUserName;
@@ -315,6 +355,30 @@ router.put('/', function (req, res) {
                 'OperateUser': accountID,
                 'EditUser': accountID,
                 'EditTime': time
+            }
+            if (data.ProjectDesc.length>45) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '项目描述过长'
+                });
+            }
+            if (!isNaN(data.ProjectPrice)) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '项目预算不是正确的数值'
+                });
+            }
+            if (data.ProjectTimeLine.length>45) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '项目进度描述过长'
+                });
             }
             projectservice.updateProject(data, function (err, results) {
                 if (err) {
@@ -632,12 +696,15 @@ router.get('/', function (req, res) {
                                 })
                             }
                             logger.writeInfo(results);
+                            result.data[0].data = {};
                             if (results !== undefined && results.length > 0) {
-                                result.data.data = results;
+                                result.data[0].data = results;
                                 res.status(200);
+                                console.log(result)
                                 return res.json(result);
                             } else {
                                 res.status(200);
+                                console.log(result)
                                 return res.json(result);
                             }
                         })

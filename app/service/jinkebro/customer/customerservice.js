@@ -486,8 +486,7 @@ Customer.prototype.addListFunction = function(token,data,callback)
                                     return;
                                 }
                         });
-                        
-                    
+                                          
                });
     }
 });

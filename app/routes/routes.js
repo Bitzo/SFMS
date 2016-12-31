@@ -25,7 +25,7 @@ module.exports = function(app) {
     //实验室管理子系统
     app.use('/sfms', sfmsRoute);
     //金科小哥子系统
-    app.use('/jkbro', jinkeBroRoute);
+    app.use('/jinkeBro', jinkeBroRoute);
 
     // app.get('jkbro/book',function(req,res)
     // {

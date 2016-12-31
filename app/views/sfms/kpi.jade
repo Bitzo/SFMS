@@ -3,7 +3,7 @@ block content
   jason-pagecontent(action='/sfms/api/kpi/person' conf='paginationConf')
     div.page-content
       ng-form.form-inline
-        span(style='font-size: 24px;')  绩效管理
+        span.title  绩效管理
         div.buttons.pull-right
           label.form-group.my-form-group 
             select(ng-model='f.KPIStatus')
@@ -11,11 +11,11 @@ block content
               option 已审核              
               option
           label.form-group.my-form-group 
-            jason-select(placeholder='绩效名称' style="width:120px;height:34px;" ng-model='f.KPIName' source='/datadict/plainnof?Category=dc_kpiname' selectparams='{"Category":"dc_kpiname"}' stext='DictionaryValue' svalue='DictionaryValue')
+            jason-select.ext(placeholder='绩效名称' ng-model='f.KPIName' source='/datadict/plainnof?Category=dc_kpiname' selectparams='{"Category":"dc_kpiname"}' stext='DictionaryValue' svalue='DictionaryValue')
           label.form-group.my-form-group 
-            jason-select(placeholder='绩效类型' style="width:120px;height:34px;" ng-model='f.KPIType' source='/datadict/plainnof?Category=dc_kpitype' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryValue')
+            jason-select.ext(placeholder='绩效类型' ng-model='f.KPIType' source='/datadict/plainnof?Category=dc_kpitype' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryValue')
           label.form-group.my-form-group 
-            jason-select(placeholder='所属项目' style="width:120px;height:34px;" ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select.ext(placeholder='所属项目' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
           label.form-group.my-form-group 
             input.form-control(type='date' ng-model='f.StartTime')
           label.form-group.my-form-group

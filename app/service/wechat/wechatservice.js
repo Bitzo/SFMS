@@ -243,7 +243,7 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
             "sub_button": [{
                 "type": "view",
                 "name": "配送地址",
-                "url": "http://sun.tunnel.2bdata.com/jkbro/book"
+                "url": "http://sun.tunnel.2bdata.com/wechat/addressinfo"
             }, {
                 "type": "view",
                 "name": "联系我们",
@@ -345,6 +345,21 @@ Weixin.prototype.eventMsg = function(callback) {
 
     return this;
 }
+
+/***********************************************************************************************************************/
+/*待查*/
+//监听用户是否要点击地址栏的菜单
+Weixin.prototype.clickAddress = function(callback)
+{
+
+    emitter.on("wexinclickAddress",callback);
+
+    return this;
+}
+
+//监听地址的事件
+
+/***********************************************************************************************************************/
 
 
 // ----------------- 消息处理 -----------------------
@@ -622,6 +637,27 @@ Weixin.prototype.sendimgMsg = function(msg) {
         this.res.status(200).send(output);
         return this;
     }
+
+/*************************************************************************************************************/
+  //待测
+    //当点击地址栏菜单的时候返回一个true值
+Weixin.prototype.sendClickAddressEvent = function(msg){
+
+   var username = msg.FromUserName; 
+   var judgement = 'false';
+
+   if(username != undefined && username.length != 0 )
+   {
+        judgement = 'true';  
+   }
+console.log("实际中"+username);
+    emitter.emit("wexinclickAddress",judgement,username);
+
+    return this;
+
+}
+/********************************************************************************************************************/
+
     //
     // ------------ 主逻辑 -----------------
     // 解析

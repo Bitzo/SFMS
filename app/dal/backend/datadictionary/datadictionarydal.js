@@ -183,7 +183,7 @@ exports.countAllDataDicts = function (data, callback) {
                 }
         }
     }
-    console.log(sql);
+    logger.writeInfo(sql);
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -221,7 +221,7 @@ exports.countAllDataDictsBySubcode = function (data, callback) {
 
     sql = sql + " and SUBSTRING(DictionaryCode,1,2) = '" +code.substring(0,2) + "' ";
 
-    console.log(sql);
+    logger.writeInfo(sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -268,7 +268,6 @@ exports.queryDatadictionaryBySubcode = function (data,callback) {
     sql += " LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询字典信息 by subCode：" + sql);
-    console.log("查询字典信息 by subCode：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {

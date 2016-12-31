@@ -20,7 +20,7 @@ router.get('/plain',function (req,res) {
     var query = JSON.parse(req.query.f);
 
      var page = query.pageindex || 1,
-         pageNum = query.pagesize || 20,
+         pageNum = query.pagesize || 500,
          applicationID = query.ApplicationID || '',
          dictionaryID = query.DictionaryID || '',
          dictionaryLevel = query.DictionaryLevel || '',
