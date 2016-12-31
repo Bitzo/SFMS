@@ -4,6 +4,7 @@ var router=express.Router();
 var url = require("url");
 //添加客户时的路由
 var customer = appRequire('routes/jinkebro/customer/customerroute');
+var product = appRequire('routes/jinkebro/product/productroute');
 
 //产品类别路由
 //var proTyperoute = appRequire('routes/jinkebro/productype/productyperoute');
@@ -22,6 +23,8 @@ router.get('/jitinfo', function(req, res, next) {
 
 //完善客户的信息
 router.use('/customer',customer);
+//产品
+router.use('/product',product);
 
 
 

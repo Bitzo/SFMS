@@ -444,7 +444,6 @@ router.get('/',function (req,res) {
 
 //新增菜单
 router.post('/',function(req,res,next) {
-    console.log(req.body);
     // 检查所需要的字段是否都存在
     var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
     var err = 'require: ';

@@ -39,6 +39,7 @@ exports.updateProjectUser = function(data, callback) {
 
 //项目用户信息查询
 exports.queryProjectUser = function (data, callback) {
+    data.IsActive = 1;
     projectuserDAL.queryProjectUser(data, function (err, results) {
         if (err) {
             callback(true, '查询失败');
