@@ -632,7 +632,6 @@ router.get('/person', function (req, res) {
 
 //项目基本信息查询-管理员
 router.get('/', function (req, res) {
-    console.log(req.query)
     var query =  JSON.parse(req.query.f),
         ID = query.ID || '',
         projectManageID = query.projectManageID || '',
