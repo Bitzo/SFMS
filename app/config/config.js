@@ -47,7 +47,7 @@ var config = {
         host: 'api.weixin.qq.com',
         baseUrl: 'https://api.weixin.qq.com/cgi-bin/',
         accessTokenUrl: 'token?grant_type=client_credential&', //获取token
-        createMenu: '/cgi-bin/menu/create?access_token=', //创建菜单
+        createMenu: 'menu/create?access_token=', //创建菜单
         userInfo:'user/info?access_token=',//获取用户信息
     },
     redis_prd: {

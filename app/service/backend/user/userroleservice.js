@@ -7,43 +7,36 @@
  */
 
 
-var userRoleDAL= appRequire('dal/backend/user/userroledal');
+var userRoleDAL = appRequire('dal/backend/user/userroledal');
 
 //勾选对应的功能,更改对应的功能
 
-exports.insert=function(data,callback){
-	userRoleDAL.insert(data,function(err,results)
-	{
-		for(var key in data)
-   		{
-       		 if(key == undefined)
-        	{
-           		 console.log("传来的值有部分为空");
-            	 return ;
-        	}
-    }
-		if(err)
-		{
+exports.insert = function (data, callback) {
+	userRoleDAL.insert(data, function (err, results) {
+		for (var key in data) {
+			if (key == undefined) {
+				console.log("传来的值有部分为空");
+				return;
+			}
+		}
+		if (err) {
 			callback(true);
 			return;
 		}
-		callback(false,results);
+		callback(false, results);
 	});
 
 };
 
-exports.updateUserRole=function(data,callback)
-{
-	userRoleDAL.updateUserRole(data,function(err,results)
-	{
-		if(err)
-		{
-			
+exports.updateUserRole = function (data, callback) {
+	userRoleDAL.updateUserRole(data, function (err, results) {
+		if (err) {
+
 			callback(true);
 			return;
 		}
-	
-		callback(false,results);
+
+		callback(false, results);
 	})
 }
 
@@ -65,34 +58,28 @@ exports.queryAppByUserID = function (data, callback) {
 };
 
 //根据用户的AccountID 来获取用户角色的ID号
-exports.query = function (data, callback)
-{
+exports.query = function (data, callback) {
 	//用来判断是否存在AccountID
 	var k = 0;
-	for(var key in data)
-	{
-		if(key == 'AccountID')
-		{
+	for (var key in data) {
+		if (key == 'AccountID') {
 			k++;
 		}
 	}
 
-	if(k != 1)
-	{
+	if (k != 1) {
 		console.log("不存在AccountID");
-		return ;
+		return;
 	}
 
-	
-	userRoleDAL.query(data,function(err,results)
-	{
-		if(err)
-		{
+
+	userRoleDAL.query(data, function (err, results) {
+		if (err) {
 			console.log("查询出错");
 			return;
 		}
 
-		callback(false,results);
+		callback(false, results);
 	})
 
 

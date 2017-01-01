@@ -3,29 +3,6 @@
  */
 myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
-    /*$scope.expanded_params = new ngTreetableParams({
-
-       getNodes: function(parent) {
-            if(parent==null) {
-                var deferred = $q.defer();
-                $http.get("/func?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
-                    .success(function (response) {
-                        deferred.resolve(response.data);
-                        //return response.data;
-                    });
-                return deferred.promise;
-            }else{
-                return parent.children;
-            }
-},
-
-        getTemplate: function(node) {
-            return 'tree_node';
-        },
-        options: {
-            initialState: 'expanded'
-        }
-    });*/
     $http.get("/func?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
         .success(function (response) {
             $scope.tree_data =response.data;
@@ -68,7 +45,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     //分页初始化数据
     $scope.paginationConf = {
         currentPage: 1,
-        itemsPerPage: 15,
+        itemsPerPage: 10,
         action: "1111"
     }
 
@@ -94,7 +71,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     }
     $scope.paginationConf = {
         currentPage: 1,
-        itemsPerPage: 15
+        itemsPerPage: 10
     }
     $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
     $scope.$watch( 'paginationConf.action',getInit);
@@ -109,8 +86,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     //新增
     $scope.formdata={};
     $scope.addnew = function(formdata,action) {
-        console.log(formdata);
-        console.log(action);
         $http({
             method:'post',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -119,9 +94,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
-            console.log($http.url)
-            console.log($scope.formdata);
-            console.log(response);
             if(response.isSuccess){
                 alert(response.msg);
                 $scope.datas.push($scope.formdata);
@@ -133,48 +105,15 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         error(function(response) {
             alert(response.msg);
-            console.log(response);
-            console.log('no');
         });
     };
 
 
-$scope.show=function(index,action){
-        getInitmenu(index,action);
-    };
-    function getInitmenu(index,action){
-        console.log(index);
-        console.log(action);
-        $http({
-            method:'get',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                f:{
-                    MenuID:index,
-                    RoleID:index,
-                    ID:index,
-                    AccountID:index
-                }
-            }
-        }).
-        success(function(response) {
-            // $scope.formdata=response.data[0];
-            // console.log($scope.formdata.ApplicationID);
-            // console.log('修改成功');
-            console.log(response);
-        }).
-        error(function(response) {
-            console.log('修改失败');
-            console.log(response);
-        });
-    }
 
     //编辑完成提交信息
 
     var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
-        console.log(formdata);
-        console.log(action);
         $http({
             method:'put',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -183,22 +122,14 @@ $scope.show=function(index,action){
             }
         }).
         success(function(response) {
-            console.log($http.url)
-            console.log($scope.formdata);
-            console.log(response);
             if(response.isSuccess){
-                console.log('提交成功');
                 alert(response.msg);
             }else{
                 alert(response.msg);
             }
         }).
         error(function(response) {
-            console.log('提交失败');
             alert(response.msg);
-            console.log(formdata);
-            console.log(response);
-            console.log('no');
         });
     };
 
@@ -209,9 +140,6 @@ $scope.show=function(index,action){
     $scope.remove = function(index,action){
         var mymessage=confirm("是否确认删除此项");  
         if(mymessage==true){
-        console.log('delete');
-        console.log(index);
-        console.log(action);
         $scope.d={
             "AccountID":$scope.datas[index].AccountID,
             "MenuID":$scope.datas[index].MenuID,
@@ -226,17 +154,10 @@ $scope.show=function(index,action){
             }
         }).
         success(function(response) {
-            console.log($scope.d);
-            console.log('删除成功');
-            console.log(response.msg);
         }).
         error(function(response) {
-            console.log($scope.d);
-            console.log('删除失败');
-            console.log(response.msg);
         });
         $scope.datas.splice(index,1);
-        console.log($scope.d);
         }else{
 
         }
@@ -246,7 +167,6 @@ $scope.show=function(index,action){
 
     //显示用户模态框数据
     $scope.moreuser = function(index,action){
-        console.log('more');
         $scope.f={
             "userID":$scope.datas[index].AccountID,
         };
@@ -255,20 +175,24 @@ $scope.show=function(index,action){
             url:action+$scope.f.userID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
         }).
         success(function(response) {
-            console.log(response);
+
             $scope.data = response.data.Role;
-            console.log($scope.data);
+
+            // console.log(response);
+            // $scope.dataRole = response.data.Role;
+            // console.log($scope.dataRole);
+            // $scope.dataMenu = response.data.Menu;
+            // console.log($scope.dataMenu);
+
 
         }).
         error(function(response) {
-            console.log(response);
         });
     }
 
 
     //显示角色模态框
     $scope.morerole = function(index,action){
-        console.log('more');
         $scope.f={
             "RoleID":$scope.datas[index].RoleID,
         };
@@ -277,13 +201,10 @@ $scope.show=function(index,action){
             url:action+$scope.f.RoleID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
         }).
         success(function(response) {
-            console.log(response);
             $scope.data = response.data;
-            console.log($scope.menus);
 
         }).
         error(function(response) {
-            console.log(response);
         });
     }
 
@@ -295,7 +216,6 @@ $scope.show=function(index,action){
 
 
     function getInitrole(action){
-        console.log(action);
         $http({
             method:'get',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -310,21 +230,14 @@ $scope.show=function(index,action){
         }).
         success(function(response) {
             $scope.formdata=response.data[0];
-            console.log($scope.formdata.ApplicationID);
-            console.log('修改成功');
-            console.log(response);
         }).
         error(function(response) {
-            console.log('修改失败');
-            console.log(response);
         });
     }
     
 
      //显示项目模态框
         $scope.moreproject = function(index,action){
-                console.log(action);
-                console.log('more');
                 $scope.f={
                     "projectID":$scope.datas[index].ID,
                 };
@@ -333,9 +246,7 @@ $scope.show=function(index,action){
                     url:action+$scope.f.projectID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
                 }).
                 success(function(response) {
-                    console.log(response);
                     $scope.data = response.data;
-                    console.log($scope.menus);
 
                 }).
                 error(function(response) {
@@ -344,14 +255,12 @@ $scope.show=function(index,action){
             }
     
 
-    //删除项目模态框中的用户
+    //删除项目编辑中的用户
     $scope.d={};
     $scope.removeUser = function(index,action){
-        console.log('delete');
-        console.log(index);
-        console.log(action);
+        var mymessage=confirm("是否确认删除此项");  
         $scope.d={
-            "ID":$scope.data[index].ID,
+            "ID":$scope.paginationConf.formdata.userdata[index].ID,
         };
         $http({
             method:'delete',
@@ -361,17 +270,10 @@ $scope.show=function(index,action){
             }
         }).
         success(function(response) {
-            console.log($scope.d);
-            console.log('删除成功');
-            console.log(response.msg);
         }).
         error(function(response) {
-            console.log($scope.d);
-            console.log('删除失败');
-            console.log(response.msg);
         });
-        $scope.data.splice(index,1);
-        console.log($scope.d);
+        $scope.paginationConf.formdata.userdata.splice(index,1);
     }
    
 
@@ -379,10 +281,6 @@ $scope.show=function(index,action){
 
     //显示签到模态框数据
     $scope.moresign = function(index,action){
-        console.log(index);
-        console.log(action);        
-                
-        console.log('more');
         $scope.f={
             "userID":index,
         };
@@ -399,11 +297,9 @@ $scope.show=function(index,action){
             }
         }).
         success(function(response) {
-            console.log(response);
             $scope.data = response.data;
         }).
         error(function(response) {
-            console.log(response);
         });
     }
     

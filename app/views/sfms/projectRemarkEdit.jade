@@ -1,47 +1,27 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(action='/backmenu' conf='paginationConf')
+  div.container-fluid(ng-controller="baseController")
     span 
       h2 项目备注编辑(普通)
-    form(method="post",name="appInfo" )
-      table.table.table-bordered.table-hover.definedwidth.m10
+    jason-form(method="post",name="appInfo" source='/sfms/api/projectremark' conf='paginationConf' tocc="ProjectID")
+       table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") 应用代码
+          td(width="15%",class="tableleft") 所属项目
           td
-            input(type="textview",name="ApplicationCode",ng-model='formdata.ApplicationCode',ng-maxlength='50',required)
-            &nbsp&nbsp
-            small.error(ng-if="appInfo.ApplicationCode.$error.maxlength && appInfo.ApplicationCode.$touched") 应用代码最多50位
-
-           
-        tr
-          td(width="15%",class="tableleft") 	应用名称 
-          td
-            input(type="textview",name="ApplicationName",ng-model="formdata.ApplicationName",ng-maxlength='50',required)
-            &nbsp&nbsp
-            small.error(ng-if="appInfo.ApplicationName.$error.maxlength && appInfo.ApplicationName.$touched") 应用名称最多50位
-        
-        tr
-          td(class="tableleft") 是否有效
-          td
-            input(type="radio",name="IsActive",value="1",style="width:15px;height:15px",ng-model="formdata.IsActive",checked)
-            &nbsp有效
-            &nbsp&nbsp          
-            input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="0",style="width:15px;height:15px")
-            &nbsp无效  
+            jason-select.input( ng-model='paginationConf.formdata.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
 
         tr
           td(width="15%",class="tableleft") 	备注（可选） 
           td
-            textarea(type="textview",name="Memo",rows="5",cols="30",ng-model='formdata.Memo',ng-maxlength='200')
-            &nbsp&nbsp
-            small.error(ng-show="formdata.Memo.$error.maxlength && formdata.Memo.$touched") 备注最多200位
+            textarea(type="textview",rows="10",cols="30",ng-model='paginationConf.formdata.Remark',ng-maxlength='200')
+            small.error(ng-show="paginationConf.formdata.Remark.$error.maxlength && paginationConf.formdata.Remark.$touched") 备注最多200位
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/app')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/projectremark')") 添加
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-sm.btn-success(href='#backend/application') 返回列表
+            a.btn.btn-sm.btn-success(href='#/sfms/projectRemark',ng-click='search()') 返回列表
 
 
 

@@ -134,7 +134,7 @@ router.post('/', function (req, res) {
                                             'Remark': Remark,
                                             'IsActive': 1
                                         }
-                                        if (!isNaN(data.KPIScore)) {
+                                        if (isNaN(data.KPIScore)) {
                                             res.status(400);
                                             return res.json({
                                                 code: 400,
@@ -247,7 +247,7 @@ router.put('/', function (req, res) {
         'Remark': Remark,
         'IsActive': 1
     }
-    if (!isNaN(data.KPIScore)) {
+    if (isNaN(data.KPIScore)) {
         res.status(400);
         return res.json({
             code: 400,
@@ -354,7 +354,7 @@ router.get('/person', function (req, res) {
     var data = {
         'ProjectID': ProjectID,
         'UserID': UserID,
-        'KPIStatus': '',
+        'KPIStatus': KPIStatus.trim(),
         'StartTime': StartTime,
         'EndTime': EndTime,
         'page': page,
@@ -472,7 +472,7 @@ router.get('/', function (req, res) {
         'ID': ID,
         'ProjectID': ProjectID,
         'UserID': UserID,
-        'KPIStatus': KPIStatus,
+        'KPIStatus': KPIStatus.trim(),
         'KPIType': KPIType,
         'KPIName': KPIName,
         'StartTime': StartTime,

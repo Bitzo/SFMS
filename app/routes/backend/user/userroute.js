@@ -5,13 +5,13 @@
  * @Last Modified time: 2016/11/20 15:04
  * @Function: 用户信息的插入,用户信息的查询，用户信息的更改,信息存入日志
  */
- var express = require('express');
- var router = express.Router();
- var url = require('url');
- var moment = require('moment');
- var operateconfig = appRequire("config/operationconfig");
- var logger = appRequire('util/loghelper').helper;
-    //加载中间件
+var express = require('express');
+var router = express.Router();
+var url = require('url');
+var moment = require('moment');
+var operateconfig = appRequire("config/operationconfig");
+var logger = appRequire('util/loghelper').helper;
+//加载中间件
 var express = require('express');
 var router = express.Router();
 var url = require('url');
@@ -29,7 +29,7 @@ var user = appRequire('service/backend/user/userservice'),
 
 //插入用户
 router.post('/', function (req, res) {
-    var data = ['ApplicationID', 'Account', 'UserName', 'Pwd',  'IsActive'];
+    var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'IsActive'];
     var err = 'require: ';
 
     for (var value in data) {
@@ -53,31 +53,30 @@ router.post('/', function (req, res) {
 
     //插入要传的参数
     var applicationID = req.body.formdata.ApplicationID,
-    account = req.body.formdata.Account,
-    userName = req.body.formdata.UserName,
-    pwd = req.body.formdata.Pwd,
-    collegeID = req.body.formdata.CollegeID,
-    gradeYear = req.body.formdata.GradeYear,
-    phone = req.body.formdata.Phone,
-    classID = req.body.formdata.ClassID,
-    memo = req.body.formdata.Memo,
-    createTime = moment().format("YYYY-MM-DD HH:mm:ss"),
-    createUserID = req.query.jitkey,
-    editUserID = req.body.formdata.EditUserID,
-    isActive = req.body.formdata.IsActive,
-    email = req.body.formdata.Email,
-    address = req.body.formdata.Address;
+        account = req.body.formdata.Account,
+        userName = req.body.formdata.UserName,
+        pwd = req.body.formdata.Pwd,
+        collegeID = req.body.formdata.CollegeID,
+        gradeYear = req.body.formdata.GradeYear,
+        phone = req.body.formdata.Phone,
+        classID = req.body.formdata.ClassID,
+        memo = req.body.formdata.Memo,
+        createTime = moment().format("YYYY-MM-DD HH:mm:ss"),
+        createUserID = req.query.jitkey,
+        editUserID = req.body.formdata.EditUserID,
+        isActive = req.body.formdata.IsActive,
+        email = req.body.formdata.Email,
+        address = req.body.formdata.Address;
 
 
     //添加角色的部分
-    var  roleID = req.body.formdata.RoleID;
+    var roleID = req.body.formdata.RoleID;
 
     var roledata = {};
-    if(roleID != undefined && roleID.length != 0)
-    {
+    if (roleID != undefined && roleID.length != 0) {
         roledata.RoleID = roleID;
     }
-    
+
 
     data = {
         'ApplicationID': applicationID,
@@ -118,42 +117,40 @@ router.post('/', function (req, res) {
         if (isNaN(intNum[key])) {
             res.status(400);
             return res.json(
-            {
-                code: 400,
-                isSuccess: false,
-                msg: key + ":" + intNum[key] + " 必须是数字"
-            });
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: key + ":" + intNum[key] + " 必须是数字"
+                });
         }
     }
 
     //用来用户名判断长度
-    if(userName.length > 50)
-    {
+    if (userName.length > 50) {
         res.status(400);
         return res.json(
-        {
-            code: 400,
-            isSuccess: false,
-            msg: "username的字符长度超过的50"
-        });
+            {
+                code: 400,
+                isSuccess: false,
+                msg: "username的字符长度超过的50"
+            });
 
     }
 
     //用来账户名判断长度
-    if(account.length >50)
-    {
+    if (account.length > 50) {
         res.status(400);
         return res.json(
-        {
-            code: 400,
-            isSuccess: false,
-            msg: "account的字符长度超过的50"
-        });
+            {
+                code: 400,
+                isSuccess: false,
+                msg: "account的字符长度超过的50"
+            });
 
     }
 
     //去除相同的账户名字
-    var sameAccount = {'Account': account};
+    var sameAccount = { 'Account': account };
     user.queryAccount(sameAccount, function (err, result) {
         if (err) {
             res.status(400);
@@ -178,42 +175,39 @@ router.post('/', function (req, res) {
 
 
         if (email != undefined && email.length != 0) {
-            if(email.length > 50)
-            {
+            if (email.length > 50) {
                 res.status(400);
                 return res.json(
-                {
-                    code: 400,
-                    isSuccess: false,
-                    msg: "email的字符长度超过的50"
-                });
+                    {
+                        code: 400,
+                        isSuccess: false,
+                        msg: "email的字符长度超过的50"
+                    });
 
             }
 
-            if(!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)))
-            {
+            if (!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email))) {
                 res.status(400);
                 return res.json(
-                {
-                    code: 400,
-                    isSuccess: false,
-                    msg: "请输入正确的邮箱号"
-                });
+                    {
+                        code: 400,
+                        isSuccess: false,
+                        msg: "请输入正确的邮箱号"
+                    });
             }
             data['Email'] = email;
         }
 
 
         if (address != undefined && address.length != 0) {
-            if(address.length > 200)
-            {
+            if (address.length > 200) {
                 res.status(400);
                 return res.json(
-                {
-                    code: 400,
-                    isSuccess: false,
-                    msg: "address的字符长度超过的200"
-                });
+                    {
+                        code: 400,
+                        isSuccess: false,
+                        msg: "address的字符长度超过的200"
+                    });
 
             }
             data['Address'] = address;
@@ -229,15 +223,14 @@ router.post('/', function (req, res) {
         }
 
         if (phone != undefined && phone.length != 0) {
-            if(!(/^1(3|4|5|7|8)\d{9}$/.test(phone)))
-            {
+            if (!(/^1(3|4|5|7|8)\d{9}$/.test(phone))) {
                 res.status(400);
                 return res.json(
-                {
-                    code: 400,
-                    isSuccess: false,
-                    msg: "请输入正确的电话号码"
-                });
+                    {
+                        code: 400,
+                        isSuccess: false,
+                        msg: "请输入正确的电话号码"
+                    });
             }
             data['Phone'] = phone;
         }
@@ -246,15 +239,14 @@ router.post('/', function (req, res) {
             data['ClassID'] = classID;
         }
         if (memo != undefined && memo.length != 0) {
-            if(memo.length > 200)
-            {
+            if (memo.length > 200) {
                 res.status(400);
                 return res.json(
-                {
-                    code: 400,
-                    isSuccess: false,
-                    msg: "memo的字符长度超过200"
-                });
+                    {
+                        code: 400,
+                        isSuccess: false,
+                        msg: "memo的字符长度超过200"
+                    });
             }
             data['Memo'] = memo;
         }
@@ -282,29 +274,25 @@ router.post('/', function (req, res) {
                 // });
                 logger.writeInfo("插入成功");
                 console.log(results.insertId);
-                if(roledata.RoleID != undefined && roledata.RoleID !=0)
-                {
-                    roledata.AccountID=results.insertId;
-                    userRole.insert(roledata,function(err, resultInsert)
-                    {
-                        if(err)
-                        {
+                if (roledata.RoleID != undefined && roledata.RoleID != 0) {
+                    roledata.AccountID = results.insertId;
+                    userRole.insert(roledata, function (err, resultInsert) {
+                        if (err) {
                             res.status(400);
                             res.json({
-                                code:400,
-                                isSuccess:false,
-                                msg:'插入角色失败'
+                                code: 400,
+                                isSuccess: false,
+                                msg: '插入角色失败'
                             });
                             logger.writeError("插入角色失败");
-                            return ;
+                            return;
                         }
-                        if(resultInsert.insertId != 0)
-                        {
+                        if (resultInsert.insertId != 0) {
                             res.json({
-                                code:200,
+                                code: 200,
                                 isSuccess: true,
-                                msg:'插入成功'                  
-                               });
+                                msg: '插入成功'
+                            });
                             return;
                         }
                     });
@@ -404,7 +392,7 @@ router.get('/', function (req, res) {
                 if (results1 != undefined && results1.length != 0 && allCount != -1) {
                     //将时间格式化，并且将CreateUser的名字改一下
                     var dataApplication = {};
-                    for(var key in results1) {
+                    for (var key in results1) {
                         results1[key].CreateTime = moment(results1[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');
                     }
                     console.log("查询成功");
@@ -531,7 +519,7 @@ router.get('/:userID', function (req, res) {
 router.put('/', function (req, res) {
     var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
     var err = 'require: ';
-    
+
     for (var value in data) {
         if (!(data[value] in req.body.formdata)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
@@ -552,21 +540,21 @@ router.put('/', function (req, res) {
 
     //插入要传的参数
     var applicationID = req.body.formdata.ApplicationID,
-    accountID = req.body.formdata.AccountID,
-    account = req.body.formdata.Account,
-    userName = req.body.formdata.UserName,
-    pwd = req.body.formdata.Pwd,
-    collegeID = req.body.formdata.CollegeID,
-    gradeYear = req.body.formdata.GradeYear,
-    phone = req.body.formdata.Phone,
-    classID = req.body.formdata.ClassID,
-    memo = req.body.formdata.Memo,
-    createUserID = req.body.formdata.CreateUserID,
-    editUserID = req.query.jitkey,
-    editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
-    isActive = req.body.formdata.IsActive,
-    email = req.body.formdata.Email,
-    address = req.body.formdata.Address;
+        accountID = req.body.formdata.AccountID,
+        account = req.body.formdata.Account,
+        userName = req.body.formdata.UserName,
+        pwd = req.body.formdata.Pwd,
+        collegeID = req.body.formdata.CollegeID,
+        gradeYear = req.body.formdata.GradeYear,
+        phone = req.body.formdata.Phone,
+        classID = req.body.formdata.ClassID,
+        memo = req.body.formdata.Memo,
+        createUserID = req.body.formdata.CreateUserID,
+        editUserID = req.query.jitkey,
+        editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
+        isActive = req.body.formdata.IsActive,
+        email = req.body.formdata.Email,
+        address = req.body.formdata.Address;
     roleID = req.body.formdata.RoleID;
 
 
@@ -583,8 +571,8 @@ router.put('/', function (req, res) {
     }
 
     var roledata = {
-        'AccountID':accountID,
-        'RoleID':roleID
+        'AccountID': accountID,
+        'RoleID': roleID
     }
 
     var requireValue = '缺少值：';
@@ -613,99 +601,93 @@ router.put('/', function (req, res) {
         'CreateUserID': createUserID,
         'IsActive': isActive,
         'EditUserID': editUserID,
-        'AccountID':accountID,
-        'RoleID':roleID
+        'AccountID': accountID,
+        'RoleID': roleID
     }
 
     for (var key in intNum) {
         if (isNaN(intNum[key])) {
             res.status(400);
             return res.json(
-            {
-                code: 400,
-                isSuccess: false,
-                msg: key + ":" + intNum[key] + " 必须是数字"
-            });
+                {
+                    code: 400,
+                    isSuccess: false,
+                    msg: key + ":" + intNum[key] + " 必须是数字"
+                });
         }
     }
 
     //用来判断密码的长度
-    if(pwd.length > 50)
-    {
+    if (pwd.length > 50) {
         res.status(400);
         return res.json(
-        {
-            code: 400,
-            isSuccess: false,
-            msg: "密码的字符长度超过的50"
-        });
+            {
+                code: 400,
+                isSuccess: false,
+                msg: "密码的字符长度超过的50"
+            });
 
     }
 
-     //用来用户名判断长度
-    if(userName.length > 50)
-    {
+    //用来用户名判断长度
+    if (userName.length > 50) {
         res.status(400);
         return res.json(
-        {
-            code: 400,
-            isSuccess: false,
-            msg: "username的字符长度超过的50"
-        });
+            {
+                code: 400,
+                isSuccess: false,
+                msg: "username的字符长度超过的50"
+            });
 
     }
 
     //用来账户名判断长度
-    if(account.length >50)
-    {
+    if (account.length > 50) {
         res.status(400);
         return res.json(
-        {
-            code: 400,
-            isSuccess: false,
-            msg: "account的字符长度超过的50"
-        });
+            {
+                code: 400,
+                isSuccess: false,
+                msg: "account的字符长度超过的50"
+            });
 
     }
 
-    if (email != undefined&& email.length != 0 ) {       
-         if(email.length > 50)
-            {
-                res.status(400);
-                return res.json(
+    if (email != undefined && email.length != 0) {
+        if (email.length > 50) {
+            res.status(400);
+            return res.json(
                 {
                     code: 400,
                     isSuccess: false,
                     msg: "email的字符长度超过的50"
                 });
 
-            }
+        }
 
-            if(!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)))
-            {
-                res.status(400);
-                return res.json(
+        if (!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email))) {
+            res.status(400);
+            return res.json(
                 {
                     code: 400,
                     isSuccess: false,
                     msg: "请输入正确的邮箱号"
                 });
-            }
+        }
         data['Email'] = email;
     }
 
     if (address != undefined && address.length != 0) {
-        if(address.length > 200)
-            {
-                res.status(400);
-                return res.json(
+        if (address.length > 200) {
+            res.status(400);
+            return res.json(
                 {
                     code: 400,
                     isSuccess: false,
                     msg: "address的字符长度超过的200"
                 });
 
-            }
+        }
         data['Address'] = address;
     }
 
@@ -719,16 +701,15 @@ router.put('/', function (req, res) {
     }
 
     if (phone != undefined && phone.length != 0) {
-         if(!(/^1(3|4|5|7|8)\d{9}$/.test(phone)))
-            {
-                res.status(400);
-                return res.json(
+        if (!(/^1(3|4|5|7|8)\d{9}$/.test(phone))) {
+            res.status(400);
+            return res.json(
                 {
                     code: 400,
                     isSuccess: false,
                     msg: "请输入正确的电话号码"
                 });
-            }
+        }
         data['Phone'] = phone;
     }
 
@@ -736,58 +717,52 @@ router.put('/', function (req, res) {
         data['ClassID'] = classID;
     }
     if (memo != undefined && memo.length != 0) {
-        if(memo.length > 200)
-            {
-                res.status(400);
-                return res.json(
+        if (memo.length > 200) {
+            res.status(400);
+            return res.json(
                 {
                     code: 400,
                     isSuccess: false,
                     msg: "memo的字符长度超过200"
                 });
-            }
+        }
         data['Memo'] = memo;
     }
 
-    userRole.query(roledata,function(err,queryinfo)
-    {
+    userRole.query(roledata, function (err, queryinfo) {
 
-        if(err)
-        {
+        if (err) {
             res.status(500);
             res.json(
-            {
-                code: 500,
-                isSuccess: false,
-                msg: '修改信息失败，服务器出错'
-            });
+                {
+                    code: 500,
+                    isSuccess: false,
+                    msg: '修改信息失败，服务器出错'
+                });
             logger.writeError("修改信息失败，服务器出错");
             return;
         }
 
-        if(queryinfo != undefined && queryinfo.length != 0)
-        {
+        if (queryinfo != undefined && queryinfo.length != 0) {
 
             roledata.ID = queryinfo[0].ID;
-            
-            userRole.updateUserRole(roledata,function(err,updatinfo)
-            {
-                if(err)
-                {
+
+            userRole.updateUserRole(roledata, function (err, updatinfo) {
+                if (err) {
                     res.status(500);
                     res.json(
-                    {
-                        code: 500,
-                        isSuccess: false,
-                        msg: '修改信息失败，服务器出错'
-                    });
+                        {
+                            code: 500,
+                            isSuccess: false,
+                            msg: '修改信息失败，服务器出错'
+                        });
 
-                     console.log("修改角色失败");
+                    console.log("修改角色失败");
                     logger.writeError("修改信息失败，服务器出错");
                     return;
                 }
 
-              
+
                 if (updatinfo !== undefined && updatinfo.affectedRows != 0) {
 
                     console.log("检查错误");
@@ -805,45 +780,41 @@ router.put('/', function (req, res) {
                     return;
                 }
             });
-    }
-    else
-    {
-        userRole.insert(roledata,function(err, resultInsert)
-                    {
-                        if(err)
-                        {
-                            res.status(400);
-                            res.json({
-                                code:400,
-                                isSuccess:false,
-                                errorMsg:'插入角色失败'
-                            });
-                            logger.writeError("插入角色失败");
-                            return ;
-                        }
-                        if(resultInsert.insertId != 0)
-                        {
-                            // res.json({
-                            //     code:200,
-                            //     isSuccess: true,
-                            //     msg:'插入成功'                  
-                            //    });
-                            return;
-                        }
-             });
-    }
-});
+        }
+        else {
+            userRole.insert(roledata, function (err, resultInsert) {
+                if (err) {
+                    res.status(400);
+                    res.json({
+                        code: 400,
+                        isSuccess: false,
+                        errorMsg: '插入角色失败'
+                    });
+                    logger.writeError("插入角色失败");
+                    return;
+                }
+                if (resultInsert.insertId != 0) {
+                    // res.json({
+                    //     code:200,
+                    //     isSuccess: true,
+                    //     msg:'插入成功'                  
+                    //    });
+                    return;
+                }
+            });
+        }
+    });
 
 
     user.update(data, function (err, results) {
         if (err) {
             res.status(500);
             res.json(
-            {
-                code: 500,
-                isSuccess: false,
-                msg: '修改信息失败，服务器出错'
-            });
+                {
+                    code: 500,
+                    isSuccess: false,
+                    msg: '修改信息失败，服务器出错'
+                });
             logger.writeError("修改信息失败，服务器出错");
             return;
         }
@@ -869,23 +840,22 @@ router.put('/', function (req, res) {
 });
 
 //逻辑删除角色
-router.delete('/',function (req , res)
-{
+router.delete('/', function (req, res) {
     var query = JSON.parse(req.query.d),
-    accountID = query.AccountID;
+        accountID = query.AccountID;
     var data = {
-        'AccountID' :accountID,
-        'IsActive' : 0
+        'AccountID': accountID,
+        'IsActive': 0
     }
     user.update(data, function (err, results) {
         if (err) {
             res.status(500);
             res.json(
-            {
-                code: 500,
-                isSuccess: false,
-                msg: '操作失败，服务器出错'
-            });
+                {
+                    code: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                });
             logger.writeError("修改信息失败，服务器出错");
             return;
         }

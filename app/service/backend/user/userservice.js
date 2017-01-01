@@ -5,10 +5,10 @@
  * @Last Modified time: 2016-11-17 20:00
  */
 var userDAL = appRequire('dal/backend/user/userdal');
-    logger = appRequire('util/loghelper').helper;
+logger = appRequire('util/loghelper').helper;
 
 //根据Account,密码查询单一有效用户
-exports.querySingleUser = function(accountid, pwd, callback) {
+exports.querySingleUser = function (accountid, pwd, callback) {
     if (accountid == undefined || accountid == null) {
         callback(true, {
             msg: "帐号不能为空!"
@@ -21,7 +21,7 @@ exports.querySingleUser = function(accountid, pwd, callback) {
         });
     }
 
-    userDAL.querySingleUser(accountid, pwd, function(err, results) {
+    userDAL.querySingleUser(accountid, pwd, function (err, results) {
         if (err) {
             callback(true);
             return;
@@ -30,36 +30,31 @@ exports.querySingleUser = function(accountid, pwd, callback) {
     });
 };
 
-exports.querySingleID=function(accountid,callback)
-{
-    if(accountid==undefined&&accountid==null)
-    {
-        callback(true,{
-            msg:"账户ID不能为空！"
+exports.querySingleID = function (accountid, callback) {
+    if (accountid == undefined && accountid == null) {
+        callback(true, {
+            msg: "账户ID不能为空！"
         });
 
     }
-    userDAL.querySingleID(accountid,function(err,result)
-    {
-        if(err)
-        {
+    userDAL.querySingleID(accountid, function (err, result) {
+        if (err) {
             callback(true);
             return;
         }
-        callback(false,result);
+        callback(false, result);
     });
 };
 
 //查询目前所有用户
-exports.queryAllUsers = function(data, callback) {
+exports.queryAllUsers = function (data, callback) {
     //保证传到dal里面的值中page肯定有值
     var page = 'add: '
     for (var key in data) {
         if (key == 'page') {
             page += 'exit ';
         }
-        if(key == undefined)
-        {
+        if (key == undefined) {
             console.log("传来的值有部分为空")
             return;
         }
@@ -67,7 +62,7 @@ exports.queryAllUsers = function(data, callback) {
     if (page == 'add: ') {
         data['page'] = 1;
     }
-    userDAL.queryAllUsers(data, function(err, results) {
+    userDAL.queryAllUsers(data, function (err, results) {
         if (err) {
             callback(true);
             return;
@@ -77,16 +72,14 @@ exports.queryAllUsers = function(data, callback) {
 };
 
 //新增用户
-exports.insert = function(data, callback) {
-    for(var key in data)
-    {
-        if(key == undefined)
-        {
+exports.insert = function (data, callback) {
+    for (var key in data) {
+        if (key == undefined) {
             console.log("传来的值有部分为空");
-            return ;
+            return;
         }
     }
-    userDAL.insert(data, function(err, results) {
+    userDAL.insert(data, function (err, results) {
         if (err) {
             callback(true);
             return;
@@ -96,16 +89,14 @@ exports.insert = function(data, callback) {
 };
 
 //修改用户
-exports.update = function(data, callback) {
-    for(var key in data)
-    {
-        if(key == undefined)
-        {
+exports.update = function (data, callback) {
+    for (var key in data) {
+        if (key == undefined) {
             console.log("传来的值有部分为空");
-            return ;
+            return;
         }
     }
-    userDAL.update(data, function(err, results) {
+    userDAL.update(data, function (err, results) {
         if (err) {
             callback(true);
             return;
@@ -115,16 +106,14 @@ exports.update = function(data, callback) {
 };
 
 //修改用户
-exports.delete = function(data, callback) {
-    for(var key in data)
-    {
-        if(key == undefined)
-        {
+exports.delete = function (data, callback) {
+    for (var key in data) {
+        if (key == undefined) {
             console.log("传来的值有部分为空");
-            return ;
+            return;
         }
     }
-    userDAL.delete(data, function(err) {
+    userDAL.delete(data, function (err) {
         if (err) {
             callback(true);
             return;
@@ -134,7 +123,7 @@ exports.delete = function(data, callback) {
 };
 
 //登录,模拟
-exports.login = function(data, callback) {
+exports.login = function (data, callback) {
     var userObj = {
         username: 'snail'
     };
@@ -143,8 +132,8 @@ exports.login = function(data, callback) {
 };
 
 //查询数量的service
-exports.countUser = function(data, callback) {
-    userDAL.countUser(data, function(err, results) {
+exports.countUser = function (data, callback) {
+    userDAL.countUser(data, function (err, results) {
         if (err) {
             callback(true);
             return;
@@ -153,39 +142,31 @@ exports.countUser = function(data, callback) {
     });
 }
 
-exports.queryAccount=function(data,callback)
-{
+exports.queryAccount = function (data, callback) {
 
-    for(var key in data)
-    {
-        if(key == undefined)
-        {
+    for (var key in data) {
+        if (key == undefined) {
             console.log("传来的值有部分为空");
-            return ;
+            return;
         }
     }
-    
-    userDAL.queryAccount(data,function(err,results)
-    {
-        if(err)
-        {
+
+    userDAL.queryAccount(data, function (err, results) {
+        if (err) {
             callback(true);
             return;
         }
-        callback(false,results);
+        callback(false, results);
     });
 }
 
-exports.queryAccountByID=function(data,callback)
-{
+exports.queryAccountByID = function (data, callback) {
 
-    userDAL.queryAccountByID(data,function(err,results)
-    {
-        if(err)
-        {
+    userDAL.queryAccountByID(data, function (err, results) {
+        if (err) {
             callback(true);
             return;
         }
-        callback(false,results);
+        callback(false, results);
     });
 }

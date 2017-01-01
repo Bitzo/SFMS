@@ -8,7 +8,7 @@
 var mysql = require('mysql');
 var config = appRequire('config/config');
 
-var jinkeConfig=config.mysql;
+var jinkeConfig = config.mysql;
 
 jinkeConfig.database = 'jit_jinkebro';
 var dbJinkeBroPool = mysql.createPool(jinkeConfig);

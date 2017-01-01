@@ -100,7 +100,8 @@ exports.countQuery = function (data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (data[key] != '' && key !== 'startTime' && key !== 'endTime') {
-                sql += 'and ' + key + "= '" + data[key] + "' ";
+                if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
+                else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
@@ -136,8 +137,10 @@ exports.queryFinance = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'startTime' && key !== 'endTime')
-                sql += "and " + key + " = '" + data[key] + "' ";
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'startTime' && key !== 'endTime') {
+                if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
+                else sql += 'and ' + key + "= '" + data[key] + "' ";
+            }
         }
     }
     if (data.startTime != '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";

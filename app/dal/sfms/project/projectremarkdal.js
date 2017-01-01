@@ -147,11 +147,10 @@ exports.countRemark = function (data, callback) {
 };
 
 //删除用户备注的项目信息
-exports.countRemark = function (data, callback) {
+exports.delRemark = function (data, callback) {
     var sql = 'delete from jit_projectremark where ID = ' + data.ID;
 
     logger.writeInfo("删除备注信息: " + sql);
-
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             logger.writeError('err: '+ err);

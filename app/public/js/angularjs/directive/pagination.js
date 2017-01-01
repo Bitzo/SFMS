@@ -61,18 +61,18 @@ angular.module('jason.pagination').directive('jasonPagination',[function(){
                 // conf.totalItems
                 scope.conf.totalItems = parseInt(scope.conf.totalItems);
 
-                // conf.itemsPerPage (default:15)
+                // conf.itemsPerPage (default:10)
                 // 先判断一下本地存储中有没有这个值
                 if(scope.conf.rememberPerPage){
                     if(!parseInt(localStorage[scope.conf.rememberPerPage])){
-                        localStorage[scope.conf.rememberPerPage] = parseInt(scope.conf.itemsPerPage) ? parseInt(scope.conf.itemsPerPage) : 15;
+                        localStorage[scope.conf.rememberPerPage] = parseInt(scope.conf.itemsPerPage) ? parseInt(scope.conf.itemsPerPage) : 10;
                     }
 
                     scope.conf.itemsPerPage = parseInt(localStorage[scope.conf.rememberPerPage]);
 
 
                 }else{
-                    scope.conf.itemsPerPage = parseInt(scope.conf.itemsPerPage) ? parseInt(scope.conf.itemsPerPage) : 15;
+                    scope.conf.itemsPerPage = parseInt(scope.conf.itemsPerPage) ? parseInt(scope.conf.itemsPerPage) : 10;
                 }
 
                 // numberOfPages

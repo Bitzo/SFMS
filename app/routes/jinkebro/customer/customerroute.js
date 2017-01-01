@@ -3,31 +3,32 @@
 */
 
 var express = require('express');
- var router = express.Router();
- var url = require('url');
- var moment = require('moment');
- var operateconfig = appRequire("config/operationconfig");
- var logger = appRequire('util/loghelper').helper;
-    //加载中间件
+var router = express.Router();
+var url = require('url');
+var moment = require('moment');
+var operateconfig = appRequire("config/operationconfig");
+var logger = appRequire('util/loghelper').helper;
+//加载中间件
 var express = require('express');
 var router = express.Router();
 var url = require('url');
 var moment = require('moment');
 var logger = appRequire('util/loghelper').helper;
+
+// 
 //加载中间件
 
-var customer = appRequire('service/jinkebro/customer/customerservice');
+    
+//res.render('jinkeBro/wechat/customer.html',{title:'Hi jkbro'})
 
+router.post('/', function (req, res) {
+    var data = ['truename', 'phone', 'school', 'area', 'house', 'dormNum'];
 
-router.post('/',function(req,res)
-{
-	var data = ['truename','phone','school','area','house','dormNum'];
-
-	var err = 'require: ';
+    var err = 'require: ';
 
     for (var value in data) {
 
-        if (!(data[value] in req.body.formdata)) {
+        if (!(data[value] in req.body)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
             err += data[value] + ' ';//检查post传输的数据
         }
@@ -45,37 +46,35 @@ router.post('/',function(req,res)
     }
 
     //插入要传入的值
-    var truename = req.body.formdata.truename,
-    phone = req.body.formdata.phone,
-    school = req.body.formdata.school,
-    area = req.body.formdata.area,
-    dromNum = req.body.formdata.house,
-    roomNum = req.body.formdata.dormNum;
+    var truename = req.body.truename,
+        phone = req.body.phone,
+        school = req.body.school,
+        area = req.body.area,
+        dromNum = req.body.house,
+        roomNum = req.body.dormNum;
 
     data = {
-    	'CustomerUserName' : truename,
-    	'Phone' : phone,
-    	'AreaID' : area,
-    	'DormID' : dromNum,
-    	'HouseNum' : roomNum
+        'CustomerUserName': truename,
+        'Phone': phone,
+        'AreaID': area,
+        'DormID': dromNum,
+        'HouseNum': roomNum
     }
 
-    customer.update(data,function(err,updateinfo)
-    {
-    	 if(err)
-        {
+    customer.update(data, function (err, updateinfo) {
+        if (err) {
             res.status(500);
             res.json(
-            {
-                code: 500,
-                isSuccess: false,
-                msg: '修改信息失败，服务器出错'
-            });
+                {
+                    code: 500,
+                    isSuccess: false,
+                    msg: '修改信息失败，服务器出错'
+                });
             logger.writeError("修改信息失败，服务器出错");
             return;
         }
 
-          if (updatinfo !== undefined && updatinfo.affectedRows != 0) {
+        if (updatinfo !== undefined && updatinfo.affectedRows != 0) {
             res.json({
                 code: 200,
                 isSuccess: true,
