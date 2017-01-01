@@ -163,12 +163,16 @@ myApp.config(function($routeProvider) {
         templateUrl: '/jinkeBro/jitorder',
         //controller: 'HomeController'
     }).
-    when('/jinkeBro/jitgoods', {
-        templateUrl: '/jinkeBro/jitgoods',
-        //controller: 'HomeController'
-    }).
     when('/jinkeBro/jitinfo', {
         templateUrl: '/jinkeBro/jitinfo',
+        //controller: 'HomeController'
+    }).
+    when('/jinkeBro/jitgoods', {
+        templateUrl: '/jinkeBro/jitgoods?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
+    when('/jinkeBro/jitgoodsAdd', {
+        templateUrl: '/jinkeBro/jitgoodsAdd?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
     otherwise({

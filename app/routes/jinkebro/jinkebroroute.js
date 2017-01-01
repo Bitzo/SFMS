@@ -17,6 +17,14 @@ router.get('/jitinfo', function(req, res, next) {
     res.render('jinkeBro/jitinfo', { title: 'Hi jkbro' });
 });
 
+router.get('/jitgoods', function(req, res, next) {
+    res.render('jinkeBro/jitgoods', { title: 'Hi jkbro' });
+});
+
+router.get('/jitgoodsAdd', function(req, res, next) {
+    res.render('jinkeBro/jitgoodsAdd', { title: 'Hi jkbro' });
+});
+
 //管理产品类别
 //router.use('/proType', proTyperoute);
 
