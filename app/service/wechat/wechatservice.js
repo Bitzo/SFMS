@@ -24,7 +24,7 @@ var redisHelper = appRequire('util/redishelper');
 var redisCache = new redisHelper();
 
 // 微信类
-var Weixin = function() {
+var Weixin = function () {
     this.data = '';
     this.msgType = 'text';
     this.fromUserName = '';
@@ -33,7 +33,7 @@ var Weixin = function() {
 }
 
 // 验证
-Weixin.prototype.checkSignature = function(req) {
+Weixin.prototype.checkSignature = function (req) {
     // 获取校验参数
     this.signature = req.query.signature;
     this.timestamp = req.query.timestamp;
@@ -59,9 +59,9 @@ Weixin.prototype.checkSignature = function(req) {
  *获取access_token
  *先走redis缓存，如未获取到，再重新请求微信获取，并覆盖缓存
  */
-Weixin.prototype.getLocalAccessToken = function(operatorid, callback) {
+Weixin.prototype.getLocalAccessToken = function (operatorid, callback) {
     var me = this;
-    redisCache.get(config.weChat.rediskey, function(err, token) {
+    redisCache.get(config.weChat.rediskey, function (err, token) {
         if (err) {
             //记录异常
             logger.writeInfo('从redis获取微信token异常' + new Date());
@@ -72,20 +72,20 @@ Weixin.prototype.getLocalAccessToken = function(operatorid, callback) {
                 logger.writeInfo('redis中没有微信的token，准备从微信重新获取' + new Date());
 
                 //从微信重新请求获取数据
-                me.getAccessToken(operatorid, function(wehcattoken) {
+                me.getAccessToken(operatorid, function (wehcattoken) {
                     logger.writeInfo('从微信重新获取access_token' + new Date());
                     if (wehcattoken != undefined && wehcattoken.access_token !== undefined && wehcattoken.access_token !== null) {
                         logger.writeInfo('从微信重新获取access_token:' + wehcattoken);
 
                         //放到redis
-                        redisCache.set(config.weChat.rediskey, wehcattoken.access_token, function(err, result) {
+                        redisCache.set(config.weChat.rediskey, wehcattoken.access_token, function (err, result) {
                             if (err) {
                                 logger.writeError('redis插入键异常' + new Date());
                             }
                             logger.writeInfo('将access_token插入到redis成功');
                         });
 
-                        redisCache.expire(config.weChat.rediskey, config.weChat.expiretime, function(err, result) {
+                        redisCache.expire(config.weChat.rediskey, config.weChat.expiretime, function (err, result) {
                             if (err) {
                                 logger.writeError('redis设置键过期异常' + new Date());
                             }
@@ -103,30 +103,30 @@ Weixin.prototype.getLocalAccessToken = function(operatorid, callback) {
 };
 
 //从微信获取access_token
-Weixin.prototype.getAccessToken = function(operatorid, callback) {
+Weixin.prototype.getAccessToken = function (operatorid, callback) {
     var accessurl = config.weChat.baseUrl + config.weChat.accessTokenUrl +
         'appid=' + config.weChat.appid +
         "&secret=" + config.weChat.secret;
 
-    https.get(accessurl, function(res) {
+    https.get(accessurl, function (res) {
         var datas = [];
         var size = 0;
-        res.on('data', function(data) {
+        res.on('data', function (data) {
             datas.push(data);
             size += data.length;
         });
 
-        res.on("end", function() {
+        res.on("end", function () {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-            logModel.OperationName= '获取微信AccessToken';
+            logModel.OperationName = '获取微信AccessToken';
             logModel.NewValue = result.access_token;
             logModel.Action = '微信操作_获取AccessToken';
             logModel.Memo = 'AccessToken获取成功';
             logModel.CreateUserID = operatorid;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
-            logService.insertOperationLog(logModel, function(err, insertId) {
+            logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
                     logger.writeError('获取微信token成功，生成操作日志异常' + new Date());
                 }
@@ -137,24 +137,24 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
             }
         });
 
-    }).on('error', function(e) {
+    }).on('error', function (e) {
         logger.writeError('获取微信token时异常' + new Date());
     });
 };
 
 //微信获取用户的列表
-Weixin.prototype.getCustomerList = function(accessToken, callback) {
+Weixin.prototype.getCustomerList = function (accessToken, callback) {
     var getUrl = config.weChat.baseUrl + 'user/get?access_token=' + accessToken;
     console.log(getUrl);
-    https.get(getUrl, function(res) {
+    https.get(getUrl, function (res) {
         var datas = [];
         var size = 0;
-        res.on('data', function(data) {
+        res.on('data', function (data) {
             datas.push(data);
             size += data.length;
         });
 
-        res.on('end', function() {
+        res.on('end', function () {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
             if (callback && typeof callback === 'function') {
@@ -162,52 +162,52 @@ Weixin.prototype.getCustomerList = function(accessToken, callback) {
             }
 
         })
-    }).on('error', function(e) {
+    }).on('error', function (e) {
         logger.writeError('获取列表信息时异常' + new Date());
     });
 }
 
 //微信获取到指定用户的的列表
-Weixin.prototype.getNextOpenid = function(accessToken, nextopenid, callback) {
-        var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
-       // console.log(getUrl);
-        https.get(getUrl, function(res) {
-            var datas = [];
-            var size = 0;
-            res.on('data', function(data) {
-                datas.push(data);
-                size += data.length;
-            });
-
-            res.on('end', function() {
-                var buff = Buffer.concat(datas, size);
-                var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
-                console.log(result);
-
-                if (callback && typeof callback === 'function') {
-                    callback(result);
-                }
-
-            })
-        }).on('error', function(e) {
-            logger.writeError('获取列表信息时异常' + new Date());
-        });
-    }
-    
-//微信获取用户信息
-Weixin.prototype.getCustomerInfo = function(accessToken, openid, callback) {
-    //get获取微信端的接口的url
-    var getUrl = config.weChat.baseUrl + config.weChat.userInfo + accessToken + "&openid=" + openid;
-    //console.log(getUrl);
-    https.get(getUrl, function(res) {
+Weixin.prototype.getNextOpenid = function (accessToken, nextopenid, callback) {
+    var getUrl = config.weChat.baseUrl + config.weChat.getCustomerList + accessToken + "&nextopenid=" + nextopenid;
+    // console.log(getUrl);
+    https.get(getUrl, function (res) {
         var datas = [];
         var size = 0;
-        res.on('data', function(data) {
+        res.on('data', function (data) {
             datas.push(data);
             size += data.length;
         });
 
-        res.on('end', function() {
+        res.on('end', function () {
+            var buff = Buffer.concat(datas, size);
+            var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
+            console.log(result);
+
+            if (callback && typeof callback === 'function') {
+                callback(result);
+            }
+
+        })
+    }).on('error', function (e) {
+        logger.writeError('获取列表信息时异常' + new Date());
+    });
+}
+    
+//微信获取用户信息
+Weixin.prototype.getCustomerInfo = function (accessToken, openid, callback) {
+    //get获取微信端的接口的url
+    var getUrl = config.weChat.baseUrl + config.weChat.userInfo + accessToken + "&openid=" + openid;
+    //console.log(getUrl);
+    https.get(getUrl, function (res) {
+        var datas = [];
+        var size = 0;
+        res.on('data', function (data) {
+            datas.push(data);
+            size += data.length;
+        });
+
+        res.on('end', function () {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码
             if (callback && typeof callback === 'function') {
@@ -215,7 +215,7 @@ Weixin.prototype.getCustomerInfo = function(accessToken, openid, callback) {
             }
 
         })
-    }).on('error', function(e) {
+    }).on('error', function (e) {
         logger.writeError('获取用户信息时异常' + new Date());
     });
 
@@ -223,11 +223,11 @@ Weixin.prototype.getCustomerInfo = function(accessToken, openid, callback) {
 
 
 //微信创建菜单的方法
-Weixin.prototype.createMenu = function(accessToken, callback) {
+Weixin.prototype.createMenu = function (accessToken, callback) {
     //微信的创建菜单的url
     //var postUrl = config.weChat.baseUrl + "menu/jcreate?accessToken=j" + accessToken;
-    var postUrl = config.weChat.baseUrl+config.weChat.createMenu + accessToken;
-    
+    var postUrl = config.weChat.baseUrl + config.weChat.createMenu + accessToken;
+
     console.log(postUrl);
     var body = {
         "button": [{
@@ -235,25 +235,25 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
             "name": "我要下单",
             "url": "http://www.baidu.com"
         }, {
-            "type": "view",
-            "name": "跟踪包裹",
-            "url": "http://www.baidu.com"
-        }, {
-            "name": "我",
-            "sub_button": [{
                 "type": "view",
-                "name": "配送地址",
-                "url": "http://sun.tunnel.2bdata.com/wechat/addressinfo"
+                "name": "跟踪包裹",
+                "url": "http://www.baidu.com"
             }, {
-                "type": "view",
-                "name": "联系我们",
-                "url": "http://www.soso.com"
-            }, {
-                "type": "location_select",
-                "name": "发送位置",
-                "key": "rselfmenu_2_0"
+                "name": "我",
+                "sub_button": [{
+                    "type": "view",
+                    "name": "配送地址",
+                    "url": "http://sun.tunnel.2bdata.com/wechat/addressinfo"
+                }, {
+                        "type": "view",
+                        "name": "联系我们",
+                        "url": "http://www.soso.com"
+                    }, {
+                        "type": "location_select",
+                        "name": "发送位置",
+                        "key": "rselfmenu_2_0"
+                    }]
             }]
-        }]
     }
     var bodyString = JSON.stringify(body);
 
@@ -278,17 +278,17 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
 
     }
 
-    var post_req = https.request(options, function(res) {
+    var post_req = https.request(options, function (res) {
         console.log("statusCode: ", res.statusCode);
         console.log("headers: ", res.headers);
 
         res.setEncoding('utf8');
-        res.on('data', function(chunk) {
+        res.on('data', function (chunk) {
             console.log('Response: ' + chunk);
         });
     });
 
-    post_req.on('error', function(e) {
+    post_req.on('error', function (e) {
         console.log('problem with request: ' + e.message);
     });
 
@@ -299,7 +299,7 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
 
 // ------------------ 监听 ------------------------
 // 监听文本消息
-Weixin.prototype.textMsg = function(callback) {
+Weixin.prototype.textMsg = function (callback) {
 
     emitter.on("weixinTextMsg", callback);
 
@@ -307,7 +307,7 @@ Weixin.prototype.textMsg = function(callback) {
 }
 
 // 监听图片消息
-Weixin.prototype.imageMsg = function(callback) {
+Weixin.prototype.imageMsg = function (callback) {
 
     emitter.on("weixinImageMsg", callback);
 
@@ -315,7 +315,7 @@ Weixin.prototype.imageMsg = function(callback) {
 }
 
 // 监听语音消息
-Weixin.prototype.voiceMsg = function(callback) {
+Weixin.prototype.voiceMsg = function (callback) {
 
     emitter.on("weixinVoiceMsg", callback);
 
@@ -323,7 +323,7 @@ Weixin.prototype.voiceMsg = function(callback) {
 }
 
 // 监听地理位置消息
-Weixin.prototype.locationMsg = function(callback) {
+Weixin.prototype.locationMsg = function (callback) {
 
     emitter.on("weixinLocationMsg", callback);
 
@@ -331,7 +331,7 @@ Weixin.prototype.locationMsg = function(callback) {
 }
 
 // 监听链接消息
-Weixin.prototype.urlMsg = function(callback) {
+Weixin.prototype.urlMsg = function (callback) {
 
     emitter.on("weixinUrlMsg", callback);
 
@@ -339,7 +339,7 @@ Weixin.prototype.urlMsg = function(callback) {
 }
 
 // 监听事件
-Weixin.prototype.eventMsg = function(callback) {
+Weixin.prototype.eventMsg = function (callback) {
 
     emitter.on("weixinEventMsg", callback);
 
@@ -349,10 +349,9 @@ Weixin.prototype.eventMsg = function(callback) {
 /***********************************************************************************************************************/
 /*待查*/
 //监听用户是否要点击地址栏的菜单
-Weixin.prototype.clickAddress = function(callback)
-{
+Weixin.prototype.clickAddress = function (callback) {
 
-    emitter.on("wexinclickAddress",callback);
+    emitter.on("wexinclickAddress", callback);
 
     return this;
 }
@@ -372,7 +371,7 @@ Weixin.prototype.clickAddress = function(callback)
  * Content   文本消息内容
  * MsgId   消息id，64位整型
  */
-Weixin.prototype.parseTextMsg = function() {
+Weixin.prototype.parseTextMsg = function () {
     var msg = {
         "toUserName": this.data.ToUserName[0],
         "fromUserName": this.data.FromUserName[0],
@@ -395,7 +394,7 @@ Weixin.prototype.parseTextMsg = function() {
  * Content   图片链接
  * MsgId   消息id，64位整型
  */
-Weixin.prototype.parseImageMsg = function() {
+Weixin.prototype.parseImageMsg = function () {
     var msg = {
         "toUserName": this.data.ToUserName[0],
         "fromUserName": this.data.FromUserName[0],
@@ -421,7 +420,7 @@ Weixin.prototype.parseImageMsg = function() {
  * Format 语音格式，如amr，speex等
  * MsgID 消息id，64位整型
  */
-Weixin.prototype.parseVoiceMsg = function() {
+Weixin.prototype.parseVoiceMsg = function () {
     var eventKey = '';
     if (this.data.EventKey) {
         eventKey = this.data.EventKey[0];
@@ -454,7 +453,7 @@ Weixin.prototype.parseVoiceMsg = function() {
  * Label 位置信息
  * MsgId   消息id，64位整型
  */
-Weixin.prototype.parseLocationMsg = function(data) {
+Weixin.prototype.parseLocationMsg = function (data) {
     var msg = {
         "toUserName": this.data.ToUserName[0],
         "fromUserName": this.data.FromUserName[0],
@@ -483,7 +482,7 @@ Weixin.prototype.parseLocationMsg = function(data) {
  * Url　消息链接
  * MsgId   消息id，64位整型
  */
-Weixin.prototype.parseLinkMsg = function() {
+Weixin.prototype.parseLinkMsg = function () {
     var msg = {
         "toUserName": this.data.ToUserName[0],
         "fromUserName": this.data.FromUserName[0],
@@ -509,7 +508,7 @@ Weixin.prototype.parseLinkMsg = function() {
  * Event 事件类型，subscribe(订阅)、unsubscribe(取消订阅)、CLICK(自定义菜单点击事件)
  * EventKey 事件KEY值，与自定义菜单接口中KEY值对应
  */
-Weixin.prototype.parseEventMsg = function() {
+Weixin.prototype.parseEventMsg = function () {
     // var eventKey = '';
     // if (this.data.EventKey) {
     //     eventKey = this.data.EventKey[0];
@@ -524,18 +523,17 @@ Weixin.prototype.parseEventMsg = function() {
     //     "eventKey": eventKey
     // }
     var msg = {};
-    for(var key in this.data)
-    {
+    for (var key in this.data) {
         msg[key] = this.data[key][0];
     }
-    emitter.emit("weixinEventMsg",msg);
+    emitter.emit("weixinEventMsg", msg);
 
     return this;
 }
 
 // --------------------- 消息返回 -------------------------
 // 返回文字信息
-Weixin.prototype.sendTextMsg = function(msg) {
+Weixin.prototype.sendTextMsg = function (msg) {
     var time = Math.round(new Date().getTime() / 1000);
 
     var funcFlag = msg.funcFlag ? msg.funcFlag : this.funcFlag;
@@ -557,7 +555,7 @@ Weixin.prototype.sendTextMsg = function(msg) {
 }
 
 // 返回音乐信息
-Weixin.prototype.sendMusicMsg = function(msg) {
+Weixin.prototype.sendMusicMsg = function (msg) {
     var time = Math.round(new Date().getTime() / 1000);
 
     var funcFlag = msg.funcFlag ? msg.funcFlag : this.funcFlag;
@@ -584,18 +582,18 @@ Weixin.prototype.sendMusicMsg = function(msg) {
 }
 
 // 返回图文信息
-Weixin.prototype.sendNewsMsg = function(msg) {
+Weixin.prototype.sendNewsMsg = function (msg) {
     var time = Math.round(new Date().getTime() / 1000);
 
     //
     var articlesStr = "";
     for (var i = 0; i < msg.articles.length; i++) {
         articlesStr += "<item>" +
-            "<Title><![CDATA[" + msg.articles[i].title + "]]></Title>" +
-            "<Description><![CDATA[" + msg.articles[i].description + "]]></Description>" +
-            "<PicUrl><![CDATA[" + msg.articles[i].picUrl + "]]></PicUrl>" +
-            "<Url><![CDATA[" + msg.articles[i].url + "]]></Url>" +
-            "</item>";
+        "<Title><![CDATA[" + msg.articles[i].title + "]]></Title>" +
+        "<Description><![CDATA[" + msg.articles[i].description + "]]></Description>" +
+        "<PicUrl><![CDATA[" + msg.articles[i].picUrl + "]]></PicUrl>" +
+        "<Url><![CDATA[" + msg.articles[i].url + "]]></Url>" +
+        "</item>";
     }
 
     var funcFlag = msg.funcFlag ? msg.funcFlag : this.funcFlag;
@@ -618,50 +616,49 @@ Weixin.prototype.sendNewsMsg = function(msg) {
 
 //返回图片的消息
 //问题:根据接口返回的数据但在微信客户端没有显示出图片
-Weixin.prototype.sendimgMsg = function(msg) {
-        var time = Math.round(new Date().getTime() / 1000);
-        var funcFlag = msg.funcFlag ? msg.funcFlag : this.funcFlag;
-        var output = "" +
-            "<xml>" +
-            "<ToUserName><![CDATA[" + msg.toUserName + "]]></ToUserName>" +
-            "<FromUserName><![CDATA[" + msg.fromUserName + "]]></FromUserName>" +
-            "<CreateTime>" + time + "</CreateTime>" +
-            "<MsgType><![CDATA[" + msg.msgType + "]]></MsgType>" +
-            "<image>" +
-            "<MediaId><![CDATA[" + msg.MediaId + "]]></MediaId>" +
-            "</image>" +
-            "<funcFlag><![CDATA[" + msg.funcFlag + "]]></funcFlag>" +
-            "</xml>";
+Weixin.prototype.sendimgMsg = function (msg) {
+    var time = Math.round(new Date().getTime() / 1000);
+    var funcFlag = msg.funcFlag ? msg.funcFlag : this.funcFlag;
+    var output = "" +
+        "<xml>" +
+        "<ToUserName><![CDATA[" + msg.toUserName + "]]></ToUserName>" +
+        "<FromUserName><![CDATA[" + msg.fromUserName + "]]></FromUserName>" +
+        "<CreateTime>" + time + "</CreateTime>" +
+        "<MsgType><![CDATA[" + msg.msgType + "]]></MsgType>" +
+        "<image>" +
+        "<MediaId><![CDATA[" + msg.MediaId + "]]></MediaId>" +
+        "</image>" +
+        "<funcFlag><![CDATA[" + msg.funcFlag + "]]></funcFlag>" +
+        "</xml>";
 
-        this.res.type('xml');
-        this.res.status(200).send(output);
-        return this;
-    }
+    this.res.type('xml');
+    this.res.status(200).send(output);
+    return this;
+}
 
 /*************************************************************************************************************/
-  //待测
-    //当点击地址栏菜单的时候返回一个true值
-Weixin.prototype.sendClickAddressEvent = function(msg){
+//待测
+//当点击地址栏菜单的时候返回一个true值
+Weixin.prototype.sendClickAddressEvent = function (msg) {
 
-   var username = msg.FromUserName; 
-   var judgement = 'false';
+    var username = msg.FromUserName;
+    var judgement = 'false';
 
-   if(username != undefined && username.length != 0 )
-   {
-        judgement = 'true';  
-   }
-console.log("实际中"+username);
-    emitter.emit("wexinclickAddress",judgement,username);
+    if (username != undefined && username.length != 0) {
+        judgement = 'true';
+    }
+    console.log("实际中" + username);
+    emitter.emit("wexinclickAddress", judgement, username);
 
     return this;
 
 }
 /********************************************************************************************************************/
 
-    //
-    // ------------ 主逻辑 -----------------
-    // 解析
-Weixin.prototype.parse = function() {
+//
+// ------------ 主逻辑 -----------------
+// 解析
+Weixin.prototype.parse = function () {
 
     this.msgType = this.data.MsgType[0] ? this.data.MsgType[0] : "text";
     switch (this.msgType) {
@@ -693,7 +690,7 @@ Weixin.prototype.parse = function() {
 }
 
 // 发送信息
-Weixin.prototype.sendMsg = function(msg) {
+Weixin.prototype.sendMsg = function (msg) {
     switch (msg.msgType) {
         case 'text':
             this.sendTextMsg(msg);
@@ -712,7 +709,7 @@ Weixin.prototype.sendMsg = function(msg) {
 }
 
 
-Weixin.prototype.handleCustomerMsg = function(req, res) {
+Weixin.prototype.handleCustomerMsg = function (req, res) {
     // 保存res
     this.res = res;
 
@@ -721,12 +718,12 @@ Weixin.prototype.handleCustomerMsg = function(req, res) {
 
     // 获取XML内容
     req.setEncoding('utf8');
-    req.on('data', function(chunk) {
+    req.on('data', function (chunk) {
         buf += chunk;
     });
     // 内容接收完毕
-    req.on('end', function() {
-        xml2js.parseString(buf, function(err, json) {
+    req.on('end', function () {
+        xml2js.parseString(buf, function (err, json) {
             if (err) {
                 err.status = 400;
             } else {
