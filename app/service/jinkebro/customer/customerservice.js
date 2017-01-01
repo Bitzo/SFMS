@@ -188,9 +188,9 @@ Customer.prototype.addSubscibe = function(token, msg, callback) {
     wechat.getCustomerInfo(token, msg.FromUserName, function(info) {
         var data = {
             'WechatUserCode': info.openid,
-            Sex = info.sex,
-            NickName = info.nickname,
-            IsActive = 1
+            Sex: info.sex,
+            NickName: info.nickname,
+            IsActive: 1
         };
 
         /**
@@ -277,7 +277,7 @@ Customer.prototype.unsubscribe = function(token, msg, callback) {
         console.log(me.createTime);
         var data = {
             WechatUserCode: info.openid,
-            IsActive = 0
+            IsActive : 0
         }
 
         me.query(data, function(err, resultInfo) {
@@ -384,7 +384,9 @@ Customer.prototype.addAllList = function(token, callback) {
         // }
 
         for (openid in arrOfOpenID) {
-            me.addListFunction(token, {'WechatUserCode': openid}, function(err, result) {
+            me.addListFunction(token, {
+                'WechatUserCode': openid
+            }, function(err, result) {
                 if (err) {
                     callback(true, result);
                     return;
