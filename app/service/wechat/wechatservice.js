@@ -231,9 +231,9 @@ Weixin.prototype.createMenu = function (accessToken, callback) {
     console.log(postUrl);
     var body = {
         "button": [{
-            "type": "view",
+            "type": "click",
             "name": "我要下单",
-            "url": "http://www.baidu.com"
+            "key": "ProductInfo"
         }, {
                 "type": "view",
                 "name": "跟踪包裹",
@@ -647,7 +647,7 @@ Weixin.prototype.sendClickAddressEvent = function (msg) {
     if (username != undefined && username.length != 0) {
         judgement = 'true';
     }
-    console.log("实际中" + username);
+  
     emitter.emit("wexinclickAddress", judgement, username);
 
     return this;

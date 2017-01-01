@@ -28,7 +28,7 @@ router.post('/', function (req, res) {
 
     for (var value in data) {
 
-        if (!(data[value] in req.body.formdata)) {
+        if (!(data[value] in req.body)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
             err += data[value] + ' ';//检查post传输的数据
         }
@@ -46,12 +46,12 @@ router.post('/', function (req, res) {
     }
 
     //插入要传入的值
-    var truename = req.body.formdata.truename,
-        phone = req.body.formdata.phone,
-        school = req.body.formdata.school,
-        area = req.body.formdata.area,
-        dromNum = req.body.formdata.house,
-        roomNum = req.body.formdata.dormNum;
+    var truename = req.body.truename,
+        phone = req.body.phone,
+        school = req.body.school,
+        area = req.body.area,
+        dromNum = req.body.house,
+        roomNum = req.body.dormNum;
 
     data = {
         'CustomerUserName': truename,
