@@ -33,7 +33,7 @@ Customer.prototype.insert = function(data, callback) {
             logModel.Action = operationConfig.jinkeBroApp.customerManage.customerAdd.actionName;
             logModel.Memo = '新增客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = operationConfig.jinkeBroApp.operationType.operation;
+            logModel.Type = operationConfig.operationType.operation;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
@@ -57,7 +57,7 @@ Customer.prototype.insert = function(data, callback) {
             logModel.Action = operationConfig.jinkeBroApp.customerManage.customerAdd.actionName;
             logModel.Memo = '插入客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = operationConfig.jinkeBroApp.operationType.operation;
+            logModel.Type = operationConfig.operationType.error;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
@@ -87,7 +87,7 @@ Customer.prototype.update = function(data, callback) {
             logModel.Action = operationConfig.jinkeBroApp.customerManage.customerUpd.actionName;
             logModel.Memo = '更新客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = operationConfig.jinkeBroApp.operationType.operation;
+            logModel.Type = operationConfig.operationType.operation;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
@@ -109,7 +109,7 @@ Customer.prototype.update = function(data, callback) {
             logModel.Action = operationConfig.jinkeBroApp.customerManage.customerUpd.actionName;
             logModel.Memo = '更新客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = operationConfig.jinkeBroApp.operationType.operation;
+            logModel.Type = operationConfig.operationType.error;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
@@ -136,7 +136,7 @@ Customer.prototype.query = function(data, callback) {
             logModel.Action = operationConfig.jinkeBroApp.customerManage.customerQuery;
             logModel.Memo = '查询客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = operationConfig.jinkeBroApp.operationType.operation;
+            logModel.Type = operationConfig.operationType.operation;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
@@ -158,7 +158,7 @@ Customer.prototype.query = function(data, callback) {
             logModel.Action = operationConfig.jinkeBroApp.customerManage.customerQuery;
             logModel.Memo = '查询客户失败';
             logModel.CreateUserID = 1;
-            logModel.Type = operationConfig.jinkeBroApp.operationType.operation;
+            logModel.Type = operationConfig.operationType.error;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function(err, insertId) {
@@ -274,10 +274,9 @@ Customer.prototype.unsubscribe = function(token, msg, callback) {
     var me = this;
 
     wechat.getCustomerInfo(token, msg.FromUserName, function(info) {
-        console.log(me.createTime);
         var data = {
             WechatUserCode: info.openid,
-            //IsActive : 0 既然取消关注了，为什么这边要设置成0呢？？
+            IsActive: 1
         }
 
         me.query(data, function(err, resultInfo) {
@@ -291,6 +290,7 @@ Customer.prototype.unsubscribe = function(token, msg, callback) {
             if (resultInfo != undefined && resultInfo.length != 0) {
                 //当用户名存在做更新操作
                 data.CustomerID = resultInfo[0].CustomerID;
+                data.IsActive = 0;
 
                 me.update(data, function(err, updataInfo) {
                     if (err) {
@@ -427,16 +427,17 @@ Customer.prototype.addListFunction = function(token, data, callback) {
                 insertData.Sex = info.sex;
                 insertData.NickName = info.nickname;
                 insertData.IsActive = 1;
-                if (info.city.length != 0) {
+
+                if (info.city && info.city.length != 0) {
                     insertData.City = info.city;
                 }
-                if (info.province.length != 0) {
+                if (info.province && info.province.length != 0) {
                     insertData.Province = info.province;
                 }
-                if (info.country.length != 0) {
+                if (info.country && info.country.length != 0) {
                     insertData.Country = info.country;
                 }
-                if (info.remark.length != 0) {
+                if (info.remark && info.remark.length != 0) {
                     insertData.Memo = info.remark;
                 }
 
