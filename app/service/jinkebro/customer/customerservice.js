@@ -277,7 +277,7 @@ Customer.prototype.unsubscribe = function(token, msg, callback) {
         console.log(me.createTime);
         var data = {
             WechatUserCode: info.openid,
-            IsActive : 0
+            //IsActive : 0 既然取消关注了，为什么这边要设置成0呢？？
         }
 
         me.query(data, function(err, resultInfo) {
@@ -356,7 +356,7 @@ Customer.prototype.addLocation = function(msg, callback) {
 Customer.prototype.addAllList = function(token, callback) {
     var me = this;
     //用来记录总共有多少的openid   
-    var arrOfOpenID = {};
+    var arrOfOpenID = [];
 
     //获取所有的列表
     wechat.getCustomerList(token, function(infoList) {
