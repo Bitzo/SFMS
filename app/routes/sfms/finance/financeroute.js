@@ -417,15 +417,17 @@ router.put('/', function (req, res) {
 
 //财务信息查询
 router.get('/', function (req, res) {
+    console.log(req.query)
     var query = JSON.parse(req.query.f),
         ID = query.ID || '',
         startTime = query.startTime || '',
         endTime = query.endTime || '',
-        fiType = query.fiType || '',
-        inOutType = query.inOutType || '',
-        projectID = query.projectID || '',
+        fiType = query.FIType || '',
+        inOutType = query.InOutType || '',
+        projectID = query.ProjectID || '',
         username = query.username || '',
-        fiStatus = query.fiStatus || '',
+        fiStatus = query.FIStatus || '',
+        fiName = query.FIName || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -434,9 +436,10 @@ router.get('/', function (req, res) {
         'ID':ID,
         'Username': username,
         'InOutType': inOutType,
+        'FIName': fiName,
         'projectID': projectID,
-        'FIType': fiType,
-        'FIStatus': fiStatus,
+        'FIType': fiType.trim(),
+        'FIStatus': fiStatus.trim(),
         'startTime': startTime,
         'endTime': endTime,
         'page': page,

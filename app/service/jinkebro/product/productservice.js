@@ -26,6 +26,18 @@ Product.prototype.insertProduct = function (data, callback) {
     });
 }
 
+//删除商品
+Product.prototype.deleteProduct = function (data, callback) {
+    productDAL.deleteProduct(data, function (err, result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        callback(false, result);
+    });
+}
+
 //编辑商品信息
 Product.prototype.updateProduct = function (data, callback) {
     productDAL.updateProduct(data, function (err, result) {
@@ -41,20 +53,26 @@ Product.prototype.updateProduct = function (data, callback) {
 //查询商品信息
 Product.prototype.queryProducts = function (data, callback) {
 
-    var formData = {
-        ProductID: data.ProductID,
-        SKU: data.SKU,
-        ProductName: data.ProductName,
-        ProductDesc: data.ProductDesc,
-        ProductImgPath: data.ProductImgPath,
-        ExpireTime: data.ExpireTime,
-        ProducTime: data.ProducTime,
-        SupplierID: data.SupplierID,
-        ProductTypeID: data.ProductTypeID
+    productDAL.queryProducts(data, function (err, result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        var tempTimeStamp,temp;
+        var days = 60*60*24*1000;
+        for(var i=0;i<result.length; i++){
+            tempTimeStamp = (Date.parse(new Date()) - Date.parse(result[i].ExpireTime)) / days;
+            temp = Math.ceil(tempTimeStamp.toFixed(4));
+            result[i]['remainTime'] = temp;
+        }
+        callback(false, result);
+    });
+}
 
-    };
+//查询商品信息
+Product.prototype.CountProducts = function (data, callback) {
 
-    productDAL.queryProducts(formData, function (err, result) {
+    productDAL.CountProducts(data, function (err, result) {
         if (err) {
             callback(true);
             return;

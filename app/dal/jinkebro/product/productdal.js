@@ -49,6 +49,33 @@ exports.insertProduct = function (data,callback) {
 
 }
 
+//删除产品
+exports.deleteProduct = function (data,callback) {
+    var delete_sql = 'delete from jit_product where ProductID = ' + data['ProductID'] + ';';
+
+    logger.writeInfo("[menuDelete func in menudal]产品删除：" + delete_sql);
+    console.log("in dal,产品删除：" + delete_sql);
+
+    db_jinkebro.mysqlPool.getConnection(function (err,connection) {
+        if(err){
+            logger.writeError("[productdal]数据库连接错误：" + err);
+            callback(true);
+            return ;
+        }
+
+        connection.query(delete_sql, function(err, results) {
+            if (err) {
+                throw err;
+                callback(true);
+                return ;
+            }
+
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
+
 //修改商品
 exports.updateProduct = function (data,callback) {
 
@@ -122,6 +149,11 @@ exports.queryProducts = function (data,callback) {
         }
     }
 
+    var num = data.pageNum; //每页显示的个数
+    var page = data.page || 1;
+
+    query_sql += " LIMIT " + (page-1)*num + "," + num + " ;";
+
     logger.writeInfo("[queryProducts func in productdal]产品编辑:" + query_sql);
     console.log("[queryProducts func in productdal]产品编辑:" + query_sql);
 
@@ -149,7 +181,7 @@ exports.CountProducts = function (data,callback) {
 
     if(data !== undefined){
         for(var key in data){
-            if(data[key] != ''){
+            if(key !== 'page' && key !== 'pageNum' && data[key] != ''){
                 //如果data[key]是数字
                 if(!isNaN(data[key])){
                     sql += " and " + key + " = " + data[key] + " ";

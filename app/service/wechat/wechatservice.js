@@ -225,8 +225,10 @@ Weixin.prototype.getCustomerInfo = function(accessToken, openid, callback) {
 //微信创建菜单的方法
 Weixin.prototype.createMenu = function(accessToken, callback) {
     //微信的创建菜单的url
-    //var postUrl = config.weChat.baseUrl + "menu/create?accessToken=" + accessToken;
-    var postUrl = config.weChat.createMenu + accessToken;
+    //var postUrl = config.weChat.baseUrl + "menu/jcreate?accessToken=j" + accessToken;
+    var postUrl = config.weChat.baseUrl+config.weChat.createMenu + accessToken;
+    
+    console.log(postUrl);
     var body = {
         "button": [{
             "type": "view",
@@ -240,8 +242,8 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
             "name": "我",
             "sub_button": [{
                 "type": "view",
-                "name": "个人信息",
-                "url": "http://www.soso.com"
+                "name": "配送地址",
+                "url": "http://sun.tunnel.2bdata.com/wechat/addressinfo"
             }, {
                 "type": "view",
                 "name": "联系我们",
@@ -255,7 +257,6 @@ Weixin.prototype.createMenu = function(accessToken, callback) {
     }
     var bodyString = JSON.stringify(body);
 
-    console.log(bodyString);
     //头文件
     var headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -344,6 +345,21 @@ Weixin.prototype.eventMsg = function(callback) {
 
     return this;
 }
+
+/***********************************************************************************************************************/
+/*待查*/
+//监听用户是否要点击地址栏的菜单
+Weixin.prototype.clickAddress = function(callback)
+{
+
+    emitter.on("wexinclickAddress",callback);
+
+    return this;
+}
+
+//监听地址的事件
+
+/***********************************************************************************************************************/
 
 
 // ----------------- 消息处理 -----------------------
@@ -621,6 +637,27 @@ Weixin.prototype.sendimgMsg = function(msg) {
         this.res.status(200).send(output);
         return this;
     }
+
+/*************************************************************************************************************/
+  //待测
+    //当点击地址栏菜单的时候返回一个true值
+Weixin.prototype.sendClickAddressEvent = function(msg){
+
+   var username = msg.FromUserName; 
+   var judgement = 'false';
+
+   if(username != undefined && username.length != 0 )
+   {
+        judgement = 'true';  
+   }
+console.log("实际中"+username);
+    emitter.emit("wexinclickAddress",judgement,username);
+
+    return this;
+
+}
+/********************************************************************************************************************/
+
     //
     // ------------ 主逻辑 -----------------
     // 解析
