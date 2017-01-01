@@ -213,12 +213,9 @@ myApp.config(function($routeProvider) {
         }).
         success(function(response) {
             $scope.menus = response.data.Menu;
-            console.log($scope.menus);
         }).
         error(function(response) {
-            console.log(response);
         });
     }
-
 
 })

@@ -154,7 +154,7 @@ block content
           td
             button.btn.btn-primary(type="submit",ng-disabled="roleAddForm.$invalid",ng-click="addnew(formdata,'/role')") 添加
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-success(href="#backend/role") 返回列表
+            a.btn.btn-success(href="#backend/role",ng-click='search()') 返回列表
 
 
 script(src="js/roleAdd.js")
