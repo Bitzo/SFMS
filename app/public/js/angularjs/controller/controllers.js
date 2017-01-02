@@ -5,7 +5,7 @@ myApp.controller('formController', ['$scope', '$http', function($scope, $http) {
     $scope.codesrc="/generatecode";
     function  changeCode() {
         console.log($scope.codeSrc);
-        $scope.codesrc = '/generatecode';
+        $scope.codesrc = '/generatecode?r='+Math.random();
         console.log($scope.codeSrc);
     }
     $scope.changeCode = function() {
