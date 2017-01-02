@@ -425,7 +425,7 @@ router.put('/', function (req, res) {
                                             msg: '人员职责描述过长'
                                         })
                                     }
-                                    userData[i].projectID = results.insertId;
+                                    userData[i].projectID = data.ID;
                                     userData[i].projectName = projectName;
                                     userData[i].editName = operateUserName;
                                     userData[i].operateUser = operateUserName;
