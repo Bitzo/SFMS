@@ -12,7 +12,82 @@ var db_jinkebro = appRequire('db/db_jinkebro'),
 //新增订单
 exports.insertOrder = function (data,callback) {
 
+    var insertSql = 'insert into jit_order set ';
+    var sql = '';
+
+    if(data !== undefined){
+        for(var key in data){
+            if(sql.length == 0){
+                sql += " " + key + " = '" + data[key] + "' " ;
+            }else{
+                sql += ", " + key + " = '" + data[key] + "' " ;
+            }
+        }
+    }
+
+    insertSql += sql;
+
+    logger.writeInfo("[queryOrders func in productdal]订单新增:" + insertSql);
+    console.log("[queryOrders func in productdal]订单新增:" + insertSql);
+
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(insertSql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
 }
+
+//新增订单
+exports.insertOrderProduct = function (data,callback) {
+
+    var insertSql = 'insert into jit_orderproduct set ';
+    var sql = '';
+
+    if(data !== undefined){
+        for(var key in data){
+            if(sql.length == 0){
+                sql += " " + key + " = '" + data[key] + "' " ;
+            }else{
+                sql += ", " + key + " = '" + data[key] + "' " ;
+            }
+        }
+    }
+
+    insertSql += sql + ";";
+
+
+    logger.writeInfo("[insertOrderProduct func in productdal]订单新增:" + insertSql);
+    console.log("[insertOrderProduct func in productdal]订单新增:" + insertSql);
+
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(insertSql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
+
 
 //删除订单
 exports.deleteOrder = function (data,callback) {
