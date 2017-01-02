@@ -5,7 +5,7 @@ var url = require("url");
 //添加客户时的路由
 var customer = appRequire('routes/jinkebro/customer/customerroute');
 var product = appRequire('routes/jinkebro/product/productroute');
-
+var order = appRequire('routes/jinkebro/order/orderroute');
 //产品类别路由
 //var proTyperoute = appRequire('routes/jinkebro/productype/productyperoute');
 //金科小哥主站点
@@ -26,6 +26,10 @@ router.get('/jitgoodsAdd', function(req, res, next) {
     res.render('jinkeBro/jitgoodsAdd', { title: 'Hi jkbro' });
 });
 
+router.get('/jitorder', function (req, res, next) {
+    res.render('jinkeBro/jitorder', { title: 'Hi jkbro' });
+});
+
 //管理产品类别
 //router.use('/proType', proTyperoute);
 
@@ -33,7 +37,8 @@ router.get('/jitgoodsAdd', function(req, res, next) {
 router.use('/customer', customer);
 //产品
 router.use('/product', product);
-
+//订单
+router.use('/order',order);
 
 
 

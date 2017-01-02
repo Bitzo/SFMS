@@ -90,8 +90,8 @@ router.get('/plain',function (req,res) {
                         totalPage: Math.ceil(countNum/pageNum),
                         data: result
                     };
-                    if(resultBack.curPage == resultBack.totlePage) {
-                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    if(resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(resultBack);
@@ -188,8 +188,8 @@ router.get('/plainnof',function (req,res) {
                         totalPage: Math.ceil(countNum/pageNum),
                         data: result
                     };
-                    if(resultBack.curPage == resultBack.totlePage) {
-                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    if(resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(resultBack);
@@ -276,8 +276,8 @@ router.get('/subcode',function (req,res) {
                         totalPage: Math.ceil(countNum/pageNum),
                         data: result
                     };
-                    if(resultBack.curPage == resultBack.totlePage) {
-                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    if(resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(resultBack);
@@ -379,8 +379,8 @@ router.get('/tree',function (req,res) {
                         totalPage: Math.ceil(countNum/pageNum),
                         data: result
                     };
-                    if(resultBack.curPage == resultBack.totlePage) {
-                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    if(resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     return res.json(resultBack);

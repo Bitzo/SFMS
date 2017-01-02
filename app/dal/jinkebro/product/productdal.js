@@ -27,7 +27,7 @@ exports.insertProduct = function (data,callback) {
 
     insert_sql += sql;
 
-    logger.writeInfo("[insertProduct func in menudal]产品新增：" +insert_sql);
+    logger.writeInfo("[insertProduct func in productdal]产品新增：" +insert_sql);
     console.log("in dal, 产品新增：" + insert_sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err,connection) {
@@ -53,7 +53,7 @@ exports.insertProduct = function (data,callback) {
 exports.deleteProduct = function (data,callback) {
     var delete_sql = 'delete from jit_product where ProductID = ' + data['ProductID'] + ';';
 
-    logger.writeInfo("[menuDelete func in menudal]产品删除：" + delete_sql);
+    logger.writeInfo("[menuDelete func in productdal]产品删除：" + delete_sql);
     console.log("in dal,产品删除：" + delete_sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err,connection) {
@@ -129,7 +129,7 @@ exports.queryProducts = function (data,callback) {
     var arr = new Array();
 
     arr.push(' select SKU,ProductID,ProductName,ProductDesc,ProductImgPath, ');
-    arr.push(' ExpireTime,ProducTime,SupplierID,ProductTypeID,jit_productype.ProductTypeName ');
+    arr.push(' ExpireTime,ProducTime,SupplierID,ProductTypeID,jit_productype.ProductTypeName,ProductPrice ');
     arr.push(' from jit_product ');
     arr.push(' left join jit_productype on jit_product.ProductTypeID = jit_productype.ID ');
     arr.push(' where 1 = 1 ');
