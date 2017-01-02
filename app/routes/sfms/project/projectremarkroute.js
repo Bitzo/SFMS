@@ -384,7 +384,6 @@ router.get('/', function (req, res) {
     var query = JSON.parse(req.query.f);
     var projectID = query.ProjectID || '',
         ID = query.ID || '',
-        userID = query.userID || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || config.pageCount,
         countNum = 0;
@@ -392,7 +391,6 @@ router.get('/', function (req, res) {
 
     var data = {
         'ID': ID,
-        'userID': userID,
         'projectID': projectID,
         'page': page,
         'pageNum': pageNum

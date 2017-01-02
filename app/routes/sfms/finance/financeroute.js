@@ -126,7 +126,7 @@ router.post('/', function (req, res) {
                                         'Remark': remark,
                                         'IsActive': isActive
                                     };
-                                    if (isNaN(data.FIPrice)) {
+                                    if (isNaN(data.FIPrice)||data.FIPrice<0) {
                                         res.status(400);
                                         return res.json({
                                             code: 400,
@@ -327,7 +327,7 @@ router.put('/', function (req, res) {
                                                 'Remark': remark,
                                                 'IsActive': isActive
                                             };
-                                            if (isNaN(data.FIPrice)) {
+                                            if (isNaN(data.FIPrice)||data.FIPrice<0) {
                                                 res.status(400);
                                                 return res.json({
                                                     code: 400,

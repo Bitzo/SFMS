@@ -43,7 +43,7 @@ exports.queryAllMenus = function(data, callback) {
     sql += " LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("[queryAllMenus func in menudal]查询所有菜单：" + sql);
-    console.log("in dal,查询所有的菜单：" + sql);
+    //console.log("in dal,查询所有的菜单：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){

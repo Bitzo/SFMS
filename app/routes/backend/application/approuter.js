@@ -184,7 +184,7 @@ router.get('/', function (req, res) {
                     curPage: page,
                     dataNum: countNum,
                     curPageNum: curpageNum,
-                    totlePage: Math.ceil(countNum/pageNum),
+                    totalPage: Math.ceil(countNum/pageNum),
                     data: results,
                     msg: '查找成功'
                 });
