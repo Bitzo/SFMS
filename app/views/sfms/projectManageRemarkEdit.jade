@@ -3,7 +3,8 @@ block content
   div.container-fluid(ng-controller="baseController")
     span 
       h2 项目备注编辑(管理)
-    jason-form(method="post",name="appInfo" source='/sfms/api/projectremark' conf='paginationConf' tocc="ProjectID")
+    jason-form(method="post", source='/sfms/api/projectremark' conf='paginationConf' tocc="ProjectID")
+     form(name="remarkEdit")  
        table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 所属项目
@@ -13,8 +14,8 @@ block content
         tr
           td(width="15%",class="tableleft") 	备注（可选） 
           td
-            textarea(type="textview",rows="10",cols="30",ng-model='paginationConf.formdata.Remark',ng-maxlength='200')
-            small.error(ng-show="paginationConf.formdata.Remark.$error.maxlength && paginationConf.formdata.Remark.$touched") 备注最多200位
+            textarea(type="textview",rows="10",cols="30",name='Remark',ng-model='paginationConf.formdata.Remark',ng-maxlength='200')
+            small.error(ng-show="remarkEdit.Remark.$error.maxlength && remarkEdit.Remark.$touched") 备注最多200位
 
         tr
           td(class="tableleft")

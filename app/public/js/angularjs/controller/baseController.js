@@ -122,7 +122,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             if(response.isSuccess){
-                console.log($scope.paginationConf.formdata)
                 alert(response.msg);
             }else{
                 alert(response.msg);
