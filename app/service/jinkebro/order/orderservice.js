@@ -26,6 +26,18 @@ Order.prototype.insertOrder = function (data, callback) {
     });
 }
 
+//新增订单
+Order.prototype.insertOrderProduct = function (data, callback) {
+    orderDAL.insertOrderProduct(data, function (err, result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        callback(false, result);
+    });
+}
+
 //删除订单
 Order.prototype.deleteOrder = function (data, callback) {
     orderDAL.deleteOrder(data, function (err, result) {

@@ -10,7 +10,8 @@ var express = require('express'),
     url = require('url');
 
 //订单业务逻辑组件
-var orderService = appRequire('service/jinkebro/order/orderservice');
+var orderService = appRequire('service/jinkebro/order/orderservice'),
+    moment = require('moment');
 
 router.get('/',function (req,res) {
     var query = JSON.parse(req.query.f);
@@ -112,7 +113,131 @@ router.get('/',function (req,res) {
     });
 });
 
+router.post('/', function (req, res) {
 
+    var formdata = JSON.parse(req.body.formdata);
+    //检查所需要的字段是否都存在
+    var data = ['PayMethod', 'IsValid', 'IsActive'];
+    var err = 'require: ';
+    for (var value in data) {
+        if (!(data[value] in formdata)) {
+            err += data[value] + ' ';
+        }
+    }
+    //如果要求的字段不在req的参数中
+    if (err !== 'require: ') {
+        logger.writeError(err);
+        res.status(400);
+        return res.json({
+            code: 404,
+            isSuccess: false,
+            msg: '存在未填写的必填字段' + err
+        });
+    }
+
+    var OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),
+        PayMethod = formdata.PayMethod,
+        IsValid = formdata.IsValid,
+        IsActive = formdata.IsActive;
+        // ProductIDs = formdata.ProductIDs,
+        // ProductNames = formdata.ProductNames;
+
+    // 存放接收的数据
+    var insertdata = {
+        OrderTime: OrderTime,
+        PayMethod: PayMethod,
+        IsValid: IsValid,
+        IsActive: IsActive
+    };
+
+    var intdata = {
+        PayMethod: PayMethod,
+        IsValid: IsValid,
+        IsActive: IsActive
+    };
+
+    for (var key in intdata) {
+        if (isNaN(intdata[key])) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intdata[key] + '不是数字'
+            });
+        }
+    }
+
+    var requiredvalue = '缺少输入参数：';
+    for (var key in insertdata) {
+        if (key != 'CancelTime' && key != 'DiscountMoney') {
+            if (insertdata[key].length == 0) {
+                requiredvalue += key + ' ';
+                logger.writeError(requiredvalue);
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: requiredvalue
+                });
+            }
+        }
+
+    }
+
+    //执行插入操作
+    orderService.insertOrder(insertdata, function (err, result) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                addProductResult: result,
+                msg: '服务器出错，产品新增操作失败'
+            });
+        }
+
+
+        if (result !== undefined && result.affectedRows != 0) {
+
+            var orderprod = {
+                OrderID: result.insertId,
+                ProductID: [1,1,1],//ProductIDs,
+                ProductName: ['辣条','辣条','辣条']//ProductNames
+            }
+
+            var flag = 1;
+            var temp;
+            for (var i = 0; i < orderprod.ProductID.length; i++) {
+                temp = {
+                    OrderID: result.insertId,
+                    ProductID: orderprod.ProductID[i],
+                    ProductName: orderprod.ProductName[i]
+                }
+                orderService.insertOrderProduct(temp, function (err, results) {
+                    if (results !== undefined && results.affectedRows == 0) {
+                        flag = 0;
+                    }
+                });
+            }
+            if (flag == 1) {
+                res.status(200);
+                return res.json({
+                    code: 200,
+                    isSuccess: true,
+                    msg: '一条订单记录添加成功'
+                });
+            }
+
+        } else {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "产品添加操作失败"
+            });
+        }
+    });
+});
 
 
 
