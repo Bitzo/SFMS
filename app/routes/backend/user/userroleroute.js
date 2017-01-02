@@ -6,13 +6,13 @@
  * @Function: 角色的勾选，角色的修改
  */
 
-var express=require('express'),
-	url=require('url'),
- 	router=express.Router(),
- 	logger=appRequire('util/loghelper').helper;
+var express = require('express'),
+	url = require('url'),
+	router = express.Router(),
+	logger = appRequire('util/loghelper').helper;
 
 //菜单业务、用户业务逻辑组件
-var	userRole = appRequire('service/backend/user/userroleservice'),
+var userRole = appRequire('service/backend/user/userroleservice'),
 	menuService = appRequire('service/backend/menu/menuservice'),
 	userService = appRequire('service/backend/user/userservice');
 
@@ -153,7 +153,7 @@ router.put('/', function (req, res) {
 });
 
 //根据UserID获取用户的菜单和角色信息
-router.get('/',function (req,res) {
+router.get('/', function (req, res) {
 	var userID = req.query.jitkey;
 	if (userID === undefined || userID === '') {
 		res.status(400);
@@ -163,7 +163,7 @@ router.get('/',function (req,res) {
 			msg: 'require userID'
 		});
 	}
-	if(isNaN(userID)){
+	if (isNaN(userID)) {
         res.status(400);
         return res.json({
 			code: 400,
@@ -172,72 +172,72 @@ router.get('/',function (req,res) {
 		});
 	}
 	var uniqueData = {
-		"userID" : userID
+		"userID": userID
 	};
 
 	//判断user是否存在
-	userService.querySingleID(userID,function (err,result) {
-		if(err){
+	userService.querySingleID(userID, function (err, result) {
+		if (err) {
             res.status(500);
             return res.json({
-				code : 500,
-				isSuccess :false,
-				msg : '服务器出错'
+				code: 500,
+				isSuccess: false,
+				msg: '服务器出错'
 			});
 		}
 		//user存在，则可以进行查询
-		if(result !== undefined && result.length != 0){
-			menuService.queryMenuAndRoleByUserID(uniqueData,function (err, results) {
-				if(err){
+		if (result !== undefined && result.length != 0) {
+			menuService.queryMenuAndRoleByUserID(uniqueData, function (err, results) {
+				if (err) {
                     res.status(500);
                     return res.json({
-						code : 500,
-						isSuccess :false,
-						msg : '服务器出错'
+						code: 500,
+						isSuccess: false,
+						msg: '服务器出错'
 					});
 
 				}
 
-				if(results.Menu !== undefined && results.Menu.length != 0 ){
-					if(results.Role !== undefined &&  results.Role.length != 0){
+				if (results.Menu !== undefined && results.Menu.length != 0) {
+					if (results.Role !== undefined && results.Role.length != 0) {
                         res.status(200);
                         return res.json({
-							code : 200,
-							isSuccess :true,
-							data : results,
-							msg : '查询菜单和角色成功'
+							code: 200,
+							isSuccess: true,
+							data: results,
+							msg: '查询菜单和角色成功'
 						});
-					}else {
+					} else {
                         res.status(200);
                         return res.json({
-							code : 404,
-							isSuccess :false,
-							msg : '未查到角色'
+							code: 404,
+							isSuccess: false,
+							msg: '未查到角色'
 						});
 					}
 
-				}else {
+				} else {
                     res.status(200);
                     return res.json({
-						code : 404,
-						isSuccess :false,
-						msg : '未查到菜单'
+						code: 404,
+						isSuccess: false,
+						msg: '未查到菜单'
 					});
 				}
 			});
-		}else{
+		} else {
             res.status(400);
             return res.json({
-				code : 400,
-				isSuccess :false,
-				msg : '用户不存在'
+				code: 400,
+				isSuccess: false,
+				msg: '用户不存在'
 			});
 		}
 	});
 
 });
 
-router.get('/userID/:userID',function (req,res) {
+router.get('/userID/:userID', function (req, res) {
 	var userID = req.params.userID;
 	if (userID === undefined || userID === '') {
         res.status(400);
@@ -247,7 +247,7 @@ router.get('/userID/:userID',function (req,res) {
 			msg: 'require userID'
 		});
 	}
-	if(isNaN(userID)){
+	if (isNaN(userID)) {
         res.status(400);
         return res.json({
 			code: 400,
@@ -256,62 +256,62 @@ router.get('/userID/:userID',function (req,res) {
 		});
 	}
 	var uniqueData = {
-		"userID" : userID
+		"userID": userID
 	};
 
 	//判断user是否存在
-	userService.querySingleID(userID,function (err,result) {
-		if(err){
+	userService.querySingleID(userID, function (err, result) {
+		if (err) {
             res.status(500);
             return res.json({
-				code : 500,
-				isSuccess :false,
-				msg : '服务器出错'
+				code: 500,
+				isSuccess: false,
+				msg: '服务器出错'
 			});
 		}
 		//user存在，则可以进行查询
-		if(result !== undefined && result.length != 0){
-			menuService.queryMenuAndRoleByUserID(uniqueData,function (err, results) {
-				if(err){
+		if (result !== undefined && result.length != 0) {
+			menuService.queryMenuAndRoleByUserID(uniqueData, function (err, results) {
+				if (err) {
                     res.status(500);
                     return res.json({
-						code : 500,
-						isSuccess :false,
-						msg : '服务器出错'
+						code: 500,
+						isSuccess: false,
+						msg: '服务器出错'
 					});
 
 				}
 
-				if(results.Menu !== undefined && results.Menu.length != 0 ){
-					if(results.Role !== undefined &&  results.Role.length != 0){
+				if (results.Menu !== undefined && results.Menu.length != 0) {
+					if (results.Role !== undefined && results.Role.length != 0) {
 						return res.json({
-							code : 200,
-							isSuccess :true,
-							data : results,
-							msg : '查询菜单和角色成功'
+							code: 200,
+							isSuccess: true,
+							data: results,
+							msg: '查询菜单和角色成功'
 						});
-					}else {
+					} else {
                         res.status(200);
                         return res.json({
-							code : 404,
-							isSuccess :false,
-							msg : '未查到角色'
+							code: 404,
+							isSuccess: false,
+							msg: '未查到角色'
 						});
 					}
 
-				}else {
+				} else {
 					return res.json({
-						code : 404,
-						isSuccess :false,
-						msg : '未查到菜单'
+						code: 404,
+						isSuccess: false,
+						msg: '未查到菜单'
 					});
 				}
 			});
-		}else{
+		} else {
 			return res.json({
-				code : 404,
-				isSuccess :false,
-				msg : '用户不存在'
+				code: 404,
+				isSuccess: false,
+				msg: '用户不存在'
 			});
 		}
 	});

@@ -148,7 +148,7 @@ exports.queryDatadictionary = function (data,callback) {
     sql += " LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询字典信息：" + sql);
-
+    console.log("查询字典信息：" + sql);
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);

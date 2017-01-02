@@ -150,7 +150,7 @@ wechat.urlMsg(function(msg) {
 // 监听事件消息
 wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
-
+    console.log(msg);
     //判断是否是订阅以及取消的判断条件
     switch (msg.Event)
     {
@@ -166,6 +166,7 @@ wechat.eventMsg(function(msg) {
         //         console.log("创建菜单");
         //     });
         // }
+        
             //如果成功  
             if(isSussess)
             {
@@ -255,11 +256,35 @@ wechat.eventMsg(function(msg) {
 
         //菜单点击的事件
         case 'CLICK':
+        switch(msg.EventKey)
+        {
+            case 'ProductInfo':
+            var resMsg = {
+                fromUserName: msg.ToUserName,
+                toUserName: msg.FromUserName,
+                msgType: "text",
+                content: "1、面包  2、泡面   3、可乐。。",
+                funcFlag: 0
+            };
+            console.log("测试微信的clickbutton");
+             wechat.sendMsg(resMsg);
+            break;
+        }
         break;
 
         //菜单的链接的事件
         case 'VIEW':
-        wechat.sendClickAddressEvent(msg);
+        switch(msg.EventKey)
+        {
+            case 'http://sun.tunnel.2bdata.com/wechat/addressinfo':
+            wechat.sendClickAddressEvent(msg);
+            break;
+            case 'http://www.baidu.com':
+            console.log("点击了百度的页面");
+            break;
+            
+        }
+      
         break;
 
     }

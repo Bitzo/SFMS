@@ -6,21 +6,17 @@
  * @Function 读取customer.html里面的内容
  */
 var fs = require('fs');
- module.exports = function(res)
- {
+module.exports = function (res) {
 
- 	fs.readFile(__dirname+'/customer.html','utf-8',function(err,data)
-    { 
-        if(err)
-        {
+    fs.readFile(__dirname + '/customer.html', 'utf-8', function (err, data) {
+        if (err) {
             console.log('读取文件的时候出错');
         }
-        else
-        {
+        else {
             console.log('sdada');
-            res.set('Content-Type','text/html');
+            res.set('Content-Type', 'text/html');
             res.send(new Buffer(data));
             res.end();
         }
     })
- }
+}

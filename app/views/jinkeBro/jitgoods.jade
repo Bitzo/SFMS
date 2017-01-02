@@ -1,3 +1,51 @@
-//
-   Created by Cecurio on 2016/12/30.
+link(rel='stylesheet', href='css/backend/backend.css')   
+block content
+  jason-pagecontent(action='/jinkeBro/product' conf='paginationConf')
+    div.page-content
+      ng-form.form-inline
+        span.title 商品管理
+             div.buttons.pull-right
+              label.form-group.my-form-group
+                a.btn.btn-sm.btn-primary(ng-click='search()')
+                  i.icon.icon-search   查询
+                a.btn.btn-sm.btn-success(href='#/jinkeBro/jitgoodsAdd')
+                  i.icon.icon-plus 新建
+                a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
+                  i.icon.icon-repeat  刷新
+      hr
+      table.table.table-striped.table-bordered.text-center
+        thead
+          tr 
+            th 序号
+            th 仓储量的单位
+            th 商品名称       
+            th 商品描述
+            th 商品图片路径
+            th 有效期
+            th 生产日期
+            th 供应商ID
+            th 商品类型
+            th 操作
+        tbody
+          tr(ng-repeat="x in datas" )
+            td {{$index+1}}
+            td {{x.SKU}}
+            td {{x.ProductName}}
+            td {{x.ProductDesc}}
+            td {{x.ProductImgPath}}
+            td {{x.ExpireTime}}
+            td {{x.ProducTime}}
+            td {{x.SupplierID}}
+            td {{x.ProductTypeID}}
+            td 
+              a(href='#/backend/useredit/?AccountID={{x.AccountID}}' )
+                i.icon.icon-edit 编辑 
+              a(ng-click="remove($index,'/backuser')")
+                i.icon.icon-trash 删除
+              a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'userrole/userID/')") 
+                i.icon.icon-zoom-in  更多
+      div.pull-right
+        jason-pagination(conf='paginationConf')
+
+    
 

@@ -29,10 +29,10 @@ block content
         tr
           td(class="tableleft") 是否有效
           td
-            input(type="radio",name="isActive",value="1",ng-model="formdata.IsActive",checked) 
+            input(type="radio",name="isActive",value="1",ng-model="formdata.IsActive",checked,style="width:15px;height:15px") 
             有效
             &nbsp&nbsp&nbsp
-            input(type="radio",name="isActive",ng-model="formdata.IsActive",value="0")
+            input(type="radio",name="isActive",ng-model="formdata.IsActive",value="0",style="width:15px;height:15px")
             无效
         tr
           td(class="tableleft") 权限树
@@ -41,29 +41,29 @@ block content
               li
                   span
                     i(class="icon-folder-open")
-                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent1")
+                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent1",style="width:15px;height:15px")
                   权限
                   ul
                     li
                       i(class="icon-leaf")
-                        input(type="checkbox",value="1",class="tree_node_child_checkbox",ng-model="formdata.child11")
+                        input(type="checkbox",value="1",class="tree_node_child_checkbox",ng-model="formdata.child11",style="width:15px;height:15px")
                         权限列表
                     li
                       i(class="icon-leaf")
-                        input(type="checkbox",value="2",class="tree_node_child_checkbox",ng-model="formdata.child12")
+                        input(type="checkbox",value="2",class="tree_node_child_checkbox",ng-model="formdata.child12",style="width:15px;height:15px")
                         添加权限
                     li
                       i(class="icon-leaf")
-                        input(type="checkbox",value="3",class="tree_node_child_checkbox",ng-model="formdata.child13")
+                        input(type="checkbox",value="3",class="tree_node_child_checkbox",ng-model="formdata.child13",style="width:15px;height:15px")
                         编辑权限
                      li
                       i(class="icon-leaf")
-                        input(type="checkbox",value="4",class="tree_node_child_checkbox",ng-model="formdata.child14")
+                        input(type="checkbox",value="4",class="tree_node_child_checkbox",ng-model="formdata.child14",style="width:15px;height:15px")
                         删除权限
               li
                   span
                     i(class="icon-folder-open")
-                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent2")
+                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent2",style="width:15px;height:15px")
                   角色
                   ul
                     li
