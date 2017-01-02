@@ -3,7 +3,8 @@ block content
   div.container-fluid(ng-controller="sfmsIndexController")
     span 
       h2 用户编辑
-    jason-form(method="post" source='/backuser' name="userEdit" conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
+    jason-form(method="post" source='/backuser' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
+     form( name="userEdit")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用名称

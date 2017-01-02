@@ -70,7 +70,7 @@ block content
             td
               a(ng-click="show(x.ID,'/sfms/api/project')",href='#/sfms/projectManageEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑
-              a(ng-click="remove($index,'/sfms/api/project')")
+              a(ng-click="remove($index,'/sfms/api/project')",href='')
                 i.icon.icon-trash 删除
               a(data-toggle="modal",data-target="#myModal",ng-click="moreproject($index,'/sfms/api/projectuser/')")
                 i.icon.icon-zoom-in  更多

@@ -3,7 +3,8 @@ block content
   div.container-fluid
     span 
       h2 菜单编辑
-    jason-form(method="post",source='/backmenu/plain' ,name="menuEdit" conf='paginationConf' tocc="ApplicationID,ApplicationName,MenuLevel,ParentID")
+    jason-form(method="post",source='/backmenu/plain'  conf='paginationConf' tocc="ApplicationID,ApplicationName,MenuLevel,ParentID")
+     form(name="menuEdit")
       table.table.table-bordered.table-hover.definedwidth.m10
           tr
             td(width="15%",class="tableleft") 菜单名称 

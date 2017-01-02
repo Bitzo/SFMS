@@ -75,7 +75,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     }
     $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
     $scope.$watch( 'paginationConf.action',getInit);
-    $scope.$watch( 'paginationConf.action',getInit);
     
     //查询
     $scope.search=function(){
@@ -123,6 +122,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             if(response.isSuccess){
+                console.log($scope.paginationConf.formdata)
                 alert(response.msg);
             }else{
                 alert(response.msg);
@@ -214,8 +214,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     $scope.addrole=function(iaction){
         getInitrole(action);
     };
-
-
     function getInitrole(action){
         $http({
             method:'get',

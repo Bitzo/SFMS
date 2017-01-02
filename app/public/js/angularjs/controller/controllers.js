@@ -5,7 +5,7 @@ myApp.controller('formController', ['$scope', '$http', function($scope, $http) {
     $scope.codesrc="/generatecode";
     function  changeCode() {
         console.log($scope.codeSrc);
-        $scope.codesrc = '/generatecode'+"?access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0ODMzMzU3OTI1NDN9.NDS1H-YV-bID4jZ_-YWM3QMdpol4lZIGqDoFx0jL_IM&jitkey=1&date="+new Date();
+        $scope.codesrc = '/generatecode';
         console.log($scope.codeSrc);
     }
     $scope.changeCode = function() {
