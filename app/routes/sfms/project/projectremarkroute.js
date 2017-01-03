@@ -56,7 +56,7 @@ router.post('/', function (req, res) {
         }
         if (results!==undefined && results.length>0) {
             userName = results[0].UserName;
-            projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
+            projectservice.queryProject({ID:projectID}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -66,38 +66,24 @@ router.post('/', function (req, res) {
                     })
                 }
                 if (results!==undefined&&results.length>0) {
-                    var isIn = false;
-                    for (var i in results) {
-                        if (projectID == results[i].ProjectID) isIn = true;
-                    }
-                    if (isIn == true) {
-                        projectservice.queryProject({ID: projectID}, function (err, results) {
-                            if (err) {
-                                res.status(500);
-                                return res.json({
-                                    status: 500,
-                                    isSuccess: false,
-                                    msg: '操作失败，服务器出错'
-                                })
+                    var projectManageID = results[0].ProjectManageID;
+                    projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            })
+                        }
+                        if (results!==undefined&&results.length>0) {
+                            var isIn = false;
+                            if (projectManageID == userID) isIn = true;
+                            for (var i in results) {
+                                if (projectID == results[i].ProjectID) isIn = true;
                             }
-                            if (results!==undefined&& results.length>0) {
-                                projectName = results[0].ProjectName;
-                                var data = {
-                                    'projectID': projectID,
-                                    'projectName': projectName,
-                                    'userID': userID,
-                                    'userName': userName,
-                                    'remark': remark
-                                }
-                                if (data.remark.length > 200) {
-                                    res.status(400);
-                                    return res.json({
-                                        status: 400,
-                                        isSuccess: false,
-                                        msg: '备注信息过长'
-                                    })
-                                }
-                                projectRemarkservice.addRemark(data, function (err, results) {
+                            if (isIn == true) {
+                                projectservice.queryProject({ID: projectID}, function (err, results) {
                                     if (err) {
                                         res.status(500);
                                         return res.json({
@@ -106,19 +92,54 @@ router.post('/', function (req, res) {
                                             msg: '操作失败，服务器出错'
                                         })
                                     }
-                                    if (results!==undefined&&results.insertId>0) {
-                                        res.status(200);
-                                        return res.json({
-                                            status: 200,
-                                            isSuccess: true,
-                                            msg: '操作成功'
+                                    if (results!==undefined&& results.length>0) {
+                                        projectName = results[0].ProjectName;
+                                        var data = {
+                                            'projectID': projectID,
+                                            'projectName': projectName,
+                                            'userID': userID,
+                                            'userName': userName,
+                                            'remark': remark
+                                        }
+                                        if (data.remark.length > 200) {
+                                            res.status(400);
+                                            return res.json({
+                                                status: 400,
+                                                isSuccess: false,
+                                                msg: '备注信息过长'
+                                            })
+                                        }
+                                        projectRemarkservice.addRemark(data, function (err, results) {
+                                            if (err) {
+                                                res.status(500);
+                                                return res.json({
+                                                    status: 500,
+                                                    isSuccess: false,
+                                                    msg: '操作失败，服务器出错'
+                                                })
+                                            }
+                                            if (results!==undefined&&results.insertId>0) {
+                                                res.status(200);
+                                                return res.json({
+                                                    status: 200,
+                                                    isSuccess: true,
+                                                    msg: '操作成功'
+                                                })
+                                            } else {
+                                                res.status(400);
+                                                return res.json({
+                                                    status: 400,
+                                                    isSuccess: false,
+                                                    msg: '操作失败'
+                                                })
+                                            }
                                         })
                                     } else {
                                         res.status(400);
                                         return res.json({
                                             status: 400,
                                             isSuccess: false,
-                                            msg: '操作失败'
+                                            msg: '操作失败，项目信息有误！'
                                         })
                                     }
                                 })
@@ -127,24 +148,24 @@ router.post('/', function (req, res) {
                                 return res.json({
                                     status: 400,
                                     isSuccess: false,
-                                    msg: '操作失败，项目信息有误！'
+                                    msg: '操作失败，该用户不在项目组内'
                                 })
                             }
-                        })
-                    } else {
-                        res.status(400);
-                        return res.json({
-                            status: 400,
-                            isSuccess: false,
-                            msg: '操作失败，该用户不在项目组内'
-                        })
-                    }
+                        } else {
+                            res.status(400);
+                            return res.json({
+                                status: 400,
+                                isSuccess: false,
+                                msg: '操作失败，该用户还不在项目组内'
+                            })
+                        }
+                    })
                 } else {
                     res.status(400);
                     return res.json({
                         status: 400,
                         isSuccess: false,
-                        msg: '操作失败，该用户还不在项目组内'
+                        msg: '操作失败，项目不存在'
                     })
                 }
             })
@@ -162,6 +183,7 @@ router.post('/', function (req, res) {
 
 //项目备注信息编辑
 router.put('/', function (req, res) {
+    console.log(req.body)
     var query = req.body.formdata,
         ID = query.ID,
         projectID = query.ProjectID,
@@ -201,7 +223,7 @@ router.put('/', function (req, res) {
         }
         if (results!==undefined && results.length>0) {
             userName = results[0].UserName;
-            projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
+            projectservice.queryProject({ID:projectID}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -211,39 +233,24 @@ router.put('/', function (req, res) {
                     })
                 }
                 if (results!==undefined&&results.length>0) {
-                    var isIn = false;
-                    for (var i in results) {
-                        if (projectID == results[i].ProjectID) isIn = true;
-                    }
-                    if (isIn == true) {
-                        projectservice.queryProject({ID: projectID}, function (err, results) {
-                            if (err) {
-                                res.status(500);
-                                return res.json({
-                                    status: 500,
-                                    isSuccess: false,
-                                    msg: '操作失败，服务器出错'
-                                })
+                    var projectManageID = results[0].ProjectManageID;
+                    projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            })
+                        }
+                        if (results!==undefined&&results.length>0) {
+                            var isIn = false;
+                            if (projectManageID == userID) isIn = true;
+                            for (var i in results) {
+                                if (projectID == results[i].ProjectID) isIn = true;
                             }
-                            if (results!==undefined&& results.length>0) {
-                                projectName = results[0].ProjectName;
-                                var data = {
-                                    'ID':ID,
-                                    'projectID': projectID,
-                                    'projectName': projectName,
-                                    'userID': userID,
-                                    'userName': userName,
-                                    'remark': remark
-                                }
-                                if (data.remark.length > 200) {
-                                    res.status(400);
-                                    return res.json({
-                                        status: 400,
-                                        isSuccess: false,
-                                        msg: '备注信息过长'
-                                    })
-                                }
-                                projectRemarkservice.updateRemark(data, function (err, results) {
+                            if (isIn == true) {
+                                projectservice.queryProject({ID: projectID}, function (err, results) {
                                     if (err) {
                                         res.status(500);
                                         return res.json({
@@ -252,19 +259,56 @@ router.put('/', function (req, res) {
                                             msg: '操作失败，服务器出错'
                                         })
                                     }
-                                    if (results!==undefined&&results.affectedRows>0) {
-                                        res.status(200);
-                                        return res.json({
-                                            status: 200,
-                                            isSuccess: true,
-                                            msg: '操作成功'
+                                    if (results!==undefined&& results.length>0) {
+                                        projectName = results[0].ProjectName;
+                                        var data = {
+                                            'ID':ID,
+                                            'projectID': projectID,
+                                            'projectName': projectName,
+                                            'userID': userID,
+                                            'userName': userName,
+                                            'remark': remark
+                                        }
+                                        if (data.remark.length > 200) {
+                                            res.status(400);
+                                            return res.json({
+                                                status: 400,
+                                                isSuccess: false,
+                                                msg: '备注信息过长'
+                                            })
+                                        }
+                                        projectRemarkservice.updateRemark(data, function (err, results) {
+                                            if (err) {
+                                                res.status(500);
+                                                return res.json({
+                                                    status: 500,
+                                                    isSuccess: false,
+                                                    msg: '操作失败，服务器出错'
+                                                })
+                                            }
+                                            console.log(results)
+                                            if (results!==undefined&&results.affectedRows>0) {
+                                                res.status(200);
+                                                return res.json({
+                                                    status: 200,
+                                                    isSuccess: true,
+                                                    msg: '操作成功'
+                                                })
+                                            } else {
+                                                res.status(400);
+                                                return res.json({
+                                                    status: 400,
+                                                    isSuccess: false,
+                                                    msg: '操作失败'
+                                                })
+                                            }
                                         })
                                     } else {
                                         res.status(400);
                                         return res.json({
                                             status: 400,
                                             isSuccess: false,
-                                            msg: '操作失败'
+                                            msg: '操作失败，项目信息有误！'
                                         })
                                     }
                                 })
@@ -273,24 +317,24 @@ router.put('/', function (req, res) {
                                 return res.json({
                                     status: 400,
                                     isSuccess: false,
-                                    msg: '操作失败，项目信息有误！'
+                                    msg: '操作失败，该用户不在项目组内'
                                 })
                             }
-                        })
-                    } else {
-                        res.status(400);
-                        return res.json({
-                            status: 400,
-                            isSuccess: false,
-                            msg: '操作失败，该用户不在项目组内'
-                        })
-                    }
+                        } else {
+                            res.status(400);
+                            return res.json({
+                                status: 400,
+                                isSuccess: false,
+                                msg: '操作失败，该用户还不在项目组内'
+                            })
+                        }
+                    })
                 } else {
                     res.status(400);
                     return res.json({
                         status: 400,
                         isSuccess: false,
-                        msg: '操作失败，该用户还不在项目组内'
+                        msg: '操作失败，项目不存在'
                     })
                 }
             })
@@ -333,7 +377,6 @@ router.get('/person', function (req, res) {
         }
         if (results !==undefined && results.length != 0) {
             countNum = results[0]['num'];
-            console.log(countNum)
             projectRemarkservice.queryRemark(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -433,7 +476,6 @@ router.get('/', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     res.status(200);
-                    console.log(result)
                     return res.json(result);
                 } else {
                     res.status(200);

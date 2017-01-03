@@ -9,6 +9,7 @@
 var express = require('express');
 var router = express.Router();
 var KPIservice = appRequire('service/sfms/KPI/KPIservice');
+var projectservice = appRequire('service/sfms/project/projectservice');
 var dataservice = appRequire('service/backend/datadictionary/datadictionaryservice');
 var projectuserservice = appRequire('service/sfms/project/projectuserservice');
 var userservice = appRequire('service/backend/user/userservice');
@@ -60,8 +61,7 @@ router.post('/', function (req, res) {
         })
     };
 
-    //验证绩效分用户userID是否属于项目projectID
-    projectuserservice.queryProjectByUserID({'UserID': UserID}, function (err, results) {
+    projectservice.queryProject({ID:ProjectID}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -70,35 +70,29 @@ router.post('/', function (req, res) {
                 msg: '操作失败，服务器出错'
             })
         }
-        if (results !== undefined && results.length>0) {
-            for (var i in results) {
-                if (results[i].ProjectID == ProjectID) isTrue = true;
-            }
-            if (isTrue == true) {
-                isTrue = false;
-                //查询KPIName, KPIType是否在字典表里
-                var DicID = {
-                    'DictionaryID': [KPIType]
+        if (results!==undefined&&results.length>0) {
+            var ProjectManageID = results[0].ProjectManageID;
+            //验证绩效分用户userID是否属于项目projectID
+            projectuserservice.queryProjectByUserID({'UserID': UserID}, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '操作失败，服务器出错'
+                    })
                 }
-                dataservice.queryDatadictionaryByID(DicID, function (err, results) {
-                    if (err) {
-                        res.status(500);
-                        return res.json({
-                            status: 500,
-                            isSuccess: false,
-                            msg: '操作失败，服务器出错'
-                        })
+                if (results !== undefined && results.length>0) {
+                    if (ProjectManageID == UserID) isTrue = true;
+                    for (var i in results) {
+                        if (results[i].ProjectID == ProjectID) isTrue = true;
                     }
-                    if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                        KPIType = results[0].DictionaryValue;
-                        //查询当前申请的projectID内是否已经有KPIType类型的绩效
-                        query = {
-                            'ProjectID': ProjectID,
-                            'KPIType': KPIType,
-                            'UserID': UserID,
-                            'IsActive': 1
+                    if (isTrue == true) {
+                        //查询KPIName, KPIType是否在字典表里
+                        var DicID = {
+                            'DictionaryID': [KPIType]
                         }
-                        KPIservice.queryKPI(query, function (err, results) {
+                        dataservice.queryDatadictionaryByID(DicID, function (err, results) {
                             if (err) {
                                 res.status(500);
                                 return res.json({
@@ -107,9 +101,16 @@ router.post('/', function (req, res) {
                                     msg: '操作失败，服务器出错'
                                 })
                             }
-                            if (results !== undefined && results.length == 0) {
-                                //获取userID的用户名UserName
-                                userservice.querySingleID(UserID, function (err, results) {
+                            if (results !== undefined && results.length == DicID.DictionaryID.length) {
+                                KPIType = results[0].DictionaryValue;
+                                //查询当前申请的projectID内是否已经有KPIType类型的绩效
+                                query = {
+                                    'ProjectID': ProjectID,
+                                    'KPIType': KPIType,
+                                    'UserID': UserID,
+                                    'IsActive': 1
+                                }
+                                KPIservice.queryKPI(query, function (err, results) {
                                     if (err) {
                                         res.status(500);
                                         return res.json({
@@ -118,46 +119,9 @@ router.post('/', function (req, res) {
                                             msg: '操作失败，服务器出错'
                                         })
                                     }
-                                    if (results !== undefined && results.length > 0) {
-                                        UserName = results[0].UserName;
-                                        //数据获取并验证完毕后再存入KPI数据
-                                        var data = {
-                                            'KPIName': KPIName,
-                                            'KPIType': KPIType,
-                                            'KPIScore': KPIScore,
-                                            'ProjectId': ProjectID,
-                                            'UserID': UserID,
-                                            'UserName': UserName,
-                                            'OperateUser': OperateUser,
-                                            'KPIStatus': '待审核',
-                                            'Remark': Remark,
-                                            'IsActive': 1
-                                        }
-                                        if (data.KPIName.length>45) {
-                                            res.status(400);
-                                            return res.json({
-                                                code: 400,
-                                                isSuccess: false,
-                                                msg: '绩效名称过长'
-                                            });
-                                        }
-                                        if (isNaN(data.KPIScore)||data.KPIScore<0) {
-                                            res.status(400);
-                                            return res.json({
-                                                code: 400,
-                                                isSuccess: false,
-                                                msg: '绩效分不是正确的数值'
-                                            });
-                                        }
-                                        if (data.Remark.length>45) {
-                                            res.status(400);
-                                            return res.json({
-                                                code: 400,
-                                                isSuccess: false,
-                                                msg: '备注过长'
-                                            });
-                                        }
-                                        KPIservice.addKPI(data, function (err, results) {
+                                    if (results !== undefined && results.length == 0) {
+                                        //获取userID的用户名UserName
+                                        userservice.querySingleID(UserID, function (err, results) {
                                             if (err) {
                                                 res.status(500);
                                                 return res.json({
@@ -166,37 +130,94 @@ router.post('/', function (req, res) {
                                                     msg: '操作失败，服务器出错'
                                                 })
                                             }
-                                            if(results !== undefined && results.insertId > 0) {
-                                                res.status(200);
-                                                return res.json({
-                                                    status: 200,
-                                                    isSuccess: true,
-                                                    msg: '操作成功'
+                                            if (results !== undefined && results.length > 0) {
+                                                UserName = results[0].UserName;
+                                                //数据获取并验证完毕后再存入KPI数据
+                                                var data = {
+                                                    'KPIName': KPIName,
+                                                    'KPIType': KPIType,
+                                                    'KPIScore': KPIScore,
+                                                    'ProjectId': ProjectID,
+                                                    'UserID': UserID,
+                                                    'UserName': UserName,
+                                                    'OperateUser': OperateUser,
+                                                    'KPIStatus': '待审核',
+                                                    'Remark': Remark,
+                                                    'IsActive': 1
+                                                }
+                                                if (data.KPIName.length>45) {
+                                                    res.status(400);
+                                                    return res.json({
+                                                        code: 400,
+                                                        isSuccess: false,
+                                                        msg: '绩效名称过长'
+                                                    });
+                                                }
+                                                if (isNaN(data.KPIScore)||data.KPIScore<0) {
+                                                    res.status(400);
+                                                    return res.json({
+                                                        code: 400,
+                                                        isSuccess: false,
+                                                        msg: '绩效分不是正确的数值'
+                                                    });
+                                                }
+                                                if (data.Remark.length>45) {
+                                                    res.status(400);
+                                                    return res.json({
+                                                        code: 400,
+                                                        isSuccess: false,
+                                                        msg: '备注过长'
+                                                    });
+                                                }
+                                                KPIservice.addKPI(data, function (err, results) {
+                                                    if (err) {
+                                                        res.status(500);
+                                                        return res.json({
+                                                            status: 500,
+                                                            isSuccess: false,
+                                                            msg: '操作失败，服务器出错'
+                                                        })
+                                                    }
+                                                    if(results !== undefined && results.insertId > 0) {
+                                                        res.status(200);
+                                                        return res.json({
+                                                            status: 200,
+                                                            isSuccess: true,
+                                                            msg: '操作成功'
+                                                        })
+                                                    } else {
+                                                        res.status(400);
+                                                        return res.json({
+                                                            status: 404,
+                                                            isSuccess: false,
+                                                            msg: results
+                                                        })
+                                                    }
                                                 })
                                             } else {
                                                 res.status(400);
                                                 return res.json({
                                                     status: 404,
                                                     isSuccess: false,
-                                                    msg: results
+                                                    msg: '操作失败，用户有误！'
                                                 })
                                             }
                                         })
                                     } else {
                                         res.status(400);
                                         return res.json({
-                                            status: 404,
+                                            status: 400,
                                             isSuccess: false,
-                                            msg: '操作失败，用户有误！'
+                                            msg: '操作失败，当前项目，该用户已申请过此类型的绩效，不可重复申请'
                                         })
                                     }
                                 })
                             } else {
                                 res.status(400);
                                 return res.json({
-                                    status: 400,
+                                    status: 404,
                                     isSuccess: false,
-                                    msg: '操作失败，当前项目，该用户已申请过此类型的绩效，不可重复申请'
+                                    msg: '操作失败，该绩效类型或名称无效'
                                 })
                             }
                         })
@@ -205,24 +226,24 @@ router.post('/', function (req, res) {
                         return res.json({
                             status: 404,
                             isSuccess: false,
-                            msg: '操作失败，该绩效类型或名称无效'
+                            msg: '操作失败，该用户不在该项目中'
                         })
                     }
-                })
-            } else {
-                res.status(400);
-                return res.json({
-                    status: 404,
-                    isSuccess: false,
-                    msg: '操作失败，该用户不在该项目中'
-                })
-            }
+                } else {
+                    res.status(400);
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: '操作失败，该用户不在该项目中'
+                    })
+                }
+            })
         } else {
             res.status(400);
             return res.json({
-                status: 404,
+                status: 400,
                 isSuccess: false,
-                msg: '操作失败，该用户不在该项目中'
+                msg: '操作失败,项目不存在'
             })
         }
     })
@@ -239,7 +260,8 @@ router.put('/', function (req, res) {
         UserID = query.UserID,
         UserName = query.UserName,
         OperateUser = req.query.jitkey,
-        Remark = query.Remark || '';
+        Remark = query.Remark || '',
+        isTrue = false;
 
     var data ={
         'ID': ID,
@@ -310,11 +332,7 @@ router.put('/', function (req, res) {
         }
         if(results !== undefined && results.length>0) {
             if (results[0].KPIStatus == '待审核') {
-                //查询KPIType是否在字典表里
-                var DicID = {
-                    'DictionaryID': [KPIType]
-                }
-                dataservice.queryDatadictionaryByID(DicID, function (err, results) {
+                projectservice.queryProject({ID:ProjectID}, function (err, results) {
                     if (err) {
                         res.status(500);
                         return res.json({
@@ -323,9 +341,10 @@ router.put('/', function (req, res) {
                             msg: '操作失败，服务器出错'
                         })
                     }
-                    if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                        KPIType = results[0].DictionaryValue;
-                        KPIservice.updateKPI(data, function (err, results) {
+                    if (results!==undefined&&results.length>0) {
+                        var ProjectManageID = results[0].ProjectManageID;
+                        //验证绩效分用户userID是否属于项目projectID
+                        projectuserservice.queryProjectByUserID({'UserID': UserID}, function (err, results) {
                             if (err) {
                                 res.status(500);
                                 return res.json({
@@ -334,19 +353,75 @@ router.put('/', function (req, res) {
                                     msg: '操作失败，服务器出错'
                                 })
                             }
-                            if(results !== undefined && results.affectedRows > 0) {
-                                res.status(200);
-                                return res.json({
-                                    status: 200,
-                                    isSuccess: true,
-                                    msg: '操作成功'
-                                })
+                            if (results !== undefined && results.length>0) {
+                                if (ProjectManageID == UserID) isTrue = true;
+                                for (var i in results) {
+                                    if (results[i].ProjectID == ProjectID) isTrue = true;
+                                }
+                                if (isTrue == true) {
+                                    //查询KPIType是否在字典表里
+                                    var DicID = {
+                                        'DictionaryID': [KPIType]
+                                    }
+                                    dataservice.queryDatadictionaryByID(DicID, function (err, results) {
+                                        if (err) {
+                                            res.status(500);
+                                            return res.json({
+                                                status: 500,
+                                                isSuccess: false,
+                                                msg: '操作失败，服务器出错'
+                                            })
+                                        }
+                                        if (results !== undefined && results.length == DicID.DictionaryID.length) {
+                                            KPIType = results[0].DictionaryValue;
+                                            KPIservice.updateKPI(data, function (err, results) {
+                                                if (err) {
+                                                    res.status(500);
+                                                    return res.json({
+                                                        status: 500,
+                                                        isSuccess: false,
+                                                        msg: '操作失败，服务器出错'
+                                                    })
+                                                }
+                                                if(results !== undefined && results.affectedRows > 0) {
+                                                    res.status(200);
+                                                    return res.json({
+                                                        status: 200,
+                                                        isSuccess: true,
+                                                        msg: '操作成功'
+                                                    })
+                                                } else {
+                                                    res.status(400);
+                                                    return res.json({
+                                                        status: 404,
+                                                        isSuccess: false,
+                                                        msg: results
+                                                    })
+                                                }
+                                            })
+                                        } else {
+                                            res.status(400);
+                                            return res.json({
+                                                status: 400,
+                                                isSuccess: false,
+                                                msg: '操作失败，绩效类型有误！'
+                                            })
+                                        }
+                                    })
+                                } else {
+                                    res.status(400);
+                                    return res.json({
+                                        status: 400,
+                                        isSuccess: false,
+                                        msg: '操作失败，该用户不在项目组成员中！'
+                                    })
+                                }
                             } else {
                                 res.status(400);
                                 return res.json({
-                                    status: 404,
+                                    status: 400,
                                     isSuccess: false,
-                                    msg: results
+                                    msg: '操作失败，用户信息有误！'
                                 })
                             }
                         })
@@ -355,7 +430,7 @@ router.put('/', function (req, res) {
                         return res.json({
                             status: 400,
                             isSuccess: false,
-                            msg: '操作失败，绩效类型有误！'
+                            msg: '操作失败，项目不存在'
                         })
                     }
                 })
