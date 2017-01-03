@@ -75,7 +75,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     }
     $scope.$watch( 'paginationConf.currentPage+paginationConf.itemsPerPage',getInit);
     $scope.$watch( 'paginationConf.action',getInit);
-    $scope.$watch( 'paginationConf.action',getInit);
     
     //查询
     $scope.search=function(){
@@ -138,7 +137,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     //删除
     $scope.d={};
     $scope.remove = function(index,action){
-        var mymessage=confirm("是否确认删除此项");  
+        var a = index+1;
+        var mymessage=confirm("是否确认删除第"+a+"项");  
         if(mymessage==true){
         $scope.d={
             "AccountID":$scope.datas[index].AccountID,
@@ -153,15 +153,15 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
                 d:$scope.d
             }
         }).
-        success(function(response) {
+        success(function(response) {     
         }).
         error(function(response) {
         });
         $scope.datas.splice(index,1);
+        location.reload();
         }else{
 
         }
-
     }
 
 
@@ -213,8 +213,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     $scope.addrole=function(iaction){
         getInitrole(action);
     };
-
-
     function getInitrole(action){
         $http({
             method:'get',

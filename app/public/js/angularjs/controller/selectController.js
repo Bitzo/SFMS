@@ -111,14 +111,10 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
 
             }); 
             }
-     
 
               //新增项目管理中的用户列表
                 $scope.formdata.data=[];
-                $scope.addUser = function(item){
-                    console.log('addUser');
-                    console.log(item);
-                    console.log($scope.user)  
+                $scope.addUser = function(item){ 
                     if(item.duty) {
                     $scope.formdata.data.push($scope.user);
                     $scope.user={};
@@ -131,6 +127,24 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
                 $scope.resetUser = function(item){
                     var mymessage=confirm("是否确认删除此项");  
                     console.log(item.$index);
+                    $scope.formdata.data.splice(item.$index,1);
+                }
+
+                //新增项目管理中的用户列表
+                $scope.paginationConf.formdata.data=[];
+                $scope.addEditUser = function(item){
+                    if(item.duty) {
+                    $scope.formdata.data.push($scope.user);
+                    $scope.paginationConf.formdata.data = $scope.formdata.data;
+                    $scope.user={};
+                    }else{
+                        alert('请填写相关信息')
+                    }
+                    
+                }
+                //重置项目管理中的用户列表
+                $scope.resetEditUser = function(item){
+                    var mymessage=confirm("是否确认删除此项");  
                     $scope.formdata.data.splice(item.$index,1);
                 }
 

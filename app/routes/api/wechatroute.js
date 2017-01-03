@@ -16,6 +16,7 @@ var logger = appRequire('util/loghelper').helper;
 //用来插入到log中的
 var logService = appRequire('service/backend/log/logservice');
 var logModel = appRequire('model/jinkebro/log/logmodel');
+var config = appRequire('config/config');
 //微信接收消息通用组件
 var customerhtml = appRequire('views/jinkeBro/wechat/readfilecustomer');
 //微信的地址栏
@@ -239,18 +240,39 @@ wechat.eventMsg(function (msg) {
         case 'CLICK':
             switch (msg.EventKey) {
                 case 'ProductDisplay':
-                    var resMsg = {
-                        fromUserName: msg.ToUserName,
-                        toUserName: msg.FromUserName,
-                        msgType: "text",
-                        content: "1、面包  2、泡面   3、可乐。。",
-                        funcFlag: 0
-                    };
-                    product.getProductInfoThroughHttpGet(function(productInfo)
-                        {
-                            console.log(productInfo); 
-                        });
-                    wechat.sendMsg(resMsg);
+                    product.getProductInfoThroughHttpGet(function (productInfo) {
+                        var contentInfo = '';
+                        console.log(productInfo);
+                        for (var index in productInfo.data) {
+                            console.log("商品的序列" + index);
+                            for (var key in productInfo.data[index]) {
+                                console.log(key);
+                                if (key == 'ProductID') {
+                                    contentInfo += "编号:" + productInfo.data[index][key] + "  ";
+                                }
+
+                                if (key == 'ProductName') {
+                                    contentInfo += "名称:" + productInfo.data[index][key] + "  ";
+                                }
+
+                                if (key == 'ProductPrice') {
+                                    contentInfo += "价格:" + productInfo.data[index][key] + "  ";
+                                }
+
+                            }
+                            contentInfo += "\n";
+                        }
+                        console.log(contentInfo);
+                        var resMsg = {
+                            fromUserName: msg.ToUserName,
+                            toUserName: msg.FromUserName,
+                            msgType: "text",      
+                            content: contentInfo,
+                            funcFlag: 0
+                        };
+                        wechat.sendMsg(resMsg);
+                    });
+
                     break;
 
                 case 'SubmitOrder':
@@ -297,7 +319,7 @@ router.get('/addressinfo', function (req, res) {
 
     var addressurl = wechat.data.FromUserName;
     //路由的重定义
-    res.redirect(301, 'http://sun.tunnel.2bdata.com/wechat/' + addressurl);
+    res.redirect(301,  + addressurl);
 });
 
 /************************************************************************************/

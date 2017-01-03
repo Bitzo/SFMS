@@ -333,6 +333,7 @@ router.get('/person', function (req, res) {
         }
         if (results !==undefined && results.length != 0) {
             countNum = results[0]['num'];
+            console.log(countNum)
             projectRemarkservice.queryRemark(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -384,7 +385,6 @@ router.get('/', function (req, res) {
     var query = JSON.parse(req.query.f);
     var projectID = query.ProjectID || '',
         ID = query.ID || '',
-        userID = query.userID || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || config.pageCount,
         countNum = 0;
@@ -392,7 +392,6 @@ router.get('/', function (req, res) {
 
     var data = {
         'ID': ID,
-        'userID': userID,
         'projectID': projectID,
         'page': page,
         'pageNum': pageNum
@@ -434,6 +433,7 @@ router.get('/', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     res.status(200);
+                    console.log(result)
                     return res.json(result);
                 } else {
                     res.status(200);

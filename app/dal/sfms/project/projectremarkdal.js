@@ -80,7 +80,7 @@ exports.updateRemark = function (data, callback) {
 
 //项目用户备注查询
 exports.queryRemark = function (data, callback) {
-    var sql = 'select ID,ProjectID,ProjectName,UserID,UserName,Remark,CreateTime,EditTime from jit_projectremark where 1=1 ';
+    var sql = 'select jit_projectremark.ID,ProjectID,jit_projectremark.ProjectName,UserID,UserName,Remark,jit_projectremark.CreateTime,jit_projectremark.EditTime from jit_projectremark,jit_projectbaseinfo where 1=1 and jit_projectremark.ProjectID = jit_projectbaseinfo.ID and jit_projectbaseinfo.IsActive = 1 ';
 
     if (data !== undefined) {
         for (var key in data) {
@@ -118,7 +118,7 @@ exports.queryRemark = function (data, callback) {
 
 //计数，统计对应数据总个数
 exports.countRemark = function (data, callback) {
-    var sql =  'select count(1) AS num from jit_projectremark where 1=1 ';
+    var sql =  'select count(1) AS num from jit_projectremark,jit_projectbaseinfo where 1=1 and jit_projectremark.ProjectID = jit_projectbaseinfo.ID and jit_projectbaseinfo.IsActive = 1 ';
 
     if (data !== undefined) {
         for (var key in data) {

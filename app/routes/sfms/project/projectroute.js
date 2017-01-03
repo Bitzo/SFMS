@@ -123,7 +123,7 @@ router.post('/', function (req, res) {
                                     msg: '项目描述过长'
                                 });
                             }
-                            if (isNaN(data.ProjectPrice)) {
+                            if (isNaN(data.ProjectPrice)||data.ProjectPrice<0) {
                                 res.status(400);
                                 return res.json({
                                     code: 400,
@@ -385,7 +385,7 @@ router.put('/', function (req, res) {
                             msg: '项目描述过长'
                         });
                     }
-                    if (isNaN(data.ProjectPrice)) {
+                    if (isNaN(data.ProjectPrice)||data.ProjectPrice<0) {
                         res.status(400);
                         return res.json({
                             code: 400,
@@ -425,7 +425,7 @@ router.put('/', function (req, res) {
                                             msg: '人员职责描述过长'
                                         })
                                     }
-                                    userData[i].projectID = results.insertId;
+                                    userData[i].projectID = data.ID;
                                     userData[i].projectName = projectName;
                                     userData[i].editName = operateUserName;
                                     userData[i].operateUser = operateUserName;

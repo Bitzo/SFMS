@@ -20,7 +20,7 @@ router.post('/',function (req,res) {
     var formdata = JSON.parse(req.body.formdata);
 
     //检查所需要的字段是否都存在
-    var data = ['SKU','ProductName','SupplierID','ProductTypeID'];
+    var data = ['SKU','ProductName','SupplierID','ProductTypeID','ProductPrice'];
     var err = 'require: ';
     for (var value in data){
         if(!(data[value] in formdata)){
@@ -46,6 +46,7 @@ router.post('/',function (req,res) {
     var ProducTime = (formdata.ProducTime) ? (formdata.ProducTime) : moment().format('YYYY-MM-DD HH:mm:ss');
     var SupplierID = formdata.SupplierID;
     var ProductTypeID = formdata.ProductTypeID;
+    var ProductPrice = formdata.ProductPrice;
 
     // 存放接收的数据
     var insertdata = {
@@ -56,7 +57,8 @@ router.post('/',function (req,res) {
         "ExpireTime" : ExpireTime,
         "ProducTime" : ProducTime,
         "SupplierID" :SupplierID,
-        "ProductTypeID" : ProductTypeID
+        "ProductTypeID" : ProductTypeID,
+        "ProductPrice" : ProductPrice
     };
 
     var intdata = {
@@ -77,7 +79,7 @@ router.post('/',function (req,res) {
 
     var requiredvalue = '缺少输入参数：';
     for(var key in insertdata){
-        if(key != 'SupplierID' && key != 'ProductTypeID'){
+        if(key != 'ProductDesc' && key != 'ProductImgPath'){
             if(insertdata[key].length == 0){
                 requiredvalue += key + ' ';
                 logger.writeError(requiredvalue);
@@ -209,7 +211,7 @@ router.put('/',function (req,res) {
     var formdata = JSON.parse(req.body.formdata);
 
     //检查所需要的字段是否都存在
-    var data = ['SKU', 'ProductID', 'ProductName', 'SupplierID', 'ProductTypeID'];
+    var data = ['SKU', 'ProductID', 'ProductName', 'SupplierID', 'ProductTypeID','ProductPrice'];
     var err = 'require: ';
     for (var value in data) {
         if (!(data[value] in formdata)) {
@@ -237,6 +239,7 @@ router.put('/',function (req,res) {
     var ProducTime = (formdata.ProducTime) ? (formdata.ProducTime) : moment().format('YYYY-MM-DD HH:mm:ss');
     var SupplierID = formdata.SupplierID;
     var ProductTypeID = formdata.ProductTypeID;
+    var ProductPrice = formdata.ProductPrice;
 
     // 存放接收的数据
     var updatedata = {
@@ -248,7 +251,8 @@ router.put('/',function (req,res) {
         "ExpireTime": ExpireTime,
         "ProducTime": ProducTime,
         "SupplierID": SupplierID,
-        "ProductTypeID": ProductTypeID
+        "ProductTypeID": ProductTypeID,
+        "ProductPrice" : ProductPrice
     };
 
     var intdata = {
@@ -347,7 +351,8 @@ router.get('/',function (req,res) {
         ProductName = query.ProductName || '',
         ExpireTime = query.ExpireTime || '',
         SupplierID = query.SupplierID || '',
-        ProductTypeID = query.ProductTypeID || '';
+        ProductTypeID = query.ProductTypeID || '',
+        ProductPrice = query.ProductPrice || '';
 
     page = page>0 ? page : 1;
 
@@ -366,7 +371,8 @@ router.get('/',function (req,res) {
         ProductName : ProductName,
         ExpireTime : ExpireTime,
         SupplierID : SupplierID,
-        ProductTypeID : ProductTypeID
+        ProductTypeID : ProductTypeID,
+        ProductPrice : ProductPrice
     };
 
     var intdata = {
@@ -422,8 +428,8 @@ router.get('/',function (req,res) {
                         totalPage: Math.ceil(countNum/pageNum),
                         data: result
                     };
-                    if(resultBack.curPage == resultBack.totlePage) {
-                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    if(resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
                     }
                     res.status(200);
                     //console.log(resultBack);

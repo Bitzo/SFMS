@@ -72,9 +72,9 @@ router.post('/', function (req, res) {
             })
         }
         if (results !== undefined && results.length > 0) {
-            //查询fiType、inOutType、fiName是否在字典表中
+            //查询fiType、inOutType是否在字典表中
             var DicID = {
-                'DictionaryID': [fiType, inOutType, fiName]
+                'DictionaryID': [fiType, inOutType]
             }
             dataservice.queryDatadictionaryByID(DicID, function (err, results) {
                 if (err) {
@@ -88,7 +88,6 @@ router.post('/', function (req, res) {
                 if (results !== undefined && results.length == DicID.DictionaryID.length) {
                     fiType = results[0].DictionaryValue;
                     inOutType = results[1].DictionaryValue;
-                    fiName = results[2].DictionaryValue;
                     //获取userid的username
                     userservice.querySingleID(userID, function (err, results) {
                         if (err) {
@@ -126,12 +125,20 @@ router.post('/', function (req, res) {
                                         'Remark': remark,
                                         'IsActive': isActive
                                     };
-                                    if (isNaN(data.FIPrice)) {
+                                    if (isNaN(data.FIPrice)||data.FIPrice<0) {
                                         res.status(400);
                                         return res.json({
                                             code: 400,
                                             isSuccess: false,
                                             msg: '财务金额不是正确的数值'
+                                        });
+                                    }
+                                    if (data.FIName.length>45) {
+                                        res.status(400);
+                                        return res.json({
+                                            code: 400,
+                                            isSuccess: false,
+                                            msg: '财务名称过长'
                                         });
                                     }
                                     if (data.Remark.length>45) {
@@ -272,9 +279,9 @@ router.put('/', function (req, res) {
                     })
                 }
                 if (results !== undefined && results.length > 0) {
-                    //查询fiType、inOutType、fiName是否在字典表中
+                    //查询fiType、inOutType是否在字典表中
                     var DicID = {
-                        'DictionaryID': [fiType, inOutType, fiName]
+                        'DictionaryID': [fiType, inOutType]
                     }
                     dataservice.queryDatadictionaryByID(DicID, function (err, results) {
                         if (err) {
@@ -288,7 +295,6 @@ router.put('/', function (req, res) {
                         if (results !== undefined && results.length == DicID.DictionaryID.length) {
                             fiType = results[0].DictionaryValue;
                             inOutType = results[1].DictionaryValue;
-                            fiName = results[2].DictionaryValue;
                             //获取userid的username
                             userservice.querySingleID(userID, function (err, results) {
                                 if (err) {
@@ -327,12 +333,20 @@ router.put('/', function (req, res) {
                                                 'Remark': remark,
                                                 'IsActive': isActive
                                             };
-                                            if (isNaN(data.FIPrice)) {
+                                            if (isNaN(data.FIPrice)||data.FIPrice<0) {
                                                 res.status(400);
                                                 return res.json({
                                                     code: 400,
                                                     isSuccess: false,
                                                     msg: '财务金额不是正确的数值'
+                                                });
+                                            }
+                                            if (data.FIName.length>45) {
+                                                res.status(400);
+                                                return res.json({
+                                                    code: 400,
+                                                    isSuccess: false,
+                                                    msg: '财务名称过长'
                                                 });
                                             }
                                             if (data.Remark.length>45) {
