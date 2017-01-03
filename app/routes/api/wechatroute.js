@@ -266,7 +266,7 @@ wechat.eventMsg(function (msg) {
                         var resMsg = {
                             fromUserName: msg.ToUserName,
                             toUserName: msg.FromUserName,
-                            msgType: "text",      
+                            msgType: "text",
                             content: contentInfo,
                             funcFlag: 0
                         };
@@ -317,9 +317,9 @@ wechat.clickAddress(function (judgement, username) {
 //渲染地址栏的页面
 router.get('/addressinfo', function (req, res) {
 
-    var addressurl = wechat.data.FromUserName;
+    var addressurl = config.jinkebro.baseUrl + wechat.data.FromUserName;
     //路由的重定义
-    res.redirect(301,  + addressurl);
+    res.redirect(301, + addressurl);
 });
 
 /************************************************************************************/
