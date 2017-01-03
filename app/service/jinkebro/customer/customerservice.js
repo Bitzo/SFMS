@@ -348,13 +348,12 @@ Customer.prototype.addAllList = function (token, callback) {
     //用来记录总共有多少的openid   
     var arrOfOpenID = [];
     //获取所有的列表
-    console.log("单凯真帅");
     wechat.getCustomerList(token, function (infoList) {
         for (var key in infoList.data.openid) {
             arrOfOpenID.push(infoList.data.openid[key]);
         }
 
-        for (openid in arrOfOpenID) {
+        for (var openid in arrOfOpenID) {
             me.addListFunction(token, {
                 'WechatUserCode': arrOfOpenID[openid]
             }, function (err, result) {
@@ -385,7 +384,7 @@ Customer.prototype.addListFunction = function (token, data, callback) {
         }
 
         if (resultInfo != undefined && resultInfo.length != 0) {
-            var errinfo = '用户名已经存在，不需要重复插入';
+            errinfo = '用户名已经存在，不需要重复插入';
             callback(true, errinfo);
             return;
         }

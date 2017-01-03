@@ -8,8 +8,14 @@
 var productDAL = appRequire('dal/jinkebro/product/productdal'),
     moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
-    logModel = appRequire('model/jinkebro/log/logmodel');
-
+    logModel = appRequire('model/jinkebro/log/logmodel'),
+    config = appRequire('config/config');
+var http =require('http');
+var logger = appRequire('util/loghelper').helper;
+var logService = appRequire('service/backend/log/logservice');
+var logModel = appRequire('model/jinkebro/log/logmodel');
+//日期组件
+var moment = require('moment');
 var Product = function () {
 
 }
@@ -97,4 +103,37 @@ Product.prototype.getProCountByID = function (data, callback) {
     });
 }
 
+//通过http的get方法直接获取信息
+Product.prototype.getProductInfoThroughHttpGet  = function(callback) 
+{
+    
+    var getUrl = config.jinkebro.baseUrl + config.jinkebro.productInfo;
+    //var getUrl = '/jinkeBro/product';
+    console.log(getUrl);
+   http.get(getUrl, function (res) {
+        var datas = [];
+        var size = 0;
+        res.on('data', function (data) {
+            datas.push(data);
+            size += data.length;
+        });
+
+        res.on("end", function () {
+            var buff = Buffer.concat(datas, size);
+            var result =JSON.parse(buff); //转码//var result = buff.toString();//不需要转编码,直接tostring  
+            logService.insertOperationLog(logModel, function (err, insertId) {
+                if (err) {
+                    logger.writeError('获取微信商品信息成功，生成操作日志异常' + new Date());
+                }
+            });
+            
+            if (callback && typeof callback === 'function') {
+                callback(result);
+            }
+        });
+
+    }).on('error', function (e) {
+        logger.writeError('获取微信商品信息时异常' + new Date());
+    });
+}
 module.exports = new Product();

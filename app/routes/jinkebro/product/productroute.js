@@ -448,4 +448,116 @@ router.get('/',function (req,res) {
     });
 });
 
+//查询所有的商品的部分 简单的没有任何的限制
+router.get('/info',function (req,res) {
+   
+    var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
+        pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
+        SKU = req.query.SKU || '',
+        ProductID = req.query.ProductID || '',
+        ProductName = req.query.ProductName || '',
+        ExpireTime = req.query.ExpireTime || '',
+        SupplierID = req.query.SupplierID || '',
+        ProductTypeID = req.query.ProductTypeID || '';
+
+    page = page>0 ? page : 1;
+     console.log("测试商品的查询的路由");
+    if (pageNum == ''){
+        pageNum = config.pageCount;
+    }
+
+    //用于查询结果总数的计数
+    var countNum = 0;
+
+    var data = {
+        page : page,
+        pageNum : pageNum,
+        SKU : SKU,
+        ProductID : ProductID,
+        ProductName : ProductName,
+        ExpireTime : ExpireTime,
+        SupplierID : SupplierID,
+        ProductTypeID : ProductTypeID
+    };
+
+    var intdata = {
+        page : page,
+        pageNum : pageNum,
+        ProductID : ProductID,
+        SupplierID : SupplierID,
+        ProductTypeID : ProductTypeID
+    };
+
+    for (var key in intdata){
+        if(isNaN(intdata[key]) && intdata[key] != ''){
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intdata[key] + '不是数字'
+            });
+        }
+    }
+
+    productService.CountProducts(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                errorMsg: "查询失败，服务器内部错误"
+            });
+        }
+        if (results !== undefined && results.length != 0) {
+            countNum = results[0]['num'];
+
+            //查询所需的详细数据
+            productService.queryProducts(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                }
+
+                if (result !== undefined && result.length != 0 && countNum != -1) {
+                    var resultBack = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        curPageNum:pageNum,
+                        totalPage: Math.ceil(countNum/pageNum),
+                        data: result
+                    };
+                    if(resultBack.curPage == resultBack.totlePage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    }
+                    res.status(200);
+                    //console.log(resultBack);
+                    return res.json(resultBack);
+                } else {
+                    res.status(200);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相应菜单"
+                    });
+                }
+            });
+        } else {
+            res.status(200);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相应菜单"
+            });
+        }
+    });
+});
+
+
 module.exports = router;
