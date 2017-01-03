@@ -138,7 +138,7 @@ exports.queryProducts = function (data,callback) {
 
     if(data !== undefined){
         for(var key in data){
-            if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging'){
                 //判断data[key]是否是数值类型
                 if(!isNaN(data[key])){
                     query_sql += ' and ' + key + ' = '+ data[key] + ' ';
@@ -152,10 +152,15 @@ exports.queryProducts = function (data,callback) {
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-    query_sql += " LIMIT " + (page-1)*num + "," + num + " ;";
+    if(data['isPaging'] == 1){
+        query_sql += " LIMIT " + (page-1)*num + "," + num + " ;";
+    }else {
+        query_sql += ';' ;
+    }
 
-    logger.writeInfo("[queryProducts func in productdal]产品编辑:" + query_sql);
-    console.log("[queryProducts func in productdal]产品编辑:" + query_sql);
+
+    logger.writeInfo("[queryProducts func in productdal]产品查询:" + query_sql);
+    console.log("[queryProducts func in productdal]产品查询:" + query_sql);
 
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
@@ -181,7 +186,7 @@ exports.CountProducts = function (data,callback) {
 
     if(data !== undefined){
         for(var key in data){
-            if(key !== 'page' && key !== 'pageNum' && data[key] != ''){
+            if(key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging'){
                 //如果data[key]是数字
                 if(!isNaN(data[key])){
                     sql += " and " + key + " = " + data[key] + " ";
