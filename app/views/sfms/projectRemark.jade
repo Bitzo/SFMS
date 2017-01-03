@@ -33,7 +33,7 @@ block content
             td {{x.Remark}}
             td {{x.EditTime}}                                                                                                                                                                
             td
-              a(ng-click="show(x.ID,'/sfms/api/project')",href='#/sfms/projectRemarkEdit?ID={{x.ID}}' )
+              a(ng-click="show(x.ID,'/sfms/api/project')",href='#/sfms/projectRemarkEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑
               a(ng-click="remove($index,'/sfms/api/projectremark')")
                 i.icon.icon-trash 删除
