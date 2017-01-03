@@ -69,7 +69,7 @@ block content
             td {{x.Class}}
             td {{x.Phone}}
             td 
-              a(href='#/backend/useredit/?AccountID={{x.AccountID}}' )
+              a(href='#/backend/useredit/?AccountID={{x.AccountID}}'  ng-click="show(x.ID,'/backuser')")
                 i.icon.icon-edit 编辑 
               a(ng-click="remove($index,'/backuser')",href='')
                 i.icon.icon-trash 删除

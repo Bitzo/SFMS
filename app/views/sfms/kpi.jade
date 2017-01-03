@@ -53,7 +53,7 @@ block content
             td {{x.CheckTime}}
             td {{x.Remark}}            
             td
-              a(href='#/sfms/kpiEdit/?ID={{x.ID}}' )
+              a(href='#/sfms/kpiEdit/?ID={{x.ID}}' ng-click="show(x.ID,'/sfms/api/kpi/person')" )
                 i.icon.icon-edit 修改
 
             

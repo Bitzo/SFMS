@@ -23,6 +23,7 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
         transclude:true,
         link: function (scope, element, attrs) {
             scope.conf.formactionsubmit = attrs.action;
+            
             var url= attrs.source+"?access_token=";
             var params={f:$location.search()};
             jasonformService.IintGrid(url,params).then(function(response){

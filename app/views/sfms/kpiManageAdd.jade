@@ -3,12 +3,14 @@ block content
   div.container-fluid
     span 
       h2 绩效新增
-    form(method="post",name="financeAdd" )
+    form(method="post",name="kpiManageAdd" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
           td
-            jason-select.input( ng-model='formdata.KPIName' source='/datadict/plain' selectparams='{"Category":"dc_kpiname"}' stext='DictionaryValue' svalue='DictionaryID')
+            input(ng-model='formdata.KPIName' type="textview", name='KPIName' ,ng-maxlength='45',required)
+            &nbsp&nbsp
+            small.error(ng-if="kpiManageAdd.FIName.$error.maxlength && kpiManageAdd.FIName.$touched") 绩效名称最多45位 
       
         tr
           td(width="15%",class="tableleft") 绩效类型
@@ -20,7 +22,7 @@ block content
           td
             input(type="number",name="KPIScore",ng-model="formdata.KPIScore",ng-maxlength='10',required)
             &nbsp&nbsp
-            small.error(ng-if="financeAdd.KPIScore.$error.maxlength && financeAdd.KPIScore.$touched") 绩效分最多50位
+            small.error(ng-if="kpiManageAdd.KPIScore.$error.maxlength && kpiManageAdd.KPIScore.$touched") 绩效分最多50位
 
         tr
           td(width="15%",class="tableleft") 所属项目
@@ -37,7 +39,7 @@ block content
           td
             textarea(type="textview",rows="5",cols="30",name="Remark",ng-model='formdata.Remark',ng-maxlength='200',required)
             &nbsp&nbsp
-            small.error(ng-if="financeAdd.Remark.$error.maxlength && financeAdd.Remark.$touched") 备注最多200位
+            small.error(ng-if="kpiManageAdd.Remark.$error.maxlength && kpiManageAdd.Remark.$touched") 备注最多200位
 
         tr
           td(class="tableleft")

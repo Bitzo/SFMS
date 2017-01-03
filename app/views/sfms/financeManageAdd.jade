@@ -8,7 +8,9 @@ block content
         tr
           td(width="15%",class="tableleft") 财务名称
           td
-            jason-select.input( ng-model='formdata.FIName' source='/datadict/plain' selectparams='{"Category":"dc_finame"}' stext='DictionaryValue' svalue='DictionaryID')
+            input(type="textview", ng-model='formdata.FIName' name='FIName',ng-maxlength='45',required)
+            &nbsp&nbsp
+            small.error(ng-if="financeAdd.FIName.$error.maxlength && financeAdd.FIName.$touched") 财务名称最多45位
             
         
         tr
@@ -44,9 +46,10 @@ block content
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
-            textarea(type="textview",rows="5",cols="30",name="remark",ng-model='formdata.remark',ng-maxlength='200',required)
+            textarea(type="textview",rows="5",cols="30",name="Remark",ng-model='formdata.Remark',ng-maxlength='200',required)
             &nbsp&nbsp
-            small.error(ng-if="financeAdd.remark.$error.maxlength && financeAdd.remark.$touched") 描述最多200位
+            small.error(ng-if="financeAdd.Remark.$error.maxlength && financeAdd.Remark.$touched") 描述最多200位
+
         tr
           td(class="tableleft")
           td

@@ -107,6 +107,36 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         });
     };
 
+//获取编辑信息
+    $scope.show=function(index,action){
+        getInitmenu(index,action);
+    };
+    function getInitmenu(index,action){
+        console.log(index);
+        console.log(action);
+        $http({
+            method:'get',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:{
+                    MenuID:index,
+                    RoleID:index,
+                    ID:index,
+                    AccountID:index
+                }
+            }
+        }).
+        success(function(response) {
+            $scope.paginationConf.formdata=response.data[0];
+            console.log($scope.paginationConf.formdata);
+            console.log('修改成功');
+            console.log(response);
+        }).
+        error(function(response) {
+            console.log('修改失败');
+            console.log(response);
+        });
+    }
 
 
     //编辑完成提交信息
