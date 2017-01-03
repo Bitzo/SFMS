@@ -9,6 +9,7 @@
 var projectremarkDAL = appRequire('dal/sfms/project/projectremarkdal.js');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
+var config = appRequire('config/config');
 
 //项目用户备注信息新增
 exports.addRemark = function(data, callback) {
@@ -36,6 +37,13 @@ exports.updateRemark = function(data, callback) {
 
 //项目用户备注信息查询
 exports.queryRemark = function(data, callback) {
+    data = {
+        'jit_projectremark.ID': data.ID || '',
+        'projectID': data.projectID || '',
+        'userID': data.userID || '',
+        'page': data.page || 1,
+        'pageNum': data.pageNum || config.pageCount
+    }
     projectremarkDAL.queryRemark(data, function (err, results) {
         if (err) {
             callback(true, '查询失败');
@@ -48,6 +56,11 @@ exports.queryRemark = function(data, callback) {
 
 //项目用户备注信息查询统计
 exports.countRemark = function (data, callback) {
+    data = {
+        'userID': data.userID || '',
+        'jit_projectremark.ID': data.ID || '',
+        'projectID': data.projectID || ''
+    }
     projectremarkDAL.countRemark(data, function (err, results) {
         if (err) {
             callback(true);

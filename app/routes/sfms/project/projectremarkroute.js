@@ -333,6 +333,7 @@ router.get('/person', function (req, res) {
         }
         if (results !==undefined && results.length != 0) {
             countNum = results[0]['num'];
+            console.log(countNum)
             projectRemarkservice.queryRemark(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -432,6 +433,7 @@ router.get('/', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     res.status(200);
+                    console.log(result)
                     return res.json(result);
                 } else {
                     res.status(200);
