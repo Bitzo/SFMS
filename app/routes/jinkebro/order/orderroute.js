@@ -18,7 +18,7 @@ router.get('/',function (req,res) {
     var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
         pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
         OrderID = query.OrderID || '',
-        isPaging = query.isPaging || 1;
+        isPaging = query.isPaging || 1; //是否分页 0表示不分页,1表示分页
 
     page = page>0 ? page : 1;
 
@@ -116,31 +116,31 @@ router.get('/',function (req,res) {
 router.post('/', function (req, res) {
 
     var formdata = JSON.parse(req.body.formdata);
+
     //检查所需要的字段是否都存在
-    var data = ['PayMethod', 'IsValid', 'IsActive'];
-    var err = 'require: ';
-    for (var value in data) {
-        if (!(data[value] in formdata)) {
-            err += data[value] + ' ';
-        }
-    }
-    //如果要求的字段不在req的参数中
-    if (err !== 'require: ') {
-        logger.writeError(err);
-        res.status(400);
-        return res.json({
-            code: 404,
-            isSuccess: false,
-            msg: '存在未填写的必填字段' + err
-        });
-    }
+    // var data = ['PayMethod', 'IsValid', 'IsActive'];
+    // var err = 'require: ';
+    // for (var value in data) {
+    //     if (!(data[value] in formdata)) {
+    //         err += data[value] + ' ';
+    //     }
+    // }
+    // //如果要求的字段不在req的参数中
+    // if (err !== 'require: ') {
+    //     logger.writeError(err);
+    //     res.status(400);
+    //     return res.json({
+    //         code: 404,
+    //         isSuccess: false,
+    //         msg: '存在未填写的必填字段' + err
+    //     });
+    // }
 
     var OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),
-        PayMethod = formdata.PayMethod,
-        IsValid = formdata.IsValid,
-        IsActive = formdata.IsActive;
-        // ProductIDs = formdata.ProductIDs,
-        // ProductNames = formdata.ProductNames;
+        PayMethod = formdata.PayMethod || 1,
+        IsValid = formdata.IsValid || 1,
+        IsActive = formdata.IsActive || 1,
+        ProductIDs = formdata.ProductIDs;
 
     // 存放接收的数据
     var insertdata = {
@@ -196,13 +196,11 @@ router.post('/', function (req, res) {
             });
         }
 
-
         if (result !== undefined && result.affectedRows != 0) {
 
             var orderprod = {
                 OrderID: result.insertId,
-                ProductID: [1,1,1],//ProductIDs,
-                ProductName: ['辣条','辣条','辣条']//ProductNames
+                ProductID: ProductIDs
             }
 
             var flag = 1;
@@ -210,8 +208,7 @@ router.post('/', function (req, res) {
             for (var i = 0; i < orderprod.ProductID.length; i++) {
                 temp = {
                     OrderID: result.insertId,
-                    ProductID: orderprod.ProductID[i],
-                    ProductName: orderprod.ProductName[i]
+                    ProductID: orderprod.ProductID[i]
                 }
                 orderService.insertOrderProduct(temp, function (err, results) {
                     if (results !== undefined && results.affectedRows == 0) {
@@ -239,7 +236,23 @@ router.post('/', function (req, res) {
     });
 });
 
+router.put('/',function (req,res) {
+    res.status(200);
+    return res.json({
+        code : 200,
+        isSuccess : true,
+        msg : 'product put '
+    });
+});
 
+router.delete('/',function (req,res) {
+    res.status(200);
+    return res.json({
+        code : 200,
+        isSuccess : true,
+        msg : 'product delete '
+    });
+});
 
 
 module.exports = router;

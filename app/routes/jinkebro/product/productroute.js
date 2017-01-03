@@ -38,15 +38,16 @@ router.post('/',function (req,res) {
         });
     }
 
-    var SKU = formdata.SKU;
-    var ProductName = formdata.ProductName;
-    var ProductDesc = formdata.ProductDesc || '';
-    var ProductImgPath = formdata.ProductImgPath || '';
-    var ExpireTime = (formdata.ExpireTime) ? (formdata.ExpireTime) : moment().format('YYYY-MM-DD HH:mm:ss');
-    var ProducTime = (formdata.ProducTime) ? (formdata.ProducTime) : moment().format('YYYY-MM-DD HH:mm:ss');
-    var SupplierID = formdata.SupplierID;
-    var ProductTypeID = formdata.ProductTypeID;
-    var ProductPrice = formdata.ProductPrice;
+    var SKU = formdata.SKU,
+        ProductName = formdata.ProductName,
+        ProductDesc = formdata.ProductDesc || '',
+        ProductImgPath = formdata.ProductImgPath || '',
+        ExpireTime = (formdata.ExpireTime) ? (formdata.ExpireTime) : moment().format('YYYY-MM-DD HH:mm:ss'),
+        ProducTime = (formdata.ProducTime) ? (formdata.ProducTime) : moment().format('YYYY-MM-DD HH:mm:ss'),
+        SupplierID = formdata.SupplierID,
+        ProductTypeID = formdata.ProductTypeID,
+        ProductPrice = formdata.ProductPrice,
+        OnSale = formdata.OnSale;
 
     // 存放接收的数据
     var insertdata = {
@@ -56,14 +57,16 @@ router.post('/',function (req,res) {
         "ProductImgPath" : ProductImgPath,
         "ExpireTime" : ExpireTime,
         "ProducTime" : ProducTime,
-        "SupplierID" :SupplierID,
+        "SupplierID" : SupplierID,
         "ProductTypeID" : ProductTypeID,
-        "ProductPrice" : ProductPrice
+        "ProductPrice" : ProductPrice,
+        "OnSale" : OnSale
     };
 
     var intdata = {
         "SupplierID" :SupplierID,
-        "ProductTypeID" : ProductTypeID
+        "ProductTypeID" : ProductTypeID,
+        "OnSale" : OnSale
     };
 
     for (var key in intdata){
@@ -230,16 +233,18 @@ router.put('/',function (req,res) {
         });
     }
 
-    var SKU = formdata.SKU;
-    var ProductID = formdata.ProductID;
-    var ProductName = formdata.ProductName;
-    var ProductDesc = formdata.ProductDesc ? formdata.ProductDesc : '';
-    var ProductImgPath = formdata.ProductImgPath ? formdata.ProductImgPath : '';
-    var ExpireTime = (formdata.ExpireTime) ? (formdata.ExpireTime) : moment().format('YYYY-MM-DD HH:mm:ss');
-    var ProducTime = (formdata.ProducTime) ? (formdata.ProducTime) : moment().format('YYYY-MM-DD HH:mm:ss');
-    var SupplierID = formdata.SupplierID;
-    var ProductTypeID = formdata.ProductTypeID;
-    var ProductPrice = formdata.ProductPrice;
+    var SKU = formdata.SKU,
+        ProductID = formdata.ProductID,
+        ProductName = formdata.ProductName,
+        ProductDesc = formdata.ProductDesc ? formdata.ProductDesc : '',
+        ProductImgPath = formdata.ProductImgPath ? formdata.ProductImgPath : '',
+        ExpireTime = (formdata.ExpireTime) ? (formdata.ExpireTime) : moment().format('YYYY-MM-DD HH:mm:ss'),
+        ProducTime = (formdata.ProducTime) ? (formdata.ProducTime) : moment().format('YYYY-MM-DD HH:mm:ss'),
+        SupplierID = formdata.SupplierID,
+        ProductTypeID = formdata.ProductTypeID,
+        ProductPrice = formdata.ProductPrice,
+        OnSale = formdata.OnSale;
+
 
     // 存放接收的数据
     var updatedata = {
@@ -252,19 +257,22 @@ router.put('/',function (req,res) {
         "ProducTime": ProducTime,
         "SupplierID": SupplierID,
         "ProductTypeID": ProductTypeID,
-        "ProductPrice" : ProductPrice
+        "ProductPrice" : ProductPrice,
+        "OnSale" : OnSale
     };
 
     var intdata = {
         "ProductID": ProductID,
         "SupplierID": SupplierID,
-        "ProductTypeID": ProductTypeID
+        "ProductTypeID": ProductTypeID,
+        "OnSale" : OnSale
     };
 
     var JudgeData = {
         "ProductID": ProductID,
         "pageNum" : 1,
-        "page" : 1
+        "page" : 1,
+        "OnSale" : OnSale
     };
 
     for (var key in intdata) {
@@ -352,7 +360,9 @@ router.get('/',function (req,res) {
         ExpireTime = query.ExpireTime || '',
         SupplierID = query.SupplierID || '',
         ProductTypeID = query.ProductTypeID || '',
-        ProductPrice = query.ProductPrice || '';
+        ProductPrice = query.ProductPrice || '',
+        OnSale = (query.OnSale !== undefined) ? (query.OnSale) : 1,
+        isPaging = (query.isPaging !== undefined) ? (query.isPaging) : 1; //是否分页 0表示不分页,1表示分页
 
     page = page>0 ? page : 1;
 
@@ -372,7 +382,9 @@ router.get('/',function (req,res) {
         ExpireTime : ExpireTime,
         SupplierID : SupplierID,
         ProductTypeID : ProductTypeID,
-        ProductPrice : ProductPrice
+        ProductPrice : ProductPrice,
+        OnSale : OnSale,
+        isPaging : isPaging
     };
 
     var intdata = {
@@ -380,7 +392,9 @@ router.get('/',function (req,res) {
         pageNum : pageNum,
         ProductID : ProductID,
         SupplierID : SupplierID,
-        ProductTypeID : ProductTypeID
+        ProductTypeID : ProductTypeID,
+        OnSale : OnSale,
+        isPaging : isPaging
     };
 
     for (var key in intdata){
@@ -439,7 +453,7 @@ router.get('/',function (req,res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "未查询到相应菜单"
+                        msg: "未查询到相应产品"
                     });
                 }
             });
@@ -448,7 +462,7 @@ router.get('/',function (req,res) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "未查询到相应菜单"
+                msg: "未查询到相应产品"
             });
         }
     });
@@ -464,10 +478,12 @@ router.get('/info',function (req,res) {
         ProductName = req.query.ProductName || '',
         ExpireTime = req.query.ExpireTime || '',
         SupplierID = req.query.SupplierID || '',
-        ProductTypeID = req.query.ProductTypeID || '';
+        ProductTypeID = req.query.ProductTypeID || '',
+        isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
+        OnSale = (req.query.OnSale !== undefined) ? (req.query.OnSale) : 1;
 
     page = page>0 ? page : 1;
-     console.log("测试商品的查询的路由");
+    console.log("测试商品的查询的路由");
     if (pageNum == ''){
         pageNum = config.pageCount;
     }
@@ -483,7 +499,9 @@ router.get('/info',function (req,res) {
         ProductName : ProductName,
         ExpireTime : ExpireTime,
         SupplierID : SupplierID,
-        ProductTypeID : ProductTypeID
+        ProductTypeID : ProductTypeID,
+        isPaging : isPaging,
+        OnSale : OnSale
     };
 
     var intdata = {
@@ -491,7 +509,9 @@ router.get('/info',function (req,res) {
         pageNum : pageNum,
         ProductID : ProductID,
         SupplierID : SupplierID,
-        ProductTypeID : ProductTypeID
+        ProductTypeID : ProductTypeID,
+        isPaging :isPaging,
+        OnSale : OnSale
     };
 
     for (var key in intdata){
@@ -550,7 +570,7 @@ router.get('/info',function (req,res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "未查询到相应菜单"
+                        msg: "未查询到相应产品"
                     });
                 }
             });
@@ -559,7 +579,7 @@ router.get('/info',function (req,res) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: "未查询到相应菜单"
+                msg: "未查询到相应产品"
             });
         }
     });

@@ -71,6 +71,10 @@ Order.prototype.queryOrders = function (data, callback) {
             return;
         }
 
+        for(var i=0;i<result.length; i++){
+            result[i].OrderTime = moment(result[i].OrderTime).format('YYYY-MM-DD HH:mm:SS');
+        }
+
         callback(false, result);
     });
 }
