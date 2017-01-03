@@ -142,14 +142,14 @@ router.post('/', function (req, res) {
                             //如果有项目人员信息，则添加
                             if (userData !== undefined && userData.length > 0) {
                                 //转换数据格式
-                                userData.push({
-                                    projectName: projectName,
-                                    userID: projectManageID,
-                                    editName: operateUserName,
-                                    operateUser: operateUserName,
-                                    duty: '项目负责人',
-                                    isActive: 1
-                                });
+                                // userData.push({
+                                //     projectName: projectName,
+                                //     userID: projectManageID,
+                                //     editName: operateUserName,
+                                //     operateUser: operateUserName,
+                                //     duty: '项目负责人',
+                                //     isActive: 1
+                                // });
                                 //获取所有项目用户的username
                                 var ID = [];
                                 for (var i in userData) {
@@ -300,6 +300,7 @@ router.post('/', function (req, res) {
 
 //项目基本信息修改
 router.put('/', function (req, res) {
+    console.log(req.body)
     var query = req.body.formdata;
     var ID = query.ID,
         projectName = query.ProjectName,
@@ -340,7 +341,6 @@ router.put('/', function (req, res) {
             msg: '项目截止时间不能比当前日期早'
         })
     }
-
     userservice.querySingleID(projectManageID, function (err, results) {
         if (err) {
             res.status(500);
@@ -352,7 +352,7 @@ router.put('/', function (req, res) {
         }
         if (results !== undefined && results.length > 0) {
             projectManageName = results[0].UserName;
-            userservice.querySingleID(projectManageID, function (err, results) {
+            userservice.querySingleID(accountID, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -373,8 +373,8 @@ router.put('/', function (req, res) {
                         'ProjectTimeLine': projectTimeLine,
                         'ProjectStatus': projectStatus,
                         'ProjectPrice': projectPrice,
-                        'OperateUser': accountID,
-                        'EditUser': accountID,
+                        'OperateUser': operateUserName,
+                        'EditUser': operateUserName,
                         'EditTime': time
                     }
                     if (data.ProjectDesc.length>45) {

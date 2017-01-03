@@ -8,8 +8,9 @@ block content
         tr
           td(width="15%",class="tableleft") 绩效名称
           td
-            jason-select.input( ng-model='formdata.KPIName' source='/datadict/plain' selectparams='{"Category":"dc_kpiname"}' stext='DictionaryValue' svalue='DictionaryID')
-           
+            input(ng-model='formdata.KPIName' type="textview", name='KPIName' ,ng-maxlength='45',required)
+            &nbsp&nbsp
+            small.error(ng-if="financeAdd.FIName.$error.maxlength && financeAdd.FIName.$touched") 绩效名称最多45位 
         tr
           td(width="15%",class="tableleft") 绩效类型
           td
