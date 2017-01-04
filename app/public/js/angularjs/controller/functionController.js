@@ -16,13 +16,6 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
     };
     $scope.col_defs = [
         {
-            field: "FunctionName",
-            sortable: true,
-            sortingType: "string",
-            displayName: "功能名字",
-            cellTemplate: "{{row.branch[col.field]}}</strong>"
-        },
-        {
             field: "ApplicationID",
             sortable: true,
             sortingType: "number",
@@ -37,4 +30,15 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
             field: "ParentID"
         }
     ];
+    $scope.clickHander = function(e){
+        $scope.currentData=Object.assign({},e);
+        for(key in $scope.currentData){
+            $scope.currentData[key]=$scope.currentData[key]+'';
+        }
+    }
+    $scope.disable=true;
+    $scope.edit=function(){
+        $scope.disable=false;
+    }
+
 })

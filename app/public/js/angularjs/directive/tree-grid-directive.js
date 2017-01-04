@@ -195,7 +195,7 @@ angular.module('treeGrid', [
                     };
                     scope.on_user_click = function (branch) {
                         if (scope.onClick) {
-                            scope.onClick({
+                           return scope.onClick({
                                 branch: branch
                             });
                         }
