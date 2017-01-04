@@ -96,6 +96,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         success(function(response) {
             if(response.isSuccess){
                 alert(response.msg);
+                console.log($scope.formdata);
                 $scope.datas.push($scope.formdata);
                 $scope.formdata={};
             }else{

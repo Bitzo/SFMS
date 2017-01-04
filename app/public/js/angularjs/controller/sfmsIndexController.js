@@ -30,7 +30,7 @@ myApp.controller('sfmsIndexController', function($scope, $http,$q,baseService) {
                         pageindex:1,
                         pagesize:10,
                         f:{
-                            UserID:$scope.paginationConf.formdata.UserID
+                            UserID: 1
                         }
                     }
                 }).
