@@ -34,6 +34,25 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
         error(function(response) {
         });
 
+        //用户名称
+        $http({
+            method:'get',
+            url: '/backuser' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                pageindex:1,
+                pagesize:10,
+                f:{}
+            }
+        }).
+        success(function(response) {
+            $scope.UserNames=response.data;
+            console.log(response);
+            console.log($scope.UserNames);
+            
+        }).
+        error(function(response) {
+        });
+
        //所在学院
         $http({
             method:'get',
@@ -68,6 +87,28 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             $scope.cls=response.data;
+        }).
+        error(function(response) {
+        });
+
+    }
+
+    //绩效管理项目随用户的变化而变化
+    $scope.userKpiChanged = function() {
+        console.log($scope.formdata.UserID)
+        $http({
+            method:'get',
+            url: '/sfms/api/project/user' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                pageindex:1,
+                pagesize:10,
+                f:{
+                    UserID:$scope.formdata.UserID
+                }
+            }
+        }).
+        success(function(response) {
+            $scope.ProjectNames=response.data;
         }).
         error(function(response) {
         });
