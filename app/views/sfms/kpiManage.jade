@@ -6,7 +6,7 @@ block content
         span.title  绩效管理
         div.buttons.pull-right
           label.form-group.my-form-group  绩效类型
-           jason-select.est(placeholder='绩效类型' ng-model='f.KPIType'  source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryValue')
+           jason-select.est(placeholder='绩效类型' ng-model='f.KPIType'  source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
           label.form-group.my-form-group  所属项目
            jason-select.est(placeholder='所属项目' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
           label.form-group.my-form-group 状态
@@ -41,9 +41,9 @@ block content
           tr(ng-repeat="x in datas") 
             td {{$index+1}}
             td {{x.KPIName}}            
-            td {{x.KPIType}}
+            td {{x.KPITypeValue}}
             td {{x.KPIScore}}
-            td {{x.projectName}}            
+            td {{x.ProjectName}}
             td {{x.UserName}}
             td {{x.CreateTime}}
             td {{x.KPIStatus}}
