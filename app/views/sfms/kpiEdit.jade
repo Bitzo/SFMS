@@ -4,7 +4,7 @@ block content
     span 
       h2 绩效编辑
     jason-form(method="post",source='/sfms/api/kpi/person' name='kpiEdit' conf='paginationConf' tocc="ProjectID,UserID")
-      form(name='kpiEdit')
+      form(name='kpiEdit' ng-controller="sfmsIndexController")
         table.table.table-bordered.table-hover.definedwidth.m10
           tr
             td(width="15%",class="tableleft") 绩效名称
@@ -22,10 +22,7 @@ block content
           tr
             td(width="15%",class="tableleft") 用户名
             td
-              jason-select.input( ng-model='paginationConf.formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID' ng-change= "userKpiChanged()")
-              select(ng-model='paginationConf.formdata.UserID',name='UserID' ng-change= "userKpiChanged()")
-                option   
-                option(ng-repeat="item in UserNames" value='{{item.AccountID}}') {{item.UserName}}
+              jason-select.input( ng-model='paginationConf.formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID' ng-change= "userKpiChanged()")   
 
           tr
             td(width="15%",class="tableleft") 所属项目
@@ -41,10 +38,6 @@ block content
               &nbsp&nbsp
               small.error(ng-if="kpiEdit.KPIScore.$error.maxlength && kpiEdit.KPIScore.$touched") 绩效分最多45位
               
-          tr
-            td(width="15%",class="tableleft") 用户名
-            td
-              jason-select.input(ng-model='paginationConf.formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID')
           
           tr
             td(width="15%",class="tableleft") 绩效备注
@@ -56,7 +49,7 @@ block content
           tr
             td(class="tableleft")
             td
-              button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/sfms/api/kpi')") 确认修改
+              button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/kpi')") 确认修改
               &nbsp&nbsp&nbsp&nbsp
               a.btn.btn-sm.btn-success(href='#sfms/kpi',ng-click='search()') 返回列表
 

@@ -11,18 +11,17 @@ block content
             input(ng-model='formdata.KPIName' type="textview", name='KPIName' ,ng-maxlength='45',required)
             &nbsp&nbsp
             small.error(ng-if="financeAdd.FIName.$error.maxlength && financeAdd.FIName.$touched") 绩效名称最多45位 
+
         tr
           td(width="15%",class="tableleft") 绩效类型
           td
             jason-select.input( ng-model='formdata.KPIType' source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
            
-         tr
+        tr
           td(width="15%",class="tableleft") 用户名
           td
             jason-select.input( ng-model='formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID' ng-change= "userKpiChanged()")
-            select(ng-model='formdata.UserID',name='UserID' ng-change= "userKpiChanged()")
-              option   
-              option(ng-repeat="item in UserNames" value='{{item.AccountID}}') {{item.UserName}}
+    
 
         tr
           td(width="15%",class="tableleft") 所属项目
