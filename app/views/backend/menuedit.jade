@@ -19,9 +19,9 @@ block content
               jason-select.input(ng-model='paginationConf.formdata.ApplicationID',name='ApplicationID' source='/app' stext='ApplicationName' svalue='ID',required) 
               
           tr
-          td(width="15%",class="tableleft") 	对应的父级名称
-          td
-            jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="paginationConf.formdata.ParentID", source='/backmenu/parent', stext='ParentMenuName' svalue='ParentID',required)
+            td(width="15%",class="tableleft") 	对应的父级名称
+            td
+              jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="paginationConf.formdata.ParentID", source='/backmenu/parent', stext='ParentMenuName' svalue='ParentID',required)
             
           tr
             td(width="15%",class="tableleft") 菜单对应的层级

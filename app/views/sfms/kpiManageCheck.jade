@@ -13,7 +13,7 @@ block content
         tr
           td(width="15%",class="tableleft") 绩效类型
           td
-            span( ng-model='paginationConf.formdata.KPIType') {{paginationConf.formdata.KPIType}}
+            span( ng-model='paginationConf.formdata.KPIType') {{paginationConf.formdata.KPITypeValue}}
            
         tr
           td(width="15%",class="tableleft") 绩效分
@@ -23,8 +23,13 @@ block content
         tr
           td(width="15%",class="tableleft") 用户名
           td
-            span( ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserID}}
-            
+            span( ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserName}}
+
+        tr
+          td(width="15%",class="tableleft") 所属项目
+          td
+            span(ng-model='paginationConf.formdata.ProjectId' ) {{paginationConf.formdata.ProjectName}}
+
         tr
           td(width="15%",class="tableleft") 申请时间
           td
@@ -47,15 +52,15 @@ block content
         tr
           td(width="15%",class="tableleft") 审核意见
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',required) 
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',required,ng-maxlength='45') 
             &nbsp&nbsp
-            small.error(ng-if="financeAdd.Memo.$error.maxlength && financeAdd.Memo.$touched") 备注最多200位
+            small.error(ng-if="financeAdd.Memo.$error.maxlength && financeAdd.Memo.$touched") 审核意见最多45位
 
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 确认
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 确认审核
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/kpiManage',ng-click='search()') 返回列表
        

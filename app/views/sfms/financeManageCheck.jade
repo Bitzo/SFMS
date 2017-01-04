@@ -29,12 +29,12 @@ block content
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            span(ng-model='paginationConf.formdata.ProjectID' ) {{paginationConf.formdata.ProjectID}}
+            span(ng-model='paginationConf.formdata.ProjectId' ) {{paginationConf.formdata.ProjectName}}
 
         tr
           td(width="15%",class="tableleft") 相关用户
           td
-            span(ng-model='paginationConf.formdata.UserID' ) {{paginationConf.formdata.UserID}}
+            span(ng-model='paginationConf.formdata.UserID' ) {{paginationConf.formdata.UserName}}
      
         tr
           td(width="15%",class="tableleft") 申请时间
@@ -44,7 +44,7 @@ block content
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
-            span(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required) {{paginationConf.formdata.Remark}}
+            span(type="textview",rows="5",cols="30",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required) {{paginationConf.formdata.Remark}}
             
 
         tr
@@ -59,16 +59,16 @@ block content
         tr
           td(width="15%",class="tableleft") 审核意见 
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='200',required) 
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='45',required) 
             &nbsp&nbsp
-            small.error(ng-if="financeCheck.Memo.$error.maxlength && financeCheck.Memo.$touched") 描述最多200位
+            small.error(ng-if="financeCheck.Memo.$error.maxlength && financeCheck.Memo.$touched") 审核意见最多45位
 
 
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/finance/check')") 确认
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/finance/check')") 确认审核
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/financeManage',ng-click='search()') 返回列表
 

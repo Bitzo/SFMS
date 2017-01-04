@@ -264,7 +264,7 @@ router.get('/:projectID', function (req, res) {
     var data = {
         'ProjectID': projectID,
         'UserName': userName,
-        'IsActive': isActive,
+        'IsActive': 1,
         'page': page,
         'pageNum': pageNum
     }

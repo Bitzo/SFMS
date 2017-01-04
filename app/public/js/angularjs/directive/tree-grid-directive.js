@@ -8,6 +8,7 @@ angular.module('template/treeGrid/treeGrid.html', []).run([
             "     <tr>\n" +
             "       <th><a ng-if=\"expandingProperty.sortable\" ng-click=\"sortBy(expandingProperty)\">{{expandingProperty.displayName || expandingProperty.field || expandingProperty}}</a><span ng-if=\"!expandingProperty.sortable\">{{expandingProperty.displayName || expandingProperty.field || expandingProperty}}</span><i ng-if=\"expandingProperty.sorted\" class=\"{{expandingProperty.sortingIcon}} pull-right\"></i></th>\n" +
             "       <th ng-repeat=\"col in colDefinitions\"><a ng-if=\"col.sortable\" ng-click=\"sortBy(col)\">{{col.displayName || col.field}}</a><span ng-if=\"!col.sortable\">{{col.displayName || col.field}}</span><i ng-if=\"col.sorted\" class=\"{{col.sortingIcon}} pull-right\"></i></th>\n" +
+            "       <th><span >操作列</span></th>\n" +
             "     </tr>\n" +
             "   </thead>\n" +
             "   <tbody>\n" +
@@ -23,6 +24,10 @@ angular.module('template/treeGrid/treeGrid.html', []).run([
             "       <td ng-repeat=\"col in colDefinitions\">\n" +
             "         <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
             "         <div ng-if=\"!col.cellTemplate\">{{row.branch[col.field]}}</div>\n" +
+            "       </td>\n" +
+            "       <td><a ng-click=\"on_user_click(row.branch)\"><i class=\"icon.icon-edit\"></i>编辑</a>"+
+            "           <a ng-click=\"on_user_clickadd(row.branch)\"><i class=\"icon.icon-plus\"></i>新增子元素</a>"+
+            "           <a ng-click=\"on_user_click(row.branch)\"><i class=\"icon.icon-delete\"></i>删除</a>"+
             "       </td>\n" +
             "     </tr>\n" +
             "   </tbody>\n" +
@@ -73,8 +78,10 @@ angular.module('treeGrid', [
                     expandOn: '=',
                     onSelect: '&',
                     onClick: '&',
+                    onClickadd:'&',
                     initialSelection: '@',
                     treeControl: '=',
+
                     expandTo: '='
                 },
                 link: function (scope, element, attrs) {
@@ -195,7 +202,14 @@ angular.module('treeGrid', [
                     };
                     scope.on_user_click = function (branch) {
                         if (scope.onClick) {
-                            scope.onClick({
+                            return scope.onClick({
+                                branch: branch
+                            });
+                        }
+                    };
+                    scope.on_user_clickadd = function (branch) {
+                        if (scope.onClickadd) {
+                            return scope.onClickadd({
                                 branch: branch
                             });
                         }

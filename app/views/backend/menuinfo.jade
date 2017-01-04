@@ -24,7 +24,6 @@ block content
             &nbsp&nbsp
             small.error(ng-if="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级名称最多11位
 
-
         tr
           td(width="15%",class="tableleft") 菜单对应的层级
           td
@@ -33,9 +32,6 @@ block content
             &nbsp&nbsp&nbsp           
             input(type="radio",name="MenuLevel",ng-model="formdata.MenuLevel",value="2" ,style="width:15px;height:15px")
             &nbsp2          
-
-              
-        
            
         tr
           td(class="tableleft") 是否有效
@@ -66,14 +62,12 @@ block content
             input(type="textview",name='Url',ng-model='formdata.Url',ng-maxlength='50',required)
             &nbsp&nbsp
             small.error(ng-if="menuInfo.Url.$error.maxlength && menuInfo.Url.$touched") 菜单对应的url最多50位
-           
-          
+                    
         tr
           td(width="15%",class="tableleft") 备注(可选) 
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Memo',ng-maxlength='200')
             small.error(ng-if="menuInfo.Memo.$error.maxlength && menuInfo.Memo.$touched") 备注最多200位
-
 
         tr
           td(class="tableleft")
