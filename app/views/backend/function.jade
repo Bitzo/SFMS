@@ -1,4 +1,17 @@
 block content
-     tree-grid(tree-data="tree_data" col_defs='col_defs' expand-on="expanding_property")
+    div.container-fluid(ng-controller='functionController')
+        div.row
+            div.col-lg-5.col-md-5.col-sm-5
+                tree-grid(tree-data="tree_data" col_defs='col_defs' expand-on="expanding_property" expandingProperty="ApplicationID")
+            div.col-lg-5.col-md-5.col-sm-5(style='border:1px solid black' +
+            ';')
+                h4功能点编辑
+                form.form-horizontal(role='form')
+                    div.form-group
+                        label.col-sm-2.control-label 应用ID
+                        div.col-sm-10
+                            jason-select.input(ng-model='paginationConf.formdata.ApplicationID',name='ApplicationID' source='/app' stext='ApplicationName' svalue='ID',required)
+                    div.form-group
+                        label.col-sm-2.control-label 功能名称
+                        div.col-sm-10
 
-    
