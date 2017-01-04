@@ -44,7 +44,7 @@ block content
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
-            span(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required) {{paginationConf.formdata.Remark}}
+            span(type="textview",rows="5",cols="30",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required) {{paginationConf.formdata.Remark}}
             
 
         tr
@@ -59,9 +59,9 @@ block content
         tr
           td(width="15%",class="tableleft") 审核意见 
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='200',required) 
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='45',required) 
             &nbsp&nbsp
-            small.error(ng-if="financeCheck.Memo.$error.maxlength && financeCheck.Memo.$touched") 描述最多200位
+            small.error(ng-if="financeCheck.Memo.$error.maxlength && financeCheck.Memo.$touched") 审核意见最多45位
 
 
 

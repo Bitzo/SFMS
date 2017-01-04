@@ -47,9 +47,9 @@ block content
         tr
           td(width="15%",class="tableleft") 审核意见
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',required) 
+            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',required,ng-maxlength='45') 
             &nbsp&nbsp
-            small.error(ng-if="financeAdd.Memo.$error.maxlength && financeAdd.Memo.$touched") 备注最多200位
+            small.error(ng-if="financeAdd.Memo.$error.maxlength && financeAdd.Memo.$touched") 审核意见最多45位
 
 
         tr
