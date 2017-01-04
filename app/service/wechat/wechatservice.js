@@ -231,9 +231,19 @@ Weixin.prototype.createMenu = function (accessToken, callback) {
     console.log(postUrl);
     var body = {
         "button": [{
-            "type": "click",
-            "name": "我要下单",
-            "key": "ProductInfo"
+            'name':"我要下单",
+            'sub_button': [
+                {
+                    "type" : "click",
+                    'name' : "商品展示",
+                    'key' : "ProductDisplay"
+                },
+                {
+                    'type' : "click",
+                    'name' : "提交订单",
+                    'key' : "SubmitOrder"
+                }
+            ]
         }, {
                 "type": "view",
                 "name": "跟踪包裹",

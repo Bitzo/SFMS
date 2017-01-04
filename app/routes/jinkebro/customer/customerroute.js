@@ -14,7 +14,7 @@ var router = express.Router();
 var url = require('url');
 var moment = require('moment');
 var logger = appRequire('util/loghelper').helper;
-
+var customer = appRequire('service/jinkebro/customer/customerservice');
 // 
 //加载中间件
 
@@ -22,6 +22,9 @@ var logger = appRequire('util/loghelper').helper;
 //res.render('jinkeBro/wechat/customer.html',{title:'Hi jkbro'})
 
 router.post('/', function (req, res) {
+    console.log(req.headers.referer);
+    var arr =req.headers.referer.split('/');
+    var wechatusercode = arr[4];
     var data = ['truename', 'phone', 'school', 'area', 'house', 'dormNum'];
 
     var err = 'require: ';
@@ -52,7 +55,7 @@ router.post('/', function (req, res) {
         area = req.body.area,
         dromNum = req.body.house,
         roomNum = req.body.dormNum;
-
+        console.log("宿舍号为"+roomNum);
     data = {
         'CustomerUserName': truename,
         'Phone': phone,
@@ -60,39 +63,36 @@ router.post('/', function (req, res) {
         'DormID': dromNum,
         'HouseNum': roomNum
     }
-
-    customer.update(data, function (err, updateinfo) {
+    
+    var queryData = {
+        'WechatUserCode' : wechatusercode
+    } 
+    
+   customer.query(queryData, function (err, queryInfo) {
         if (err) {
-            res.status(500);
-            res.json(
-                {
-                    code: 500,
-                    isSuccess: false,
-                    msg: '修改信息失败，服务器出错'
-                });
-            logger.writeError("修改信息失败，服务器出错");
+            console.log("查询失败");
+            var errinfo = '在获取微信宿舍地址的时候查询失败';
+            console.log(errinfo);
             return;
         }
 
-        if (updatinfo !== undefined && updatinfo.affectedRows != 0) {
-            res.json({
-                code: 200,
-                isSuccess: true,
-                msg: "修改信息成功"
-            })
-            logger.writeInfo("修改信息成功");
-            return;
-        } else {
-            res.status(400);
-            res.json({
-                code: 400,
-                isSuccess: false,
-                msg: "修改信息失败"
-            })
-            logger.writeError("修改信息失败");
-            return;
+        if (queryInfo != undefined && queryInfo.length != 0) {
+            data.CustomerID = queryInfo[0].CustomerID;
+            customer.update(data, function (err, updataInfo) {
+                if (err) {
+                    console.log("更新失败");
+                    var errinfo = "获取宿舍地址时出错";
+                    console.log(errinfo);
+                    return;
+                }
+                if (updataInfo != undefined && updataInfo.affectedRows != 0) {
+                    console.log("微信获取宿舍地址更新成功");
+                    return;
+                }
+            });
         }
     });
+   
 
 });
 

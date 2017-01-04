@@ -1,21 +1,22 @@
 /**
- * @Author: snail
- * @Date:   2016-12-03
- * @Last Modified by:
- * @Last Modified time:
- * 微信相关的操作
- */
+* @Author: snail
+* @Date:   2016-12-03
+* @Last Modified by:
+* @Last Modified time:
+* 微信相关的操作
+*/
 
- var express = require('express');
- var router = express.Router();
- var url = require("url");
- var crypto = require("crypto");
- var operateconfig = appRequire("config/operationconfig");
- var config = appRequire("config/config");
- var logger = appRequire('util/loghelper').helper;
+var express = require('express');
+var router = express.Router();
+var url = require("url");
+var crypto = require("crypto");
+var operateconfig = appRequire("config/operationconfig");
+var config = appRequire("config/config");
+var logger = appRequire('util/loghelper').helper;
 //用来插入到log中的
 var logService = appRequire('service/backend/log/logservice');
 var logModel = appRequire('model/jinkebro/log/logmodel');
+var config = appRequire('config/config');
 //微信接收消息通用组件
 var customerhtml = appRequire('views/jinkeBro/wechat/readfilecustomer');
 //微信的地址栏
@@ -25,8 +26,11 @@ wechat.token = config.weChat.token;
 //从微信端获取数据插入数据库
 var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
 
+//调用商品的模块的内容
+var product = appRequire('service/jinkebro/product/productservice');
+
 //微信开发者认证
-router.get('/accesscheck', function(req, res, next) {
+router.get('/accesscheck', function (req, res, next) {
     var query = url.parse(req.url, true).query;
 
 
@@ -54,7 +58,7 @@ router.get('/accesscheck', function(req, res, next) {
 });
 
 // 监听文本消息
-wechat.textMsg(function(msg) {
+wechat.textMsg(function (msg) {
     var resMsg = {};
     switch (msg.msgType) {
         case "text":
@@ -69,7 +73,7 @@ wechat.textMsg(function(msg) {
 
             break;
 
-            case "音乐":
+        case "音乐":
             // 返回音乐消息
             resMsg = {
                 fromUserName: msg.toUserName,
@@ -83,7 +87,7 @@ wechat.textMsg(function(msg) {
             };
             break;
 
-            case "图文":
+        case "图文":
             // 返回图文消息
             var articles = [];
             articles[0] = {
@@ -101,15 +105,15 @@ wechat.textMsg(function(msg) {
                 articles: articles,
                 funcFlag: 0
             }
-        }
-        wechat.sendMsg(resMsg);
+    }
+    wechat.sendMsg(resMsg);
 
     //测试获取token
     
 });
 
 // 监听图片消息
-wechat.imageMsg(function(msg) {
+wechat.imageMsg(function (msg) {
     console.log("imageMsg received");
     console.log(JSON.stringify(msg));
     var resMsg = {};
@@ -125,206 +129,203 @@ wechat.imageMsg(function(msg) {
                 funcFlag: 1
             }
             break;
-        }
-        wechat.sendMsg(resMsg);
-    });
+    }
+    wechat.sendMsg(resMsg);
+});
 
 // 监听语音消息
-wechat.voiceMsg(function(msg) {
+wechat.voiceMsg(function (msg) {
     console.log("voiceMsg received");
     console.log(JSON.stringify(msg));
 });
 
 // 监听位置消息
-wechat.locationMsg(function(msg) {
+wechat.locationMsg(function (msg) {
     console.log("locationMsg received");
     console.log(JSON.stringify(msg));
 });
 
 // 监听链接消息
-wechat.urlMsg(function(msg) {
+wechat.urlMsg(function (msg) {
     console.log("urlMsg received");
     console.log(JSON.stringify(msg));
 });
 
 // 监听事件消息
-wechat.eventMsg(function(msg) {
+wechat.eventMsg(function (msg) {
     console.log("eventMsg received");
     console.log(msg);
     //判断是否是订阅以及取消的判断条件
-    switch (msg.Event)
-    {
+    switch (msg.Event) {
         //订阅的事件
-        case 'subscribe':  
+        case 'subscribe':
+            //获取token
+            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
+                //如果成功  
+                if (isSussess) {
 
-        wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
-        {
-        //     if(isSussess)
-        //     {
-        //     wechat.createMenu(token,function()
-        //     {
-        //         console.log("创建菜单");
-        //     });
-        // }
-        
-            //如果成功  
-            if(isSussess)
-            {
-                //当服务器出错的时候的补过
-                wechatCustomer.addAllList(token,function(err,errinfo)
-                {
-                    if(err)
-                    {
-                        console.log(errinfo);
-                        return ;
-                    }
+                    // wechat.createMenu(token, function () {
+                    //     console.log("创建菜单");
+                    // });
+                    //用户订阅时的操作
+                    wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
 
-                    console.log("由服务器导致的错误，添加成功");
-                    return ;
-                });
-            }
-        });
-   
-        //获取token
-        wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
-        {
-            //如果成功  
-            if(isSussess)
-            {
-               
-                //用户订阅时的操作
-                wechatCustomer.addSubscibe(token,msg,function(err,errinfo)
-                {
-                    
-                    if(err)
-                    {
-                        console.log(errinfo);
-                        return ;
-                    }
+                        if (err) {
+                            console.log(errinfo);
+                            return;
+                        }
 
-                    console.log("成功");
-                })
-                
-            }   
-        });
+                        console.log("成功");
+                    })
 
-        break;
+                }
+            });
+
+            break;
         
         //取消订阅
         case 'unsubscribe':
+            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
+                if (isSussess) {
+                    //当服务器出错的时候的补过
+                    wechatCustomer.addAllList(token, function (err, errinfo) {
+                        if (err) {
+                            console.log(errinfo);
+                            return;
+                        }
 
-        //获取token
-        wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,function(isSussess,token)
-        {
-            if(isSussess)
-            {              
-                //取消时更改用户
-                wechatCustomer.unsubscribe(token,msg,function(err,errinfo)
-                {
-                    if(err)
-                    {
-                        console.log(errinfo);
-                        return ;
-                    }
+                        console.log("由服务器导致的错误，添加成功");
+                        return;
+                    });
+                }
+            });
+            //获取token
+            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
+                //如果成功  
+                
+                if (isSussess) {              
+                    //取消时更改用户
+                    wechatCustomer.unsubscribe(token, msg, function (err, errinfo) {
+                        if (err) {
+                            console.log(errinfo);
+                            return;
+                        }
 
-                    console.log("取消成功");
-                });
-            }
-        });
+                        console.log("取消成功");
+                    });
+                }
+            });
 
-        break;
+            break;
 
         //发送地址
         case 'LOCATION':
 
-        //添加地址坐标到数据库
-        wechatCustomer.addLocation(msg,function(err,errinfo)
-        {
-            if(err)
-            {
-                console.log(errinfo);
-                return;
-            }
-            console.log("获取地址成功");
-        });
+            //添加地址坐标到数据库
+            wechatCustomer.addLocation(msg, function (err, errinfo) {
+                if (err) {
+                    console.log(errinfo);
+                    return;
+                }
+                console.log("获取地址成功");
+            });
 
-        break;
+            break;
 
         //扫码的事件
         case 'SCAN':
-        break;
+            break;
 
         //菜单点击的事件
         case 'CLICK':
-        switch(msg.EventKey)
-        {
-            case 'ProductInfo':
-            var resMsg = {
-                fromUserName: msg.ToUserName,
-                toUserName: msg.FromUserName,
-                msgType: "text",
-                content: "1、面包  2、泡面   3、可乐。。",
-                funcFlag: 0
-            };
-            console.log("测试微信的clickbutton");
-             wechat.sendMsg(resMsg);
+            switch (msg.EventKey) {
+                case 'ProductDisplay':
+                    product.getProductInfoThroughHttpGet(function (productInfo) {
+                        var contentInfo = '';
+                        console.log(productInfo);
+                        for (var index in productInfo.data) {
+                            console.log("商品的序列" + index);
+                            for (var key in productInfo.data[index]) {
+                                console.log(key);
+                                if (key == 'ProductID') {
+                                    contentInfo += "编号:" + productInfo.data[index][key] + "  ";
+                                }
+
+                                if (key == 'ProductName') {
+                                    contentInfo += "名称:" + productInfo.data[index][key] + "  ";
+                                }
+
+                                if (key == 'ProductPrice') {
+                                    contentInfo += "价格:" + productInfo.data[index][key] + "  ";
+                                }
+
+                            }
+                            contentInfo += "\n";
+                        }
+                        console.log(contentInfo);
+                        var resMsg = {
+                            fromUserName: msg.ToUserName,
+                            toUserName: msg.FromUserName,
+                            msgType: "text",      
+                            content: contentInfo,
+                            funcFlag: 0
+                        };
+                        wechat.sendMsg(resMsg);
+                    });
+
+                    break;
+
+                case 'SubmitOrder':
+                    console.log("提交订单");
+                    break;
+            }
             break;
-        }
-        break;
 
         //菜单的链接的事件
         case 'VIEW':
-        switch(msg.EventKey)
-        {
-            case 'http://sun.tunnel.2bdata.com/wechat/addressinfo':
-            wechat.sendClickAddressEvent(msg);
+            switch (msg.EventKey) {
+                case 'http://sun.tunnel.2bdata.com/wechat/addressinfo':
+                    wechat.sendClickAddressEvent(msg);
+                    break;
+                case 'http://www.baidu.com':
+                    console.log("点击了百度的页面");
+                    break;
+
+            }
+
             break;
-            case 'http://www.baidu.com':
-            console.log("点击了百度的页面");
-            break;
-            
-        }
-      
-        break;
 
     }
-         
+
 });
 
-
 //监听地址的事件
- wechat.clickAddress(function(judgement,username)
-    { 
-        console.log(username);
-        if(judgement != undefined && judgement == 'true')
-        {
-            var tempRoute = '/'+username;
-            console.log(tempRoute)
-            router.get(tempRoute,function(req,res)
-            {
-               customerhtml(res);
-            });
-            return ;
-         }
+wechat.clickAddress(function (judgement, username) {
+    console.log(username);
+    if (judgement != undefined && judgement == 'true') {
+        var tempRoute = '/' + username;
+        console.log(tempRoute)
+        router.get(tempRoute, function (req, res) {
+            customerhtml(res);
+        });
+        return;
+    }
 
-     });
-
+});
 
 /************************************************************************************/
 //渲染地址栏的页面
-router.get('/addressinfo',function(req,res)
-{
-   
+router.get('/addressinfo', function (req, res) {
+
     var addressurl = wechat.data.FromUserName;
     //路由的重定义
-    res.redirect(301,'http://sun.tunnel.2bdata.com/wechat/'+addressurl);
+    res.redirect(301,  + addressurl);
 });
 
 /************************************************************************************/
 
-
 //接受用户的消息
-router.post('/accesscheck', function(req, res) {
+router.post('/accesscheck', function (req, res) {
     wechat.handleCustomerMsg(req, res);
 });
 

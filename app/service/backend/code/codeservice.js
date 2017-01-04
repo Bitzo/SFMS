@@ -11,6 +11,7 @@ var captchapng=require('captchapng');
 //生成验证码
 exports.generateCode=function(req,res)
 {
+    console.log("测试");
     var width=!isNaN(parseInt(req.query.width))?parseInt(req.query.width):100;
     var height=!isNaN(parseInt(req.query.height))?parseInt(req.query.height):30;
     var code = parseInt(Math.random()*9000+1000);

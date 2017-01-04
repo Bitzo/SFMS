@@ -12,6 +12,7 @@ var customerDAL = appRequire('dal/jinkebro/customer/customerdal'),
     operationConfig = appRequire('config/operationconfig'),
     config = appRequire('config/config'),
     logModel = appRequire('model/jinkebro/log/logmodel');
+var logger = appRequire('util/loghelper').helper;
 var wechat = appRequire("service/wechat/wechatservice");
 wechat.token = config.weChat.token;
 
@@ -39,7 +40,7 @@ Customer.prototype.insert = function (data, callback) {
 
             logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
-                    logger.writeErr('生成操作日志异常' + new Date());
+                    logger.writeError('生成操作日志异常' + new Date());
                 }
             });
             return;
@@ -62,7 +63,7 @@ Customer.prototype.insert = function (data, callback) {
 
             logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
-                    logger.writeErr('生成操作日志异常' + new Date());
+                    logger.writeError('生成操作日志异常' + new Date());
                 }
             });
 
@@ -92,7 +93,7 @@ Customer.prototype.update = function (data, callback) {
 
             logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
-                    logger.writeErr('生成操作日志异常' + new Date());
+                    logger.writeError('生成操作日志异常' + new Date());
                 }
             });
             console.log("更新的数据数据未定义");
@@ -115,7 +116,7 @@ Customer.prototype.update = function (data, callback) {
 
             logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
-                    logger.writeErr('生成操作日志异常' + new Date());
+                    logger.writeError('生成操作日志异常' + new Date());
                 }
             });
             console.log("更新失败，sql的检查");
@@ -142,7 +143,7 @@ Customer.prototype.query = function (data, callback) {
 
             logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
-                    logger.writeErr('生成操作日志异常' + new Date());
+                    logger.writeError('生成操作日志异常' + new Date());
                 }
             });
             console.log("查询的数据数据未定义");
@@ -163,7 +164,7 @@ Customer.prototype.query = function (data, callback) {
             logModel.PDate = moment().format('YYYY-MM-DD');
             logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
-                    logger.writeErr('生成操作日志异常' + new Date());
+                    logger.writeError('生成操作日志异常' + new Date());
                 }
             });
             console.log("查询数据失败");
@@ -348,13 +349,12 @@ Customer.prototype.addAllList = function (token, callback) {
     //用来记录总共有多少的openid   
     var arrOfOpenID = [];
     //获取所有的列表
-    console.log("单凯真帅");
     wechat.getCustomerList(token, function (infoList) {
         for (var key in infoList.data.openid) {
             arrOfOpenID.push(infoList.data.openid[key]);
         }
 
-        for (openid in arrOfOpenID) {
+        for (var openid in arrOfOpenID) {
             me.addListFunction(token, {
                 'WechatUserCode': arrOfOpenID[openid]
             }, function (err, result) {
@@ -385,7 +385,7 @@ Customer.prototype.addListFunction = function (token, data, callback) {
         }
 
         if (resultInfo != undefined && resultInfo.length != 0) {
-            var errinfo = '用户名已经存在，不需要重复插入';
+            errinfo = '用户名已经存在，不需要重复插入';
             callback(true, errinfo);
             return;
         }
