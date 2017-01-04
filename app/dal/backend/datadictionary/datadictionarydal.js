@@ -293,7 +293,7 @@ exports.queryDatadictionaryBySubcode = function (data,callback) {
 
 }
 exports.queryDatadictionaryByID = function (data,callback) {
-    var sql = 'select DictionaryCode,DictionaryValue from jit_datadictionary where 1=0 ';
+    var sql = 'select DictionaryID,DictionaryCode,DictionaryValue from jit_datadictionary where 1=0 ';
 
     if (data !== undefined) {
         for(var i in data.DictionaryID)

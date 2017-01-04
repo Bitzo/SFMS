@@ -86,8 +86,8 @@ router.post('/', function (req, res) {
                     })
                 }
                 if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                    fiType = results[0].DictionaryValue;
-                    inOutType = results[1].DictionaryValue;
+                    // fiType = results[0].DictionaryValue;
+                    // inOutType = results[1].DictionaryValue;
                     //获取userid的username
                     userservice.querySingleID(userID, function (err, results) {
                         if (err) {
@@ -293,8 +293,8 @@ router.put('/', function (req, res) {
                             })
                         }
                         if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                            fiType = results[0].DictionaryValue;
-                            inOutType = results[1].DictionaryValue;
+                            // fiType = results[0].DictionaryValue;
+                            // inOutType = results[1].DictionaryValue;
                             //获取userid的username
                             userservice.querySingleID(userID, function (err, results) {
                                 if (err) {
@@ -431,7 +431,6 @@ router.put('/', function (req, res) {
 
 //财务信息查询
 router.get('/', function (req, res) {
-    console.log(req.query)
     var query = JSON.parse(req.query.f),
         ID = query.ID || '',
         startTime = query.startTime || '',
@@ -501,7 +500,7 @@ router.get('/', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     //替换用户名
-                    var ID = [];
+                    var ID = [],DicID = [];
                     for (var i=0;i<results.length;++i) {
                         if (results[i].CheckUser == null) continue;
                         if (i==0) ID[i] = results[i].CheckUser;
@@ -511,6 +510,23 @@ router.get('/', function (req, res) {
                                 if (ID[j] == results[i].CheckUser) break;
                             }
                             if (j == ID.length) ID[j] = results[i].CheckUser;
+                        }
+                    }
+                    for (var i=0;i<results.length;++i) {
+                        if (i==0) {
+                            DicID[0] = results[i].FIType;
+                            DicID[1] = results[i].InOutType;
+                        }
+                        else {
+                            var k=0;
+                            for (k=0;k<DicID.length;++k) {
+                                if (DicID[k] == results[i].FIType) break;
+                            }
+                            if (k == DicID.length) DicID[k] = results[i].FIType;
+                            for (k=0;k<DicID.length;++k) {
+                                if (DicID[k] == results[i].InOutType) break;
+                            }
+                            if (k == DicID.length) DicID[k] = results[i].InOutType;
                         }
                     }
                     userservice.queryAccountByID(ID, function (err, data) {
@@ -525,14 +541,40 @@ router.get('/', function (req, res) {
                         for (var i in results) {
                             for (var j in data) {
                                 if (results[i].CheckUser == data[j].AccountID) {
-                                    console.log(results[i].CheckUser)
                                     results[i].CheckUser = data[j].UserName;
                                     break;
                                 }
                             }
                         }
-                        res.status(200);
-                        return res.json(result);
+                        //查询字典表 更新所有字典表数据
+                        dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
+                            if (err) {
+                                res.status(500);
+                                return res.json({
+                                    status: 500,
+                                    isSuccess: false,
+                                    msg: '操作失败，服务器出错'
+                                })
+                            }
+                            if (data!==undefined && data.length>0) {
+                                for (var i in results) {
+                                    var j=0;
+                                    for (j=0;j<data.length;++j) {
+                                        if (results[i].FIType == data[j].DictionaryID) results[i].FITypeValue = data[j].DictionaryValue;
+                                        if (results[i].InOutType == data[j].DictionaryID) results[i].InOutTypeValue = data[j].DictionaryValue;
+                                    }
+                                }
+                                res.status(200);
+                                return res.json(result);
+                            } else {
+                                res.status(200);
+                                return res.json({
+                                    status: 200,
+                                    isSuccess: false,
+                                    msg: '无数据'
+                                })
+                            }
+                        })
                     })
                 } else {
                     res.status(200);

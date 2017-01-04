@@ -102,7 +102,7 @@ router.post('/', function (req, res) {
                                 })
                             }
                             if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                                KPIType = results[0].DictionaryValue;
+                                //KPIType = results[0].DictionaryValue;
                                 //查询当前申请的projectID内是否已经有KPIType类型的绩效
                                 query = {
                                     'ProjectID': ProjectID,
@@ -373,7 +373,7 @@ router.put('/', function (req, res) {
                                             })
                                         }
                                         if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                                            KPIType = results[0].DictionaryValue;
+                                            // KPIType = results[0].DictionaryValue;
                                             KPIservice.updateKPI(data, function (err, results) {
                                                 if (err) {
                                                     res.status(500);
@@ -514,16 +514,30 @@ router.get('/person', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     //替换用户名
-                    var ID = [];
+                    var ID = [],DicID = [];
                     for (var i=0;i<results.length;++i) {
                         if (results[i].CheckUser == null) continue;
-                        if (i==0) ID[i] = results[i].UserID;
+                        if (i==0) {
+                            ID[i] = results[i].CheckUser;
+                        }
                         else {
                             var j = 0;
                             for (j=0;j<ID.length;++j) {
                                 if (ID[j] == results[i].CheckUser) break;
                             }
                             if (j == ID.length) ID[j] = results[i].CheckUser;
+                        }
+                    }
+                    for (var i=0;i<results.length;++i) {
+                        if (i==0) {
+                            DicID[i] = results[i].KPIType;
+                        }
+                        else {
+                            var k=0;
+                            for (k=0;k<DicID.length;++k) {
+                                if (DicID[k] == results[i].KPIType) break;
+                            }
+                            if (k == DicID.length) DicID[k] = results[i].KPIType;
                         }
                     }
                     userservice.queryAccountByID(ID, function (err, data) {
@@ -543,9 +557,34 @@ router.get('/person', function (req, res) {
                                 }
                             }
                         }
-                        res.status(200);
-                        console.log(result)
-                        return res.json(result);
+                        //查询字典表 更新所有字典表数据
+                        dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
+                            if (err) {
+                                res.status(500);
+                                return res.json({
+                                    status: 500,
+                                    isSuccess: false,
+                                    msg: '操作失败，服务器出错'
+                                })
+                            }
+                            if (data!==undefined && data.length>0) {
+                                for (var i in results) {
+                                    var j=0;
+                                    for (j=0;j<data.length;++j) {
+                                        if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
+                                    }
+                                }
+                                res.status(200);
+                                return res.json(result);
+                            } else {
+                                res.status(200);
+                                return res.json({
+                                    status: 200,
+                                    isSuccess: false,
+                                    msg: '无数据'
+                                })
+                            }
+                        })
                     })
                 } else {
                     res.status(200);
@@ -636,7 +675,7 @@ router.get('/', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     //替换用户名
-                    var ID = [];
+                    var ID = [],DicID = [];
                     for (var i=0;i<results.length;++i) {
                         if (results[i].CheckUser == null) continue;
                         if (i==0) ID[i] = results[i].CheckUser;
@@ -646,6 +685,18 @@ router.get('/', function (req, res) {
                                 if (ID[j] == results[i].CheckUser) break;
                             }
                             if (j == ID.length) ID[j] = results[i].CheckUser;
+                        }
+                    }
+                    for (var i=0;i<results.length;++i) {
+                        if (i==0) {
+                            DicID[i] = results[i].KPIType;
+                        }
+                        else {
+                            var k=0;
+                            for (k=0;k<DicID.length;++k) {
+                                if (DicID[k] == results[i].KPIType) break;
+                            }
+                            if (k == DicID.length) DicID[k] = results[i].KPIType;
                         }
                     }
                     userservice.queryAccountByID(ID, function (err, data) {
@@ -665,8 +716,34 @@ router.get('/', function (req, res) {
                                 }
                             }
                         }
-                        res.status(200);
-                        return res.json(result);
+                        //查询字典表 更新所有字典表数据
+                        dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
+                            if (err) {
+                                res.status(500);
+                                return res.json({
+                                    status: 500,
+                                    isSuccess: false,
+                                    msg: '操作失败，服务器出错'
+                                })
+                            }
+                            if (data!==undefined && data.length>0) {
+                                for (var i in results) {
+                                    var j=0;
+                                    for (j=0;j<data.length;++j) {
+                                        if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
+                                    }
+                                }
+                                res.status(200);
+                                return res.json(result);
+                            } else {
+                                res.status(200);
+                                return res.json({
+                                    status: 200,
+                                    isSuccess: false,
+                                    msg: '无数据'
+                                })
+                            }
+                        })
                     })
                 } else {
                     res.status(200);
