@@ -504,7 +504,7 @@ router.get('/', function (req, res) {
                     var ID = [];
                     for (var i=0;i<results.length;++i) {
                         if (results[i].CheckUser == null) continue;
-                        if (i==0) ID[i] = results[i].UserID;
+                        if (i==0) ID[i] = results[i].CheckUser;
                         else {
                             var j = 0;
                             for (j=0;j<ID.length;++j) {
@@ -525,6 +525,7 @@ router.get('/', function (req, res) {
                         for (var i in results) {
                             for (var j in data) {
                                 if (results[i].CheckUser == data[j].AccountID) {
+                                    console.log(results[i].CheckUser)
                                     results[i].CheckUser = data[j].UserName;
                                     break;
                                 }
