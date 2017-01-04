@@ -733,6 +733,7 @@ router.get('/', function (req, res) {
                                         if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
                                     }
                                 }
+                                console.log(result)
                                 res.status(200);
                                 return res.json(result);
                             } else {

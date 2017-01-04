@@ -13,7 +13,7 @@ block content
         tr
           td(width="15%",class="tableleft") 绩效类型
           td
-            span( ng-model='paginationConf.formdata.KPITypeValue') {{paginationConf.formdata.KPIType}}
+            span( ng-model='paginationConf.formdata.KPIType') {{paginationConf.formdata.KPITypeValue}}
            
         tr
           td(width="15%",class="tableleft") 绩效分
@@ -23,8 +23,13 @@ block content
         tr
           td(width="15%",class="tableleft") 用户名
           td
-            span( ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserID}}
-            
+            span( ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserName}}
+
+        tr
+          td(width="15%",class="tableleft") 所属项目
+          td
+            span(ng-model='paginationConf.formdata.ProjectId' ) {{paginationConf.formdata.ProjectName}}
+
         tr
           td(width="15%",class="tableleft") 申请时间
           td

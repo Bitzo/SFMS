@@ -565,6 +565,7 @@ router.get('/', function (req, res) {
                                     }
                                 }
                                 res.status(200);
+                                console.log(result)
                                 return res.json(result);
                             } else {
                                 res.status(200);
