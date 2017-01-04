@@ -532,6 +532,70 @@ router.put('/', function (req, res) {
     })
 })
 
+//根据用户查询有关的项目
+router.get('/user', function (req, res) {
+    var query =  JSON.parse(req.query.f),
+        userID = query.UserID || '';
+
+    if (userID===undefined||userID=='') {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: '缺少userID'
+        })
+    }
+
+    projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '操作失败，服务器出错'
+            })
+        }
+        var projectInfo = [];
+        if (results.length>0) {
+            projectInfo = results;
+        }
+        console.log(results)
+        projectservice.queryProject({ProjectManageID:userID}, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                })
+            }
+            console.log(results)
+            if (results.length>0) {
+                var i=0,j=0;
+                for (i=0;i<results.length;++i) {
+                    for (j=0;j<projectInfo.length;++j) {
+                        if (results[i].ID == projectInfo[j].ProjectID) break;
+                    }
+                    if (j==projectInfo.length) projectInfo.push(results[i]);
+                }
+                res.status(200);
+                return res.json({
+                    status: 200,
+                    isSuccess: true,
+                    data: projectInfo
+                })
+            } else {
+                res.status(200);
+                return res.json({
+                    status: 200,
+                    isSuccess: true,
+                    data: projectInfo
+                })
+            }
+        })
+    })
+})
+
 //项目基本信息查询-项目负责人
 router.get('/person', function (req, res) {
     var query =  JSON.parse(req.query.f),

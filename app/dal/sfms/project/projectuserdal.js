@@ -161,7 +161,7 @@ exports.countQuery = function (data, callback) {
 
 //根据用户ID，查找所在的项目
 exports.queryProjectByUserID = function (data, callback) {
-    var sql = 'select distinct ProjectID from jit_projectruser where IsActive = 1 and UserID = ';
+    var sql = 'select distinct ProjectID,jit_projectruser.ProjectName from jit_projectruser,jit_projectbaseinfo  where jit_projectruser.IsActive = 1 and jit_projectbaseinfo.IsActive = 1 and jit_projectruser.ProjectID = jit_projectbaseinfo.ID and UserID = ';
 
     sql += data.UserID;
 
@@ -183,5 +183,4 @@ exports.queryProjectByUserID = function (data, callback) {
             connection.release();
         });
     });
-
 }
