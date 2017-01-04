@@ -137,7 +137,7 @@ exports.queryDatadictionary = function (data,callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
@@ -145,7 +145,9 @@ exports.queryDatadictionary = function (data,callback) {
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    if (data['isPaging'] == 1){
+        sql += " LIMIT " + (page-1)*num + "," + num;
+    }
 
     logger.writeInfo("查询字典信息：" + sql);
     console.log("查询字典信息：" + sql);
@@ -175,7 +177,7 @@ exports.countAllDataDicts = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging')
                 if(!isNaN(data[key])){
                     sql += " and " + key + " = " + data[key] + " ";
                 }else{
@@ -183,6 +185,7 @@ exports.countAllDataDicts = function (data, callback) {
                 }
         }
     }
+
     logger.writeInfo(sql);
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {

@@ -19,8 +19,8 @@ var datadictionaryService = appRequire('service/backend/datadictionary/datadicti
 router.get('/plain',function (req,res) {
     var query = JSON.parse(req.query.f);
     console.log(req.query.f);
-     var page = query.pageindex || 1,
-         pageNum = query.pagesize || 500,
+     var page = req.query.pageindex || query.pageindex || 1,
+         pageNum = req.query.pagesize || query.pagesize || 500,
          applicationID = query.ApplicationID || '',
          dictionaryID = query.DictionaryID || '',
          dictionaryLevel = query.DictionaryLevel || '',
@@ -28,7 +28,8 @@ router.get('/plain',function (req,res) {
          category = query.Category || '',
          dictionaryCode = query.DictionaryCode || '',
          dictionaryValue = query.DictionaryValue || '',
-         isActive = query.IsActive || '';
+         isActive = query.IsActive || '',
+         isPaging = query.isPaging || 0;
 
     page = page>0 ? page : 1;
 
@@ -48,7 +49,8 @@ router.get('/plain',function (req,res) {
         "Category" : category,
         "DictionaryCode" : dictionaryCode,
         "DictionaryValue" : dictionaryValue,
-        "IsActive" : isActive
+        "IsActive" : isActive,
+        "isPaging" : isPaging
     };
 
     //用于查询结果总数的计数
