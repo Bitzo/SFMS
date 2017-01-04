@@ -51,11 +51,11 @@ exports.updateRemark = function (data, callback) {
             if (key != 'ID') {
                 if (update == '')
                     update += key + " = '" + data[key] + "'";
-                else update += ' and ' + key + " = '" + data[key] + "'";
+                else update += ', ' + key + " = '" + data[key] + "'";
             }
         }
     }
-    update += " and EditTime = '" + time + "'";
+    update += " , EditTime = '" + time + "'";
     sql += update + ' where ID = ' + data.ID;
 
     logger.writeInfo('编辑项目用户备注' + sql);

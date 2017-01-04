@@ -8,63 +8,65 @@
 </head>
 <body>
 
-<form class="form-horizontal" role="form" method='post' action=''>
+<form class="form-horizontal" role="form" method='post' action='http://sun.tunnel.2bdata.com/jinkeBro/customer'>
 	<div class="form-group">
 		<label for="truename" class="col-sm-2 control-label">真实姓名</label>
 		<div class="col-sm-10"  >
-			<input type="text" class="form-control" id="truename" 
+			<input type="text" class="form-control" id="truename" name='truename' 
 				   placeholder="请输入名字" > 
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="phone" class="col-sm-2 control-label">手机号码</label>
 		<div class="col-sm-10"  >
-			<input type="text" class="form-control" id="phone" 
+			<input type="text" class="form-control" id="phone" name = 'phone' 
 				   placeholder="手机号码" >
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="school" class="col-sm-2 control-label">学校</label>
 		<div class="col-sm-10">
-		<select class="form-control"  id = "school">
-			<option>金陵科技学院</option>
-			<option>南京晓庄学院</option>
-			<option>南京大学</option>
-			<option>南航</option>
-			<option>南广</option>
+		<select class="form-control"  id = "school" name='school'>
+			<option value='1'>金陵科技学院</option>
+			<option value='2'>南京晓庄学院</option>
+			<option value='3'>南京大学</option>
+			<option value='4'>南航</option>
+			<option value='5'>南广</option>
 		</select>
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="area" class="col-sm-2 control-label">区域</label>
 		<div class="col-sm-10">
-		<select class="form-control"  id= "area">
-			<option>南区</option>
-			<option>北区</option>
+		<select class="form-control"  id= "area" name='area'>
+			<option value='1'>南区</option>
+			<option value='2'>北区</option>
 		</select>
 	</div>
 	</div>
 	<div class="form-group">
 		<label for="dormNum" class="col-sm-2 control-label">楼栋</label>
 		<div class="col-sm-10">
-		<select class="form-control"  id="dormNum">
-			<option>01栋</option>
-			<option>02栋</option>
-			<option>。。</option>
+		<select class="form-control"  id="dormNum" name ='house'>
+			<option value='1'>01栋</option>
+			<option value='2'>02栋</option>
+			<option value='3'>03栋</option>
+			<option value='4'>04栋</option>
+			<option value='5'>05栋</option>
+			<option value='6'>06栋</option>
+			<option value='7'>07栋</option>
+			<option value='8'>08栋</option>
+			<option value='9'>09栋</option>
+			<option value='10'>10栋</option>
 		</select>
 	</div>
 	</div>
 	<div class="form-group">
-		<label for="roomNum" class="col-sm-2 control-label">门牌号</label>
-		<div class="col-sm-10">
-		<select class="form-control"  id="roomNum">
-			<option>A417</option>
-			<option>A307</option>
-			<option>B411</option>
-			<option>B411</option>
-			<option>B617</option>
-		</select>
-	</div>
+		<label for="dromNum" class="col-sm-2 control-label">宿舍号</label>
+		<div class="col-sm-10"  >
+			<input type="text" class="form-control" id="dormNum" name = 'dormNum' 
+				   placeholder="宿舍号" >
+		</div>
 	</div>
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-10">

@@ -96,25 +96,53 @@ exports.deleteOrder = function (data,callback) {
 
 //修改订单
 exports.updateOrder = function (data,callback) {
+    var sql = 'select 1+1 ' ;
 
+    console.log(sql);
 
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
 }
 
 //查询订单
 exports.queryOrders = function (data,callback) {
     var arr = new Array();
     arr.push(' select jit_order.OrderID,OrderTime,jit_order.IsActive,jit_order.PayMethod,jit_order.IsValid,jit_product.ProductName, ');
-    arr.push(' jit_product.ProductPrice')
+    arr.push(' jit_product.ProductPrice');
     arr.push(' from jit_order ');
     arr.push(' left join jit_orderproduct ');
     arr.push(' on jit_orderproduct.OrderID = jit_order.OrderID ');
     arr.push(' left join jit_product ');
     arr.push(' on jit_product.ProductID = jit_orderproduct.ProductID ');
-    arr.push(' where 1=1 and jit_order.OrderID =  ');
+    arr.push(' where 1=1 ');
 
     var query_sql = arr.join(' ');
 
-    query_sql += data['OrderID'];
+    if(data !== undefined){
+        for(var key in data){
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging'){
+                //判断data[key]是否是数值类型
+                if(!isNaN(data[key])){
+                    query_sql += ' and ' + 'jit_order.' + key + ' = '+ data[key] + ' ';
+                }else {
+                    query_sql += ' and ' + 'jit_order.' + key + ' = "'+ data[key] + '" ';
+                }
+            }
+        }
+    }
 
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;

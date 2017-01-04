@@ -50,6 +50,11 @@ var config = {
         createMenu: 'menu/create?access_token=', //创建菜单
         userInfo:'user/info?access_token=',//获取用户信息
     },
+    //金科小哥相关的
+    jinkebro : {
+        baseUrl : 'http://sun.tunnel.2bdata.com/',
+        productInfo : 'jinkeBro/product/info'
+    },
     redis_prd: {
         host: '120.27.38.175',
         port: '6379',
