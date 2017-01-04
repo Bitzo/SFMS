@@ -79,6 +79,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     //查询
     $scope.search=function(){
         getInit();
+        $scope.formdata={};
     }
 
 
@@ -140,7 +141,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
 
     //编辑完成提交信息
-
     var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
         $http({
