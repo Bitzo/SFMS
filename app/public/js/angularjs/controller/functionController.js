@@ -31,10 +31,12 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
         }
     ];
     $scope.clickHander = function(e){
-        $scope.currentData=Object.assign({},e);
-        for(key in $scope.currentData){
-            $scope.currentData[key]=$scope.currentData[key]+'';
-        }
+        e.ApplicationID= e.ApplicationID+'';
+        $scope.currentData=e;
+        // $scope.currentData=Object.assign({},e);
+        //for(key in $scope.currentData){
+      //      $scope.currentData[key]=$scope.currentData[key]+'';
+       // }
     }
     $scope.disable=true;
     $scope.edit=function(){
