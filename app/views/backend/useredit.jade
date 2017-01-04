@@ -1,10 +1,10 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(ng-controller="sfmsIndexController")
+  div.container-fluid
     span 
       h2 用户编辑
     jason-form(method="post" source='/backuser' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
-     form( name="userEdit")
+     form( name="userEdit" ng-controller="userEditController")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用名称

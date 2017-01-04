@@ -22,9 +22,6 @@ block content
           td(width="15%",class="tableleft") 用户名
           td
             jason-select.input( ng-model='formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID' ng-change= "userKpiChanged()")
-            select(ng-model='formdata.UserID',name='UserID' ng-change= "userKpiChanged()")
-              option   
-              option(ng-repeat="item in UserNames" value='{{item.AccountID}}') {{item.UserName}}
 
         tr
           td(width="15%",class="tableleft") 所属项目
