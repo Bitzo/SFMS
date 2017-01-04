@@ -111,7 +111,6 @@ Product.prototype.getProCountByID = function (data, callback) {
 //通过http的get方法直接获取信息
 Product.prototype.getProductInfoThroughHttpGet  = function(callback) 
 {
-    
     var getUrl = config.jinkebro.baseUrl + config.jinkebro.productInfo;
     //var getUrl = '/jinkeBro/product';
     console.log(getUrl);

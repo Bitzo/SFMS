@@ -30,6 +30,10 @@ router.get('/jitorder', function (req, res, next) {
     res.render('jinkeBro/jitorder', { title: 'Hi jkbro' });
 });
 
+router.get('/jitorderAdd', function (req, res, next) {
+    res.render('jinkeBro/jitorderAdd', { title: 'Hi jkbro' });
+});
+
 //管理产品类别
 //router.use('/proType', proTyperoute);
 

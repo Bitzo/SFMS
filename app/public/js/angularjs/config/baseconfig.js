@@ -175,6 +175,10 @@ myApp.config(function($routeProvider) {
         templateUrl: '/jinkeBro/jitgoodsAdd?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
+    when('/jinkeBro/jitorderAdd', {
+        templateUrl: '/jinkeBro/jitorderAdd?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
     otherwise({
         redirectTo: '/'
     });

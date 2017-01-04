@@ -11,7 +11,7 @@ var orderDAL = appRequire('dal/jinkebro/order/orderdal'),
     logModel = appRequire('model/jinkebro/log/logmodel');
 
 var Order = function () {
-
+    this.OrderTime = moment().format("YYYY-MM-DD HH:mm:ss"); //创建的时间
 }
 
 //新增订单
@@ -26,9 +26,21 @@ Order.prototype.insertOrder = function (data, callback) {
     });
 }
 
-//新增订单
+//新增订单产品表的一条记录
 Order.prototype.insertOrderProduct = function (data, callback) {
     orderDAL.insertOrderProduct(data, function (err, result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        callback(false, result);
+    });
+}
+
+//新增订单用户表的一条记录
+Order.prototype.insertOrderCustomer = function (data, callback) {
+    orderDAL.insertOrderCustomer(data, function (err, result) {
         if (err) {
             callback(true);
             return;
@@ -92,5 +104,16 @@ Order.prototype.CountOrders = function (data, callback) {
     });
 }
 
+Order.prototype.checkInput = function (res,input,string) {
+    if(input === undefined){
+        console.log(string + ' is undefined');
+        res.status(404);
+        return res.json({
+            code : 404,
+            isSuccess :false,
+            msg : string + '没有输入'
+        });
+    }
+}
 
 module.exports = new Order();

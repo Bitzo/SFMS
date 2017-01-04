@@ -18,8 +18,10 @@ router.get('/',function (req,res) {
     var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
         pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
         OrderID = query.OrderID || '',
-        isPaging = query.isPaging || 1; //是否分页 0表示不分页,1表示分页
+        WechatUserCode = query.WechatUserCode || '',
+        isPaging = query.isPaging || 0; //是否分页 0表示不分页,1表示分页
 
+    console.log(WechatUserCode);
     page = page>0 ? page : 1;
 
     if (pageNum == ''){
@@ -32,7 +34,8 @@ router.get('/',function (req,res) {
     var data = {
         page : page,
         pageNum : pageNum,
-        OrderID : OrderID,
+        "jit_ordercustomer.OrderID" : OrderID,
+        "jit_customer.WechatUserCode" : WechatUserCode,
         isPaging : isPaging
     };
 
@@ -140,7 +143,10 @@ router.post('/', function (req, res) {
         PayMethod = formdata.PayMethod || 1,
         IsValid = formdata.IsValid || 1,
         IsActive = formdata.IsActive || 1,
-        ProductIDs = formdata.ProductIDs;
+        ProductIDs = formdata.ProductIDs,//数组，表示ProductID的集合
+        ProductCounts = formdata.ProductCounts,
+        CustomerID = formdata.CustomerID || 1;
+
 
     // 存放接收的数据
     var insertdata = {
@@ -194,23 +200,55 @@ router.post('/', function (req, res) {
                 addProductResult: result,
                 msg: '服务器出错，产品新增操作失败'
             });
+            return ;
         }
 
         if (result !== undefined && result.affectedRows != 0) {
+            var InsertUserOrderData = {
+                CustomerID : CustomerID,
+                OrderID : result.insertId,
+                IsActive : 1,
+                CreateTime : moment().format('YYYY-MM-DD HH:mm:ss')
+            };
+
+            orderService.insertOrderCustomer(InsertUserOrderData,function (err,InsertUserOrderResult) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        addProductResult: result,
+                        msg: '服务器出错，产品新增操作失败'
+                    });
+                    return ;
+                }
+            });
 
             var orderprod = {
                 OrderID: result.insertId,
-                ProductID: ProductIDs
-            }
+                ProductID: ProductIDs,
+                ProductCount : ProductCounts
+            };
 
             var flag = 1;
             var temp;
             for (var i = 0; i < orderprod.ProductID.length; i++) {
                 temp = {
                     OrderID: result.insertId,
-                    ProductID: orderprod.ProductID[i]
+                    ProductID: orderprod.ProductID[i],
+                    ProductCount : orderprod.ProductCount[i]
                 }
                 orderService.insertOrderProduct(temp, function (err, results) {
+                    if (err) {
+                        res.status(500);
+                        return res.json({
+                            code: 500,
+                            isSuccess: false,
+                            addProductResult: result,
+                            msg: '服务器出错，产品新增操作失败'
+                        });
+                        return ;
+                    }
                     if (results !== undefined && results.affectedRows == 0) {
                         flag = 0;
                     }
@@ -221,6 +259,7 @@ router.post('/', function (req, res) {
                 return res.json({
                     code: 200,
                     isSuccess: true,
+                    insertOrderID: result.insertId,
                     msg: '一条订单记录添加成功'
                 });
             }
@@ -237,12 +276,54 @@ router.post('/', function (req, res) {
 });
 
 router.put('/',function (req,res) {
-    res.status(200);
-    return res.json({
-        code : 200,
-        isSuccess : true,
-        msg : 'product put '
-    });
+    var formdata = JSON.parse(req.body.formdata);
+    console.log(formdata);
+    var OrderID = formdata.OrderID,
+        PayMethod = formdata.PayMethod ,
+        IsValid = formdata.IsValid ,
+        IsActive = formdata.IsActive ,
+        PayTime = formdata.PayTime,
+        DeliveryTime = formdata.DeliveryTime,
+        DeliveryUserID = formdata.DeliveryUserID,
+        IsCancel = formdata.IsCancel,
+        DiscountMoney = formdata.DiscountMoney,
+        DiscountType = formdata.DiscountType,
+        BizID = formdata.BizID,
+        Memo = formdata.Memo,
+        IsCheck = formdata.IsCheck,
+        PDate = formdata.PDate,
+        CancelTime = formdata.CancelTime;
+
+    //检查要输入的部分
+    if (orderService.checkInput(res,OrderID,'OrderID') !== undefined){
+        return ;
+    }
+
+    if (orderService.checkInput(res,PayMethod,'PayMethod') !== undefined){
+        return ;
+    }
+
+    if (orderService.checkInput(res,IsValid,'IsValid') !== undefined){
+        return ;
+    }
+    if(orderService.checkInput(res,IsActive,'IsActive') !== undefined){
+        return ;
+    }
+    // orderService.checkInput(res,PayTime,'PayTime');
+    // orderService.checkInput(res,DeliveryTime,'DeliveryTime');
+    // orderService.checkInput(res,DeliveryUserID,'DeliveryUserID');
+    // orderService.checkInput(res,IsCancel,'IsCancel');
+    // orderService.checkInput(res,DiscountMoney,'DiscountMoney');
+    // orderService.checkInput(res,DiscountType,'DiscountType');
+    // orderService.checkInput(res,BizID,'BizID');
+    // orderService.checkInput(res,Memo,'Memo');
+    // orderService.checkInput(res,IsCheck,'IsCheck');
+    // orderService.checkInput(res,PDate,'PDate');
+    // orderService.checkInput(res,CancelTime,'CancelTime');
+
+
+
+
 });
 
 router.delete('/',function (req,res) {

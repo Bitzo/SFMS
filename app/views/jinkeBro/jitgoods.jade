@@ -24,6 +24,7 @@ block content
             th 有效期
             th 生产日期
             th 供应商ID
+            th 商品类型ID
             th 商品类型
             th 操作
         tbody
@@ -37,6 +38,7 @@ block content
             td {{x.ProducTime}}
             td {{x.SupplierID}}
             td {{x.ProductTypeID}}
+            td {{x.ProductTypeName}}
             td 
               a(href='#/backend/useredit/?AccountID={{x.AccountID}}' )
                 i.icon.icon-edit 编辑 
