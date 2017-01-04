@@ -138,7 +138,7 @@ router.post('/', function (req, res) {
                                         return res.json({
                                             code: 400,
                                             isSuccess: false,
-                                            msg: '财务名称过长'
+                                            msg: '财务名称过长,请勿超过45个字符'
                                         });
                                     }
                                     if (data.Remark.length>45) {
@@ -146,7 +146,7 @@ router.post('/', function (req, res) {
                                         return res.json({
                                             code: 400,
                                             isSuccess: false,
-                                            msg: '备注过长'
+                                            msg: '备注过长,请勿超过45个字符'
                                         });
                                     }
                                     financeService.addFinance(data, function (err, results) {
@@ -346,7 +346,7 @@ router.put('/', function (req, res) {
                                                 return res.json({
                                                     code: 400,
                                                     isSuccess: false,
-                                                    msg: '财务名称过长'
+                                                    msg: '财务名称过长,请勿超过45个字符'
                                                 });
                                             }
                                             if (data.Remark.length>45) {
@@ -354,7 +354,7 @@ router.put('/', function (req, res) {
                                                 return res.json({
                                                     code: 400,
                                                     isSuccess: false,
-                                                    msg: '备注过长'
+                                                    msg: '备注过长,请勿超过45个字符'
                                                 });
                                             }
                                             financeService.updateFinance(data, function (err, results) {
@@ -586,7 +586,7 @@ router.put('/check', function (req, res) {
         return res.json({
             code: 400,
             isSuccess: false,
-            msg: '备注过长'
+            msg: '备注过长,请勿超过45个字符'
         });
     }
     data.CheckUser = req.query.jitkey;

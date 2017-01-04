@@ -161,7 +161,7 @@ exports.countQuery = function (data, callback) {
 
 //根据用户ID，查找所在的项目
 exports.queryProjectByUserID = function (data, callback) {
-    var sql = 'select distinct ProjectID from jit_projectruser where UserID = ';
+    var sql = 'select distinct ProjectID from jit_projectruser where IsActive = 1 and UserID = ';
 
     sql += data.UserID;
 

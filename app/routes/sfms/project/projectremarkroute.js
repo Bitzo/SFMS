@@ -106,7 +106,7 @@ router.post('/', function (req, res) {
                                             return res.json({
                                                 status: 400,
                                                 isSuccess: false,
-                                                msg: '备注信息过长'
+                                                msg: '备注信息过长,请勿超过200个字符'
                                             })
                                         }
                                         projectRemarkservice.addRemark(data, function (err, results) {
@@ -274,7 +274,7 @@ router.put('/', function (req, res) {
                                             return res.json({
                                                 status: 400,
                                                 isSuccess: false,
-                                                msg: '备注信息过长'
+                                                msg: '备注信息过长,请勿超过200个字符'
                                             })
                                         }
                                         projectRemarkservice.updateRemark(data, function (err, results) {

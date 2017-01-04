@@ -112,7 +112,7 @@ router.post('/', function (req, res) {
                                 return res.json({
                                     code: 400,
                                     isSuccess: false,
-                                    msg: '项目名称过长'
+                                    msg: '项目名称过长,请勿超过45个字符'
                                 });
                             }
                             if (data.ProjectDesc.length > 45) {
@@ -120,7 +120,7 @@ router.post('/', function (req, res) {
                                 return res.json({
                                     code: 400,
                                     isSuccess: false,
-                                    msg: '项目描述过长'
+                                    msg: '项目描述过长,请勿超过45个字符'
                                 });
                             }
                             if (isNaN(data.ProjectPrice)||data.ProjectPrice<0) {
@@ -136,7 +136,7 @@ router.post('/', function (req, res) {
                                 return res.json({
                                     code: 400,
                                     isSuccess: false,
-                                    msg: '项目进度描述过长'
+                                    msg: '项目进度描述过长,请勿超过45个字符'
                                 });
                             }
                             //如果有项目人员信息，则添加
@@ -158,7 +158,7 @@ router.post('/', function (req, res) {
                                         return res.json({
                                             status: 400,
                                             isSuccess: false,
-                                            msg: '人员职责描述过长'
+                                            msg: '人员职责描述过长,请勿超过45个字符'
                                         })
                                     }
                                     userData[i].projectName = projectName;
@@ -382,7 +382,7 @@ router.put('/', function (req, res) {
                         return res.json({
                             code: 400,
                             isSuccess: false,
-                            msg: '项目描述过长'
+                            msg: '项目描述过长,请勿超过45个字符'
                         });
                     }
                     if (isNaN(data.ProjectPrice)||data.ProjectPrice<0) {
@@ -398,7 +398,7 @@ router.put('/', function (req, res) {
                         return res.json({
                             code: 400,
                             isSuccess: false,
-                            msg: '项目进度描述过长'
+                            msg: '项目进度描述过长,请勿超过45个字符'
                         });
                     }
                     projectservice.updateProject(data, function (err, results) {
@@ -422,7 +422,7 @@ router.put('/', function (req, res) {
                                         return res.json({
                                             status: 400,
                                             isSuccess: false,
-                                            msg: '人员职责描述过长'
+                                            msg: '人员职责描述过长,请勿超过45个字符'
                                         })
                                     }
                                     userData[i].projectID = data.ID;

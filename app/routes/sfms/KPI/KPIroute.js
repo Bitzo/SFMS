@@ -150,7 +150,7 @@ router.post('/', function (req, res) {
                                                     return res.json({
                                                         code: 400,
                                                         isSuccess: false,
-                                                        msg: '绩效名称过长'
+                                                        msg: '绩效名称过长,请勿超过45个字符'
                                                     });
                                                 }
                                                 if (isNaN(data.KPIScore)||data.KPIScore<0) {
@@ -166,7 +166,7 @@ router.post('/', function (req, res) {
                                                     return res.json({
                                                         code: 400,
                                                         isSuccess: false,
-                                                        msg: '备注过长'
+                                                        msg: '备注过长,请勿超过45个字符'
                                                     });
                                                 }
                                                 KPIservice.addKPI(data, function (err, results) {
@@ -281,7 +281,7 @@ router.put('/', function (req, res) {
         return res.json({
             code: 400,
             isSuccess: false,
-            msg: '绩效名称过长'
+            msg: '绩效名称过长,请勿超过45个字符'
         });
     }
     if (isNaN(data.KPIScore)||data.KPIScore<0) {
@@ -297,7 +297,7 @@ router.put('/', function (req, res) {
         return res.json({
             code: 400,
             isSuccess: false,
-            msg: '备注过长'
+            msg: '备注过长,请勿超过45个字符'
         });
     }
     //检查所需要的参数是否齐全
@@ -725,7 +725,7 @@ router.put('/check', function (req, res) {
         return res.json({
             code: 400,
             isSuccess: false,
-            msg: '备注过长'
+            msg: '备注过长,请勿超过45个字符'
         });
     }
 
