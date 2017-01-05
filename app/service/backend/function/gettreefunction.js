@@ -11,9 +11,12 @@ var logger = appRequire("util/loghelper").helper;
 function treeNode(funcModel, children) {
     this.ApplicationID = funcModel.ApplicationID;
     this.FunctionID = funcModel.FunctionID;
+    this.FunctionCode=funcModel.FunctionCode;
     this.ParentID = funcModel.ParentID;
     this.FunctionName=funcModel.FunctionName;
     this.Memo=funcModel.Memo;
+    this.IsActive=funcModel.IsActive;
+    this.FunctionLevel=funcModel.FunctionLevel;
     this.children = children;
 }
 //递归生成多层树结构
@@ -32,7 +35,7 @@ function getTreeFunction(data, callback) {
     var treelist = getMultiTree(data, 0);
     var d = {};
     //从应用表中查出所有应用
-    l = appService.queryAllApp(d, function (err, results) {
+    appService.queryAllApp(d, function (err, results) {
         if (err) {
             console.log('queryAllApperr');
             callback(true);

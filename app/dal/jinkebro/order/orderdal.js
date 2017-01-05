@@ -18,17 +18,25 @@ exports.insertOrder = function (data,callback) {
     if(data !== undefined){
         for(var key in data){
             if(sql.length == 0){
-                sql += " " + key + " = '" + data[key] + "' " ;
+                if(!isNaN(data[key])){
+                    sql += " " + key + " = " + data[key] + " " ;
+                }else {
+                    sql += " " + key + " = '" + data[key] + "' " ;
+                }
             }else{
-                sql += ", " + key + " = '" + data[key] + "' " ;
+                if(!isNaN(data[key])){
+                    sql += ", " + key + " = " + data[key] + " " ;
+                }else {
+                    sql += ", " + key + " = '" + data[key] + "' " ;
+                }
             }
         }
     }
 
     insertSql += sql;
 
-    logger.writeInfo("[queryOrders func in productdal]订单新增:" + insertSql);
-    console.log("[queryOrders func in productdal]订单新增:" + insertSql);
+    logger.writeInfo("[insertOrder func in productdal]订单新增:" + insertSql);
+    console.log("[insertOrder func in productdal]订单新增:" + insertSql);
 
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
@@ -48,7 +56,7 @@ exports.insertOrder = function (data,callback) {
     });
 }
 
-//新增订单
+//新增订单产品表的一条记录
 exports.insertOrderProduct = function (data,callback) {
 
     var insertSql = 'insert into jit_orderproduct set ';
@@ -57,15 +65,22 @@ exports.insertOrderProduct = function (data,callback) {
     if(data !== undefined){
         for(var key in data){
             if(sql.length == 0){
-                sql += " " + key + " = '" + data[key] + "' " ;
+                if(!isNaN(data[key])){
+                    sql += " " + key + " = " + data[key] + " " ;
+                }else{
+                    sql += " " + key + " = '" + data[key] + "' " ;
+                }
             }else{
-                sql += ", " + key + " = '" + data[key] + "' " ;
+                if(!isNaN(data[key])){
+                    sql += ", " + key + " = " + data[key] + " " ;
+                }else {
+                    sql += ", " + key + " = '" + data[key] + "' " ;
+                }
             }
         }
     }
 
     insertSql += sql + ";";
-
 
     logger.writeInfo("[insertOrderProduct func in productdal]订单新增:" + insertSql);
     console.log("[insertOrderProduct func in productdal]订单新增:" + insertSql);
@@ -88,6 +103,52 @@ exports.insertOrderProduct = function (data,callback) {
     });
 }
 
+//新增用户订单表的一条记录
+exports.insertOrderCustomer = function (data,callback) {
+
+    var insertSql = 'insert into jit_ordercustomer set ';
+    var sql = '';
+
+    if(data !== undefined){
+        for(var key in data){
+            if(sql.length == 0){
+                if(!isNaN(data[key])){
+                    sql += " " + key + " = " + data[key] + " " ;
+                }else{
+                    sql += " " + key + " = '" + data[key] + "' " ;
+                }
+            }else{
+                if(!isNaN(data[key])){
+                    sql += ", " + key + " = " + data[key] + " " ;
+                }else {
+                    sql += ", " + key + " = '" + data[key] + "' " ;
+                }
+            }
+        }
+    }
+
+    insertSql += sql + ";";
+
+    logger.writeInfo("[insertOrderCustomer func in productdal]订单用户表的新增:" + insertSql);
+    console.log("[insertOrderCustomer func in productdal]订单用户表的新增:" + insertSql);
+
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(insertSql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
 
 //删除订单
 exports.deleteOrder = function (data,callback) {
@@ -120,14 +181,15 @@ exports.updateOrder = function (data,callback) {
 //查询订单
 exports.queryOrders = function (data,callback) {
     var arr = new Array();
-    arr.push(' select jit_order.OrderID,OrderTime,jit_order.IsActive,jit_order.PayMethod,jit_order.IsValid,jit_product.ProductName, ');
-    arr.push(' jit_product.ProductPrice');
-    arr.push(' from jit_order ');
-    arr.push(' left join jit_orderproduct ');
-    arr.push(' on jit_orderproduct.OrderID = jit_order.OrderID ');
-    arr.push(' left join jit_product ');
-    arr.push(' on jit_product.ProductID = jit_orderproduct.ProductID ');
-    arr.push(' where 1=1 ');
+    arr.push(' select  jit_customer.CustomerID,jit_ordercustomer.OrderID, ');
+    arr.push(' jit_order.OrderTime,jit_orderproduct.ProductID,jit_product.ProductName, ');
+    arr.push(' jit_product.ProductPrice,jit_productype.ProductTypeName,jit_order.PayMethod ');
+    arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer,jit_productype ');
+    arr.push(' where 1 = 1 and jit_order.OrderID = jit_ordercustomer.orderID ');
+    arr.push(' and jit_order.OrderID = jit_orderproduct.OrderID ');
+    arr.push(' and jit_product.ProductID = jit_orderproduct.ProductID ');
+    arr.push(' and jit_ordercustomer.CustomerID = jit_customer.CustomerID ');
+    arr.push(' and jit_product.ProductTypeID = jit_productype.ID ');
 
     var query_sql = arr.join(' ');
 
@@ -136,9 +198,9 @@ exports.queryOrders = function (data,callback) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging'){
                 //判断data[key]是否是数值类型
                 if(!isNaN(data[key])){
-                    query_sql += ' and ' + 'jit_order.' + key + ' = '+ data[key] + ' ';
+                    query_sql += ' and ' + key + ' = '+ data[key] + ' ';
                 }else {
-                    query_sql += ' and ' + 'jit_order.' + key + ' = "'+ data[key] + '" ';
+                    query_sql += ' and ' + key + ' = "'+ data[key] + '" ';
                 }
             }
         }
@@ -150,7 +212,6 @@ exports.queryOrders = function (data,callback) {
     if(data.isPaging == 1){
         query_sql += " LIMIT " + (page-1)*num + "," + num + " ;";
     }
-
 
     logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
     console.log("[queryOrders func in productdal]订单查询:" + query_sql);
@@ -176,7 +237,15 @@ exports.queryOrders = function (data,callback) {
 
 //查询指定条件订单的个数
 exports.CountOrders = function (data,callback) {
-    var sql = ' select count(1) as num from jit_order where 1=1 ';
+    var arr = new Array();
+    arr.push(' select count(*) as num ');
+    arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer ');
+    arr.push(' where 1 = 1 and jit_order.OrderID = jit_ordercustomer.orderID ');
+    arr.push(' and jit_order.OrderID = jit_orderproduct.OrderID ');
+    arr.push(' and jit_product.ProductID = jit_orderproduct.ProductID ');
+    arr.push(' and jit_ordercustomer.CustomerID = jit_customer.CustomerID ');
+
+    var sql = arr.join(' ');
 
     if(data !== undefined){
         for(var key in data){

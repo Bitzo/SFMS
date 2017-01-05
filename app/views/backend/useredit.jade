@@ -1,10 +1,10 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(ng-controller="sfmsIndexController")
+  div.container-fluid
     span 
       h2 用户编辑
     jason-form(method="post" source='/backuser' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
-     form( name="userEdit")
+     form( name="userEdit" ng-controller="userEditController")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 应用名称
@@ -16,9 +16,9 @@ block content
         tr
           td(width="15%",class="tableleft") 用户姓名 
           td
-            input(type="textview",name="UserName",ng-model='paginationConf.formdata.UserName',ng-maxlength='11',required)
+            input(type="textview",name="UserName",ng-model='paginationConf.formdata.UserName',ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-if="userInfo.UserName.$error.maxlength && userInfo.UserName.$touched") 用户姓名最多11位
+            small.error(ng-if="userInfo.UserName.$error.maxlength && userInfo.UserName.$touched") 用户姓名最多50位
            
         tr
           td(width="15%",class="tableleft") 密码 
@@ -82,14 +82,14 @@ block content
           td
             textarea(type="textview",rows="2",cols="30",name="Address",ng-model="paginationConf.formdata.Address",ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-if="userInfo.Address.$error.maxlength && userInfo.Address.$touched") 填写地址
+            small.error(ng-if="userInfo.Address.$error.maxlength && userInfo.Address.$touched") 地址最多200位
 
         tr
           td(width="15%",class="tableleft") 备注 (可选)  
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-if="userInfo.Memo.$error.maxlength && userInfo.Memo.$touched") 填写备注   
+            small.error(ng-if="userInfo.Memo.$error.maxlength && userInfo.Memo.$touched") 备注最多200位 
 
         tr
           td(class="tableleft")

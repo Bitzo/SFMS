@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 财务新增
-    form(method="post",name="financeAdd" )
+    form(method="post",name="financeAdd" ng-controller="selectController" )
       table.table.table-bordered.table-hover.definedwidth.m10      
         tr
           td(width="15%",class="tableleft") 财务名称
@@ -11,6 +11,18 @@ block content
             input(type="textview", ng-model='formdata.FIName' name='FIName',ng-maxlength='45',required)
             &nbsp&nbsp
             small.error(ng-if="financeAdd.FIName.$error.maxlength && financeAdd.FIName.$touched") 财务名称最多45位
+        
+        tr
+          td(width="15%",class="tableleft") 用户名
+          td
+            jason-select.input( ng-model='formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID' ng-change= "userKpiChanged()")
+
+        tr
+          td(width="15%",class="tableleft") 所属项目
+          td
+            select(ng-model='formdata.ProjectID',name='ProjectID')
+              option   
+              option(ng-repeat="item in ProjectNames" value='{{item.ProjectID}}') {{item.ProjectName}}
             
         
         tr
@@ -28,27 +40,19 @@ block content
         tr
           td(width="15%",class="tableleft") 财务金额 
           td
-            input(type="number",name="FIPrice",ng-model="formdata.FIPrice",ng-maxlength='10',required)
+            input(type="number",name="FIPrice",ng-model="formdata.FIPrice",ng-maxlength='45',required)
 
             &nbsp&nbsp
-            small.error(ng-if="financeAdd.FIPrice.$error.maxlength && financeAdd.FIPrice.$touched") 金额最多10位
+            small.error(ng-if="financeAdd.FIPrice.$error.maxlength && financeAdd.FIPrice.$touched") 金额最多45位
 
-        tr
-          td(width="15%",class="tableleft") 所属项目
-          td
-            jason-select.input( ng-model='formdata.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
-
-        tr
-          td(width="15%",class="tableleft") 相关用户
-          td
-            jason-select.input( ng-model='formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID')
+       
      
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
-            textarea(type="textview",rows="5",cols="30",name="Remark",ng-model='formdata.Remark',ng-maxlength='200',required)
+            textarea(type="textview",rows="5",cols="30",name="Remark",ng-model='formdata.Remark',ng-maxlength='45',required)
             &nbsp&nbsp
-            small.error(ng-if="financeAdd.Remark.$error.maxlength && financeAdd.Remark.$touched") 描述最多200位
+            small.error(ng-if="financeAdd.Remark.$error.maxlength && financeAdd.Remark.$touched") 描述最多45位
 
         tr
           td(class="tableleft")

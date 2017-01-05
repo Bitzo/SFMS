@@ -69,7 +69,7 @@ router.post('/', function (req, res) {
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: '应用代码过长'
+                    msg: '应用代码过长,请勿超过50个字符'
                 });
             }
             if (data.ApplicationName.length>50) {
@@ -77,7 +77,7 @@ router.post('/', function (req, res) {
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: '应用名称过长'
+                    msg: '应用名称过长,请勿超过50个字符'
                 });
             }
             if (data.Memo.length>200) {
@@ -85,7 +85,7 @@ router.post('/', function (req, res) {
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: '备注过长'
+                    msg: '备注过长,请勿超过200个字符'
                 });
             }
             userSpring.insert(data, function (err, results) {
@@ -260,7 +260,7 @@ router.put('/', function(req, res) {
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: '应用代码过长'
+                    msg: '应用代码过长,请勿超过50个字符'
                 });
             }
             if (data.ApplicationName.length>50) {
@@ -268,7 +268,7 @@ router.put('/', function(req, res) {
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: '应用名称过长'
+                    msg: '应用名称过长,请勿超过50个字符'
                 });
             }
             if (data.Memo.length>200) {
@@ -276,7 +276,7 @@ router.put('/', function(req, res) {
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: '备注过长'
+                    msg: '备注过长,请勿超过200个字符'
                 });
             }
             userSpring.update(data, function (err, results) {

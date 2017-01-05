@@ -6,9 +6,9 @@ block content
         span.title  财务管理
         div.buttons.pull-right
           label.form-group.my-form-group   类型  
-            jason-select.est(placeholder='财务类型' ng-model='f.FIType' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='DictionaryValue')
+            jason-select.est(placeholder='财务类型' ng-model='f.FIType' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='DictionaryID')
           label.form-group.my-form-group  收支类型  
-            jason-select.est(placeholder='收入支出类型' ng-model='f.InOutType' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='DictionaryValue')
+            jason-select.est(placeholder='收入支出类型' ng-model='f.InOutType' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='DictionaryID')
           label.form-group.my-form-group   项目  
             jason-select.est(placeholder='' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
           label.form-group.my-form-group  状态 
@@ -44,8 +44,8 @@ block content
           tr(ng-repeat="x in datas") 
             td {{$index+1}}
             td {{x.FIName}}            
-            td {{x.FIType}}
-            td {{x.InOutType}}
+            td {{x.FITypeValue}}
+            td {{x.InOutTypeValue}}
             td {{x.FIPrice}}            
             td {{x.ProjectName}}
             td {{x.UserName}}            

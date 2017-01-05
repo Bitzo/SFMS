@@ -3,40 +3,6 @@
  */
 myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
-    $http.get("/func?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
-        .success(function (response) {
-            $scope.tree_data =response.data;
-        });
-    $scope.expanding_property = {
-        field: "FunctionName",
-        displayName: "功能名字",
-        sortable: true,
-        filterable: true,
-        cellTemplate: "<input type='checkbox'><i>{{row.branch[expandingProperty.field]}}</i>"
-    };
-    $scope.col_defs = [
-        {
-            field: "FunctionName",
-            sortable: true,
-            sortingType: "string",
-            displayName:"功能名字",
-            cellTemplate: "{{row.branch[col.field]}}</strong>"
-        },
-        {
-            field: "ApplicationID",
-            sortable: true,
-            sortingType: "number",
-            filterable: true
-        },
-        {
-            field: "FunctionID",
-            sortable: true,
-            sortingType: "number"
-        },
-        {
-            field: "ParentID"
-        }
-    ];
     //显示左侧菜单栏
     $scope.menus =baseService.InitMenu().then(function(response){
         $scope.menus = response.data.data.Menu;
@@ -46,28 +12,28 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     $scope.paginationConf = {
         currentPage: 1,
         itemsPerPage: 10,
-        action: "1111"
+        action: ""
     }
 
 
     //应用角色菜单用户首页数据显示
     $scope.f={};
     function getInit(){
-        $http({
-            method:'get',
-            url:$scope.paginationConf.action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                pageindex:$scope.paginationConf.currentPage,
-                pagesize:$scope.paginationConf.itemsPerPage,
-                f:$scope.f
-            }
-        }).
-        success(function(response) {
-            $scope.datas=response.data;
-            $scope.paginationConf.totalItems= response.dataNum;
-        }).
-        error(function(response) {
-        });
+        if($scope.paginationConf&&$scope.paginationConf.action&&$scope.paginationConf.action!="") {
+            $http({
+                method: 'get',
+                url: $scope.paginationConf.action + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+                params: {
+                    pageindex: $scope.paginationConf.currentPage,
+                    pagesize: $scope.paginationConf.itemsPerPage,
+                    f: $scope.f
+                }
+            }).success(function (response) {
+                $scope.datas = response.data;
+                $scope.paginationConf.totalItems = response.dataNum;
+            }).error(function (response) {
+            });
+        }
     }
     $scope.paginationConf = {
         currentPage: 1,
@@ -79,6 +45,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     //查询
     $scope.search=function(){
         getInit();
+        $scope.formdata={};
     }
 
 
@@ -95,6 +62,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         success(function(response) {
             if(response.isSuccess){
                 alert(response.msg);
+                console.log($scope.formdata);
                 $scope.datas.push($scope.formdata);
                 $scope.formdata={};
             }else{
@@ -127,7 +95,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
-            $scope.paginationConf.formdata=response.data[0];
             console.log($scope.paginationConf.formdata);
             console.log('修改成功');
             console.log(response);
@@ -140,7 +107,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
 
     //编辑完成提交信息
-
     var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
         $http({

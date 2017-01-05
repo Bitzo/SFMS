@@ -24,7 +24,7 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
     return {
         restrict: 'EA',
         template:
-        '<select id ="selectChange" ng-change="hasChanged()" ng-click="getNew()">'+
+        '<select id ="selectChange" ng-click="getNew()">'+
         '<option value="">全部显示</option>'+
         '<option ng-repeat="item in options" value={{item.value}}>{{item.text}}</option>'+
         '</select>',
@@ -34,13 +34,6 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
         },
         link: function(scope, element, attrs){
            
-            scope.hasChanged = function() {
-                var selectChange=document.getElementById('selectChange');
-                if(!selectChange.value){
-                     console.log('selectChange');
-                }
-            }
-
 
             if(attrs.selectparams){
                 var url= attrs.source+"?access_token=";

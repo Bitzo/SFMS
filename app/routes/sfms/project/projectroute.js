@@ -112,7 +112,7 @@ router.post('/', function (req, res) {
                                 return res.json({
                                     code: 400,
                                     isSuccess: false,
-                                    msg: '项目名称过长'
+                                    msg: '项目名称过长,请勿超过45个字符'
                                 });
                             }
                             if (data.ProjectDesc.length > 45) {
@@ -120,7 +120,7 @@ router.post('/', function (req, res) {
                                 return res.json({
                                     code: 400,
                                     isSuccess: false,
-                                    msg: '项目描述过长'
+                                    msg: '项目描述过长,请勿超过45个字符'
                                 });
                             }
                             if (isNaN(data.ProjectPrice)||data.ProjectPrice<0) {
@@ -136,7 +136,7 @@ router.post('/', function (req, res) {
                                 return res.json({
                                     code: 400,
                                     isSuccess: false,
-                                    msg: '项目进度描述过长'
+                                    msg: '项目进度描述过长,请勿超过45个字符'
                                 });
                             }
                             //如果有项目人员信息，则添加
@@ -158,7 +158,7 @@ router.post('/', function (req, res) {
                                         return res.json({
                                             status: 400,
                                             isSuccess: false,
-                                            msg: '人员职责描述过长'
+                                            msg: '人员职责描述过长,请勿超过45个字符'
                                         })
                                     }
                                     userData[i].projectName = projectName;
@@ -382,7 +382,7 @@ router.put('/', function (req, res) {
                         return res.json({
                             code: 400,
                             isSuccess: false,
-                            msg: '项目描述过长'
+                            msg: '项目描述过长,请勿超过45个字符'
                         });
                     }
                     if (isNaN(data.ProjectPrice)||data.ProjectPrice<0) {
@@ -398,7 +398,7 @@ router.put('/', function (req, res) {
                         return res.json({
                             code: 400,
                             isSuccess: false,
-                            msg: '项目进度描述过长'
+                            msg: '项目进度描述过长,请勿超过45个字符'
                         });
                     }
                     projectservice.updateProject(data, function (err, results) {
@@ -422,7 +422,7 @@ router.put('/', function (req, res) {
                                         return res.json({
                                             status: 400,
                                             isSuccess: false,
-                                            msg: '人员职责描述过长'
+                                            msg: '人员职责描述过长,请勿超过45个字符'
                                         })
                                     }
                                     userData[i].projectID = data.ID;
@@ -529,6 +529,70 @@ router.put('/', function (req, res) {
                 msg: '操作失败，项目负责人信息有误'
             })
         }
+    })
+})
+
+//根据用户查询有关的项目
+router.get('/user', function (req, res) {
+    var query =  JSON.parse(req.query.f),
+        userID = query.UserID || '';
+
+    if (userID===undefined||userID=='') {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: '缺少userID'
+        })
+    }
+
+    projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '操作失败，服务器出错'
+            })
+        }
+        var projectInfo = [];
+        if (results.length>0) {
+            projectInfo = results;
+        }
+        console.log(results)
+        projectservice.queryProject({ProjectManageID:userID}, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                })
+            }
+            console.log(results)
+            if (results.length>0) {
+                var i=0,j=0;
+                for (i=0;i<results.length;++i) {
+                    for (j=0;j<projectInfo.length;++j) {
+                        if (results[i].ID == projectInfo[j].ProjectID) break;
+                    }
+                    if (j==projectInfo.length) projectInfo.push(results[i]);
+                }
+                res.status(200);
+                return res.json({
+                    status: 200,
+                    isSuccess: true,
+                    data: projectInfo
+                })
+            } else {
+                res.status(200);
+                return res.json({
+                    status: 200,
+                    isSuccess: true,
+                    data: projectInfo
+                })
+            }
+        })
     })
 })
 
