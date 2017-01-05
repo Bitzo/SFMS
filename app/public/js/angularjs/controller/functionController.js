@@ -94,6 +94,31 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
             });
         }
     }
+    $scope.delete=function(e,par){
+        $scope.currentData=e;
+        $scope.parent=par;
+        var  promise=doDelete();
+        promise.success(function(data){
+            for(index=0;index<$scope.parent.children.length;index++)
+            {
+                if($scope.parent.children===$scope.currentData)
+                {
+                    break;
+                }
+            }
+            $scope.parent.children.splice(index,1);
+            $("#functionModel").modal('show');
+        });
+    }
+    function  doDelete(){
+        return $http({
+            method: 'delete',
+            url: "func?access_token=" + accesstokenstring,
+            data: {
+                d:JSON.stringify($scope.currentData)
+            }
+        });
+    }
     function doSave(){
        if($scope.currentData.FunctionID==="") {
            return $http({

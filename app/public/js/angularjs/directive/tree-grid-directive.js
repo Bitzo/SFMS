@@ -27,7 +27,7 @@ angular.module('template/treeGrid/treeGrid.html', []).run([
             "       </td>\n" +
             "       <td><a ng-click=\"on_user_clickedit(row.branch)\"><i class=\"icon.icon-edit\"></i>编辑</a>"+
             "           <a ng-click=\"on_user_clickadd(row.branch)\"><i class=\"icon.icon-plus\"></i>新增子元素</a>"+
-            "           <a ng-click=\"on_user_click(row.branch)\"><i class=\"icon.icon-delete\"></i>删除</a>"+
+            "           <a ng-click=\"on_user_clickdelete(row.branch)\"><i class=\"icon.icon-delete\"></i>删除</a>"+
             "       </td>\n" +
             "     </tr>\n" +
             "   </tbody>\n" +
@@ -80,6 +80,7 @@ angular.module('treeGrid', [
                     onClick: '&',
                     onClickadd:'&',
                     onClickedit:'&',
+                    onClickdelete:'&',
                     initialSelection: '@',
                     treeControl: '=',
 
@@ -222,6 +223,15 @@ angular.module('treeGrid', [
                         if (scope.onClickedit) {
                             return scope.onClickedit({
                                 branch: branch
+                            });
+                        }
+                    };
+                    scope.on_user_clickdelete = function (branch) {
+                        if (scope.onClickdelete) {
+                            var partent=get_parent(branch);
+                            return scope.onClickdelete({
+                                branch: branch,
+                                parent:partent
                             });
                         }
                     };
