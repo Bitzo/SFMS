@@ -12,8 +12,14 @@ var functionModel = appRequire('model/backend/function/functionmodel');
 
 //得到所有功能点
 exports.queryAllFunctions = function (data, callback) {
-    var sql = 'select ApplicationID,FunctionID,FunctionLevel,ParentID,FunctionCode,FunctionName,Memo,IsActive from jit_function where IsActive=1';
-
+    var sql = 'select ApplicationID,FunctionID,FunctionLevel,ParentID,FunctionCode,FunctionName,Memo,IsActive from jit_function where 1=1 ';
+   
+     if (data !== undefined) {
+        for (var key in data) {
+            if (key !== '')
+            sql += " and " + key + " = '" + data[key] + "' ";
+        }
+    }
     logger.writeInfo("得到所有功能点:" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {

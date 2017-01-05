@@ -25,12 +25,11 @@ router.get('/', function (req, res) {
         }
 
         if (results !== undefined && results.length != 0) {
-            var result = {
+            res.json({
                 code: 200,
                 isSuccess: true,
                 data: results
-            };
-            res.json(result);
+            });
         } else {
             res.json({
                 code: 404,
@@ -46,7 +45,7 @@ router.get('/', function (req, res) {
 //功能点的新增
 router.post('/', function (req, res) {
 
-    var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName'];
+    var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'IsActive'];
     var err = 'required: ';
     var formdata = req.body.formdata;
     for (var value in data) {
@@ -81,7 +80,22 @@ router.post('/', function (req, res) {
         'FunctionCode': FunctionCode,
         'FunctionName': FunctionName,
         'Memo': Memo,
-        'IsActive': 1
+        'IsActive': IsActive
+    }
+    var intdata = {
+        'ApplicationID': ApplicationID,
+        "ParentID": ParentID,
+        "IsActive": IsActive,
+    };
+    for (var key in intdata) {
+        if (isNaN(intdata[key])) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intdata[key] + '不是数字'
+            });
+        }
     }
     functionservice.insert(data, function (err, result) {
         if (err) {
@@ -113,7 +127,7 @@ router.post('/', function (req, res) {
 //功能点的编辑
 router.put('/', function (req, res) {
 
-    var data = ['ApplicationID', 'FunctionID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName'];
+    var data = ['ApplicationID', 'FunctionID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'IsActive'];
     var err = 'required: ';
     var formdata = req.body.formdata;
     for (var value in data) {
@@ -139,7 +153,24 @@ router.put('/', function (req, res) {
     var FunctionCode = formdata.FunctionCode;
     var FunctionName = formdata.FunctionName;
     var Memo = formdata.Memo || '';
+    var IsActive = formdata.IsActive;
 
+    var intdata = {
+        "FunctionID": FunctionID,
+        "ApplicationID": ApplicationID,
+        "ParentID": ParentID,
+        "IsActive": IsActive,
+    };
+    for (var key in intdata) {
+        if (isNaN(intdata[key])) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intdata[key] + '不是数字'
+            });
+        }
+    }
     var data = {
         'ApplicationID': ApplicationID,
         'FunctionID': FunctionID,
@@ -148,6 +179,7 @@ router.put('/', function (req, res) {
         'FunctionCode': FunctionCode,
         'FunctionName': FunctionName,
         'Memo': Memo,
+        'IsActive': IsActive
     }
 
     functionservice.update(data, function (err, results) {
@@ -187,6 +219,14 @@ router.delete('/', function (req, res) {
             code: 404,
             isSuccess: false,
             msg: 'require FunctionID'
+        })
+        return;
+    }
+    if (isNaN(FunctionID)) {
+        res.json({
+            code: 404,
+            isSuccess: false,
+            msg: 'FunctionID 不是数字'
         })
         return;
     }
