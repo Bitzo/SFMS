@@ -39,8 +39,8 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
        // }
     }
     $scope.clickHanderAdd = function(e){
-        e.ApplicationID= e.ApplicationID+'';
-        $scope.currentData=e;
+        e.children.push({"ApplicationID": e.ApplicationID,"FunctionID":"","ParentID": e.FunctionID,"FunctionName":"","Memo":""});
+        $scope.currentData= e.children[e.children.length-1];
         // $scope.currentData=Object.assign({},e);
         //for(key in $scope.currentData){
         //      $scope.currentData[key]=$scope.currentData[key]+'';

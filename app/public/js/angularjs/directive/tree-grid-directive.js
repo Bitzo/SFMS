@@ -208,6 +208,8 @@ angular.module('treeGrid', [
                         }
                     };
                     scope.on_user_clickadd = function (branch) {
+                        branch.expanded = true;
+                       //expand_all_parents(branch);
                         if (scope.onClickadd) {
                             return scope.onClickadd({
                                 branch: branch
