@@ -27,7 +27,8 @@ wechat.token = config.weChat.token;
 var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
 
 //调用商品的模块的内容
-var product = appRequire('service/jinkebro/product/productservice');
+var product = appRequire('service/jinkebro/product/productservice'),
+    order = appRequire('service/jinkebro/order/orderservice');
 
 //微信开发者认证
 router.get('/accesscheck', function (req, res, next) {
@@ -60,17 +61,30 @@ router.get('/accesscheck', function (req, res, next) {
 // 监听文本消息
 wechat.textMsg(function (msg) {
     var resMsg = {};
+    console.log(msg);
     switch (msg.msgType) {
         case "text":
-            // 返回文本消息
-            resMsg = {
-                fromUserName: msg.toUserName,
-                toUserName: msg.fromUserName,
-                msgType: "text",
-                content: "这是文本回复" + new Date(),
-                funcFlag: 0
-            };
-
+            // 返回文本消息           
+            if (/^(\d+#\d+)$/.test(msg.content) ||
+                /^((\d+#\d+\|)+(\d+#\d+))$/.test(msg.content)) {
+                console.log("收到订单的消息");
+                resMsg = {
+                    fromUserName: msg.toUserName,
+                    toUserName: msg.fromUserName,
+                    msgType: "text",
+                    content: "收到订单" + new Date(),
+                    funcFlag: 0
+                };
+            }
+            else {
+                resMsg = {
+                    fromUserName: msg.toUserName,
+                    toUserName: msg.fromUserName,
+                    msgType: "text",
+                    content: "这是文本回复" + new Date(),
+                    funcFlag: 0
+                };
+            }
             break;
 
         case "音乐":
@@ -242,11 +256,9 @@ wechat.eventMsg(function (msg) {
                 case 'ProductDisplay':
                     product.getProductInfoThroughHttpGet(function (productInfo) {
                         var contentInfo = '';
-                        console.log(productInfo);
                         for (var index in productInfo.data) {
                             console.log("商品的序列" + index);
                             for (var key in productInfo.data[index]) {
-                                console.log(key);
                                 if (key == 'ProductID') {
                                     contentInfo += "编号:" + productInfo.data[index][key] + "  ";
                                 }
@@ -259,6 +271,9 @@ wechat.eventMsg(function (msg) {
                                     contentInfo += "价格:" + productInfo.data[index][key] + "  ";
                                 }
 
+                                if (key == 'ProductTypeName') {
+                                    contentInfo += "规格:" + productInfo.data[index][key] + "  ";
+                                }
                             }
                             contentInfo += "\n";
                         }
@@ -317,9 +332,11 @@ wechat.clickAddress(function (judgement, username) {
 //渲染地址栏的页面
 router.get('/addressinfo', function (req, res) {
 
-    var addressurl = config.jinkebro.baseUrl + wechat.data.FromUserName;
+    var addressurl = config.jinkebro.baseUrl + 'wechat/' + wechat.data.FromUserName;
+    console.log(addressurl);
     //路由的重定义
-    res.redirect(301, + addressurl);
+    res.redirect(301, addressurl);
+   
 });
 
 /************************************************************************************/

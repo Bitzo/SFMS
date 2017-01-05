@@ -718,7 +718,6 @@ Weixin.prototype.sendMsg = function (msg) {
     }
 }
 
-
 Weixin.prototype.handleCustomerMsg = function (req, res) {
     // 保存res
     this.res = res;

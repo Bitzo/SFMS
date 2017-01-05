@@ -9,6 +9,7 @@ var orderDAL = appRequire('dal/jinkebro/order/orderdal'),
     moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
     logModel = appRequire('model/jinkebro/log/logmodel');
+    
 
 var Order = function () {
 
@@ -92,5 +93,17 @@ Order.prototype.CountOrders = function (data, callback) {
     });
 }
 
-
+//根据用户的信息来将订单的内容插入进数据库
+Order.prototype.insertOrderInfo = function(msg)
+{
+    var productInfo= msg.split('|');
+    for(var eachProduct in productInfo)
+    {
+       var eachOrderInfo = eachProduct.split('#');
+       var orderInfo = {
+           'ProductID' : eachOrderInfo[0],
+           'Num'  : eachOrderInfo[1]
+       }
+    }
+}
 module.exports = new Order();

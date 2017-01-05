@@ -362,7 +362,7 @@ router.get('/',function (req,res) {
         ProductTypeID = query.ProductTypeID || '',
         ProductPrice = query.ProductPrice || '',
         OnSale = (query.OnSale !== undefined) ? (query.OnSale) : 1,
-        isPaging = (query.isPaging !== undefined) ? (query.isPaging) : 1; //是否分页 0表示不分页,1表示分页
+        isPaging = (query.isPaging !== undefined) ? (query.isPaging) : 0; //是否分页 0表示不分页,1表示分页
 
     page = page>0 ? page : 1;
 
