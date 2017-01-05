@@ -6,7 +6,12 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
     $scope.disable=true;//右边的编辑框是否可编辑
     $scope.btnSaveMessage='编辑';//编辑框中的提交按钮的作用
     $scope.parent=[];//新增时，当前节点的父节点
-
+    $scope.Config={
+        ModelTitle:'确定',
+        ModelBody:'保存成功',
+        BtnCancel:'取消',
+        BtnSave:'确定'
+    };
     //获取树形数据
     $http.get("/func?access_token=" + accesstokenstring)
         .success(function (response) {
@@ -80,16 +85,33 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
             $scope.disable = false;
             $scope.btnSaveMessage = '保存';
         }else{//按钮为保存激活状态，点击保存操作
-            $http({
-                method:'post',
-                url:"func?access_token="+accesstokenstring,
-                data:{
-                    formdata:$scope.currentData
+            var  promise=doSave();
+            promise.success(function(data){
+                if($scope.currentData.FunctionID===""){
+                    $scope.currentData.FunctionID="s"
                 }
-            }).success(function(data){
-
+                $("#functionModel").modal('show');
             });
         }
+    }
+    function doSave(){
+       if($scope.currentData.FunctionID==="") {
+           return $http({
+               method: 'post',
+               url: "func?access_token=" + accesstokenstring,
+               data: {
+                   formdata: $scope.currentData
+               }
+           });
+       }else{
+           return $http({
+               method: 'put',
+               url: "func?access_token=" + accesstokenstring,
+               data: {
+                   formdata: $scope.currentData
+               }
+           });
+       }
     }
     // 点击取消按钮时候触发事件
     $scope.cancel=function(){
