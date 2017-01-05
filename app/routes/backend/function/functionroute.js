@@ -47,7 +47,9 @@ router.post('/', function (req, res) {
 
     var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'IsActive'];
     var err = 'required: ';
+
     var formdata = req.body.formdata;
+    console.log(formdata);
     for (var value in data) {
         if (!(data[value] in formdata)) {
             console.log("require " + data[value]);
