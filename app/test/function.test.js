@@ -12,8 +12,8 @@ var funcService = appRequire('service/backend/function/functionservice');
 
 var data = {
     "ApplicationID": 1,
-    "FunctionLevel": 1,
-    "ParentID": 0,
+    "FunctionLevel": 2,
+    "ParentID": 1,
     "FunctionCode": '单元测试代码',
     "FunctionName": "单元测试功能点",
     "Memo": '描述',
@@ -81,6 +81,7 @@ describe("功能点单元测试", function () {
     });
     it("功能点逻辑删除", function (done) {
         data.FunctionID = insertFunctionID;
+        data.IsActive=0;
         funcService.delete(data, function (err, result) {
             if (err) {
                  if(result>0){

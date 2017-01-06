@@ -33,7 +33,7 @@ function getMultiTree(data, pid) {
 //将应用名称作为功能点的根节点
 function getTreeFunction(data, callback) {
     var treelist = getMultiTree(data, 0);
-    var d = {};
+    var d = {'IsActive':1};
     //从应用表中查出所有应用
     appService.queryAllApp(d, function (err, results) {
         if (err) {

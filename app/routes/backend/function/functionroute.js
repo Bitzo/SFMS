@@ -47,9 +47,7 @@ router.post('/', function (req, res) {
 
     var data = ['ApplicationID', 'FunctionLevel', 'ParentID', 'FunctionCode', 'FunctionName', 'IsActive'];
     var err = 'required: ';
-
     var formdata = req.body.formdata;
-    console.log(formdata);
     for (var value in data) {
         if (!(data[value] in formdata)) {
             console.log("require " + data[value]);
@@ -108,7 +106,7 @@ router.post('/', function (req, res) {
             })
             return;
         }
-        if (result !== undefined && result.length != 0) {
+        if (result !== undefined && result.length != 0 && result.affectedRows > 0) {
             res.json({
                 code: 200,
                 isSuccess: true,
@@ -195,18 +193,25 @@ router.put('/', function (req, res) {
         }
 
         if (results !== undefined && results.length != 0) {
-            res.json({
-                code: 200,
-                isSuccess: true,
-                data: data,
-                msg: '操作成功'
-            })
+            if (results.affectedRows > 0) {
+                res.json({
+                    code: 200,
+                    isSuccess: true,
+                    msg: '操作成功'
+                });
+            } else {
+                res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: '不存在该功能点'
+                });
+            }
         } else {
             res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '操作失败'
-            })
+            });
         }
     })
 
@@ -215,7 +220,6 @@ router.put('/', function (req, res) {
 //功能点的删除
 router.delete('/', function (req, res) {
     var FunctionID = JSON.parse(req.query.d).FunctionID;
-
     if (FunctionID === undefined || FunctionID == '') {
         res.json({
             code: 404,
@@ -236,35 +240,35 @@ router.delete('/', function (req, res) {
     var data = {
         'FunctionID': FunctionID
     };
+
     functionservice.delete(data, function (err, results) {
         if (err) {
-            if (results > 0) {
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: results
+            });
+            return;
+        }
+        if (results !== undefined && results.length != 0) {
+            if (results.affectedRows > 0) {
+                res.json({
+                    code: 200,
+                    isSuccess: true,
+                    msg: results
+                })
+            } else {
                 res.json({
                     code: 404,
                     isSuccess: false,
-                    msg: '请选删除其子功能点。'
-                });
-            } else {
-                res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: '操作失败，服务器出错'
-                });
+                    msg: '不存在该功能点'
+                })
             }
-        }
-
-        if (results !== undefined && results.length != 0) {
-
-            res.json({
-                code: 200,
-                isSuccess: true,
-                msg: '操作成功'
-            })
         } else {
             res.json({
                 code: 404,
                 isSuccess: false,
-                msg: '操作失败！'
+                msg: '删除失败！'
             })
         }
     })
@@ -273,8 +277,7 @@ router.delete('/', function (req, res) {
 
 //根据FunctionID得到该功能点的值
 router.get('/getFuncByID', function (req, res) {
-    var functionID = JSON.parse(req.query.f).functionID;
-
+    var FunctionID = JSON.parse(req.query.f).FunctionID;
     if (FunctionID === undefined || FunctionID == '') {
         res.json({
             code: 404,
@@ -285,7 +288,7 @@ router.get('/getFuncByID', function (req, res) {
     }
 
     var data = {
-        'FunctionID': functionID,
+        'FunctionID': FunctionID
     };
 
     functionservice.getFuncByID(data, function (err, results) {
