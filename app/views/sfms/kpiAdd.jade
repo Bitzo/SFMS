@@ -16,19 +16,12 @@ block content
           td(width="15%",class="tableleft") 绩效类型
           td
             jason-select.input( ng-model='formdata.KPIType' source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
-           
-        tr
-          td(width="15%",class="tableleft") 用户名
-          td
-            jason-select.input( ng-model='formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID' ng-change= "userKpiChanged()")
     
 
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            select(ng-model='formdata.ProjectID',name='ProjectID')
-              option   
-              option(ng-repeat="item in ProjectNames" value='{{item.ProjectID}}') {{item.ProjectName}}
+            jason-select.input( ng-model='formdata.ProjectID' source='/sfms/api/project/user' stext='ProjectName' svalue='ProjectID')
             
         tr
           td(width="15%",class="tableleft") 绩效分

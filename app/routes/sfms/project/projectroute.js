@@ -574,9 +574,15 @@ router.get('/user', function (req, res) {
                     for (j=0;j<projectInfo.length;++j) {
                         if (results[i].ID == projectInfo[j].ProjectID) break;
                     }
-                    if (j==projectInfo.length) projectInfo.push(results[i]);
+                    if (j==projectInfo.length) {
+                        projectInfo.push({
+                            ProjectID: results[i].ID,
+                            ProjectName: results[i].ProjectName
+                        });
+                    }
                 }
                 res.status(200);
+                console.log(projectInfo)
                 return res.json({
                     status: 200,
                     isSuccess: true,
