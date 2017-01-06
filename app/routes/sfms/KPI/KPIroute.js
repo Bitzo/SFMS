@@ -251,6 +251,7 @@ router.post('/', function (req, res) {
 
 //KPI基本信息编辑
 router.put('/', function (req, res) {
+    console.log(req.body)
     var query = req.body.formdata,
         ID = query.ID,
         KPIName = query.KPIName,
@@ -331,6 +332,7 @@ router.put('/', function (req, res) {
             })
         }
         if(results !== undefined && results.length>0) {
+            console.log(results)
             if (results[0].KPIStatus == '待审核') {
                 projectservice.queryProject({ID:ProjectID}, function (err, results) {
                     if (err) {
@@ -783,6 +785,14 @@ router.put('/check', function (req, res) {
             status: 400,
             isSuccess: false,
             msg: err
+        })
+    }
+    if (data.KPIStatus != '不通过' && data.KPIStatus != '通过' ) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: '操作失败,未选择审核结果'
         })
     }
 

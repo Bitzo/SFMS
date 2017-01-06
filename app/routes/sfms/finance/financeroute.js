@@ -616,6 +616,14 @@ router.put('/check', function (req, res) {
             msg: err
         })
     }
+    if (data.FIStatu != '不通过' && data.FIStatu != '通过' ) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: '操作失败,未选择审核结果'
+        })
+    }
     if(data.FIStatu == '不通过' && (data.Memo === undefined || data.Memo.trim()==='')) {
         res.status(400);
         return res.json({
