@@ -58,8 +58,8 @@ block content
                         td
                           select(ng-model='user.userIndex' ng-change= "userChanged()") 
                             option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}
-                        td
-                          input(ng-model='user.userID')  
+                        td(style="width:150px;")
+                          span(ng-model='user.userID' style="width:150px;")  {{user.userID}}  
                         td 
                           button(ng-click="addEditUser(user)" style="width:80px;height:34px") 添加
 
