@@ -20,16 +20,9 @@ block content
                 option(ng-repeat="item in kpitype" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
 
           tr
-            td(width="15%",class="tableleft") 用户名
-            td
-              jason-select.input( ng-model='paginationConf.formdata.UserID' source='/backuser' stext='UserName' svalue='AccountID' ng-change= "userKpiChanged()")   
-
-          tr
             td(width="15%",class="tableleft") 所属项目
             td
-              select(ng-model='paginationConf.formdata.ProjectID',name='ProjectID')
-                option   
-                option(ng-repeat="item in ProjectNames" value='{{item.ProjectID}}') {{item.ProjectName}}
+              jason-select.input( ng-model='paginationConf.formdata.ProjectID' source='/sfms/api/project/user' stext='ProjectName' svalue='ProjectID')
               
           tr
             td(width="15%",class="tableleft") 绩效分
