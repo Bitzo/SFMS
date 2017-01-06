@@ -133,7 +133,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     //删除
     $scope.d={};
     $scope.remove = function(index,a,action){
-        var mymessage=confirm("是否确认删除"+a);  
+        var mymessage=confirm("是否确认删除  "+a);  
         if(mymessage==true){
         $scope.d={
             "AccountID":$scope.datas[index].AccountID,
@@ -171,7 +171,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
 
-            $scope.data = response.data.Role;
+            $scope.dataRole = response.data.Role;
 
             // console.log(response);
             // $scope.dataRole = response.data.Role;
