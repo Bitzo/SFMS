@@ -78,9 +78,10 @@ exports.queryAllUsers = function(data, callback) {
         }
     }
          var num = data['pageNum']; //每一页要显示的数据量
-
+         sql += 'order by A.AccountID ASC';
          sql += " limit " + (data['page'] - 1) * num + " , " + num;
          logger.writeInfo("查询用户:" + sql);
+         console.log(sql);
          db_backend.mysqlPool.getConnection(function(err, connection) {
             if (err) {
                 callback(true);

@@ -182,7 +182,7 @@ exports.updateOrder = function (data,callback) {
 exports.queryOrders = function (data,callback) {
     var arr = new Array();
     arr.push(' select  jit_customer.CustomerID,jit_ordercustomer.OrderID, ');
-    arr.push(' jit_order.OrderTime,jit_orderproduct.ProductID,jit_product.ProductName, ');
+    arr.push(' jit_order.OrderTime,jit_orderproduct.ProductID,jit_product.ProductName,jit_orderproduct.ProductCount, ');
     arr.push(' jit_product.ProductPrice,jit_productype.ProductTypeName,jit_order.PayMethod ');
     arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer,jit_productype ');
     arr.push(' where 1 = 1 and jit_order.OrderID = jit_ordercustomer.orderID ');

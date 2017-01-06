@@ -52,8 +52,10 @@ var config = {
     },
     //金科小哥相关的
     jinkebro : {
+        host : 'sun.tunnel.2bdata.com',
         baseUrl : 'http://sun.tunnel.2bdata.com/',
-        productInfo : 'jinkeBro/product/info'
+        productInfo : 'jinkeBro/product/info',
+        order : 'jinkeBro/order'
     },
     redis_prd: {
         host: '120.27.38.175',

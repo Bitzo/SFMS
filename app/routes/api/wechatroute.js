@@ -68,13 +68,17 @@ wechat.textMsg(function (msg) {
             if (/^(\d+#\d+)$/.test(msg.content) ||
                 /^((\d+#\d+\|)+(\d+#\d+))$/.test(msg.content)) {
                 console.log("收到订单的消息");
-                resMsg = {
-                    fromUserName: msg.toUserName,
-                    toUserName: msg.fromUserName,
-                    msgType: "text",
-                    content: "收到订单" + new Date(),
-                    funcFlag: 0
-                };
+                order.insertOrderInfo(msg.content, msg.fromUserName, function (resultinfo) {
+                    console.log("订单的消息" + resultinfo);
+                    resMsg = {
+                        fromUserName: msg.toUserName,
+                        toUserName: msg.fromUserName,
+                        msgType: "text",
+                        content: resultinfo,
+                        funcFlag: 0
+                    };
+                    wechat.sendMsg(resMsg);
+                });
             }
             else {
                 resMsg = {
@@ -259,24 +263,14 @@ wechat.eventMsg(function (msg) {
                         for (var index in productInfo.data) {
                             console.log("商品的序列" + index);
                             for (var key in productInfo.data[index]) {
-                                if (key == 'ProductID') {
-                                    contentInfo += "编号:" + productInfo.data[index][key] + "  ";
-                                }
-
-                                if (key == 'ProductName') {
-                                    contentInfo += "名称:" + productInfo.data[index][key] + "  ";
-                                }
-
-                                if (key == 'ProductPrice') {
-                                    contentInfo += "价格:" + productInfo.data[index][key] + "  ";
-                                }
-
-                                if (key == 'ProductTypeName') {
-                                    contentInfo += "规格:" + productInfo.data[index][key] + "  ";
-                                }
+                                contentInfo += "编号:" + productInfo.data[index]['ProductID'] + "  ";
+                                contentInfo += "名称:" + productInfo.data[index]['ProductName'] + "  ";
+                                contentInfo += "价格:" + productInfo.data[index]['ProductPrice'] + "  ";
+                                contentInfo += "规格:" + productInfo.data[index]['ProductTypeName'] + "  ";
                             }
                             contentInfo += "\n";
                         }
+                        contentInfo += '下单输入的格式为：编号#数量|编号#数量';
                         console.log(contentInfo);
                         var resMsg = {
                             fromUserName: msg.ToUserName,
@@ -292,6 +286,21 @@ wechat.eventMsg(function (msg) {
 
                 case 'SubmitOrder':
                     console.log("提交订单");
+                    break;
+
+                case 'TrackPackage':
+                    console.log("跟踪包裹");
+                    order.insertOrderInfo(msg.content, msg.fromUserName, function (resultinfo) {
+                        console.log("订单的消息" + resultinfo);
+                        var resMsg = {
+                            fromUserName: msg.toUserName,
+                            toUserName: msg.fromUserName,
+                            msgType: "text",
+                            content: resultinfo,
+                            funcFlag: 0
+                        };
+                        wechat.sendMsg(resMsg);
+                    });
                     break;
             }
             break;
@@ -336,7 +345,7 @@ router.get('/addressinfo', function (req, res) {
     console.log(addressurl);
     //路由的重定义
     res.redirect(301, addressurl);
-   
+
 });
 
 /************************************************************************************/
