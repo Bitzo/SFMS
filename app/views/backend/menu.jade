@@ -34,7 +34,7 @@ block content
             td
               a(href='#/backend/menuedit/?MenuID={{x.MenuID}}' )
                 i.icon.icon-edit 编辑
-              a(ng-click="remove($index,'/backmenu')",href='')
+              a(ng-click="remove($index,x.MenuName,'/backmenu')",href='')
                 i.icon.icon-trash 删除
       div.pull-right
         jason-pagination(conf='paginationConf')

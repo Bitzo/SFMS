@@ -19,6 +19,7 @@ var logger = appRequire("util/loghelper").helper;
 
 //项目备注信息新增
 router.post('/', function (req, res) {
+    console.log(req.body)
     var query = req.body.formdata,
         projectID = query.ProjectID,
         userID = req.query.jitkey,

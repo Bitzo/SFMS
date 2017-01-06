@@ -35,13 +35,12 @@ router.post('/', function (req, res) {
         KPIType = query.KPIType,//字典表的ID
         KPIScore = query.KPIScore,
         OperateUser = req.query.jitkey,
-        UserID = query.UserID,
+        UserID = query.UserID || req.query.jitkey,
         KPIName = query.KPIName,
         Remark = query.Remark || '',
         isTrue = false; //用于逻辑上的判断
-
     //检查所需要的参数是否齐全
-    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID'],
+    var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID'],
         err = 'required: ';
     for(var value in temp)
     {
@@ -82,7 +81,7 @@ router.post('/', function (req, res) {
                         msg: '操作失败，服务器出错'
                     })
                 }
-                if (results !== undefined && results.length>0) {
+                if (results !== undefined) {
                     if (ProjectManageID == UserID) isTrue = true;
                     for (var i in results) {
                         if (results[i].ProjectID == ProjectID) isTrue = true;
@@ -251,6 +250,7 @@ router.post('/', function (req, res) {
 
 //KPI基本信息编辑
 router.put('/', function (req, res) {
+    console.log(req.body)
     var query = req.body.formdata,
         ID = query.ID,
         KPIName = query.KPIName,
@@ -331,6 +331,7 @@ router.put('/', function (req, res) {
             })
         }
         if(results !== undefined && results.length>0) {
+            console.log(results)
             if (results[0].KPIStatus == '待审核') {
                 projectservice.queryProject({ID:ProjectID}, function (err, results) {
                     if (err) {
@@ -457,6 +458,7 @@ router.put('/', function (req, res) {
 router.get('/person', function (req, res) {
     var UserID = req.query.jitkey,
         query =  JSON.parse(req.query.f),
+        ID = query.ID,
         ProjectID = query.ProjectID || '',
         StartTime = query.StartTime || '',
         EndTime = query.EndTime || '',
@@ -466,6 +468,7 @@ router.get('/person', function (req, res) {
         totalNum = 0;
 
     var data = {
+        'ID': ID,
         'ProjectID': ProjectID,
         'UserID': UserID,
         'KPIStatus': KPIStatus.trim(),
@@ -574,6 +577,7 @@ router.get('/person', function (req, res) {
                                         if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
                                     }
                                 }
+                                console.log(result)
                                 res.status(200);
                                 return res.json(result);
                             } else {
@@ -783,6 +787,14 @@ router.put('/check', function (req, res) {
             status: 400,
             isSuccess: false,
             msg: err
+        })
+    }
+    if (data.KPIStatus != '不通过' && data.KPIStatus != '通过' ) {
+        res.status(400);
+        return res.json({
+            status: 400,
+            isSuccess: false,
+            msg: '操作失败,未选择审核结果'
         })
     }
 

@@ -57,7 +57,6 @@ describe("库存单元测试", function () {
         }
         proStockService.queryProStock(queryData, function (err, result) {
             if (err) return done(err);
-            console.log(result);
             result.length.should.be.above(0).and.should.be.a.Number;
             done();
         });

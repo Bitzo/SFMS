@@ -11,9 +11,13 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询所有树形功能点
 exports.queryAllFunctions = function (data, callback) {
+    if (!checkData(data)) {
+        callback(true, '数据有误');
+        return;
+    }
     functionDAL.queryAllFunctions(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         logger.writeInfo('queryAllFunctions')
@@ -30,12 +34,12 @@ exports.queryAllFunctions = function (data, callback) {
 //新增功能点
 exports.insert = function (data, callback) {
     if (!checkData(data)) {
-        callback(true);
+        callback(true, '数据有误');
         return;
     }
     functionDAL.insert(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         logger.writeInfo('funcitoninsert');
@@ -47,12 +51,12 @@ exports.insert = function (data, callback) {
 exports.update = function (data, callback) {
     if (!checkData(data)) {
         logger.writeError('修改功能点err');
-        callback(true);
+        callback(true, results);
         return;
     }
     functionDAL.update(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         logger.writeInfo('funcitonupdate');
@@ -60,34 +64,44 @@ exports.update = function (data, callback) {
     });
 };
 
+var treeFuncID = [];
 //删除功能点
 exports.delete = function (data, callback) {
-    //删除时，判断其是否有子节点
-    functionDAL.HasChildernByID(data, function (err, results) {
+    if (!checkData(data)) {
+        callback(true, '数据有误');
+        return;
+    }
+    treeFuncID.length = 0;
+    getMultiTreeID(data.FunctionID, function (err, results) {
         if (err) {
-            callback(true);
-        }
-        var count = results[0]['count'];
-        if (count > 0) {
-            return callback(true, count);
+            return callback(true, results);
         } else {
-            //当取出的子节点为0时，可删除
-            functionDAL.delete(data, function (err, results) {
-                if (err) {
-                    callback(true);
-                    return;
-                }
-                callback(false, results);
-            });
+            if (treeFuncID.length > 0) {
+                treeFuncID.push({
+                    'ParentID': data.FunctionID
+                });
+                functionDAL.delete(treeFuncID, function (err, results) {
+                    if (err) {
+                        return callback(true, results);
+                    }
+                    return callback(false, results);
+                });
+            } else {
+                return callback(true, '不存在功能点')
+            }
         }
-    });
+    })
 };
 
 //根据FunctionID判断该功能点是否存在
 exports.queryFuncByID = function (data, callback) {
+    if (!checkData(data)) {
+        callback(true, '数据有误');
+        return;
+    }
     functionDAL.queryFuncByID(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         callback(false, results);
@@ -96,7 +110,11 @@ exports.queryFuncByID = function (data, callback) {
 
 //根据FunctionID得到该功能点的值
 exports.getFuncByID = function (data, callback) {
-    functionDAL.getFuncByID(data, function (err, results) {
+    if (!checkData(data)) {
+        callback(true);
+        return;
+    }
+    functionDAL.queryAllFunctions(data, function (err, results) {
         if (err) {
             callback(true);
             return;
@@ -104,6 +122,7 @@ exports.getFuncByID = function (data, callback) {
         callback(false, results);
     });
 }
+
 //验证数据是否都已定义
 function checkData(data) {
     for (var key in data) {
@@ -113,4 +132,27 @@ function checkData(data) {
         }
     }
     return true;
+}
+
+//得到子节点的所有functionid
+function getMultiTreeID(ParentID, callback) {
+    var querydata = {
+        'ParentID': ParentID,
+        'IsActive': 1
+    }
+    functionDAL.queryAllFunctions(querydata, function (err, results) {
+        if (err) {
+            return callback(true, '系统内部错误');
+        }
+        if (results != undefined && results.length > 0) {
+            for (var i in results) {
+                treeFuncID.push({
+                    'ParentID': results[i].FunctionID
+                })
+                console.log(results[i].FunctionID)
+                getMultiTreeID(results[i].FunctionID, callback);
+            }
+        }
+        callback(false);
+    });
 }
