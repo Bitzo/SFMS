@@ -536,7 +536,7 @@ router.put('/', function (req, res) {
 router.get('/user', function (req, res) {
     var query =  JSON.parse(req.query.f),
         userID = query.UserID || req.query.jitkey;
-
+console.log(userID)
     if (userID===undefined||userID=='') {
         res.status(400);
         return res.json({

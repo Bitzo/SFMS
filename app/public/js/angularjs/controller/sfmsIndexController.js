@@ -21,7 +21,7 @@ myApp.controller('sfmsIndexController', function($scope, $http,$q,baseService) {
         error(function(response) {
         });
 
-          //绩效管理项目
+          //绩效账户管理项目
                 console.log($scope.paginationConf.formdata.UserID);
                 $http({
                     method:'get',
@@ -30,7 +30,7 @@ myApp.controller('sfmsIndexController', function($scope, $http,$q,baseService) {
                         pageindex:1,
                         pagesize:10,
                         f:{
-                            UserID: 1
+                            UserID: '',
                         }
                     }
                 }).
@@ -42,7 +42,7 @@ myApp.controller('sfmsIndexController', function($scope, $http,$q,baseService) {
                 });
 
          
-        //绩效管理项目随用户的变化而变化
+        //绩效账户管理项目随用户的变化而变化
             $scope.userKpiChanged = function() {
                 console.log($scope.formdata.UserID)
                 $http({

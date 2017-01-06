@@ -113,11 +113,17 @@ router.get('/signManage', function(req, res, next) {
 router.get('/signPersonal', function(req, res, next) {
         res.render('sfms/signPersonal', { title: 'Hi sfms' });
 });
+router.get('/finance', function(req, res, next) {
+        res.render('sfms/finance', { title: 'Hi sfms' });
+});
+router.get('/financeAdd', function(req, res, next) {
+        res.render('sfms/financeAdd', { title: 'Hi sfms' });
+});
+router.get('/financeEdit', function(req, res, next) {
+        res.render('sfms/financeEdit', { title: 'Hi sfms' });
+});
 router.get('/financeManage', function(req, res, next) {
         res.render('sfms/financeManage', { title: 'Hi sfms' });
-});
-router.get('/financeManageAdd', function(req, res, next) {
-        res.render('sfms/financeManageAdd', { title: 'Hi sfms' });
 });
 router.get('/financeManageCheck', function(req, res, next) {
         res.render('sfms/financeManageCheck', { title: 'Hi sfms' });

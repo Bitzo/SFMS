@@ -221,20 +221,21 @@ router.post('/', function (req, res) {
  * 5. 全部核实并查询完，存入数据
  */
 router.put('/', function (req, res) {
-    var query = req.body,
+    console.log( req.body.formdata)
+    var query = req.body.formdata,
         ID = query.ID,
-        fiName = query.fiName,
-        fiType = query.fiType,
-        inOutType = query.inOutType,
-        fiPrice = query.fiPrice,
-        projectID = query.projectID,
-        userID = query.userID,
-        userName = query.userName,
+        fiName = query.FIName,
+        fiType = query.FIType,
+        inOutType = query.InOutType,
+        fiPrice = query.FIPrice,
+        projectID = query.ProjectId,
+        userID = query.UserID,
+        userName = query.UserName,
         operateUser = req.query.jitkey,
-        remark = query.remark || '',
+        remark = query.Remark || '',
         isActive = 1,
         //前端需要传输的数据
-        temp = ['ID', 'fiName', 'fiType', 'inOutType', 'fiPrice', 'projectID','userID','userName'],
+        temp = ['ID', 'FIName', 'FIType', 'InOutType', 'FIPrice', 'ProjectId','UserID','UserName'],
         err = 'require: ';
 
     for(var value in temp)
