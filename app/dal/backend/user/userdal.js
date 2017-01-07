@@ -113,6 +113,7 @@ exports.insert = function(data, callback) {
     }
 
     logger.writeInfo("新增用户: " + insert_sql);
+    console.log(insert_sql);
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
@@ -145,7 +146,7 @@ exports.update = function(data, callback) {
     }
     }
     upd_sql += " WHERE " + userModel.PK + " = '" + data[userModel.PK]+"' ";
-
+    console.log(upd_sql);
     logger.writeInfo("修改用户: " + upd_sql);
     db_backend.mysqlPool.getConnection(function(err, connection) {
         if (err) {
