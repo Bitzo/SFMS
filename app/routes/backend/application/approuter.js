@@ -37,7 +37,7 @@ router.post('/', function (req, res) {
     var ApplicationCode = query.ApplicationCode,
         ApplicationName = query.ApplicationName,
         IsActive = query.IsActive,
-        memo = query.Memo;
+        memo = query.Memo || '';
 
     var data = {
         'ApplicationName': ApplicationName,
@@ -80,7 +80,8 @@ router.post('/', function (req, res) {
                     msg: '应用名称过长,请勿超过50个字符'
                 });
             }
-            if (data.Memo.length>200) {
+
+            if (data.Memo!==undefined&&data.Memo.length>200) {
                 res.status(400);
                 return res.json({
                     code: 400,
@@ -212,7 +213,7 @@ router.put('/', function(req, res) {
         ApplicationName = query.ApplicationName,
         IsActive = query.IsActive,
         ID = query.ID,
-        Memo = query.Memo;
+        Memo = query.Memo||'';
 
     for (var index in data) {
         if (!(data[index] in query)) {
