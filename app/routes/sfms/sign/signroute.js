@@ -204,10 +204,10 @@ router.get('/:userID', function (req, res) {
                     var result = {
                         status: 200,
                         isSuccess: true,
-                        totalNum: totalNum,
+                        dataNum: totalNum,
                         curPage: page,
                         totalPage: Math.ceil(totalNum/pageNum),
-                        curNum: pageNum,
+                        curPageNum: pageNum,
                         data: results
                     };
                     if(result.curPage == result.totalPage) {
@@ -245,6 +245,7 @@ router.get('/:userID', function (req, res) {
                                 }
                             }
                         }
+                        console.log(result)
                         res.status(200);
                         return res.json(result);
                     })

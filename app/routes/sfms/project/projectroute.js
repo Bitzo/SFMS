@@ -582,7 +582,6 @@ console.log(userID)
                     }
                 }
                 res.status(200);
-                console.log(projectInfo)
                 return res.json({
                     status: 200,
                     isSuccess: true,
