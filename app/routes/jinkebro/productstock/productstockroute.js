@@ -95,8 +95,7 @@ router.post('/', function (req, res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                data: result,
-                msg: '服务器出错，产品类别新增操作失败'
+                msg: result,
             });
         }
 
@@ -106,7 +105,6 @@ router.post('/', function (req, res) {
             return res.json({
                 code: 200,
                 isSuccess: true,
-                data: result,
                 msg: '库存信息添加成功'
             });
         } else {
@@ -176,8 +174,7 @@ router.put('/', function (req, res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                addProductResult: results,
-                msg: '服务器出错，产品类别新增操作失败'
+                msg: results
             });
         }
 
@@ -239,7 +236,6 @@ router.delete('/', function (req, res) {
             return res.json({
                 code: 200,
                 isSuccess: true,
-                data: results,
                 msg: '库存信息删除操作成功'
             });
         } else {
