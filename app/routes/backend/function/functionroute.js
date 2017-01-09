@@ -219,7 +219,8 @@ router.put('/', function (req, res) {
 
 //功能点的删除
 router.delete('/', function (req, res) {
-    var FunctionID = JSON.parse(req.query.d).FunctionID;
+    //var FunctionID = JSON.parse(req.query.d).FunctionID;
+    var FunctionID = req.body.FunctionID;
     if (FunctionID === undefined || FunctionID == '') {
         res.json({
             code: 404,
@@ -248,31 +249,27 @@ router.delete('/', function (req, res) {
                 isSuccess: false,
                 msg: results
             });
+            console.log('111')
             return;
         }
         if (results !== undefined && results.length != 0) {
-            if (results.affectedRows > 0) {
-                res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: results
-                })
-            } else {
-                res.json({
-                    code: 404,
-                    isSuccess: false,
-                    msg: '不存在该功能点'
-                })
-            }
+            res.json({
+                code: 200,
+                isSuccess: true,
+                msg: results
+            });
+            console.log('200')
+            return;
         } else {
             res.json({
                 code: 404,
                 isSuccess: false,
                 msg: '删除失败！'
-            })
+            });
+            console.log('333')
+            return;
         }
     })
-
 });
 
 //根据FunctionID得到该功能点的值
