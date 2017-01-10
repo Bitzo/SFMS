@@ -7,7 +7,7 @@
  */
 
 var proStockDAL = appRequire('dal/jinkebro/productstock/productstockdal');
-    moment = require('moment'),
+moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
     operationConfig = appRequire('config/operationconfig'),
     logModel = appRequire('model/jinkebro/log/logmodel');
@@ -24,11 +24,11 @@ ProStock.prototype.queryProStock = function (data, callback) {
         logModel.Memo = '查询库存信息失败';
         logModel.Type = operationConfig.operationType.operation;
         loggerWrite();
-        return callback(true);
+        return callback(true, logModel.OperationName);
     }
     proStockDAL.queryProStock(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         callback(false, results);
@@ -44,7 +44,7 @@ ProStock.prototype.insert = function (data, callback) {
         logModel.Memo = '新增库存信息失败';
         logModel.Type = operationConfig.operationType.operation;
         loggerWrite();
-        callback(true);
+        callback(true, logModel.OperationName);
         return;
     }
 
@@ -55,7 +55,7 @@ ProStock.prototype.insert = function (data, callback) {
             logModel.Memo = '新增库存信息失败';
             logModel.Type = operationConfig.operationType.error;
             loggerWrite();
-            return callback(true);
+            return callback(true, logModel.OperationName);
         }
         callback(false, results);
     });
@@ -69,7 +69,7 @@ ProStock.prototype.update = function (data, callback) {
         logModel.Memo = '修改库存信息失败';
         logModel.Type = operationConfig.operationType.operation;
         loggerWrite();
-        return callback(true);
+        return callback(true, logModel.OperationName);
     }
     proStockDAL.update(data, function (err, results) {
         if (err) {
@@ -80,7 +80,7 @@ ProStock.prototype.update = function (data, callback) {
             logModel.Memo = '修改库存信息失败';
             logModel.Type = operationConfig.operationType.error;
             loggerWrite();
-            return callback(true);
+            return callback(true, logModel.OperationName);
         }
         callback(false, results);
     });
@@ -94,7 +94,7 @@ ProStock.prototype.delete = function (data, callback) {
         logModel.Memo = '删除库存信息失败';
         logModel.Type = operationConfig.operationType.operation;
         loggerWrite();
-        return callback(true);
+        return callback(true, logModel.OperationName);
     }
     proStockDAL.delete(data, function (err, results) {
         if (err) {
@@ -103,7 +103,7 @@ ProStock.prototype.delete = function (data, callback) {
             logModel.Action = operationConfig.jinkeBroApp.productStock.productStockDel.actionName;
             logModel.Memo = '删除库存信息失败';
             logModel.Type = operationConfig.operationType.error;
-            callback(true);
+            callback(true, logModel.OperationName);
             return;
         }
         logger.writeInfo('删除库存信息:' + results);

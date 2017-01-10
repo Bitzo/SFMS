@@ -535,8 +535,8 @@ router.put('/', function (req, res) {
 //根据用户查询有关的项目
 router.get('/user', function (req, res) {
     var query =  JSON.parse(req.query.f),
-        userID = query.UserID || '';
-
+        userID = query.UserID || req.query.jitkey;
+console.log(userID)
     if (userID===undefined||userID=='') {
         res.status(400);
         return res.json({
@@ -559,7 +559,6 @@ router.get('/user', function (req, res) {
         if (results.length>0) {
             projectInfo = results;
         }
-        console.log(results)
         projectservice.queryProject({ProjectManageID:userID}, function (err, results) {
             if (err) {
                 res.status(500);
@@ -569,16 +568,21 @@ router.get('/user', function (req, res) {
                     msg: '操作失败，服务器出错'
                 })
             }
-            console.log(results)
             if (results.length>0) {
                 var i=0,j=0;
                 for (i=0;i<results.length;++i) {
                     for (j=0;j<projectInfo.length;++j) {
                         if (results[i].ID == projectInfo[j].ProjectID) break;
                     }
-                    if (j==projectInfo.length) projectInfo.push(results[i]);
+                    if (j==projectInfo.length) {
+                        projectInfo.push({
+                            ProjectID: results[i].ID,
+                            ProjectName: results[i].ProjectName
+                        });
+                    }
                 }
                 res.status(200);
+                console.log(projectInfo)
                 return res.json({
                     status: 200,
                     isSuccess: true,
@@ -641,11 +645,11 @@ router.get('/person', function (req, res) {
                 if (results !== undefined && results.length > 0) {
                     for (var i in results) {
                         if (results[i].ProjectEndTime != null)
-                            results[i].ProjectEndTime = moment(results[i].ProjectEndTime).format('YYYY-MM-DD HH:mm:ss');
+                            results[i].ProjectEndTime = moment(results[i].ProjectEndTime).format('YYYY-MM-DD');
                         if (results[i].CreateTime != null)
-                            results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:ss');
+                            results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD');
                         if (results[i].EditTime != null)
-                            results[i].EditTime = moment(results[i].EditTime).format('YYYY-MM-DD HH:mm:ss');
+                            results[i].EditTime = moment(results[i].EditTime).format('YYYY-MM-DD');
                     }
                     var result = {
                         status: 200,
@@ -749,11 +753,11 @@ router.get('/', function (req, res) {
                 if (results !== undefined && results.length > 0) {
                     for (var i in results) {
                         if (results[i].ProjectEndTime != null)
-                            results[i].ProjectEndTime = moment(results[i].ProjectEndTime).format('YYYY-MM-DD HH:mm:ss');
+                            results[i].ProjectEndTime = moment(results[i].ProjectEndTime).format('YYYY-MM-DD');
                         if (results[i].CreateTime != null)
-                            results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:ss');
+                            results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD');
                         if (results[i].EditTime != null)
-                            results[i].EditTime = moment(results[i].EditTime).format('YYYY-MM-DD HH:mm:ss');
+                            results[i].EditTime = moment(results[i].EditTime).format('YYYY-MM-DD');
                     }
                     var result = {
                         status: 200,

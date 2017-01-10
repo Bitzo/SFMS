@@ -8,12 +8,17 @@
 var functionDAL = appRequire('dal/backend/function/functiondal.js');
 var getTree = appRequire('service/backend/function/gettreefunction');
 var logger = appRequire("util/loghelper").helper;
+var Q = require('q');
 
 //查询所有树形功能点
 exports.queryAllFunctions = function (data, callback) {
+    if (!checkData(data)) {
+        callback(true, '数据有误');
+        return;
+    }
     functionDAL.queryAllFunctions(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         logger.writeInfo('queryAllFunctions')
@@ -30,12 +35,12 @@ exports.queryAllFunctions = function (data, callback) {
 //新增功能点
 exports.insert = function (data, callback) {
     if (!checkData(data)) {
-        callback(true);
+        callback(true, '数据有误');
         return;
     }
     functionDAL.insert(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         logger.writeInfo('funcitoninsert');
@@ -47,12 +52,12 @@ exports.insert = function (data, callback) {
 exports.update = function (data, callback) {
     if (!checkData(data)) {
         logger.writeError('修改功能点err');
-        callback(true);
+        callback(true, results);
         return;
     }
     functionDAL.update(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         logger.writeInfo('funcitonupdate');
@@ -60,34 +65,75 @@ exports.update = function (data, callback) {
     });
 };
 
+var treeFuncID = [];
 //删除功能点
 exports.delete = function (data, callback) {
-    //删除时，判断其是否有子节点
-    functionDAL.HasChildernByID(data, function (err, results) {
+    if (!checkData(data)) {
+        callback(true, '数据有误');
+        return;
+    }
+    data.IsActive = 1;
+    treeFuncID.length = 0;
+    treeFuncID.push({
+        'FunctionID': data.FunctionID
+    });
+    functionDAL.queryAllFunctions(data, function (err, results) {
         if (err) {
-            callback(true);
+            return callback(true, results);
         }
-        var count = results[0]['count'];
-        if (count > 0) {
-            return callback(true, count);
-        } else {
-            //当取出的子节点为0时，可删除
-            functionDAL.delete(data, function (err, results) {
-                if (err) {
-                    callback(true);
-                    return;
+        //根据FunctionID判断该功能点是否存在
+        if (results != undefined && results.length > 0) {
+            var querydata = {
+                'ApplicationID': results[0].ApplicationID
+            }
+            functionDAL.queryAllFunctions(querydata, function (err, results) {
+                //得到子节点的所有functionid
+                function getMultiTreeID(FunctionID) {
+                    var querydata = {
+                        'ParentID': FunctionID,
+                        'IsActive': 1
+                    }
+                    var data = [];
+                  
+                    for (var j in results) {
+                        if (results[j].ParentID == FunctionID) {
+                            data.push({ 'FunctionID': results[j].FunctionID });
+                        }
+                    }
+                    if (data != undefined && data.length > 0) {
+                        for (var i in data) {
+                            getMultiTreeID(data[i].FunctionID);
+                            treeFuncID.push({
+                                'FunctionID': data[i].FunctionID
+                            });
+
+                        }
+                    }
                 }
-                callback(false, results);
+                getMultiTreeID(data.FunctionID);
+                //禁用功能点
+                functionDAL.delete(treeFuncID, function (err, results) {
+                    if (err) {
+                        return callback(true, results);
+                    }
+                    return callback(false, results);
+                });
             });
+        } else {
+            return callback(true, '该功能点已被禁用')
         }
     });
 };
 
 //根据FunctionID判断该功能点是否存在
 exports.queryFuncByID = function (data, callback) {
+    if (!checkData(data)) {
+        callback(true, '数据有误');
+        return;
+    }
     functionDAL.queryFuncByID(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         callback(false, results);
@@ -96,7 +142,11 @@ exports.queryFuncByID = function (data, callback) {
 
 //根据FunctionID得到该功能点的值
 exports.getFuncByID = function (data, callback) {
-    functionDAL.getFuncByID(data, function (err, results) {
+    if (!checkData(data)) {
+        callback(true);
+        return;
+    }
+    functionDAL.queryAllFunctions(data, function (err, results) {
         if (err) {
             callback(true);
             return;
@@ -104,6 +154,7 @@ exports.getFuncByID = function (data, callback) {
         callback(false, results);
     });
 }
+
 //验证数据是否都已定义
 function checkData(data) {
     for (var key in data) {

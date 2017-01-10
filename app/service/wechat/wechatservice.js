@@ -245,23 +245,19 @@ Weixin.prototype.createMenu = function (accessToken, callback) {
                 }
             ]
         }, {
-                "type": "view",
+                "type": "click",
                 "name": "跟踪包裹",
-                "url": "http://www.baidu.com"
+                'key' : "TrackPackage"
             }, {
                 "name": "我",
                 "sub_button": [{
                     "type": "view",
-                    "name": "配送地址",
+                    "name": "个人信息",
                     "url": "http://sun.tunnel.2bdata.com/wechat/addressinfo"
                 }, {
                         "type": "view",
                         "name": "联系我们",
                         "url": "http://www.soso.com"
-                    }, {
-                        "type": "location_select",
-                        "name": "发送位置",
-                        "key": "rselfmenu_2_0"
                     }]
             }]
     }
@@ -717,7 +713,6 @@ Weixin.prototype.sendMsg = function (msg) {
             this.sendimgMsg(msg);
     }
 }
-
 
 Weixin.prototype.handleCustomerMsg = function (req, res) {
     // 保存res

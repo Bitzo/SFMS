@@ -161,9 +161,9 @@ exports.countQuery = function (data, callback) {
 
 //根据用户ID，查找所在的项目
 exports.queryProjectByUserID = function (data, callback) {
-    var sql = 'select distinct ProjectID,jit_projectruser.ProjectName from jit_projectruser,jit_projectbaseinfo  where jit_projectruser.IsActive = 1 and jit_projectbaseinfo.IsActive = 1 and jit_projectruser.ProjectID = jit_projectbaseinfo.ID and UserID = ';
+    var sql = 'select distinct ProjectID,jit_projectruser.ProjectName from jit_projectruser,jit_projectbaseinfo  where jit_projectruser.IsActive = 1 and jit_projectbaseinfo.IsActive = 1 and jit_projectruser.ProjectID = jit_projectbaseinfo.ID ';
 
-    sql += data.UserID;
+    if (data.userID != '')  sql +=' and UserID = ' + data.UserID;
 
     logger.writeInfo('根据用户ID，查找所在的项目：' + sql);
     db_sfms.mysqlPool.getConnection(function(err, connection) {

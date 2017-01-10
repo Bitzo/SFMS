@@ -14,14 +14,18 @@ var orderService = appRequire('service/jinkebro/order/orderservice'),
     moment = require('moment');
 
 router.get('/',function (req,res) {
-    var query = JSON.parse(req.query.f);
-    var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
-        pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
-        OrderID = query.OrderID || '',
-        WechatUserCode = query.WechatUserCode || '',
-        isPaging = query.isPaging || 0; //是否分页 0表示不分页,1表示分页
+    for(var key1 in req.query)
+    {
+        console.log("获取等到的url为" + key1);     
+    }
+   
+    var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
+        pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
+        OrderID = req.query.OrderID || '',
+        WechatUserCode = req.query.WechatUserCode || '',
+        isPaging = req.query.isPaging || 0; //是否分页 0表示不分页,1表示分页
 
-    console.log(WechatUserCode);
+    console.log("获取到的orderid="+OrderID);
     page = page>0 ? page : 1;
 
     if (pageNum == ''){
@@ -118,7 +122,7 @@ router.get('/',function (req,res) {
 
 router.post('/', function (req, res) {
 
-    var formdata = JSON.parse(req.body.formdata);
+    
 
     //检查所需要的字段是否都存在
     // var data = ['PayMethod', 'IsValid', 'IsActive'];
@@ -138,7 +142,13 @@ router.post('/', function (req, res) {
     //         msg: '存在未填写的必填字段' + err
     //     });
     // }
-
+    var stringinfo = {}; 
+   //获取到传到的值
+    for(var key in req.body)
+    {
+        stringinfo = key;
+    }
+    var formdata = JSON.parse(stringinfo);
     var OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),
         PayMethod = formdata.PayMethod || 1,
         IsValid = formdata.IsValid || 1,
@@ -147,6 +157,8 @@ router.post('/', function (req, res) {
         ProductCounts = formdata.ProductCounts,
         CustomerID = formdata.CustomerID || 1;
 
+        console.log(ProductIDs);
+        console.log(CustomerID);
 
     // 存放接收的数据
     var insertdata = {

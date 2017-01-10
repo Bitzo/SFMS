@@ -406,6 +406,7 @@ router.get('/', function (req, res) {
                         totalPage: Math.ceil(allCount / pageNum),
                         data: results1
                     };
+                    
                     if (results.curPage == results.totlePage) {
                         results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
                     }

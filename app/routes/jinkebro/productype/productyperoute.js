@@ -29,7 +29,7 @@ router.get('/', function (req, res) {
             res.json({
                 code: 500,
                 isSuccess: false,
-                msg: "操作失败，服务器内部错误"
+                msg: results
             })
             return;
         }
@@ -60,7 +60,7 @@ router.post('/', function (req, res) {
         isSuccess: false,
         msg: '存在未填写的必填字段'
     });
-    
+
     var formdata = JSON.parse(req.body.formdata);
 
     //检查所需要的字段是否都存在
@@ -96,8 +96,7 @@ router.post('/', function (req, res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                data: result,
-                msg: '服务器出错，产品类别新增操作失败'
+                msg: results
             });
         }
 
@@ -165,8 +164,7 @@ router.put('/', function (req, res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                addProductResult: results,
-                msg: '服务器出错，产品类别新增操作失败'
+                msg: results
             });
         }
 
@@ -175,7 +173,6 @@ router.put('/', function (req, res) {
             return res.json({
                 code: 200,
                 isSuccess: true,
-                addProductResult: results,
                 msg: '产品类别修改成功'
             });
         } else {
@@ -218,8 +215,7 @@ router.delete('/', function (req, res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                data: results,
-                msg: '服务器出错，操作失败'
+                msg: results,
             });
         }
         //判断是否删除成功
@@ -228,7 +224,6 @@ router.delete('/', function (req, res) {
             return res.json({
                 code: 200,
                 isSuccess: true,
-                data: results,
                 msg: '产品类别删除操作成功'
             });
         } else {

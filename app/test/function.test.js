@@ -12,8 +12,8 @@ var funcService = appRequire('service/backend/function/functionservice');
 
 var data = {
     "ApplicationID": 1,
-    "FunctionLevel": 1,
-    "ParentID": 0,
+    "FunctionLevel": 2,
+    "ParentID": 1,
     "FunctionCode": '单元测试代码',
     "FunctionName": "单元测试功能点",
     "Memo": '描述',
@@ -52,13 +52,13 @@ describe("功能点单元测试", function () {
         });
     });
 
-    var QueryData={
-        "ApplicationID":1,
-        "FunctionID":[99,100,101,102]
+    var QueryData = {
+        "ApplicationID": 1,
+        "FunctionID": [99, 100, 101, 102]
     }
     it("根据多个FunctionID判断功能点是否存在", function (done) {
-        funcService.queryFuncByID(QueryData,function(err,result){
-            if(err){
+        funcService.queryFuncByID(QueryData, function (err, result) {
+            if (err) {
                 return done(err);
             }
             console.log(result)
@@ -66,15 +66,14 @@ describe("功能点单元测试", function () {
             done();
         });
     });
-     it("根据FunctionID得到该功能点的值", function (done) {
-         var data={
-            'FunctionID':insertFunctionID  
-         }
-        funcService.getFuncByID(data,function(err,result){
-            if(err){
+    it("根据FunctionID得到该功能点的值", function (done) {
+        var data = {
+            'FunctionID': insertFunctionID
+        }
+        funcService.getFuncByID(data, function (err, result) {
+            if (err) {
                 return done(err);
             }
-            console.log(result)
             result.length.should.be.above(0).and.should.be.a.Number;
             done();
         });
@@ -83,12 +82,8 @@ describe("功能点单元测试", function () {
         data.FunctionID = insertFunctionID;
         funcService.delete(data, function (err, result) {
             if (err) {
-                 if(result>0){
-                  console.log('功能点下有子节点，不可删除!');
-                  done();
-                }else{
-                 return done(err);
-             }
+                console.log(result)
+                return done(err);
             }
             result.affectedRows.should.be.above(0).and.should.be.a.Number;
             done();

@@ -65,6 +65,7 @@ router.post('/', function (req, res) {
                         msg: '操作失败，服务器出错'
                     })
                 }
+
                 if (results!==undefined&&results.length>0) {
                     var projectManageID = results[0].ProjectManageID;
                     projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
@@ -76,7 +77,7 @@ router.post('/', function (req, res) {
                                 msg: '操作失败，服务器出错'
                             })
                         }
-                        if (results!==undefined&&results.length>0) {
+                        if (results!==undefined) {
                             var isIn = false;
                             if (projectManageID == userID) isIn = true;
                             for (var i in results) {
@@ -183,7 +184,6 @@ router.post('/', function (req, res) {
 
 //项目备注信息编辑
 router.put('/', function (req, res) {
-    console.log(req.body)
     var query = req.body.formdata,
         ID = query.ID,
         projectID = query.ProjectID,
@@ -243,7 +243,7 @@ router.put('/', function (req, res) {
                                 msg: '操作失败，服务器出错'
                             })
                         }
-                        if (results!==undefined&&results.length>0) {
+                        if (results!==undefined) {
                             var isIn = false;
                             if (projectManageID == userID) isIn = true;
                             for (var i in results) {
