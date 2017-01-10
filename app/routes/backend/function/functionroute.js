@@ -215,7 +215,7 @@ router.put('/', function (req, res) {
 //功能点的删除
 router.delete('/', function (req, res) {
     var FunctionID = JSON.parse(req.query.d).FunctionID;
-
+    console.log("FunctionID:"+FunctionID);
     if (FunctionID === undefined || FunctionID == '') {
         res.json({
             code: 404,
@@ -251,6 +251,7 @@ router.delete('/', function (req, res) {
                     msg: '操作失败，服务器出错'
                 });
             }
+            return;
         }
 
         if (results !== undefined && results.length != 0) {
