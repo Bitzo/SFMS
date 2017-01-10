@@ -13,7 +13,7 @@ angular.module('template/treeGrid/treeGrid.html', []).run([
             "   </thead>\n" +
             "   <tbody>\n" +
             "     <tr ng-repeat=\"row in tree_rows | searchFor:$parent.filterString:expandingProperty:colDefinitions track by row.branch.uid\"\n" +
-            "       ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" ng-class=\"(row.branch.selected ? 'selectactive':'')\" class=\"tree-grid-row\">\n" +
+            "       ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\"  class=\"tree-grid-row\">\n" +
             "       <td><a ng-click=\"user_clicks_branch(row.branch)\"><i ng-class=\"row.tree_icon\"\n" +
             "              ng-click=\"row.branch.expanded = !row.branch.expanded\"\n" +
             "              class=\"indented tree-icon\"></i></a><span ng-if=\"expandingProperty.cellTemplate\" class=\"indented tree-label\" " +

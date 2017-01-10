@@ -7,7 +7,7 @@
  */
 
 var productypeDAL = appRequire('dal/jinkebro/productype/productypedal');
-    moment = require('moment'),
+moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
     logModel = appRequire('model/jinkebro/log/logmodel'),
     productServ = appRequire('service/jinkebro/product/productservice');
@@ -19,7 +19,7 @@ var Productype = function () {
 Productype.prototype.queryAllProType = function (data, callback) {
     productypeDAL.queryAllProType(data, function (err, results) {
         if (err) {
-            callback(true);
+            callback(true, results);
             return;
         }
         callback(false, results);
@@ -34,7 +34,7 @@ Productype.prototype.insert = function (data, callback) {
         logModel.Memo = '产品类别的插入失败';
         logModel.Type = operationConfig.operationType.operation;
         loggerWrite();
-        return callback(true);
+        return callback(true, logModel.OperationName);
     }
     productypeDAL.insert(data, function (err, results) {
         if (err) {
@@ -43,7 +43,7 @@ Productype.prototype.insert = function (data, callback) {
             logModel.Memo = '产品类别的插入失败';
             logModel.Type = operationConfig.operationType.error;
             loggerWrite();
-            return callback(true);
+            return callback(true, logModel.OperationName);
         }
         callback(false, results);
     });
@@ -57,7 +57,7 @@ Productype.prototype.update = function (data, callback) {
         logModel.Memo = '修改产品类别失败';
         logModel.Type = operationConfig.operationType.operation;
         loggerWrite();
-        return callback(true);
+        return callback(true, logModel.OperationName);
     }
     console.log(data)
     productypeDAL.update(data, function (err, results) {
@@ -69,7 +69,7 @@ Productype.prototype.update = function (data, callback) {
             logModel.Memo = '修改产品类别失败';
             logModel.Type = operationConfig.operationType.error;
             loggerWrite();
-            return callback(true);
+            return callback(true, logModel.OperationName);
         }
         callback(false, results);
     });
@@ -83,7 +83,7 @@ Productype.prototype.delete = function (data, callback) {
         logModel.Memo = '删除产品类别失败';
         logModel.Type = operationConfig.operationType.operation;
         loggerWrite();
-        return callback(true);
+        return callback(true, logModel.OperationName);
     }
     productServ.getProCountByID(data, function (err, results) {
         if (err) {
@@ -92,7 +92,7 @@ Productype.prototype.delete = function (data, callback) {
             logModel.Action = operationConfig.jinkeBroApp.productType.productTypeDel.actionName;
             logModel.Memo = '根据ID得到产品数量异常失败';
             logModel.Type = operationConfig.operationType.error;
-            return callback(true);
+            return callback(true, logModel.OperationName);
         }
         var count = results[0]['count'];
         console.log('count:' + count)
@@ -102,11 +102,11 @@ Productype.prototype.delete = function (data, callback) {
             productypeDAL.delete(data, function (err, results) {
                 if (err) {
                     logger.writeError('删除产品类别异常:' + this.createTime);
-                    logModel.OperationName = '删除库存信息';
+                    logModel.OperationName = '删除库存信息失败';
                     logModel.Action = operationConfig.jinkeBroApp.productType.productTypeDel.actionName;
                     logModel.Memo = '删除库存信息失败';
                     logModel.Type = operationConfig.operationType.error;
-                    callback(true);
+                    callback(true, logModel.OperationName);
                     return;
                 }
                 logger.writeInfo('删除产品类别的:' + results);
