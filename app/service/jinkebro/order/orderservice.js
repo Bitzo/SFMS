@@ -159,7 +159,7 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
         if (queryInfo == undefined || queryInfo.length == 0) {
             console.log('查询失败');
             logger.writeError("当插入订单的时候查无此用户");
-            callback("当插入订单的时候查无此用户")
+            callback(true, "当插入订单的时候查无此用户");
             return;
         }
 
@@ -200,12 +200,12 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
                     }
                     orderinfo += "总共消费：" + totalPrice + '元  正在等待配送';
                     logger.writeInfo("发送订单消息给用户");
-                    return callback(orderinfo);
+                    return callback(false, orderinfo);
                 });
             } else {
                 var orderinfo = '对不起，您所需要的商品库存量不足';
                 logger.writeError("对不起，你所需要的商品库存量不足");
-                return callback(orderinfo);
+                return callback(true, orderinfo);
             }
         });
     });
