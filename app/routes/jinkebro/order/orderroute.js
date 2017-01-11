@@ -13,22 +13,21 @@ var express = require('express'),
 var orderService = appRequire('service/jinkebro/order/orderservice'),
     moment = require('moment');
 
-router.get('/',function (req,res) {
-    for(var key1 in req.query)
-    {
-        console.log("获取等到的url为" + key1);     
+router.get('/', function (req, res) {
+    for (var key1 in req.query) {
+        console.log("获取等到的url为" + key1);
     }
-   
+
     var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
         pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
         OrderID = req.query.OrderID || '',
         WechatUserCode = req.query.WechatUserCode || '',
         isPaging = req.query.isPaging || 0; //是否分页 0表示不分页,1表示分页
 
-    console.log("获取到的orderid="+OrderID);
-    page = page>0 ? page : 1;
+    console.log("获取到的orderid=" + OrderID);
+    page = page > 0 ? page : 1;
 
-    if (pageNum == ''){
+    if (pageNum == '') {
         pageNum = config.pageCount;
     }
 
@@ -36,21 +35,21 @@ router.get('/',function (req,res) {
     var countNum = 0;
 
     var data = {
-        page : page,
-        pageNum : pageNum,
-        "jit_ordercustomer.OrderID" : OrderID,
-        "jit_customer.WechatUserCode" : WechatUserCode,
-        isPaging : isPaging
+        page: page,
+        pageNum: pageNum,
+        "jit_ordercustomer.OrderID": OrderID,
+        "jit_customer.WechatUserCode": WechatUserCode,
+        isPaging: isPaging
     };
 
     var intdata = {
-        page : page,
-        pageNum : pageNum,
-        OrderID : OrderID
+        page: page,
+        pageNum: pageNum,
+        OrderID: OrderID
     };
 
-    for (var key in intdata){
-        if(isNaN(intdata[key]) && intdata[key] != ''){
+    for (var key in intdata) {
+        if (isNaN(intdata[key]) && intdata[key] != '') {
             res.status(400);
             return res.json({
                 code: 400,
@@ -90,12 +89,12 @@ router.get('/',function (req,res) {
                         msg: '查询成功',
                         dataNum: countNum,
                         curPage: page,
-                        curPageNum:pageNum,
-                        totalPage: Math.ceil(countNum/pageNum),
+                        curPageNum: pageNum,
+                        totalPage: Math.ceil(countNum / pageNum),
                         data: result
                     };
-                    if(resultBack.curPage == resultBack.totalPage) {
-                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
+                    if (resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
                     }
                     res.status(200);
                     //console.log(resultBack);
@@ -121,9 +120,6 @@ router.get('/',function (req,res) {
 });
 
 router.post('/', function (req, res) {
-
-    
-
     //检查所需要的字段是否都存在
     // var data = ['PayMethod', 'IsValid', 'IsActive'];
     // var err = 'require: ';
@@ -142,30 +138,33 @@ router.post('/', function (req, res) {
     //         msg: '存在未填写的必填字段' + err
     //     });
     // }
-    var stringinfo = {}; 
-   //获取到传到的值
-    for(var key in req.body)
-    {
+    var stringinfo = ''; 
+    //获取到传到的值
+    for (var key in req.body) {
         stringinfo = key;
     }
     var formdata = JSON.parse(stringinfo);
+    for (var key in formdata)
+        console.log("增加订单的时候接受到的值 " + key + " 值为 " + formdata[key]);
     var OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),
         PayMethod = formdata.PayMethod || 1,
         IsValid = formdata.IsValid || 1,
         IsActive = formdata.IsActive || 1,
+        OrderStatus = formdata.OrderStatus || 1,
         ProductIDs = formdata.ProductIDs,//数组，表示ProductID的集合
         ProductCounts = formdata.ProductCounts,
         CustomerID = formdata.CustomerID || 1;
 
-        console.log(ProductIDs);
-        console.log(CustomerID);
+    console.log("增加订单的时候" + ProductIDs);
+    console.log("增加订单的时候的" + CustomerID);
 
     // 存放接收的数据
     var insertdata = {
         OrderTime: OrderTime,
         PayMethod: PayMethod,
         IsValid: IsValid,
-        IsActive: IsActive
+        IsActive: IsActive,
+        OrderStatus: OrderStatus
     };
 
     var intdata = {
@@ -212,18 +211,18 @@ router.post('/', function (req, res) {
                 addProductResult: result,
                 msg: '服务器出错，产品新增操作失败'
             });
-            return ;
+            return;
         }
 
         if (result !== undefined && result.affectedRows != 0) {
             var InsertUserOrderData = {
-                CustomerID : CustomerID,
-                OrderID : result.insertId,
-                IsActive : 1,
-                CreateTime : moment().format('YYYY-MM-DD HH:mm:ss')
+                CustomerID: CustomerID,
+                OrderID: result.insertId,
+                IsActive: 1,
+                CreateTime: moment().format('YYYY-MM-DD HH:mm:ss')
             };
 
-            orderService.insertOrderCustomer(InsertUserOrderData,function (err,InsertUserOrderResult) {
+            orderService.insertOrderCustomer(InsertUserOrderData, function (err, InsertUserOrderResult) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -232,14 +231,14 @@ router.post('/', function (req, res) {
                         addProductResult: result,
                         msg: '服务器出错，产品新增操作失败'
                     });
-                    return ;
+                    return;
                 }
             });
 
             var orderprod = {
                 OrderID: result.insertId,
                 ProductID: ProductIDs,
-                ProductCount : ProductCounts
+                ProductCount: ProductCounts
             };
 
             var flag = 1;
@@ -248,7 +247,7 @@ router.post('/', function (req, res) {
                 temp = {
                     OrderID: result.insertId,
                     ProductID: orderprod.ProductID[i],
-                    ProductCount : orderprod.ProductCount[i]
+                    ProductCount: orderprod.ProductCount[i]
                 }
                 orderService.insertOrderProduct(temp, function (err, results) {
                     if (err) {
@@ -259,7 +258,7 @@ router.post('/', function (req, res) {
                             addProductResult: result,
                             msg: '服务器出错，产品新增操作失败'
                         });
-                        return ;
+                        return;
                     }
                     if (results !== undefined && results.affectedRows == 0) {
                         flag = 0;
@@ -287,13 +286,13 @@ router.post('/', function (req, res) {
     });
 });
 
-router.put('/',function (req,res) {
+router.put('/', function (req, res) {
     var formdata = JSON.parse(req.body.formdata);
     console.log(formdata);
     var OrderID = formdata.OrderID,
-        PayMethod = formdata.PayMethod ,
-        IsValid = formdata.IsValid ,
-        IsActive = formdata.IsActive ,
+        PayMethod = formdata.PayMethod,
+        IsValid = formdata.IsValid,
+        IsActive = formdata.IsActive,
         PayTime = formdata.PayTime,
         DeliveryTime = formdata.DeliveryTime,
         DeliveryUserID = formdata.DeliveryUserID,
@@ -307,19 +306,19 @@ router.put('/',function (req,res) {
         CancelTime = formdata.CancelTime;
 
     //检查要输入的部分
-    if (orderService.checkInput(res,OrderID,'OrderID') !== undefined){
-        return ;
+    if (orderService.checkInput(res, OrderID, 'OrderID') !== undefined) {
+        return;
     }
 
-    if (orderService.checkInput(res,PayMethod,'PayMethod') !== undefined){
-        return ;
+    if (orderService.checkInput(res, PayMethod, 'PayMethod') !== undefined) {
+        return;
     }
 
-    if (orderService.checkInput(res,IsValid,'IsValid') !== undefined){
-        return ;
+    if (orderService.checkInput(res, IsValid, 'IsValid') !== undefined) {
+        return;
     }
-    if(orderService.checkInput(res,IsActive,'IsActive') !== undefined){
-        return ;
+    if (orderService.checkInput(res, IsActive, 'IsActive') !== undefined) {
+        return;
     }
     // orderService.checkInput(res,PayTime,'PayTime');
     // orderService.checkInput(res,DeliveryTime,'DeliveryTime');
@@ -338,12 +337,12 @@ router.put('/',function (req,res) {
 
 });
 
-router.delete('/',function (req,res) {
+router.delete('/', function (req, res) {
     res.status(200);
     return res.json({
-        code : 200,
-        isSuccess : true,
-        msg : 'product delete '
+        code: 200,
+        isSuccess: true,
+        msg: 'product delete '
     });
 });
 

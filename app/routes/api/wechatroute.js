@@ -70,14 +70,15 @@ wechat.textMsg(function (msg) {
                 console.log("收到订单的消息");
                 order.insertOrderInfo(msg.content, msg.fromUserName, function (resultinfo) {
                     console.log("订单的消息" + resultinfo);
-                    resMsg = {
+                    var sendMsg = {
                         fromUserName: msg.toUserName,
                         toUserName: msg.fromUserName,
                         msgType: "text",
                         content: resultinfo,
                         funcFlag: 0
                     };
-                    wechat.sendMsg(resMsg);
+                    wechat.sendMsg(sendMsg);
+                    return;
                 });
             }
             else {
@@ -261,14 +262,17 @@ wechat.eventMsg(function (msg) {
                     product.getProductInfoThroughHttpGet(function (productInfo) {
                         var contentInfo = '';
                         for (var index in productInfo.data) {
+                            console.log("商品的序列" + index);
+                            for (var key in productInfo.data[index]) {
                                 contentInfo += "编号:" + productInfo.data[index]['ProductID'] + "  ";
                                 contentInfo += "名称:" + productInfo.data[index]['ProductName'] + "  ";
                                 contentInfo += "价格:" + productInfo.data[index]['ProductPrice'] + "  ";
                                 contentInfo += "规格:" + productInfo.data[index]['ProductTypeName'] + "  ";
-                                contentInfo += "\n";
+                            }
+                            contentInfo += "\n";
                         }
                         contentInfo += '下单输入的格式为：编号#数量|编号#数量';
-
+                        console.log(contentInfo);
                         var resMsg = {
                             fromUserName: msg.ToUserName,
                             toUserName: msg.FromUserName,

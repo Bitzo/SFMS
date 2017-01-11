@@ -14,12 +14,12 @@ var express = require('express'),
 
 //查看库存信息
 router.get('/', function (req, res) {
-    console.log(req.query.f)
+    console.log(req.query)
     var data = {};
-    if (req.query.f !== undefined) {
-        var query = JSON.parse(req.query.f);
-        var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
-            pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
+    if (req.query !== undefined) {
+        var query = req.query;
+        var page = (query.pageindex || query.pageindex) ? (query.pageindex || query.pageindex) : 1,
+            pageNum = (query.pagesize || query.pagesize) ? (query.pagesize || query.pagesize) : 20,
             data = {
                 ProductID: query.ProductID || '',
                 StockAreaID: query.StockAreaID || '',
@@ -29,6 +29,8 @@ router.get('/', function (req, res) {
                 EditTime: query.EditTime || ''
             };
     }
+
+    console.log(data.ProductID);
     proStockService.queryProStock(data, function (err, results) {
         if (err) {
             res.json({
@@ -122,17 +124,22 @@ router.post('/', function (req, res) {
 
 //修改库存信息
 router.put('/', function (req, res) {
-    var formdata = JSON.parse(req.body.formdata);
 
+    var datainfo = '';
+    for (var key in req.body) {
+        datainfo = key;
+    }
+
+    console.log(datainfo);
+    var formdata = JSON.parse(datainfo);
     //检查所需要的字段是否都存在
-    var data = ['ID', 'ProductID', 'TotalNum', 'StockAreaID', 'EditUserID'];
+    var data = ['ID', 'ProductID', 'TotalNum'];
     var err = 'require: ';
     for (var value in data) {
         if (!(data[value] in formdata)) {
             err += data[value] + ' ';
         }
     }
-
     //如果要求的字段不在req的参数中
     if (err !== 'require: ') {
         logger.writeError(err);
@@ -150,13 +157,13 @@ router.put('/', function (req, res) {
         'StockAreaID': formdata.StockAreaID,
         'EditUserID': formdata.EditUserID,
     }
-    for (var key in intdata) {
-        if (isNaN(intdata[key])) {
+    for (var key in initdata) {
+        if (isNaN(initdata[key])) {
             res.status(400);
             return res.json({
                 code: 400,
                 isSuccess: false,
-                msg: key + ": " + intdata[key] + '不是数字'
+                msg: key + ": " + initdata[key] + '不是数字'
             });
         }
     }
@@ -187,7 +194,7 @@ router.put('/', function (req, res) {
                 code: 200,
                 isSuccess: true,
                 addProductResult: results,
-                msg: '产品类别添加成功'
+                msg: '产品类别修改成功'
             });
         } else {
             res.status(404);

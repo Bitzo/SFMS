@@ -10,7 +10,7 @@ var productDAL = appRequire('dal/jinkebro/product/productdal'),
     logService = appRequire('service/backend/log/logservice'),
     logModel = appRequire('model/jinkebro/log/logmodel'),
     config = appRequire('config/config');
-var http =require('http');
+var http = require('http');
 var logger = appRequire('util/loghelper').helper;
 var logService = appRequire('service/backend/log/logservice');
 var logModel = appRequire('model/jinkebro/log/logmodel');
@@ -29,6 +29,7 @@ Product.prototype.insertProduct = function (data, callback) {
         }
 
         callback(false, result);
+        return;
     });
 }
 
@@ -41,6 +42,7 @@ Product.prototype.deleteProduct = function (data, callback) {
         }
 
         callback(false, result);
+        return;
     });
 }
 
@@ -53,6 +55,7 @@ Product.prototype.updateProduct = function (data, callback) {
         }
 
         callback(false, result);
+        return;
     });
 }
 
@@ -64,19 +67,20 @@ Product.prototype.queryProducts = function (data, callback) {
             callback(true);
             return;
         }
-        var tempTimeStamp,temp;
-        var days = 60*60*24*1000;
-        for(var i=0;i<result.length; i++){
+        var tempTimeStamp, temp;
+        var days = 60 * 60 * 24 * 1000;
+        for (var i = 0; i < result.length; i++) {
             tempTimeStamp = (Date.parse(result[i].ExpireTime) - Date.parse(new Date())) / days;
             temp = Math.ceil(tempTimeStamp.toFixed(4));
             result[i]['remainTime'] = temp;
             result[i].ExpireTime = moment(result[i].ExpireTime).format('YYYY-MM-DD HH:mm:SS');
             result[i].ProducTime = moment(result[i].ProducTime).format('YYYY-MM-DD HH:mm:SS');
         }
-        for(var i=0;i<result.length; i++){
+        for (var i = 0; i < result.length; i++) {
 
         }
         callback(false, result);
+        return;
     });
 }
 
@@ -90,6 +94,7 @@ Product.prototype.CountProducts = function (data, callback) {
         }
 
         callback(false, result);
+        return;
     });
 }
 
@@ -105,16 +110,16 @@ Product.prototype.getProCountByID = function (data, callback) {
             return;
         }
         callback(false, result);
+        return;
     });
 }
 
 //通过http的get方法直接获取信息
-Product.prototype.getProductInfoThroughHttpGet  = function(callback) 
-{
+Product.prototype.getProductInfoThroughHttpGet = function (callback) {
     var getUrl = config.jinkebro.baseUrl + config.jinkebro.productInfo;
     //var getUrl = '/jinkeBro/product';
     console.log(getUrl);
-   http.get(getUrl, function (res) {
+    http.get(getUrl, function (res) {
         var datas = [];
         var size = 0;
         res.on('data', function (data) {
@@ -124,20 +129,23 @@ Product.prototype.getProductInfoThroughHttpGet  = function(callback)
 
         res.on("end", function () {
             var buff = Buffer.concat(datas, size);
-            var result =JSON.parse(buff); //转码//var result = buff.toString();//不需要转编码,直接tostring  
+            var result = JSON.parse(buff); //转码//var result = buff.toString();//不需要转编码,直接tostring  
             logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
                     logger.writeError('获取微信商品信息成功，生成操作日志异常' + new Date());
                 }
             });
-            
+
             if (callback && typeof callback === 'function') {
                 callback(result);
+                return;
             }
         });
 
     }).on('error', function (e) {
         logger.writeError('获取微信商品信息时异常' + new Date());
+        return;
     });
+
 }
 module.exports = new Product();

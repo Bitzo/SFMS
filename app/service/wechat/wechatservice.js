@@ -231,23 +231,23 @@ Weixin.prototype.createMenu = function (accessToken, callback) {
     console.log(postUrl);
     var body = {
         "button": [{
-            'name':"我要下单",
+            'name': "我要下单",
             'sub_button': [
                 {
-                    "type" : "click",
-                    'name' : "商品展示",
-                    'key' : "ProductDisplay"
+                    "type": "click",
+                    'name': "商品展示",
+                    'key': "ProductDisplay"
                 },
                 {
-                    'type' : "click",
-                    'name' : "提交订单",
-                    'key' : "SubmitOrder"
+                    'type': "click",
+                    'name': "提交订单",
+                    'key': "SubmitOrder"
                 }
             ]
         }, {
                 "type": "click",
                 "name": "跟踪包裹",
-                'key' : "TrackPackage"
+                'key': "TrackPackage"
             }, {
                 "name": "我",
                 "sub_button": [{
@@ -541,7 +541,9 @@ Weixin.prototype.parseEventMsg = function () {
 // 返回文字信息
 Weixin.prototype.sendTextMsg = function (msg) {
     var time = Math.round(new Date().getTime() / 1000);
-
+    for (var key in msg) {
+        console.log("[service/wechat/wechatservice:]" + "要发送的值" + key + " " + msg[key]);
+    }
     var funcFlag = msg.funcFlag ? msg.funcFlag : this.funcFlag;
 
     var output = "" +
@@ -653,7 +655,7 @@ Weixin.prototype.sendClickAddressEvent = function (msg) {
     if (username != undefined && username.length != 0) {
         judgement = 'true';
     }
-  
+
     emitter.emit("wexinclickAddress", judgement, username);
 
     return this;
