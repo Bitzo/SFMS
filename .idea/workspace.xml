@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1b4bbaa5-fc38-4fd6-934c-d35741b7441e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js" afterPath="$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/roleEdit.jade" afterPath="$PROJECT_DIR$/app/views/backend/roleEdit.jade" />
     </list>
     <ignored path="JinkeBro.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -26,11 +27,21 @@
       <file leaf-file-name="roleEditController.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4394366">
-              <caret line="28" column="32" selection-start-line="28" selection-start-column="32" selection-end-line="28" selection-end-column="32" />
+            <state vertical-scroll-proportion="0.46478873">
+              <caret line="116" column="26" selection-start-line="116" selection-start-column="26" selection-end-line="116" selection-end-column="26" />
               <folding>
                 <element signature="e#0#49#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="baseController.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-11.033334">
+              <caret line="60" column="11" selection-start-line="54" selection-start-column="7" selection-end-line="60" selection-end-column="11" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -57,8 +68,8 @@
       <file leaf-file-name="roleEdit.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views/backend/roleEdit.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.7441862">
-              <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
+            <state vertical-scroll-proportion="-5.616279">
+              <caret line="43" column="74" selection-start-line="43" selection-start-column="74" selection-end-line="43" selection-end-column="74" />
               <folding />
             </state>
           </provider>
@@ -115,8 +126,8 @@
         <option value="$PROJECT_DIR$/app/views/backend/index.jade" />
         <option value="$PROJECT_DIR$/app/views/backend/function.jade" />
         <option value="$PROJECT_DIR$/app/views/backend/role.jade" />
-        <option value="$PROJECT_DIR$/app/views/backend/roleEdit.jade" />
         <option value="$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js" />
+        <option value="$PROJECT_DIR$/app/views/backend/roleEdit.jade" />
         <option value="$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js" />
       </list>
     </option>
@@ -1028,13 +1039,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.87931">
-          <caret line="36" column="5" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/routes/backend/role/roleroute.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1163,14 +1167,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/backend/roleEdit.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.7441862">
-          <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-13.566667">
@@ -1188,10 +1184,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.033334">
+          <caret line="60" column="11" selection-start-line="54" selection-start-column="7" selection-end-line="60" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/backend/roleEdit.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.616279">
+          <caret line="43" column="74" selection-start-line="43" selection-start-column="74" selection-end-line="43" selection-end-column="74" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4394366">
-          <caret line="28" column="32" selection-start-line="28" selection-start-column="32" selection-end-line="28" selection-end-column="32" />
+        <state vertical-scroll-proportion="0.46478873">
+          <caret line="116" column="26" selection-start-line="116" selection-start-column="26" selection-end-line="116" selection-end-column="26" />
           <folding>
             <element signature="e#0#49#0" expanded="false" />
           </folding>

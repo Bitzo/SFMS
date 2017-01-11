@@ -103,4 +103,29 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
         branch.myselected=val;
         branch.expanded=true;
     }
+    $scope.submit=function(){
+        var  data=[];
+        $scope.tree_data.map(function(tree){
+            foreachsubmit(tree,data);
+        })
+        var param={
+            "RoleID": $location.search().RoleID,
+            "data":data
+        }
+        $http({
+            method:'post',
+            url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:param
+        })
+    }
+    function foreachsubmit(data,dataparam){
+        if(data.children&&data.children.length!=0){
+            data.children.map(function(branch){
+                foreachsubmit(branch,dataparam);
+            })
+        }
+        if(data.myselected==true){
+            dataparam.push({"FunctionID":data.FunctionID})
+        }
+    }
 })
