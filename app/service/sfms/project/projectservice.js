@@ -69,20 +69,24 @@ exports.addProject = function(data, callback) {
 
 //项目基本信息修改
 exports.updateProject = function(data, callback) {
+    var isActive = 1;
+    if (data.IsActive === 0) {
+        isActive = 0;
+    }
     var formdata = {
-        'ID': data.ID,
-        'ProjectDesc': data.ProjectDesc,
-        'ProjectName': data.ProjectName,
-        'ProjectManageID': data.ProjectManageID,
-        'ProjectManageName': data.ProjectManageName,
-        'ProjectEndTime': data.ProjectEndTime,
-        'ProjectTimeLine': data.ProjectTimeLine,
-        'ProjectStatus': data.ProjectStatus,
-        'ProjectPrice': data.ProjectPrice,
-        'OperateUser': data.OperateUser,
-        'EditUser': data.EditUser,
-        'EditTime': data.EditTime,
-        'IsActive': data.IsActive || 1
+        'ID': data.ID || '',
+        'ProjectDesc': data.ProjectDesc || '',
+        'ProjectName': data.ProjectName || '',
+        'ProjectManageID': data.ProjectManageID || '',
+        'ProjectManageName': data.ProjectManageName || '',
+        'ProjectEndTime': data.ProjectEndTime || '',
+        'ProjectTimeLine': data.ProjectTimeLine || '',
+        'ProjectStatus': data.ProjectStatus || '',
+        'ProjectPrice': data.ProjectPrice || '',
+        'OperateUser': data.OperateUser || '',
+        'EditUser': data.EditUser || '',
+        'EditTime': data.EditTime || '',
+        'IsActive': isActive,
     }
     if (formdata.IsActive == 1) {
         logModel.OperationName = operationConfig.sfmsApp.projectManage.projectUpdete.actionName;

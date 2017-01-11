@@ -61,7 +61,7 @@ exports.updateFinance = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'ID') {
+            if (key !== 'ID') {
                 if (sql.length == 0) {
                     sql += ' ' + key + " = '" + data[key] + "' ";
                 } else {
@@ -99,14 +99,14 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (data[key] != '' && key !== 'startTime' && key !== 'endTime') {
+            if (data[key] !== '' && key !== 'startTime' && key !== 'endTime') {
                 if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
                 else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
-    if (data.startTime != '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
-    if (data.endTime != '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
+    if (data.startTime !== '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
+    if (data.endTime !== '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
 
     logger.writeInfo('财务查询统计：' + sql);
 
@@ -137,14 +137,14 @@ exports.queryFinance = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'startTime' && key !== 'endTime') {
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'startTime' && key !== 'endTime') {
                 if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
                 else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
-    if (data.startTime != '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
-    if (data.endTime != '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
+    if (data.startTime !== '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
+    if (data.endTime !== '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
@@ -175,7 +175,7 @@ exports.checkFinance = function (data, callback) {
         update_sql = '';
 
     for(var key in data) {
-        if(key != 'ID') {
+        if(key !== 'ID') {
             if(update_sql.length == 0) {
                 update_sql += ' ' + key + " = '" + data[key] +"'";
             } else {

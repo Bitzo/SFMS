@@ -72,7 +72,7 @@ exports.querySign = function (data, callback) {
     logger.writeInfo(page);
     if (data !== undefined) {
         for (var key in data) {
-            if(key !== 'page' && key !== 'pageNum' && data[key] != '') {
+            if(key !== 'page' && key !== 'pageNum' && data[key] !== '') {
                 sql += "and " + key + " = '" + data[key] + "' ";
             }
         }
@@ -107,7 +107,7 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] != '' && key !== 'page' && key !== 'pageNum')
+            if(data[key] !== '' && key !== 'page' && key !== 'pageNum')
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }
@@ -168,9 +168,9 @@ exports.signCount = function (data, callback) {
     var sql = 'select UserID,CreateTime,SignType from jit_signinfo where 1=1';
 
     if (data !== undefined) {
-        if (data.userID != '') sql += ' and UserID = ' + data.userID;
-        if (data.startTime != '') sql += " and CreateTime >= '" + data.startTime + "'";
-        if (data.endTime != '') sql += " and CreateTime <= '" + data.endTime + "'";
+        if (data.userID !== '') sql += ' and UserID = ' + data.userID;
+        if (data.startTime !== '') sql += " and CreateTime >= '" + data.startTime + "'";
+        if (data.endTime !== '') sql += " and CreateTime <= '" + data.endTime + "'";
     }
 
     sql += ' order by UserID,CreateTime';
