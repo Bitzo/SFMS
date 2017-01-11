@@ -60,7 +60,8 @@ router.post('/', function (req, res) {
 
     //验证申报财务的项目是否存在
     var data = {
-        'ID': projectID
+        'ID': projectID,
+        'OperateUserID': req.query.jitkey
     }
     projectservice.queryProject(data, function (err, results) {
         if (err) {
@@ -121,6 +122,7 @@ router.post('/', function (req, res) {
                                         'UserID': userID,
                                         'UserName': userName,
                                         'OperateUser': operateUser,
+                                        'OperateUserID': req.query.jitkey,
                                         'FIStatu': '待审核',
                                         'Remark': remark,
                                         'IsActive': isActive
@@ -221,7 +223,6 @@ router.post('/', function (req, res) {
  * 5. 全部核实并查询完，存入数据
  */
 router.put('/', function (req, res) {
-    console.log( req.body.formdata)
     var query = req.body.formdata,
         ID = query.ID,
         fiName = query.FIName,
@@ -255,7 +256,7 @@ router.put('/', function (req, res) {
             msg: err
         })
     };
-    financeService.queryFinance({'ID':ID}, function (err, results) {
+    financeService.queryFinance({'ID':ID,'OperateUserID':req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -268,7 +269,8 @@ router.put('/', function (req, res) {
 
             //验证申报财务的项目是否存在
             var data = {
-                'ID': projectID
+                'ID': projectID,
+                'OperateUserID': req.query.jitkey
             }
             projectservice.queryProject(data, function (err, results) {
                 if (err) {
@@ -330,6 +332,7 @@ router.put('/', function (req, res) {
                                                 'UserID': userID,
                                                 'UserName': userName,
                                                 'OperateUser': operateUser,
+                                                'OperateUserID': req.query.jitkey,
                                                 'FIStatu': '待审核',
                                                 'Remark': remark,
                                                 'IsActive': isActive
@@ -456,6 +459,7 @@ router.get('/', function (req, res) {
         'FIStatus': fiStatus.trim(),
         'startTime': startTime,
         'endTime': endTime,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
         'IsActive': 1
@@ -566,7 +570,6 @@ router.get('/', function (req, res) {
                                     }
                                 }
                                 res.status(200);
-                                console.log(result)
                                 return res.json(result);
                             } else {
                                 res.status(200);
@@ -617,6 +620,7 @@ router.put('/check', function (req, res) {
             msg: err
         })
     }
+    data.OperataUserID = req.query.jitkey;
     if (data.FIStatu != '不通过' && data.FIStatu != '通过' ) {
         res.status(400);
         return res.json({
@@ -645,7 +649,7 @@ router.put('/check', function (req, res) {
     data.CheckUser = req.query.jitkey;
     var ID = data.ID;
     //查看该财务信息是否已经被审核
-    financeService.queryFinance({ID:ID}, function (err, results) {
+    financeService.queryFinance({ID:ID,OperateUserID: req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -715,6 +719,7 @@ router.delete('/', function (req, res) {
 
     var data = {
         'ID': ID,
+        'OperateUserID': req.query.jitkey,
         'IsActive': 0
     };
 

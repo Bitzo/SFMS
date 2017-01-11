@@ -245,7 +245,6 @@ router.get('/:userID', function (req, res) {
                                 }
                             }
                         }
-                        console.log(result)
                         res.status(200);
                         return res.json(result);
                     })
