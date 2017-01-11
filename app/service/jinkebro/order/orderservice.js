@@ -60,6 +60,18 @@ Order.prototype.insertOrderCustomer = function (data, callback) {
     });
 }
 
+//新增一个订单的全部信息
+Order.prototype.insertOrderFull = function (data, callback) {
+    orderDAL.insertOrderFull(data, function (err, result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        callback(false, result);
+    });
+}
+
 //删除订单
 Order.prototype.deleteOrder = function (data, callback) {
     orderDAL.deleteOrder(data, function (err, result) {
