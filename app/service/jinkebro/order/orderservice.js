@@ -144,6 +144,7 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
     /*********直接用callback没事，但只要用了底下的一个function，就会报错 */
     //return callback("[service/order/orderservice]" + "订单的消息");
     /******** */
+    console.log('msg:' + msg + ',openid:' + openid);
     customer.query(queryCustomerInfo, function(err, queryInfo) {
         if (err) {
             console.log("查询失败");
@@ -152,6 +153,7 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
             callback(true, errinfo);
             return;
         }
+        console.log('queryInfo:' + JSON.stringify(queryInfo));
 
         //该用户不存在
         if (queryInfo == undefined || queryInfo.length == 0) {
@@ -174,14 +176,19 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
 
         orderInfo.ProductIDs = productIDArray;
         orderInfo.ProductCounts = productCountArray;
-
         me.checkproductcount(orderInfo, function(isSussess, resultInfo) {
             if (isSussess) {
                 var order = JSON.parse(resultInfo);
                 var orderID = {
                     "OrderID": order.insertOrderID
                 };
+
+                console.log('resultInfo:' + JSON.stringify(resultInfo));
+
                 me.getOrderInfo(orderID, function(resultInfo) {
+
+                    console.log('resultInfo1:' + JSON.stringify(resultInfo));
+
                     //拼凑所需要的订单消息
                     var getorderinfo = resultInfo.data;
                     var totalPrice = 0;
