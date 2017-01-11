@@ -23,35 +23,40 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
     $http.get("/func?access_token=" + accesstokenstring)
         .success(function (response) {
             $scope.tree_data = response.data;
-            $scope.tree_data.map(function(val){
-                foreachtree(val);
-            })
+            console.log($scope.tree_data);
+            getrolefunction();
         });
-    $http.get("/rolefunc/"+$location.search().RowID+"?access_token=" + accesstokenstring)
-        .success(function (response) {
-           var rolefunction= response.data||[];
-            $scope.tree_data.map(function(data,index){
-                 for(var i=0;i<rolefunction.length;i++)
-                 {
-                     if(rolefunction[i].FunctionID==data.FunctionID){
-                         data.myselected=true;
-                         break;
-                     }
-                 }
-                if(i==rolefunction.length){
-                    data.myselected=false;
-                }
-                data.myselected=true;
-            }
-            )
-        });
+    function getrolefunction() {
+        $http.get("/rolefunc/" + $location.search().RoleID + "?access_token=" + accesstokenstring)
+            .success(function (response) {
+                $scope.rolefunction = response.data || [];
+                console.log($scope.tree_data);
+                $scope.tree_data.map(function (data, index) {
+                        foreachtree(data);
+                    }
+                );
+                console.log($scope.tree_data);
+            });
+    }
     function foreachtree(data){
         if(data.children&&data.children.length!=0){
             data.children.map(function(branch){
                 foreachtree(branch);
             })
         }
-        data.myselected=true;
+        var rolefunction= $scope.rolefunction;
+        for(var i=0;i<rolefunction.length;i++)
+        {
+            if(rolefunction[i].FunctionID==data.FunctionID){
+                data.myselected=true;
+                break;
+            }
+        }
+        if(i==rolefunction.length){
+            data.myselected=false;
+        }else {
+            data.myselected = true;
+        }
     }
     //第一列显示的数据
     $scope.expanding_property = {
