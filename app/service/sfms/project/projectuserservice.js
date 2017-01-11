@@ -9,6 +9,17 @@
 var projectuserDAL = appRequire('dal/sfms/project/projectuserdal.js');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
+var config = appRequire('config/config');
+var logModel = appRequire('model/backend/log/logmodel');
+var logService = appRequire('service/backend/log/logservice');
+var operationConfig = appRequire('config/operationconfig');
+var moment = require('moment');
+
+logModel.ApplicationID = operationConfig.sfmsApp.applicationID;
+logModel.ApplicationName = operationConfig.sfmsApp.applicationName;
+logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+logModel.PDate = moment().format('YYYY-MM-DD');
+delete logModel.ID;
 
 //项目用户基本信息新增
 exports.addProjectUser = function(data, callback) {
@@ -39,12 +50,38 @@ exports.updateProjectUser = function(data, callback) {
 
 //项目用户信息查询
 exports.queryProjectUser = function (data, callback) {
-    data.IsActive = 1;
-    projectuserDAL.queryProjectUser(data, function (err, results) {
+    var formdata = {
+        'ProjectID': data.ProjectID || '',
+        'UserName': data.UserName || '',
+        'IsActive': 1,
+        'page': data.page || 1,
+        'pageNum': data.pageNum || config.pageCount
+    }
+    logModel.OperationName = operationConfig.sfmsApp.projectManage.projectUserQuery.actionName;
+    logModel.Action = operationConfig.sfmsApp.projectManage.projectUserQuery.actionName;
+    logModel.Identifier = operationConfig.sfmsApp.projectManage.projectUserQuery.identifier;
+
+    projectuserDAL.queryProjectUser(formdata, function (err, results) {
         if (err) {
+            logModel.Type = 1;
+            logModel.CreateUserID = data.OperateUserID;
+            logModel.Memo = "项目用户查询失败";
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("项目用户查询失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
             callback(true, '查询失败');
             return;
         }
+        logModel.Type = 2;
+        logModel.CreateUserID = data.OperateUserID;
+        logModel.Memo = "项目用户查询成功";
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("项目用户查询成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
         logger.writeInfo('查询项目用户');
         callback(false, results);
     })
@@ -53,8 +90,8 @@ exports.queryProjectUser = function (data, callback) {
 //项目用户信息查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'ProjectID': data.ProjectID,
-        'UserName': data.UserName,
+        'ProjectID': data.ProjectID || '',
+        'UserName': data.UserName || '',
         'IsActive': 1
     }
     projectuserDAL.countQuery(queryData, function (err, results) {

@@ -27,13 +27,13 @@ exports.queryProStock= function (data, callback) {
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             logger.writeError('根据条件查询库存连接：err' + err);
-            callback(true);
+            callback(true,'连接出错');
             return;
         }
         connection.query(sql, function (err, results) {
             if (err) {
                 logger.writeError('根据条件查询库存，出错信息：' + err)
-                callback(true);
+                callback(true,'系统内部错误');
                 return;
             }
             callback(false, results);
@@ -49,14 +49,14 @@ exports.insert = function (data, callback) {
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             logger.writeError('新增库存信息连接：err' + err);
-            callback(true);
+            callback(true,'连接出错');
             return;
         }
         logger.writeInfo('新增库存信息' + insert_sql);
         connection.query(insert_sql, data, function (err, results) {
             if (err) {
                 logger.writeError('新增库存信息，出错信息：' + err)
-                callback(true);
+                callback(true,'系统内部错误');
                 return;
             }
             callback(false, results);

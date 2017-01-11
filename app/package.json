@@ -38,7 +38,8 @@
     "supertest": "*",
     "underscore": "*",
     "validator": "*",
-    "xml2js": "*"
+    "xml2js": "*",
+    "q":"*"
   },
   "devDependencies": {}
 }

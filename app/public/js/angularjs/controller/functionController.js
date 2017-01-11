@@ -10,7 +10,13 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
         ModelTitle:'确定',
         ModelBody:'保存成功',
         BtnCancel:'取消',
-        BtnSave:'确定'
+        BtnSave:'确定',
+        Cancel:function(){
+            $("#functionModel").modal('hide');
+        },
+        Save:function(){
+            $("#functionModel").modal('hide');
+        }
     };
     //获取树形数据
     $http.get("/func?access_token=" + accesstokenstring)
@@ -44,6 +50,11 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
         },
         {
             field: "ParentID"
+        },
+        {
+            field: "IsActive",
+            displayName: "是否删除",
+            cellTemplate: "<i>{{row.branch[col.field]=='0'?'是':'否'}}</i>"
         }
     ];
     //点击第一列时候发生的事件
@@ -101,7 +112,7 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
         promise.success(function(data){
             for(index=0;index<$scope.parent.children.length;index++)
             {
-                if($scope.parent.children===$scope.currentData)
+                if($scope.parent.children[index]===$scope.currentData)
                 {
                     break;
                 }
@@ -113,7 +124,7 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
     function  doDelete(){
         return $http({
             method: 'delete',
-            url: "func?access_token=" + accesstokenstring,
+            url: "func?access_token=" + accesstokenstring+'&d='+JSON.stringify($scope.currentData),
             data: {
                 d:JSON.stringify($scope.currentData)
             }

@@ -56,7 +56,7 @@ router.post('/', function (req, res) {
         }
         if (results!==undefined && results.length>0) {
             userName = results[0].UserName;
-            projectservice.queryProject({ID:projectID}, function (err, results) {
+            projectservice.queryProject({ID:projectID, OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -99,6 +99,7 @@ router.post('/', function (req, res) {
                                             'projectID': projectID,
                                             'projectName': projectName,
                                             'userID': userID,
+                                            'OperateUserID': req.query.jitkey,
                                             'userName': userName,
                                             'remark': remark
                                         }
@@ -223,7 +224,7 @@ router.put('/', function (req, res) {
         }
         if (results!==undefined && results.length>0) {
             userName = results[0].UserName;
-            projectservice.queryProject({ID:projectID}, function (err, results) {
+            projectservice.queryProject({ID:projectID, OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -250,7 +251,7 @@ router.put('/', function (req, res) {
                                 if (projectID == results[i].ProjectID) isIn = true;
                             }
                             if (isIn == true) {
-                                projectservice.queryProject({ID: projectID}, function (err, results) {
+                                projectservice.queryProject({ID: projectID, OperateUserID: req.query.jitkey}, function (err, results) {
                                     if (err) {
                                         res.status(500);
                                         return res.json({
@@ -265,6 +266,7 @@ router.put('/', function (req, res) {
                                             'ID':ID,
                                             'projectID': projectID,
                                             'projectName': projectName,
+                                            'OperateUserID': req.query.jitkey,
                                             'userID': userID,
                                             'userName': userName,
                                             'remark': remark
@@ -286,7 +288,6 @@ router.put('/', function (req, res) {
                                                     msg: '操作失败，服务器出错'
                                                 })
                                             }
-                                            console.log(results)
                                             if (results!==undefined&&results.affectedRows>0) {
                                                 res.status(200);
                                                 return res.json({
@@ -362,6 +363,7 @@ router.get('/person', function (req, res) {
     var data = {
         'userID': userID,
         'projectID': projectID,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum
     }
@@ -436,6 +438,7 @@ router.get('/', function (req, res) {
     var data = {
         'ID': ID,
         'projectID': projectID,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum
     }
@@ -509,7 +512,7 @@ router.delete('/', function (req, res) {
         })
     }
 
-    projectRemarkservice.delRemark({ID:ID}, function (err, results) {
+    projectRemarkservice.delRemark({ID:ID, OperateUserID: req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({

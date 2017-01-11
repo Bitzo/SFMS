@@ -35,7 +35,7 @@ router.post('/', function (req, res) {
      *   ...
      * ]
      */
-    var data = req.body.data.formdata,
+    var data = req.body.formdata,
         operateID = req.query.jitkey;
     //检查所需要的参数是否齐全
     var temp = ['projectID', 'userID', 'editID', 'isActive'],
@@ -264,7 +264,8 @@ router.get('/:projectID', function (req, res) {
     var data = {
         'ProjectID': projectID,
         'UserName': userName,
-        'IsActive': 1,
+        'OperateUserID': req.query.jitkey,
+        'IsActive': isActive,
         'page': page,
         'pageNum': pageNum
     }

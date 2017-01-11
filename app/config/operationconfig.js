@@ -220,11 +220,27 @@ var operationConfig = {
             },
             projectUserQuery: {
                 actionName: "项目人员查询",
-                identifier: 3001
+                identifier: 3007
             },
             projectUserDelete: {
                 actionName: "项目人员删除",
-                identifier: 3001
+                identifier: 3008
+            },
+            projectRemarkAdd: {
+                actionName: "项目备注新增",
+                identifier: 3009
+            },
+            projectRemarkQuery: {
+                actionName: "项目备注查询",
+                identifier: 3010
+            },
+            projectRemarkUpdate: {
+                actionName: "项目备注修改",
+                identifier: 3011
+            },
+            projectRemarkDelete: {
+                actionName: "项目备注删除",
+                identifier: 3012
             },
         },
         financeManage: {

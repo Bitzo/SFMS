@@ -4,7 +4,7 @@ angular.module('template/treeGrid/treeGrid.html', []).run([
         $templateCache.put('template/treeGrid/treeGrid.html',
             "<div class=\"table-responsive\">\n" +
             " <table class=\"table tree-grid\">\n" +
-            "   <thead>\n" +
+            "   <thead ng-if=\"showHead\">\n" +
             "     <tr>\n" +
             "       <th><a ng-if=\"expandingProperty.sortable\" ng-click=\"sortBy(expandingProperty)\">{{expandingProperty.displayName || expandingProperty.field || expandingProperty}}</a><span ng-if=\"!expandingProperty.sortable\">{{expandingProperty.displayName || expandingProperty.field || expandingProperty}}</span><i ng-if=\"expandingProperty.sorted\" class=\"{{expandingProperty.sortingIcon}} pull-right\"></i></th>\n" +
             "       <th ng-repeat=\"col in colDefinitions\"><a ng-if=\"col.sortable\" ng-click=\"sortBy(col)\">{{col.displayName || col.field}}</a><span ng-if=\"!col.sortable\">{{col.displayName || col.field}}</span><i ng-if=\"col.sorted\" class=\"{{col.sortingIcon}} pull-right\"></i></th>\n" +
@@ -13,10 +13,12 @@ angular.module('template/treeGrid/treeGrid.html', []).run([
             "   </thead>\n" +
             "   <tbody>\n" +
             "     <tr ng-repeat=\"row in tree_rows | searchFor:$parent.filterString:expandingProperty:colDefinitions track by row.branch.uid\"\n" +
-            "       ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\" ng-class=\"(row.branch.selected ? 'selectactive':'')\" class=\"tree-grid-row\">\n" +
+            "       ng-class=\"'level-' + {{ row.level }} + (row.branch.selected ? ' active':'')\"  class=\"tree-grid-row\">\n" +
             "       <td><a ng-click=\"user_clicks_branch(row.branch)\"><i ng-class=\"row.tree_icon\"\n" +
             "              ng-click=\"row.branch.expanded = !row.branch.expanded\"\n" +
-            "              class=\"indented tree-icon\"></i></a><span ng-if=\"expandingProperty.cellTemplate\" class=\"indented tree-label\" " +
+            "              class=\"indented tree-icon\"></i></a>" +
+            "<input ng-checked='row.branch.myselected' class=\"indented tree-label\" type='checkbox' ng-model='row.branch.myselected' ng-click='user_check_change(row.branch)' ng-if='showCheck'>"+
+            "<span ng-if=\"expandingProperty.cellTemplate\" class=\"indented tree-label\" " +
             "              ng-click=\"on_user_click(row.branch)\" compile=\"expandingProperty.cellTemplate\"></span>" +
             "              <span  ng-if=\"!expandingProperty.cellTemplate\" class=\"indented tree-label\" ng-click=\"on_user_click(row.branch)\">\n" +
             "             {{row.branch[expandingProperty.field] || row.branch[expandingProperty]}}</span>\n" +
@@ -25,7 +27,7 @@ angular.module('template/treeGrid/treeGrid.html', []).run([
             "         <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
             "         <div ng-if=\"!col.cellTemplate\">{{row.branch[col.field]}}</div>\n" +
             "       </td>\n" +
-            "       <td><a ng-click=\"on_user_clickedit(row.branch)\"><i class=\"icon.icon-edit\"></i>编辑</a>"+
+            "       <td ng-if=\"showHead\"><a ng-click=\"on_user_clickedit(row.branch)\"><i class=\"icon.icon-edit\"></i>编辑</a>"+
             "           <a ng-click=\"on_user_clickadd(row.branch)\"><i class=\"icon.icon-plus\"></i>新增子元素</a>"+
             "           <a ng-click=\"on_user_clickdelete(row.branch)\"><i class=\"icon.icon-delete\"></i>删除</a>"+
             "       </td>\n" +
@@ -83,7 +85,7 @@ angular.module('treeGrid', [
                     onClickdelete:'&',
                     initialSelection: '@',
                     treeControl: '=',
-
+                    onCheck:'&',
                     expandTo: '='
                 },
                 link: function (scope, element, attrs) {
@@ -101,6 +103,8 @@ angular.module('treeGrid', [
                     attrs.sortedAsc = attrs.sortedAsc ? attrs.sortedAsc : 'icon-file  glyphicon glyphicon-chevron-up  fa angle-up';
                     attrs.sortedDesc = attrs.sortedDesc ? attrs.sortedDesc : 'icon-file  glyphicon glyphicon-chevron-down  fa angle-down';
                     attrs.expandLevel = attrs.expandLevel ? attrs.expandLevel : '0';
+                    scope.showHead=attrs.showhead=='true'?true:false;
+                    scope.showCheck=attrs.showcheck=='true'?true:false;
                     expand_level = parseInt(attrs.expandLevel, 10);
 
                     if (!scope.treeData) {
@@ -209,6 +213,16 @@ angular.module('treeGrid', [
                             });
                         }
                     };
+                    scope.user_check_change=function(branch){
+                        if (scope.onCheck) {
+                            branch.expanded = true;
+                            var partent=get_parent(branch);
+                            return scope.onCheck({
+                                branch: branch,
+                                parent:partent
+                            });
+                        }
+                    }
                     scope.on_user_clickadd = function (branch) {
                         branch.expanded = true;
                         branch.seleted = true;

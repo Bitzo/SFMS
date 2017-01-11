@@ -18,13 +18,13 @@ exports.queryAllProType = function (data, callback) {
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             logger.writeError('产品类别连接：err' + err);
-            callback(true);
+            callback(true,'系统内部错误');
             return;
         }
         connection.query(sql, function (err, results) {
             if (err) {
                 logger.writeError('得到产品类别，出错信息：' + err)
-                callback(true);
+                callback(true,'系统内部错误');
                 return;
             }
             callback(false, results);
@@ -40,14 +40,14 @@ exports.insert = function (data, callback) {
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             logger.writeError('产品类别新增连接：err' + err);
-            callback(true);
+            callback(true,'连接失败');
             return;
         }
         logger.writeInfo('新增产品类别' + insert_sql);
         connection.query(insert_sql, data, function (err, results) {
             if (err) {
                 logger.writeError('新增产品类别，出错信息：' + err)
-                callback(true);
+                callback(true,'系统内部错误');
                 return;
             }
             callback(false, results);
@@ -92,14 +92,14 @@ exports.delete = function (data, callback) {
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
-            callback(true);
+            callback(true,'连接出错');
             connection.release();
             return;
         }
 
         connection.query(del_sql, function (err, results) {
             if (err) {
-                callback(true);
+                callback(true,'系统内部错误');
                 logger.writeError('删除产品类别，出错信息：' + err)
                 connection.release();
                 return;
