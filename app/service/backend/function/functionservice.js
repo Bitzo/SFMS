@@ -8,7 +8,7 @@
 var functionDAL = appRequire('dal/backend/function/functiondal.js');
 var getTree = appRequire('service/backend/function/gettreefunction');
 var logger = appRequire("util/loghelper").helper;
-var Q = require('q');
+
 
 //查询所有树形功能点
 exports.queryAllFunctions = function (data, callback) {
