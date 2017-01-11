@@ -20,7 +20,7 @@ router.get('/:roleID',function (req, res) {
     var data = {
         'RoleID': roleID
     };
-
+   console.log('roleID'+roleID);
     if (roleID === undefined) {
         res.status(404);
         return res.json({

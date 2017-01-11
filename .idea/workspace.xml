@@ -2,62 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1b4bbaa5-fc38-4fd6-934c-d35741b7441e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/sfms/finance.jade" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/views/sfms/financeEdit.jade" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/config/config.js" afterPath="$PROJECT_DIR$/app/config/config.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dal/backend/function/functiondal.js" afterPath="$PROJECT_DIR$/app/dal/backend/function/functiondal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dal/backend/role/rolefuncdal.js" afterPath="$PROJECT_DIR$/app/dal/backend/role/rolefuncdal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dal/backend/user/userdal.js" afterPath="$PROJECT_DIR$/app/dal/backend/user/userdal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dal/jinkebro/order/orderdal.js" afterPath="$PROJECT_DIR$/app/dal/jinkebro/order/orderdal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dal/jinkebro/productstock/productstockdal.js" afterPath="$PROJECT_DIR$/app/dal/jinkebro/productstock/productstockdal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dal/jinkebro/productype/productypedal.js" afterPath="$PROJECT_DIR$/app/dal/jinkebro/productype/productypedal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dal/sfms/project/projectuserdal.js" afterPath="$PROJECT_DIR$/app/dal/sfms/project/projectuserdal.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/package.json" afterPath="$PROJECT_DIR$/app/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/public/js/angularjs/config/baseconfig.js" afterPath="$PROJECT_DIR$/app/public/js/angularjs/config/baseconfig.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js" afterPath="$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/public/js/angularjs/controller/functionController.js" afterPath="$PROJECT_DIR$/app/public/js/angularjs/controller/functionController.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/public/js/angularjs/controller/sfmsIndexController.js" afterPath="$PROJECT_DIR$/app/public/js/angularjs/controller/sfmsIndexController.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/api/wechatroute.js" afterPath="$PROJECT_DIR$/app/routes/api/wechatroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/backend/application/approuter.js" afterPath="$PROJECT_DIR$/app/routes/backend/application/approuter.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/backend/function/functionroute.js" afterPath="$PROJECT_DIR$/app/routes/backend/function/functionroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/backend/user/userroute.js" afterPath="$PROJECT_DIR$/app/routes/backend/user/userroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/jinkebro/customer/customerroute.js" afterPath="$PROJECT_DIR$/app/routes/jinkebro/customer/customerroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/jinkebro/order/orderroute.js" afterPath="$PROJECT_DIR$/app/routes/jinkebro/order/orderroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/jinkebro/product/productroute.js" afterPath="$PROJECT_DIR$/app/routes/jinkebro/product/productroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/jinkebro/productstock/productstockroute.js" afterPath="$PROJECT_DIR$/app/routes/jinkebro/productstock/productstockroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/jinkebro/productype/productyperoute.js" afterPath="$PROJECT_DIR$/app/routes/jinkebro/productype/productyperoute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/sfms/KPI/KPIroute.js" afterPath="$PROJECT_DIR$/app/routes/sfms/KPI/KPIroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/sfms/finance/financeroute.js" afterPath="$PROJECT_DIR$/app/routes/sfms/finance/financeroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/sfms/project/projectremarkroute.js" afterPath="$PROJECT_DIR$/app/routes/sfms/project/projectremarkroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/sfms/project/projectroute.js" afterPath="$PROJECT_DIR$/app/routes/sfms/project/projectroute.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/sfms/sfmsroute.js" afterPath="$PROJECT_DIR$/app/routes/sfms/sfmsroute.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js" afterPath="$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes/backend/role/rolefuncroute.js" afterPath="$PROJECT_DIR$/app/routes/backend/role/rolefuncroute.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/service/backend/function/functionservice.js" afterPath="$PROJECT_DIR$/app/service/backend/function/functionservice.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/service/backend/function/gettreefunction.js" afterPath="$PROJECT_DIR$/app/service/backend/function/gettreefunction.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/service/jinkebro/order/orderservice.js" afterPath="$PROJECT_DIR$/app/service/jinkebro/order/orderservice.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/service/jinkebro/productstock/productstockservice.js" afterPath="$PROJECT_DIR$/app/service/jinkebro/productstock/productstockservice.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/service/jinkebro/productype/productypeservice.js" afterPath="$PROJECT_DIR$/app/service/jinkebro/productype/productypeservice.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/service/wechat/wechatservice.js" afterPath="$PROJECT_DIR$/app/service/wechat/wechatservice.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/test/function.test.js" afterPath="$PROJECT_DIR$/app/test/function.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/test/productstock.test.js" afterPath="$PROJECT_DIR$/app/test/productstock.test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/application.jade" afterPath="$PROJECT_DIR$/app/views/backend/application.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/menu.jade" afterPath="$PROJECT_DIR$/app/views/backend/menu.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/user.jade" afterPath="$PROJECT_DIR$/app/views/backend/user.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/userinfo.jade" afterPath="$PROJECT_DIR$/app/views/backend/userinfo.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/financeManage.jade" afterPath="$PROJECT_DIR$/app/views/sfms/financeManage.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/kpiAdd.jade" afterPath="$PROJECT_DIR$/app/views/sfms/kpiAdd.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/kpiEdit.jade" afterPath="$PROJECT_DIR$/app/views/sfms/kpiEdit.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectLeadEdit.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectLeadEdit.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectManage.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectManage.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectManageAdd.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectManageAdd.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectManageEdit.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectManageEdit.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectManageRemark.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectManageRemark.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectManageRemarkAdd.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectManageRemarkAdd.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectManageRemarkEdit.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectManageRemarkEdit.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectRemark.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectRemark.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectRemarkAdd.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectRemarkAdd.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/sfms/projectRemarkEdit.jade" afterPath="$PROJECT_DIR$/app/views/sfms/projectRemarkEdit.jade" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/views/sfms/financeManageAdd.jade" afterPath="$PROJECT_DIR$/app/views/sfms/financeAdd.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/function.jade" afterPath="$PROJECT_DIR$/app/views/backend/function.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/index.jade" afterPath="$PROJECT_DIR$/app/views/backend/index.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/role.jade" afterPath="$PROJECT_DIR$/app/views/backend/role.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/backend/roleEdit.jade" afterPath="$PROJECT_DIR$/app/views/backend/roleEdit.jade" />
     </list>
     <ignored path="JinkeBro.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,30 +31,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="function.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/views/backend/function.jade">
+      <file leaf-file-name="roleEditController.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.25">
-              <caret line="42" column="57" selection-start-line="42" selection-start-column="57" selection-end-line="42" selection-end-column="57" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="functionController.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/functionController.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.142858">
-              <caret line="17" column="43" selection-start-line="17" selection-start-column="43" selection-end-line="17" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.8028169">
+              <caret line="50" column="27" selection-start-line="50" selection-start-column="27" selection-end-line="50" selection-end-column="27" />
               <folding>
-                <element signature="e#0#48#0" expanded="false" />
-                <element signature="e#718#775#0" expanded="false" />
-                <element signature="e#1675#1928#0" expanded="false" />
-                <element signature="e#1990#2312#0" expanded="false" />
-                <element signature="e#2370#2866#0" expanded="false" />
-                <element signature="e#2914#3360#0" expanded="false" />
-                <element signature="e#4179#4700#0" expanded="false" />
-                <element signature="e#4749#5067#0" expanded="false" />
+                <element signature="e#0#49#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -110,15 +46,17 @@
       <file leaf-file-name="tree-grid-directive.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.6785714">
-              <caret line="21" column="79" selection-start-line="21" selection-start-column="79" selection-end-line="21" selection-end-column="79" />
+            <state vertical-scroll-proportion="-13.566667">
+              <caret line="217" column="43" selection-start-line="217" selection-start-column="35" selection-end-line="217" selection-end-column="43" />
               <folding>
-                <element signature="e#35470#35805#0" expanded="false" />
-                <marker date="1483942460587" expanded="true" signature="220:3036" placeholder="..." />
-                <marker date="1483942460587" expanded="true" signature="273:3011" placeholder="..." />
-                <marker date="1483942460587" expanded="true" signature="1194:2983" placeholder="..." />
-                <marker date="1483942460587" expanded="true" signature="1472:2953" placeholder="..." />
-                <marker date="1483942460587" expanded="true" signature="2584:2924" placeholder="..." />
+                <element signature="e#36340#36675#0" expanded="false" />
+                <marker date="1484125278583" expanded="true" signature="220:3287" placeholder="..." />
+                <marker date="1484125278583" expanded="true" signature="273:3262" placeholder="..." />
+                <marker date="1484125278583" expanded="true" signature="1213:3234" placeholder="..." />
+                <marker date="1484125278583" expanded="true" signature="1491:3204" placeholder="..." />
+                <marker date="1484125278583" expanded="true" signature="1521:2456" placeholder="..." />
+                <marker date="1484125278583" expanded="true" signature="2522:2786" placeholder="..." />
+                <marker date="1484125278583" expanded="true" signature="2835:3175" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -127,68 +65,28 @@
       <file leaf-file-name="roleEdit.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/views/backend/roleEdit.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="113" column="22" selection-start-line="113" selection-start-column="22" selection-end-line="113" selection-end-column="22" />
+            <state vertical-scroll-proportion="-2.7441862">
+              <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="backendroute.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/routes/backend/backendroute.js">
+      <file leaf-file-name="function.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views/backend/function.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="198" column="37" selection-start-line="198" selection-start-column="28" selection-end-line="198" selection-end-column="37" />
+            <state vertical-scroll-proportion="-1.3103448">
+              <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="41" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="functionroute.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/routes/backend/function/functionroute.js">
+      <file leaf-file-name="index.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/views/backend/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.55329156">
-              <caret line="53" column="37" selection-start-line="53" selection-start-column="37" selection-end-line="53" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="treeGrid.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/public/css/treeGrid.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="88" column="31" selection-start-line="88" selection-start-column="31" selection-end-line="88" selection-end-column="31" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="select.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/select.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="43" column="8" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="baseController.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="89" column="33" selection-start-line="89" selection-start-column="33" selection-end-line="89" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="baseconfig.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/config/baseconfig.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="60" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="60" />
+            <state vertical-scroll-proportion="-2.2931035">
+              <caret line="7" column="25" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -214,14 +112,20 @@
         <option value="$PROJECT_DIR$/app/views/backend/useredit.jade" />
         <option value="$PROJECT_DIR$/app/views/sfms/projectManageEdit.jade" />
         <option value="$PROJECT_DIR$/app/views/sfms/kpiEdit.jade" />
-        <option value="$PROJECT_DIR$/app/views/backend/index.jade" />
         <option value="$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js" />
         <option value="$USER_HOME$/Downloads/tree-grid-directive-master/tree-grid-directive-master/test/treeGrid.html" />
         <option value="$PROJECT_DIR$/app/public/css/treeGrid.css" />
-        <option value="$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js" />
-        <option value="$PROJECT_DIR$/app/views/backend/function.jade" />
         <option value="$PROJECT_DIR$/app/public/js/angularjs/controller/functionController.js" />
         <option value="$PROJECT_DIR$/app/routes/backend/function/functionroute.js" />
+        <option value="$PROJECT_DIR$/app/service/backend/function/functionservice.js" />
+        <option value="$PROJECT_DIR$/app/public/js/angularjs/config/baseconfig.js" />
+        <option value="$PROJECT_DIR$/app/routes/backend/role/rolefuncroute.js" />
+        <option value="$PROJECT_DIR$/app/views/backend/index.jade" />
+        <option value="$PROJECT_DIR$/app/views/backend/function.jade" />
+        <option value="$PROJECT_DIR$/app/views/backend/role.jade" />
+        <option value="$PROJECT_DIR$/app/views/backend/roleEdit.jade" />
+        <option value="$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js" />
+        <option value="$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js" />
       </list>
     </option>
   </component>
@@ -405,6 +309,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JinkeBro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JinkeBro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="backend" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="role" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -626,6 +556,54 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JinkeBro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JinkeBro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="assets" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="font" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JinkeBro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="JinkeBro" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -640,6 +618,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="js-jscs-nodeInterpreter" value="C:\Program Files\nodejs\node.exe" />
+    <property name="ignore_missing_gitignore" value="true" />
   </component>
   <component name="RunManager" selected="Node.js.app.js">
     <configuration default="false" name="app.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-node="C:/Program Files/nodejs/node" path-to-js-file="app.js" working-dir="$PROJECT_DIR$/app">
@@ -719,11 +698,11 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16596417" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21917808" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2478355" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16864865" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -733,7 +712,7 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14918919" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44805196" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -771,7 +750,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js</url>
-          <line>60</line>
+          <line>62</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
@@ -784,115 +763,13 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/public/css/treeGrid.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="88" column="31" selection-start-line="88" selection-start-column="31" selection-end-line="88" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/select.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="43" column="8" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="90" column="33" selection-start-line="90" selection-start-column="33" selection-end-line="90" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/config/baseconfig.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="25" column="60" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/backend/function.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="57" selection-start-line="9" selection-start-column="57" selection-end-line="9" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#35470#35805#0" expanded="false" />
-            <marker date="1483942460587" expanded="true" signature="220:3036" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="273:3011" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="1194:2983" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="1472:2953" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="2584:2924" placeholder="..." />
+            <marker date="1484036570806" expanded="true" signature="5876:5955" placeholder="{...}" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/routes/backend/backendroute.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="198" column="37" selection-start-line="198" selection-start-column="28" selection-end-line="198" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/css/treeGrid.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="88" column="31" selection-start-line="88" selection-start-column="31" selection-end-line="88" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/functionController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="4" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#48#0" expanded="false" />
-            <element signature="e#718#775#0" expanded="false" />
-            <element signature="e#1675#1928#0" expanded="false" />
-            <element signature="e#1990#2312#0" expanded="false" />
-            <element signature="e#2370#2866#0" expanded="false" />
-            <element signature="e#2914#3360#0" expanded="false" />
-            <element signature="e#4179#4700#0" expanded="false" />
-            <element signature="e#4749#5067#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/select.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="43" column="8" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="90" column="33" selection-start-line="90" selection-start-column="33" selection-end-line="90" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/config/baseconfig.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="60" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -900,7 +777,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -916,12 +792,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="211" column="51" selection-start-line="211" selection-start-column="51" selection-end-line="211" selection-end-column="51" />
           <folding>
-            <element signature="e#35470#35805#0" expanded="false" />
-            <marker date="1483942460587" expanded="true" signature="220:3036" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="273:3011" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="1194:2983" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="1472:2953" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="2584:2924" placeholder="..." />
+            <element signature="e#36340#36675#0" expanded="false" />
+            <marker date="1484125278583" expanded="true" signature="220:3287" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="273:3262" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1213:3234" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1491:3204" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1521:2456" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="2522:2786" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="2835:3175" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -954,7 +832,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="50" column="24" selection-start-line="50" selection-start-column="24" selection-end-line="50" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -969,7 +846,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="42" column="38" selection-start-line="42" selection-start-column="38" selection-end-line="42" selection-end-column="38" />
-          <folding />
+          <folding>
+            <marker date="1484036570806" expanded="true" signature="5876:5955" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -977,7 +856,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="27" column="42" selection-start-line="27" selection-start-column="42" selection-end-line="27" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -985,7 +863,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1001,12 +878,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="211" column="51" selection-start-line="211" selection-start-column="51" selection-end-line="211" selection-end-column="51" />
           <folding>
-            <element signature="e#35470#35805#0" expanded="false" />
-            <marker date="1483942460587" expanded="true" signature="220:3036" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="273:3011" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="1194:2983" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="1472:2953" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="2584:2924" placeholder="..." />
+            <element signature="e#36340#36675#0" expanded="false" />
+            <marker date="1484125278583" expanded="true" signature="220:3287" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="273:3262" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1213:3234" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1491:3204" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1521:2456" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="2522:2786" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="2835:3175" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1039,7 +918,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="50" column="24" selection-start-line="50" selection-start-column="24" selection-end-line="50" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1054,7 +932,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="42" column="38" selection-start-line="42" selection-start-column="38" selection-end-line="42" selection-end-column="38" />
-          <folding />
+          <folding>
+            <marker date="1484036570806" expanded="true" signature="5876:5955" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1062,7 +942,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="27" column="42" selection-start-line="27" selection-start-column="42" selection-end-line="27" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1077,13 +956,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/backend/index.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6437008">
-          <caret line="108" column="0" selection-start-line="108" selection-start-column="0" selection-end-line="108" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1122,13 +994,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/backend/menu.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="32" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/config/config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.821428">
@@ -1140,23 +1005,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="43" column="8" selection-start-line="43" selection-start-column="8" selection-end-line="43" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="89" column="33" selection-start-line="89" selection-start-column="33" selection-end-line="89" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/config/baseconfig.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="60" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="60" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1164,7 +1012,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="88" column="31" selection-start-line="88" selection-start-column="31" selection-end-line="88" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1175,41 +1022,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/routes/backend/backendroute.js">
+    <entry file="file://$PROJECT_DIR$/app/public/css/index.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="198" column="37" selection-start-line="198" selection-start-column="28" selection-end-line="198" selection-end-column="37" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/backend/menu.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.160714">
+          <caret line="35" column="32" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/baseController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.87931">
+          <caret line="36" column="5" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/routes/backend/role/roleroute.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/backend/roleEdit.jade">
+    <entry file="file://$PROJECT_DIR$/app/public/js/roleAdd.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="113" column="22" selection-start-line="113" selection-start-column="22" selection-end-line="113" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.3638393">
+          <caret line="38" column="47" selection-start-line="38" selection-start-column="47" selection-end-line="38" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/service/backend/function/functionservice.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.021205356">
+          <caret line="12" column="11" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="11" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js">
+    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/config/baseconfig.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.6785714">
-          <caret line="21" column="79" selection-start-line="21" selection-start-column="79" selection-end-line="21" selection-end-column="79" />
+        <state vertical-scroll-proportion="0.66071427">
+          <caret line="207" column="0" selection-start-line="207" selection-start-column="0" selection-end-line="207" selection-end-column="0" />
           <folding>
-            <element signature="e#35470#35805#0" expanded="false" />
-            <marker date="1483942460587" expanded="true" signature="220:3036" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="273:3011" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="1194:2983" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="1472:2953" placeholder="..." />
-            <marker date="1483942460587" expanded="true" signature="2584:2924" placeholder="..." />
+            <marker date="1484036570806" expanded="true" signature="5876:5955" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/functionController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.142858">
-          <caret line="17" column="43" selection-start-line="17" selection-start-column="43" selection-end-line="17" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="161" selection-end-column="2" />
           <folding>
             <element signature="e#0#48#0" expanded="false" />
             <element signature="e#718#775#0" expanded="false" />
@@ -1223,19 +1093,116 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/views/backend/function.jade">
+    <entry file="file://$PROJECT_DIR$/app/routes/backend/function/functionroute.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.25">
-          <caret line="42" column="57" selection-start-line="42" selection-start-column="57" selection-end-line="42" selection-end-column="57" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="269" column="10" selection-start-line="269" selection-start-column="7" selection-end-line="269" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/routes/backend/function/functionroute.js">
+    <entry file="file://$PROJECT_DIR$/app/routes/backend/backendroute.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.55329156">
-          <caret line="53" column="37" selection-start-line="53" selection-start-column="37" selection-end-line="53" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="198" column="21" selection-start-line="198" selection-start-column="13" selection-end-line="198" selection-end-column="21" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/formcontent.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/backend/menuedit.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/form.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.69324327">
+          <caret line="27" column="35" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/routes/backend/role/rolefuncroute.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="65" column="45" selection-start-line="65" selection-start-column="45" selection-end-line="65" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/selectController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/backend/index.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.2931035">
+          <caret line="7" column="25" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/backend/role.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5519663">
+          <caret line="51" column="39" selection-start-line="51" selection-start-column="39" selection-end-line="51" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/backend/function.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.3103448">
+          <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/views/backend/roleEdit.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.7441862">
+          <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/directive/tree-grid-directive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.566667">
+          <caret line="217" column="43" selection-start-line="217" selection-start-column="35" selection-end-line="217" selection-end-column="43" />
+          <folding>
+            <element signature="e#36340#36675#0" expanded="false" />
+            <marker date="1484125278583" expanded="true" signature="220:3287" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="273:3262" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1213:3234" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1491:3204" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="1521:2456" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="2522:2786" placeholder="..." />
+            <marker date="1484125278583" expanded="true" signature="2835:3175" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/public/js/angularjs/controller/roleEditController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8028169">
+          <caret line="50" column="27" selection-start-line="50" selection-start-column="27" selection-end-line="50" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#49#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
