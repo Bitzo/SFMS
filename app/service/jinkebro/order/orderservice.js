@@ -140,16 +140,16 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
     var productInfo = msg.split('|');
     var productIDArray = [];
     var productCountArray = [];
-   
+
     console.log('msg:' + msg + ',openid:' + openid);
     customer.query(queryCustomerInfo, function (err, customerInfo) {
-        
+
         if (err) {
             var errinfo = '在添加用户的时候查询失败';
             logger.writeError('[service/jinkebro/order/orderservice-----152行]在添加用户的时候查询失败');
             return callback(true, errinfo);
         }
-       
+
         console.log('customerInfo:' + JSON.stringify(customerInfo));
         
         //该用户不存在
@@ -263,12 +263,12 @@ Order.prototype.queryCount = function (queryinfo, callback) {
         console.log("查询货存的结果：" + resultInfo.data[0].TotalNum);
         //计算库存的剩余量
         var surplus = resultInfo.data[0].TotalNum - queryinfo.ProductCount;
-        
+
         var updateStockInfo = {
             'ProductID': queryinfo.ProductID,
             'TotalNum': surplus
         }
-        
+
         if (surplus >= 0) {
             logger.writeInfo("[service/jinkebro/order/orderservice -----274行]库存量足够");
             return callback(true, updateStockInfo);
@@ -354,4 +354,33 @@ Order.prototype.getOrderInfo = function (orderID, callback) {
     });
     return;
 }
+
+//通过http.get的方法获取到用户的历史订单，通过用户的微信的唯一标示
+Order.prototype.getHistoryOrderInfo = function (openid, callback) {
+    logger.writeInfo("[service/jinkebro/order/orderservice-------------361行]获取某个用户的历史订单");
+    var getUrl = config.jinkebro.baseUrl + config.jinkebro.order + "?WechatUserCode=" + openid;
+    console.log("获取的url" + getUrl);
+    http.get(getUrl, function (res) {
+        var datas = [];
+        var sizes = 0;
+        res.on('data', function (data) {
+            datas.push(data);
+            sizes += data.length;
+        });
+
+        res.on('end', function () {
+            var buff = Buffer.concat(datas, sizes);
+            var result = JSON.parse(buff);
+
+            if (callback && typeof (callback) === 'function') {
+                
+                return callback(result);
+            }
+        }).on('error', function (e) {
+            console.log("通过http.get获取订单失败");
+            logger.writeError('[service/jinkebro/order/orderservice------385行]通过http.get获取');
+        });
+    });
+}
+
 module.exports = new Order();

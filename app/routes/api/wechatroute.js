@@ -189,10 +189,10 @@ wechat.eventMsg(function (msg) {
                 //如果成功  
                 if (isSussess) {
 
-                    wechat.createMenu(token, function () {
-                        console.log("创建菜单");
-                    logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
-                    });
+                    // wechat.createMenu(token, function () {
+                    //     console.log("创建菜单");
+                    // logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
+                    // });
                     //用户订阅时的操作
                     wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
 
@@ -310,6 +310,35 @@ wechat.eventMsg(function (msg) {
                             content: resultinfo,
                             funcFlag: 0
                         };
+                        wechat.sendMsg(resMsg);
+                    });
+                    break;
+
+                case 'OrderHistory':
+                    order.getHistoryOrderInfo(msg.FromUserName, function (orderinfo) {
+                        console.log("routes/api/wechatroute------------319行");
+                        var historyInfo = '';
+                        var totalPrice = 0;
+                        var index = 1;
+                         for(var key in orderinfo.data)
+                        {
+                            historyInfo += index + '、订单号：' + orderinfo.data[key]['OrderID'] + "  ";
+                            historyInfo += '商品名称：' + orderinfo.data[key]['ProductName'] + "  ";
+                            historyInfo += '数量：' + orderinfo.data[key]['ProductCount'] + "  ";
+                            totalPrice += orderinfo.data[key]['ProductCount'] * orderinfo.data[key]['ProductPrice'];
+                            historyInfo += "付款：" + totalPrice;
+                            historyInfo += '\n';
+                            index++;
+                            totalPrice = 0;
+                        }
+                         var resMsg = {
+                            fromUserName: msg.ToUserName,
+                            toUserName: msg.FromUserName,
+                            msgType: "text",
+                            content: historyInfo,
+                            funcFlag: 0
+                        };
+                        console.log(historyInfo);
                         wechat.sendMsg(resMsg);
                     });
                     break;
