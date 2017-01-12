@@ -9,22 +9,22 @@ var order = appRequire('routes/jinkebro/order/orderroute');
 //产品类别路由
 var proTyperoute = appRequire('routes/jinkebro/productype/productyperoute');
 //库存信息路由
-var proStockroute=appRequire('routes/jinkebro/productstock/productstockroute');
+var proStockroute = appRequire('routes/jinkebro/productstock/productstockroute');
 //金科小哥主站点
 
 router.get('/', function (req, res, next) {
-	res.render('sfms', { title: 'Hi jkbro' });
+    res.render('sfms', { title: 'Hi jkbro' });
 });
 
 router.get('/jitinfo', function (req, res, next) {
     res.render('jinkeBro/jitinfo', { title: 'Hi jkbro' });
 });
 
-router.get('/jitgoods', function(req, res, next) {
+router.get('/jitgoods', function (req, res, next) {
     res.render('jinkeBro/jitgoods', { title: 'Hi jkbro' });
 });
 
-router.get('/jitgoodsAdd', function(req, res, next) {
+router.get('/jitgoodsAdd', function (req, res, next) {
     res.render('jinkeBro/jitgoodsAdd', { title: 'Hi jkbro' });
 });
 
@@ -44,9 +44,9 @@ router.use('/customer', customer);
 //产品
 router.use('/product', product);
 //订单
-router.use('/order',order);
+router.use('/order', order);
 //库存信息
-router.use('/proStock',proStockroute)
+router.use('/proStock', proStockroute)
 
 
 

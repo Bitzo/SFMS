@@ -7,11 +7,13 @@
  */
 
 var proStockDAL = appRequire('dal/jinkebro/productstock/productstockdal');
-moment = require('moment'),
-    logService = appRequire('service/backend/log/logservice'),
-    operationConfig = appRequire('config/operationconfig'),
-    logModel = appRequire('model/jinkebro/log/logmodel');
-
+var moment = require('moment'),
+logService = appRequire('service/backend/log/logservice'),
+operationConfig = appRequire('config/operationconfig'),
+logModel = appRequire('model/jinkebro/log/logmodel');
+var config = appRequire('config/config');
+var logger = appRequire("util/loghelper").helper;
+var http = require('http');
 var ProStock = function () {
     this.createTime = moment().format("YYYY-MM-DD HH:mm:ss");
 }
@@ -32,6 +34,7 @@ ProStock.prototype.queryProStock = function (data, callback) {
             return;
         }
         callback(false, results);
+        return;
     });
 };
 
@@ -58,6 +61,7 @@ ProStock.prototype.insert = function (data, callback) {
             return callback(true, logModel.OperationName);
         }
         callback(false, results);
+        return;
     });
 };
 
@@ -83,6 +87,7 @@ ProStock.prototype.update = function (data, callback) {
             return callback(true, logModel.OperationName);
         }
         callback(false, results);
+        return;
     });
 };
 
@@ -108,6 +113,7 @@ ProStock.prototype.delete = function (data, callback) {
         }
         logger.writeInfo('删除库存信息:' + results);
         callback(false, results);
+        return;
     });
 };
 
@@ -134,5 +140,85 @@ function loggerWrite() {
             logger.writeError('生成操作日志异常' + new Date());
         }
     });
+}
+
+//通过http get的方法来获取库存的数据,通过商品的ID来查库存
+ProStock.prototype.getStockInfo = function (productID, callback) {
+    console.log(productID);
+    var getUrl = config.jinkebro.baseUrl + config.jinkebro.productstock + '?ProductID=' + productID;
+    console.log("库存的获取数量的url" + getUrl);
+    http.get(getUrl, function (res) {
+        var datas = [];
+        var size = 0;
+        res.on('data', function (data) {
+            datas.push(data);
+            size += data.length;
+        });
+        res.on('end', function () {
+            var buff = Buffer.concat(datas, size);
+            var result = JSON.parse(buff);
+
+            if (callback && typeof (callback) === 'function') {
+                callback(result);
+                console.log(result);
+                return;
+            }
+        }).on('error', function (e) {
+            logger.writeError()
+            console.log("通过http.get来获取http失败");
+            return;
+        });
+    });
+}
+
+//通过http put来修改商品的已减少的库存量
+ProStock.prototype.updateStockInfo = function (data, callback) {
+    console.log("数量为：" + data.TotalNum);
+    var me = this;
+    var putUrl = config.jinkebro.baseUrl + config.jinkebro.productstock;
+    me.getStockInfo(data.ProductID, function (queryInfo) {
+        queryInfo.data[0].TotalNum = data.TotalNum;
+        var body = queryInfo.data[0];
+        var bodyString = JSON.stringify(body);
+            
+        //头文件
+        var headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': bodyString.length
+        };
+
+        var options = {
+            host: config.jinkebro.host,
+            port: '80',
+            path: putUrl,
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': Buffer.byteLength(bodyString)
+            }
+        };
+        var put_req = http.request(options, function (res) {
+            console.log("statusCode: ", res.statusCode);
+            console.log("headers: ", res.headers);
+
+            res.setEncoding('utf8');
+            res.on('data', function (chunk) {
+                console.log('Response: ' + chunk);
+                callback(chunk);
+                return;
+            })
+        });
+
+        put_req.on('error', function (e) {
+            console.log('problem with request: ' + e.message);
+            callback(e.message);
+            return;
+        });
+
+        put_req.write(bodyString);
+        put_req.end();
+        return;
+    });
+
 }
 module.exports = new ProStock();

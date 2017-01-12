@@ -20,12 +20,13 @@ block content
             th 仓储量的单位
             th 商品名称       
             th 商品描述
-            th 商品图片路径
             th 有效期
             th 生产日期
             th 供应商ID
             th 商品类型ID
             th 商品类型
+            th 价格
+            th 库存量
             th 操作
         tbody
           tr(ng-repeat="x in datas" )
@@ -33,12 +34,13 @@ block content
             td {{x.SKU}}
             td {{x.ProductName}}
             td {{x.ProductDesc}}
-            td {{x.ProductImgPath}}
             td {{x.ExpireTime}}
             td {{x.ProducTime}}
             td {{x.SupplierID}}
             td {{x.ProductTypeID}}
             td {{x.ProductTypeName}}
+            td {{x.ProductPrice}}元
+            td {{x.TotalNum}}
             td 
               a(href='#/backend/useredit/?AccountID={{x.AccountID}}' )
                 i.icon.icon-edit 编辑 

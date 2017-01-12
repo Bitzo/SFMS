@@ -64,7 +64,7 @@ block content
             small.error(ng-if="menuInfo.Url.$error.maxlength && menuInfo.Url.$touched") 菜单对应的url最多50位
                     
         tr
-          td(width="15%",class="tableleft") 备注(可选) 
+          td(width="15%",class="tableleft") 备注
           td
             textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='formdata.Memo',ng-maxlength='200')
             small.error(ng-if="menuInfo.Memo.$error.maxlength && menuInfo.Memo.$touched") 备注最多200位
