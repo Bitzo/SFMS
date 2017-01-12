@@ -107,6 +107,7 @@ router.post('/', function (req, res) {
                                     'ProjectID': ProjectID,
                                     'KPIType': KPIType,
                                     'UserID': UserID,
+                                    'OperateUserID': req.query.jitkey,
                                     'IsActive': 1
                                 }
                                 KPIservice.queryKPI(query, function (err, results) {
@@ -140,6 +141,7 @@ router.post('/', function (req, res) {
                                                     'UserID': UserID,
                                                     'UserName': UserName,
                                                     'OperateUser': OperateUser,
+                                                    'OperateUserID': req.query.jitkey,
                                                     'KPIStatus': '待审核',
                                                     'Remark': Remark,
                                                     'IsActive': 1
@@ -271,6 +273,7 @@ router.put('/', function (req, res) {
         'UserID': UserID,
         'UserName': UserName,
         'OperateUser': OperateUser,
+        'OperateUserID': req.query.jitkey,
         'KPIStatus': '待审核',
         'Remark': Remark,
         'IsActive': 1
@@ -320,7 +323,7 @@ router.put('/', function (req, res) {
         })
     };
 
-    KPIservice.queryKPI({'ID':ID}, function (err, results) {
+    KPIservice.queryKPI({'ID':ID, 'OperateUserID': req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -469,6 +472,7 @@ router.get('/person', function (req, res) {
         'ID': ID,
         'ProjectID': ProjectID,
         'UserID': UserID,
+        'OperateUserID': req.query.jitkey,
         'KPIStatus': KPIStatus.trim(),
         'StartTime': StartTime,
         'EndTime': EndTime,
@@ -631,6 +635,7 @@ router.get('/', function (req, res) {
         'KPIName': KPIName,
         'StartTime': StartTime,
         'EndTime': EndTime,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
         'IsActive': 1
@@ -819,7 +824,7 @@ router.put('/check', function (req, res) {
     var ID = data.ID;
 
     //查看该绩效信息是否已经被审核
-    KPIservice.queryKPI({ID:ID}, function (err, results) {
+    KPIservice.queryKPI({'ID':ID, 'OperateUserID': req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
