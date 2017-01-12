@@ -44,6 +44,7 @@ Customer.prototype.insert = function (data, callback) {
                     logger.writeError('生成操作日志异常' + new Date());
                 }
             });
+            logger.writeError("[service/jinkebro/customer/customerservice----------------47行]新增用户失败");
             return;
         }
     }
@@ -65,16 +66,18 @@ Customer.prototype.insert = function (data, callback) {
             logService.insertOperationLog(logModel, function (err, insertId) {
                 if (err) {
                     logger.writeError('生成操作日志异常' + new Date());
+                    return;
                 }
             });
 
             console.log("插入失败");
+            logger.writeError("[service/jinkebro/customer/customerservice----------------74行]插入客户的时候失败");
             return;
         }
         //生成操作的日志
         console.log("插入成功");
-        callback(false, results);
-        return;
+        logger.writeInfo("[service/jinkebro/customer/customerservice-------------79行]插入用户的时候成功");
+        return callback(false, results);
     });
 };
 
@@ -99,6 +102,7 @@ Customer.prototype.update = function (data, callback) {
                 }
             });
             console.log("更新的数据数据未定义");
+            logger.writeError("[service/jinkebro/customer/customerservice---------105行]更新数据未定义");
             return;
         }
 
@@ -122,11 +126,11 @@ Customer.prototype.update = function (data, callback) {
                 }
             });
             console.log("更新失败，sql的检查");
+            logger.writeError("[service/jinkebro/customer/customerservice---------129行]更新数据失败，sql的检查");
             callback(true);
             return;
         }
-        callback(false, result);
-        return;
+        return callback(false, result);
     });
 };
 
@@ -151,6 +155,7 @@ Customer.prototype.query = function (data, callback) {
                 }
             });
             console.log("查询的数据数据未定义");
+            logger.writeError("[service/jinkebro/customer/customerservice---------158行]" + "查询的数据数据未定义");
             return;
         }
     }
@@ -172,11 +177,10 @@ Customer.prototype.query = function (data, callback) {
                 }
             });
             console.log("查询数据失败");
-            callback(true);
-            return;
+            logger.writeError("[service/jinkebro/customer/customerservice---------180行]" + "查询数据");
+            return callback(true);
         }
-        callback(false, result);
-        return;
+        return callback(false, result);
     });
 }
 
@@ -233,8 +237,8 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
                         logger.writeError('添加微信的用户时的验证查询失败，生成操作日志异常' + new Date());
                     }
                 });
-                callback(true, errinfo);
-                return;
+                logger.writeError("[service/jinkebro/customer/customerservice-----------240行]添加微信用户的时候查询失败");
+                return callback(true, errinfo);
             }
 
             if (resultInfo != undefined && resultInfo.length != 0) {
@@ -259,14 +263,14 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
                                 logger.writeError('添加微信的用户时的二次更新失败，生成操作日志异常' + new Date());
                             }
                         });
-                        callback(true, errinfo);
-                        return;
+                        logger.writeError("[service/jinkebro/customer/customerservice----------266行]添加微信用户时的更新出错");
+                        return callback(true, errinfo);
                     }
 
                     if (updataInfo != undefined && updataInfo.affectedRows != 0) {
                         console.log("更新成功");
-                        callback(false, '');
-                        return;
+                        logger.writeInfo("[service/jinkebro/customer/customerservice------------272行]微信添加用户的时候更新成功");
+                        return callback(false, '');
                     }
                 });
             } else {
@@ -289,14 +293,14 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
                                 logger.writeError('添加微信的用户时，生成操作日志异常' + new Date());
                             }
                         });
-                        callback(true, errinfo);
-                        return;
+                        logger.writeError("[service/jinkebro/customer/customerservice-----------296行]添加微信用户的时候插入失败");
+                        return callback(true, errinfo);
                     }
 
                     if (insertInfo != undefined && insertInfo.affectedRows != 0) {
                         console.log("插入成功");
-                        callback(false, '');
-                        return;
+                        logger.writeInfo("[service/jinkebro/customer/customerservice-------------302行]添加微信用户的时候插入成功");
+                        return callback(false, '');
                     }
                 });
             }
@@ -332,8 +336,8 @@ Customer.prototype.unsubscribe = function (token, msg, callback) {
                         logger.writeError('微信用户取消关注的查询失败，生成操作日志异常' + new Date());
                     }
                 });
-                callback(true, errinfo);
-                return;
+                logger.writeInfo("[service/jinkebro/customer/customerservice-------------339行]" + errinfo);
+                return callback(true, errinfo);
             }
 
             if (resultInfo != undefined && resultInfo.length != 0) {
@@ -359,14 +363,13 @@ Customer.prototype.unsubscribe = function (token, msg, callback) {
                                 logger.writeError('微信用户取消关注时更新失败，生成操作日志异常' + new Date());
                             }
                         });
-                        callback(true, errinfo);
-                        return;
+                        logger.writeError("[service/jinkebro/customer/customerservice----------366行]" + errinfo);
+                        return callback(true, errinfo);
                     }
 
                     if (updataInfo != undefined && updataInfo.affectedRows != 0) {
                         console.log("更新成功");
-                        callback(false, '');
-                        return;
+                        return callback(false, '');
                     }
                 });
             }
@@ -406,8 +409,8 @@ Customer.prototype.addLocation = function (msg, callback) {
                     logger.writeError('在获取微信地址时的查询，生成操作日志异常' + new Date());
                 }
             });
-            callback(true, errinfo);
-            return;
+            logger.writeError("[service/jinkebro/customer/customerservice--------------412行]" + errinfo);
+            return callback(true, errinfo);
         }
 
         if (queryInfo != undefined && queryInfo.length != 0) {
@@ -430,13 +433,13 @@ Customer.prototype.addLocation = function (msg, callback) {
                             logger.writeError('在获取微信地址时的查询，生成操作日志异常' + new Date());
                         }
                     });
-                    callback(true, errinfo);
-                    return;
+                    logger.writeError("[service/jinkebro/customer/customerservice-------------436行]" + errinfo);
+                    return callback(true, errinfo);
                 }
                 if (updataInfo != undefined && updataInfo.affectedRows != 0) {
                     console.log("更新成功");
-                    callback(false);
-                    return;
+                    logger.writeInfo("[service/jinkebro/customer/customerservice--------441行]" + "更新成功");
+                    return callback(false);
                 }
             });
         }
@@ -460,11 +463,9 @@ Customer.prototype.addAllList = function (token, callback) {
             }, function (err, result) {
 
                 if (err) {
-                    callback(true, result);
-                    return;
+                    return callback(true, result);
                 }
-                callback(false, result);
-                return;
+                return callback(false, result);
             });
         }
 
@@ -495,14 +496,13 @@ Customer.prototype.addListFunction = function (token, data, callback) {
                     logger.writeError('添加微信客户端所有用户时的查询，生成操作日志异常' + new Date());
                 }
             });
-            callback(true, errinfo);
-            return;
+            logger.writeError("[service/jinkebro/customer/customerservice-------------499行]" + errinfo);
+            return callback(true, errinfo);
         }
 
         if (resultInfo != undefined && resultInfo.length != 0) {
             errinfo = '用户名已经存在，不需要重复插入';
-            callback(true, errinfo);
-            return;
+            return callback(true, errinfo);
         }
         else {
             wechat.getCustomerInfo(token, data.WechatUserCode, function (info) {
@@ -539,13 +539,13 @@ Customer.prototype.addListFunction = function (token, data, callback) {
                                 logger.writeError('添加微信客户端所有用户时的插入，生成操作日志异常' + new Date());
                             }
                         });
-                        callback(true, errinfo);
-                        return;
+                        logger.writeError("[service/jinkebro/customer/customerservice-------------499行]" + errinfo);
+                        return callback(true, errinfo);
                     }
                     if (insertInfo != undefined && insertInfo.affectedRows != 0) {
                         console.log("插入成功");
-                        callback(false, '获取所有列表的填补成功');
-                        return;
+                        logger.writeInfo("[service/jinkebro/customer/customerservice--------546行]" + "获取所有列表成功");
+                        return callback(false, '获取所有列表的填补成功');
                     }
                 });
             });
