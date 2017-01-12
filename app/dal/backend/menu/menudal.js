@@ -153,11 +153,14 @@ exports.menuInsert = function (data,callback) {
     var sql = '';
     if(data !== undefined){
         for(var key in data){
-            if(sql.length == 0){
-                sql += " " + key + " = '" + data[key] + "' " ;
-            }else{
-                sql += ", " + key + " = '" + data[key] + "' " ;
+            if (key !== undefined) {
+                if(sql.length == 0){
+                    sql += " " + key + " = '" + data[key] + "' " ;
+                }else{
+                    sql += ", " + key + " = '" + data[key] + "' " ;
+                }
             }
+
         }
     }
 
@@ -192,7 +195,7 @@ exports.menuUpdate = function(data, callback) {
     var sql = '';
     if(data !== undefined){
         for(var key in data){
-            if(key != 'MenuID'){
+            if(key != 'MenuID' && key !== undefined){
                 if(sql.length == 0){
                     sql += " " + key + " = '" + data[key] + "' " ;
                 }else{
@@ -233,7 +236,6 @@ exports.menuUpdate = function(data, callback) {
 //菜单删除
 exports.menuDelete = function (data, callback) {
     var update_sql = 'update jit_menu set IsActive = 0 where IsActive = 1 and MenuID = ' + data['MenuID'];
-
 
     logger.writeInfo("[menuDelete func in menudal]菜单删除：" + update_sql);
     console.log("in dal,菜单删除：" + update_sql);

@@ -464,7 +464,7 @@ exports.queryOrders = function (data, callback) {
 //查询指定条件订单的个数
 exports.CountOrders = function (data, callback) {
     var arr = new Array();
-    arr.push(' select count(*) as num ');
+    arr.push(' select count(1) as num ');
     arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer ');
     arr.push(' where 1 = 1 and jit_order.OrderID = jit_ordercustomer.orderID ');
     arr.push(' and jit_order.OrderID = jit_orderproduct.OrderID ');
@@ -518,6 +518,7 @@ exports.CountOrders = function (data, callback) {
         sql += tempSql;
     }
 
+    sql += ';' ;
     logger.writeInfo("查询指定条件的订单个数,sql:" + sql);
     console.log("查询指定条件的订单个数,sql:" + sql);
 
