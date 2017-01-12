@@ -22,13 +22,13 @@ var productstock = appRequire('service/jinkebro/productstock/productstockservice
 //记录日志
 var wechat = appRequire("service/wechat/wechatservice");
 var logger = appRequire("util/loghelper").helper;
-var Order = function() {
+var Order = function () {
     this.OrderTime = moment().format("YYYY-MM-DD HH:mm:ss"); //创建的时间
 }
 
 //新增订单
-Order.prototype.insertOrder = function(data, callback) {
-    orderDAL.insertOrder(data, function(err, result) {
+Order.prototype.insertOrder = function (data, callback) {
+    orderDAL.insertOrder(data, function (err, result) {
         if (err) {
             callback(true);
             return;
@@ -39,8 +39,8 @@ Order.prototype.insertOrder = function(data, callback) {
 }
 
 //新增订单产品表的一条记录
-Order.prototype.insertOrderProduct = function(data, callback) {
-    orderDAL.insertOrderProduct(data, function(err, result) {
+Order.prototype.insertOrderProduct = function (data, callback) {
+    orderDAL.insertOrderProduct(data, function (err, result) {
         if (err) {
             callback(true);
             return;
@@ -51,8 +51,8 @@ Order.prototype.insertOrderProduct = function(data, callback) {
 }
 
 //新增订单用户表的一条记录
-Order.prototype.insertOrderCustomer = function(data, callback) {
-    orderDAL.insertOrderCustomer(data, function(err, result) {
+Order.prototype.insertOrderCustomer = function (data, callback) {
+    orderDAL.insertOrderCustomer(data, function (err, result) {
         if (err) {
             callback(true);
             return;
@@ -63,8 +63,8 @@ Order.prototype.insertOrderCustomer = function(data, callback) {
 }
 
 //删除订单
-Order.prototype.deleteOrder = function(data, callback) {
-    orderDAL.deleteOrder(data, function(err, result) {
+Order.prototype.deleteOrder = function (data, callback) {
+    orderDAL.deleteOrder(data, function (err, result) {
         if (err) {
             callback(true);
             return;
@@ -75,8 +75,8 @@ Order.prototype.deleteOrder = function(data, callback) {
 }
 
 //编辑订单信息
-Order.prototype.updateOrder = function(data, callback) {
-    orderDAL.updateOrder(data, function(err, result) {
+Order.prototype.updateOrder = function (data, callback) {
+    orderDAL.updateOrder(data, function (err, result) {
         if (err) {
             callback(true);
             return;
@@ -87,9 +87,9 @@ Order.prototype.updateOrder = function(data, callback) {
 }
 
 //查询订单信息
-Order.prototype.queryOrders = function(data, callback) {
+Order.prototype.queryOrders = function (data, callback) {
 
-    orderDAL.queryOrders(data, function(err, result) {
+    orderDAL.queryOrders(data, function (err, result) {
         if (err) {
             callback(true);
             return;
@@ -104,9 +104,9 @@ Order.prototype.queryOrders = function(data, callback) {
 }
 
 //查询订单信息
-Order.prototype.CountOrders = function(data, callback) {
+Order.prototype.CountOrders = function (data, callback) {
 
-    orderDAL.CountOrders(data, function(err, result) {
+    orderDAL.CountOrders(data, function (err, result) {
         if (err) {
             callback(true);
             return;
@@ -117,7 +117,7 @@ Order.prototype.CountOrders = function(data, callback) {
 }
 
 //检查输入的
-Order.prototype.checkInput = function(res, input, string) {
+Order.prototype.checkInput = function (res, input, string) {
     if (input === undefined) {
         console.log(string + ' is undefined');
         res.status(404);
@@ -130,41 +130,38 @@ Order.prototype.checkInput = function(res, input, string) {
 }
 
 //根据用户的信息来将订单的内容插入进数据库
-Order.prototype.insertOrderInfo = function(msg, openid, callback) {
+Order.prototype.insertOrderInfo = function (msg, openid, callback) {
     var me = this;
     var wechatUserCode = openid;
     var queryCustomerInfo = {
-            'WechatUserCode': wechatUserCode
-        }
-        //根据“1#3|2#2”的输入格式来分割字符串
+        'WechatUserCode': wechatUserCode
+    }
+    //根据“1#3|2#2”的输入格式来分割字符串c
     var productInfo = msg.split('|');
     var productIDArray = [];
     var productCountArray = [];
-
-    /*********直接用callback没事，但只要用了底下的一个function，就会报错 */
-    //return callback("[service/order/orderservice]" + "订单的消息");
-    /******** */
+   
     console.log('msg:' + msg + ',openid:' + openid);
-    customer.query(queryCustomerInfo, function(err, queryInfo) {
+    customer.query(queryCustomerInfo, function (err, customerInfo) {
+        
         if (err) {
-            console.log("查询失败");
             var errinfo = '在添加用户的时候查询失败';
-            logger.writeError('在添加用户的时候查询失败');
-            callback(true, errinfo);
-            return;
+            logger.writeError('[service/jinkebro/order/orderservice-----152行]在添加用户的时候查询失败');
+            return callback(true, errinfo);
         }
-        console.log('queryInfo:' + JSON.stringify(queryInfo));
-
+       
+        console.log('customerInfo:' + JSON.stringify(customerInfo));
+        
         //该用户不存在
-        if (queryInfo == undefined || queryInfo.length == 0) {
+        if (customerInfo == undefined || customerInfo.length == 0) {
             console.log('查询失败');
-            logger.writeError("当插入订单的时候查无此用户");
+            logger.writeError("[service/jinkebro/order/orderservice-------158行]当插入订单的时候查无此用户");
             callback(true, "当插入订单的时候查无此用户");
             return;
         }
 
         var orderInfo = {
-            "CustomerID": queryInfo[0].CustomerID
+            "CustomerID": customerInfo[0].CustomerID
         }
 
         //将订单格式的1#3，商品号，和数量分别放在两个数组中
@@ -176,7 +173,7 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
 
         orderInfo.ProductIDs = productIDArray;
         orderInfo.ProductCounts = productCountArray;
-        me.checkproductcount(orderInfo, function(isSussess, resultInfo) {
+        me.checkProductCount(orderInfo, function (isSussess, resultInfo) {
             if (isSussess) {
                 var order = JSON.parse(resultInfo);
                 var orderID = {
@@ -185,7 +182,7 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
 
                 console.log('resultInfo:' + JSON.stringify(resultInfo));
 
-                me.getOrderInfo(orderID, function(resultInfo) {
+                me.getOrderInfo(orderID, function (resultInfo) {
 
                     console.log('resultInfo1:' + JSON.stringify(resultInfo));
 
@@ -199,13 +196,13 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
                         totalPrice += getorderinfo[key1].ProductCount * getorderinfo[key1].ProductPrice;
                     }
                     orderinfo += "总共消费：" + totalPrice + '元  正在等待配送';
-                    logger.writeInfo("发送订单消息给用户");
+                    logger.writeInfo("[service/jinkebro/order/orderservice-------199行] 发送订单消息给用户");
                     return callback(false, orderinfo);
                 });
             } else {
                 var orderinfo = '对不起，您所需要的商品库存量不足';
-                logger.writeError("对不起，你所需要的商品库存量不足");
-                return callback(true, orderinfo);
+                logger.writeError("service/jinkebro/order/orderservice-----204行]对不起，你所需要的商品库存量不足");
+                return callback(false, orderinfo);
             }
         });
     });
@@ -213,7 +210,7 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
 
 /*待重构*/
 //查找库存表来检查商品的库存量
-Order.prototype.checkproductcount = function(productInfo, callback) {
+Order.prototype.checkProductCount = function (productInfo, callback) {
     var me = this;
     console.log("商品的信息" + productInfo);
     var queryInfo = {
@@ -241,19 +238,19 @@ Order.prototype.checkproductcount = function(productInfo, callback) {
 
     queryInfo.ProductID = productIDs[0];
     queryInfo.ProductCount = productCounts[0];
-    me.queryCount(queryInfo, function(isEnough, resultInfo) {
+    me.queryCount(queryInfo, function (isEnough, resultInfo) {
         if (isEnough) {
-            me.linkOrderRoute(productInfo, function(orderInfo) {
-                logger.writeInfo("在checkproductcount获取到了订单的消息");
+            me.linkOrderRoute(productInfo, function (orderInfo) {
+                logger.writeInfo("[service/jinkebro/order/orderservice-----247行]在checkproductcount获取到了订单的消息");
                 return callback(true, orderInfo);
             });
-            productStock.updateStockInfo(resultInfo, function(resultInfo) {
-                logger.writeInfo("更新库存,库存减少掉已经订购完的商品");
+            productStock.updateStockInfo(resultInfo, function (resultInfo) {
+                logger.writeInfo("[service/jinkebro/order/orderservice------248行]更新库存,库存减少掉已经订购完的商品");
                 return;
             });
         } else {
-            logger.writeInfo("库存量不足");
-            callback(false);
+            logger.writeInfo("[service/jinkebro/order/orderservice-----255行]库存量不足");
+            callback(false, "库存量不足");
             return;
         }
     })
@@ -261,29 +258,31 @@ Order.prototype.checkproductcount = function(productInfo, callback) {
 }
 
 //查询库存，并返回正确的库存量
-Order.prototype.queryCount = function(queryinfo, callback) {
-        productStock.getStockInfo(queryinfo.ProductID, function(resultInfo) {
-            console.log("查询货存的结果：" + resultInfo.data[0].TotalNum);
-            //计算库存的剩余量
-            var surplus = resultInfo.data[0].TotalNum - queryinfo.ProductCount;
-            var updateStockInfo = {
-                'ProductID': queryinfo.ProductID,
-                'TotalNum': surplus
-            }
-            if (surplus >= 0) {
-                logger.writeInfo("库存量足够");
-                return callback(true, updateStockInfo);
-            } else {
-                logger.writeInfo("库存量不足");
-                return callback(false, queryinfo.ProductID);
-            }
+Order.prototype.queryCount = function (queryinfo, callback) {
+    productStock.getStockInfo(queryinfo.ProductID, function (resultInfo) {
+        console.log("查询货存的结果：" + resultInfo.data[0].TotalNum);
+        //计算库存的剩余量
+        var surplus = resultInfo.data[0].TotalNum - queryinfo.ProductCount;
+        
+        var updateStockInfo = {
+            'ProductID': queryinfo.ProductID,
+            'TotalNum': surplus
+        }
+        
+        if (surplus >= 0) {
+            logger.writeInfo("[service/jinkebro/order/orderservice -----274行]库存量足够");
+            return callback(true, updateStockInfo);
+        } else {
+            logger.writeInfo("[service/jinkebro/order/orderservice -----277行]库存量不足");
+            return callback(false, queryinfo.ProductID);
+        }
 
-        })
-    }
-    /*********************************************** */
+    })
+}
+/*********************************************** */
 
 //通过http的post将数据传送到order的后端接口
-Order.prototype.linkOrderRoute = function(productInfo, callback) {
+Order.prototype.linkOrderRoute = function (productInfo, callback) {
     var postUrl = config.jinkebro.baseUrl + config.jinkebro.order;
     var body = productInfo;
     var bodyString = JSON.stringify(body);
@@ -305,19 +304,19 @@ Order.prototype.linkOrderRoute = function(productInfo, callback) {
         }
     }
 
-    var post_req = http.request(options, function(res) {
+    var post_req = http.request(options, function (res) {
         console.log("statusCode: ", res.statusCode);
         console.log("headers: ", res.headers);
 
         res.setEncoding('utf8');
-        res.on('data', function(chunk) {
+        res.on('data', function (chunk) {
             console.log('Response: ' + chunk);
             callback(chunk);
             return;
         })
     });
 
-    post_req.on('error', function(e) {
+    post_req.on('error', function (e) {
         console.log('problem with request: ' + e.message);
         callback(e.message);
         return;
@@ -325,32 +324,34 @@ Order.prototype.linkOrderRoute = function(productInfo, callback) {
 
     post_req.write(bodyString);
     post_req.end();
+    return;
 }
 
 //通过http的形式来获取订单的信息，通过订单的ID
-Order.prototype.getOrderInfo = function(orderID, callback) {
+Order.prototype.getOrderInfo = function (orderID, callback) {
     console.log(orderID);
     var getUrl = config.jinkebro.baseUrl + config.jinkebro.order + "?OrderID=" + orderID.OrderID;
     console.log(getUrl);
-    http.get(getUrl, function(res) {
+    http.get(getUrl, function (res) {
         var datas = [];
         var size = 0;
-        res.on('data', function(data) {
+        res.on('data', function (data) {
             datas.push(data);
             size += data.length;
         });
 
-        res.on('end', function() {
+        res.on('end', function () {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(buff);
 
-            if (callback && typeof(callback) === 'function') {
-                callback(result);
-                return;
+            if (callback && typeof (callback) === 'function') {
+                return callback(result);
             }
-        }).on('error', function(e) {
+        }).on('error', function (e) {
             console.log("通过http.get获取订单的信息出错");
+            logger.writeError('[service/jinkebro/order/orderservice-----352行] 通过http.get获取订单的信息失败');
         });
     });
+    return;
 }
 module.exports = new Order();

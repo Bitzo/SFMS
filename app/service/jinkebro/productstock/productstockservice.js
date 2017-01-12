@@ -169,6 +169,7 @@ ProStock.prototype.getStockInfo = function (productID, callback) {
             return;
         });
     });
+    return;
 }
 
 //通过http put来修改商品的已减少的库存量

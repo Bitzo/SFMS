@@ -254,7 +254,13 @@ Weixin.prototype.createMenu = function (accessToken, callback) {
                     "type": "view",
                     "name": "个人信息",
                     "url": "http://sun.tunnel.2bdata.com/wechat/addressinfo"
-                }, {
+                }, 
+                {
+                    "type" : "click",
+                    "name" : "历史订单",
+                    "key"  : "OrderHistory"
+                },
+                {
                         "type": "view",
                         "name": "联系我们",
                         "url": "http://www.soso.com"
