@@ -13,7 +13,11 @@ var functionservice = appRequire('service/backend/function/functionservice');
 
 //得到所有树形功能点
 router.get('/', function (req, res) {
-    data = {};
+    var query = JSON.parse(req.query.f);
+
+    data = {
+        IsActive: query.IsActive || 1
+    };
     functionservice.queryAllFunctions(data, function (err, results) {
         if (err) {
             res.json({
