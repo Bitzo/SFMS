@@ -71,10 +71,11 @@ router.post('/', function (req, res) {
 
     for(var value in data)
     {
-        if((!(data[value] in req.body.data[0]))&&(!(data[value] in req.body)))
-        {
-            logger.writeError("require " + data[value]);
-            err += data[value] + ' ';
+        if (req.body.data.length>0) {
+            if ((!(data[value] in req.body.data[0])) && (!(data[value] in req.body))) {
+                logger.writeError("require " + data[value]);
+                err += data[value] + ' ';
+            }
         }
     }
 
@@ -139,20 +140,20 @@ router.post('/', function (req, res) {
                                         msg: "操作失败，服务器出错"
                                     })
                         }
-                        if (results !== undefined && results.affectedRows != 0) {
+                        if (results !== undefined && results.insertId > 0) {
                             res.status(200);
                             return res.json({
-                                        code: 200,
-                                        isSuccess: true,
-                                        msg: "操作成功"
-                                    })
+                                code: 200,
+                                isSuccess: true,
+                                msg: "操作成功"
+                            })
                         } else {
                             res.status(400);
                             return res.json({
-                                        code: 404,
-                                        isSuccess: false,
-                                        msg: "操作失败"
-                                    })
+                                code: 400,
+                                isSuccess: false,
+                                msg: "操作失败"
+                            })
                         }
                     })
                 }
@@ -161,10 +162,10 @@ router.post('/', function (req, res) {
             //数据非法，重新输入
             res.status(400);
             return res.json({
-                        code: 400,
-                        isSuccess: false,
-                        msg: "功能点数据有误，请重新编辑"
-                    })
+                code: 400,
+                isSuccess: false,
+                msg: "功能点数据有误，请重新编辑"
+            })
         }
     })
 });
@@ -179,10 +180,12 @@ router.put('/',function (req, res) {
 
     for(var value in data)
     {
-        if((!(data[value] in req.body.data[0]))&&(!(data[value] in req.body)))
-        {
-            logger.writeError("require " + data[value]);
-            err += data[value] + ' ';
+        if (req.body.data.length>0) {
+            if((!(data[value] in req.body.data[0]))&&(!(data[value] in req.body)))
+            {
+                logger.writeError("require " + data[value]);
+                err += data[value] + ' ';
+            }
         }
     }
 

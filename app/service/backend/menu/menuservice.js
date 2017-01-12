@@ -320,3 +320,14 @@ exports.queryMenuAndRoleByUserID = function (data,callback) {
         }
     });
 }
+
+//校验菜单
+exports.queryMenuByID = function (data, callback) {
+    menuDAl.queryMenuByID(data, function (err, results) {
+        if (err) {
+            callback(true, results);
+            return;
+        }
+        callback(false, results);
+    });
+}
