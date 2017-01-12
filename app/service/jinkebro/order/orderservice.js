@@ -109,6 +109,26 @@ Order.prototype.queryOrders = function(data, callback) {
 
         for (var i = 0; i < result.length; i++) {
             result[i].OrderTime = moment(result[i].OrderTime).format('YYYY-MM-DD HH:mm:SS');
+            switch (result[i].OrderStatus) {
+                case 1 :
+                    result[i]['OrderStatusDesc'] = '等待配送';
+                    break;
+                case 2 :
+                    result[i]['OrderStatusDesc'] = '配送中';
+                    break;
+                case 3 :
+                    result[i]['OrderStatusDesc'] = '配送成功';
+                    break;
+                case 4 :
+                    result[i]['OrderStatusDesc'] = '已确认';
+                    break;
+                case 5 :
+                    result[i]['OrderStatusDesc'] = '已取消';
+                    break;
+                default :
+                    result[i]['OrderStatusDesc'] = '无此状态';
+                    break;
+            }
         }
 
         callback(false, result);
