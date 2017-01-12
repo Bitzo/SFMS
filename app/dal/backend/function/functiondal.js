@@ -120,7 +120,7 @@ exports.delete = function (data, callback) {
 //根据FunctionID判断该功能点是否存在
 exports.queryFuncByID = function (data, callback) {
     var sql = 'select count(*) as count from jit_function where IsActive=1';
-    sql += " and ApplicationID= " + data['ApplicationID'] + " and (";
+    sql += " and (";
     var FunctionID = data.FunctionID;
 
     for (var i in FunctionID) {
