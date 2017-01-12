@@ -44,6 +44,7 @@ exports.insertProduct = function (data,callback) {
             }
             callback(false, result);
             connection.release();
+            return ;
         });
     });
 
@@ -72,6 +73,7 @@ exports.deleteProduct = function (data,callback) {
 
             callback(false, results);
             connection.release();
+            return;
         });
     });
 }
@@ -117,6 +119,7 @@ exports.updateProduct = function (data,callback) {
 
             callback(false, results);
             connection.release();
+            return ;
         })
 
     });
@@ -177,6 +180,7 @@ exports.queryProducts = function (data,callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 }

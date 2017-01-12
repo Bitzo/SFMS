@@ -205,19 +205,18 @@ Product.prototype.getProCountByID = function (data, callback) {
             callback(true);
             return;
         }
-        callback(false, result);
-        return;
+        return callback(false, result);
     });
 }
 
 //通过http的get方法直接获取信息
 Product.prototype.getProductInfoThroughHttpGet = function (callback) {
     var getUrl = config.jinkebro.baseUrl + config.jinkebro.productInfo;
-    //var getUrl = '/jinkeBro/product';
-    console.log(getUrl);
+    //var getUrl = '/jinkeBro/product'
     http.get(getUrl, function (res) {
         var datas = [];
         var size = 0;
+   
         res.on('data', function (data) {
             datas.push(data);
             size += data.length;
@@ -233,15 +232,16 @@ Product.prototype.getProductInfoThroughHttpGet = function (callback) {
             });
 
             if (callback && typeof callback === 'function') {
-                callback(result);
-                return;
+                console.log("[service/jinkebro/product/productservice-------139行]");
+                console.log(result);
+                return callback(result);
             }
         });
 
     }).on('error', function (e) {
-        logger.writeError('获取微信商品信息时异常' + new Date());
+        logger.writeError('[service/jinkebro/product/productservice-------146行]获取微信商品信息时异常' + new Date());
         return;
     });
-
+    return ;
 }
 module.exports = new Product();

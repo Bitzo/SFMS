@@ -64,7 +64,7 @@ router.post('/', function (req, res) {
 			isSuccess: false,
 			msg: requireValue
 		});
-		logger.writeError(requireValue);
+		logger.writeError("[routes/backend/user/userroleroute--------------67行]" + requireValue);
 		return;
 	}
 	userRole.insert(data, function (err, results) {
@@ -75,7 +75,7 @@ router.post('/', function (req, res) {
 				isSuccess: false,
 				msg: '操作失败'
 			});
-			logger.writeError("插入失败");
+			logger.writeError("[routes/backend/user/userroleroute---------------78行]用户插入失败");
 			return;
 		}
 		if (results.insertId != 0) {
@@ -84,6 +84,7 @@ router.post('/', function (req, res) {
 				isSuccess: true,
 				msg: '操作成功'
 			});
+			return;
 		}
 
 	});
@@ -106,7 +107,7 @@ router.put('/', function (req, res) {
 			isSuccess: false,
 			msg: err
 		});
-		logger.writeError(err);
+		logger.writeError("[routes/backend/user/userroleroute]" + err);
 		return;
 	}
 
@@ -129,7 +130,7 @@ router.put('/', function (req, res) {
 					isSuccess: false,
 					msg: '操作失败，服务器出错'
 				});
-			logger.writeError("修改信息失败，服务器出错");
+			logger.writeError("[routes/backend/user/userroleroute---------------133行]" + "修改信息失败，服务器出错");
 			return;
 		}
 		if (results !== undefined && results.affectedRows != 0) {
@@ -146,7 +147,7 @@ router.put('/', function (req, res) {
 				isSuccess: false,
 				msg: "操作失败"
 			});
-			logger.writeError("修改信息失败");
+			logger.writeError("[routes/backend/user/userroleroute---------------150行]" + "修改信息失败");
 			return;
 		}
 	})

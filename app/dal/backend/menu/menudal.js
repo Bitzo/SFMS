@@ -331,3 +331,33 @@ exports.queryMenuByUserID = function (data,callback) {
         });
     });
 }
+
+exports.queryMenuByID = function (data, callback) {
+    var sql = 'select count(1) as count from jit_menu where IsActive=1';
+    sql += " and (";
+    var MenuID = data.MenuID;
+
+    for (var i in MenuID) {
+        if (i == MenuID.length - 1) {
+            sql += "MenuID=" + MenuID[i] + " )";
+        } else {
+            sql += "MenuID=" + MenuID[i] + " or ";
+        }
+    }
+    logger.writeInfo("判断菜单是否存在:" + sql);
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        connection.query(sql, function (err, results) {
+            if (err) {
+                logger.writeError('根据MenuID判断该菜单是否存在err:' + err);
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
