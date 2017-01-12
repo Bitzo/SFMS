@@ -3,7 +3,7 @@ block content
   div.container-fluid(action='/backmenu' conf='paginationConf')
     span 
       h2 项目备注新增(普通)
-    form(method="post",name="appInfo" )
+    form(method="post",name="remarkInfo" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 所属项目
@@ -15,7 +15,7 @@ block content
           td
             textarea(type="textview",name="Remark",rows="10",cols="30",ng-model='formdata.Remark',ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-show="formdata.Remark.$error.maxlength && formdata.Remark.$touched") 备注最多200位
+            small.error(ng-show="remarkInfo.Remark.$error.maxlength && remarkInfo.Remark.$touched") 备注最多200位
 
 
         tr

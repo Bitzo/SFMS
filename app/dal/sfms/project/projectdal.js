@@ -55,10 +55,9 @@ exports.addProject = function (data, callback) {
 exports.updateProject = function (data, callback) {
     var sql = 'update jit_projectbaseinfo set',
         update_sql = '';
-
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'ID') {
+            if (key !== 'ID'&&data[key]!=='') {
                 if(update_sql.length == 0) {
                     update_sql += ' ' + key + " = '" + data[key] +"'";
                 } else {
@@ -96,12 +95,12 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] != '' && key !== 'CreateTime' && key !== 'ProjectEndTime')
+            if(data[key] !== '' && key !== 'CreateTime' && key !== 'ProjectEndTime')
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }
-    if (data.CreateTime != '') sql += " and CreateTime > '" + data.CreateTime + "' ";
-    if (data.ProjectEndTime != '') sql += " and ProjectEndTime < '" + data.ProjectEndTime + "' ";
+    if (data.CreateTime !== '') sql += " and CreateTime > '" + data.CreateTime + "' ";
+    if (data.ProjectEndTime !== '') sql += " and ProjectEndTime < '" + data.ProjectEndTime + "' ";
 
     logger.writeInfo('项目信息数据统计：' + sql);
 
@@ -133,13 +132,13 @@ exports.queryProject = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'CreateTime' && key != 'ProjectEndTime')
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'CreateTime' && key !== 'ProjectEndTime')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
 
-    if (data.CreateTime != '') sql += " and CreateTime > '" + data.CreateTime + "' ";
-    if (data.ProjectEndTime != '') sql += " and ProjectEndTime < '" + data.ProjectEndTime + "' ";
+    if (data.CreateTime !== '') sql += " and CreateTime > '" + data.CreateTime + "' ";
+    if (data.ProjectEndTime !== '') sql += " and ProjectEndTime < '" + data.ProjectEndTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 

@@ -11,24 +11,24 @@ var db_jinkebro = appRequire('db/db_jinkebro'),
     async = require('async'),
     moment = require('moment');
 //新增订单
-exports.insertOrder = function (data,callback) {
+exports.insertOrder = function (data, callback) {
 
     var insertSql = 'insert into jit_order set ';
     var sql = '';
 
-    if(data !== undefined){
-        for(var key in data){
-            if(sql.length == 0){
-                if(!isNaN(data[key])){
-                    sql += " " + key + " = " + data[key] + " " ;
-                }else {
-                    sql += " " + key + " = '" + data[key] + "' " ;
+    if (data !== undefined) {
+        for (var key in data) {
+            if (sql.length == 0) {
+                if (!isNaN(data[key])) {
+                    sql += " " + key + " = " + data[key] + " ";
+                } else {
+                    sql += " " + key + " = '" + data[key] + "' ";
                 }
-            }else{
-                if(!isNaN(data[key])){
-                    sql += ", " + key + " = " + data[key] + " " ;
-                }else {
-                    sql += ", " + key + " = '" + data[key] + "' " ;
+            } else {
+                if (!isNaN(data[key])) {
+                    sql += ", " + key + " = " + data[key] + " ";
+                } else {
+                    sql += ", " + key + " = '" + data[key] + "' ";
                 }
             }
         }
@@ -40,13 +40,13 @@ exports.insertOrder = function (data,callback) {
     console.log("[insertOrder func in productdal]订单新增:" + insertSql);
 
 
-    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(insertSql, function(err, results) {
+        connection.query(insertSql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -252,24 +252,24 @@ exports.insertOrderFull = function (data,callback) {
 }
 
 //新增订单产品表的一条记录
-exports.insertOrderProduct = function (data,callback) {
+exports.insertOrderProduct = function (data, callback) {
 
     var insertSql = 'insert into jit_orderproduct set ';
     var sql = '';
 
-    if(data !== undefined){
-        for(var key in data){
-            if(sql.length == 0){
-                if(!isNaN(data[key])){
-                    sql += " " + key + " = " + data[key] + " " ;
-                }else{
-                    sql += " " + key + " = '" + data[key] + "' " ;
+    if (data !== undefined) {
+        for (var key in data) {
+            if (sql.length == 0) {
+                if (!isNaN(data[key])) {
+                    sql += " " + key + " = " + data[key] + " ";
+                } else {
+                    sql += " " + key + " = '" + data[key] + "' ";
                 }
-            }else{
-                if(!isNaN(data[key])){
-                    sql += ", " + key + " = " + data[key] + " " ;
-                }else {
-                    sql += ", " + key + " = '" + data[key] + "' " ;
+            } else {
+                if (!isNaN(data[key])) {
+                    sql += ", " + key + " = " + data[key] + " ";
+                } else {
+                    sql += ", " + key + " = '" + data[key] + "' ";
                 }
             }
         }
@@ -281,13 +281,13 @@ exports.insertOrderProduct = function (data,callback) {
     console.log("[insertOrderProduct func in orderdal]订单新增:" + insertSql);
 
 
-    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(insertSql, function(err, results) {
+        connection.query(insertSql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -299,24 +299,24 @@ exports.insertOrderProduct = function (data,callback) {
 }
 
 //新增用户订单表的一条记录
-exports.insertOrderCustomer = function (data,callback) {
+exports.insertOrderCustomer = function (data, callback) {
 
     var insertSql = 'insert into jit_ordercustomer set ';
     var sql = '';
 
-    if(data !== undefined){
-        for(var key in data){
-            if(sql.length == 0){
-                if(!isNaN(data[key])){
-                    sql += " " + key + " = " + data[key] + " " ;
-                }else{
-                    sql += " " + key + " = '" + data[key] + "' " ;
+    if (data !== undefined) {
+        for (var key in data) {
+            if (sql.length == 0) {
+                if (!isNaN(data[key])) {
+                    sql += " " + key + " = " + data[key] + " ";
+                } else {
+                    sql += " " + key + " = '" + data[key] + "' ";
                 }
-            }else{
-                if(!isNaN(data[key])){
-                    sql += ", " + key + " = " + data[key] + " " ;
-                }else {
-                    sql += ", " + key + " = '" + data[key] + "' " ;
+            } else {
+                if (!isNaN(data[key])) {
+                    sql += ", " + key + " = " + data[key] + " ";
+                } else {
+                    sql += ", " + key + " = '" + data[key] + "' ";
                 }
             }
         }
@@ -328,13 +328,13 @@ exports.insertOrderCustomer = function (data,callback) {
     console.log("[insertOrderCustomer func in productdal]订单用户表的新增:" + insertSql);
 
 
-    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(insertSql, function(err, results) {
+        connection.query(insertSql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -346,23 +346,23 @@ exports.insertOrderCustomer = function (data,callback) {
 }
 
 //删除订单
-exports.deleteOrder = function (data,callback) {
+exports.deleteOrder = function (data, callback) {
 
 }
 
 //修改订单
-exports.updateOrder = function (data,callback) {
-    var sql = 'select 1+1 ' ;
+exports.updateOrder = function (data, callback) {
+    var sql = 'select 1+1 ';
 
     console.log(sql);
 
-    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(sql, function(err, results) {
+        connection.query(sql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -374,7 +374,7 @@ exports.updateOrder = function (data,callback) {
 }
 
 //查询订单
-exports.queryOrders = function (data,callback) {
+exports.queryOrders = function (data, callback) {
     var arr = new Array();
     arr.push(' select  jit_customer.CustomerID,jit_ordercustomer.OrderID, ');
     arr.push(' jit_order.OrderTime,jit_orderproduct.ProductID,jit_product.ProductName,jit_orderproduct.ProductCount, ');
@@ -388,14 +388,14 @@ exports.queryOrders = function (data,callback) {
 
     var query_sql = arr.join(' ');
 
-    if(data !== undefined){
-        for(var key in data){
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging'){
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging') {
                 //判断data[key]是否是数值类型
-                if(!isNaN(data[key])){
-                    query_sql += ' and ' + key + ' = '+ data[key] + ' ';
-                }else {
-                    query_sql += ' and ' + key + ' = "'+ data[key] + '" ';
+                if (!isNaN(data[key])) {
+                    query_sql += ' and ' + key + ' = ' + data[key] + ' ';
+                } else {
+                    query_sql += ' and ' + key + ' = "' + data[key] + '" ';
                 }
             }
         }
@@ -404,21 +404,21 @@ exports.queryOrders = function (data,callback) {
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-    if(data.isPaging == 1){
-        query_sql += " LIMIT " + (page-1)*num + "," + num + " ;";
+    if (data.isPaging == 1) {
+        query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     }
 
     logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
     console.log("[queryOrders func in productdal]订单查询:" + query_sql);
 
 
-    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(query_sql, function(err, results) {
+        connection.query(query_sql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -431,7 +431,7 @@ exports.queryOrders = function (data,callback) {
 }
 
 //查询指定条件订单的个数
-exports.CountOrders = function (data,callback) {
+exports.CountOrders = function (data, callback) {
     var arr = new Array();
     arr.push(' select count(*) as num ');
     arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer ');
@@ -442,13 +442,13 @@ exports.CountOrders = function (data,callback) {
 
     var sql = arr.join(' ');
 
-    if(data !== undefined){
-        for(var key in data){
-            if(key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging'){
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging') {
                 //如果data[key]是数字
-                if(!isNaN(data[key])){
+                if (!isNaN(data[key])) {
                     sql += " and " + key + " = " + data[key] + " ";
-                }else {
+                } else {
                     sql += " and " + key + " = '" + data[key] + "' ";
                 }
             }

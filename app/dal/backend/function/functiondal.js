@@ -25,17 +25,15 @@ exports.queryAllFunctions = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             logger.writeError('功能点连接：err' + err);
-            callback(true, '系统内部错误');
-            return;
+            return callback(true, '系统内部错误');
         }
         connection.query(sql, function (err, results) {
             if (err) {
                 logger.writeError('得到所有功能点，出错信息：' + err)
-                callback(true, '系统内部错误');
-                return;
+                return callback(true, '系统内部错误');
             }
-            callback(false, results);
             connection.release();
+            return callback(false, results);
         });
     });
 };
@@ -47,18 +45,16 @@ exports.insert = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             logger.writeError('功能点新增连接：err' + err);
-            callback(true, '系统内部错误');
-            return;
+            return callback(true, '系统内部错误');
         }
         logger.writeInfo('新增功能点' + insert_sql);
         connection.query(insert_sql, data, function (err, results) {
             if (err) {
                 logger.writeError('新增功能点，出错信息：' + err)
-                callback(true, '系统内部错误');
-                return;
+                return callback(true, '系统内部错误');
             }
-            callback(false, results);
             connection.release();
+            return callback(false, results);
         });
     });
 };
@@ -93,11 +89,11 @@ exports.update = function (data, callback) {
 exports.delete = function (data, callback) {
     var upd_sql = 'update jit_function set IsActive=0 where ';
     for (var i in data) {
-        if (data[i].ParentID != '') {
+        if (data[i].FunctionID != '') {
             if (i == data.length - 1) {
-                upd_sql += functionModel.PK + " = " + data[i].ParentID;
+                upd_sql += functionModel.PK + " = " + data[i].FunctionID;
             } else {
-                upd_sql += functionModel.PK + " = " + data[i].ParentID + " or ";
+                upd_sql += functionModel.PK + " = " + data[i].FunctionID + " or ";
             }
         }
     }
@@ -107,17 +103,15 @@ exports.delete = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             logger.writeError('功能点修改连接：err' + err);
-            callback(tru, '系统内部错误');
-            return;
+            return callback(true, '系统内部错误');
         }
 
         connection.query(upd_sql, data, function (err, results) {
             if (err) {
                 logger.writeError('修改功能点，出错信息：' + err)
-                callback(true, '系统内部错误');
-                return;
+                return callback(true, '系统内部错误');
             }
-            return callback(false, results);
+            callback(false, results);
             connection.release();
         });
     });
