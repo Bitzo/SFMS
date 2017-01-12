@@ -123,10 +123,10 @@ router.get('/',function (req,res) {
 router.post('/full',function (req,res) {
     var stringinfo = {};
     // 获取到传到的值
-    // for(var key in req.body)
-    // {
-    //     stringinfo = key;
-    // }
+    for(var key in req.body)
+    {
+        stringinfo = key;
+    }
     var formdata = JSON.parse(req.body.formdata);
     var OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),
         PayMethod = formdata.PayMethod || 1,
