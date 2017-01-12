@@ -131,10 +131,11 @@ exports.queryProducts = function (data,callback) {
 
     var arr = new Array();
 
-    arr.push(' select SKU,ProductID,ProductName,ProductDesc,ProductImgPath, ');
-    arr.push(' ExpireTime,ProducTime,SupplierID,ProductTypeID,jit_productype.ProductTypeName,ProductPrice ');
+    arr.push(' select SKU,jit_product.ProductID,ProductName,ProductDesc,ProductImgPath, ');
+    arr.push(' ExpireTime,ProducTime,SupplierID,ProductTypeID,jit_productype.ProductTypeName,ProductPrice,jit_productstock.TotalNum ');
     arr.push(' from jit_product ');
     arr.push(' left join jit_productype on jit_product.ProductTypeID = jit_productype.ID ');
+    arr.push(' left join jit_productstock on jit_productstock.ProductID = jit_product.ProductID ')
     arr.push(' where 1 = 1 ');
 
     var query_sql = arr.join(' ');

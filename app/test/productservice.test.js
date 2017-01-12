@@ -35,21 +35,22 @@ describe("产品单元测试", function () {
 
     it("产品修改", function (done) {
         var updateData = {
-            'SKU' : 'pdt003',
-            'ProductName': '香烟',
-            'ProductDesc':'吸烟有害健康',
+            'SKU' : 'pdt',
+            'ProductName': '咖啡',
+            'ProductDesc':'提神',
             'ProductImgPath':'',
             'ExpireTime': moment().format('YYYY-MM-DD HH:mm:ss'),
             'ProducTime': moment().format('YYYY-MM-DD HH:mm:ss'),
             'SupplierID':1,
             'ProductTypeID':1,
+            'ProductPrice' : 12.5,
+            'OnSale' : 1,
             'ProductID': insertProductID
         }
         productService.updateProduct(updateData, function (err, result) {
             if (err) return done(err);
             result.affectedRows.should.be.above(0).and.should.be.a.Number;
             result.changedRows.should.be.above(0).and.should.be.a.Number;
-            console.log(result);
             done();
         });
     });
@@ -68,9 +69,7 @@ describe("产品单元测试", function () {
         }
         productService.queryProducts(queryData, function (err, result) {
             if (err) return done(err);
-            console.log(result);
             result.length.should.be.above(0).and.should.be.a.Number;
-
             done();
         });
     });

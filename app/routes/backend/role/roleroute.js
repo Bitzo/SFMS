@@ -213,7 +213,6 @@ router.post('/',function (req, res) {
                         }
 
                         var queryData = {
-                            'ApplicationID': applicationID,
                             'FunctionID': funcID
                         }
                         //验证传入的functionID是否都存在或有效
@@ -376,7 +375,6 @@ router.put('/', function (req, res) {
                     }
 
                     var queryData = {
-                        'ApplicationID': appID,
                         'FunctionID': funcID
                     }
                     logger.writeInfo(queryData);

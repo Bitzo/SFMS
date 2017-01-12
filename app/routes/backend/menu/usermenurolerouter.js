@@ -1,8 +1,8 @@
 /**
  * @Author: Cecurio
  * @Date: 2016/11/26 22:23
- * @Last Modified by: Cecurio
- * @Last Modified time: 2016/11/26 22:23
+ * @Last Modified by: bitzo
+ * @Last Modified time: 2017/1/12 11:50
  * @Function:
  */
 
@@ -13,7 +13,8 @@ var express = require('express'),
 
 //菜单业务、用户业务逻辑组件
 var menuService = appRequire('service/backend/menu/menuservice'),
-    userService = appRequire('service/backend/user/userservice');
+    userService = appRequire('service/backend/user/userservice'),
+    usermenuService = appRequire('service/backend/menu/usermenuservice')
 
 //根据UserID获取用户的菜单和角色信息
 router.get('/',function (req,res) {
@@ -169,8 +170,141 @@ router.get('/userID/:userID',function (req,res) {
             });
         }
     });
-
 });
+
+router.post('/', function (req, res) {
+    var userID = req.body.userID,
+        menuData = req.body.menuData,
+        data = ['userID', 'menuID'],
+        err = 'required: ';
+
+    for(var value in data)
+    {
+        if (req.body.menuData.length>0) {
+            if((!(data[value] in req.body.menuData[0]))&&(!(data[value] in req.body)))
+            {
+                logger.writeError("require " + data[value]);
+                err += data[value] + ' ';
+            }
+        }
+    }
+
+    if(err!='required: ')
+    {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: err
+        });
+    };
+
+    var menuID = [],
+        i = 0;
+
+    for (i=0;i<menuData.length;++i) {
+        menuID[i] = menuData[i].menuID;
+    }
+
+    data = {
+        'MenuID' : menuID
+    }
+    if (i==0) {
+        usermenuService.delUserMenu({userID: userID, isActive: 0}, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: "用户菜单增加操作失败，服务器出错"
+                })
+            }
+            if (results!==undefined) {
+                res.status(200);
+                return res.json({
+                    code: 200,
+                    isSuccess: true,
+                    msg: "操作成功"
+                })
+            }
+        })
+    } else {
+        //验证菜单是否都存在且有效
+        menuService.queryMenuByID(data, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: "用户菜单增加操作失败，服务器出错"
+                })
+            }
+            var count = results[0]['count'];
+            if (results!==undefined && count == i) {
+                //数据相同可以添加菜单
+                data = {
+                    'userID': userID,
+                    'menuData': menuData
+                }
+                //先删除原来的用户菜单
+                usermenuService.delUserMenu({userID: userID, isActive: 0}, function (err, results) {
+                    if (err) {
+                        res.status(500);
+                        return res.json({
+                            code: 500,
+                            isSuccess: false,
+                            msg: "用户菜单增加操作失败，服务器出错"
+                        })
+                    }
+                    if (results!==undefined) {
+                        //新增用户菜单
+                        if (menuData.length>0) {
+                            usermenuService.addUserMenu(data, function (err, results) {
+                                if (err) {
+                                    res.status(500);
+                                    return res.json({
+                                        code: 500,
+                                        isSuccess: false,
+                                        msg: "用户菜单增加操作失败，服务器出错"
+                                    })
+                                }
+                                if (results !== undefined && results.insertId > 0) {
+                                    res.status(200);
+                                    return res.json({
+                                        code: 200,
+                                        isSuccess: true,
+                                        msg: "操作成功"
+                                    })
+                                } else {
+                                    res.status(400);
+                                    return res.json({
+                                        code: 400,
+                                        isSuccess: false,
+                                        msg: "操作失败"
+                                    })
+                                }
+                            })
+                        } else {
+                            res.status(200);
+                            return res.json({
+                                code: 200,
+                                isSuccess: true,
+                                msg: "操作成功"
+                            })
+                        }
+                    }
+                })
+            } else {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: "用户菜单增加操作失败，菜单数据有误"
+                })
+            }
+        })
+    }
+})
 
 
 module.exports = router;

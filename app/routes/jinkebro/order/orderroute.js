@@ -22,7 +22,11 @@ router.get('/', function (req, res) {
         pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
         OrderID = req.query.OrderID || '',
         WechatUserCode = req.query.WechatUserCode || '',
-        isPaging = req.query.isPaging || 0; //是否分页 0表示不分页,1表示分页
+        isPaging = req.query.isPaging || 1, //是否分页 0表示不分页,1表示分页
+        CustomerID = req.query.CustomerID || '',
+        ProductID = req.query.ProductID || [],
+        OrderStatus = req.query.OrderStatus || '',
+        ProductCount = req.query.ProductCount || [];
 
     console.log("获取到的orderid=" + OrderID);
     page = page > 0 ? page : 1;
@@ -38,7 +42,11 @@ router.get('/', function (req, res) {
         page: page,
         pageNum: pageNum,
         "jit_ordercustomer.OrderID": OrderID,
-        "jit_customer.WechatUserCode": WechatUserCode,
+        "jit_customer.WechatUserCode" : WechatUserCode,
+        "jit_customer.CustomerID" : CustomerID,
+        "jit_orderproduct.ProductID" : ProductID,
+        "jit_orderproduct.ProductCount" : ProductCount,
+        "jit_order.OrderStatus" : OrderStatus,
         isPaging: isPaging
     };
 
@@ -119,7 +127,103 @@ router.get('/', function (req, res) {
     });
 });
 
+router.post('/full',function (req,res) {
+    var stringinfo = '';
+    // 获取到传到的值
+    for(var key in req.body)
+    {
+        stringinfo = key;
+    }
+    var formdata = JSON.parse(req.body.formdata);
+    var OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),
+        PayMethod = formdata.PayMethod || 1,
+        IsValid = formdata.IsValid || 1,
+        IsActive = formdata.IsActive || 1,
+        ProductIDs = formdata.ProductIDs || [1,2,3],//数组，表示ProductID的集合
+        ProductCounts = formdata.ProductCounts || [2,1,3],
+        CustomerID = formdata.CustomerID || 1,
+        OrderStatus = formdata.OrderStatus || 1;
+
+    // 存放接收的数据
+    var insertdata = {
+        OrderTime: OrderTime,
+        PayMethod: PayMethod,
+        IsValid: IsValid,
+        IsActive: IsActive,
+        ProductIDs : ProductIDs,
+        ProductCounts : ProductCounts,
+        CustomerID : CustomerID,
+        OrderStatus : OrderStatus
+    };
+
+    //应该是int型的数据
+    var intdata = {
+        PayMethod: PayMethod,
+        IsValid: IsValid,
+        IsActive: IsActive
+    };
+
+    for (var key in intdata) {
+        if (isNaN(intdata[key])) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intdata[key] + '不是数字'
+            });
+        }
+    }
+
+    var requiredvalue = '缺少输入参数：';
+    for (var key in insertdata) {
+        if (key != 'CancelTime' && key != 'DiscountMoney') {
+            if (insertdata[key].length == 0) {
+                requiredvalue += key + ' ';
+                logger.writeError(requiredvalue);
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: requiredvalue
+                });
+            }
+        }
+
+    }
+
+    orderService.insertOrderFull(insertdata,function (err,result) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '服务器出错，产品新增操作失败'
+            });
+            return ;
+        }
+        if (result !== undefined && result.affectedRows != 0) {
+            res.status(200);
+            res.json({
+                code : 200,
+                isSuccess : true,
+                msg : result
+            });
+            return ;
+        }else {
+            res.status(400);
+            res.json({
+                code : 400,
+                isSuccess : true,
+                msg : '订单新增失败'
+            });
+            return ;
+        }
+
+    });
+});
+
 router.post('/', function (req, res) {
+
     //检查所需要的字段是否都存在
     // var data = ['PayMethod', 'IsValid', 'IsActive'];
     // var err = 'require: ';
@@ -138,6 +242,7 @@ router.post('/', function (req, res) {
     //         msg: '存在未填写的必填字段' + err
     //     });
     // }
+
     var stringinfo = ''; 
     //获取到传到的值
     for (var key in req.body) {
@@ -332,7 +437,24 @@ router.put('/', function (req, res) {
     // orderService.checkInput(res,PDate,'PDate');
     // orderService.checkInput(res,CancelTime,'CancelTime');
 
-
+    orderService.insertOrderFull({},function (err,result) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '服务器出错，产品新增操作失败'
+            });
+            return ;
+        }
+        res.status(200);
+        res.json({
+            code : 200,
+            isSuccess : true,
+            result : result
+        });
+        return ;
+    });
 
 
 });
