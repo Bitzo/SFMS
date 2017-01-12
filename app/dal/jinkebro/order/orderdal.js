@@ -378,7 +378,7 @@ exports.queryOrders = function (data, callback) {
     var arr = new Array();
     arr.push(' select  jit_customer.CustomerID,jit_ordercustomer.OrderID, ');
     arr.push(' jit_order.OrderTime,jit_orderproduct.ProductID,jit_product.ProductName,jit_orderproduct.ProductCount, ');
-    arr.push(' jit_product.ProductPrice,jit_productype.ProductTypeName,jit_order.PayMethod ');
+    arr.push(' jit_product.ProductPrice,jit_productype.ProductTypeName,jit_order.PayMethod,jit_order.OrderStatus ');
     arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer,jit_productype ');
     arr.push(' where 1 = 1 and jit_order.OrderID = jit_ordercustomer.orderID ');
     arr.push(' and jit_order.OrderID = jit_orderproduct.OrderID ');
@@ -390,7 +390,7 @@ exports.queryOrders = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging') {
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging' && key !== 'jit_orderproduct.ProductID' && key !== 'jit_orderproduct.ProductCount') {
                 //判断data[key]是否是数值类型
                 if (!isNaN(data[key])) {
                     query_sql += ' and ' + key + ' = ' + data[key] + ' ';
@@ -399,6 +399,38 @@ exports.queryOrders = function (data, callback) {
                 }
             }
         }
+    }
+
+    var tempSql = '',
+        tempArr = data['jit_orderproduct.ProductID'],
+        tempArrLength = tempArr.length;
+    if (tempArrLength != 0) {
+        for(var i=0; i<tempArrLength; i++) {
+            if (tempSql.length == 0) {
+                tempSql += ' and jit_orderproduct.ProductID in (' + tempArr[i];
+            }
+            else {
+                tempSql += ' ,' + tempArr[i];
+            }
+        }
+        tempSql += ' ) ';
+        query_sql += tempSql;
+    }
+
+    tempSql = '';
+    tempArr = data['jit_orderproduct.ProductCount'];
+    tempArrLength = tempArr.length;
+    if (tempArrLength != 0) {
+        for(var i=0; i<tempArrLength; i++) {
+            if (tempSql.length == 0) {
+                tempSql += ' and jit_orderproduct.ProductCount in (' + tempArr[i];
+            }
+            else {
+                tempSql += ' ,' + tempArr[i];
+            }
+        }
+        tempSql += ' ) ';
+        query_sql += tempSql;
     }
 
     var num = data.pageNum; //每页显示的个数
@@ -410,7 +442,6 @@ exports.queryOrders = function (data, callback) {
 
     logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
     console.log("[queryOrders func in productdal]订单查询:" + query_sql);
-
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -444,7 +475,7 @@ exports.CountOrders = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging') {
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging' && key !== 'jit_orderproduct.ProductID' && key !== 'jit_orderproduct.ProductCount') {
                 //如果data[key]是数字
                 if (!isNaN(data[key])) {
                     sql += " and " + key + " = " + data[key] + " ";
@@ -453,6 +484,38 @@ exports.CountOrders = function (data, callback) {
                 }
             }
         }
+    }
+
+    var tempSql = '',
+        tempArr = data['jit_orderproduct.ProductID'],
+        tempArrLength = tempArr.length;
+    if (tempArrLength != 0) {
+        for(var i=0; i<tempArrLength; i++) {
+            if (tempSql.length == 0) {
+                tempSql += ' and jit_orderproduct.ProductID in (' + tempArr[i];
+            }
+            else {
+                tempSql += ' ,' + tempArr[i];
+            }
+        }
+        tempSql += ' ) ';
+        sql += tempSql;
+    }
+
+    tempSql = '';
+    tempArr = data['jit_orderproduct.ProductCount'];
+    tempArrLength = tempArr.length;
+    if (tempArrLength != 0) {
+        for(var i=0; i<tempArr.length; i++) {
+            if (tempSql.length == 0) {
+                tempSql += ' and jit_orderproduct.ProductCount in (' + tempArr[i];
+            }
+            else {
+                tempSql += ' ,' + tempArr[i];
+            }
+        }
+        tempSql += ' ) ';
+        sql += tempSql;
     }
 
     logger.writeInfo("查询指定条件的订单个数,sql:" + sql);

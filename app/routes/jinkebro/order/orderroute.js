@@ -22,7 +22,11 @@ router.get('/', function (req, res) {
         pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
         OrderID = req.query.OrderID || '',
         WechatUserCode = req.query.WechatUserCode || '',
-        isPaging = req.query.isPaging || 0; //是否分页 0表示不分页,1表示分页
+        isPaging = req.query.isPaging || 1, //是否分页 0表示不分页,1表示分页
+        CustomerID = req.query.CustomerID || '',
+        ProductID = req.query.ProductID || [],
+        OrderStatus = req.query.OrderStatus || '',
+        ProductCount = req.query.ProductCount || [];
 
     console.log("获取到的orderid=" + OrderID);
     page = page > 0 ? page : 1;
@@ -38,7 +42,11 @@ router.get('/', function (req, res) {
         page: page,
         pageNum: pageNum,
         "jit_ordercustomer.OrderID": OrderID,
-        "jit_customer.WechatUserCode": WechatUserCode,
+        "jit_customer.WechatUserCode" : WechatUserCode,
+        "jit_customer.CustomerID" : CustomerID,
+        "jit_orderproduct.ProductID" : ProductID,
+        "jit_orderproduct.ProductCount" : ProductCount,
+        "jit_order.OrderStatus" : OrderStatus,
         isPaging: isPaging
     };
 
