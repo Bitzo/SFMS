@@ -63,11 +63,10 @@ router.get('/:roleID',function (req, res) {
 
 //角色功能点新增
 router.post('/', function (req, res) {
-    var data = ['ApplicationID', 'RoleID', 'FunctionID'],
+    var data = ['RoleID', 'FunctionID'],
         err = 'required: ';
 
-    var applicationID = req.body.ApplicationID,
-        roleID = req.body.RoleID,
+    var roleID = req.body.RoleID,
         funcData = req.body.data;
 
     for(var value in data)
@@ -97,7 +96,6 @@ router.post('/', function (req, res) {
     }
 
     data = {
-        'ApplicationID': applicationID,
         'FunctionID': funcID
     }
     //验证传入的functionID是否都存在或有效
@@ -173,11 +171,10 @@ router.post('/', function (req, res) {
 
 //角色功能点修改
 router.put('/',function (req, res) {
-    var data = ['ApplicationID', 'RoleID', 'FunctionID'],
+    var data = ['RoleID', 'FunctionID'],
         err = 'required: ';
 
-    var applicationID = req.body.ApplicationID,
-        roleID = req.body.RoleID,
+    var roleID = req.body.RoleID,
         funcData = req.body.data;
 
     for(var value in data)
@@ -207,7 +204,6 @@ router.put('/',function (req, res) {
     }
 
     data = {
-        'ApplicationID': applicationID,
         'FunctionID': funcID
     }
     //验证传入的functionID是否都存在或有效
