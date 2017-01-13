@@ -167,8 +167,10 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
                 //重置项目管理中的用户列表
                 $scope.resetUser = function(item){
                     var mymessage=confirm("是否确认删除此项");  
-                    console.log(item.$index);
-                    $scope.formdata.data.splice(item.$index,1);
+                    console.log(mymessage);
+                    if(mymessage){
+                         $scope.formdata.data.splice(item.$index,1);
+                    }            
                 }
 
                 //新增项目管理中的用户列表
