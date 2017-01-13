@@ -11,7 +11,9 @@ var express = require('express'),
 
 //订单业务逻辑组件
 var orderService = appRequire('service/jinkebro/order/orderservice'),
-    moment = require('moment');
+    orderModel = appRequire('model/jinkebro/order/ordermodel'),
+    moment = require('moment'),
+    validator = require('validator');
 
 router.get('/', function (req, res) {
     for (var key1 in req.query) {
@@ -27,6 +29,14 @@ router.get('/', function (req, res) {
         ProductID = req.query.ProductID || [],
         OrderStatus = req.query.OrderStatus || '',
         ProductCount = req.query.ProductCount || [];
+
+    //前端传来的是字符串,转化为对象
+    if (typeof ProductID == "string") {
+        ProductID = JSON.parse(ProductID);
+    }
+    if (typeof ProductCount == "string") {
+        ProductCount = JSON.parse(ProductCount);
+    }
 
     console.log("获取到的orderid=" + OrderID);
     page = page > 0 ? page : 1;
@@ -218,7 +228,6 @@ router.post('/full',function (req,res) {
             });
             return ;
         }
-
     });
 });
 
@@ -391,27 +400,60 @@ router.post('/', function (req, res) {
     });
 });
 
+/**
+ * 订单修改路由
+ */
 router.put('/', function (req, res) {
+    // 使string(req.body.formdata)变成object(formdata)
     var formdata = JSON.parse(req.body.formdata);
-    console.log(formdata);
-    var OrderID = formdata.OrderID,
-        PayMethod = formdata.PayMethod,
-        IsValid = formdata.IsValid,
-        IsActive = formdata.IsActive,
+
+    // 接收前端传过来的变量
+    var OrderID = formdata.OrderID || 256,     //not null
+        OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),  //not null
+        PayMethod = (formdata.PayMethod !== undefined) ? (formdata.PayMethod) : 1, //not null
+        IsValid = (formdata.IsValid !== undefined) ? (formdata.IsValid) : 1,       //not null
+        IsActive = (formdata.IsActive !== undefined) ? (formdata.IsActive) : 1,    //not null
         PayTime = formdata.PayTime,
         DeliveryTime = formdata.DeliveryTime,
         DeliveryUserID = formdata.DeliveryUserID,
         IsCancel = formdata.IsCancel,
+        CancelTime = formdata.CancelTime,
         DiscountMoney = formdata.DiscountMoney,
         DiscountType = formdata.DiscountType,
         BizID = formdata.BizID,
         Memo = formdata.Memo,
         IsCheck = formdata.IsCheck,
         PDate = formdata.PDate,
-        CancelTime = formdata.CancelTime;
+        OrderStatus = (formdata.OrderStatus !== undefined) ? (formdata.OrderStatus) : 1,  //not null
+        ProductIDs = formdata.ProductIDs || [1,2,5],
+        ProductCounts = formdata.ProductCounts || [2,3,1];
 
-    //检查要输入的部分
+    // orderModelData传到dal里
+    var orderModelData = orderModel;
+    delete orderModelData.PK;
+
+    //整合数据
+    orderModelData.OrderID = OrderID;
+    orderModelData.OrderTime = OrderTime;
+    orderModelData.PayMethod = PayMethod;
+    orderModelData.IsValid = IsValid;
+    orderModelData.IsActive = IsActive;
+    orderModelData.OrderStatus = OrderStatus;
+
+    var sendData = {
+        order : orderModelData,
+        orderProduct : {
+            ProductIDs : ProductIDs,
+            ProductCounts : ProductCounts
+        }
+    }
+    //检查必填字段是否存在
+    // var mandatoryFieldData = ['OrderID','OrderTime','PayMethod', 'IsValid', 'IsActive','OrderStatus'];
     if (orderService.checkInput(res, OrderID, 'OrderID') !== undefined) {
+        return;
+    }
+
+    if (orderService.checkInput(res, OrderTime, 'OrderTime') !== undefined) {
         return;
     }
 
@@ -422,40 +464,101 @@ router.put('/', function (req, res) {
     if (orderService.checkInput(res, IsValid, 'IsValid') !== undefined) {
         return;
     }
+
     if (orderService.checkInput(res, IsActive, 'IsActive') !== undefined) {
         return;
     }
-    // orderService.checkInput(res,PayTime,'PayTime');
-    // orderService.checkInput(res,DeliveryTime,'DeliveryTime');
-    // orderService.checkInput(res,DeliveryUserID,'DeliveryUserID');
-    // orderService.checkInput(res,IsCancel,'IsCancel');
-    // orderService.checkInput(res,DiscountMoney,'DiscountMoney');
-    // orderService.checkInput(res,DiscountType,'DiscountType');
-    // orderService.checkInput(res,BizID,'BizID');
-    // orderService.checkInput(res,Memo,'Memo');
-    // orderService.checkInput(res,IsCheck,'IsCheck');
-    // orderService.checkInput(res,PDate,'PDate');
-    // orderService.checkInput(res,CancelTime,'CancelTime');
 
-    orderService.insertOrderFull({},function (err,result) {
+    if (orderService.checkInput(res, OrderStatus, 'OrderStatus') !== undefined) {
+        return;
+    }
+
+    /**
+     * 检验一个变量的值是否为正整数
+     * @param intData
+     * @param intDataDesc
+     */
+    function checkIsInt(intData,intDataDesc) {
+        var returnErrInfo = {
+            "msg": "参数不能为空!"
+        };
+        if (isNaN(intData)) {
+            returnErrInfo.msg = intDataDesc + "必须是一个整数!";
+            res.status(400);
+            return res.json({
+                code : 400,
+                isSuccess : true,
+                msg : returnErrInfo.msg
+            });
+
+        }else {
+            if (intData < 0) {
+                returnErrInfo.msg = intDataDesc + "必须是一个正整数!";
+                if (intDataDesc == 'IsActive' || intDataDesc == 'IsValid') {
+                    returnErrInfo.msg = intDataDesc + "必须是0或者是一个正整数!";
+                }
+                res.status(400);
+                return res.json({
+                    code : 400,
+                    isSuccess : true,
+                    msg : returnErrInfo.msg
+                });
+            }
+        }
+    }
+
+    // 数据完整性校验
+    if (checkIsInt(orderModelData.OrderID,'OrderID') !== undefined) {
+        return ;
+    }
+
+    if (checkIsInt(orderModelData.PayMethod,'PayMethod') !== undefined) {
+        return ;
+    }
+
+    if (checkIsInt(orderModelData.IsActive,'IsActive') !== undefined) {
+        return ;
+    }
+
+    if (checkIsInt(orderModelData.IsValid,'IsValid') !== undefined) {
+        return ;
+    }
+
+    if (checkIsInt(orderModelData.OrderStatus,'OrderStatus') !== undefined) {
+        return ;
+    }
+
+    // 订单修改
+    orderService.updateOrder(sendData,function (err,result) {
         if (err) {
             res.status(500);
             return res.json({
                 code: 500,
                 isSuccess: false,
-                msg: '服务器出错，产品新增操作失败'
+                msg: '服务器出错，产品修改操作失败'
             });
             return ;
         }
-        res.status(200);
-        res.json({
-            code : 200,
-            isSuccess : true,
-            result : result
-        });
-        return ;
+        console.log("result.affectedRows: " + result.affectedRows);
+        console.log("result.affectedRows != 0的结果：" + (result.affectedRows != 0));  //true
+        if (result !== undefined && result.affectedRows != 0) {
+            res.status(200);
+            res.json({
+                code : 200,
+                isSuccess : true,
+                msg : result
+            });
+            return ;
+        }else {
+            res.status(400);
+            res.json({
+                code : 400,
+                isSuccess : true,
+                msg : '订单新增失败'
+            });
+            return ;
+        }
     });
-
 
 });
 

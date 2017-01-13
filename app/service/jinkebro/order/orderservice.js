@@ -115,6 +115,10 @@ Order.prototype.insertOrderFull = function (data, callback) {
 
 Order.prototype.deleteOrder = function(data, callback) {
     //要写入operationlog表的
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
     logModel.OperationName = operationConfig.jinkeBroApp.orderManger.orderDel.actionName;
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderDel.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderDel.identifier;
@@ -149,7 +153,11 @@ Order.prototype.deleteOrder = function(data, callback) {
 
 //编辑订单信息
 Order.prototype.updateOrder = function(data, callback) {
-    //要写入operationlog表的
+    //日志： 要写入operationlog表的
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
     logModel.OperationName = operationConfig.jinkeBroApp.orderManger.orderUpd.actionName;
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderUpd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderUpd.identifier;
@@ -287,10 +295,16 @@ Order.prototype.CountOrders = function(data, callback) {
 }
 
 
-//检查输入
+/**
+ * 检查必填字段是否存在
+ * @param res
+ * @param input
+ * @param string
+ */
 Order.prototype.checkInput = function(res, input, string) {
     if (input === undefined) {
         console.log(string + ' is undefined');
+        logger.writeError(string + ' is undefined');
         res.status(404);
         return res.json({
             code: 404,
