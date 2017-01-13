@@ -153,11 +153,14 @@ exports.menuInsert = function (data,callback) {
     var sql = '';
     if(data !== undefined){
         for(var key in data){
-            if(sql.length == 0){
-                sql += " " + key + " = '" + data[key] + "' " ;
-            }else{
-                sql += ", " + key + " = '" + data[key] + "' " ;
+            if (key !== undefined) {
+                if(sql.length == 0){
+                    sql += " " + key + " = '" + data[key] + "' " ;
+                }else{
+                    sql += ", " + key + " = '" + data[key] + "' " ;
+                }
             }
+
         }
     }
 
@@ -192,7 +195,7 @@ exports.menuUpdate = function(data, callback) {
     var sql = '';
     if(data !== undefined){
         for(var key in data){
-            if(key != 'MenuID'){
+            if(key != 'MenuID' && key !== undefined){
                 if(sql.length == 0){
                     sql += " " + key + " = '" + data[key] + "' " ;
                 }else{
@@ -233,7 +236,6 @@ exports.menuUpdate = function(data, callback) {
 //菜单删除
 exports.menuDelete = function (data, callback) {
     var update_sql = 'update jit_menu set IsActive = 0 where IsActive = 1 and MenuID = ' + data['MenuID'];
-
 
     logger.writeInfo("[menuDelete func in menudal]菜单删除：" + update_sql);
     console.log("in dal,菜单删除：" + update_sql);
@@ -325,6 +327,36 @@ exports.queryMenuByUserID = function (data,callback) {
             }
 
             callback(false,results);
+            connection.release();
+        });
+    });
+}
+
+exports.queryMenuByID = function (data, callback) {
+    var sql = 'select count(1) as count from jit_menu where IsActive=1';
+    sql += " and (";
+    var MenuID = data.MenuID;
+
+    for (var i in MenuID) {
+        if (i == MenuID.length - 1) {
+            sql += "MenuID=" + MenuID[i] + " )";
+        } else {
+            sql += "MenuID=" + MenuID[i] + " or ";
+        }
+    }
+    logger.writeInfo("判断菜单是否存在:" + sql);
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        connection.query(sql, function (err, results) {
+            if (err) {
+                logger.writeError('根据MenuID判断该菜单是否存在err:' + err);
+                callback(true);
+                return;
+            }
+            callback(false, results);
             connection.release();
         });
     });

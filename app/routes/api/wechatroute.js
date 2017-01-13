@@ -1,10 +1,10 @@
 /**
-* @Author: snail
-* @Date:   2016-12-03
-* @Last Modified by:
-* @Last Modified time:
-* 微信相关的操作
-*/
+ * @Author: snail
+ * @Date:   2016-12-03
+ * @Last Modified by:
+ * @Last Modified time:
+ * 微信相关的操作
+ */
 
 var express = require('express');
 var router = express.Router();
@@ -27,7 +27,8 @@ wechat.token = config.weChat.token;
 var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
 
 //调用商品的模块的内容
-var product = appRequire('service/jinkebro/product/productservice');
+var product = appRequire('service/jinkebro/product/productservice'),
+    order = appRequire('service/jinkebro/order/orderservice');
 
 //微信开发者认证
 router.get('/accesscheck', function (req, res, next) {
@@ -60,17 +61,41 @@ router.get('/accesscheck', function (req, res, next) {
 // 监听文本消息
 wechat.textMsg(function (msg) {
     var resMsg = {};
+    console.log(msg);
     switch (msg.msgType) {
         case "text":
-            // 返回文本消息
-            resMsg = {
-                fromUserName: msg.toUserName,
-                toUserName: msg.fromUserName,
-                msgType: "text",
-                content: "这是文本回复" + new Date(),
-                funcFlag: 0
-            };
+            // 返回文本消息           
+            if (/^(\d+#\d+)$/.test(msg.content) ||
+                /^((\d+#\d+\|)+(\d+#\d+))$/.test(msg.content)) {
+                console.log("收到订单的消息");
+                order.insertOrderInfo(msg.content, msg.fromUserName, function (err, resultinfo) {
+                    if (err) {
+                        console.log("[route/api/wechatroute-------74行]" + resultinfo);
+                        logger.writeError("[route/api/wechatroute-------74行]" + resultinfo);
+                        return;
+                    }
 
+                    var sendMsg = {
+                        fromUserName: msg.toUserName,
+                        toUserName: msg.fromUserName,
+                        msgType: "text",
+                        content: resultinfo,
+                        funcFlag: 0
+                    };
+
+                    logger.writeInfo("[route/api/wechatroute--------------86行]发送订单的消息给用户");
+                    wechat.sendMsg(sendMsg);
+                    return;
+                });
+            } else {
+                resMsg = {
+                    fromUserName: msg.toUserName,
+                    toUserName: msg.fromUserName,
+                    msgType: "text",
+                    content: "这是文本回复" + new Date(),
+                    funcFlag: 0
+                };
+            }
             break;
 
         case "音乐":
@@ -109,7 +134,7 @@ wechat.textMsg(function (msg) {
     wechat.sendMsg(resMsg);
 
     //测试获取token
-    
+
 });
 
 // 监听图片消息
@@ -166,6 +191,7 @@ wechat.eventMsg(function (msg) {
 
                     // wechat.createMenu(token, function () {
                     //     console.log("创建菜单");
+                    // logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
                     // });
                     //用户订阅时的操作
                     wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
@@ -182,7 +208,7 @@ wechat.eventMsg(function (msg) {
             });
 
             break;
-        
+
         //取消订阅
         case 'unsubscribe':
             wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
@@ -191,10 +217,11 @@ wechat.eventMsg(function (msg) {
                     wechatCustomer.addAllList(token, function (err, errinfo) {
                         if (err) {
                             console.log(errinfo);
+                            logger.writeError("[route/api/wechatroute-------------221行]" + errinfo);
                             return;
                         }
 
-                        console.log("由服务器导致的错误，添加成功");
+                        logger.writeInfo("[route/api/wechatroute---------------224行]服务器出错的时候导致漏加的用户补全");
                         return;
                     });
                 }
@@ -202,16 +229,16 @@ wechat.eventMsg(function (msg) {
             //获取token
             wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
                 //如果成功  
-                
-                if (isSussess) {              
+
+                if (isSussess) {
                     //取消时更改用户
                     wechatCustomer.unsubscribe(token, msg, function (err, errinfo) {
                         if (err) {
                             console.log(errinfo);
+                            logger.writeInfo("[route/api/wechatroute---------------239行]" + errinfo);
                             return;
                         }
-
-                        console.log("取消成功");
+                        logger.writeInfo("[route/api/wechatroute---------------241行]取消成功");
                     });
                 }
             });
@@ -242,41 +269,78 @@ wechat.eventMsg(function (msg) {
                 case 'ProductDisplay':
                     product.getProductInfoThroughHttpGet(function (productInfo) {
                         var contentInfo = '';
-                        console.log(productInfo);
+                        console.log("商品" + JSON.stringify(productInfo.data));
+
                         for (var index in productInfo.data) {
                             console.log("商品的序列" + index);
-                            for (var key in productInfo.data[index]) {
-                                console.log(key);
-                                if (key == 'ProductID') {
-                                    contentInfo += "编号:" + productInfo.data[index][key] + "  ";
-                                }
-
-                                if (key == 'ProductName') {
-                                    contentInfo += "名称:" + productInfo.data[index][key] + "  ";
-                                }
-
-                                if (key == 'ProductPrice') {
-                                    contentInfo += "价格:" + productInfo.data[index][key] + "  ";
-                                }
-
-                            }
+                            contentInfo += "编号:" + productInfo.data[index]['ProductID'] + "  ";
+                            contentInfo += "名称:" + productInfo.data[index]['ProductName'] + "  ";
+                            contentInfo += "价格:" + productInfo.data[index]['ProductPrice'] + "  ";
+                            contentInfo += "规格:" + productInfo.data[index]['ProductTypeName'] + "  ";
                             contentInfo += "\n";
                         }
+                        contentInfo += '下单输入的格式为：编号#数量|编号#数量';
                         console.log(contentInfo);
                         var resMsg = {
                             fromUserName: msg.ToUserName,
                             toUserName: msg.FromUserName,
-                            msgType: "text",      
+                            msgType: "text",
                             content: contentInfo,
                             funcFlag: 0
                         };
+                        logger.writeInfo("[routes/api/wechatroute-----------------292行]商品展示")
                         wechat.sendMsg(resMsg);
+                        return;
                     });
 
                     break;
 
                 case 'SubmitOrder':
                     console.log("提交订单");
+                    break;
+
+                case 'TrackPackage':
+                    console.log("跟踪包裹");
+                    order.insertOrderInfo(msg.content, msg.fromUserName, function (resultinfo) {
+                        console.log("订单的消息" + resultinfo);
+                        var resMsg = {
+                            fromUserName: msg.toUserName,
+                            toUserName: msg.fromUserName,
+                            msgType: "text",
+                            content: resultinfo,
+                            funcFlag: 0
+                        };
+                        wechat.sendMsg(resMsg);
+                    });
+                    break;
+
+                case 'OrderHistory':
+                    order.getHistoryOrderInfo(msg.FromUserName, function (orderinfo) {
+                        console.log("routes/api/wechatroute------------319行");
+                        var historyInfo = '';
+                        var totalPrice = 0;
+                        var index = 1;
+                         for(var key in orderinfo.data)
+                        {
+                            historyInfo += index + '、订单号：' + orderinfo.data[key]['OrderID'] + "  ";
+                            historyInfo += '商品名称：' + orderinfo.data[key]['ProductName'] + "  ";
+                            historyInfo += '数量：' + orderinfo.data[key]['ProductCount'] + "  ";
+                            totalPrice += orderinfo.data[key]['ProductCount'] * orderinfo.data[key]['ProductPrice'];
+                            historyInfo += "付款：" + totalPrice;
+                            historyInfo += '\n';
+                            index++;
+                            totalPrice = 0;
+                        }
+                         var resMsg = {
+                            fromUserName: msg.ToUserName,
+                            toUserName: msg.FromUserName,
+                            msgType: "text",
+                            content: historyInfo,
+                            funcFlag: 0
+                        };
+                        console.log(historyInfo);
+                        wechat.sendMsg(resMsg);
+                    });
                     break;
             }
             break;
@@ -314,12 +378,14 @@ wechat.clickAddress(function (judgement, username) {
 });
 
 /************************************************************************************/
-//渲染地址栏的页面
+//渲染地址栏的页面//待改
 router.get('/addressinfo', function (req, res) {
 
-    var addressurl = wechat.data.FromUserName;
+    var addressurl = config.jinkebro.baseUrl + 'wechat/' + wechat.data.FromUserName;
+    console.log(addressurl);
     //路由的重定义
-    res.redirect(301,  + addressurl);
+    res.redirect(301, addressurl);
+
 });
 
 /************************************************************************************/

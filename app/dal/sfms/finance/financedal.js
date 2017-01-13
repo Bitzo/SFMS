@@ -61,7 +61,7 @@ exports.updateFinance = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'ID') {
+            if (key !== 'ID') {
                 if (sql.length == 0) {
                     sql += ' ' + key + " = '" + data[key] + "' ";
                 } else {
@@ -99,14 +99,14 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (data[key] != '' && key !== 'startTime' && key !== 'endTime') {
+            if (data[key] !== '' && key !== 'startTime' && key !== 'endTime') {
                 if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
                 else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
-    if (data.startTime != '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
-    if (data.endTime != '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
+    if (data.startTime !== '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
+    if (data.endTime !== '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
 
     logger.writeInfo('财务查询统计：' + sql);
 
@@ -137,14 +137,14 @@ exports.queryFinance = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'startTime' && key !== 'endTime') {
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'startTime' && key !== 'endTime') {
                 if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
                 else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
-    if (data.startTime != '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
-    if (data.endTime != '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
+    if (data.startTime !== '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
+    if (data.endTime !== '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
@@ -170,31 +170,12 @@ exports.queryFinance = function (data, callback) {
 }
 //财务审核
 exports.checkFinance = function (data, callback) {
-    // var time = moment().format('YYYY-MM-DD HH:mm:ss'),
-    //     sql = '';
-
-    // for(var i in data) {
-    //     sql += 'update jit_financeinfo set';
-    //     var update_sql = '';
-    //     for(var key in data[i]) {
-    //         if(key != 'ID') {
-    //             if(update_sql.length == 0) {
-    //                 update_sql += ' ' + key + " = '" + data[i][key] +"'";
-    //             } else {
-    //                 update_sql += ", " + key + " = '" + data[i][key] +"'";
-    //             }
-    //         }
-    //     }
-    //     sql += update_sql + ", CheckTime = '" + time + "'";
-    //     sql += ' where ID = ' + data[i].ID;
-    //     sql += ';'
-    // }
     var time = moment().format('YYYY-MM-DD HH:mm:ss'),
         sql = 'update jit_financeinfo set',
         update_sql = '';
 
     for(var key in data) {
-        if(key != 'ID') {
+        if(key !== 'ID') {
             if(update_sql.length == 0) {
                 update_sql += ' ' + key + " = '" + data[key] +"'";
             } else {
@@ -217,47 +198,6 @@ exports.checkFinance = function (data, callback) {
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '修改失败');
-                return;
-            }
-            // var status = [];
-            // logger.writeInfo(data);
-            // if (results.length > 1) {
-            //     for(var i in results) {
-            //         status[i] = {};
-            //         status[i].ID = data[i].ID;
-            //         status[i].isSuccess = results[i].affectedRows?true:false;
-            //     }
-            // } else {
-            //     status[0] = {};
-            //     status[0].ID = data[0].ID;
-            //     status[0].isSuccess = results.affectedRows?true:false;
-            // }
-            // callback(false, status);
-            callback(false, results);
-            connection.release();
-        });
-    });
-}
-
-exports.queryFinanceForCheck = function (ID, callback) {
-    var sql = 'select FIStatu from jit_financeinfo where 1=0'
-
-    for (var i in ID) {
-        sql += ' or ID = ' + ID[i];
-    }
-
-    logger.writeInfo('查询FOR审核财务：'+ sql);
-
-    db_sfms.mysqlPool.getConnection(function(err, connection) {
-        if (err) {
-            logger.writeError('err: '+ err);
-            callback(true, '连接数据库失败');
-            return;
-        }
-        connection.query(sql, function(err, results) {
-            if (err) {
-                logger.writeError('err: '+ err);
-                callback(true, '修改失败 ');
                 return;
             }
             callback(false, results);

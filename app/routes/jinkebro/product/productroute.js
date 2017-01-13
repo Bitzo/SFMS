@@ -16,23 +16,23 @@ var productService = appRequire('service/jinkebro/product/productservice'),
     moment = require('moment');
 
 //产品的新增
-router.post('/',function (req,res) {
+router.post('/', function (req, res) {
     var formdata = JSON.parse(req.body.formdata);
 
     //检查所需要的字段是否都存在
-    var data = ['SKU','ProductName','SupplierID','ProductTypeID','ProductPrice'];
+    var data = ['SKU', 'ProductName', 'SupplierID', 'ProductTypeID', 'ProductPrice'];
     var err = 'require: ';
-    for (var value in data){
-        if(!(data[value] in formdata)){
+    for (var value in data) {
+        if (!(data[value] in formdata)) {
             err += data[value] + ' ';
         }
     }
     //如果要求的字段不在req的参数中
-    if(err !== 'require: ') {
+    if (err !== 'require: ') {
         logger.writeError(err);
         res.status(400);
         return res.json({
-            code:404,
+            code: 404,
             isSuccess: false,
             msg: '存在未填写的必填字段' + err
         });
@@ -51,26 +51,26 @@ router.post('/',function (req,res) {
 
     // 存放接收的数据
     var insertdata = {
-        "SKU" : SKU ,
-        "ProductName" : ProductName,
-        "ProductDesc" : ProductDesc,
-        "ProductImgPath" : ProductImgPath,
-        "ExpireTime" : ExpireTime,
-        "ProducTime" : ProducTime,
-        "SupplierID" : SupplierID,
-        "ProductTypeID" : ProductTypeID,
-        "ProductPrice" : ProductPrice,
-        "OnSale" : OnSale
+        "SKU": SKU,
+        "ProductName": ProductName,
+        "ProductDesc": ProductDesc,
+        "ProductImgPath": ProductImgPath,
+        "ExpireTime": ExpireTime,
+        "ProducTime": ProducTime,
+        "SupplierID": SupplierID,
+        "ProductTypeID": ProductTypeID,
+        "ProductPrice": ProductPrice,
+        "OnSale": OnSale
     };
 
     var intdata = {
-        "SupplierID" :SupplierID,
-        "ProductTypeID" : ProductTypeID,
-        "OnSale" : OnSale
+        "SupplierID": SupplierID,
+        "ProductTypeID": ProductTypeID,
+        "OnSale": OnSale
     };
 
-    for (var key in intdata){
-        if(isNaN(intdata[key])){
+    for (var key in intdata) {
+        if (isNaN(intdata[key])) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -81,16 +81,16 @@ router.post('/',function (req,res) {
     }
 
     var requiredvalue = '缺少输入参数：';
-    for(var key in insertdata){
-        if(key != 'ProductDesc' && key != 'ProductImgPath'){
-            if(insertdata[key].length == 0){
+    for (var key in insertdata) {
+        if (key != 'ProductDesc' && key != 'ProductImgPath') {
+            if (insertdata[key].length == 0) {
                 requiredvalue += key + ' ';
                 logger.writeError(requiredvalue);
                 res.status(404);
                 return res.json({
-                    code :404,
-                    isSuccess : false,
-                    msg : requiredvalue
+                    code: 404,
+                    isSuccess: false,
+                    msg: requiredvalue
                 });
             }
         }
@@ -98,27 +98,27 @@ router.post('/',function (req,res) {
     }
 
     //执行插入操作
-    productService.insertProduct(insertdata,function (err,result) {
-        if(err){
+    productService.insertProduct(insertdata, function (err, result) {
+        if (err) {
             res.status(500);
             return res.json({
-                code : 500,
-                isSuccess : false,
-                addProductResult:result,
-                msg : '服务器出错，产品新增操作失败'
+                code: 500,
+                isSuccess: false,
+                addProductResult: result,
+                msg: '服务器出错，产品新增操作失败'
             });
         }
 
 
-        if(result !== undefined && result.affectedRows != 0){
+        if (result !== undefined && result.affectedRows != 0) {
             res.status(200);
             return res.json({
-                code : 200,
-                isSuccess : true,
-                addProductResult:result,
-                msg : '一条产品记录添加成功'
+                code: 200,
+                isSuccess: true,
+                addProductResult: result,
+                msg: '一条产品记录添加成功'
             });
-        }else {
+        } else {
             res.status(404);
             return res.json({
                 code: 404,
@@ -130,7 +130,7 @@ router.post('/',function (req,res) {
 
 });
 
-router.delete('/',function (req,res) {
+router.delete('/', function (req, res) {
     //productID是主键，只需要此属性就可准确删除，不必传入其他参数
     var d = JSON.parse(req.query.d);
     var productID = d.ProductID;
@@ -142,7 +142,7 @@ router.delete('/',function (req,res) {
             msg: 'require productID'
         });
     }
-    if(isNaN(productID)){
+    if (isNaN(productID)) {
         res.status(400);
         return res.json({
             code: 400,
@@ -151,44 +151,44 @@ router.delete('/',function (req,res) {
         });
     }
     var deleteData = {
-        "ProductID" : productID
+        "ProductID": productID
     };
 
     //查询要删除的菜单是否存在
-    productService.CountProducts(deleteData,function (err,result) {
-        if(err){
+    productService.CountProducts(deleteData, function (err, result) {
+        if (err) {
             res.status(500);
             return res.json({
-                code : 500,
-                isSuccess : false,
-                deleteResult:result,
-                msg : '操作失败，服务器出错'
+                code: 500,
+                isSuccess: false,
+                deleteResult: result,
+                msg: '操作失败，服务器出错'
             });
         }
 
         //所要删除的产品存在，执行删除操作
-        if(result !== undefined && result[0]['num'] !== 0){
-            productService.deleteProduct(deleteData,function (err,results) {
-                if(err){
+        if (result !== undefined && result[0]['num'] !== 0) {
+            productService.deleteProduct(deleteData, function (err, results) {
+                if (err) {
                     res.status(500);
                     return res.json({
-                        code :500,
-                        isSuccess : false,
+                        code: 500,
+                        isSuccess: false,
                         deleteResults: results,
-                        msg : '服务器出错，操作失败'
+                        msg: '服务器出错，操作失败'
                     });
                 }
 
                 //判断是否删除成功
-                if(results !== undefined && results.affectedRows != 0){
+                if (results !== undefined && results.affectedRows != 0) {
                     res.status(200);
                     return res.json({
-                        code : 200,
-                        isSuccess : true,
-                        deleteResult : results,
-                        msg : '产品删除操作成功'
+                        code: 200,
+                        isSuccess: true,
+                        deleteResult: results,
+                        msg: '产品删除操作成功'
                     });
-                }else {
+                } else {
                     res.status(404);
                     return res.json({
                         code: 404,
@@ -197,24 +197,24 @@ router.delete('/',function (req,res) {
                     });
                 }
             });
-        }else{
+        } else {
             // 所要删除的菜单不存在
             res.status(404);
             return res.json({
-                code :404,
-                isSuccess : false,
-                deleteResult:result,
-                msg : '操作失败，所要删除的产品不存在'
+                code: 404,
+                isSuccess: false,
+                deleteResult: result,
+                msg: '操作失败，所要删除的产品不存在'
             });
         }
     });
 });
 
-router.put('/',function (req,res) {
+router.put('/', function (req, res) {
     var formdata = JSON.parse(req.body.formdata);
 
     //检查所需要的字段是否都存在
-    var data = ['SKU', 'ProductID', 'ProductName', 'SupplierID', 'ProductTypeID','ProductPrice'];
+    var data = ['SKU', 'ProductID', 'ProductName', 'SupplierID', 'ProductTypeID', 'ProductPrice'];
     var err = 'require: ';
     for (var value in data) {
         if (!(data[value] in formdata)) {
@@ -257,22 +257,22 @@ router.put('/',function (req,res) {
         "ProducTime": ProducTime,
         "SupplierID": SupplierID,
         "ProductTypeID": ProductTypeID,
-        "ProductPrice" : ProductPrice,
-        "OnSale" : OnSale
+        "ProductPrice": ProductPrice,
+        "OnSale": OnSale
     };
 
     var intdata = {
         "ProductID": ProductID,
         "SupplierID": SupplierID,
         "ProductTypeID": ProductTypeID,
-        "OnSale" : OnSale
+        "OnSale": OnSale
     };
 
     var JudgeData = {
         "ProductID": ProductID,
-        "pageNum" : 1,
-        "page" : 1,
-        "OnSale" : OnSale
+        "pageNum": 1,
+        "page": 1,
+        "OnSale": OnSale
     };
 
     for (var key in intdata) {
@@ -350,7 +350,7 @@ router.put('/',function (req,res) {
 });
 
 //查看产品
-router.get('/',function (req,res) {
+router.get('/', function (req, res) {
     var query = JSON.parse(req.query.f);
     var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
         pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
@@ -364,9 +364,9 @@ router.get('/',function (req,res) {
         OnSale = (query.OnSale !== undefined) ? (query.OnSale) : 1,
         isPaging = (query.isPaging !== undefined) ? (query.isPaging) : 1; //是否分页 0表示不分页,1表示分页
 
-    page = page>0 ? page : 1;
+    page = page > 0 ? page : 1;
 
-    if (pageNum == ''){
+    if (pageNum == '') {
         pageNum = config.pageCount;
     }
 
@@ -374,31 +374,31 @@ router.get('/',function (req,res) {
     var countNum = 0;
 
     var data = {
-        page : page,
-        pageNum : pageNum,
-        SKU : SKU,
-        ProductID : ProductID,
-        ProductName : ProductName,
-        ExpireTime : ExpireTime,
-        SupplierID : SupplierID,
-        ProductTypeID : ProductTypeID,
-        ProductPrice : ProductPrice,
-        OnSale : OnSale,
-        isPaging : isPaging
+        page: page,
+        pageNum: pageNum,
+        SKU: SKU,
+        ProductID: ProductID,
+        ProductName: ProductName,
+        ExpireTime: ExpireTime,
+        SupplierID: SupplierID,
+        ProductTypeID: ProductTypeID,
+        ProductPrice: ProductPrice,
+        OnSale: OnSale,
+        isPaging: isPaging
     };
 
     var intdata = {
-        page : page,
-        pageNum : pageNum,
-        ProductID : ProductID,
-        SupplierID : SupplierID,
-        ProductTypeID : ProductTypeID,
-        OnSale : OnSale,
-        isPaging : isPaging
+        page: page,
+        pageNum: pageNum,
+        ProductID: ProductID,
+        SupplierID: SupplierID,
+        ProductTypeID: ProductTypeID,
+        OnSale: OnSale,
+        isPaging: isPaging
     };
 
-    for (var key in intdata){
-        if(isNaN(intdata[key]) && intdata[key] != ''){
+    for (var key in intdata) {
+        if (isNaN(intdata[key]) && intdata[key] != '') {
             res.status(400);
             return res.json({
                 code: 400,
@@ -438,12 +438,12 @@ router.get('/',function (req,res) {
                         msg: '查询成功',
                         dataNum: countNum,
                         curPage: page,
-                        curPageNum:pageNum,
-                        totalPage: Math.ceil(countNum/pageNum),
+                        curPageNum: pageNum,
+                        totalPage: Math.ceil(countNum / pageNum),
                         data: result
                     };
-                    if(resultBack.curPage == resultBack.totalPage) {
-                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
+                    if (resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
                     }
                     res.status(200);
                     //console.log(resultBack);
@@ -469,8 +469,8 @@ router.get('/',function (req,res) {
 });
 
 //查询所有的商品的部分 简单的没有任何的限制
-router.get('/info',function (req,res) {
-   
+router.get('/info', function (req, res) {
+
     var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
         pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
         SKU = req.query.SKU || '',
@@ -482,9 +482,9 @@ router.get('/info',function (req,res) {
         isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
         OnSale = (req.query.OnSale !== undefined) ? (req.query.OnSale) : 1;
 
-    page = page>0 ? page : 1;
+    page = page > 0 ? page : 1;
     console.log("测试商品的查询的路由");
-    if (pageNum == ''){
+    if (pageNum == '') {
         pageNum = config.pageCount;
     }
 
@@ -492,30 +492,30 @@ router.get('/info',function (req,res) {
     var countNum = 0;
 
     var data = {
-        page : page,
-        pageNum : pageNum,
-        SKU : SKU,
-        ProductID : ProductID,
-        ProductName : ProductName,
-        ExpireTime : ExpireTime,
-        SupplierID : SupplierID,
-        ProductTypeID : ProductTypeID,
-        isPaging : isPaging,
-        OnSale : OnSale
+        page: page,
+        pageNum: pageNum,
+        SKU: SKU,
+        ProductID: ProductID,
+        ProductName: ProductName,
+        ExpireTime: ExpireTime,
+        SupplierID: SupplierID,
+        ProductTypeID: ProductTypeID,
+        isPaging: isPaging,
+        OnSale: OnSale
     };
 
     var intdata = {
-        page : page,
-        pageNum : pageNum,
-        ProductID : ProductID,
-        SupplierID : SupplierID,
-        ProductTypeID : ProductTypeID,
-        isPaging :isPaging,
-        OnSale : OnSale
+        page: page,
+        pageNum: pageNum,
+        ProductID: ProductID,
+        SupplierID: SupplierID,
+        ProductTypeID: ProductTypeID,
+        isPaging: isPaging,
+        OnSale: OnSale
     };
 
-    for (var key in intdata){
-        if(isNaN(intdata[key]) && intdata[key] != ''){
+    for (var key in intdata) {
+        if (isNaN(intdata[key]) && intdata[key] != '') {
             res.status(400);
             return res.json({
                 code: 400,
@@ -555,12 +555,12 @@ router.get('/info',function (req,res) {
                         msg: '查询成功',
                         dataNum: countNum,
                         curPage: page,
-                        curPageNum:pageNum,
-                        totalPage: Math.ceil(countNum/pageNum),
+                        curPageNum: pageNum,
+                        totalPage: Math.ceil(countNum / pageNum),
                         data: result
                     };
-                    if(resultBack.curPage == resultBack.totlePage) {
-                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage-1)*pageNum;
+                    if (resultBack.curPage == resultBack.totlePage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totlePage - 1) * pageNum;
                     }
                     res.status(200);
                     //console.log(resultBack);

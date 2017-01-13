@@ -13,7 +13,11 @@ var functionservice = appRequire('service/backend/function/functionservice');
 
 //得到所有树形功能点
 router.get('/', function (req, res) {
-    data = {};
+    var query = JSON.parse(req.query.f);
+
+    data = {
+        IsActive: query.IsActive || 1
+    };
     functionservice.queryAllFunctions(data, function (err, results) {
         if (err) {
             res.json({
@@ -243,33 +247,24 @@ router.delete('/', function (req, res) {
 
     functionservice.delete(data, function (err, results) {
         if (err) {
-            res.json({
-                code: 500,
-                isSuccess: false,
-                msg: results
-            });
             return;
         }
         if (results !== undefined && results.length != 0) {
-            if (results.affectedRows > 0) {
-                res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: results
-                })
-            } else {
-                res.json({
-                    code: 404,
-                    isSuccess: false,
-                    msg: '不存在该功能点'
-                })
-            }
+            res.json({
+                code: 200,
+                isSuccess: true,
+                msg: results
+            });
+            console.log('200')
+            return;
         } else {
             res.json({
                 code: 404,
                 isSuccess: false,
                 msg: '删除失败！'
-            })
+            });
+            console.log('333')
+            return;
         }
     })
 
@@ -277,6 +272,7 @@ router.delete('/', function (req, res) {
 
 //根据FunctionID得到该功能点的值
 router.get('/getFuncByID', function (req, res) {
+
     var FunctionID = JSON.parse(req.query.f).FunctionID;
     if (FunctionID === undefined || FunctionID == '') {
         res.json({

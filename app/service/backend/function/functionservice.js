@@ -9,6 +9,7 @@ var functionDAL = appRequire('dal/backend/function/functiondal.js');
 var getTree = appRequire('service/backend/function/gettreefunction');
 var logger = appRequire("util/loghelper").helper;
 
+
 //查询所有树形功能点
 exports.queryAllFunctions = function (data, callback) {
     if (!checkData(data)) {
@@ -71,26 +72,57 @@ exports.delete = function (data, callback) {
         callback(true, '数据有误');
         return;
     }
+    data.IsActive = 1;
     treeFuncID.length = 0;
-    getMultiTreeID(data.FunctionID, function (err, results) {
+    treeFuncID.push({
+        'FunctionID': data.FunctionID
+    });
+    functionDAL.queryAllFunctions(data, function (err, results) {
         if (err) {
             return callback(true, results);
-        } else {
-            if (treeFuncID.length > 0) {
-                treeFuncID.push({
-                    'ParentID': data.FunctionID
-                });
+        }
+        //根据FunctionID判断该功能点是否存在
+        if (results != undefined && results.length > 0) {
+            var querydata = {
+                'ApplicationID': results[0].ApplicationID
+            }
+            functionDAL.queryAllFunctions(querydata, function (err, results) {
+                //得到子节点的所有functionid
+                function getMultiTreeID(FunctionID) {
+                    var querydata = {
+                        'ParentID': FunctionID,
+                        'IsActive': 1
+                    }
+                    var data = [];
+                  
+                    for (var j in results) {
+                        if (results[j].ParentID == FunctionID) {
+                            data.push({ 'FunctionID': results[j].FunctionID });
+                        }
+                    }
+                    if (data != undefined && data.length > 0) {
+                        for (var i in data) {
+                            getMultiTreeID(data[i].FunctionID);
+                            treeFuncID.push({
+                                'FunctionID': data[i].FunctionID
+                            });
+
+                        }
+                    }
+                }
+                getMultiTreeID(data.FunctionID);
+                //禁用功能点
                 functionDAL.delete(treeFuncID, function (err, results) {
                     if (err) {
                         return callback(true, results);
                     }
                     return callback(false, results);
                 });
-            } else {
-                return callback(true, '不存在功能点')
-            }
+            });
+        } else {
+            return callback(true, '该功能点已被禁用')
         }
-    })
+    });
 };
 
 //根据FunctionID判断该功能点是否存在
@@ -132,27 +164,4 @@ function checkData(data) {
         }
     }
     return true;
-}
-
-//得到子节点的所有functionid
-function getMultiTreeID(ParentID, callback) {
-    var querydata = {
-        'ParentID': ParentID,
-        'IsActive': 1
-    }
-    functionDAL.queryAllFunctions(querydata, function (err, results) {
-        if (err) {
-            return callback(true, '系统内部错误');
-        }
-        if (results != undefined && results.length > 0) {
-            for (var i in results) {
-                treeFuncID.push({
-                    'ParentID': results[i].FunctionID
-                })
-                console.log(results[i].FunctionID)
-                getMultiTreeID(results[i].FunctionID, callback);
-            }
-        }
-        callback(false);
-    });
 }

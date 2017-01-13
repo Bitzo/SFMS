@@ -60,7 +60,7 @@ router.post('/', function (req, res) {
         })
     };
 
-    projectservice.queryProject({ID:ProjectID}, function (err, results) {
+    projectservice.queryProject({ID:ProjectID, OperateUserID: req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -107,6 +107,7 @@ router.post('/', function (req, res) {
                                     'ProjectID': ProjectID,
                                     'KPIType': KPIType,
                                     'UserID': UserID,
+                                    'OperateUserID': req.query.jitkey,
                                     'IsActive': 1
                                 }
                                 KPIservice.queryKPI(query, function (err, results) {
@@ -130,7 +131,7 @@ router.post('/', function (req, res) {
                                                 })
                                             }
                                             if (results !== undefined && results.length > 0) {
-                                                UserName = results[0].UserName;
+                                                var UserName = results[0].UserName;
                                                 //数据获取并验证完毕后再存入KPI数据
                                                 var data = {
                                                     'KPIName': KPIName,
@@ -140,6 +141,7 @@ router.post('/', function (req, res) {
                                                     'UserID': UserID,
                                                     'UserName': UserName,
                                                     'OperateUser': OperateUser,
+                                                    'OperateUserID': req.query.jitkey,
                                                     'KPIStatus': '待审核',
                                                     'Remark': Remark,
                                                     'IsActive': 1
@@ -250,7 +252,6 @@ router.post('/', function (req, res) {
 
 //KPI基本信息编辑
 router.put('/', function (req, res) {
-    console.log(req.body)
     var query = req.body.formdata,
         ID = query.ID,
         KPIName = query.KPIName,
@@ -272,6 +273,7 @@ router.put('/', function (req, res) {
         'UserID': UserID,
         'UserName': UserName,
         'OperateUser': OperateUser,
+        'OperateUserID': req.query.jitkey,
         'KPIStatus': '待审核',
         'Remark': Remark,
         'IsActive': 1
@@ -321,7 +323,7 @@ router.put('/', function (req, res) {
         })
     };
 
-    KPIservice.queryKPI({'ID':ID}, function (err, results) {
+    KPIservice.queryKPI({'ID':ID, 'OperateUserID': req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -331,9 +333,8 @@ router.put('/', function (req, res) {
             })
         }
         if(results !== undefined && results.length>0) {
-            console.log(results)
             if (results[0].KPIStatus == '待审核') {
-                projectservice.queryProject({ID:ProjectID}, function (err, results) {
+                projectservice.queryProject({ID:ProjectID, OperateUserID: req.query.jitkey}, function (err, results) {
                     if (err) {
                         res.status(500);
                         return res.json({
@@ -471,6 +472,7 @@ router.get('/person', function (req, res) {
         'ID': ID,
         'ProjectID': ProjectID,
         'UserID': UserID,
+        'OperateUserID': req.query.jitkey,
         'KPIStatus': KPIStatus.trim(),
         'StartTime': StartTime,
         'EndTime': EndTime,
@@ -577,7 +579,6 @@ router.get('/person', function (req, res) {
                                         if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
                                     }
                                 }
-                                console.log(result)
                                 res.status(200);
                                 return res.json(result);
                             } else {
@@ -634,6 +635,7 @@ router.get('/', function (req, res) {
         'KPIName': KPIName,
         'StartTime': StartTime,
         'EndTime': EndTime,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
         'IsActive': 1
@@ -737,7 +739,6 @@ router.get('/', function (req, res) {
                                         if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
                                     }
                                 }
-                                console.log(result)
                                 res.status(200);
                                 return res.json(result);
                             } else {
@@ -823,7 +824,7 @@ router.put('/check', function (req, res) {
     var ID = data.ID;
 
     //查看该绩效信息是否已经被审核
-    KPIservice.queryKPI({ID:ID}, function (err, results) {
+    KPIservice.queryKPI({'ID':ID, 'OperateUserID': req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({

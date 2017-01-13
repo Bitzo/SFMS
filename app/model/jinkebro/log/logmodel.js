@@ -5,23 +5,23 @@
  * @Last Modified time: 
  * @Function: 操作的错误日志
  */
- var moment = require('moment');
- var logModel = 
- {
-    ApplicationID: 1,
-    ApplicationName: '金科小哥',
-    OperationName: '',
-    OldValue: '',
-    OperationUrl: '',
-    NewValue:'',
-    Action: '',
-    Type: 2,
-    ObjName: '',
-    Identifier: 1,
-    CmdStr: '',
-    Memo: '',
-    CreateTime: '',
-    CreateUserID: 0,
-    PDate: '',
-};
+var moment = require('moment');
+var logModel =
+    {
+        ApplicationID: 1,
+        ApplicationName: '',
+        OperationName: '',
+        OldValue: '',
+        OperationUrl: '',
+        NewValue: '',
+        Action: '',
+        Type: 1,
+        ObjName: '',
+        Identifier: 1,
+        CmdStr: '',
+        Memo: '',
+        CreateTime: '',
+        CreateUserID: 0,
+        PDate: '',
+    };
 module.exports = logModel;

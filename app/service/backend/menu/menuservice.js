@@ -6,12 +6,43 @@
  * @Function:queryAllMenus()查询所有的菜单，菜单新增，菜单修改，菜单删除
  */
 var menuDAl = appRequire('dal/backend/menu/menudal'),
-    logger = appRequire('util/loghelper').helper;
-    getTree = appRequire('service/backend/menu/gettreemenu');
+    getTree = appRequire('service/backend/menu/gettreemenu'),
+    logger = appRequire('util/loghelper').helper,
+    logModel = appRequire('model/jinkebro/log/logmodel'),
+    logService = appRequire('service/backend/log/logservice'),
+    operationConfig = appRequire('config/operationconfig'),
+    moment = require('moment');
+
+logModel.ApplicationID = operationConfig.backendApp.applicationID;
+logModel.ApplicationName = operationConfig.backendApp.applicationName;
+logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+logModel.PDate = moment().format('YYYY-MM-DD');
+delete logModel.ID;
+
+/**
+ * 树形展示菜单
+ * @param data
+ * @param callback
+ */
 exports.queryAllMenusFormTree = function(data, callback){
+    //要写入operationlog表的
+    logModel.ApplicationID = operationConfig.backendApp.applicationID;
+    logModel.ApplicationName = operationConfig.backendApp.applicationName;
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
     menuDAl.queryMenuByUserID(data,function (err,results) {
         if(err){
-            callback(true);
+            logModel.Type = operationConfig.operationType.error;
+            logModel.CreateUserID = data.userID || 0;  //0代表系统管理员操作
+            logModel.Memo = "通过jitkey查询菜单失败";
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("通过jitkey查询菜单失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+
+            callback(true,'通过jitkey查询菜单失败');
             return ;
         }
         //形成菜单树形结构
@@ -34,6 +65,16 @@ exports.queryAllMenusFormTree = function(data, callback){
             }
         }
 
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.CreateUserID = data.userID || 0; //0代表系统管理员操作
+        logModel.Memo = "通过jitkey查询菜单成功";
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("通过jitkey查询菜单成功，生成操作日志失败" + logModel.CreateTime);
+            }
+        });
+        logger.writeInfo('通过jitkey查询菜单成功');
+
         console.log('queryAllMenusFormTree func in service');
         logger.writeInfo('queryAllMenusFormTree func in service');
         //返回菜单树形JSON
@@ -41,7 +82,18 @@ exports.queryAllMenusFormTree = function(data, callback){
     });
 };
 
+/**
+ * 以表格形式展示所有菜单
+ * @param data
+ * @param callback
+ */
 exports.queryAllMenusFormTreeInTable = function(data, callback){
+    //要写入operationlog表的
+    logModel.ApplicationID = operationConfig.backendApp.applicationID;
+    logModel.ApplicationName = operationConfig.backendApp.applicationName;
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
     menuDAl.queryAllMenus(data,function (err,results) {
         if(err){
             callback(true);
@@ -74,7 +126,16 @@ exports.queryAllMenusFormTreeInTable = function(data, callback){
     });
 };
 
+/**
+ * 通过递归形成菜单树
+ * @param data
+ * @param callback
+ */
 exports.queryAllMenusFormTreeIByRecursion  = function(data, callback){
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
     menuDAl.queryAllMenus(data,function (err,results) {
         if(err){
             callback(true);
@@ -127,8 +188,16 @@ exports.queryAllMenusFormTreeIByRecursion  = function(data, callback){
     });
 };
 
-//查询对应项目的角色个数
+/**
+ * 查询对应菜单个数
+ * @param data
+ * @param callback
+ */
 exports.countAllMenus = function (data, callback) {
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
     menuDAl.countAllMenus(data, function (err, results) {
         if (err) {
             callback(true);
@@ -139,8 +208,16 @@ exports.countAllMenus = function (data, callback) {
     });
 }
 
-//查询所有菜单，平面展示
+/**
+ * 查询所有菜单，平面展示
+ * @param data
+ * @param callback
+ */
 exports.queryAllMenus = function(data, callback){
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
     menuDAl.queryAllMenus(data,function (err,results) {
         if(err){
             callback(true);
@@ -153,8 +230,16 @@ exports.queryAllMenus = function(data, callback){
     });
 };
 
-//查询所有父级菜单，平面展示
+/**
+ * 查询所有父级菜单，平面展示
+ * @param data
+ * @param callback
+ */
 exports.queryAllParentMenus = function(data, callback){
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
     menuDAl.queryAllParentMenus(data,function (err,results) {
         if(err){
             callback(true);
@@ -170,9 +255,16 @@ exports.queryAllParentMenus = function(data, callback){
 };
 
 
-//菜单新增
+/**
+ * 菜单新增
+ * @param data
+ * @param callback
+ */
 exports.menuInsert = function (data,callback) {
-
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuAdd.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuAdd.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuAdd.identifier;
     function checkData(data) {
         for(var key in data){
             if(data[key] === undefined){
@@ -188,12 +280,32 @@ exports.menuInsert = function (data,callback) {
         callback(true);
         return ;
     }
-
+    var tempId = data.jitkey;
+    delete data.jitkey;
     menuDAl.menuInsert(data,function (err,results) {
         if(err){
-            callback(true);
+            logModel.Type = operationConfig.operationType.error;
+            logModel.CreateUserID = tempId || 0;  //0代表系统管理员操作
+            logModel.Memo = "菜单新增失败";
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("菜单新增失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+            callback(true,'菜单新增失败');
             return ;
         }
+
+        //新增成功
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.CreateUserID = tempId || 0; //0代表系统管理员操作
+        logModel.Memo = "菜单新增成功";
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("菜单新增成功，生成操作日志失败" + logModel.CreateTime);
+            }
+        });
+        logger.writeInfo('菜单新增成功');
 
         logger.writeInfo('menuInsert func in service');
         logger.writeInfo('menuInsert func in service');
@@ -201,9 +313,16 @@ exports.menuInsert = function (data,callback) {
     });
 }
 
-//菜单编辑
+/**
+ * 菜单编辑
+ * @param data
+ * @param callback
+ */
 exports.menuUpdate = function (data,callback) {
-
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuUpd.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuUpd.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuUpd.identifier;
     function checkData(data) {
         for(var key in data){
             if(data[key] === undefined){
@@ -220,36 +339,87 @@ exports.menuUpdate = function (data,callback) {
         callback(true);
         return ;
     }
-
+    var tempId = data.jitkey;
+    delete data.jitkey;
     menuDAl.menuUpdate(data,function (err,results) {
         if(err){
-            callback(true);
+            logModel.Type = operationConfig.operationType.error;
+            logModel.CreateUserID = tempId || 0;  //0代表系统管理员操作
+            logModel.Memo = "菜单修改失败";
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("菜单修改失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+            callback(true,'菜单修改失败');
+
             return ;
         }
+
+        //修改成功
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.CreateUserID = tempId || 0; //0代表系统管理员操作
+        logModel.Memo = "菜单修改成功";
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("菜单修改成功，生成操作日志失败" + logModel.CreateTime);
+            }
+        });
+        logger.writeInfo('菜单修改成功');
 
         console.log('menuUpdate func in service');
         logger.writeInfo('menuUpdate func in service');
-        callback(false,results);
+        return callback(false,results);
     });
 }
 
-//菜单删除
+/**
+ * 菜单删除
+ * @param data
+ * @param callback
+ */
 exports.menuDelete = function (data,callback) {
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuDel.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuDel.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuDel.identifier;
     menuDAl.menuDelete(data,function (err,results) {
         if(err){
-            callback(true);
+            logModel.Type = operationConfig.operationType.error;
+            logModel.CreateUserID =  0;  //0代表系统管理员操作
+            logModel.Memo = "菜单删除失败";
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("菜单删除失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+            callback(true,'菜单删除失败');
             return ;
         }
 
+        //修改成功
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.CreateUserID =  0; //0代表系统管理员操作
+        logModel.Memo = "菜单删除成功";
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("菜单删除成功，生成操作日志失败" + logModel.CreateTime);
+            }
+        });
+        logger.writeInfo('菜单删除成功');
+
         console.log('menuDelete func in service');
         logger.writeInfo('menuDelete func in service');
-        callback(false,results);
+        return callback(false,results);
     });
 }
 
 //根据UserID显示出用户所有的菜单
 exports.queryMenuByUserID = function (data,callback) {
-
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuUpd.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuUpd.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuUpd.identifier;
     menuDAl.queryMenuByUserID(data,function (err,results) {
         if(err){
             callback(true);
@@ -265,6 +435,10 @@ exports.queryMenuByUserID = function (data,callback) {
 
 //根据UserID显示出用户的角色
 exports.queryRoleByUserID = function (data,callback) {
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuUpd.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuUpd.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuUpd.identifier;
     menuDAl.queryRoleByUserID(data,function (err,results) {
         if(err){
             callback(true);
@@ -279,6 +453,10 @@ exports.queryRoleByUserID = function (data,callback) {
 }
 
 exports.queryMenuAndRoleByUserID = function (data,callback) {
+    //要写入operationlog表的
+    logModel.OperationName = operationConfig.backendApp.memuManage.menuUpd.actionName;
+    logModel.Action = operationConfig.backendApp.memuManage.menuUpd.actionName;
+    logModel.Identifier = operationConfig.backendApp.memuManage.menuUpd.identifier;
     menuDAl.queryMenuByUserID(data,function (err, menuResults) {
         if(err){
             callback(true);
@@ -318,5 +496,16 @@ exports.queryMenuAndRoleByUserID = function (data,callback) {
             callback(false,menuResults);
             return ;
         }
+    });
+}
+
+//校验菜单
+exports.queryMenuByID = function (data, callback) {
+    menuDAl.queryMenuByID(data, function (err, results) {
+        if (err) {
+            callback(true, results);
+            return;
+        }
+        callback(false, results);
     });
 }

@@ -9,14 +9,58 @@
 var financeDAL = appRequire('dal/sfms/finance/financedal');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
+var logService = appRequire('service/backend/log/logservice');
+var config = appRequire('config/config');
+var logModel = appRequire('model/backend/log/logmodel');
+var operationConfig = appRequire('config/operationconfig');
+var moment = require('moment');
+
+logModel.ApplicationID = operationConfig.sfmsApp.applicationID;
+logModel.ApplicationName = operationConfig.sfmsApp.applicationName;
+logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+logModel.PDate = moment().format('YYYY-MM-DD');
+delete logModel.ID;
 
 //财务新增
 exports.addFinance = function(data, callback) {
-    financeDAL.addFinance(data, function (err, results) {
+    var formdata = {
+        'FIName': data.FIName,
+        'FIType': data.FIType,
+        'InOutType': data.InOutType,
+        'FIPrice': data.FIPrice,
+        'projectID': data.projectID,
+        'UserID': data.UserID,
+        'UserName': data.UserName,
+        'OperateUser': data.OperateUser,
+        'FIStatu': data.FIStatu,
+        'Remark': data.Remark,
+        'IsActive': data.IsActive
+    }
+    logModel.OperationName = operationConfig.sfmsApp.financeManage.financeAdd.actionName;
+    logModel.Action = operationConfig.sfmsApp.financeManage.financeAdd.actionName;
+    logModel.Identifier = operationConfig.sfmsApp.financeManage.financeAdd.identifier;
+    financeDAL.addFinance(formdata, function (err, results) {
         if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "财务新增失败";
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("财务信息新增失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
             callback(true, '新增失败');
             return;
         }
+
+        logModel.Type = 2;
+        logModel.Memo = "财务新增成功";
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("财务信息新增成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
         logger.writeInfo('新增财务信息');
         callback(false, results);
     })
@@ -24,11 +68,57 @@ exports.addFinance = function(data, callback) {
 
 //财务信息修改
 exports.updateFinance = function(data, callback) {
-    financeDAL.updateFinance(data, function (err, results) {
+    var formdata = {
+        'ID': data.ID,
+        'FIName': data.FIName,
+        'FIType': data.FIType,
+        'InOutType': data.InOutType,
+        'FIPrice': data.FIPrice,
+        'ProjectID': data.ProjectID,
+        'UserID': data.UserID,
+        'UserName': data.UserName,
+        'OperateUser': data.OperateUser,
+        'FIStatu': data.FIStatu,
+        'Remark': data.Remark,
+        'IsActive': data.IsActive
+    }
+    if (formdata.IsActive === 0) {
+        logModel.OperationName = operationConfig.sfmsApp.financeManage.financeDelete.actionName;
+        logModel.Action = operationConfig.sfmsApp.financeManage.financeDelete.actionName;
+        logModel.Identifier = operationConfig.sfmsApp.financeManage.financeDelete.identifier;
+    } else {
+        logModel.OperationName = operationConfig.sfmsApp.financeManage.financeUpdete.actionName;
+        logModel.Action = operationConfig.sfmsApp.financeManage.financeUpdete.actionName;
+        logModel.Identifier = operationConfig.sfmsApp.financeManage.financeUpdete.identifier;
+    }
+
+    financeDAL.updateFinance(formdata, function (err, results) {
         if (err) {
+            logModel.CreateUserID = data.OperateUserID;
+            logModel.Type = 1;
+            logModel.Memo = "财务信息修改失败";
+            if (formdata.IsActive === 0) {
+                logModel.Memo = "财务信息逻辑删除失败";
+            }
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("财务信息修改失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
             callback(true, '修改失败');
             return;
         }
+        logModel.Type = 2;
+        logModel.CreateUserID = data.OperateUserID;
+        logModel.Memo = "财务信息修改成功";
+        if (formdata.IsActive === 0) {
+            logModel.Memo = "财务信息逻辑删除成功";
+        }
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("财务信息修改成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
         logger.writeInfo('修改财务信息');
         callback(false, results);
     })
@@ -47,13 +137,40 @@ exports.queryFinance = function (data, callback) {
         'startTime': data.startTime || '',
         'endTime': data.endTime || '',
         'page': data.page || 1,
-        'pageNum': data.pageNum || 20,
+        'pageNum': data.pageNum || config.pageCount,
     }
+
+    if (data.ID !== '' && data.ID !== undefined) {
+        logModel.OperationName = operationConfig.sfmsApp.financeManage.financeSingleQuery.actionName;
+        logModel.Action = operationConfig.sfmsApp.financeManage.financeSingleQuery.actionName;
+        logModel.Identifier = operationConfig.sfmsApp.financeManage.financeSingleQuery.identifier;
+    } else {
+        logModel.OperationName = operationConfig.sfmsApp.financeManage.financeMultiQuery.actionName;
+        logModel.Action = operationConfig.sfmsApp.financeManage.financeMultiQuery.actionName;
+        logModel.Identifier = operationConfig.sfmsApp.financeManage.financeMultiQuery.identifier;
+    }
+
     financeDAL.queryFinance(queryData, function (err, results) {
         if (err) {
+            logModel.Memo = "财务信息查询失败";
+            logModel.Type = 1;
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("财务信息信息查询失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
             callback(true, '查询失败');
             return;
         }
+        logModel.Memo = "财务信息查询成功";
+        logModel.Type = 2;
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("财务信息信息查询成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
         logger.writeInfo('查询财务信息');
         callback(false, results);
     })
@@ -62,14 +179,14 @@ exports.queryFinance = function (data, callback) {
 //财务查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'jit_financeinfo.ID': data.ID,
-        'Username': data.Username,
-        'InOutType': data.InOutType,
-        'FIType': data.FIType,
-        'FIName': data.FIName,
-        'FIStatu': data.FIStatus,
-        'startTime': data.startTime,
-        'endTime': data.endTime,
+        'jit_financeinfo.ID': data.ID || '',
+        'Username': data.Username || '',
+        'InOutType': data.InOutType || '',
+        'FIType': data.FIType || '',
+        'FIName': data.FIName || '',
+        'FIStatu': data.FIStatus || '',
+        'startTime': data.startTime || '',
+        'endTime': data.endTime || '',
         'jit_financeinfo.IsActive': 1
     }
     financeDAL.countQuery(queryData, function (err, results) {
@@ -84,43 +201,39 @@ exports.countQuery = function (data, callback) {
 
 //财务审核
 exports.checkFinance = function (data, callback) {
-    data = {
+    var formdata = {
         ID: data.ID,
         FIStatu: data.FIStatu,
         CheckUser: data.CheckUser,
         Remark: data.Remark
     }
-    financeDAL.checkFinance(data, function (err, results) {
+
+    logModel.OperationName = operationConfig.sfmsApp.financeManage.financeCheck.actionName;
+    logModel.Action = operationConfig.sfmsApp.financeManage.financeCheck.actionName;
+    logModel.Identifier = operationConfig.sfmsApp.financeManage.financeCheck.identifier;
+
+    financeDAL.checkFinance(formdata, function (err, results) {
         if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "财务信息审核失败";
+            logModel.CreateUserID = data.CheckUser;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("财务信息信息审核失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
             callback(true, results);
             return;
         }
+        logModel.Type = 2;
+        logModel.Memo = "财务信息审核成功";
+        logModel.CreateUserID = data.CheckUser;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("财务信息信息审核成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
         logger.writeInfo('审核财务');
         callback(false, results);
-    })
-}
-
-//多财务查询信息
-exports.queryFinanceForCheck = function (ID, callback) {
-    if (ID.length == 0) callback(true, '数据有误');
-    for (var i in ID) {
-        if (ID[i] <= 0) callback(true, '数据有误');
-    }
-    financeDAL.queryFinanceForCheck(ID, function (err, results) {
-        if (err) {
-            callback(true, results);
-            return;
-        }
-        logger.writeInfo('查询财务状态');
-        if (results!==undefined && results.length>0 && results.length == ID.length) {
-            var t = 0;
-            for (var i in results) {
-                if (results[i].FIStatu == '待审核') ++t;
-            }
-            if (t == results.length) callback(false, true);
-            else callback(false, '有财务已被审核，无需再次审核');
-        } else {
-            callback(false, '未查询到相关的财务信息');
-        }
     })
 }

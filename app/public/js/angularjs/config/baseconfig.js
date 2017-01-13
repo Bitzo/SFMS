@@ -190,35 +190,7 @@ myApp.config(function($routeProvider) {
     otherwise({
         redirectTo: '/'
     });
-}).run(['$rootScope', '$window', '$location', '$log', function($rootScope, $window, $location, $log) {
-    var locationChangeStartOff = $rootScope.$on('$locationChangeStart', locationChangeStart);
-    var locationChangeSuccessOff = $rootScope.$on('$locationChangeSuccess', locationChangeSuccess);
-
-    var routeChangeStartOff = $rootScope.$on('$routeChangeStart', routeChangeStart);
-    var routeChangeSuccessOff = $rootScope.$on('$routeChangeSuccess', routeChangeSuccess);
-
-    function locationChangeStart(event) {
-        if ($location.$$path == "") {
-            event.preventDefault();
-        }
-    }
-
-    function locationChangeSuccess(event) {
-        $log.log('locationChangeSuccess');    
-        $log.log(arguments);
-        console.log($location.path());
-    }
-
-    function routeChangeStart(event) {
-        $log.log('routeChangeStart');
-        $log.log($location);
-    }
-
-    function routeChangeSuccess(event) {
-        $log.log('routeChangeSuccess');
-        $log.log(arguments);
-    }
-}]).controller('baseController', function($scope, $http) {
+}).controller('baseController', function($scope, $http) {
     
     //显示左侧菜单栏
    $scope.menus = [];
@@ -234,4 +206,12 @@ myApp.config(function($routeProvider) {
         });
     }
 
+}).filter('numToChin',function(){
+   return function(val){
+        switch(val){
+            case 0:return '否';
+            case 1:return '是';
+            default:return '否';
+        }
+    }
 })

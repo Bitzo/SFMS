@@ -47,7 +47,7 @@ router.post('/', function (req, res) {
             isSuccess: false,
             msg: err
         });
-        logger.writeError("缺少key值");
+        logger.writeError("[routes/route/user/userroute------------------50行]" + "缺少key值");
         return;
     }
 
@@ -103,7 +103,7 @@ router.post('/', function (req, res) {
             isSuccess: false,
             msg: requireValue
         });
-        logger.writeError(requireValue);
+        logger.writeError("[routes/backend/user/userroute------------------106行]" + requireValue);
         return;
     }
     //用来检验是否是数字
@@ -159,7 +159,7 @@ router.post('/', function (req, res) {
                 isSuccess: false,
                 msg: "查询账户失败"
             })
-            logger.writeError("查询账户失败");
+            logger.writeError("[routes/backend/user/userroute-------------162行]" + "查询账户失败");
             return;
         }
         if (result != undefined && result != 0) {
@@ -169,7 +169,7 @@ router.post('/', function (req, res) {
                 isSuccess: false,
                 msg: "账户名已存在"
             })
-            logger.writeError("账户名已存在");
+            logger.writeError("[routes/backend/user/userroute---------------172行]" + "账户名已存在");
             return;
         }
 
@@ -263,7 +263,7 @@ router.post('/', function (req, res) {
                     isSuccess: false,
                     msg: '操作失败，服务器出错'
                 });
-                logger.writeError("插入失败");
+                logger.writeError("[routes/backend/user/userrole--------------266行]" + "插入失败");
                 return;
             }
             if (results.insertId != 0) {
@@ -272,7 +272,7 @@ router.post('/', function (req, res) {
                 //     isSuccess: true,
                 //     msg: '操作成功'
                 // });
-                logger.writeInfo("插入成功");
+                logger.writeInfo("[routes/backend/user/userrole------------275行]" + "插入成功");
                 console.log(results.insertId);
                 if (roledata.RoleID != undefined && roledata.RoleID != 0) {
                     roledata.AccountID = results.insertId;
@@ -284,7 +284,7 @@ router.post('/', function (req, res) {
                                 isSuccess: false,
                                 msg: '插入角色失败'
                             });
-                            logger.writeError("插入角色失败");
+                            logger.writeError("[routes/backend/user/userrole--------------287行]" + "插入角色失败");
                             return;
                         }
                         if (resultInsert.insertId != 0) {
@@ -371,7 +371,7 @@ router.get('/', function (req, res) {
                 isSuccess: false,
                 msg: "获取数量失败，服务器出错"
             })
-            logger.writeError("数量获取失败");
+            logger.writeError("[routes/backend/user/userroute--------------374行]" + "数量获取失败");
             return;
         }
         if (result !== undefined && result.length != 0) {
@@ -386,7 +386,7 @@ router.get('/', function (req, res) {
                         msg: '查询失败'
                     });
                     console.log("查询失败");
-                    logger.writeError("查询失败");
+                    logger.writeError("[routes/backend/user/userroute---------------389行]" + "查询失败");
                     return;
                 }
                 if (results1 != undefined && results1.length != 0 && allCount != -1) {
@@ -406,6 +406,7 @@ router.get('/', function (req, res) {
                         totalPage: Math.ceil(allCount / pageNum),
                         data: results1
                     };
+
                     if (results.curPage == results.totlePage) {
                         results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
                     }
@@ -419,7 +420,7 @@ router.get('/', function (req, res) {
                         isSuccess: false,
                         msg: "未查到数据"
                     });
-                    logger.writeWarn("未查到数据");
+                    logger.writeWarn("[routes/backend/user/userroute------------423行]" + "未查到数据");
                     return;
                 }
             });
@@ -430,7 +431,7 @@ router.get('/', function (req, res) {
                 isSuccess: false,
                 msg: "未查询到相关信息"
             });
-            logger.writeError("为查询到相关的信息");
+            logger.writeError("[routes/backend/user/userroute------------434行]" + "为查询到相关的信息");
             return;
         }
     });
@@ -534,7 +535,7 @@ router.put('/', function (req, res) {
             isSuccess: false,
             msg: err
         });
-        logger.writeError(err);
+        logger.writeError("[routes/backend/user/userrole---------538行]" + err);
         return;
     }
 
@@ -554,8 +555,8 @@ router.put('/', function (req, res) {
         editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
         isActive = req.body.formdata.IsActive,
         email = req.body.formdata.Email,
-        address = req.body.formdata.Address;
-    roleID = req.body.formdata.RoleID;
+        address = req.body.formdata.Address,
+        roleID = req.body.formdata.RoleID;
 
 
     data = {
@@ -739,7 +740,7 @@ router.put('/', function (req, res) {
                     isSuccess: false,
                     msg: '修改信息失败，服务器出错'
                 });
-            logger.writeError("修改信息失败，服务器出错");
+            logger.writeError("[routes/backend/user/userroute-----------743行]" + "修改信息失败，服务器出错");
             return;
         }
 
@@ -758,7 +759,7 @@ router.put('/', function (req, res) {
                         });
 
                     console.log("修改角色失败");
-                    logger.writeError("修改信息失败，服务器出错");
+                    logger.writeError("[routes/backend/user/userroute---------762行]" + "修改信息失败，服务器出错");
                     return;
                 }
 
@@ -767,7 +768,7 @@ router.put('/', function (req, res) {
 
                     console.log("检查错误");
                     console.log("修改角色成功");
-                    logger.writeInfo("修改信息成功");
+                    logger.writeInfo("[routes/bcakend/user/userroute----------771行]" + "修改信息成功");
                     return;
                 } else {
                     res.status(400);
@@ -776,7 +777,7 @@ router.put('/', function (req, res) {
                         isSuccess: false,
                         msg: "修改信息失败"
                     })
-                    logger.writeError("修改信息失败");
+                    logger.writeError("[routes/backend/user/userroute----------780行]" + "修改信息失败");
                     return;
                 }
             });
@@ -790,7 +791,7 @@ router.put('/', function (req, res) {
                         isSuccess: false,
                         errorMsg: '插入角色失败'
                     });
-                    logger.writeError("插入角色失败");
+                    logger.writeError("[routes/backend/user/userroute------------794行]" + "插入角色失败");
                     return;
                 }
                 if (resultInsert.insertId != 0) {
@@ -815,7 +816,7 @@ router.put('/', function (req, res) {
                     isSuccess: false,
                     msg: '修改信息失败，服务器出错'
                 });
-            logger.writeError("修改信息失败，服务器出错");
+            logger.writeError("[routes/backend/user/userroute------------819行]" + "修改信息失败，服务器出错");
             return;
         }
         if (results !== undefined && results.affectedRows != 0) {
@@ -824,7 +825,7 @@ router.put('/', function (req, res) {
                 isSuccess: true,
                 msg: "修改信息成功"
             })
-            logger.writeInfo("修改信息成功");
+            logger.writeInfo("[routes/backend/user/userroute------------828行]" + "修改信息成功");
             return;
         } else {
             res.status(400);
@@ -833,7 +834,7 @@ router.put('/', function (req, res) {
                 isSuccess: false,
                 msg: "修改信息失败"
             })
-            logger.writeError("修改信息失败");
+            logger.writeError("[routes/backend/user/userroute---------837行]" + "修改信息失败");
             return;
         }
     });
@@ -856,7 +857,7 @@ router.delete('/', function (req, res) {
                     isSuccess: false,
                     msg: '操作失败，服务器出错'
                 });
-            logger.writeError("修改信息失败，服务器出错");
+            logger.writeError("[routes/backend/user/userroute---------860行]" + "修改信息失败，服务器出错");
             return;
         }
         if (results !== undefined && results.affectedRows != 0) {
@@ -865,7 +866,7 @@ router.delete('/', function (req, res) {
                 isSuccess: true,
                 msg: "操作成功"
             })
-            logger.writeInfo("修改信息成功");
+            logger.writeInfo("[routes/backend/user/userroute--------------869行]" + "修改信息成功");
             return;
         } else {
             res.status(400);
@@ -874,7 +875,7 @@ router.delete('/', function (req, res) {
                 isSuccess: false,
                 msg: "操作失败"
             })
-            logger.writeError("修改信息失败");
+            logger.writeError("[routes/backend/user/userroute-------------878行]" + "修改信息失败");
             return;
         }
     });

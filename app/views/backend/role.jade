@@ -53,9 +53,9 @@ block content
                         td {{data.ApplicationName}}
                         td {{data.RoleCode}}
                         td {{data.RoleName}}
-                        td {{data.IsActive}}
+                        td {{data.IsActive | numToChin:data.IsActive }}
                         td
-                          a(href='#/backend/roleEdit/?RoleID={{x.RoleID}}' )
+                          a(href='#/backend/roleEdit/?RoleID={{data.RoleID}}' )
                             i.icon.icon-edit 编辑 
                           a(ng-click="remove($index,'/backrole')" href='')
                             i.icon.icon-trash 删除
