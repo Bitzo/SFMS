@@ -3,67 +3,64 @@ block content
   div.container-fluid
     span 
       h2 财务审核
-    jason-form(method="post",source='/sfms/api/finance' name="financeCheck" conf='paginationConf' tocc="FIName,FIType,InOutType,ProjectID,UserID")
+    jason-form(method="post",source='/sfms/api/finance',name="financeCheck",conf='paginationConf',tocc="FIName,FIType,InOutType,ProjectID,UserID")
       table.table.table-bordered.table-hover.definedwidth.m10      
         tr
           td(width="15%",class="tableleft") 财务名称
           td
-            span(ng-model='paginationConf.formdata.FIName') {{paginationConf.formdata.FIName}}
+            span(name='FIName',ng-model='paginationConf.formdata.FIName') {{paginationConf.formdata.FIName}}
             
         tr
           td(width="15%",class="tableleft") 财务类型
           td
-            span(ng-model='paginationConf.formdata.FIType') {{paginationConf.formdata.FIType}}
+            span(name='FIType',ng-model='paginationConf.formdata.FIType') {{paginationConf.formdata.FIType}}
             
         tr
           td(width="15%",class="tableleft") 财务收支
           td
-            span(ng-model='paginationConf.formdata.InOutType') {{paginationConf.formdata.InOutType}}
+            span(name='InOutType',ng-model='paginationConf.formdata.InOutType') {{paginationConf.formdata.InOutType}}
             
         tr
           td(width="15%",class="tableleft") 财务金额 
           td
-            span(ng-model="paginationConf.formdata.FIPrice") {{paginationConf.formdata.FIPrice}}
+            span(name='FIPrice',ng-model="paginationConf.formdata.FIPrice") {{paginationConf.formdata.FIPrice}}
           
 
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            span(ng-model='paginationConf.formdata.ProjectId' ) {{paginationConf.formdata.ProjectName}}
+            span(name='ProjectId',ng-model='paginationConf.formdata.ProjectId' ) {{paginationConf.formdata.ProjectName}}
 
         tr
           td(width="15%",class="tableleft") 相关用户
           td
-            span(ng-model='paginationConf.formdata.UserID' ) {{paginationConf.formdata.UserName}}
+            span(name='UserID',ng-model='paginationConf.formdata.UserID' ) {{paginationConf.formdata.UserName}}
      
         tr
           td(width="15%",class="tableleft") 申请时间
           td
-            span( ng-model='paginationConf.formdata.CreateTime') {{paginationConf.formdata.CreateTime}}
+            span(name='CreateTime',ng-model='paginationConf.formdata.CreateTime') {{paginationConf.formdata.CreateTime}}
             
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
-            span(type="textview",rows="5",cols="30",ng-model='paginationConf.formdata.Remark',ng-maxlength='200',required) {{paginationConf.formdata.Remark}}
-            
+            span(type="textview",ng-model='paginationConf.formdata.Remark',rows="5",cols="30",ng-maxlength='200',required) {{paginationConf.formdata.Remark}}
 
         tr
-          td(class="tableleft") 是否通过
+          td(width="15%",class="tableleft") 是否通过
           td
-            input(type="radio",name="FIStatus",value="通过",ng-model="paginationConf.formdata.FIStatu",checked,style="width:15px;height:15px")
+            input(type="radio",name="FIStatus",value="通过",ng-model="paginationConf.formdata.FIStatu",style="width:15px;height:15px",checked)
             &nbsp通过
             &nbsp&nbsp          
-            input(type="radio",name="FIStatus",ng-model="paginationConf.formdata.FIStatu",value="不通过",style="width:15px;height:15px")
+            input(type="radio",name="FIStatus",value="不通过",ng-model="paginationConf.formdata.FIStatu",style="width:15px;height:15px")
             &nbsp不通过
 
         tr
           td(width="15%",class="tableleft") 审核意见 
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',ng-maxlength='45',required) 
+            textarea(type="textview",name="Memo",ng-model='paginationConf.formdata.Memo',rows="5",cols="30",ng-maxlength='45',required) 
             &nbsp&nbsp
             small.error(ng-if="financeCheck.Memo.$error.maxlength && financeCheck.Memo.$touched") 审核意见最多45位
-
-
 
         tr
           td(class="tableleft")

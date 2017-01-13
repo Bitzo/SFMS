@@ -1,13 +1,13 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 link(rel='stylesheet')   
 block content
-  jason-pagecontent(action='/sfms/api/projectremark/person' conf='paginationConf')                        
+  jason-pagecontent(action='/sfms/api/projectremark/person',conf='paginationConf')                        
     div.page-content
       ng-form.form-inline
         span(style='font-size: 24px;') 项目备注查看(普通)
         div.buttons.pull-right
           label.form-group.my-form-group 项目名称: 
-            jason-select.select.ext(data-max-options='2' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select.select.ext(data-max-options='2',ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询
@@ -33,12 +33,10 @@ block content
             td {{x.Remark}}
             td {{x.EditTime}}                                                                                                                                                                
             td
-              a(ng-click="show(x.ID,'/sfms/api/project')",href='#/sfms/projectRemarkEdit/?ID={{x.ID}}' )
+              a(href='#/sfms/projectRemarkEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑
               a(ng-click="remove($index,x.ProjectName,'/sfms/api/projectremark')",href='')
-                i.icon.icon-trash 删除
-
-            
+                i.icon.icon-trash 删除          
       div.pull-right
         jason-pagination(conf='paginationConf')
 

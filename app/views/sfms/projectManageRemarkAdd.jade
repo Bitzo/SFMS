@@ -8,15 +8,14 @@ block content
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            jason-select.input( ng-model='formdata.ProjectID' source='/sfms/api/project/user' stext='ProjectName' svalue='ProjectID')
+            jason-select.input(name='ProjectID',ng-model='formdata.ProjectID' source='/sfms/api/project/user' stext='ProjectName' svalue='ProjectID')
 
         tr
           td(width="15%",class="tableleft") 	备注（可选） 
           td
-            textarea(type="textview",name="Remark",rows="10",cols="30",ng-model='formdata.Remark',ng-maxlength='200')
+            textarea(type="textview",name="Remark",ng-model='formdata.Remark',rows="10",cols="30",ng-maxlength='200')
             &nbsp&nbsp
             small.error(ng-show="formdata.Remark.$error.maxlength && formdata.Remark.$touched") 备注最多200位
-
 
         tr
           td(class="tableleft")

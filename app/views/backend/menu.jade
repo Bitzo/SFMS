@@ -6,15 +6,15 @@ block content
         span.title 菜单管理
         div.buttons.pull-right
           label.form-group.my-form-group 应用名称
-            jason-select.form-control.ext(placeholder='应用名称'  ng-model='f.ApplicationID' source='/app' stext='ApplicationName' svalue='ID')
+            jason-select.form-control.ext(ng-model='f.ApplicationID',source='/app',stext='ApplicationName',svalue='ID')
           label.form-group.my-form-group 菜单名称
-            jason-select.form-control.ext(placeholder='菜单名称'  ng-model='f.MenuID' source='/backmenu/plain' stext='MenuName' svalue='MenuID')
+            jason-select.form-control.ext(ng-model='f.MenuID',source='/backmenu/plain',stext='MenuName',svalue='MenuID')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询
             a.btn.btn-sm.btn-success(ng-href='#/backend/menuinfo')
               i.icon.icon-plus 新建
-            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm	 btn-default') 
+            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
               i.icon.icon-repeat  刷新
       hr
       table.table.table-striped.table-bordered.text-center
@@ -33,8 +33,8 @@ block content
             td {{x.Url}} 
             td
               a(href='#/backend/menuedit/?MenuID={{x.MenuID}}' )
-                i.icon.icon-edit 编辑
+                i.icon.icon-edit 编辑 
               a(ng-click="remove($index,x.MenuName,'/backmenu')",href='')
-                i.icon.icon-trash 删除
+                i.icon.icon-trash  删除
       div.pull-right
         jason-pagination(conf='paginationConf')
