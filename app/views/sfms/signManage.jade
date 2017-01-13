@@ -23,8 +23,7 @@ block content
                                     td {{data.UserAgent}}
                                     td {{data.CreateTime}}
                                     td {{data.SignType}}
-                        button.btn.btn-default(type="button",data-dismiss="modal") Close
-                        
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close                   
     div.page-content
       ng-form.form-inline
         span(style='font-size: 24px;')  签到统计
@@ -53,8 +52,6 @@ block content
             td {{x.signTime}}
             td
               a(data-toggle="modal",data-target="#myModal",ng-click="moresign(x.userID,'/sfms/api/sign/')",href='') 
-                i.icon.icon-zoom-in  更多
-
-            
+                i.icon.icon-zoom-in  更多       
       div.pull-right
         jason-pagination(conf='paginationConf')

@@ -1,14 +1,14 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-  jason-pagecontent(action='/sfms/api/kpi' conf='paginationConf')
+  jason-pagecontent(action='/sfms/api/kpi',conf='paginationConf')
     div.page-content
       ng-form.form-inline
         span.title  绩效管理
         div.buttons.pull-right
           label.form-group.my-form-group  绩效类型
-           jason-select.est(placeholder='绩效类型' ng-model='f.KPIType'  source='/datadict/plain' selectparams='{"Category":"dc_kpitype"}' stext='DictionaryValue' svalue='DictionaryID')
+           jason-select.est(ng-model='f.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
           label.form-group.my-form-group  所属项目
-           jason-select.est(placeholder='所属项目' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+           jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
           label.form-group.my-form-group 状态
             select(ng-model='f.KPIStatus' style="width:120px;height:34px;")
               option(value='') 全部
@@ -52,9 +52,7 @@ block content
             td {{x.Remark}}            
             td
               a(href='#/sfms/kpiManageCheck/?ID={{x.ID}}' )
-                i.icon.icon-edit 审核
-
-            
+                i.icon.icon-edit 审核        
       div.pull-right
         jason-pagination(conf='paginationConf')
 

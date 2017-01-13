@@ -119,7 +119,7 @@ myApp.config(function($routeProvider) {
         //controller: 'HomeController'
     }).
     
-     when('/sfms/kpi', {
+    when('/sfms/kpi', {
         templateUrl: '/sfms/kpi?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
