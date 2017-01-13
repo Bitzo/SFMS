@@ -5,8 +5,8 @@ block content
       ng-form.form-inline
         span.title 应用管理
         div.buttons.pull-right
-          label.form-group.my-form-group 应用名称：
-            jason-select(ng-model='f.ID' source='/app' stext='ApplicationName' svalue='ID')
+          label.form-group.my-form-group 应用名称
+            jason-select(ng-model='f.ID',source='/app',stext='ApplicationName',svalue='ID')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询
@@ -33,9 +33,7 @@ block content
               a(href='#/backend/applicationedit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑 
               a(ng-click="remove($index,x.ApplicationName,'/app')",href='')
-                i.icon.icon-trash  删除
-
-            
+                i.icon.icon-trash  删除        
       div.pull-right
         jason-pagination(conf='paginationConf')
 

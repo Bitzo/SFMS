@@ -16,20 +16,20 @@ block content
           tr
             td(width="15%",class="tableleft") 应用名称 
             td
-              jason-select.input(ng-model='paginationConf.formdata.ApplicationID',name='ApplicationID' source='/app' stext='ApplicationName' svalue='ID',required) 
+              jason-select.input(name="ApplicationName",ng-model='paginationConf.formdata.ApplicationID',source='/app',stext='ApplicationName',svalue='ID',required) 
               
           tr
             td(width="15%",class="tableleft") 	对应的父级名称
             td
-              jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="paginationConf.formdata.ParentID", source='/backmenu/parent', stext='ParentMenuName' svalue='ParentID',required)
+              jason-select.input(name='ParentID',ng-model="paginationConf.formdata.ParentID",source='/backmenu/parent',stext='ParentMenuName',svalue='ParentID',required)
             
           tr
             td(width="15%",class="tableleft") 菜单对应的层级
             td
               input(type="radio",name="MenuLevel",value="1",ng-model="paginationConf.formdata.MenuLevel",style="width:15px;height:15px",checked)
               &nbsp1
-              &nbsp&nbsp   &nbsp       
-              input(type="radio",name="MenuLevel",ng-model="paginationConf.formdata.MenuLevel",value="2",style="width:15px;height:15px",)
+              &nbsp&nbsp &nbsp       
+              input(type="radio",name="MenuLevel",value="2",ng-model="paginationConf.formdata.MenuLevel",style="width:15px;height:15px",)
               &nbsp2          
 
           tr
@@ -38,7 +38,7 @@ block content
               input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive",style="width:15px;height:15px",checked)
               &nbsp有效
               &nbsp&nbsp          
-              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.IsActive",value="0",style="width:15px;height:15px",)
+              input(type="radio",name="IsActive",value="0",ng-model="paginationConf.formdata.IsActive",style="width:15px;height:15px",)
               &nbsp无效  
 
           tr

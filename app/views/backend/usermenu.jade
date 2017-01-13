@@ -3,28 +3,29 @@ block content
     span 
       h2 用户菜单设置
     jason-form(method="post", source='/backuser' name="userMenu" conf='paginationConf')
+       form(name="userMenu")
         table.table.table-bordered.table-hover.definedwidth.m10              
           tr
             td(width="15%",class="tableleft") 用户姓名 
             td
-              span(ng-model='paginationConf.formdata.UserName') {{paginationConf.formdata.UserName}}
+              span(name='UserName',ng-model='paginationConf.formdata.UserName') {{paginationConf.formdata.UserName}}
 
           tr
             td(width="15%",class="tableleft") 账户名 
             td
-              span(ng-model="paginationConf.formdata.Account") {{paginationConf.formdata.Account}}
+              span(name='Account',ng-model="paginationConf.formdata.Account") {{paginationConf.formdata.Account}}
 
           tr
             td(width="15%",class="tableleft") 用户ID 
             td
-              span(ng-model='paginationConf.formdata.AccountID' ) {{paginationConf.formdata.AccountID}}
-  
-         
+              span(name='AccountID',ng-model='paginationConf.formdata.AccountID' ) {{paginationConf.formdata.AccountID}}
+    
           tr
             td(class="tableleft") 权限树
             td
               div
                 tree-grid(tree-data="tree_data" col_defs='col_defs' expand-on="expanding_property" expandOn="ApplicationID" on-check='clickHander(branch,parent)' showCheck='true')
+        
           tr
             td(class="tableleft")
             td
