@@ -39,16 +39,17 @@ router.post('/', function (req, res) {
         isActive = 1,
         //前端需要传输的数据
         temp = ['FIName', 'FIType', 'InOutType', 'FIPrice', 'ProjectID','UserID','Remark'],
-        err = 'require: ';
+        temp1 = ['财务名称', '财务类型', '财务收支', '财务金额','所属项目', '用户名', '财务描述'],
+        err = '缺少值: ';
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='require: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -236,18 +237,19 @@ router.put('/', function (req, res) {
         remark = query.Remark || '',
         isActive = 1,
         //前端需要传输的数据
-        temp = ['ID', 'FIName', 'FIType', 'InOutType', 'FIPrice', 'ProjectId','UserID','UserName'],
-        err = 'require: ';
+        temp = ['ID', 'FIName', 'FIType', 'InOutType', 'FIPrice', 'ProjectId','UserID','Remark'],
+        temp1 = ['财务ID', '财务名称', '财务类型', '财务收支', '财务金额','所属项目', '用户名', '财务描述'],
+        err = '缺少值: ';
 
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='require: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -605,14 +607,15 @@ router.get('/', function (req, res) {
 router.put('/check', function (req, res) {
     var data = req.body.formdata,
         temp = ['ID', 'FIStatu'],
-        err = 'require: ';
+        temp1 = ['财务ID', '审核结果'],
+        err = '缺少值: ';
     for (var key in temp) {
         if (!(temp[key] in data)) {
-            logger.writeInfo("require: " + temp[key]);
-            err += temp[key];
+            logger.writeInfo("缺少值: " + temp[key]);
+            err += temp1[key];
         }
     }
-    if (err != 'require: ') {
+    if (err != '缺少值: ') {
         res.status(400);
         return res.json({
             status: 400,
@@ -713,7 +716,7 @@ router.delete('/', function (req, res) {
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: "require ID"
+            msg: "缺少财务ID"
         })
     }
 

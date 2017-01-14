@@ -41,16 +41,17 @@ router.post('/', function (req, res) {
         isTrue = false; //用于逻辑上的判断
     //检查所需要的参数是否齐全
     var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID'],
-        err = 'required: ';
+        temp1 = ['绩效名称', '绩效类型', '绩效分', '所属项目'],
+        err = '缺少值: ';
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='required: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -294,6 +295,8 @@ router.put('/', function (req, res) {
             msg: '绩效分不是正确的数值'
         });
     }
+    console.log(data.Remark)
+    console.log(data.Remark.length)
     if (data.Remark.length>45) {
         res.status(400);
         return res.json({
@@ -303,17 +306,18 @@ router.put('/', function (req, res) {
         });
     }
     //检查所需要的参数是否齐全
-    var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID', 'UserName',],
-        err = 'required: ';
+    var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID'],
+        temp1 = ['绩效ID', '绩效名称', '绩效类型', '绩效分', '所属项目', '用户名'],
+        err = '缺少值: ';
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='required: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -775,14 +779,15 @@ router.get('/', function (req, res) {
 router.put('/check', function (req, res) {
     var data = req.body.formdata,
         temp = ['ID', 'KPIStatus'],
-        err = 'require: ';
+        temp1 = ['绩效ID', '审核意见']
+        err = '缺少值: ';
     for (var key in temp) {
         if (!(temp[key] in data)) {
-            logger.writeInfo("require: " + temp[key]);
-            err += temp[key];
+            logger.writeInfo("缺少值: " + temp[key]);
+            err += temp1[key];
         }
     }
-    if (err != 'require: ') {
+    if (err != '缺少值: ') {
         res.status(400);
         return res.json({
             status: 400,
@@ -887,7 +892,7 @@ router.delete('/', function (req, res) {
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: "require ID"
+            msg: "缺少绩效ID"
         })
     }
 

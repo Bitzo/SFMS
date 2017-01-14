@@ -41,16 +41,17 @@ router.post('/', function (req, res) {
     }
     //检查所需要的参数是否齐全
     var temp = ['ProjectName', 'ProjectDesc', 'ProjectPrice', 'ProjectManageID', 'ProjectEndTime'],
-        err = 'required: ';
+        temp1 = ['项目名称', '项目描述', '项目预算', '项目负责人', '项目截止时间']
+        err = '缺少值: ';
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='required: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -308,14 +309,15 @@ router.put('/', function (req, res) {
         time = moment().format('YYYY-MM-DD HH:mm:ss');
     //检查所需要的参数是否齐全
     var temp = ['ID', 'ProjectName', 'ProjectDesc', 'ProjectStatus', 'ProjectPrice', 'ProjectManageID', 'ProjectEndTime', 'ProjectTimeLine'],
-        err = 'required: ';
+        temp1 = ['项目ID', '项目名称', '项目描述','项目状态', '项目预算', '项目负责人', '项目截止时间', '项目进度'],
+    err = '缺少值: ';
     for (var value in temp) {
         if (!(temp[value] in query)) {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if (err != 'required: ') {
+    if (err != '缺少值: ') {
         res.status(400);
         return res.json({
             status: 400,
@@ -534,7 +536,7 @@ router.get('/user', function (req, res) {
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: '缺少userID'
+            msg: '缺少用户ID'
         })
     }
 
@@ -818,7 +820,7 @@ router.delete('/', function (req, res) {
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: 'require: ID'
+            msg: '缺少项目ID'
         })
     }
     var data = {
