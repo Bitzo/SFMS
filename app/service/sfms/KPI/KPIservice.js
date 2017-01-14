@@ -105,7 +105,6 @@ exports.updateKPI = function(data, callback) {
                 logger.writeError("绩效修改成功，生成操作日志失败 " + logModel.CreateTime);
             }
         })
-        console.log(logModel)
         logger.writeInfo('修改KPI');
         callback(false, results);
     })

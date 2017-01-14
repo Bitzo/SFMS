@@ -26,17 +26,18 @@ router.post('/', function (req, res) {
         userName = '',
         projectName = '';
     var temp = ['ProjectID','Remark'],
-        err = 'required: ';
+        temp1 = ['项目名称', '备注信息'],
+        err = '缺少值: ';
 
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='required: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -193,17 +194,18 @@ router.put('/', function (req, res) {
         userName = '',
         projectName = '',
         temp = ['ID', 'ProjectID','Remark'],
-        err = 'required: ';
+        temp1 = ['项目备注ID', '项目名称', '备注信息'],
+        err = '缺少值: ';
 
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='required: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -508,7 +510,7 @@ router.delete('/', function (req, res) {
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: "require ID"
+            msg: "缺少项目备注ID"
         })
     }
 
