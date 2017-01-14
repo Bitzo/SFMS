@@ -15,11 +15,11 @@ block content
           td
             textarea(type="textview",name="Remark",ng-model='formdata.Remark',rows="10",cols="30",ng-maxlength='200')
             &nbsp&nbsp
-            small.error(ng-show="formdata.Remark.$error.maxlength && formdata.Remark.$touched") 备注最多200位
+            small.error(ng-show="remarkInfo.Remark.$error.maxlength && remarkInfo.Remark.$touched") 备注最多200位
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/sfms/api/projectremark')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="remarkInfo.$invalid",ng-click="addnew(formdata,'/sfms/api/projectremark')") 添加
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#/sfms/projectManageRemark',ng-click='search()') 返回列表

@@ -65,6 +65,6 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/finance/check')") 确认审核
+            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="financeCheck.$invalid",ng-click="newedit(paginationConf.formdata,'/sfms/api/finance/check')") 确认审核
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/financeManage',ng-click='search()') 返回列表

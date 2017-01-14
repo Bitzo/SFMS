@@ -72,6 +72,6 @@ block content
           tr
             td(class="tableleft")
             td
-              button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/backmenu')") 确认修改
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="menuEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/backmenu')") 确认修改
               &nbsp&nbsp&nbsp&nbsp
               a.btn.btn-sm.btn-success(href='#backend/menu',ng-click='search()') 返回列表      
