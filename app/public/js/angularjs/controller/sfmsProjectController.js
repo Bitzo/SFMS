@@ -131,26 +131,6 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
             error(function(response) {
         });
          
-         //删除项目编辑中的用户
-    $scope.d={};
-    $scope.removeUser = function(index,action){
-        var mymessage=confirm("是否确认删除此项");  
-        $scope.d={
-            "ID":$scope.paginationConf.formdata.userdata[index].ID,
-        };
-        $http({
-            method:'delete',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                d:$scope.d
-            }
-        }).
-        success(function(response) {
-        }).
-        error(function(response) {
-        });
-        $scope.paginationConf.formdata.userdata.splice(index,1);
-    }
 
             //项目成员新增ID
             $scope.userChanged = function() {
