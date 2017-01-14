@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 菜单编辑
-    jason-form(method="post",source='/backmenu/plain'  conf='paginationConf' tocc="ApplicationID,ApplicationName,MenuLevel,ParentID")
+    jason-form(method="post",source='/backmenu/plain',conf='paginationConf',tocc="ApplicationID,ApplicationName,MenuLevel,ParentID")
      form(name="menuEdit")
       table.table.table-bordered.table-hover.definedwidth.m10
           tr
@@ -74,9 +74,4 @@ block content
             td
               button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/backmenu')") 确认修改
               &nbsp&nbsp&nbsp&nbsp
-              a.btn.btn-sm.btn-success(href='#backend/menu',ng-click='search()') 返回列表
-
-
-
-
-      
+              a.btn.btn-sm.btn-success(href='#backend/menu',ng-click='search()') 返回列表      

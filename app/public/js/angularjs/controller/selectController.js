@@ -71,49 +71,49 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
         error(function(response) {
         });
 
-    //所在班级
-    $scope.collegeChanged = function() {
-        $http({
-            method:'get',
-            url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                pageindex:1,
-                pagesize:10,
-                f:{
-                    Category:"dc_cls",
-                    ParentID:$scope.formdata.CollegeID
+        //所在班级
+        $scope.collegeChanged = function() {
+            $http({
+                method:'get',
+                url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                params:{
+                    pageindex:1,
+                    pagesize:10,
+                    f:{
+                        Category:"dc_cls",
+                        ParentID:$scope.formdata.CollegeID
+                    }
                 }
+            }).
+            success(function(response) {
+                $scope.cls=response.data;
+            }).
+            error(function(response) {
+            });
+
+        }
+
+            //绩效管理项目随用户的变化而变化
+            $scope.userKpiChanged = function() {
+                console.log($scope.formdata.UserID)
+                $http({
+                    method:'get',
+                    url: '/sfms/api/project/user' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                    params:{
+                        pageindex:1,
+                        pagesize:10,
+                        f:{
+                            UserID:$scope.formdata.UserID
+                        }
+                    }
+                }).
+                success(function(response) {
+                    $scope.ProjectNames=response.data;
+                }).
+                error(function(response) {
+                });
+
             }
-        }).
-        success(function(response) {
-            $scope.cls=response.data;
-        }).
-        error(function(response) {
-        });
-
-    }
-
-    //绩效管理项目随用户的变化而变化
-    $scope.userKpiChanged = function() {
-        console.log($scope.formdata.UserID)
-        $http({
-            method:'get',
-            url: '/sfms/api/project/user' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                pageindex:1,
-                pagesize:10,
-                f:{
-                    UserID:$scope.formdata.UserID
-                }
-            }
-        }).
-        success(function(response) {
-            $scope.ProjectNames=response.data;
-        }).
-        error(function(response) {
-        });
-
-    }
 
             //项目成员新增姓名
             $http({
@@ -153,42 +153,42 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
             }); 
             }
 
-              //新增项目管理中的用户列表
-                $scope.formdata.data=[];
-                $scope.addUser = function(item){ 
-                    if(item.duty) {
-                    $scope.formdata.data.push($scope.user);
-                    $scope.user={};
-                    }else{
-                        alert('请填写相关信息')
-                    }
-                    
+            //新增项目管理中的用户列表
+            $scope.formdata.data=[];
+            $scope.addUser = function(item){ 
+                if(item.duty) {
+                $scope.formdata.data.push($scope.user);
+                $scope.user={};
+                }else{
+                    alert('请填写相关信息')
                 }
-                //重置项目管理中的用户列表
-                $scope.resetUser = function(item){
-                    var mymessage=confirm("是否确认删除此项");  
-                    console.log(mymessage);
-                    if(mymessage){
-                         $scope.formdata.data.splice(item.$index,1);
-                    }            
-                }
+                
+            }
+            //重置项目管理中的用户列表
+            $scope.resetUser = function(item){
+                var mymessage=confirm("是否确认删除此项");  
+                console.log(mymessage);
+                if(mymessage){
+                        $scope.formdata.data.splice(item.$index,1);
+                }            
+            }
 
-                //新增项目管理中的用户列表
-                $scope.paginationConf.formdata.data=[];
-                $scope.addEditUser = function(item){
-                    if(item.duty) {
-                    $scope.formdata.data.push($scope.user);
-                    $scope.paginationConf.formdata.data = $scope.formdata.data;
-                    $scope.user={};
-                    }else{
-                        alert('请填写相关信息')
-                    }
-                    
+            //新增项目管理中的用户列表
+            $scope.paginationConf.formdata.data=[];
+            $scope.addEditUser = function(item){
+                if(item.duty) {
+                $scope.formdata.data.push($scope.user);
+                $scope.paginationConf.formdata.data = $scope.formdata.data;
+                $scope.user={};
+                }else{
+                    alert('请填写相关信息')
                 }
-                //重置项目管理中的用户列表
-                $scope.resetEditUser = function(item){
-                    var mymessage=confirm("是否确认删除此项");  
-                    $scope.formdata.data.splice(item.$index,1);
-                }
+                
+            }
+            //重置项目管理中的用户列表
+            $scope.resetEditUser = function(item){
+                var mymessage=confirm("是否确认删除此项");  
+                $scope.formdata.data.splice(item.$index,1);
+            }
 
 })
