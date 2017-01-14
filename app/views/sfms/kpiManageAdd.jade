@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 绩效新增
-    form(method="post",name="kpiManageAdd",ng-controller="selectController" )
+    form(method="post",name="kpiManageAdd",ng-controller="sfmsApiFinanceController" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
@@ -16,8 +16,7 @@ block content
           td(width="15%",class="tableleft") 绩效类型
           td
             jason-select.input(name='KPIType',ng-model='formdata.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
-        
-            
+                
         tr
           td(width="15%",class="tableleft") 用户名
           td

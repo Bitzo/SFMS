@@ -4,7 +4,7 @@ block content
     span 
       h2 绩效编辑
     jason-form(method="post",source='/sfms/api/kpi/person',name='kpiEdit',conf='paginationConf',tocc="ProjectID,UserID")
-      form(name='kpiEdit' ng-controller="sfmsIndexController")
+      form(name='kpiEdit' ng-controller="sfmsApiFinanceController")
         table.table.table-bordered.table-hover.definedwidth.m10
           tr
             td(width="15%",class="tableleft") 绩效名称
@@ -16,9 +16,8 @@ block content
           tr
             td(width="15%",class="tableleft") 绩效类型
             td
-              select(name='KPIType',ng-model='paginationConf.formdata.KPIType')
-                option(ng-repeat="item in kpitype",value='{{item.DictionaryID}}') {{item.DictionaryValue}}
-
+              jason-select.input(name='KPIType',ng-model='paginationConf.formdata.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
+      
           tr
             td(width="15%",class="tableleft") 所属项目
             td
