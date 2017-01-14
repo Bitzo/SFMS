@@ -73,8 +73,4 @@ myApp.controller('userInfoController', function($scope, $http,$q,baseService) {
             });
 
         }
-    
-        
-     
-
 })

@@ -7,7 +7,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         $scope.menus = response.data.data.Menu;
     });
 
-
 //------所有模块------
     //分页初始化数据
     $scope.paginationConf = {
@@ -18,6 +17,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
     //首页 数据显示
     $scope.f={};
+
     function getInit(){
         if($scope.paginationConf&&$scope.paginationConf.action&&$scope.paginationConf.action!="") {
             $http({
@@ -249,7 +249,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         });
     }
     
-
     //项目管理--首页 更多
     $scope.moreproject = function(index,action){
             $scope.f={
@@ -267,7 +266,4 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
                 console.log(response);
             });
         }
-
-
-    
 })
