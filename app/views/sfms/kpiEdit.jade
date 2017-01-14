@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(ng-controller="sfmsIndexController")
+  div.container-fluid
     span 
       h2 绩效编辑
     jason-form(method="post",source='/sfms/api/kpi/person',name='kpiEdit',conf='paginationConf',tocc="ProjectID,UserID")
