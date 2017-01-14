@@ -3,7 +3,8 @@ block content
   div.container-fluid(ng-controller="sfmsProjectController")
     span 
       h2 项目编辑
-    jason-form(method="post",name="projectEdit",source='/sfms/api/project',conf='paginationConf',tocc="ProjectManageID,ApplicationName,RoleName,ClassID")
+    jason-form(method="post",source='/sfms/api/project',conf='paginationConf',tocc="ProjectManageID,ApplicationName,RoleName,ClassID")
+      form(name="projectEdit")
         table.table.table-bordered.table-hover.definedwidth.m10
           tr
             td(width="15%",class="tableleft") 项目负责人

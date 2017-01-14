@@ -3,7 +3,8 @@ block content
   div.container-fluid
     span 
       h2 财务审核
-    jason-form(method="post",source='/sfms/api/finance',name="financeCheck",conf='paginationConf',tocc="FIName,FIType,InOutType,ProjectID,UserID")
+    jason-form(method="post",source='/sfms/api/finance',conf='paginationConf',tocc="FIName,FIType,InOutType,ProjectID,UserID")
+     form(name="financeCheck",ng-controller="userEditController")
       table.table.table-bordered.table-hover.definedwidth.m10      
         tr
           td(width="15%",class="tableleft") 财务名称

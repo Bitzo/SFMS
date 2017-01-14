@@ -25,8 +25,7 @@ block content
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            select(name='ProjectID',ng-model='formdata.ProjectID')
-              option   
+            select(name='ProjectID',ng-model='formdata.ProjectID') 
               option(ng-repeat="item in ProjectNames" value='{{item.ProjectID}}') {{item.ProjectName}}
 
         tr

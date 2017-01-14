@@ -4,6 +4,7 @@ block content
     span 
       h2 绩效审核
     jason-form(method="post",source='/sfms/api/kpi',conf='paginationConf',tocc="KPIName,KPIType,UserID")
+     form(name="kpiManageCheck")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
