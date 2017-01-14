@@ -1,11 +1,13 @@
 /**
  * Created by Administrator on 2016/12/14.
  */
-myApp.controller('selectController', function($scope, $http,$q,baseService) {
-       //应用名称
-        $http({
+myApp.controller('sfmsProjectController', function($scope, $http,$q,baseService) {    
+        //项目成员新增ID
+        $scope.userChanged = function() {
+            var index =  $scope.user.userIndex;
+            $http({
             method:'get',
-            url: '/app'+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url: '/backuser' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
                 pageindex:1,
                 pagesize:10,
@@ -13,28 +15,14 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
-            $scope.applicationNames=response.data;
+            $scope.user.userID=response.data[index].AccountID;
+            $scope.user.userName=response.data[index].UserName; 
         }).
         error(function(response) {
-        });
 
-       //角色名称
-        $http({
-            method:'get',
-            url: '/backrole' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                pageindex:1,
-                pagesize:10,
-                f:{}
-            }
-        }).
-        success(function(response) {
-            $scope.roleNames=response.data;
-        }).
-        error(function(response) {
-        });
-
-        //用户名称
+        }); 
+        }
+        //项目成员新增姓名
         $http({
             method:'get',
             url: '/backuser' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -46,149 +34,73 @@ myApp.controller('selectController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             $scope.UserNames=response.data;
-            console.log(response);
-            console.log($scope.UserNames);
-            
         }).
         error(function(response) {
-        });
+     });
 
-       //所在学院
-        $http({
-            method:'get',
-            url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                pageindex:1,
-                pagesize:10,
-                f:{
-                    Category:"dc_academy"
-                }
+         //实验室管理系统-项目管理-新建页面-项目成员新增  新增
+        $scope.formdata.data=[];
+        $scope.addUser = function(item){ 
+            if(item.duty) {
+            $scope.formdata.data.push($scope.user);
+            $scope.user={};
+            }else{
+                alert('请填写相关信息')
             }
-        }).
-        success(function(response) {
-            $scope.college=response.data;
-        }).
-        error(function(response) {
-        });
+            
+        }
+       //实验室管理系统-项目管理-新建页面-项目成员新增  重置
+        $scope.resetUser = function(item){
+            var mymessage=confirm("是否确认删除此项");  
+            console.log(mymessage);
+            if(mymessage){
+                    $scope.formdata.data.splice(item.$index,1);
+            }            
+        }
 
-        //所在班级
-        $scope.collegeChanged = function() {
+       //实验室管理系统-项目管理-编辑页面-项目成员信息显示  删除
+        $scope.d={};
+        $scope.removeUser = function(index,action){
+            var mymessage=confirm("是否确认删除此项");  
+            if(mymessage==true){
+            $scope.d={
+                "ID":$scope.paginationConf.formdata.userdata[index].ID,
+            };
             $http({
-                method:'get',
-                url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                method:'delete',
+                url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
                 params:{
-                    pageindex:1,
-                    pagesize:10,
-                    f:{
-                        Category:"dc_cls",
-                        ParentID:$scope.formdata.CollegeID
-                    }
+                    d:$scope.d
                 }
             }).
             success(function(response) {
-                $scope.cls=response.data;
             }).
             error(function(response) {
             });
+            $scope.paginationConf.formdata.userdata.splice(index,1);
+            }else{
 
+            }
         }
-
-            //绩效管理项目随用户的变化而变化
-            $scope.userKpiChanged = function() {
-                console.log($scope.formdata.UserID)
-                $http({
-                    method:'get',
-                    url: '/sfms/api/project/user' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                    params:{
-                        pageindex:1,
-                        pagesize:10,
-                        f:{
-                            UserID:$scope.formdata.UserID
-                        }
-                    }
-                }).
-                success(function(response) {
-                    $scope.ProjectNames=response.data;
-                }).
-                error(function(response) {
-                });
-
+        //实验室管理系统-项目管理-编辑页面-项目成员新增  新增
+        $scope.paginationConf.formdata.data=[];
+        $scope.addEditUser = function(item){
+            if(item.duty) {
+            $scope.formdata.data.push($scope.user);
+            $scope.paginationConf.formdata.data = $scope.formdata.data;
+            $scope.user={};
+            }else{
+                alert('请填写相关信息')
             }
-
-            //项目成员新增姓名
-            $http({
-                method:'get',
-                url: '/backuser' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                params:{
-                    pageindex:1,
-                    pagesize:10,
-                    f:{}
-                }
-            }).
-            success(function(response) {
-                $scope.UserNames=response.data;
-            }).
-            error(function(response) {
-        });
-         
-
-            //项目成员新增ID
-            $scope.userChanged = function() {
-                var index =  $scope.user.userIndex;
-                $http({
-                method:'get',
-                url: '/backuser' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                params:{
-                    pageindex:1,
-                    pagesize:10,
-                    f:{}
-                }
-            }).
-            success(function(response) {
-                $scope.user.userID=response.data[index].AccountID;
-                $scope.user.userName=response.data[index].UserName; 
-            }).
-            error(function(response) {
-
-            }); 
-            }
-
-            //新增项目管理中的用户列表
-            $scope.formdata.data=[];
-            $scope.addUser = function(item){ 
-                if(item.duty) {
-                $scope.formdata.data.push($scope.user);
-                $scope.user={};
-                }else{
-                    alert('请填写相关信息')
-                }
-                
-            }
-            //重置项目管理中的用户列表
-            $scope.resetUser = function(item){
-                var mymessage=confirm("是否确认删除此项");  
-                console.log(mymessage);
-                if(mymessage){
-                        $scope.formdata.data.splice(item.$index,1);
-                }            
-            }
-
-            //新增项目管理中的用户列表
-            $scope.paginationConf.formdata.data=[];
-            $scope.addEditUser = function(item){
-                if(item.duty) {
-                $scope.formdata.data.push($scope.user);
-                $scope.paginationConf.formdata.data = $scope.formdata.data;
-                $scope.user={};
-                }else{
-                    alert('请填写相关信息')
-                }
-                
-            }
-            //重置项目管理中的用户列表
-            $scope.resetEditUser = function(item){
-                var mymessage=confirm("是否确认删除此项");  
-                $scope.formdata.data.splice(item.$index,1);
-            }
+            
+        }
+        //实验室管理系统-项目管理-编辑页面-项目成员新增  重置
+        $scope.resetEditUser = function(item){
+            var mymessage=confirm("是否确认删除此项"); 
+            if(mymessage){
+                 $scope.formdata.data.splice(item.$index,1);
+            }   
+            
+        }
 
 })

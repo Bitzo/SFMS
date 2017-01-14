@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 财务新增
-    form(method="post",name="financeAdd")
+    form(method="post",name="financeAdd" ng-controller="sfmsApiFinanceController")
       table.table.table-bordered.table-hover.definedwidth.m10      
         tr
           td(width="15%",class="tableleft") 财务名称
@@ -21,7 +21,6 @@ block content
           td(width="15%",class="tableleft") 所属项目
           td
             select(name='ProjectID',ng-model='formdata.ProjectID')
-              option   
               option(ng-repeat="item in ProjectNames",value='{{item.ProjectID}}') {{item.ProjectName}}
                   
         tr

@@ -1,6 +1,6 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(ng-controller="selectController")
+  div.container-fluid(ng-controller="sfmsProjectController")
     span 
       h2 项目编辑
     jason-form(method="post",name="projectEdit",source='/sfms/api/project',conf='paginationConf',tocc="ProjectManageID,ApplicationName,RoleName,ClassID")
@@ -35,7 +35,7 @@ block content
                       td 
                         button(ng-click="removeUser($index,'/sfms/api/projectuser')" style="width:80px;height:34px") 删除                 
 
-          tr(ng-controller="selectController")
+          tr(ng-controller="sfmsProjectController")
             td(width="15%",class="tableleft") 项目成员新增 
             td
               table.table-bordered.table-hover
