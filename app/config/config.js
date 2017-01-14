@@ -49,6 +49,7 @@ var config = {
         accessTokenUrl: 'token?grant_type=client_credential&', //获取token
         createMenu: 'menu/create?access_token=', //创建菜单
         userInfo: 'user/info?access_token=',//获取用户信息
+        autoreplyInfo: 'get_current_autoreply_info?access_token='//获取公众号自动回复的信息
     },
     //金科小哥相关的
     jinkebro: {

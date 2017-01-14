@@ -39,7 +39,8 @@ router.get('/accesscheck', function (req, res, next) {
     var echostr = query.echostr;
     var timestamp = query['timestamp'];
     var nonce = query.nonce;
-
+    console.log("[routes/api/wechatroute-------------------42行]" + signature);
+    
     var oriArray = new Array();
     oriArray[0] = nonce;
     oriArray[1] = timestamp;
@@ -87,14 +88,27 @@ wechat.textMsg(function (msg) {
                     wechat.sendMsg(sendMsg);
                     return;
                 });
-            } else {
-                resMsg = {
+            } else {              
+                var articles = [];
+                var picurl = "http://mmbiz.qpic.cn/mmbiz_png/2gG8lzb9PibtXRR";
+                picurl += "a2ibT3yQS8o2IFUiboGzSRCvbhzPVfooq34aNbs7MYXiaBkjMr";
+                picurl += "IlrR7biadliafyA3EcG16iaYg9hw/0";
+                articles[0] = {
+                    title: "零食",
+                    description: "测试描述",
+                    picUrl: picurl,
+                    url: "https://www.baidu.com/"
+                };
+
+                // 返回图文消息
+                var resMsg1 = {
                     fromUserName: msg.toUserName,
                     toUserName: msg.fromUserName,
-                    msgType: "text",
-                    content: "这是文本回复" + new Date(),
+                    msgType: "news",
+                    articles: articles,
                     funcFlag: 0
-                };
+                }
+                wechat.sendNewsMsg(resMsg1);
             }
             break;
 
@@ -139,7 +153,7 @@ wechat.textMsg(function (msg) {
 
 // 监听图片消息
 wechat.imageMsg(function (msg) {
-    console.log("imageMsg received");
+    console.log("[routes/api/wechatroute----------142行]imageMsg received");
     console.log(JSON.stringify(msg));
     var resMsg = {};
     switch (msg.msgType) {
@@ -184,14 +198,26 @@ wechat.eventMsg(function (msg) {
     switch (msg.Event) {
         //订阅的事件
         case 'subscribe':
+            //当订阅时间出发的时候发送欢迎标语
+            var resMsg = {
+                fromUserName: msg.ToUserName,
+                toUserName: msg.FromUserName,
+                msgType: "text",
+                content: "欢迎来到金科小哥",
+                funcFlag: 0
+            }
+            wechat.sendMsg(resMsg);
+            
             //获取token
             wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
                 //如果成功  
                 if (isSussess) {
-
+                    wechat.getCurrentAutoreplyInfo(token, function (resultInfo) {
+                        console.log("[routes/api/wechatroute-------202行]token=" + token);
+                    });
                     // wechat.createMenu(token, function () {
                     //     console.log("创建菜单");
-                    // logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
+                    //     logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
                     // });
                     //用户订阅时的操作
                     wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
@@ -320,8 +346,7 @@ wechat.eventMsg(function (msg) {
                         var historyInfo = '';
                         var totalPrice = 0;
                         var index = 1;
-                         for(var key in orderinfo.data)
-                        {
+                        for (var key in orderinfo.data) {
                             historyInfo += index + '、订单号：' + orderinfo.data[key]['OrderID'] + "  ";
                             historyInfo += '商品名称：' + orderinfo.data[key]['ProductName'] + "  ";
                             historyInfo += '数量：' + orderinfo.data[key]['ProductCount'] + "  ";
@@ -331,7 +356,7 @@ wechat.eventMsg(function (msg) {
                             index++;
                             totalPrice = 0;
                         }
-                         var resMsg = {
+                        var resMsg = {
                             fromUserName: msg.ToUserName,
                             toUserName: msg.FromUserName,
                             msgType: "text",
@@ -356,11 +381,8 @@ wechat.eventMsg(function (msg) {
                     break;
 
             }
-
             break;
-
     }
-
 });
 
 //监听地址的事件

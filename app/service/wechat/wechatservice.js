@@ -221,7 +221,34 @@ Weixin.prototype.getCustomerInfo = function (accessToken, openid, callback) {
 
 }
 
+//微信的公众号的自动回复的接口
+Weixin.prototype.getCurrentAutoreplyInfo = function (accessToken, callback) {
+    var getUrl = config.weChat.baseUrl + config.weChat.autoreplyInfo + accessToken;
+    console.log("[service/wechat/wechatservice------228行]" + getUrl);
+    https.get(getUrl, function (res) {
+        var datas = [];
+        var size = 0;
+        res.on('data', function (data) {
+            datas.push(data);
+            size += data.length;
+        });
 
+        res.on('end', function () {
+            var buff = Buffer.concat(datas, size);
+            var result = JSON.parse(buff);
+
+            if (callback && typeof (callback) === 'function') {
+                console.log("[service/wechat/wechatservice-------241行]");
+                console.log(result);
+                return callback(result);
+            };
+        }).on('error',function(e)
+        {
+            console.log("通过http.get获取微信的自动回复的接口信息");
+            logger.writeError('[service/wechat/wechatservice---------246行]通过http.get获取微信的自动回复的接口信息失败');
+        })
+    })
+}
 //微信创建菜单的方法
 Weixin.prototype.createMenu = function (accessToken, callback) {
     //微信的创建菜单的url
@@ -254,13 +281,13 @@ Weixin.prototype.createMenu = function (accessToken, callback) {
                     "type": "view",
                     "name": "个人信息",
                     "url": "http://sun.tunnel.2bdata.com/wechat/addressinfo"
-                }, 
-                {
-                    "type" : "click",
-                    "name" : "历史订单",
-                    "key"  : "OrderHistory"
                 },
-                {
+                    {
+                        "type": "click",
+                        "name": "历史订单",
+                        "key": "OrderHistory"
+                    },
+                    {
                         "type": "view",
                         "name": "联系我们",
                         "url": "http://www.soso.com"
@@ -639,12 +666,12 @@ Weixin.prototype.sendimgMsg = function (msg) {
         "<FromUserName><![CDATA[" + msg.fromUserName + "]]></FromUserName>" +
         "<CreateTime>" + time + "</CreateTime>" +
         "<MsgType><![CDATA[" + msg.msgType + "]]></MsgType>" +
-        "<image>" +
+        "<Image>" +
         "<MediaId><![CDATA[" + msg.MediaId + "]]></MediaId>" +
-        "</image>" +
-        "<funcFlag><![CDATA[" + msg.funcFlag + "]]></funcFlag>" +
+        "</Image>" +
         "</xml>";
-
+    console.log("[service/wechat/wechatservice--------674行]");
+    console.log(output);
     this.res.type('xml');
     this.res.status(200).send(output);
     return this;
