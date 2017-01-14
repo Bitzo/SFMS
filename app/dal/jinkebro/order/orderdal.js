@@ -349,7 +349,11 @@ exports.insertOrderCustomer = function (data, callback) {
     });
 }
 
-//删除订单
+/**
+ * 删除订单,物理删除
+ * @param data
+ * @param callback
+ */
 exports.deleteOrder = function (data, callback) {
     var delete_sql = 'delete from jit_order where 1 = 0 ;  ';
 
@@ -417,7 +421,8 @@ exports.updateOrder = function (data, callback) {
     // 订购商品的ID及其数量
     var receiveProductIDs = ordprodtTabDt.ProductIDs; //array
     var receiveProductCounts = ordprodtTabDt.ProductCounts; //array
-
+    console.log(receiveProductIDs == undefined);
+    console.log(receiveProductCounts == undefined);
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             console.error('mysql 链接失败');
@@ -474,32 +479,38 @@ exports.updateOrder = function (data, callback) {
             funcArr.push(func1);
 
             // 修改orderproduct表
-            var func2 = function (callback2) {
-                var orderProDelSql = 'delete from jit_orderproduct where jit_orderproduct.OrderID = ' + orderTableData.OrderID;
-                console.log('删除orderproduct表中指定记录的sql：' + orderProDelSql);
-                logger.writeInfo('删除orderproduct表中指定记录的sql：' + orderProDelSql);
-                connection.query(orderProDelSql, function (err, info) {
-                    if (err) {
-                        connection.rollback(function () {
-                            logger.writeError("[ordercustomer]执行事务失败，" + "ERROR：" + err);
-                            console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
-                            throw err;
-                        });
-                    }
-                    console.log(info);
-                    callback2(err, info);
-                });
-            };
-            funcArr.push(func2);
+            if (receiveProductIDs !== undefined && receiveProductIDs.length !== undefined && receiveProductIDs.length > 0) {
+                var func2 = function (callback2) {
+                    var orderProDelSql = 'delete from jit_orderproduct where jit_orderproduct.OrderID = ' + orderTableData.OrderID;
+                    console.log('删除orderproduct表中指定记录的sql：' + orderProDelSql);
+                    logger.writeInfo('删除orderproduct表中指定记录的sql：' + orderProDelSql);
+                    connection.query(orderProDelSql, function (err, info) {
+                        if (err) {
+                            connection.rollback(function () {
+                                logger.writeError("[ordercustomer]执行事务失败，" + "ERROR：" + err);
+                                console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
+                                throw err;
+                            });
+                        }
+                        console.log(info);
+                        callback2(err, info);
+                    });
+                };
+                funcArr.push(func2);
+            }
+
 
             // 新增orderproduct表的记录
             (function next(index) {
+                if (receiveProductIDs === undefined || receiveProductIDs.length === undefined || receiveProductIDs.length <= 0) {
+                    return ;
+                }
                 if (index === receiveProductIDs.length) { // No items left
                     return;
                 }
                 var tempProID = receiveProductIDs[index];
                 var tempProCount = receiveProductCounts[index];
-                var orderProAddSqlTemp = 'insert into jit_orderproduct set jit_orderproduct.OrderID = ' + orderTableData.OrderID + ' , ' ; //+ ' 1 , = 2;' ;
+                var orderProAddSqlTemp = 'insert into jit_orderproduct set jit_orderproduct.OrderID = ' + orderTableData.OrderID + ' , ' ;
                 orderProAddSqlTemp += ' jit_orderproduct.ProductID = ' + tempProID + ' , ';
                 orderProAddSqlTemp += ' jit_orderproduct.ProductCount = ' + tempProCount + ' ;' ;
 
@@ -549,12 +560,38 @@ exports.updateOrder = function (data, callback) {
 
 }
 
-//查询订单
+/**
+ * 查询订单
+ * @param data
+ * @param callback
+ */
 exports.queryOrders = function (data, callback) {
     var arr = new Array();
+    // data的格式如下
+    // {
+    //     pageManage: {
+    //         page: 1,
+    //             pageNum: 20,
+    //             isPaging: 1
+    //     },
+    //     orderProduct: {
+    //         'jit_orderproduct.ProductID': [
+    //
+    //         ],
+    //             'jit_orderproduct.ProductCount': [
+    //
+    //         ]
+    //     },
+    //     order: {
+    //         'jit_ordercustomer.OrderID': '1',
+    //             'jit_customer.WechatUserCode': '',
+    //             'jit_customer.CustomerID': '',
+    //             'jit_order.OrderStatus': ''
+    //     }
+    // }
     arr.push(' select  jit_customer.CustomerID,jit_ordercustomer.OrderID, ');
     arr.push(' jit_order.OrderTime,jit_orderproduct.ProductID,jit_product.ProductName,jit_orderproduct.ProductCount, ');
-    arr.push(' jit_product.ProductPrice,jit_productype.ProductTypeName,jit_order.PayMethod,jit_order.OrderStatus ');
+    arr.push(' jit_product.ProductPrice,jit_productype.ProductTypeName,jit_order.PayMethod,jit_order.OrderStatus,jit_order.IsValid,jit_order.IsActive ');
     arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer,jit_productype ');
     arr.push(' where 1 = 1 and jit_order.OrderID = jit_ordercustomer.orderID ');
     arr.push(' and jit_order.OrderID = jit_orderproduct.OrderID ');
@@ -564,21 +601,28 @@ exports.queryOrders = function (data, callback) {
 
     var query_sql = arr.join(' ');
 
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging' && key !== 'jit_orderproduct.ProductID' && key !== 'jit_orderproduct.ProductCount') {
+    // 接收service传来的数据
+    var pageManageData = data.pageManage;
+    var orderProductData =  data.orderProduct;
+    var orderData = data.order;
+
+    // OrderID,WechatUserCode,CustomerID,OrderStatus,IsActive的拼接
+    if (orderData !== undefined) {
+        for (var key in orderData) {
+            if (orderData[key] != '') {
                 //判断data[key]是否是数值类型
-                if (!isNaN(data[key])) {
-                    query_sql += ' and ' + key + ' = ' + data[key] + ' ';
+                if (!isNaN(orderData[key])) {
+                    query_sql += " and " + key + " = " + orderData[key] + " ";
                 } else {
-                    query_sql += ' and ' + key + ' = "' + data[key] + '" ';
+                    query_sql += " and " + key + " = '" + orderData[key] + "' ";
                 }
             }
         }
     }
 
+    //产品种类和数量的查询sql拼接
     var tempSql = '',
-        tempArr = data['jit_orderproduct.ProductID'],
+        tempArr = orderProductData['jit_orderproduct.ProductID'],
         tempArrLength = tempArr.length;
     if (tempArrLength != 0) {
         for(var i=0; i<tempArrLength; i++) {
@@ -594,7 +638,7 @@ exports.queryOrders = function (data, callback) {
     }
 
     tempSql = '';
-    tempArr = data['jit_orderproduct.ProductCount'];
+    tempArr = orderProductData['jit_orderproduct.ProductCount'];
     tempArrLength = tempArr.length;
     if (tempArrLength != 0) {
         for(var i=0; i<tempArrLength; i++) {
@@ -609,10 +653,10 @@ exports.queryOrders = function (data, callback) {
         query_sql += tempSql;
     }
 
-    var num = data.pageNum; //每页显示的个数
-    var page = data.page || 1;
+    var num = pageManageData.pageNum; //每页显示的个数
+    var page = pageManageData.page || 1;
 
-    if (data.isPaging == 1) {
+    if (pageManageData.isPaging == 1) {
         query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     }
 
@@ -632,12 +676,18 @@ exports.queryOrders = function (data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 
 }
 
-//查询指定条件订单的个数
+/**
+ * 查询指定条件订单的个数
+ * @param data
+ * @param callback
+ * @constructor
+ */
 exports.CountOrders = function (data, callback) {
     var arr = new Array();
     arr.push(' select count(1) as num ');
@@ -646,24 +696,29 @@ exports.CountOrders = function (data, callback) {
     arr.push(' and jit_order.OrderID = jit_orderproduct.OrderID ');
     arr.push(' and jit_product.ProductID = jit_orderproduct.ProductID ');
     arr.push(' and jit_ordercustomer.CustomerID = jit_customer.CustomerID ');
-
     var sql = arr.join(' ');
 
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging' && key !== 'jit_orderproduct.ProductID' && key !== 'jit_orderproduct.ProductCount') {
-                //如果data[key]是数字
-                if (!isNaN(data[key])) {
-                    sql += " and " + key + " = " + data[key] + " ";
+    // 接收service传来的数据
+    var orderProductData =  data.orderProduct;
+    var orderData = data.order;
+
+    // OrderID,WechatUserCode,CustomerID,OrderStatus的拼接
+    if (orderData !== undefined) {
+        for (var key in orderData) {
+            if (orderData[key] != '') {
+                //判断data[key]是否是数值类型
+                if (!isNaN(orderData[key])) {
+                    sql += " and " + key + " = " + orderData[key] + " ";
                 } else {
-                    sql += " and " + key + " = '" + data[key] + "' ";
+                    sql += " and " + key + " = '" + orderData[key] + "' ";
                 }
             }
         }
     }
 
+    //产品种类和数量的查询sql拼接
     var tempSql = '',
-        tempArr = data['jit_orderproduct.ProductID'],
+        tempArr = orderProductData['jit_orderproduct.ProductID'],
         tempArrLength = tempArr.length;
     if (tempArrLength != 0) {
         for(var i=0; i<tempArrLength; i++) {
@@ -679,10 +734,10 @@ exports.CountOrders = function (data, callback) {
     }
 
     tempSql = '';
-    tempArr = data['jit_orderproduct.ProductCount'];
+    tempArr = orderProductData['jit_orderproduct.ProductCount'];
     tempArrLength = tempArr.length;
     if (tempArrLength != 0) {
-        for(var i=0; i<tempArr.length; i++) {
+        for(var i=0; i<tempArrLength; i++) {
             if (tempSql.length == 0) {
                 tempSql += ' and jit_orderproduct.ProductCount in (' + tempArr[i];
             }
@@ -694,7 +749,8 @@ exports.CountOrders = function (data, callback) {
         sql += tempSql;
     }
 
-    sql += ';' ;
+    sql += ';';   //sql拼接结束
+
     logger.writeInfo("查询指定条件的订单个数,sql:" + sql);
     console.log("查询指定条件的订单个数,sql:" + sql);
 

@@ -19,12 +19,13 @@ router.get('/', function (req, res) {
     for (var key1 in req.query) {
         console.log("获取等到的url为" + key1);
     }
-
+    //接收前端数据
     var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
         pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
         OrderID = req.query.OrderID || '',
         WechatUserCode = req.query.WechatUserCode || '',
         isPaging = req.query.isPaging || 1, //是否分页 0表示不分页,1表示分页
+        IsActive = (req.query.IsActive !== undefined) ? (req.query.IsActive) : 1,
         CustomerID = req.query.CustomerID || '',
         ProductID = req.query.ProductID || [],
         OrderStatus = req.query.OrderStatus || '',
@@ -39,8 +40,8 @@ router.get('/', function (req, res) {
     }
 
     console.log("获取到的orderid=" + OrderID);
-    page = page > 0 ? page : 1;
 
+    page = page > 0 ? page : 1;
     if (pageNum == '') {
         pageNum = config.pageCount;
     }
@@ -48,24 +49,32 @@ router.get('/', function (req, res) {
     //用于查询结果总数的计数
     var countNum = 0;
 
-    var data = {
-        page: page,
-        pageNum: pageNum,
-        "jit_ordercustomer.OrderID": OrderID,
-        "jit_customer.WechatUserCode" : WechatUserCode,
-        "jit_customer.CustomerID" : CustomerID,
-        "jit_orderproduct.ProductID" : ProductID,
-        "jit_orderproduct.ProductCount" : ProductCount,
-        "jit_order.OrderStatus" : OrderStatus,
-        isPaging: isPaging
+    // 传到dal的数据
+    var sendData = {
+        pageManage : {
+            page : page,
+            pageNum : pageNum,
+            isPaging : isPaging
+        },
+        orderProduct : {
+            "jit_orderproduct.ProductID" : ProductID,
+            "jit_orderproduct.ProductCount" : ProductCount
+        },
+        order : {
+            "jit_ordercustomer.OrderID" : OrderID,
+            "jit_customer.WechatUserCode" : WechatUserCode,
+            "jit_customer.CustomerID" : CustomerID,
+            "jit_order.OrderStatus" : OrderStatus,
+            "jit_order.IsActive" : IsActive
+        }
     };
 
+    // 应该是整型的数据
     var intdata = {
         page: page,
         pageNum: pageNum,
         OrderID: OrderID
     };
-
     for (var key in intdata) {
         if (isNaN(intdata[key]) && intdata[key] != '') {
             res.status(400);
@@ -77,7 +86,7 @@ router.get('/', function (req, res) {
         }
     }
 
-    orderService.CountOrders(data, function (err, results) {
+    orderService.CountOrders(sendData, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -90,7 +99,7 @@ router.get('/', function (req, res) {
             countNum = results[0]['num'];
 
             //查询所需的详细数据
-            orderService.queryOrders(data, function (err, result) {
+            orderService.queryOrders(sendData, function (err, result) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -425,8 +434,8 @@ router.put('/', function (req, res) {
         IsCheck = formdata.IsCheck,
         PDate = formdata.PDate,
         OrderStatus = (formdata.OrderStatus !== undefined) ? (formdata.OrderStatus) : 1,  //not null
-        ProductIDs = formdata.ProductIDs || [1,2,5],
-        ProductCounts = formdata.ProductCounts || [2,3,1];
+        ProductIDs = formdata.ProductIDs,  // 可选
+        ProductCounts = formdata.ProductCounts; // 可选
 
     // orderModelData传到dal里
     var orderModelData = orderModel;
