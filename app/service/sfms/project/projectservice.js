@@ -134,10 +134,10 @@ exports.updateProject = function(data, callback) {
 //项目信息查询-统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'ID': data.ID,
-        'ProjectManageID': data.ProjectManageID,
-        'CreateTime': data.CreateTime,
-        'ProjectEndTime': data.ProjectEndTime,
+        'ID': data.ID || '',
+        'ProjectManageID': data.ProjectManageID || '',
+        'CreateTime': data.CreateTime || '',
+        'ProjectEndTime': data.ProjectEndTime || '',
     }
     projectDAL.countQuery(queryData, function (err, results) {
         if (err) {
