@@ -40,7 +40,8 @@
     "validator": "*",
     "xml2js": "*",
     "q":"*",
-    "async":"*"
+    "async":"*",
+    "bluebird":"*"
   },
   "devDependencies": {}
 }

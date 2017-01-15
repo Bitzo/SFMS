@@ -151,8 +151,8 @@ Product.prototype.queryProducts = function (data, callback) {
                     logger.writeError("商品查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
+            
             callback(true,'商品查询失败');
-            return;
         }
 
         //计算过期时间
@@ -178,7 +178,6 @@ Product.prototype.queryProducts = function (data, callback) {
         });
 
         callback(false, result);
-        return;
     });
 }
 

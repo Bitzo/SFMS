@@ -436,7 +436,8 @@ Customer.prototype.addLocation = function(msg, callback) {
     var locationData = {
         'WechatUserCode': msg.FromUserName,
         'Lon': msg.Longitude,
-        'Lat': msg.Latitude
+        'Lat': msg.Latitude,
+        'UpdateTime': moment().format('YYYY-MM-DD HH:mm:ss')
     }
 
     var queryData = {

@@ -7,17 +7,18 @@
  */
 
 var productypeDAL = appRequire('dal/jinkebro/productype/productypedal');
-moment = require('moment'),
+    moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
     logModel = appRequire('model/jinkebro/log/logmodel'),
     productServ = appRequire('service/jinkebro/product/productservice');
-var Productype = function () {
+
+var Productype = function() {
     this.createTime = moment().format("YYYY-MM-DD HH:mm:ss");
 }
 
 //查询所有产品类别
-Productype.prototype.queryAllProType = function (data, callback) {
-    productypeDAL.queryAllProType(data, function (err, results) {
+Productype.prototype.queryAllProType = function(data, callback) {
+    productypeDAL.queryAllProType(data, function(err, results) {
         if (err) {
             callback(true, results);
             return;
@@ -27,7 +28,7 @@ Productype.prototype.queryAllProType = function (data, callback) {
 };
 
 //产品类别的插入
-Productype.prototype.insert = function (data, callback) {
+Productype.prototype.insert = function(data, callback) {
     if (!checkData(data)) {
         logModel.OperationName = '产品类别的插入时,库存信息为undefined';
         logModel.Action = operationConfig.jinkeBroApp.productType.productTypeQuery.actionName;
@@ -36,7 +37,8 @@ Productype.prototype.insert = function (data, callback) {
         loggerWrite();
         return callback(true, logModel.OperationName);
     }
-    productypeDAL.insert(data, function (err, results) {
+
+    productypeDAL.insert(data, function(err, results) {
         if (err) {
             logModel.OperationName = '产品类别的插入失败';
             logModel.Action = operationConfig.jinkeBroApp.productType.productStockAdd.actionName;
@@ -50,7 +52,7 @@ Productype.prototype.insert = function (data, callback) {
 };
 
 //修改产品类别
-Productype.prototype.update = function (data, callback) {
+Productype.prototype.update = function(data, callback) {
     if (!checkData(data)) {
         logModel.OperationName = '修改产品类别时,库存信息为undefined';
         logModel.Action = operationConfig.jinkeBroApp.productType.productTypeUpd.actionName;
@@ -59,8 +61,8 @@ Productype.prototype.update = function (data, callback) {
         loggerWrite();
         return callback(true, logModel.OperationName);
     }
-    console.log(data)
-    productypeDAL.update(data, function (err, results) {
+
+    productypeDAL.update(data, function(err, results) {
         if (err) {
             logger.writeErr('修改产品类别异常:' + this.createTime);
             console.log("修改产品类别异常");
@@ -76,7 +78,7 @@ Productype.prototype.update = function (data, callback) {
 };
 
 //删除产品类别
-Productype.prototype.delete = function (data, callback) {
+Productype.prototype.delete = function(data, callback) {
     if (!checkData(data)) {
         logModel.OperationName = '删除产品类别时,库存信息为undefined';
         logModel.Action = operationConfig.jinkeBroApp.productType.productTypeDel.actionName;
@@ -85,7 +87,8 @@ Productype.prototype.delete = function (data, callback) {
         loggerWrite();
         return callback(true, logModel.OperationName);
     }
-    productServ.getProCountByID(data, function (err, results) {
+    
+    productServ.getProCountByID(data, function(err, results) {
         if (err) {
             logger.writeError('根据ID得到产品数量异常:' + this.createTime);
             logModel.OperationName = '根据ID得到产品数量异常';
@@ -99,7 +102,7 @@ Productype.prototype.delete = function (data, callback) {
         if (count > 0) {
             callback(true, count);
         } else {
-            productypeDAL.delete(data, function (err, results) {
+            productypeDAL.delete(data, function(err, results) {
                 if (err) {
                     logger.writeError('删除产品类别异常:' + this.createTime);
                     logModel.OperationName = '删除库存信息失败';
@@ -134,7 +137,7 @@ function loggerWrite() {
     logModel.CreateTime = this.createTime;
     logModel.PDate = moment().format('YYYY-MM-DD');
 
-    logService.insertOperationLog(logModel, function (err, insertId) {
+    logService.insertOperationLog(logModel, function(err, insertId) {
         if (err) {
             logger.writeError('生成操作日志异常' + new Date());
         }
