@@ -1,18 +1,18 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-  jason-pagecontent(action='/sfms/api/finance' conf='paginationConf')
+  jason-pagecontent(action='/sfms/api/finance',conf='paginationConf')
     div.page-content
       ng-form.form-inline
         span.title  财务管理
         div.buttons.pull-right
           label.form-group.my-form-group   类型  
-            jason-select.est(placeholder='财务类型' ng-model='f.FIType' source='/datadict/plain' selectparams='{"Category":"dc_fitype"}' stext='DictionaryValue' svalue='DictionaryID')
+            jason-select.est(ng-model='f.FIType',source='/datadict/plain',selectparams='{"Category":"dc_fitype"}',stext='DictionaryValue',svalue='DictionaryID')
           label.form-group.my-form-group  收支类型  
-            jason-select.est(placeholder='收入支出类型' ng-model='f.InOutType' source='/datadict/plain' selectparams='{"Category":"dc_fiinouttype"}' stext='DictionaryValue' svalue='DictionaryID')
+            jason-select.est(ng-model='f.InOutType',source='/datadict/plain',selectparams='{"Category":"dc_fiinouttype"}',stext='DictionaryValue',svalue='DictionaryID')
           label.form-group.my-form-group   项目  
-            jason-select.est(placeholder='' ng-model='f.ProjectID' source='/sfms/api/project' stext='ProjectName' svalue='ID')
+            jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
           label.form-group.my-form-group  状态 
-            select.est(placeholder='审核状态' ng-model='f.FIStatus')
+            select.est(ng-model='f.FIStatus')
               option 待审核
               option 已审核
               option(value='') 全部
@@ -55,9 +55,7 @@ block content
             td {{x.CheckTime}}
             td {{x.Remark}}            
             td
-              a(href='#/sfms/financeEdit?ID={{x.ID}}' )
-                i.icon.icon-edit 修改            
+              a(href='#/sfms/financeEdit?ID={{x.ID}}')
+                i.icon.icon-edit 编辑            
       div.pull-right
         jason-pagination(conf='paginationConf')
-
-

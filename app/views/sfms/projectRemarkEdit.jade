@@ -1,30 +1,25 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(ng-controller="baseController")
+  div.container-fluid
     span 
       h2 项目备注编辑(普通)
-    jason-form(method="post", source='/sfms/api/projectremark' conf='paginationConf' tocc="ProjectID")
+    jason-form(method="post",source='/sfms/api/projectremark',conf='paginationConf',tocc="ProjectID")
       form(name="remarkEdit")
        table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            jason-select.input( ng-model='paginationConf.formdata.ProjectID' source='/sfms/api/project/user' stext='ProjectName' svalue='ProjectID')
+            jason-select.input(name='ProjectID',ng-model='paginationConf.formdata.ProjectID',source='/sfms/api/project/user',stext='ProjectName',svalue='ProjectID')
 
         tr
           td(width="15%",class="tableleft") 	备注
           td
-            textarea(type="textview",rows="10",cols="30",name='Remark' ng-model='paginationConf.formdata.Remark',ng-maxlength='200')
+            textarea(type="textview",name='Remark' ng-model='paginationConf.formdata.Remark',rows="10",cols="30",ng-maxlength='200')
             small.error(ng-if="remarkEdit.Remark.$error.maxlength && remarkEdit.Remark.$touched") 备注最多200位
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/projectremark')") 确认修改
+            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="remarkEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/sfms/api/projectremark')") 确认修改
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#/sfms/projectRemark',ng-click='search()') 返回列表
-
-
-
-
-      

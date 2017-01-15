@@ -15,12 +15,12 @@ block content
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(placeholder='应用名称' name='ApplicationID' ng-model='formdata.ApplicationID',source='/app', stext='ApplicationName',svalue='ID',required)
+            jason-select.input(name='ApplicationID',ng-model='formdata.ApplicationID',source='/app', stext='ApplicationName',svalue='ID',required)
       
         tr
           td(width="15%",class="tableleft") 	对应的父级名称
           td
-            jason-select.input(placeholder='对应的父级名称',name='ParentID',ng-model="formdata.ParentID", source='/backmenu/parent', stext='ParentMenuName' svalue='ParentID',ng-maxlength='11',required)
+            jason-select.input(,name='ParentID',ng-model="formdata.ParentID", source='/backmenu/parent',stext='ParentMenuName',svalue='ParentID',required)
             &nbsp&nbsp
             small.error(ng-if="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级名称最多11位
 
@@ -28,9 +28,9 @@ block content
           td(width="15%",class="tableleft") 菜单对应的层级
           td
             input(type="radio",name="MenuLevel",value="1",ng-model="formdata.MenuLevel",style="width:15px;height:15px",checked)
-            &nbsp 1
-            &nbsp&nbsp&nbsp           
-            input(type="radio",name="MenuLevel",ng-model="formdata.MenuLevel",value="2" ,style="width:15px;height:15px")
+            &nbsp1
+            &nbsp&nbsp &nbsp           
+            input(type="radio",name="MenuLevel",value="2",ng-model="formdata.MenuLevel",style="width:15px;height:15px")
             &nbsp2          
            
         tr
@@ -39,7 +39,7 @@ block content
             input(type="radio",name="IsActive",value="1",ng-model="formdata.IsActive",style="width:15px;height:15px",checked)
             &nbsp有效
             &nbsp&nbsp          
-            input(type="radio",name="IsActive",ng-model="formdata.IsActive",value="0",style="width:15px;height:15px")
+            input(type="radio",name="IsActive",value="0",ng-model="formdata.IsActive",style="width:15px;height:15px")
             &nbsp无效    
 
         tr
@@ -72,12 +72,6 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/backmenu')") 添加
- 
+            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="menuInfo.$invalid",ng-click="addnew(formdata,'/backmenu')") 添加
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-sm.btn-success(href='#backend/menu',ng-click='search()') 返回列表
-
-
-
-
-      
+            a.btn.btn-sm.btn-success(href='#backend/menu',ng-click='search()') 返回列表    

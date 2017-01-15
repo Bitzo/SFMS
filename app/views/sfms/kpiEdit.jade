@@ -1,10 +1,10 @@
 link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid(ng-controller="sfmsIndexController")
+  div.container-fluid
     span 
       h2 绩效编辑
-    jason-form(method="post",source='/sfms/api/kpi/person' name='kpiEdit' conf='paginationConf' tocc="ProjectID,UserID")
-      form(name='kpiEdit' ng-controller="sfmsIndexController")
+    jason-form(method="post",source='/sfms/api/kpi/person',name='kpiEdit',conf='paginationConf',tocc="ProjectID,UserID")
+      form(name='kpiEdit' ng-controller="sfmsApiFinanceController")
         table.table.table-bordered.table-hover.definedwidth.m10
           tr
             td(width="15%",class="tableleft") 绩效名称
@@ -16,13 +16,12 @@ block content
           tr
             td(width="15%",class="tableleft") 绩效类型
             td
-              select(ng-model='paginationConf.formdata.KPIType')
-                option(ng-repeat="item in kpitype" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
-
+              jason-select.input(name='KPIType',ng-model='paginationConf.formdata.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
+      
           tr
             td(width="15%",class="tableleft") 所属项目
             td
-              jason-select.input( ng-model='paginationConf.formdata.ProjectID' source='/sfms/api/project/user' stext='ProjectName' svalue='ProjectID')
+              jason-select.input(name='ProjectID',ng-model='paginationConf.formdata.ProjectID',source='/sfms/api/project/user',stext='ProjectName',svalue='ProjectID')
               
           tr
             td(width="15%",class="tableleft") 绩效分
@@ -35,18 +34,13 @@ block content
           tr
             td(width="15%",class="tableleft") 绩效备注
             td
-              textarea(type="textview",rows="5",cols="30",name="Remark",ng-model='paginationConf.formdata.Remark',ng-maxlength='45',required)
+              textarea(type="textview",name="Remark",ng-model='paginationConf.formdata.Remark',rows="5",cols="30",ng-maxlength='45',required)
               &nbsp&nbsp
               small.error(ng-if="kpiEdit.Remark.$error.maxlength && kpiEdit.Remark.$touched") 备注最多45位
 
           tr
             td(class="tableleft")
             td
-              button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/sfms/api/kpi')") 确认修改
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="kpiEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/sfms/api/kpi')") 确认修改
               &nbsp&nbsp&nbsp&nbsp
               a.btn.btn-sm.btn-success(href='#sfms/kpi',ng-click='search()') 返回列表
-
-
-
-
-      

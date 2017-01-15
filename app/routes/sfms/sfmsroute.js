@@ -59,72 +59,94 @@ router.get('/appedit', function(req, res, next) {
 router.get('/projectLead', function(req, res, next) {
         res.render('sfms/projectLead', { title: 'Hi sfms' });
 });
+
 router.get('/projectLeadEdit', function(req, res, next) {
         res.render('sfms/projectLeadEdit', { title: 'Hi sfms' });
 });
+
 router.get('/projectManage', function(req, res, next) {
         res.render('sfms/projectManage', { title: 'Hi sfms' });
 });
+
 router.get('/projectManageAdd', function(req, res, next) {
         res.render('sfms/projectManageAdd', { title: 'Hi sfms' });
 });
+
 router.get('/projectManageEdit', function(req, res, next) {
         res.render('sfms/projectManageEdit', { title: 'Hi sfms' });
 });
+
 router.get('/projectRemark', function(req, res, next) {
         res.render('sfms/projectRemark', { title: 'Hi sfms' });
 });
+
 router.get('/projectRemarkAdd', function(req, res, next) {
         res.render('sfms/projectRemarkAdd', { title: 'Hi sfms' });
 });
+
 router.get('/projectRemarkEdit', function(req, res, next) {
         res.render('sfms/projectRemarkEdit', { title: 'Hi sfms' });
 });
+
 router.get('/projectManageRemark', function(req, res, next) {
         res.render('sfms/projectManageRemark', { title: 'Hi sfms' });
 });
+
 router.get('/projectManageRemarkAdd', function(req, res, next) {
         res.render('sfms/projectManageRemarkAdd', { title: 'Hi sfms' });
 });
+
 router.get('/projectManageRemarkEdit', function(req, res, next) {
         res.render('sfms/projectManageRemarkEdit', { title: 'Hi sfms' });
 });
+
 router.get('/kpi', function(req, res, next) {
         res.render('sfms/kpi', { title: 'Hi sfms' });
 });
+
 router.get('/kpiAdd', function(req, res, next) {
         res.render('sfms/kpiAdd', { title: 'Hi sfms' });
 });
+
 router.get('/kpiEdit', function(req, res, next) {
         res.render('sfms/kpiEdit', { title: 'Hi sfms' });
 });
+
 router.get('/kpiManage', function(req, res, next) {
         res.render('sfms/kpiManage', { title: 'Hi sfms' });
 });
+
 router.get('/kpiManageAdd', function(req, res, next) {
         res.render('sfms/kpiManageAdd', { title: 'Hi sfms' });
 });
 router.get('/kpiManageCheck', function(req, res, next) {
         res.render('sfms/kpiManageCheck', { title: 'Hi sfms' });
 });
+
 router.get('/signManage', function(req, res, next) {
         res.render('sfms/signManage', { title: 'Hi sfms' });
 });
+
 router.get('/signPersonal', function(req, res, next) {
         res.render('sfms/signPersonal', { title: 'Hi sfms' });
 });
+
 router.get('/finance', function(req, res, next) {
         res.render('sfms/finance', { title: 'Hi sfms' });
 });
+
 router.get('/financeAdd', function(req, res, next) {
         res.render('sfms/financeAdd', { title: 'Hi sfms' });
 });
+
 router.get('/financeEdit', function(req, res, next) {
         res.render('sfms/financeEdit', { title: 'Hi sfms' });
 });
+
 router.get('/financeManage', function(req, res, next) {
         res.render('sfms/financeManage', { title: 'Hi sfms' });
 });
+
 router.get('/financeManageCheck', function(req, res, next) {
         res.render('sfms/financeManageCheck', { title: 'Hi sfms' });
 });

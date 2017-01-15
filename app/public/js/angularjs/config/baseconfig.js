@@ -22,6 +22,10 @@ myApp.config(function($routeProvider) {
         templateUrl: '/useredit?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).
+    when('/backend/usermenu', {
+        templateUrl: '/usermenu?access_token='+accesstokenstring,
+        //controller: 'HomeController'
+    }).
     when('/backend/role', {
         templateUrl: '/role?access_token='+accesstokenstring,
         //controller: 'HomeController'
@@ -115,7 +119,7 @@ myApp.config(function($routeProvider) {
         //controller: 'HomeController'
     }).
     
-     when('/sfms/kpi', {
+    when('/sfms/kpi', {
         templateUrl: '/sfms/kpi?access_token='+accesstokenstring,
         //controller: 'HomeController'
     }).

@@ -55,6 +55,33 @@ var operationConfig = {
                 identifier: 104
             },
         },
+        memuManage: {
+            module: "菜单模块",
+            menuAdd: {
+                actionName: "菜单新增",
+                identifier: 1201
+            },
+            menuDel: {
+                actionName: "菜单删除",
+                identifier: 1202
+            },
+            menuUpd: {
+                actionName: "菜单修改",
+                identifier: 1203
+            },
+            menuSingleQuery: {
+                actionName: "菜单单个查询",
+                identifier: 1204
+            },
+            menuMultiQuery: {
+                actionName: "菜单批量查询",
+                identifier: 1205
+            },
+            menuTreeQueryByjitkey: {
+                actionName: "通过jitkey查询菜单",
+                identifier: 1206
+            },
+        },
     },
     jinkeBroApp: {
         applicationID: 2,
@@ -91,6 +118,10 @@ var operationConfig = {
             orderQuery: {
                 actionName: "订单的查询",
                 identifier: 2104
+            },
+            orderQueryCount: {
+                actionName: "查询满足相应条件的订单的个数",
+                identifier: 2105
             }
         },
         orderDelivery: {

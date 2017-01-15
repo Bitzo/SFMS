@@ -3,68 +3,63 @@ block content
   div.container-fluid
     span 
       h2 绩效审核
-    jason-form(method="post",source='/sfms/api/kpi' conf='paginationConf' tocc="KPIName,KPIType,UserID")
+    jason-form(method="post",source='/sfms/api/kpi',conf='paginationConf',tocc="KPIName,KPIType,UserID")
+     form(name="kpiManageCheck")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
           td
-            span( ng-model='paginationConf.formdata.KPIName' ) {{paginationConf.formdata.KPIName}}
+            span(name='KPIName',ng-model='paginationConf.formdata.KPIName' ) {{paginationConf.formdata.KPIName}}
 
         tr
           td(width="15%",class="tableleft") 绩效类型
           td
-            span( ng-model='paginationConf.formdata.KPIType') {{paginationConf.formdata.KPITypeValue}}
+            span(name='KPIType',ng-model='paginationConf.formdata.KPIType') {{paginationConf.formdata.KPITypeValue}}
            
         tr
           td(width="15%",class="tableleft") 绩效分
           td
-            span(type="number",name="projectEndTime",ng-model="paginationConf.formdata.KPIScore") {{paginationConf.formdata.KPIScore}}
+            span(name="projectEndTime",ng-model="paginationConf.formdata.KPIScore") {{paginationConf.formdata.KPIScore}}
             
         tr
           td(width="15%",class="tableleft") 用户名
           td
-            span( ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserName}}
+            span(name='UserID',ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserName}}
 
         tr
           td(width="15%",class="tableleft") 所属项目
           td
-            span(ng-model='paginationConf.formdata.ProjectId' ) {{paginationConf.formdata.ProjectName}}
+            span(name='ProjectId',ng-model='paginationConf.formdata.ProjectId' ) {{paginationConf.formdata.ProjectName}}
 
         tr
           td(width="15%",class="tableleft") 申请时间
           td
-            span( ng-model='paginationConf.formdata.CreateTime') {{paginationConf.formdata.CreateTime}}
+            span(name='CreateTime',ng-model='paginationConf.formdata.CreateTime') {{paginationConf.formdata.CreateTime}}
             
         tr
           td(width="15%",class="tableleft") 绩效备注
           td
-            span(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Remark') {{paginationConf.formdata.Remark}}
+            span(type="textview",name="Memo",ng-model='paginationConf.formdata.Remark') {{paginationConf.formdata.Remark}}
 
         tr
-            td(class="tableleft") 审核结果
-            td
-              input(type="radio",name="IsActive",value="通过",ng-model="paginationConf.formdata.KPIStatus",checked,style="width:15px;height:15px")
-              &nbsp 通过
-              &nbsp         
-              input(type="radio",name="IsActive",ng-model="paginationConf.formdata.KPIStatus",value="不通过",style="width:15px;height:15px")
-              &nbsp不通过
+          td(class="tableleft") 审核结果
+          td
+            input(type="radio",name="IsActive",value="通过",ng-model="paginationConf.formdata.KPIStatus",style="width:15px;height:15px",checked)
+            &nbsp 通过
+            &nbsp         
+            input(type="radio",name="IsActive",value="不通过",ng-model="paginationConf.formdata.KPIStatus",style="width:15px;height:15px")
+            &nbsp不通过
 
         tr
           td(width="15%",class="tableleft") 审核意见
           td
-            textarea(type="textview",rows="5",cols="30",name="Memo",ng-model='paginationConf.formdata.Memo',required,ng-maxlength='45') 
+            textarea(type="textview",name="Memo",ng-model='paginationConf.formdata.Memo',rows="5",cols="30",ng-maxlength='45',required) 
             &nbsp&nbsp
-            small.error(ng-if="financeAdd.Memo.$error.maxlength && financeAdd.Memo.$touched") 审核意见最多45位
-
+            small.error(ng-if="kpiManageCheck.Memo.$error.maxlength && kpiManageCheck.Memo.$touched") 审核意见最多45位
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 确认审核
+            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="kpiManageCheck.$invalid",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 确认审核
             &nbsp&nbsp&nbsp&nbsp
             a.btn.btn-sm.btn-success(href='#sfms/kpiManage',ng-click='search()') 返回列表
-       
-
-
-
-      

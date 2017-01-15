@@ -18,8 +18,6 @@ block content
                                 tr(ng-repeat="data in data")
                                     td {{data.FunctionID}}
                                     td {{data.FunctionName}}
-
-
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.page-content
             ng-form.form-inline
@@ -46,7 +44,6 @@ block content
                         th 角色名称
                         th 是否有效
                         th 操作
-
                 tbody
                     tr(ng-repeat="data in datas")
                         td {{$index+1}}
@@ -56,12 +53,10 @@ block content
                         td {{data.IsActive | numToChin:data.IsActive }}
                         td
                           a(href='#/backend/roleEdit/?RoleID={{data.RoleID}}' )
-                            i.icon.icon-edit 编辑 
-                          a(ng-click="remove($index,'/backrole')")
-                            i.icon.icon-trash 删除
-                          a(data-toggle="modal",data-target="#myModal",ng-click="morerole($index,'rolefunc/')") 
-                            i.icon.icon-zoom-in  更多
-
-
+                            i.icon.icon-edit 编辑  
+                          a(ng-click="remove($index,'/backrole')" href='')
+                            i.icon.icon-trash  删除 
+                          a(data-toggle="modal",data-target="#myModal",ng-click="morerole($index,'rolefunc/')" href='') 
+                            i.icon.icon-zoom-in   更多
             div.pull-right
                 jason-pagination(conf='paginationConf')
