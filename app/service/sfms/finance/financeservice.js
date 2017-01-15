@@ -28,7 +28,7 @@ exports.addFinance = function(data, callback) {
         'FIType': data.FIType,
         'InOutType': data.InOutType,
         'FIPrice': data.FIPrice,
-        'projectID': data.projectID,
+        'projectID': data.ProjectID,
         'UserID': data.UserID,
         'UserName': data.UserName,
         'OperateUser': data.OperateUser,
@@ -42,7 +42,7 @@ exports.addFinance = function(data, callback) {
     financeDAL.addFinance(formdata, function (err, results) {
         if (err) {
             logModel.Type = 1;
-            logModel.Memo = "财务新增失败";
+            logModel.Memo = "财务新增失败: " + data.FIName;
             logModel.CreateUserID = data.OperateUserID;
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
@@ -54,7 +54,7 @@ exports.addFinance = function(data, callback) {
         }
 
         logModel.Type = 2;
-        logModel.Memo = "财务新增成功";
+        logModel.Memo = "财务新增成功: " + data.FIName;
         logModel.CreateUserID = data.OperateUserID;
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
@@ -133,7 +133,7 @@ exports.queryFinance = function (data, callback) {
         'FIType': data.FIType || '',
         'FIStatu': data.FIStatus || '',
         'FIName': data.FIName || '',
-        'ProjectID': data.projectID || '',
+        'ProjectID': data.ProjectID || '',
         'startTime': data.startTime || '',
         'endTime': data.endTime || '',
         'page': data.page || 1,

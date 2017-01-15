@@ -164,12 +164,12 @@ exports.queryKPI = function (data, callback) {
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
     var queryData = {
-        'jit_kpiinfo.ID': data.ID,
-        'ProjectID': data.ProjectID,
-        'UserID': data.UserID,
-        'KPIStatus': data.KPIStatus,
-        'StartTime': data.StartTime,
-        'EndTime': data.EndTime,
+        'jit_kpiinfo.ID': data.ID || '',
+        'ProjectID': data.ProjectID || '',
+        'UserID': data.UserID || '',
+        'KPIStatus': data.KPIStatus || '',
+        'StartTime': data.StartTime || '',
+        'EndTime': data.EndTime || '',
         'jit_kpiinfo.IsActive': 1
     }
     KPIdal.countQuery(queryData, function (err, results) {

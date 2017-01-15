@@ -11,7 +11,6 @@ var router = express.Router();
 var url = require("url");
 var crypto = require("crypto");
 var operateconfig = appRequire("config/operationconfig");
-var config = appRequire("config/config");
 var logger = appRequire('util/loghelper').helper;
 //用来插入到log中的
 var logService = appRequire('service/backend/log/logservice');
@@ -22,25 +21,21 @@ var customerhtml = appRequire('views/jinkeBro/wechat/readfilecustomer');
 //微信的地址栏
 var wechat = appRequire("service/wechat/wechatservice");
 wechat.token = config.weChat.token;
-
 //从微信端获取数据插入数据库
 var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
-
 //调用商品的模块的内容
-var product = appRequire('service/jinkebro/product/productservice'),
-    order = appRequire('service/jinkebro/order/orderservice');
+var product = appRequire('service/jinkebro/product/productservice');
+var order = appRequire('service/jinkebro/order/orderservice');
 
 //微信开发者认证
 router.get('/accesscheck', function (req, res, next) {
     var query = url.parse(req.url, true).query;
-
-
     var signature = query.signature;
     var echostr = query.echostr;
     var timestamp = query['timestamp'];
     var nonce = query.nonce;
     console.log("[routes/api/wechatroute-------------------42行]" + signature);
-    
+
     var oriArray = new Array();
     oriArray[0] = nonce;
     oriArray[1] = timestamp;
@@ -88,7 +83,7 @@ wechat.textMsg(function (msg) {
                     wechat.sendMsg(sendMsg);
                     return;
                 });
-            } else {              
+            } else {
                 var articles = [];
                 var picurl = "http://mmbiz.qpic.cn/mmbiz_png/2gG8lzb9PibtXRR";
                 picurl += "a2ibT3yQS8o2IFUiboGzSRCvbhzPVfooq34aNbs7MYXiaBkjMr";
@@ -145,10 +140,8 @@ wechat.textMsg(function (msg) {
                 funcFlag: 0
             }
     }
+
     wechat.sendMsg(resMsg);
-
-    //测试获取token
-
 });
 
 // 监听图片消息
@@ -229,12 +222,9 @@ wechat.eventMsg(function (msg) {
 
                         console.log("成功");
                     })
-
                 }
             });
-
             break;
-
         //取消订阅
         case 'unsubscribe':
             wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
@@ -293,7 +283,8 @@ wechat.eventMsg(function (msg) {
         case 'CLICK':
             switch (msg.EventKey) {
                 case 'ProductDisplay':
-                    product.getProductInfoThroughHttpGet(function (productInfo) {
+                    /* 优化前的
+                    product.getProductInfoThroughHttpGet(function(productInfo) {
                         var contentInfo = '';
                         console.log("商品" + JSON.stringify(productInfo.data));
 
@@ -305,6 +296,7 @@ wechat.eventMsg(function (msg) {
                             contentInfo += "规格:" + productInfo.data[index]['ProductTypeName'] + "  ";
                             contentInfo += "\n";
                         }
+
                         contentInfo += '下单输入的格式为：编号#数量|编号#数量';
                         console.log(contentInfo);
                         var resMsg = {
@@ -315,6 +307,47 @@ wechat.eventMsg(function (msg) {
                             funcFlag: 0
                         };
                         logger.writeInfo("[routes/api/wechatroute-----------------292行]商品展示")
+                        wechat.sendMsg(resMsg);
+                        return;
+                    });
+                    */
+
+                    //优化后 snail
+                    var contentInfo = '商品查询失败，请稍后再试!';
+                    var resMsg = {
+                        fromUserName: msg.ToUserName,
+                        toUserName: msg.FromUserName,
+                        msgType: "text",
+                        content: contentInfo,
+                        funcFlag: 0
+                    };
+
+                    product.queryProducts({
+                        page: 1,
+                        pageNum: 10
+                    }, function (err, productList) {
+                        if (err) {
+                            //记录微信获取商品信息-查询商品信息异常
+                            resMsg.content = '查询商品异常，请稍候再试!';
+                            wechat.sendMsg(resMsg);
+                            return;
+                        }
+
+                        if (productList !== undefined && productList.length > 0) {
+                            contentInfo = '';
+                            productList.forEach(function (item) {
+                                contentInfo += "编号:" + item.ProductID + "  ";
+                                contentInfo += "名称:" + item.ProductName + "  ";
+                                contentInfo += "价格:" + item.ProductPrice + "  ";
+                                contentInfo += "规格:" + item.ProductTypeName + "  ";
+                                contentInfo += "\n";
+                            }, this);
+
+                            logger.writeInfo("[routes/api/wechatroute-----------------346行]商品展示")
+                            contentInfo += '下单输入的格式为：编号#数量|编号#数量';
+                            resMsg.content = contentInfo;
+                        }
+
                         wechat.sendMsg(resMsg);
                         return;
                     });
@@ -379,7 +412,6 @@ wechat.eventMsg(function (msg) {
                 case 'http://www.baidu.com':
                     console.log("点击了百度的页面");
                     break;
-
             }
             break;
     }
@@ -396,7 +428,6 @@ wechat.clickAddress(function (judgement, username) {
         });
         return;
     }
-
 });
 
 /************************************************************************************/

@@ -585,6 +585,7 @@ Weixin.prototype.sendTextMsg = function (msg) {
         "<FromUserName><![CDATA[" + msg.fromUserName + "]]></FromUserName>" +
         "<CreateTime>" + time + "</CreateTime>" +
         "<MsgType><![CDATA[" + msg.msgType + "]]></MsgType>" +
+        //这边之后要考虑微信这边的最大字符数限制
         "<Content><![CDATA[" + msg.content + "]]></Content>" +
         "<FuncFlag>" + funcFlag + "</FuncFlag>" +
         "</xml>";

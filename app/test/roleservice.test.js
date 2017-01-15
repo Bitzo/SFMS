@@ -30,11 +30,21 @@ describe("角色单元测试", function() {
 
     it("角色查询", function(done) {
         data.RoleID = insertRoleID;
-        roleService.queryAllRoles(data, function(err, result) {
+        roleService.queryAllRoles({}, function(err, result) {
             if (err) {
                 return done(err);
             }
-            result[0].RoleID.should.be.equal(insertRoleID).and.should.be.a.Number;
+            result[0].RoleID.should.be.above(0).and.should.be.a.Number;
+            done();
+        });
+    });
+
+    it("角色查询计数", function(done) {
+        roleService.countAllRoles(data, function(err, result) {
+            if (err) {
+                return done(err);
+            }
+            result[0].num.should.be.above(0).and.should.be.a.Number;
             done();
         });
     });
@@ -47,16 +57,6 @@ describe("角色单元测试", function() {
                 return done(err);
             }
             result.affectedRows.should.be.above(0).and.should.be.a.Number;
-            done();
-        });
-    });
-
-    it("角色查询计数", function(done) {
-        roleService.countAllRoles(data, function(err, result) {
-            if (err) {
-                return done(err);
-            }
-            result[0].num.should.be.above(0).and.should.be.a.Number;
             done();
         });
     });
