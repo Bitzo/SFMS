@@ -15,7 +15,6 @@ var logger = appRequire("util/loghelper").helper;
 exports.signLogInsert = function (data, callback) {
     var insert_sql = "insert into jit_signinfo set ",
         sql = '';
-        // time = moment().format('YYYY-MM-DD HH:mm:ss');
 
     function checkData(data) {
         for (var key in data) {
@@ -69,14 +68,16 @@ exports.querySign = function (data, callback) {
     var sql = 'select ID,UserID,UserAgent,Longitude,Latitude,CreateTime,Remark,IP,MAC,SignType from jit_signinfo where 1=1 ',
         page = data.page > 0?data.page:1,
         num = data.pageNum;
-    logger.writeInfo(page);
     if (data !== undefined) {
         for (var key in data) {
-            if(key !== 'page' && key !== 'pageNum' && data[key] !== '') {
+            if(key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'startTime' && key !== 'endTime') {
                 sql += "and " + key + " = '" + data[key] + "' ";
             }
         }
     }
+
+    if (data.startTime !== '') sql += "and CreateTime >= '" + data.startTime + "' ";
+    if (data.endTime !== '') sql += "and CreateTime <= '" + data.endTime + "' ";
 
     sql += " LIMIT " + (page-1)*num + "," + num;
 
@@ -107,10 +108,13 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] !== '' && key !== 'page' && key !== 'pageNum')
+            if(data[key] !== '' && key !== 'page' && key !== 'pageNum' && key !== 'startTime' && key !== 'endTime')
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }
+
+    if (data.startTime !== '') sql += "and CreateTime >= '" + data.startTime + "' ";
+    if (data.endTime !== '') sql += "and CreateTime <= '" + data.endTime + "' ";
 
     logger.writeInfo('签到查询数据统计：' + sql);
 
@@ -165,6 +169,7 @@ exports.signCheck = function (data, callback) {
 
 //签到信息统计
 exports.signCount = function (data, callback) {
+    console.log(data)
     var sql = 'select UserID,CreateTime,SignType from jit_signinfo where 1=1';
 
     if (data !== undefined) {
@@ -175,7 +180,7 @@ exports.signCount = function (data, callback) {
 
     sql += ' order by UserID,CreateTime';
 
-    console.log('签到信息统计：' + sql);
+    logger.writeInfo('签到信息统计：' + sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
