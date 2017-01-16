@@ -128,7 +128,9 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
             method:'post',
             url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:param
-        }).success().error(function(data){
+        }).success(function(data){
+            console.log(data);
+        }).error(function(data){
             console.log(data);
         })
     }
@@ -138,7 +140,7 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
                 foreachsubmit(branch,dataparam);
             })
         }
-        if(data.myselected==true){
+        if(data.myselected==true&&data.FunctionID!=0){
             dataparam.push({"FunctionID":data.FunctionID})
         }
     }

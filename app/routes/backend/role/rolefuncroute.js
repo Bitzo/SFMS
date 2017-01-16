@@ -78,7 +78,6 @@ router.post('/', function (req, res) {
             }
         }
     }
-
     if(err!='required: ')
     {
         res.status(400);
@@ -95,12 +94,14 @@ router.post('/', function (req, res) {
     for (i=0;i<funcData.length;++i) {
         funcID[i] = funcData[i].FunctionID;
     }
-
+    console.log(funcID);
     data = {
         'FunctionID': funcID
     }
     //验证传入的functionID是否都存在或有效
     functionservice.queryFuncByID(data, function (err, results) {
+        console.log(err);
+        console.log(results);
         if (err) {
             res.status(500);
             return res.json({
@@ -117,8 +118,11 @@ router.post('/', function (req, res) {
                 'data': funcData
             }
             //先删除原来的功能点
+            console.log("here");
             rolefuncservice.delRoleFunc(data,function (err, results) {
-                logger.writeInfo(results);
+                logger.writeInfo(err);
+                console.log(results);
+                console.log(results);
                 if (err) {
                     res.status(500);
                     return res.json({
