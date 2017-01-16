@@ -91,10 +91,5 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
             }).
             error(function(response) {
             });
-
         }
-    
-        
-     
-
 })

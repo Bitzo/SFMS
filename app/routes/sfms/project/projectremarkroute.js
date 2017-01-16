@@ -104,12 +104,20 @@ router.post('/', function (req, res) {
                                             'userName': userName,
                                             'remark': remark
                                         }
-                                        if (data.remark.length > 200) {
+                                        if (data.remark.trim().length > 200) {
                                             res.status(400);
                                             return res.json({
                                                 status: 400,
                                                 isSuccess: false,
                                                 msg: '备注信息过长,请勿超过200个字符'
+                                            })
+                                        }
+                                        if (data.remark.trim().length === 0) {
+                                            res.status(400);
+                                            return res.json({
+                                                status: 400,
+                                                isSuccess: false,
+                                                msg: '请填写备注信息'
                                             })
                                         }
                                         projectRemarkservice.addRemark(data, function (err, results) {
@@ -273,12 +281,20 @@ router.put('/', function (req, res) {
                                             'userName': userName,
                                             'remark': remark
                                         }
-                                        if (data.remark.length > 200) {
+                                        if (data.remark.trim().length > 200) {
                                             res.status(400);
                                             return res.json({
                                                 status: 400,
                                                 isSuccess: false,
                                                 msg: '备注信息过长,请勿超过200个字符'
+                                            })
+                                        }
+                                        if (data.remark.trim().length === 0) {
+                                            res.status(400);
+                                            return res.json({
+                                                status: 400,
+                                                isSuccess: false,
+                                                msg: '请填写备注信息'
                                             })
                                         }
                                         projectRemarkservice.updateRemark(data, function (err, results) {

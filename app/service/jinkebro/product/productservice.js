@@ -140,18 +140,19 @@ Product.prototype.queryProducts = function (data, callback) {
     logModel.OperationName = operationConfig.jinkeBroApp.product.productQuery.actionName;
     logModel.Action = operationConfig.jinkeBroApp.product.productQuery.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productQuery.identifier;
+
     productDAL.queryProducts(data, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
-            logModel.Memo = "商品查询失败";
+            logModel.Memo = "商品查询失败"+result;
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
                     logger.writeError("商品查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
+            
             callback(true,'商品查询失败');
-            return;
         }
 
         //计算过期时间
@@ -169,14 +170,14 @@ Product.prototype.queryProducts = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data.SupplierID || 0; //0代表系统管理员操作
         logModel.Memo = "商品查询成功";
+        
         logService.insertOperationLog(logModel, function (err, logResult) {
             if (err) {
                 logger.writeError("商品查询成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
-        logger.writeInfo('商品查询成功');
+
         callback(false, result);
-        return;
     });
 }
 
@@ -209,10 +210,14 @@ Product.prototype.getProCountByID = function (data, callback) {
     });
 }
 
-//通过http的get方法直接获取信息
+/**
+ * @function 通过http的get方法直接获取信息
+ * 该方法废弃 by snail 2017-01-14 23:20:00
+ */
 Product.prototype.getProductInfoThroughHttpGet = function (callback) {
     var getUrl = config.jinkebro.baseUrl + config.jinkebro.productInfo;
     //var getUrl = '/jinkeBro/product'
+    console.log(getUrl);
     http.get(getUrl, function (res) {
         var datas = [];
         var size = 0;

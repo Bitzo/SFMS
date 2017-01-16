@@ -369,33 +369,21 @@ router.get('/parent',function (req,res) {
 
 });
 
-
 //获得树形Menu结构
 router.get('/',function (req,res) {
-
     var userID = req.query.jitkey;
+    var data = {
+        "userID":userID
+    };
 
-    if (userID === undefined) {
+    if (userID === undefined||parseInt(userID)<=0) {
         res.status(404);
         return res.json({
             code: 404,
             isSuccess: false,
-            msg: 'require userID'
-        });
-
-    }
-
-    if(isNaN(userID)){
-        res.status(400);
-        return res.json({
-            code: 400,
-            isSuccess: false,
-            msg: 'userID不是数字'
+            msg: '当前登录用户无效!'
         });
     }
-    var data = {
-        "userID":userID
-    };
 
     userService.querySingleID(userID,function (err,result) {
         if(err){

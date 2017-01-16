@@ -17,12 +17,12 @@ var wechat = appRequire("service/wechat/wechatservice");
 wechat.token = config.weChat.token;
 
 //一个微信的用户类
-var Customer = function () {
+var Customer = function() {
     this.createTime = moment().format("YYYY-MM-DD HH:mm:ss"); //创建的时间
 }
 
 //用户的插入service
-Customer.prototype.insert = function (data, callback) {
+Customer.prototype.insert = function(data, callback) {
     console.log("进入插入的函数");
     data.CreateTime = this.createTime;
     //插入
@@ -39,7 +39,7 @@ Customer.prototype.insert = function (data, callback) {
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
-            logService.insertOperationLog(logModel, function (err, insertId) {
+            logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeError('生成操作日志异常' + new Date());
                 }
@@ -49,7 +49,7 @@ Customer.prototype.insert = function (data, callback) {
         }
     }
 
-    customerDAL.insert(data, function (err, results) {
+    customerDAL.insert(data, function(err, results) {
         if (err) {
             //生成操作的日志
             //这边待重构 by snail 2017-01-01 10:52
@@ -63,7 +63,7 @@ Customer.prototype.insert = function (data, callback) {
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
-            logService.insertOperationLog(logModel, function (err, insertId) {
+            logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeError('生成操作日志异常' + new Date());
                     return;
@@ -82,7 +82,7 @@ Customer.prototype.insert = function (data, callback) {
 };
 
 //用户的账户更新的service
-Customer.prototype.update = function (data, callback) {
+Customer.prototype.update = function(data, callback) {
     //判断传过来的数据是否未定义
     for (var key in data) {
         if (data[key] === undefined) {
@@ -96,7 +96,7 @@ Customer.prototype.update = function (data, callback) {
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
-            logService.insertOperationLog(logModel, function (err, insertId) {
+            logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeError('生成操作日志异常' + new Date());
                 }
@@ -108,7 +108,7 @@ Customer.prototype.update = function (data, callback) {
 
     }
 
-    customerDAL.update(data, function (err, result) {
+    customerDAL.update(data, function(err, result) {
         if (err) {
             logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
             logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
@@ -120,7 +120,7 @@ Customer.prototype.update = function (data, callback) {
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
-            logService.insertOperationLog(logModel, function (err, insertId) {
+            logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeError('生成操作日志异常' + new Date());
                 }
@@ -135,7 +135,7 @@ Customer.prototype.update = function (data, callback) {
 };
 
 //用户的账户的查询
-Customer.prototype.query = function (data, callback) {
+Customer.prototype.query = function(data, callback) {
     console.log("进入查询的接口");
     for (var key in data) {
         if (data[key] === undefined) {
@@ -149,7 +149,7 @@ Customer.prototype.query = function (data, callback) {
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
 
-            logService.insertOperationLog(logModel, function (err, insertId) {
+            logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeError('生成操作日志异常' + new Date());
                 }
@@ -160,7 +160,7 @@ Customer.prototype.query = function (data, callback) {
         }
     }
 
-    customerDAL.query(data, function (err, result) {
+    customerDAL.query(data, function(err, result) {
         if (err) {
             logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
             logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
@@ -171,7 +171,7 @@ Customer.prototype.query = function (data, callback) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
-            logService.insertOperationLog(logModel, function (err, insertId) {
+            logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeError('生成操作日志异常' + new Date());
                 }
@@ -190,11 +190,11 @@ Customer.prototype.query = function (data, callback) {
  * by snail 2017-01-01 暂时可以不fix
  * 
  */
-Customer.prototype.addSubscibe = function (token, msg, callback) {
+Customer.prototype.addSubscibe = function(token, msg, callback) {
     //用类中的函数
     var me = this;
     //获取用户的信息
-    wechat.getCustomerInfo(token, msg.FromUserName, function (info) {
+    wechat.getCustomerInfo(token, msg.FromUserName, function(info) {
         var data = {
             'WechatUserCode': info.openid,
             Sex: info.sex,
@@ -219,7 +219,7 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
         };
 
         //开始查询是否存在用户
-        me.query(queryInfo, function (err, resultInfo) {
+        me.query(queryInfo, function(err, resultInfo) {
             if (err) {
                 console.log("查询失败");
                 var errinfo = '在添加用户的时候查询失败';
@@ -232,11 +232,12 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
                 logModel.CreateUserID = 1;
                 logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
                 logModel.PDate = moment().format('YYYY-MM-DD');
-                logService.insertOperationLog(logModel, function (err, insertID) {
+                logService.insertOperationLog(logModel, function(err, insertID) {
                     if (err) {
                         logger.writeError('添加微信的用户时的验证查询失败，生成操作日志异常' + new Date());
                     }
                 });
+                
                 logger.writeError("[service/jinkebro/customer/customerservice-----------240行]添加微信用户的时候查询失败");
                 return callback(true, errinfo);
             }
@@ -245,10 +246,33 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
                 // console.log("用户名已经存在");
                 //当用户名存在做更新操作
                 data.CustomerID = resultInfo[0].CustomerID;
+                data.UpdateTime = moment().format('YYYY-MM-DD HH:mm:ss');
 
-                me.update(data, function (err, updataInfo) {
+                me.update(data, function(err, updataInfo) {
                     if (err) {
                         var errinfo = '关注的时候二次关注更新失败';
+                        logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+                        logModel.Application = operationConfig.jinkeBroApp.applicationName;
+                        logModel.OperationName = '添加微信的用户时二次更新';
+                        logModel.Action = '添加微信的用户时的更新';
+                        logModel.Memo = '更新失败';
+                        logModel.Identifier = operationConfig.jinkeBroApp.identifier;
+                        logModel.CreateUserID = 1;
+                        logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                        logModel.PDate = moment().format('YYYY-MM-DD');
+                        logService.insertOperationLog(logModel, function(err, insertID) {
+                            if (err) {
+                                logger.writeError('添加微信的用户时的二次更新失败，生成操作日志异常' + new Date());
+                            }
+                        });
+                        
+                        logger.writeError("[service/jinkebro/customer/customerservice----------266行]添加微信用户时的更新出错");
+                        return callback(true, errinfo);
+                    }
+
+                    if (updataInfo != undefined && updataInfo.affectedRows != 0) {
+                        console.log("更新成功");
+                        
                         logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
                         logModel.Application = operationConfig.jinkeBroApp.applicationName;
                         logModel.OperationName = '添加微信的用户时二次更新';
@@ -263,19 +287,14 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
                                 logger.writeError('添加微信的用户时的二次更新失败，生成操作日志异常' + new Date());
                             }
                         });
-                        logger.writeError("[service/jinkebro/customer/customerservice----------266行]添加微信用户时的更新出错");
-                        return callback(true, errinfo);
-                    }
-
-                    if (updataInfo != undefined && updataInfo.affectedRows != 0) {
-                        console.log("更新成功");
+                        
                         logger.writeInfo("[service/jinkebro/customer/customerservice------------272行]微信添加用户的时候更新成功");
                         return callback(false, '');
                     }
                 });
             } else {
                 //用户名不存在的时候做插入的操作
-                me.insert(data, function (err, insertInfo) {
+                me.insert(data, function(err, insertInfo) {
                     if (err) {
                         console.log("插入失败");
                         var errinfo = '当插入客户信息失败';
@@ -288,17 +307,34 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
                         logModel.CreateUserID = 1;
                         logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
                         logModel.PDate = moment().format('YYYY-MM-DD');
-                        logService.insertOperationLog(logModel, function (err, insertID) {
+                        logService.insertOperationLog(logModel, function(err, insertID) {
                             if (err) {
                                 logger.writeError('添加微信的用户时，生成操作日志异常' + new Date());
                             }
                         });
+                        
                         logger.writeError("[service/jinkebro/customer/customerservice-----------296行]添加微信用户的时候插入失败");
                         return callback(true, errinfo);
                     }
 
                     if (insertInfo != undefined && insertInfo.affectedRows != 0) {
                         console.log("插入成功");
+                        
+                        logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+                        logModel.Application = operationConfig.jinkeBroApp.applicationName;
+                        logModel.OperationName = '添加微信的用户';
+                        logModel.Action = '添加微信的用户时的插入';
+                        logModel.Memo = '插入成功';
+                        logModel.Identifier = operationConfig.jinkeBroApp.identifier;
+                        logModel.CreateUserID = 1;
+                        logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                        logModel.PDate = moment().format('YYYY-MM-DD');
+                        logService.insertOperationLog(logModel, function (err, insertID) {
+                            if (err) {
+                                logger.writeError('添加微信的用户时，生成操作日志异常' + new Date());
+                            }
+                        });
+                        
                         logger.writeInfo("[service/jinkebro/customer/customerservice-------------302行]添加微信用户的时候插入成功");
                         return callback(false, '');
                     }
@@ -309,20 +345,21 @@ Customer.prototype.addSubscibe = function (token, msg, callback) {
 }
 
 //取消关注的人
-Customer.prototype.unsubscribe = function (token, msg, callback) {
+Customer.prototype.unsubscribe = function(token, msg, callback) {
     //用类中的函数
     var me = this;
 
-    wechat.getCustomerInfo(token, msg.FromUserName, function (info) {
+    wechat.getCustomerInfo(token, msg.FromUserName, function(info) {
         var data = {
             WechatUserCode: info.openid,
             IsActive: 1
         }
 
-        me.query(data, function (err, resultInfo) {
+        me.query(data, function(err, resultInfo) {
             if (err) {
                 console.log("查询失败");
-                var errinfo = '在用户取消关注公众号的时候查询失败'; logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+                var errinfo = '在用户取消关注公众号的时候查询失败';
+                logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
                 logModel.Application = operationConfig.jinkeBroApp.applicationName;
                 logModel.OperationName = '微信用户的取消关注查询';
                 logModel.Action = '微信用户取消关注的查询';
@@ -331,7 +368,7 @@ Customer.prototype.unsubscribe = function (token, msg, callback) {
                 logModel.CreateUserID = 1;
                 logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
                 logModel.PDate = moment().format('YYYY-MM-DD');
-                logService.insertOperationLog(logModel, function (err, insertID) {
+                logService.insertOperationLog(logModel, function(err, insertID) {
                     if (err) {
                         logger.writeError('微信用户取消关注的查询失败，生成操作日志异常' + new Date());
                     }
@@ -344,8 +381,9 @@ Customer.prototype.unsubscribe = function (token, msg, callback) {
                 //当用户名存在做更新操作
                 data.CustomerID = resultInfo[0].CustomerID;
                 data.IsActive = 0;
+                data.UpdateTime = moment().format('YYYY-MM-DD HH:mm:ss');
 
-                me.update(data, function (err, updataInfo) {
+                me.update(data, function(err, updataInfo) {
                     if (err) {
                         console.log("更新失败");
                         var errinfo = '用户取消关注公众号时更新失败';
@@ -358,7 +396,7 @@ Customer.prototype.unsubscribe = function (token, msg, callback) {
                         logModel.CreateUserID = 1;
                         logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
                         logModel.PDate = moment().format('YYYY-MM-DD');
-                        logService.insertOperationLog(logModel, function (err, insertID) {
+                        logService.insertOperationLog(logModel, function(err, insertID) {
                             if (err) {
                                 logger.writeError('微信用户取消关注时更新失败，生成操作日志异常' + new Date());
                             }
@@ -367,8 +405,22 @@ Customer.prototype.unsubscribe = function (token, msg, callback) {
                         return callback(true, errinfo);
                     }
 
-                    if (updataInfo != undefined && updataInfo.affectedRows != 0) {
+                    if (updataInfo !== undefined && updataInfo.affectedRows > 0) {
                         console.log("更新成功");
+                        logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+                        logModel.Application = operationConfig.jinkeBroApp.applicationName;
+                        logModel.OperationName = '用户取消关注公众号时的关注更新';
+                        logModel.Action = '用户取消关注的时候的更新';
+                        logModel.Memo = '更新成功';
+                        logModel.Identifier = operationConfig.jinkeBroApp.identifier;
+                        logModel.CreateUserID = 1;
+                        logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                        logModel.PDate = moment().format('YYYY-MM-DD');
+                        logService.insertOperationLog(logModel, function (err, insertID) {
+                            if (err) {
+                                logger.writeError('微信用户取消关注时更新失败，生成操作日志异常' + new Date());
+                            }
+                        });
                         return callback(false, '');
                     }
                 });
@@ -378,13 +430,14 @@ Customer.prototype.unsubscribe = function (token, msg, callback) {
 }
 
 //添加获取地址的模块
-Customer.prototype.addLocation = function (msg, callback) {
+Customer.prototype.addLocation = function(msg, callback) {
     var me = this;
     //获取地址事件者的openid
     var locationData = {
         'WechatUserCode': msg.FromUserName,
         'Lon': msg.Longitude,
-        'Lat': msg.Latitude
+        'Lat': msg.Latitude,
+        'UpdateTime': moment().format('YYYY-MM-DD HH:mm:ss')
     }
 
     var queryData = {
@@ -392,6 +445,7 @@ Customer.prototype.addLocation = function (msg, callback) {
     }
 
     this.query(queryData, function (err, queryInfo) {
+        
         if (err) {
             console.log("查询失败");
             var errinfo = '在获取地址的时候查询失败';
@@ -404,18 +458,21 @@ Customer.prototype.addLocation = function (msg, callback) {
             logModel.CreateUserID = 1;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
-            logService.insertOperationLog(logModel, function (err, insertID) {
+            logService.insertOperationLog(logModel, function(err, insertID) {
                 if (err) {
                     logger.writeError('在获取微信地址时的查询，生成操作日志异常' + new Date());
                 }
             });
+            
             logger.writeError("[service/jinkebro/customer/customerservice--------------412行]" + errinfo);
             return callback(true, errinfo);
         }
 
         if (queryInfo != undefined && queryInfo.length != 0) {
             locationData.CustomerID = queryInfo[0].CustomerID;
+
             me.update(locationData, function (err, updataInfo) {
+               
                 if (err) {
                     console.log("更新失败");
                     var errinfo = "获取地址时出错";
@@ -428,16 +485,33 @@ Customer.prototype.addLocation = function (msg, callback) {
                     logModel.CreateUserID = 1;
                     logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
                     logModel.PDate = moment().format('YYYY-MM-DD');
-                    logService.insertOperationLog(logModel, function (err, insertID) {
+                    logService.insertOperationLog(logModel, function(err, insertID) {
                         if (err) {
                             logger.writeError('在获取微信地址时的查询，生成操作日志异常' + new Date());
                         }
                     });
+                    
                     logger.writeError("[service/jinkebro/customer/customerservice-------------436行]" + errinfo);
                     return callback(true, errinfo);
                 }
                 if (updataInfo != undefined && updataInfo.affectedRows != 0) {
                     console.log("更新成功");
+                    
+                    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+                    logModel.Application = operationConfig.jinkeBroApp.applicationName;
+                    logModel.OperationName = '在获取微信地址时的更新';
+                    logModel.Action = '在获取微信地址时的更新';
+                    logModel.Memo = '更新成功';
+                    logModel.Identifier = operationConfig.jinkeBroApp.identifier;
+                    logModel.CreateUserID = 1;
+                    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                    logModel.PDate = moment().format('YYYY-MM-DD');
+                    logService.insertOperationLog(logModel, function (err, insertID) {
+                        if (err) {
+                            logger.writeError('在获取微信地址时的查询，生成操作日志异常' + new Date());
+                        }
+                    });
+                    
                     logger.writeInfo("[service/jinkebro/customer/customerservice--------441行]" + "更新成功");
                     return callback(false);
                 }
@@ -447,12 +521,12 @@ Customer.prototype.addLocation = function (msg, callback) {
 }
 
 //关于添加微信的所有列表
-Customer.prototype.addAllList = function (token, callback) {
+Customer.prototype.addAllList = function(token, callback) {
     var me = this;
     //用来记录总共有多少的openid   
     var arrOfOpenID = [];
     //获取所有的列表
-    wechat.getCustomerList(token, function (infoList) {
+    wechat.getCustomerList(token, function(infoList) {
         for (var key in infoList.data.openid) {
             arrOfOpenID.push(infoList.data.openid[key]);
         }
@@ -460,15 +534,13 @@ Customer.prototype.addAllList = function (token, callback) {
         for (var openid in arrOfOpenID) {
             me.addListFunction(token, {
                 'WechatUserCode': arrOfOpenID[openid]
-            }, function (err, result) {
-
+            }, function(err, result) {
                 if (err) {
                     return callback(true, result);
                 }
                 return callback(false, result);
             });
         }
-
     });
 }
 
@@ -476,9 +548,9 @@ Customer.prototype.addAllList = function (token, callback) {
  *1、当获取所有的列表的时候，for的循环的时候，解决异步问题
  *2、具体的方法：查询openid，如果存在就不填加信息，，如果不存在就添加用户的信息
  */
-Customer.prototype.addListFunction = function (token, data, callback) {
+Customer.prototype.addListFunction = function(token, data, callback) {
     var me = this;
-    this.query(data, function (err, resultInfo) {
+    this.query(data, function(err, resultInfo) {
 
         if (err) {
             var errinfo = '在添加用户的时候查询失败';
@@ -491,7 +563,7 @@ Customer.prototype.addListFunction = function (token, data, callback) {
             logModel.CreateUserID = 1;
             logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
             logModel.PDate = moment().format('YYYY-MM-DD');
-            logService.insertOperationLog(logModel, function (err, insertID) {
+            logService.insertOperationLog(logModel, function(err, insertID) {
                 if (err) {
                     logger.writeError('添加微信客户端所有用户时的查询，生成操作日志异常' + new Date());
                 }
@@ -500,12 +572,11 @@ Customer.prototype.addListFunction = function (token, data, callback) {
             return callback(true, errinfo);
         }
 
-        if (resultInfo != undefined && resultInfo.length != 0) {
-            errinfo = '用户名已经存在，不需要重复插入';
+        if (resultInfo !== undefined && resultInfo.length != 0) {
+            errinfo = '当前用户已经存在';
             return callback(true, errinfo);
-        }
-        else {
-            wechat.getCustomerInfo(token, data.WechatUserCode, function (info) {
+        } else {
+            wechat.getCustomerInfo(token, data.WechatUserCode, function(info) {
                 var insertData = {
                     'WechatUserCode': info.openid
                 };
@@ -520,7 +591,7 @@ Customer.prototype.addListFunction = function (token, data, callback) {
                     }
                 }
 
-                me.insert(insertData, function (err, insertInfo) {
+                me.insert(insertData, function(err, insertInfo) {
 
                     if (err) {
                         console.log("插入失败");
@@ -534,7 +605,7 @@ Customer.prototype.addListFunction = function (token, data, callback) {
                         logModel.CreateUserID = 1;
                         logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
                         logModel.PDate = moment().format('YYYY-MM-DD');
-                        logService.insertOperationLog(logModel, function (err, insertID) {
+                        logService.insertOperationLog(logModel, function(err, insertID) {
                             if (err) {
                                 logger.writeError('添加微信客户端所有用户时的插入，生成操作日志异常' + new Date());
                             }
@@ -542,8 +613,24 @@ Customer.prototype.addListFunction = function (token, data, callback) {
                         logger.writeError("[service/jinkebro/customer/customerservice-------------499行]" + errinfo);
                         return callback(true, errinfo);
                     }
+                    
                     if (insertInfo != undefined && insertInfo.affectedRows != 0) {
                         console.log("插入成功");
+                        logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+                        logModel.Application = operationConfig.jinkeBroApp.applicationName;
+                        logModel.OperationName = '添加微信客户端所有用户的时候的插入';
+                        logModel.Action = '添加微信客户端所有用户时的插入';
+                        logModel.Memo = '插入成功';
+                        logModel.Identifier = operationConfig.jinkeBroApp.identifier;
+                        logModel.CreateUserID = 1;
+                        logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                        logModel.PDate = moment().format('YYYY-MM-DD');
+                        logService.insertOperationLog(logModel, function (err, insertID) {
+                            if (err) {
+                                logger.writeError('添加微信客户端所有用户时的查询，生成操作日志异常' + new Date());
+                            }
+                        });
+                        
                         logger.writeInfo("[service/jinkebro/customer/customerservice--------546行]" + "获取所有列表成功");
                         return callback(false, '获取所有列表的填补成功');
                     }

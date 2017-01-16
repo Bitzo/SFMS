@@ -429,6 +429,8 @@ router.get('/', function (req, res) {
                         isSuccess: false,
                         msg: "查询失败，服务器内部错误"
                     });
+
+                    //这边要记录operationlog日志
                 }
 
                 if (result !== undefined && result.length != 0 && countNum != -1) {
@@ -451,8 +453,8 @@ router.get('/', function (req, res) {
                 } else {
                     res.status(200);
                     return res.json({
-                        code: 404,
-                        isSuccess: false,
+                        code: 200,
+                        isSuccess: true,
                         msg: "未查询到相应产品"
                     });
                 }
@@ -460,8 +462,8 @@ router.get('/', function (req, res) {
         } else {
             res.status(200);
             return res.json({
-                code: 404,
-                isSuccess: false,
+                code: 200,
+                isSuccess: true,
                 msg: "未查询到相应产品"
             });
         }

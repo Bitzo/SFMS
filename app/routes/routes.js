@@ -26,10 +26,4 @@ module.exports = function(app) {
     app.use('/sfms', sfmsRoute);
     //金科小哥子系统
     app.use('/jinkeBro', jinkeBroRoute);
-
-    // app.get('jkbro/book',function(req,res)
-    // {
-    //     res.set('Content-Type',text)
-    // })
-
 };
