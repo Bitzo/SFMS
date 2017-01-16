@@ -19,13 +19,24 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
             $("#functionModel").modal('hide');
         }
     };
-    //获取树形数据
+
     $http.get("/func?access_token=" + accesstokenstring)
         .success(function (response) {
             $scope.tree_data = response.data;
             console.log($scope.tree_data);
             getrolefunction();
         });
+    //获取树形数据
+    $http({
+        method: 'get',
+        url: "/backrole?access_token=" + accesstokenstring,
+        params: {
+            f: {"RoleID":$location.search().RoleID}
+        }
+    }).success(function (response) {
+        $scope.formdata =response.data[0];
+        $scope.formdata.ApplicationID=$scope.formdata.ApplicationID+'';
+    })
     function getrolefunction() {
         $http.get("/rolefunc/" + $location.search().RoleID + "?access_token=" + accesstokenstring)
             .success(function (response) {
@@ -110,13 +121,25 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
         })
         var param={
             "RoleID": $location.search().RoleID,
+            "ApplicationID": $scope.formdata.ApplicationID,
             "data":data
         }
+        var param1={
+            formdata:$scope.formdata
+        }
         $http({
-            method:'post',
-            url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            data:param
-        })
+            method:'put',
+            url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:param1
+        }).success(function(data){
+            $http({
+                method:'post',
+                url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data:param
+            }).success(function(data){
+                $("#functionModel").modal('show');
+            })
+        });
     }
     function foreachsubmit(data,dataparam){
         if(data.children&&data.children.length!=0){
@@ -124,7 +147,7 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
                 foreachsubmit(branch,dataparam);
             })
         }
-        if(data.myselected==true){
+        if(data.myselected==true&&data.FunctionID!=0){
             dataparam.push({"FunctionID":data.FunctionID})
         }
     }
