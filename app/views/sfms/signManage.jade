@@ -12,6 +12,7 @@ block content
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
+                                    th 序号
                                     th 用户名
                                     th 签到端
                                     th 签到时间
@@ -19,13 +20,29 @@ block content
                             tbody
                                 tbody
                                 tr(ng-repeat="data in data")
+                                    td {{$index+1}}
                                     td {{data.UserName}}
                                     td {{data.UserAgent}}
                                     td {{data.CreateTime}}
-                                    td {{data.SignType}}
+                                    td {{data.SignType}}                               
                         button.btn.btn-default(type="button",data-dismiss="modal") Close  
                         div.pull-right
-                            jason-pagination(conf='paginationConf')                 
+                          div.page-total.pull-left 第
+                            input(type="text" style="width:30px;" ng-model="jumpPageNum",value='{{jumpPageNum}}' ng-keyup="jumpToPage(this)") 
+                            span 页                           
+                            span 共{{length}}条 
+                          ul.pagination.pull-right(style="line-height:60px;background-color:#ccc;")
+                            li(ng-click="prevPage()")
+                              span&laquo
+                            li(ng-repeat="item in pageList track by $index" ng-click="pageChanged(this)")
+                              span {{item}}
+                            li(ng-click="nextPage()")
+                              span&raquo
+
+                            
+
+
+                                          
     div.page-content
       ng-form.form-inline
         span(style='font-size: 24px;')  签到统计
@@ -53,7 +70,7 @@ block content
             td {{x.userName}}         
             td {{x.signTime}}
             td
-              a(data-toggle="modal",data-target="#myModal",ng-click="moresign(x.userID,'/sfms/api/sign/')",href='') 
+              a(data-toggle="modal",data-target="#myModal",ng-click="moresign(x.userID,1,'/sfms/api/sign/')",href='') 
                 i.icon.icon-zoom-in  更多       
       div.pull-right
         jason-pagination(conf='paginationConf')
