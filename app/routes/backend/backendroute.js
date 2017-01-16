@@ -13,14 +13,14 @@ var user = appRequire('routes/backend/user/userroute')
 var funcroute = appRequire('routes/backend/function/functionroute');
 //用户的角色添加以及修改的路由
 var userRole = appRequire('routes/backend/user/userroleroute')
-
 //菜单路由
 var menuRouter = appRequire('routes/backend/menu/menurouter');
 //通过userID查看菜单角色路由
 var userMenuRoleRouter = appRequire('routes/backend/menu/usermenurolerouter');
 //数据字典路由
 var datadictionaryRouter = appRequire('routes/backend/datadictionary/datadictionaryrouter');
-
+//操作日志路由
+var logrouter = appRequire('routes/backend/operationlog/operationlogroute');
 
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper = appRequire('util/jwthelper');
@@ -126,6 +126,11 @@ router.get('/functionEdit', function(req, res, next) {
 
 });
 
+router.get('/operationlog', function(req, res, next) {
+    res.render('backend/operationlog', { title: 'Hi backend' });
+
+});
+
 
 //生成验证码
 router.get('/generatecode', code);
@@ -210,5 +215,7 @@ router.use('/backuser', user);
 router.use('/userrole', userRole);
 //应用功能模块
 router.use('/app', approuter);
+//操作日志模块
+router.use('/log', logrouter);
 
 module.exports = router;

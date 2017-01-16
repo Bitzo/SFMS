@@ -23,7 +23,7 @@ router.get('/count/:type', function (req, res) {
         endTime = query.endTime || '',
         page = req.query.pageindex || 1,
         pagesize = req.query.pagesize || config.pageCount;
-    page > 0? page : 1;
+    page = page > 0? page : 1;
     
     if (type == 'person') userID = req.query.jitkey; 
     

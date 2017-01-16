@@ -57,6 +57,9 @@ myApp.config(function($routeProvider) {
     when('/backend/menuedit', {
         templateUrl: '/menuedit?access_token=' + accesstokenstring,
     }).
+    when('/backend/operationlog', {
+        templateUrl: '/operationlog?access_token=' + accesstokenstring,
+    }).
     when('/sfms/projectLead', {
         templateUrl: '/sfms/projectLead?access_token=' + accesstokenstring,
     }).
@@ -171,6 +174,17 @@ myApp.config(function($routeProvider) {
                 return '是';
             default:
                 return '否';
+        }
+    }
+}).filter('logType', function() {
+    return function(val) {
+        switch (val) {
+            case 1:
+                return '异常日志';
+            case 2:
+                return '常规日志';
+            default:
+                return '异常日志';
         }
     }
 })

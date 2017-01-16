@@ -4,7 +4,7 @@ block content
             div.col-lg-7.col-md-7.col-sm-7
                 tree-grid(showHead='true' tree-data="tree_data" col_defs='col_defs' expand-on="expanding_property" expandOn="ApplicationID" on-clickdelete='delete(branch,parent)' on-clickedit='clickHanderedit(branch)'  on-click='clickHander(branch)' on-clickadd='clickHanderAdd(branch)')
             div.col-lg-4.col-md-4.col-sm-4(style='border:1px solid black')
-                h4功能点编辑
+                h4 功能点编辑
                 form.form-horizontal(role='form')
                     div.form-group
                         label.col-sm-2.control-label 应用ID
@@ -32,7 +32,7 @@ block content
                             input(type='checkbox' ng-model='currentData.IsActive' ng-checked='currentData.IsActive==1',ng-disabled='disable')
                     div.form-group.row.text-center
                         button.btn.btn-primary(ng-click='edit()') {{btnSaveMessage}}
-                        button.btn.btn-primary(style='margin-left:20px;' ng-click='cancel()')取消
+                        button.btn.btn-primary(style='margin-left:20px;' ng-click='cancel()') 取消
         div.modal.fade(id='functionModel')
             div.modal-dialog
                 div.modal-content
