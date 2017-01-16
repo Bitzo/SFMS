@@ -124,15 +124,22 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
             "ApplicationID": $scope.formdata.ApplicationID,
             "data":data
         }
+        var param1={
+            formdata:$scope.formdata
+        }
         $http({
-            method:'post',
-            url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            data:param
+            method:'put',
+            url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:param1
         }).success(function(data){
-            console.log(data);
-        }).error(function(data){
-            console.log(data);
-        })
+            $http({
+                method:'post',
+                url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data:param
+            }).success(function(data){
+                $("#functionModel").modal('show');
+            })
+        });
     }
     function foreachsubmit(data,dataparam){
         if(data.children&&data.children.length!=0){
