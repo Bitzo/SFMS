@@ -16,7 +16,12 @@ var menuService = appRequire('service/backend/menu/menuservice'),
     config = appRequire('config/config');
 
 router.get('/tree',function (req,res) {
-    var query = JSON.parse(req.query.f);
+    var query ;
+    if (req.query.f === undefined){
+        query = {};
+    }else {
+        query = JSON.parse(req.query.f);
+    }
     var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
         pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
         applicationID = query.ApplicationID || '',
@@ -364,33 +369,21 @@ router.get('/parent',function (req,res) {
 
 });
 
-
 //获得树形Menu结构
 router.get('/',function (req,res) {
-
     var userID = req.query.jitkey;
+    var data = {
+        "userID":userID
+    };
 
-    if (userID === undefined) {
+    if (userID === undefined||parseInt(userID)<=0) {
         res.status(404);
         return res.json({
             code: 404,
             isSuccess: false,
-            msg: 'require userID'
-        });
-
-    }
-
-    if(isNaN(userID)){
-        res.status(400);
-        return res.json({
-            code: 400,
-            isSuccess: false,
-            msg: 'userID不是数字'
+            msg: '当前登录用户无效!'
         });
     }
-    var data = {
-        "userID":userID
-    };
 
     userService.querySingleID(userID,function (err,result) {
         if(err){
@@ -488,7 +481,8 @@ router.post('/',function(req,res,next) {
         "IconPath" : iconPath,
         "Url" :url,
         "Memo" : memo,
-        "IsActive" : isActive
+        "IsActive" : isActive,
+        "jitkey" : req.query.jitkey
     };
 
     var intdata = {
@@ -602,6 +596,7 @@ router.put('/',function (req,res) {
     var url = req.body.formdata.Url;
     var memo = req.body.formdata.Memo;
     var isActive = req.body.formdata.IsActive;
+
     var data = {
         "MenuID" : menuID,
         "ApplicationID" : applicationID,
@@ -612,8 +607,10 @@ router.put('/',function (req,res) {
         "IconPath" : iconPath,
         "Url" : url,
         "Memo" : memo,
-        "IsActive" : isActive
+        "IsActive" : isActive,
+        "jitkey" : req.query.jitkey
     };
+
     var intdata = {
         "MenuID" : menuID,
         "ApplicationID" : applicationID,

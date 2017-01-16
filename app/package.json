@@ -39,7 +39,9 @@
     "underscore": "*",
     "validator": "*",
     "xml2js": "*",
-    "q":"*"
+    "q":"*",
+    "async":"*",
+    "bluebird":"*"
   },
   "devDependencies": {}
 }

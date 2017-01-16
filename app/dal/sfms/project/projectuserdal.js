@@ -57,7 +57,7 @@ exports.updateProjectUser = function (data, callback) {
         var update_sql = '';
         data[i].EditTime = time;
         for (var key in data[i]) {
-            if (key != 'ID' && key != 'ProjectID') {
+            if (key !== 'ID' && key !== 'ProjectID') {
                 if(update_sql.length == 0) {
                     update_sql += ' ' + key + " = '" + data[i][key] +"'";
                 } else {
@@ -66,8 +66,8 @@ exports.updateProjectUser = function (data, callback) {
             }
         }
         sql += update_sql;
-        if (data[i].ID!=''&&data[i].ID!==undefined) sql += ' where ID = ' + data[i].ID;
-        if (data[i].ProjectID!=''&&data[i].ProjectID!==undefined) sql += ' where ProjectID = ' + data[i].ProjectID;
+        if (data[i].ID!==''&&data[i].ID!==undefined) sql += ' where ID = ' + data[i].ID;
+        if (data[i].ProjectID!==''&&data[i].ProjectID!==undefined) sql += ' where ProjectID = ' + data[i].ProjectID;
     }
 
     logger.writeInfo('更新项目用户信息' + sql);
@@ -99,7 +99,7 @@ exports.queryProjectUser = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '') {
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '') {
                 sql += "and " + key + "= '" + data[key] + "' ";
             }
         }
@@ -133,7 +133,7 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] != '' && key !== 'page' && key !== 'pageNum')
+            if(data[key] !== '' && key !== 'page' && key !== 'pageNum')
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }
@@ -163,7 +163,7 @@ exports.countQuery = function (data, callback) {
 exports.queryProjectByUserID = function (data, callback) {
     var sql = 'select distinct ProjectID,jit_projectruser.ProjectName from jit_projectruser,jit_projectbaseinfo  where jit_projectruser.IsActive = 1 and jit_projectbaseinfo.IsActive = 1 and jit_projectruser.ProjectID = jit_projectbaseinfo.ID ';
 
-    if (data.userID != '')  sql +=' and UserID = ' + data.UserID;
+    if (data.userID !== '' && data.userID !== undefined)  sql +=' and UserID = ' + data.UserID;
 
     logger.writeInfo('根据用户ID，查找所在的项目：' + sql);
     db_sfms.mysqlPool.getConnection(function(err, connection) {

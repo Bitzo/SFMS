@@ -2,216 +2,175 @@
  * Created by Administrator on 2016/11/21.
  */
 var accesstokenstring = localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key');
-var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination','treeGrid']);
+var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination', 'treeGrid']);
 
 myApp.config(function($routeProvider) {
     $routeProvider.
     when('/backend/index', {
-        templateUrl: '/index?access_token='+accesstokenstring,
-            // controller: 'HomeController'
+        templateUrl: '/index?access_token=' + accesstokenstring,
     }).
     when('/backend/user', {
-        templateUrl: '/user?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/user?access_token=' + accesstokenstring,
     }).
     when('/backend/userinfo', {
-        templateUrl: '/userinfo?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/userinfo?access_token=' + accesstokenstring,
     }).
     when('/backend/useredit', {
-        templateUrl: '/useredit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/useredit?access_token=' + accesstokenstring,
+    }).
+    when('/backend/usermenu', {
+        templateUrl: '/usermenu?access_token=' + accesstokenstring,
     }).
     when('/backend/role', {
-        templateUrl: '/role?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/role?access_token=' + accesstokenstring,
     }).
     when('/backend/roleAdd', {
-        templateUrl: '/roleAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/roleAdd?access_token=' + accesstokenstring,
     }).
     when('/backend/roleEdit', {
-        templateUrl: '/roleEdit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/roleEdit?access_token=' + accesstokenstring,
     }).
     when('/backend/function', {
-        templateUrl: '/function'+"?access_token=" +accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/function' + "?access_token=" + accesstokenstring,
     }).
     when('/backend/functionAdd', {
-        templateUrl: '/functionAdd'+"?access_token=" +accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/functionAdd' + "?access_token=" + accesstokenstring,
     }).
     when('/backend/functionEdit', {
-        templateUrl: '/functionEdit'+"?access_token=" +accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/functionEdit' + "?access_token=" + accesstokenstring,
     }).
     when('/backend/application', {
-        templateUrl: '/application?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/application?access_token=' + accesstokenstring,
     }).
     when('/backend/applicationinfo', {
-        templateUrl: '/applicationinfo?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/applicationinfo?access_token=' + accesstokenstring,
     }).
     when('/backend/applicationedit', {
-        templateUrl: '/applicationedit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/applicationedit?access_token=' + accesstokenstring,
     }).
     when('/backend/menu', {
-        templateUrl: '/menu?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/menu?access_token=' + accesstokenstring,
     }).
     when('/backend/menuinfo', {
-        templateUrl: '/menuinfo?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/menuinfo?access_token=' + accesstokenstring,
     }).
     when('/backend/menuedit', {
-        templateUrl: '/menuedit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/menuedit?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectLead', {
-        templateUrl: '/sfms/projectLead?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectLead?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectLeadEdit', {
-        templateUrl: '/sfms/projectLeadEdit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectLeadEdit?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectManage', {
-        templateUrl: '/sfms/projectManage?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectManage?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectManageAdd', {
-        templateUrl: '/sfms/projectManageAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectManageAdd?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectManageEdit', {
-        templateUrl: '/sfms/projectManageEdit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectManageEdit?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectRemark', {
-        templateUrl: '/sfms/projectRemark?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectRemark?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectRemarkAdd', {
-        templateUrl: '/sfms/projectRemarkAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectRemarkAdd?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectRemarkEdit', {
-        templateUrl: '/sfms/projectRemarkEdit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectRemarkEdit?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectManageRemark', {
-        templateUrl: '/sfms/projectManageRemark?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectManageRemark?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectManageRemarkAdd', {
-        templateUrl: '/sfms/projectManageRemarkAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectManageRemarkAdd?access_token=' + accesstokenstring,
     }).
     when('/sfms/projectManageRemarkEdit', {
-        templateUrl: '/sfms/projectManageRemarkEdit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/projectManageRemarkEdit?access_token=' + accesstokenstring,
     }).
-    
-     when('/sfms/kpi', {
-        templateUrl: '/sfms/kpi?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+    when('/sfms/kpi', {
+        templateUrl: '/sfms/kpi?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiAdd', {
-        templateUrl: '/sfms/kpiAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/kpiAdd?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiEdit', {
-        templateUrl: '/sfms/kpiEdit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/kpiEdit?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiManage', {
-        templateUrl: '/sfms/kpiManage?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/kpiManage?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiManageAdd', {
-        templateUrl: '/sfms/kpiManageAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/kpiManageAdd?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiManageCheck', {
-        templateUrl: '/sfms/kpiManageCheck?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/kpiManageCheck?access_token=' + accesstokenstring,
     }).
     when('/sfms/finance', {
-        templateUrl: '/sfms/finance?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/finance?access_token=' + accesstokenstring,
     }).
     when('/sfms/financeAdd', {
-        templateUrl: '/sfms/financeAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/financeAdd?access_token=' + accesstokenstring,
     }).
     when('/sfms/financeEdit', {
-        templateUrl: '/sfms/financeEdit?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/financeEdit?access_token=' + accesstokenstring,
     }).
-     when('/sfms/financeManage', {
-        templateUrl: '/sfms/financeManage?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+    when('/sfms/financeManage', {
+        templateUrl: '/sfms/financeManage?access_token=' + accesstokenstring,
     }).
     when('/sfms/financeManageCheck', {
-        templateUrl: '/sfms/financeManageCheck?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/financeManageCheck?access_token=' + accesstokenstring,
     }).
     when('/sfms/signManage', {
-        templateUrl: '/sfms/signManage?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/signManage?access_token=' + accesstokenstring,
     }).
     when('/sfms/signPersonal', {
-        templateUrl: '/sfms/signPersonal?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/sfms/signPersonal?access_token=' + accesstokenstring,
     }).
     when('/jinkeBro/jitorder', {
         templateUrl: '/jinkeBro/jitorder',
-        //controller: 'HomeController'
     }).
     when('/jinkeBro/jitinfo', {
         templateUrl: '/jinkeBro/jitinfo',
-        //controller: 'HomeController'
     }).
     when('/jinkeBro/jitgoods', {
-        templateUrl: '/jinkeBro/jitgoods?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/jinkeBro/jitgoods?access_token=' + accesstokenstring,
     }).
     when('/jinkeBro/jitgoodsAdd', {
-        templateUrl: '/jinkeBro/jitgoodsAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/jinkeBro/jitgoodsAdd?access_token=' + accesstokenstring,
     }).
     when('/jinkeBro/jitorderAdd', {
-        templateUrl: '/jinkeBro/jitorderAdd?access_token='+accesstokenstring,
-        //controller: 'HomeController'
+        templateUrl: '/jinkeBro/jitorderAdd?access_token=' + accesstokenstring,
     }).
     otherwise({
         redirectTo: '/'
     });
-}).controller('baseController', function($scope, $http) {
-    
+}).controller('baseController', function($scope, $http,baseService) {
     //显示左侧菜单栏
-   $scope.menus = [];
-    function getList() {        
+    $scope.menus = [];
+
+    function getList() {
         $http({
             method: 'get',
-            url: "/backmenu?access_token="+accesstokenstring,
+            url: "/backmenu?" + baseService.getPassToken(),
         }).
         success(function(response) {
             $scope.menus = response.data.Menu;
         }).
-        error(function(response) {
-        });
+        error(function(response) {});
     }
 
-}).filter('numToChin',function(){
-   return function(val){
-        switch(val){
-            case 0:return '否';
-            case 1:return '是';
-            default:return '否';
+}).filter('numToChin', function() {
+    return function(val) {
+        switch (val) {
+            case 0:
+                return '否';
+            case 1:
+                return '是';
+            default:
+                return '否';
         }
     }
 })

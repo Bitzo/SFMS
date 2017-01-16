@@ -26,17 +26,18 @@ router.post('/', function (req, res) {
         userName = '',
         projectName = '';
     var temp = ['ProjectID','Remark'],
-        err = 'required: ';
+        temp1 = ['项目名称', '备注信息'],
+        err = '缺少值: ';
 
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='required: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -56,7 +57,7 @@ router.post('/', function (req, res) {
         }
         if (results!==undefined && results.length>0) {
             userName = results[0].UserName;
-            projectservice.queryProject({ID:projectID}, function (err, results) {
+            projectservice.queryProject({ID:projectID, OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -99,15 +100,24 @@ router.post('/', function (req, res) {
                                             'projectID': projectID,
                                             'projectName': projectName,
                                             'userID': userID,
+                                            'OperateUserID': req.query.jitkey,
                                             'userName': userName,
                                             'remark': remark
                                         }
-                                        if (data.remark.length > 200) {
+                                        if (data.remark.trim().length > 200) {
                                             res.status(400);
                                             return res.json({
                                                 status: 400,
                                                 isSuccess: false,
                                                 msg: '备注信息过长,请勿超过200个字符'
+                                            })
+                                        }
+                                        if (data.remark.trim().length === 0) {
+                                            res.status(400);
+                                            return res.json({
+                                                status: 400,
+                                                isSuccess: false,
+                                                msg: '请填写备注信息'
                                             })
                                         }
                                         projectRemarkservice.addRemark(data, function (err, results) {
@@ -192,17 +202,18 @@ router.put('/', function (req, res) {
         userName = '',
         projectName = '',
         temp = ['ID', 'ProjectID','Remark'],
-        err = 'required: ';
+        temp1 = ['项目备注ID', '项目名称', '备注信息'],
+        err = '缺少值: ';
 
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='required: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -223,7 +234,7 @@ router.put('/', function (req, res) {
         }
         if (results!==undefined && results.length>0) {
             userName = results[0].UserName;
-            projectservice.queryProject({ID:projectID}, function (err, results) {
+            projectservice.queryProject({ID:projectID, OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -250,7 +261,7 @@ router.put('/', function (req, res) {
                                 if (projectID == results[i].ProjectID) isIn = true;
                             }
                             if (isIn == true) {
-                                projectservice.queryProject({ID: projectID}, function (err, results) {
+                                projectservice.queryProject({ID: projectID, OperateUserID: req.query.jitkey}, function (err, results) {
                                     if (err) {
                                         res.status(500);
                                         return res.json({
@@ -265,16 +276,25 @@ router.put('/', function (req, res) {
                                             'ID':ID,
                                             'projectID': projectID,
                                             'projectName': projectName,
+                                            'OperateUserID': req.query.jitkey,
                                             'userID': userID,
                                             'userName': userName,
                                             'remark': remark
                                         }
-                                        if (data.remark.length > 200) {
+                                        if (data.remark.trim().length > 200) {
                                             res.status(400);
                                             return res.json({
                                                 status: 400,
                                                 isSuccess: false,
                                                 msg: '备注信息过长,请勿超过200个字符'
+                                            })
+                                        }
+                                        if (data.remark.trim().length === 0) {
+                                            res.status(400);
+                                            return res.json({
+                                                status: 400,
+                                                isSuccess: false,
+                                                msg: '请填写备注信息'
                                             })
                                         }
                                         projectRemarkservice.updateRemark(data, function (err, results) {
@@ -286,7 +306,6 @@ router.put('/', function (req, res) {
                                                     msg: '操作失败，服务器出错'
                                                 })
                                             }
-                                            console.log(results)
                                             if (results!==undefined&&results.affectedRows>0) {
                                                 res.status(200);
                                                 return res.json({
@@ -362,6 +381,7 @@ router.get('/person', function (req, res) {
     var data = {
         'userID': userID,
         'projectID': projectID,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum
     }
@@ -436,6 +456,7 @@ router.get('/', function (req, res) {
     var data = {
         'ID': ID,
         'projectID': projectID,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum
     }
@@ -505,11 +526,11 @@ router.delete('/', function (req, res) {
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: "require ID"
+            msg: "缺少项目备注ID"
         })
     }
 
-    projectRemarkservice.delRemark({ID:ID}, function (err, results) {
+    projectRemarkservice.delRemark({ID:ID, OperateUserID: req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({

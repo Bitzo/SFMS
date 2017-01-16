@@ -6,22 +6,21 @@
  * @Function: 验证码生成
  */
 
-var captchapng=require('captchapng');
+var captchapng = require('captchapng');
 
 //生成验证码
-exports.generateCode=function(req,res)
-{
+exports.generateCode = function (req, res) {
     console.log("测试");
-    var width=!isNaN(parseInt(req.query.width))?parseInt(req.query.width):100;
-    var height=!isNaN(parseInt(req.query.height))?parseInt(req.query.height):30;
-    var code = parseInt(Math.random()*9000+1000);
+    var width = !isNaN(parseInt(req.query.width)) ? parseInt(req.query.width) : 100;
+    var height = !isNaN(parseInt(req.query.height)) ? parseInt(req.query.height) : 30;
+    var code = parseInt(Math.random() * 9000 + 1000);
     req.session.code = code;
-    console.log("生成验证码"+code);
-    var p = new captchapng(width,height, code);
-    p.color(0, 0, 0, 0); 
+    console.log("生成验证码" + code);
+    var p = new captchapng(width, height, code);
+    p.color(0, 0, 0, 0);
     p.color(80, 80, 80, 255);
     var img = p.getBase64();
-    var imgbase64 = new Buffer(img,'base64');
+    var imgbase64 = new Buffer(img, 'base64');
     res.writeHead(200, {
         'Content-Type': 'image/png'
     });

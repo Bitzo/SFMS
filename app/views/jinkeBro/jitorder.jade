@@ -19,18 +19,22 @@ block content
                         th 序号
                         th 订单ID
                         th 商品名称
+                        th 商品数量
                         th 支付方式
                         th 商品的价格
                         th 下单时间
+                        th 配送状态
                         th 操作
                 tbody
                     tr(ng-repeat="x in datas" )
                         td {{$index+1}}
                         td {{x.OrderID}}
                         td {{x.ProductName}}
+                        td {{x.ProductCount}}
                         td {{x.PayMethod}}
                         td {{x.ProductPrice}}
                         td {{x.OrderTime}}
+                        td {{x.OrderStatusDesc}}
                         td
                             a(href='#/backend/useredit/?AccountID={{x.AccountID}}' )
                                 i.icon.icon-edit 编辑

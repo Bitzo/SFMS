@@ -33,7 +33,8 @@ router.get('/count/:type', function (req, res) {
     var data = {
         'userID': userID,
         'startTime': startTime,
-        'endTime': endTime
+        'endTime': endTime,
+        'OperateUserID': req.query.jitkey
     }
 
     signservice.signCount(data, function (err, results) {
@@ -153,11 +154,10 @@ router.get('/count/:type', function (req, res) {
 
 //签到信息记录查询
 router.get('/:userID', function (req, res) {
-    var query = req.query;
+    var query = JSON.parse(req.query.f);
     var userID = req.params.userID || '',
-        userAgent = query.userAgent || '',
-        createTime = query.createTime || '',
-        signType = query.signType || '',
+        startTime = query.startTime || '',
+        endTime = query.endTime || '',
         totalNum = 0,
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount;
@@ -165,15 +165,16 @@ router.get('/:userID', function (req, res) {
     if (userID == 0) {
         userID = req.query.jitkey;
     }
+    if (startTime !== '') startTime = moment(startTime).format('YYYY-MM-DD hh:mm:ss');
+    if (endTime !== '') endTime = moment(endTime).format('YYYY-MM-DD hh:mm:ss');
     var data = {
         'UserID': userID,
-        'UserAgent': userAgent,
-        'CreateTime': createTime,
-        'SignType': signType,
+        'startTime': startTime,
+        'endTime': endTime,
         'page': page,
-        'pageNum': pageNum
+        'pageNum': pageNum,
+        'OperateUserID': req.query.jitkey
     }
-
     signservice.countQuery(data, function (err, results) {
         if (err) {
             res.status(500);
@@ -204,10 +205,10 @@ router.get('/:userID', function (req, res) {
                     var result = {
                         status: 200,
                         isSuccess: true,
-                        totalNum: totalNum,
+                        dataNum: totalNum,
                         curPage: page,
                         totalPage: Math.ceil(totalNum/pageNum),
-                        curNum: pageNum,
+                        curPageNum: pageNum,
                         data: results
                     };
                     if(result.curPage == result.totalPage) {

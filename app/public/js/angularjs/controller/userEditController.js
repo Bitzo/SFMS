@@ -52,7 +52,7 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
         error(function(response) {
         });
 
-        //所在班级     
+        //所在班级初始化     
         $http({
             method:'get',
             url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -71,7 +71,7 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
         error(function(response) {
         });
 
-        //所在班级
+        //所在班级动态添加
         $scope.collegeChanged = function() {
             console.log($scope.formdata.CollegeID)
             $http({
@@ -91,10 +91,5 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
             }).
             error(function(response) {
             });
-
         }
-    
-        
-     
-
 })

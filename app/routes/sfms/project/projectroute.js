@@ -41,16 +41,17 @@ router.post('/', function (req, res) {
     }
     //检查所需要的参数是否齐全
     var temp = ['ProjectName', 'ProjectDesc', 'ProjectPrice', 'ProjectManageID', 'ProjectEndTime'],
-        err = 'required: ';
+        temp1 = ['项目名称', '项目描述', '项目预算', '项目负责人', '项目截止时间']
+        err = '缺少值: ';
     for(var value in temp)
     {
         if(!(temp[value] in query))
         {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if(err!='required: ')
+    if(err!='缺少值: ')
     {
         res.status(400);
         return res.json({
@@ -102,6 +103,7 @@ router.post('/', function (req, res) {
                                 'ProjectStatus': projectStatus,
                                 'ProjectPrice': projectPrice,
                                 'OperateUser': accountID,
+                                'OperateUserID': req.query.jitkey,
                                 'EditUser': accountID,
                                 'IsActive': isActive,
                                 'EditTime': '',
@@ -142,14 +144,6 @@ router.post('/', function (req, res) {
                             //如果有项目人员信息，则添加
                             if (userData !== undefined && userData.length > 0) {
                                 //转换数据格式
-                                // userData.push({
-                                //     projectName: projectName,
-                                //     userID: projectManageID,
-                                //     editName: operateUserName,
-                                //     operateUser: operateUserName,
-                                //     duty: '项目负责人',
-                                //     isActive: 1
-                                // });
                                 //获取所有项目用户的username
                                 var ID = [];
                                 for (var i in userData) {
@@ -300,7 +294,6 @@ router.post('/', function (req, res) {
 
 //项目基本信息修改
 router.put('/', function (req, res) {
-    console.log(req.body)
     var query = req.body.formdata;
     var ID = query.ID,
         projectName = query.ProjectName,
@@ -316,14 +309,15 @@ router.put('/', function (req, res) {
         time = moment().format('YYYY-MM-DD HH:mm:ss');
     //检查所需要的参数是否齐全
     var temp = ['ID', 'ProjectName', 'ProjectDesc', 'ProjectStatus', 'ProjectPrice', 'ProjectManageID', 'ProjectEndTime', 'ProjectTimeLine'],
-        err = 'required: ';
+        temp1 = ['项目ID', '项目名称', '项目描述','项目状态', '项目预算', '项目负责人', '项目截止时间', '项目进度'],
+    err = '缺少值: ';
     for (var value in temp) {
         if (!(temp[value] in query)) {
-            logger.writeInfo("require " + temp[value]);
-            err += temp[value] + ' ';
+            logger.writeInfo("缺少值 " + temp[value]);
+            err += temp1[value] + ' ';
         }
     }
-    if (err != 'required: ') {
+    if (err != '缺少值: ') {
         res.status(400);
         return res.json({
             status: 400,
@@ -374,6 +368,7 @@ router.put('/', function (req, res) {
                         'ProjectStatus': projectStatus,
                         'ProjectPrice': projectPrice,
                         'OperateUser': operateUserName,
+                        'OperateUserID': req.query.jitkey,
                         'EditUser': operateUserName,
                         'EditTime': time
                     }
@@ -536,17 +531,16 @@ router.put('/', function (req, res) {
 router.get('/user', function (req, res) {
     var query =  JSON.parse(req.query.f),
         userID = query.UserID || req.query.jitkey;
-console.log(userID)
     if (userID===undefined||userID=='') {
         res.status(400);
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: '缺少userID'
+            msg: '缺少用户ID'
         })
     }
 
-    projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
+    projectuserservice.queryProjectByUserID({UserID: userID, OperateUserID: req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -559,7 +553,7 @@ console.log(userID)
         if (results.length>0) {
             projectInfo = results;
         }
-        projectservice.queryProject({ProjectManageID:userID}, function (err, results) {
+        projectservice.queryProject({ProjectManageID:userID, OperateUserID: req.query.jitkey}, function (err, results) {
             if (err) {
                 res.status(500);
                 return res.json({
@@ -582,7 +576,6 @@ console.log(userID)
                     }
                 }
                 res.status(200);
-                console.log(projectInfo)
                 return res.json({
                     status: 200,
                     isSuccess: true,
@@ -616,6 +609,7 @@ router.get('/person', function (req, res) {
         'ProjectManageID': projectManageID,
         'CreateTime': startTime,
         'ProjectEndTime': endTime,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
     }
@@ -664,7 +658,7 @@ router.get('/person', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     if (totalNum == 1) {
-                        projectuserservice.queryProjectUser({ProjectID: results[0].ID}, function (err, results) {
+                        projectuserservice.queryProjectUser({ProjectID: results[0].ID, OperateUserID: req.query.jitkey}, function (err, results) {
                             if (err) {
                                 res.status(500);
                                 return res.json({
@@ -724,6 +718,7 @@ router.get('/', function (req, res) {
         'ProjectManageID': projectManageID,
         'CreateTime': startTime,
         'ProjectEndTime': endTime,
+        'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
     }
@@ -772,7 +767,7 @@ router.get('/', function (req, res) {
                         result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                     }
                     if (totalNum == 1) {
-                        projectuserservice.queryProjectUser({ProjectID: results[0].ID}, function (err, results) {
+                        projectuserservice.queryProjectUser({ProjectID: results[0].ID, OperateUserID: req.query.jitkey}, function (err, results) {
                             if (err) {
                                 res.status(500);
                                 return res.json({
@@ -825,11 +820,12 @@ router.delete('/', function (req, res) {
         return res.json({
             status: 400,
             isSuccess: false,
-            msg: 'require: ID'
+            msg: '缺少项目ID'
         })
     }
     var data = {
         'ID': ID,
+        'OperateUserID': req.query.jitkey,
         'IsActive': 0
     };
 

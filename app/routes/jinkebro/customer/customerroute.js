@@ -1,7 +1,3 @@
-/*
-	
-*/
-
 var express = require('express');
 var router = express.Router();
 var url = require('url');
@@ -23,7 +19,7 @@ var customer = appRequire('service/jinkebro/customer/customerservice');
 
 router.post('/', function (req, res) {
     console.log(req.headers.referer);
-    var arr =req.headers.referer.split('/');
+    var arr = req.headers.referer.split('/');
     var wechatusercode = arr[4];
     var data = ['truename', 'phone', 'school', 'area', 'house', 'dormNum'];
 
@@ -55,7 +51,7 @@ router.post('/', function (req, res) {
         area = req.body.area,
         dromNum = req.body.house,
         roomNum = req.body.dormNum;
-        console.log("宿舍号为"+roomNum);
+    console.log("宿舍号为" + roomNum);
     data = {
         'CustomerUserName': truename,
         'Phone': phone,
@@ -63,12 +59,12 @@ router.post('/', function (req, res) {
         'DormID': dromNum,
         'HouseNum': roomNum
     }
-    
+
     var queryData = {
-        'WechatUserCode' : wechatusercode
-    } 
-    
-   customer.query(queryData, function (err, queryInfo) {
+        'WechatUserCode': wechatusercode
+    }
+
+    customer.query(queryData, function (err, queryInfo) {
         if (err) {
             console.log("查询失败");
             var errinfo = '在获取微信宿舍地址的时候查询失败';
@@ -92,7 +88,7 @@ router.post('/', function (req, res) {
             });
         }
     });
-   res.send("成功");
+    res.send("成功");
 
 });
 

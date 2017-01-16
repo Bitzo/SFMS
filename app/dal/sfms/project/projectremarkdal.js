@@ -48,7 +48,7 @@ exports.updateRemark = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'ID') {
+            if (key !== 'ID') {
                 if (update == '')
                     update += key + " = '" + data[key] + "'";
                 else update += ', ' + key + " = '" + data[key] + "'";
@@ -84,7 +84,7 @@ exports.queryRemark = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
@@ -122,7 +122,7 @@ exports.countRemark = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
