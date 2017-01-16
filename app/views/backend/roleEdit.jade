@@ -7,31 +7,31 @@ block content
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(placeholder='应用名称' ng-model='paginationConf.paginationConf.formdata.ApplicationName' source='/app', stext='ApplicationName' svalue='ApplicationName',style="width:160px;height:30px",required)
+            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationID' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
 
          tr
           td(width="15%",class="tableleft") 角色名称
           td
-            input(type="text",name="roleName",ng-model="paginationConf.formdata.RoleName",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
+            input(type="text",name="roleName",ng-model="formdata.RoleName",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
             &nbsp&nbsp
-            span.error(ng-show="paginationConf.formdata.RoleName.$dirty &&paginationConf.formdata.RoleName.$invalid")
-              small.error(ng-show="paginationConf.formdata.RoleName.$error.minlength") 角色名称至少三位
-              small.error(ng-show="paginationConf.formdata.RoleName.$error.maxlength") 角色名称最多十位
+            span.error(ng-show="formdata.RoleName.$dirty &&formdata.RoleName.$invalid")
+              small.error(ng-show="formdata.RoleName.$error.minlength") 角色名称至少三位
+              small.error(ng-show="formdata.RoleName.$error.maxlength") 角色名称最多十位
         tr
           td(width="15%",class="tableleft") 角色代码
           td
-            input(type="text",name="roleCode",ng-model="paginationConf.formdata.RoleCode",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
+            input(type="text",name="roleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
             &nbsp&nbsp
-            span.error(ng-show="paginationConf.formdata.RoleCode.$dirty &&paginationConf.formdata.RoleCode.$invalid")
-              small.error(ng-show="paginationConf.formdata.RoleCode.$error.minlength") 角色号至少三位
-              small.error(ng-show="paginationConf.formdata.RoleCode.$error.maxlength") 角色号最多十位     
+            span.error(ng-show="formdata.RoleCode.$dirty &&formdata.RoleCode.$invalid")
+              small.error(ng-show="formdata.RoleCode.$error.minlength") 角色号至少三位
+              small.error(ng-show="formdata.RoleCode.$error.maxlength") 角色号最多十位     
         tr
           td(class="tableleft") 是否有效
           td
-            input(type="radio",name="isActive",value="1",ng-model="paginationConf.formdata.IsActive",checked,style="width:15px;height:15px")
+            input(type="radio",name="isActive",value="1",ng-model="formdata.IsActive",checked,style="width:15px;height:15px")
             有效
             &nbsp&nbsp&nbsp
-            input(type="radio",name="isActive",ng-model="paginationConf.formdata.IsActive",value="0",style="width:15px;height:15px")
+            input(type="radio",name="isActive",ng-model="formdata.IsActive",value="0",style="width:15px;height:15px")
             无效
         tr
           td(class="tableleft") 权限树

@@ -19,13 +19,24 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
             $("#functionModel").modal('hide');
         }
     };
-    //获取树形数据
+
     $http.get("/func?access_token=" + accesstokenstring)
         .success(function (response) {
             $scope.tree_data = response.data;
             console.log($scope.tree_data);
             getrolefunction();
         });
+    //获取树形数据
+    $http({
+        method: 'get',
+        url: "/backrole?access_token=" + accesstokenstring,
+        params: {
+            f: {"RoleID":$location.search().RoleID}
+        }
+    }).success(function (response) {
+        $scope.formdata =response.data[0];
+        $scope.formdata.ApplicationID=$scope.formdata.ApplicationID+'';
+    })
     function getrolefunction() {
         $http.get("/rolefunc/" + $location.search().RoleID + "?access_token=" + accesstokenstring)
             .success(function (response) {
@@ -110,12 +121,15 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
         })
         var param={
             "RoleID": $location.search().RoleID,
+            "ApplicationID": $scope.formdata.ApplicationID,
             "data":data
         }
         $http({
             method:'post',
             url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:param
+        }).success().error(function(data){
+            console.log(data);
         })
     }
     function foreachsubmit(data,dataparam){
