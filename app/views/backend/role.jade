@@ -46,7 +46,7 @@ block content
                         th 操作
                 tbody
                     tr(ng-repeat="data in datas")
-                        td {{$index+1}}
+                        td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
                         td {{data.ApplicationName}}
                         td {{data.RoleCode}}
                         td {{data.RoleName}}
