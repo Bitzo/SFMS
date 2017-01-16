@@ -62,7 +62,8 @@ exports.queryLog = function (data, callback) {
         'CreateUserID': data.CreateUserID || '',
         'sort': data.sort,
         'page': data.page || 1,
-        'pageNum': data.pageNum || config.pageCount
+        'pageNum': data.pageNum || config.pageCount,
+        'sortDirection': data.sortDirection
     };
 
     operationLogDAL.queryLog(formdata, function (err, results) {

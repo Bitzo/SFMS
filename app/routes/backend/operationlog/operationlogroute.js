@@ -17,16 +17,17 @@ var userservice = appRequire('service/backend/user/userservice');
 
 //日志查询
 router.get('/', function (req, res) {
+    console.log(req.query)
     var query = JSON.parse(req.query.f),
         applicationID = query.ApplicationID || '',
         type = query.Type || '',
         createTime = query.CreateTime || '',
         createUserID = query.CreateUserID || '',
-        sort = query.sort || 'ID',
+        sort = query.sortindex || 'ID',
+        sortDirection = query.sortDirection || 'asc',
         totalNum = 0,
         page = req.query.pageindex || 1,
         pagesize = req.query.pagesize || config.pageCount;
-
     page = page > 0? page : 1;
 
     if (moment(createTime).isValid())
@@ -38,6 +39,7 @@ router.get('/', function (req, res) {
         'CreateTime': createTime,
         'CreateUserID': createUserID,
         'sort': sort,
+        'sortDirection': sortDirection,
         'page': page,
         'pageNum': pagesize
     }
