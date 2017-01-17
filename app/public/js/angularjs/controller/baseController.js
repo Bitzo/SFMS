@@ -369,7 +369,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         } else {
             $scope.f.sortDirection = 'asc';
         } 
-        
+
         if($scope.f.sortDirection == 'desc'){             
            thisArrow[1].style.display = 'block';
         }else{           
