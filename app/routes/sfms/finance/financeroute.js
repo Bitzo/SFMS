@@ -268,7 +268,15 @@ router.put('/', function (req, res) {
                 msg: '操作失败，服务器出错'
             })
         }
-        if (results !== undefined && results.length>0 && results[0].FIStatu == '待审核') {
+        if (results.length>0 && results[0].IsActive === 0 ) {
+            res.status(400);
+            return res.json({
+                status: 400,
+                isSuccess: false,
+                msg: '操作失败，该财务信息已无效'
+            })
+        }
+        if (results[0].FIStatu == '待审核') {
 
             //验证申报财务的项目是否存在
             var data = {
@@ -449,6 +457,7 @@ router.get('/', function (req, res) {
         username = query.username || '',
         fiStatus = query.FIStatus || '',
         fiName = query.FIName || '',
+        isActive = query.IsActive || '',
         page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -466,7 +475,7 @@ router.get('/', function (req, res) {
         'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
-        'IsActive': 1
+        'IsActive': isActive
     }
     if (moment(data.startTime).isValid())
         data.startTime = moment(data.startTime).format("YYYY-MM-DD HH:mm:ss");
@@ -496,6 +505,11 @@ router.get('/', function (req, res) {
                     })
                 }
                 if (results !== undefined && results.length > 0) {
+                    for (var i in results) {
+                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
+                        if(results[i].CheckTime !== null)
+                            results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
+                    }
                     var result = {
                         status: 200,
                         isSuccess: true,
@@ -663,7 +677,7 @@ router.put('/check', function (req, res) {
                 msg: '操作失败，服务器出错'
             })
         }
-        if (results !== undefined && results.length>0) {
+        if (results !== undefined && results.length>0 && results[0].IsActive === 1) {
             //所有结果均为未审核状态
             if (results[0].FIStatu == '待审核') {
                 financeService.checkFinance(data, function (err, results) {
@@ -704,7 +718,7 @@ router.put('/check', function (req, res) {
             return res.json({
                 status: 400,
                 isSuccess: false,
-                msg: '审核的财务信息不存在'
+                msg: '审核的财务信息不存在或无效'
             })
         }
     })
@@ -724,11 +738,10 @@ router.delete('/', function (req, res) {
 
     var data = {
         'ID': ID,
-        'OperateUserID': req.query.jitkey,
-        'IsActive': 0
+        'OperateUserID': req.query.jitkey
     };
 
-    financeService.updateFinance(data, function (err, results) {
+    financeService.delFinance(data, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({

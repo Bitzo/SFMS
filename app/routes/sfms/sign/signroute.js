@@ -237,8 +237,6 @@ router.get('/:userID', function (req, res) {
                             })
                         }
                         for (var i in results) {
-                            if(results[i].SignType == 0) results[i].SignType = '签入';
-                            else results[i].SignType = '签出'; 
                             for (var j in data) {
                                 if (results[i].UserID == data[j].AccountID) {
                                     results[i].UserName = data[j].UserName;
