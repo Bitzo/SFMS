@@ -461,8 +461,8 @@ exports.updateOrder = function (data, callback) {
                 }
                 update_sql += temp_sql;
                 update_sql += ' where OrderID = ' + orderTableData.OrderID + ';';
-                console.log('修改order表中记录的sql' + update_sql);
-                logger.writeInfo('修改order表中记录的sql' + update_sql);
+                console.log('修改order表中记录的sql:' + update_sql);
+                logger.writeInfo('修改order表中记录的sql:' + update_sql);
                 connection.query(update_sql, function (err, info) {
                     if (err) {
                         connection.rollback(function () {
