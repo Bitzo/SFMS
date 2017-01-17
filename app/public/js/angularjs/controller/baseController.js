@@ -44,6 +44,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     
     //首页 查询
     $scope.search=function(){
+        $scope.paginationConf.currentPage = 1;
         getInit();
         $scope.formdata={};
     }
@@ -226,14 +227,20 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     
 //------实验室管理系统------
     //签到管理--首页  更多
-    $scope.moresign = function(index,action){
+    $scope.moresign = function(index,page,action){
         $scope.f={
             "userID":index,
         };
+        $scope.jumpPageNum = page;
+        $scope.currentPage = page;
+        
+        
         $http({
             method:'get',
             url:action+$scope.f.userID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
+                pageindex: $scope.jumpPageNum,
+                pagesize: 10,
                 f:{
                     MenuID:index,
                     RoleID:index,
@@ -244,9 +251,91 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             $scope.data = response.data;
+            $scope.numberOfPages = response.totalPage; 
+
+            console.log('当前页数'+$scope.currentPage);                      
+            console.log('总计页数'+$scope.numberOfPages);   
+            console.log(response);  
+
+            $scope.length = response.dataNum;
+                  
+            $scope.pageList = [];
+            
+            if($scope.numberOfPages <= 7){
+                // 判断总页数如果小于等于7，若小于则直接显示
+                for(i =1; i <= $scope.numberOfPages; i++){
+                        $scope.pageList.push(i);
+                    }
+            }else{
+                // 总页数大于7（此时分为三种情况：1.左边没有...2.右边没有...3.左右都有...）
+                // 计算中心偏移量
+                var a = $scope.currentPage + 2;
+                console.log('最大页数'+a); 
+                console.log('当前页数'+ $scope.currentPage);                        
+                if(($scope.currentPage-2) <= 1){
+                    // 左边没有...
+                    for(i =1; i <= 5; i++){
+                        $scope.pageList.push(i);
+                        console.log($scope.pageList);
+                    }
+                    $scope.pageList.push('...');
+                    $scope.pageList.push($scope.numberOfPages);
+                }else if(($scope.currentPage + 2) >= $scope.numberOfPages){//右边没有
+                    var a = $scope.currentPage + 2;                      
+                    $scope.pageList.push(1);
+                    $scope.pageList.push('...');
+                    console.log($scope.pageList);
+                    for(i = 3; i >= 1; i--){
+                        $scope.pageList.push($scope.numberOfPages - i);
+                        console.log($scope.pageList);
+                    }
+                    $scope.pageList.push($scope.numberOfPages);
+                }else{
+                    // 最后一种情况，两边都有...
+                    $scope.pageList.push(1);
+                    $scope.pageList.push('...');
+
+                    for(i = 1 ; i >= 1; i--){
+                        $scope.pageList.push($scope.currentPage - i);
+                    }
+                    $scope.pageList.push($scope.currentPage);
+                    for(i = 1; i <= 1; i++){
+                        $scope.pageList.push($scope.currentPage + i);
+                    }
+
+                    $scope.pageList.push('...');
+                    $scope.pageList.push($scope.numberOfPages);
+                }
+            }
+
+                       
         }).
         error(function(response) {
         });
+        //页数点击按钮
+        $scope.pageChanged = function(n) {
+            page = n.item;
+            $scope.moresign(index,page,'/sfms/api/sign/')   
+        }
+        //页数输入按钮
+        $scope.jumpToPage = function(m){
+            $scope.moresign(index,m.jumpPageNum,'/sfms/api/sign/')          
+        };
+        //下一页
+        $scope.nextPage = function(){
+            if(page<$scope.pageList.length){
+                page = page+1;
+                $scope.moresign(index,page,'/sfms/api/sign/')
+            }                      
+        };
+        //上一页
+        $scope.prevPage = function(m){
+           if(page>1){
+                page = page-1;
+                $scope.moresign(index,page,'/sfms/api/sign/')
+            }     
+        };    
+  
     }
     
     //项目管理--首页 更多
@@ -266,4 +355,27 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
                 console.log(response);
             });
         }
+
+    //查询列表点击表头排序
+    $scope.logSort = function (sortindex) {
+        var allArrow = document.getElementsByClassName("arrow");
+        for(var i = 0;i < allArrow.length;i++){
+            allArrow[i].style.display = 'none';
+        }      
+        var thisArrow = document.getElementById(sortindex).getElementsByClassName("arrow"); 
+
+        if ($scope.f.sortindex == sortindex) {
+            $scope.f.sortDirection = $scope.f.sortDirection == 'asc' ? 'desc' : 'asc';
+        } else {
+            $scope.f.sortDirection = 'asc';
+        } 
+
+        if($scope.f.sortDirection == 'desc'){             
+           thisArrow[1].style.display = 'block';
+        }else{           
+           thisArrow[0].style.display = 'block';
+        }   
+        $scope.f.sortindex = sortindex;
+        getInit();
+    }
 })

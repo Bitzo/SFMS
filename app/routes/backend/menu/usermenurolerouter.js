@@ -20,15 +20,17 @@ var menuService = appRequire('service/backend/menu/menuservice'),
 router.get('/',function (req,res) {
     var userID = req.query.jitkey;
     if (userID === undefined || userID === '') {
+        res.status(400)
         return res.json({
-            code: 404,
+            code: 400,
             isSuccess: false,
             msg: 'require userID'
         });
     }
     if(isNaN(userID)){
+        res.status(400)
         return res.json({
-            code: 500,
+            code: 400,
             isSuccess: false,
             msg: 'userID不是数字'
         });
@@ -40,6 +42,7 @@ router.get('/',function (req,res) {
     //判断user是否存在
     userService.querySingleID(userID,function (err,result) {
         if(err){
+            res.status(500)
             return res.json({
                 code : 500,
                 isSuccess :false,
@@ -50,6 +53,7 @@ router.get('/',function (req,res) {
         if(result !== undefined && result.length != 0){
             menuService.queryMenuAndRoleByUserID(uniqueData,function (err, results) {
                 if(err){
+                    res.status(500)
                     return res.json({
                         code : 500,
                         isSuccess :false,
@@ -98,6 +102,7 @@ router.get('/',function (req,res) {
 router.get('/userID/:userID',function (req,res) {
     var userID = req.params.userID;
     if (userID === undefined || userID === '') {
+        res.status(400)
         return res.json({
             code: 404,
             isSuccess: false,
@@ -105,6 +110,7 @@ router.get('/userID/:userID',function (req,res) {
         });
     }
     if(isNaN(userID)){
+        res.status(400)
         return res.json({
             code: 500,
             isSuccess: false,
@@ -118,6 +124,7 @@ router.get('/userID/:userID',function (req,res) {
     //判断user是否存在
     userService.querySingleID(userID,function (err,result) {
         if(err){
+            res.status(500)
             return res.json({
                 code : 500,
                 isSuccess :false,
@@ -128,6 +135,7 @@ router.get('/userID/:userID',function (req,res) {
         if(result !== undefined && result.length != 0){
             menuService.queryMenuAndRoleByUserID(uniqueData,function (err, results) {
                 if(err){
+                    res.status(500)
                     return res.json({
                         code : 500,
                         isSuccess :false,
@@ -138,12 +146,12 @@ router.get('/userID/:userID',function (req,res) {
 
                 if(results.Menu !== undefined && results.Menu.length != 0 ){
                     if(results.Role !== undefined &&  results.Role.length != 0){
+                        results.UserInfo = result;
+                        results.UserInfo[0].UserID = result[0].AccountID;
                         return res.json({
                             code : 200,
                             isSuccess :true,
-                            data : {
-                                MenuAndRole : results
-                            },
+                            data : results,
                             msg : '查询菜单和角色成功'
                         });
                     }else {

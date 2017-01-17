@@ -57,7 +57,7 @@ describe("产品单元测试", function () {
 
     it("产品查询", function (done) {
         var queryData = {
-            'ProductID': insertProductID,
+            'jit_product.ProductID': insertProductID,
             'SKU' : '',
             'ProductName': '',
             'ProductDesc' : '',
@@ -65,7 +65,7 @@ describe("产品单元测试", function () {
             'ExpireTime' : '',
             'ProducTime' : '',
             'SupplierID' : '',
-            'ProductTypeID' : 1
+            'jit_product.ProductTypeID' : 1
         }
         productService.queryProducts(queryData, function (err, result) {
             if (err) return done(err);

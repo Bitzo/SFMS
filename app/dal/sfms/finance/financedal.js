@@ -95,7 +95,7 @@ exports.updateFinance = function (data, callback) {
 
 //财务查询数据量统计
 exports.countQuery = function (data, callback) {
-    var sql = 'select count(1) as num from jit_financeinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_financeinfo.projectID and jit_projectbaseinfo.IsActive = 1 ';
+    var sql = 'select count(1) as num from jit_financeinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_financeinfo.projectID ';
 
     if (data !== undefined) {
         for (var key in data) {
@@ -131,7 +131,7 @@ exports.countQuery = function (data, callback) {
 
 //财务查询
 exports.queryFinance = function (data, callback) {
-    var sql = 'select jit_financeinfo.ID,FIName,FIType,InOutType,FIPrice,ProjectId,ProjectName,UserID,UserName,jit_financeinfo.CreateTime,jit_financeinfo.OperateUser,CheckTime,CheckUser,FIStatu,Remark from jit_financeinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.IsActive = 1 and jit_financeinfo.IsActive = 1 and jit_projectbaseinfo.ID = jit_financeinfo.ProjectID ',
+    var sql = 'select jit_financeinfo.ID,FIName,FIType,InOutType,FIPrice,ProjectId,ProjectName,UserID,UserName,jit_financeinfo.CreateTime,jit_financeinfo.OperateUser,CheckTime,CheckUser,FIStatu,Remark,jit_financeinfo.IsActive from jit_financeinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_financeinfo.ProjectID ',
         page = data.page || 1,
         num = data.pageNum;
 
@@ -146,7 +146,7 @@ exports.queryFinance = function (data, callback) {
     if (data.startTime !== '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
     if (data.endTime !== '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    sql += " order by jit_financeinfo.IsActive desc,FIStatu LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询财务信息：" + sql);
 
@@ -187,6 +187,32 @@ exports.checkFinance = function (data, callback) {
     sql += ' where ID = ' + data.ID;
 
     logger.writeInfo('审核财务： ' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '修改失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
+
+exports.delFinance = function (data, callback) {
+    var sql = 'update jit_financeinfo set IsActive = 0 ';
+
+    if (data.ID !== '') sql += ' where ID = ' + data.ID;
+    if (data.ProjectID !== '') sql += ' where ProjectID = ' + data.ProjectID;
+
+    logger.writeInfo('逻辑删除财务： ' + sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {

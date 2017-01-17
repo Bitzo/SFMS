@@ -7,6 +7,7 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
             method:'get',
             url: '/app'+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
+                isPaging:1,
                 pageindex:1,
                 pagesize:10,
                 f:{}
@@ -23,6 +24,7 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
             method:'get',
             url: '/backrole' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
+                isPaging:1,
                 pageindex:1,
                 pagesize:10,
                 f:{}
@@ -39,6 +41,7 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
             method:'get',
             url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
+                isPaging:1,
                 pageindex:1,
                 pagesize:10,
                 f:{
@@ -57,6 +60,7 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
             method:'get',
             url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
+                isPaging:1,
                 pageindex:1,
                 pagesize:10,
                 f:{
@@ -78,6 +82,7 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
                 method:'get',
                 url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
                 params:{
+                    isPaging:1,
                     pageindex:1,
                     pagesize:10,
                     f:{

@@ -8,7 +8,7 @@ block content
           label.form-group.my-form-group  绩效类型
             jason-select.est(ng-model='f.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue' svalue='DictionaryID')
           label.form-group.my-form-group  所属项目
-            jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
+            jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project?selectType=1',stext='ProjectName',svalue='ID')
           label.form-group.my-form-group 状态
             select(ng-model='f.KPIStatus',style="width:120px;height:34px;")
               option(value='') 全部
@@ -28,28 +28,30 @@ block content
             th 序号
             th 绩效名称          
             th 绩效类型
-            th 绩效分
             th 所属项目
-            th 申请人       
+            th 申请人
+            th 绩效分
             th 申请时间
-            th 审核状态
             th 审核人
             th 审核时间
-            th 备注    
+            th 备注
+            th 审核状态
+            th 是否有效
             th(style="width:80px;") 操作
         tbody
           tr(ng-repeat="x in datas") 
-            td {{$index+1}}
-            td {{x.KPIName}}            
+            td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
+            td {{x.KPIName}}
             td {{x.KPITypeValue}}
-            td {{x.KPIScore}}
             td {{x.ProjectName}}
             td {{x.UserName}}
+            td {{x.KPIScore}}
             td {{x.CreateTime}}
-            td {{x.KPIStatus}}
             td {{x.CheckUser}}
             td {{x.CheckTime}}
-            td {{x.Remark}}            
+            td {{x.Remark}}
+            td {{x.KPIStatus}}
+            td {{x.IsActive | numToChin:data.IsActive }}
             td
               a(href='#/sfms/kpiEdit/?ID={{x.ID}}')
                 i.icon.icon-edit 编辑            

@@ -19,7 +19,6 @@ var moment = require('moment');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
 
-
 /**
  * KPI信息新增：
  *  所需要做的步骤
@@ -60,8 +59,7 @@ router.post('/', function (req, res) {
             msg: err
         })
     };
-
-    projectservice.queryProject({ID:ProjectID, OperateUserID: req.query.jitkey}, function (err, results) {
+    projectservice.queryProject({ID:ProjectID, IsActive: 1, OperateUserID: req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -295,8 +293,6 @@ router.put('/', function (req, res) {
             msg: '绩效分不是正确的数值'
         });
     }
-    console.log(data.Remark)
-    console.log(data.Remark.length)
     if (data.Remark.length>45) {
         res.status(400);
         return res.json({
@@ -336,9 +332,9 @@ router.put('/', function (req, res) {
                 msg: '操作失败，服务器出错'
             })
         }
-        if(results !== undefined && results.length>0) {
+        if(results !== undefined && results.length>0 && results[0].IsActive === 1) {
             if (results[0].KPIStatus == '待审核') {
-                projectservice.queryProject({ID:ProjectID, OperateUserID: req.query.jitkey}, function (err, results) {
+                projectservice.queryProject({ID:ProjectID, IsActive: 1, OperateUserID: req.query.jitkey}, function (err, results) {
                     if (err) {
                         res.status(500);
                         return res.json({
@@ -436,7 +432,7 @@ router.put('/', function (req, res) {
                         return res.json({
                             status: 400,
                             isSuccess: false,
-                            msg: '操作失败，项目不存在'
+                            msg: '操作失败，项目不存在或无效'
                         })
                     }
                 })
@@ -453,7 +449,7 @@ router.put('/', function (req, res) {
             return res.json({
                 status: 404,
                 isSuccess: false,
-                msg: results
+                msg: '绩效记录无效或不存在'
             })
         }
     })
@@ -468,6 +464,7 @@ router.get('/person', function (req, res) {
         StartTime = query.StartTime || '',
         EndTime = query.EndTime || '',
         KPIStatus = query.KPIStatus || '',
+        IsActive = query.IsActive || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -480,6 +477,7 @@ router.get('/person', function (req, res) {
         'KPIStatus': KPIStatus.trim(),
         'StartTime': StartTime,
         'EndTime': EndTime,
+        'IsActive': IsActive,
         'page': page,
         'pageNum': pageNum,
     }
@@ -506,9 +504,9 @@ router.get('/person', function (req, res) {
                 }
                 if (results !== undefined && results.length > 0) {
                     for (var i in results) {
-                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:SS');
+                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD');
                         if(results[i].CheckTime !== null)
-                            results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm:SS');
+                            results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
                     }
                     var result = {
                         status: 200,
@@ -626,6 +624,7 @@ router.get('/', function (req, res) {
         KPIStatus = query.KPIStatus || '',
         KPIType =  query.KPIType || '',
         KPIName = query.KPIName || '',
+        IsActive = query.IsActive || '',
         page = req.query.pageindex > 0 ? req.query.pageindex : 1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -642,7 +641,7 @@ router.get('/', function (req, res) {
         'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
-        'IsActive': 1
+        'IsActive': IsActive
     }
 
     KPIservice.countQuery(data, function (err, results) {
@@ -779,7 +778,7 @@ router.get('/', function (req, res) {
 router.put('/check', function (req, res) {
     var data = req.body.formdata,
         temp = ['ID', 'KPIStatus'],
-        temp1 = ['绩效ID', '审核意见']
+        temp1 = ['绩效ID', '审核意见'],
         err = '缺少值: ';
     for (var key in temp) {
         if (!(temp[key] in data)) {
@@ -838,7 +837,7 @@ router.put('/check', function (req, res) {
                 msg: '操作失败，服务器出错'
             })
         }
-        if (results !== undefined && results.length>0) {
+        if (results !== undefined && results.length>0 && results[0].IsActive === 1) {
             if (results[0].KPIStatus == '待审核') {
                 KPIservice.checkKPI(data, function (err, results) {
                     if (err) {
@@ -878,11 +877,11 @@ router.put('/check', function (req, res) {
             return res.json({
                 status: 400,
                 isSuccess: false,
-                msg: '审核的绩效信息不存在'
+                msg: '审核的绩效信息不存在或无效'
             })
         }
     })
-})
+});
 
 //KPI删除
 router.delete('/', function (req, res) {
@@ -898,10 +897,10 @@ router.delete('/', function (req, res) {
 
     var data = {
         'ID': ID,
-        'IsActive': 0
+        'OperateUserID': req.query.jitkey
     };
 
-    KPIservice.updateKPI(data, function (err, results) {
+    KPIservice.delKPI(data, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({

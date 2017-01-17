@@ -51,18 +51,20 @@ block content
             th 项目进度
             th 项目预计完成时间
             th 项目状态       
-            th 项目预算                            
+            th 项目预算
+            th 是否有效
             th 操作
         tbody
           tr(ng-repeat="x in datas") 
-            td {{$index+1}}
+            td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
             td {{x.ProjectName}}           
             td {{x.ProjectDesc}}
             td {{x.ProjectManageName}}
             td {{x.ProjectTimeLine}}   
             td {{x.ProjectEndTime}}  
             td {{x.ProjectStatus}}    
-            td {{x.ProjectPrice}}                                                                                                                                                                
+            td {{x.ProjectPrice}}
+            td {{x.IsActive | numToChin:x.IsActive}}
             td
               a(href='#/sfms/projectManageEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑

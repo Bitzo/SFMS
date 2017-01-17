@@ -2,7 +2,7 @@
  * Created by Administrator on 2017/1/11.
  */
 
-myApp.controller('roleEditController', function($scope, $http,$q,baseService,$location) {
+myApp.controller('userMenuController', function($scope, $http,$q,baseService,$location) {
     $scope.tree_data = [];//树形数据，获取 $scope.tree_data过程是异步的如果没有初始化会导致报错
     $scope.disable=true;//右边的编辑框是否可编辑
     $scope.btnSaveMessage='编辑';//编辑框中的提交按钮的作用
@@ -31,7 +31,7 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
         method: 'get',
         url: "/backrole?access_token=" + accesstokenstring,
         params: {
-            f: {"RoleID":$location.search().RoleID}
+            f: {"RoleID":$location.search().AcconutID}
         }
     }).success(function (response) {
         $scope.formdata =response.data[0];

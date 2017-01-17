@@ -40,7 +40,6 @@ router.post('/', function (req, res) {
     //检查所需要的参数是否齐全
     var temp = ['projectID', 'userID', 'editID', 'isActive'],
         err = 'required: ';
-    console.log(data)
     for(var value in temp)
     {
         if(!(temp[value] in data[0]))
@@ -58,7 +57,7 @@ router.post('/', function (req, res) {
             msg: err
         })
     };
-    projectservice.queryProject({ID:data[0].projectID}, function (err, results) {
+    projectservice.queryProject({ID:data[0].projectID, IsActive:1}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({

@@ -14,7 +14,7 @@ block content
           tr
             td(width="15%",class="tableleft") 项目名称
             td
-              input(type="textview",name="projectName",ng-model="paginationConf.formdata.ProjectName",ng-maxlength='45',required)
+              input(type="textview",name="ProjectName",ng-model="paginationConf.formdata.ProjectName",ng-maxlength='45',required)
               &nbsp&nbsp
               small.error(ng-show="projectEdit.ProjectName.$error.maxlength && projectEdit.ProjectName.$touched") 应用名称最多45位    
 
@@ -72,7 +72,7 @@ block content
           tr
             td(width="15%",class="tableleft") 项目经费预算
             td
-              input(type="textview",name="projectPrice",ng-model="paginationConf.formdata.ProjectPrice",ng-maxlength='45',required)
+              input(type="textview",name="ProjectPrice",ng-model="paginationConf.formdata.ProjectPrice",ng-maxlength='45',required)
               &nbsp&nbsp
               small.error(ng-show="projectEdit.ProjectPrice.$error.maxlength && projectEdit.ProjectPrice.$touched") 预算最多45位
           
@@ -95,7 +95,7 @@ block content
           tr
             td(width="15%",class="tableleft") 项目描述 
             td
-              textarea(type="textview",name="Memo",ng-model='paginationConf.formdata.ProjectDesc',rows="5",cols="30",ng-maxlength='45',required)
+              textarea(type="textview",name="ProjectDesc",ng-model='paginationConf.formdata.ProjectDesc',rows="5",cols="30",ng-maxlength='45',required)
               &nbsp&nbsp
               small.error(ng-show="projectEdit.ProjectDesc.$error.maxlength && projectEdit.ProjectDesc.$touched") 描述最多45位
 

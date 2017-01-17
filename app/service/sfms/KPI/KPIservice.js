@@ -79,7 +79,7 @@ exports.updateKPI = function(data, callback) {
         'KPIStatus': data.KPIStatus,
         'Remark': data.Remark,
         'IsActive': data.IsActive
-    }
+    };
 
     logModel.OperationName = operationConfig.sfmsApp.KPIManage.KPIUpdete.actionName;
     logModel.Action = operationConfig.sfmsApp.KPIManage.KPIUpdete.actionName;
@@ -122,6 +122,7 @@ exports.queryKPI = function (data, callback) {
         'StartTime': data.StartTime || '',
         'EndTime': data.EndTime || '',
         'KPIType': data.KPIType || '',
+        'jit_kpiinfo.IsActive': data.IsActive || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount,
     }
@@ -170,7 +171,7 @@ exports.countQuery = function (data, callback) {
         'KPIStatus': data.KPIStatus || '',
         'StartTime': data.StartTime || '',
         'EndTime': data.EndTime || '',
-        'jit_kpiinfo.IsActive': 1
+        'jit_kpiinfo.IsActive': data.IsActive || ''
     }
     KPIdal.countQuery(queryData, function (err, results) {
         if (err) {
@@ -217,6 +218,41 @@ exports.checkKPI = function (data, callback) {
             }
         })
         logger.writeInfo('审核KPI');
+        callback(false, results);
+    })
+}
+
+//KPI逻辑删除
+exports.delKPI = function (data, callback) {
+    var formdata = {
+        'ID': data.ID || '',
+        'ProjectID': data.ProjectID || ''
+    }
+    logModel.OperationName = operationConfig.sfmsApp.KPIManage.KPIDelete.actionName;
+    logModel.Action = operationConfig.sfmsApp.KPIManage.KPIDelete.actionName;
+    logModel.Identifier = operationConfig.sfmsApp.KPIManage.KPIDelete.identifier;
+    KPIdal.delKPI(formdata, function (err, results) {
+        if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "绩效逻辑删除失败";
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("绩效逻辑删除失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
+            callback(true, results);
+            return;
+        }
+        logModel.Type = 2;
+        logModel.Memo = "绩效逻辑删除成功";
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("绩效逻辑删除成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
+        logger.writeInfo('逻辑删除KPI');
         callback(false, results);
     })
 }

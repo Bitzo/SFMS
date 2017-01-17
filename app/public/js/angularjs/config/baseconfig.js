@@ -57,6 +57,9 @@ myApp.config(function($routeProvider) {
     when('/backend/menuedit', {
         templateUrl: '/menuedit?access_token=' + accesstokenstring,
     }).
+    when('/backend/operationlog', {
+        templateUrl: '/operationlog?access_token=' + accesstokenstring,
+    }).
     when('/sfms/projectLead', {
         templateUrl: '/sfms/projectLead?access_token=' + accesstokenstring,
     }).
@@ -138,6 +141,12 @@ myApp.config(function($routeProvider) {
     when('/jinkeBro/jitgoods', {
         templateUrl: '/jinkeBro/jitgoods?access_token=' + accesstokenstring,
     }).
+    when('/jinkeBro/jitstock', {
+        templateUrl: '/jinkeBro/jitstock?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitstockAdd', {
+        templateUrl: '/jinkeBro/jitstockAdd?access_token=' + accesstokenstring,
+    }).
     when('/jinkeBro/jitgoodsAdd', {
         templateUrl: '/jinkeBro/jitgoodsAdd?access_token=' + accesstokenstring,
     }).
@@ -171,6 +180,28 @@ myApp.config(function($routeProvider) {
                 return '是';
             default:
                 return '否';
+        }
+    }
+}).filter('logType', function() {
+    return function(val) {
+        switch (val) {
+            case 1:
+                return '异常日志';
+            case 2:
+                return '常规日志';
+            default:
+                return '异常日志';
+        }
+    }
+}).filter('signType', function() {
+    return function(val) {
+        switch (val) {
+            case 0:
+                return '签到';
+            case 1:
+                return '签退';
+            default:
+                return '无效记录';
         }
     }
 })

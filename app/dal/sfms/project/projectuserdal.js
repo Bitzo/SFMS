@@ -163,7 +163,7 @@ exports.countQuery = function (data, callback) {
 exports.queryProjectByUserID = function (data, callback) {
     var sql = 'select distinct ProjectID,jit_projectruser.ProjectName from jit_projectruser,jit_projectbaseinfo  where jit_projectruser.IsActive = 1 and jit_projectbaseinfo.IsActive = 1 and jit_projectruser.ProjectID = jit_projectbaseinfo.ID ';
 
-    if (data.userID !== '' && data.userID !== undefined)  sql +=' and UserID = ' + data.UserID;
+    if (data.UserID !== '' && data.UserID !== undefined)  sql +=' and UserID = ' + data.UserID;
 
     logger.writeInfo('根据用户ID，查找所在的项目：' + sql);
     db_sfms.mysqlPool.getConnection(function(err, connection) {

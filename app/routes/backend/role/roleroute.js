@@ -134,7 +134,6 @@ router.post('/',function (req, res) {
             err += data[value] + ' ';
         }
     }
-
     if(err!='required: ')
     {
         res.status(400);
@@ -310,7 +309,7 @@ router.put('/', function (req, res) {
         isActive = req.body.formdata.IsActive;
     //增加角色功能点所需要的数据
     var funcData = req.body.formdata.funcdata;
-
+    console.log(req.body.formdata);
     for(var value in data)
     {
         if(!(data[value] in req.body.formdata))
