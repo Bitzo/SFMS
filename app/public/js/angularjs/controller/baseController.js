@@ -44,7 +44,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     
     //首页 查询
     $scope.search=function(){
-         $scope.paginationConf.currentPage = 1;
+        $scope.paginationConf.currentPage = 1;
         getInit();
         $scope.formdata={};
     }
