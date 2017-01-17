@@ -29,8 +29,7 @@ router.get('/', function (req, res) {
         CustomerID = req.query.CustomerID || '',
         ProductID = req.query.ProductID || [],
         OrderStatus = req.query.OrderStatus || '',
-        ProductCount = req.query.ProductCount || [];
-
+        ProductCount = req.query.ProductCount || []
     //前端传来的是字符串,转化为对象
     if (typeof ProductID == "string") {
         ProductID = JSON.parse(ProductID);
@@ -266,9 +265,9 @@ router.post('/', function (req, res) {
     for (var key in req.body) {
         stringinfo = key;
     }
+
+    console.log(stringinfo);
     var formdata = JSON.parse(stringinfo);
-    for (var key in formdata)
-        console.log("增加订单的时候接受到的值 " + key + " 值为 " + formdata[key]);
     var OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),
         PayMethod = formdata.PayMethod || 1,
         IsValid = formdata.IsValid || 1,

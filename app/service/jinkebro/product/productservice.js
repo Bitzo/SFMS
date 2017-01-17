@@ -153,6 +153,7 @@ Product.prototype.queryProducts = function (data, callback) {
             });
             
             callback(true,'商品查询失败');
+            return ;
         }
 
         //计算过期时间
@@ -210,43 +211,5 @@ Product.prototype.getProCountByID = function (data, callback) {
     });
 }
 
-/**
- * @function 通过http的get方法直接获取信息
- * 该方法废弃 by snail 2017-01-14 23:20:00
- */
-Product.prototype.getProductInfoThroughHttpGet = function (callback) {
-    var getUrl = config.jinkebro.baseUrl + config.jinkebro.productInfo;
-    //var getUrl = '/jinkeBro/product'
-    console.log(getUrl);
-    http.get(getUrl, function (res) {
-        var datas = [];
-        var size = 0;
-   
-        res.on('data', function (data) {
-            datas.push(data);
-            size += data.length;
-        });
 
-        res.on("end", function () {
-            var buff = Buffer.concat(datas, size);
-            var result = JSON.parse(buff); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-            logService.insertOperationLog(logModel, function (err, insertId) {
-                if (err) {
-                    logger.writeError('获取微信商品信息成功，生成操作日志异常' + new Date());
-                }
-            });
-
-            if (callback && typeof callback === 'function') {
-                console.log("[service/jinkebro/product/productservice-------139行]");
-                console.log(result);
-                return callback(result);
-            }
-        });
-
-    }).on('error', function (e) {
-        logger.writeError('[service/jinkebro/product/productservice-------146行]获取微信商品信息时异常' + new Date());
-        return;
-    });
-    return ;
-}
 module.exports = new Product();
