@@ -525,6 +525,8 @@ Order.prototype.queryCount = function (queryinfo, callback) {
 Order.prototype.insertWechatOrder = function (productInfo, callback) {
     console.log("[service/jinkbro/orderservice]");
     console.log(productInfo);
+
+    //这可以整个成一个订单的object
     var OrderTime = moment().format('YYYY-MM-DD HH:mm:ss'),
         PayMethod = 1,
         IsValid = 1,
