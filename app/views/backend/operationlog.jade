@@ -28,51 +28,66 @@ block content
             table.table.table-striped.table-bordered.text-center
                 thead
                     tr
-                        th(ng-click="logSort('ID')") 序号
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('ApplicationName')") 应用名称
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('OperationName')") 操作名称
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('OldValue')") 旧值
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('OperationUrl')") 操作地址
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('NewValue')") 新植
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('Action')") 动作名称
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('Type')") 日志类型
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('ObjName')") 对象名称
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('Identifier')") 操作标识
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('CmdStr')") 执行参数
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('Memo')") 备注或异常
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('CreateTime')") 创建时间
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('CreateUserID')") 创建人
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
-                        th(ng-click="logSort('PDate')") 分区
-                            span.icon.icon-chevron-down
-                            span.icon.icon-chevron-up
+                        th
+                          a(href='',ng-click="logSort('ID')",id='ID') 序号
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('ApplicationName')",id='ApplicationName') 应用名称
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('OperationName')",id='OperationName') 操作名称
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('OldValue')",id='OldValue') 旧值
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('OperationUrl')",id='OperationUrl') 操作地址
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('NewValue')",id='NewValue') 新植
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('Action')",id='Action') 动作名称
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('Type')",id='Type') 日志类型
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('ObjName')",id='ObjName') 对象名称
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('Identifier')",id='Identifier') 操作标识
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('CmdStr')",id='CmdStr') 执行参数
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('Memo')",id='Memo') 备注或异常
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('CreateTime')",id='CreateTime') 创建时间
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('CreateUserID')",id='CreateUserID') 创建人
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('PDate')",id='PDate') 分区
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
                 tbody
                     tr(ng-repeat="data in datas")
                         td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}

@@ -358,11 +358,23 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
     //查询列表点击表头排序
     $scope.logSort = function (sortindex) {
+        var allArrow = document.getElementsByClassName("arrow");
+        for(var i = 0;i < allArrow.length;i++){
+            allArrow[i].style.display = 'none';
+        }      
+        var thisArrow = document.getElementById(sortindex).getElementsByClassName("arrow"); 
+
         if ($scope.f.sortindex == sortindex) {
             $scope.f.sortDirection = $scope.f.sortDirection == 'asc' ? 'desc' : 'asc';
         } else {
             $scope.f.sortDirection = 'asc';
-        }
+        } 
+        
+        if($scope.f.sortDirection == 'desc'){             
+           thisArrow[1].style.display = 'block';
+        }else{           
+           thisArrow[0].style.display = 'block';
+        }   
         $scope.f.sortindex = sortindex;
         getInit();
     }

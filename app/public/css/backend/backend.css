@@ -19,3 +19,6 @@ jason-select{
 .est{
      width:90px;height:34px;
 }
+table .arrow{
+    display: none;
+}
