@@ -50,6 +50,6 @@ block content
                   td {{data.UserName}}
                   td {{data.UserAgent}}
                   td {{data.CreateTime}}
-                  td {{data.SignType}}
+                  td {{data.SignType | signType:data.SignType }}
         div.pull-right
           jason-pagination(conf='paginationConf')

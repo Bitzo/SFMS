@@ -12,6 +12,11 @@ block content
               input(type="textview",name="KPIName",ng-model="paginationConf.formdata.KPIName",ng-maxlength='45',required)
               &nbsp&nbsp
               small.error(ng-if="kpiEdit.KPIName.$error.maxlength && kpiEdit.KPIName.$touched") 绩效分最多45位
+          
+          tr
+            td(width="15%",class="tableleft") 用户名
+            td
+              span(name='UserID',ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserName}}
               
           tr
             td(width="15%",class="tableleft") 绩效类型

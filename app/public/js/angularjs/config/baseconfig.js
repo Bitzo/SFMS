@@ -193,4 +193,15 @@ myApp.config(function($routeProvider) {
                 return '异常日志';
         }
     }
+}).filter('signType', function() {
+    return function(val) {
+        switch (val) {
+            case 0:
+                return '签到';
+            case 1:
+                return '签退';
+            default:
+                return '无效记录';
+        }
+    }
 })

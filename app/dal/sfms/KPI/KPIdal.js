@@ -95,7 +95,7 @@ exports.updateKPI = function (data, callback) {
 
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
-    var sql = 'select count(1) as num from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_kpiinfo.projectID and jit_projectbaseinfo.IsActive = 1 ';
+    var sql = 'select count(1) as num from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_kpiinfo.projectID ';
     if (data !== undefined) {
         for (var key in data) {
             if (data[key] !== '' && data[key] !== undefined && key !== 'StartTime' && key !== 'EndTime') {
@@ -130,7 +130,7 @@ exports.countQuery = function (data, callback) {
 
 //KPI查询
 exports.queryKPI = function (data, callback) {
-    var sql = 'select jit_kpiinfo.ID,KPIName,KPIType,KPIScore,ProjectID,ProjectName,UserID,UserName,jit_kpiinfo.CreateTime,jit_kpiinfo.OperateUser,CheckTime,CheckUser,KPIStatus,Remark from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_kpiinfo.IsActive = 1 and jit_projectbaseinfo.IsActive = 1 and jit_kpiinfo.projectID = jit_projectbaseinfo.ID ',
+    var sql = 'select jit_kpiinfo.ID,KPIName,KPIType,KPIScore,ProjectID,ProjectName,UserID,UserName,jit_kpiinfo.CreateTime,jit_kpiinfo.OperateUser,CheckTime,CheckUser,KPIStatus,Remark,jit_kpiinfo.IsActive from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_kpiinfo.projectID = jit_projectbaseinfo.ID ',
         page = data.page || 1,
         num = data.pageNum || config.pageCount;
 
@@ -146,7 +146,7 @@ exports.queryKPI = function (data, callback) {
     if (data.StartTime !== '') sql += "and jit_kpiinfo.CreateTime > '" + data.StartTime + "' ";
     if (data.EndTime !== '') sql += "and jit_kpiinfo.CreateTime < '" + data.EndTime + "' ";
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    sql += " order by jit_kpiinfo.IsActive desc,KPIStatus LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询KPI信息：" + sql);
 
@@ -188,6 +188,31 @@ exports.checkKPI = function (data, callback) {
     sql += ' where ID = ' + data.ID;
 
     logger.writeInfo('审核KPI： ' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '修改失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
+
+exports.delKPI = function (data, callback) {
+    var sql = 'update jit_kpiinfo set IsActive = 0 ';
+    if (data.ID !== '') sql += ' where ID = ' + data.ID;
+    if (data.ProjectID !== '') sql += ' where ProjectID = ' + data.ProjectID;
+
+    logger.writeInfo('逻辑删除KPI： ' + sql);
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {

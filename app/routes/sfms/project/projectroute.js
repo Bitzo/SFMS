@@ -10,6 +10,8 @@ var express = require('express');
 var router = express.Router();
 var projectservice = appRequire('service/sfms/project/projectservice');
 var userservice = appRequire('service/backend/user/userservice');
+var KPIservice = appRequire('service/sfms/KPI/KPIservice');
+var financeService = appRequire('service/sfms/finance/financeservice');
 var projectuserservice = appRequire('service/sfms/project/projectuserservice');
 var config = appRequire('config/config');
 var moment = require('moment');
@@ -594,6 +596,7 @@ router.get('/user', function (req, res) {
                         });
                     }
                 }
+                console.log()
                 res.status(200);
                 return res.json({
                     status: 200,
@@ -723,11 +726,13 @@ router.get('/person', function (req, res) {
 
 //项目基本信息查询-管理员
 router.get('/', function (req, res) {
+    console.log(req.query)
     var query =  JSON.parse(req.query.f),
         ID = query.ID || '',
         projectManageID = query.projectManageID || '',
         startTime = query.startTime || '',
         endTime = query.endTime || '',
+        selectType = req.query.isPaging || '',
         page = req.query.pageindex>0 ?req.query.pageindex:1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -737,10 +742,12 @@ router.get('/', function (req, res) {
         'ProjectManageID': projectManageID,
         'CreateTime': startTime,
         'ProjectEndTime': endTime,
+        'SelectType': selectType,
         'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
     }
+    console.log(data)
     
     //查询数据量
     projectservice.countQuery(data, function (err, results) {
@@ -795,7 +802,6 @@ router.get('/', function (req, res) {
                                     msg: '操作失败，服务器出错'
                                 })
                             }
-                            logger.writeInfo(results);
                             result.data[0].userdata = {};
                             if (results !== undefined && results.length > 0) {
                                 result.data[0].userdata = results;
@@ -831,6 +837,7 @@ router.get('/', function (req, res) {
 })
 
 //项目删除
+//删除时逻辑删除项目记录，逻辑删除项目成员，并禁用与该项目有关的绩效与财务
 router.delete('/', function (req, res) {
     var ID = JSON.parse(req.query.d).ID;
 
@@ -858,7 +865,7 @@ router.delete('/', function (req, res) {
             });
         }
         if (results!==undefined) {
-            projectservice.updateProject(data, function (err, results) {
+            KPIservice.delKPI({'ProjectID': ID, 'OperateUserID': req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -867,19 +874,43 @@ router.delete('/', function (req, res) {
                         msg: "操作失败，服务器出错"
                     });
                 }
-                if(results !== undefined && results.affectedRows > 0) {
-                    res.status(200);
-                    res.json({
-                        status: 200,
-                        isSuccess: true,
-                        msg: "操作成功"
-                    })
-                } else {
-                    res.status(400);
-                    res.json({
-                        status: 400,
-                        isSuccess: true,
-                        msg: "操作失败"
+                if (results!==undefined) {
+                    financeService.delFinance({'ProjectID': ID, 'OperateUserID': req.query.jitkey}, function (err, results) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: "操作失败，服务器出错"
+                            });
+                        }
+                        if (results!==undefined) {
+                            projectservice.updateProject(data, function (err, results) {
+                                if (err) {
+                                    res.status(500);
+                                    return res.json({
+                                        code: 500,
+                                        isSuccess: false,
+                                        msg: "操作失败，服务器出错"
+                                    });
+                                }
+                                if(results !== undefined && results.affectedRows > 0) {
+                                    res.status(200);
+                                    res.json({
+                                        status: 200,
+                                        isSuccess: true,
+                                        msg: "操作成功"
+                                    })
+                                } else {
+                                    res.status(400);
+                                    res.json({
+                                        status: 400,
+                                        isSuccess: true,
+                                        msg: "操作失败"
+                                    })
+                                }
+                            })
+                        }
                     })
                 }
             })

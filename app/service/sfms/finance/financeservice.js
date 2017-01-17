@@ -136,6 +136,7 @@ exports.queryFinance = function (data, callback) {
         'ProjectID': data.ProjectID || '',
         'startTime': data.startTime || '',
         'endTime': data.endTime || '',
+        'jit_financeinfo.IsActive': data.IsActive || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount,
     }
@@ -187,7 +188,7 @@ exports.countQuery = function (data, callback) {
         'FIStatu': data.FIStatus || '',
         'startTime': data.startTime || '',
         'endTime': data.endTime || '',
-        'jit_financeinfo.IsActive': 1
+        'jit_financeinfo.IsActive': data.IsActive || ''
     }
     financeDAL.countQuery(queryData, function (err, results) {
         if (err) {
@@ -234,6 +235,41 @@ exports.checkFinance = function (data, callback) {
             }
         })
         logger.writeInfo('审核财务');
+        callback(false, results);
+    })
+}
+
+//财务逻辑删除
+exports.delFinance = function (data, callback) {
+    var formdata = {
+        'ID': data.ID || '',
+        'ProjectID': data.ProjectID || ''
+    }
+    logModel.OperationName = operationConfig.sfmsApp.financeManage.financeDelete.actionName;
+    logModel.Action = operationConfig.sfmsApp.financeManage.financeDelete.actionName;
+    logModel.Identifier = operationConfig.sfmsApp.financeManage.financeDelete.identifier;
+    financeDAL.delFinance(formdata, function (err, results) {
+        if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "财务逻辑删除失败";
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("财务逻辑删除失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
+            callback(true, results);
+            return;
+        }
+        logModel.Type = 2;
+        logModel.Memo = "财务逻辑删除成功";
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("财务逻辑删除成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
+        logger.writeInfo('逻辑删除财务');
         callback(false, results);
     })
 }
