@@ -449,7 +449,7 @@ Order.prototype.checkProductCount = function (productInfo, callback) {
     queryInfo.ProductCount = productCounts[0];
     me.queryCount(queryInfo, function (isEnough, resultInfo) {
         if (isEnough) {
-            me.insertOrder(productInfo, function (err, orderInfo) {
+            me.insertWechatOrder(productInfo, function (err, orderInfo) {
                 logger.writeInfo("[service/jinkebro/order/orderservice---453行]在checkproductcount获取到了订单的消息");
                 if (err) {
                     console.log('获取订单失败');
@@ -521,8 +521,8 @@ Order.prototype.queryCount = function (queryinfo, callback) {
 }
 /*********************************************** */
 
-//将数据插入到订单里面
-Order.prototype.insertOrder = function (productInfo, callback) {
+//从微信端获取数据插入到订单里面
+Order.prototype.insertWechatOrder = function (productInfo, callback) {
     console.log("[service/jinkbro/orderservice]");
     console.log(productInfo);
     var OrderTime = moment().format('YYYY-MM-DD HH:mm:ss'),
