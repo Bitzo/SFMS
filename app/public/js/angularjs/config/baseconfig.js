@@ -141,6 +141,12 @@ myApp.config(function($routeProvider) {
     when('/jinkeBro/jitgoods', {
         templateUrl: '/jinkeBro/jitgoods?access_token=' + accesstokenstring,
     }).
+    when('/jinkeBro/jitstock', {
+        templateUrl: '/jinkeBro/jitstock?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitstockAdd', {
+        templateUrl: '/jinkeBro/jitstockAdd?access_token=' + accesstokenstring,
+    }).
     when('/jinkeBro/jitgoodsAdd', {
         templateUrl: '/jinkeBro/jitgoodsAdd?access_token=' + accesstokenstring,
     }).
