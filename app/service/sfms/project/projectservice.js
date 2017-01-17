@@ -138,6 +138,7 @@ exports.countQuery = function (data, callback) {
         'ProjectManageID': data.ProjectManageID || '',
         'CreateTime': data.CreateTime || '',
         'ProjectEndTime': data.ProjectEndTime || '',
+        'IsActive': data.IsActive || ''
     }
     projectDAL.countQuery(queryData, function (err, results) {
         if (err) {
@@ -157,6 +158,7 @@ exports.queryProject = function (data, callback) {
         'ProjectName': data.projectName || '',
         'CreateTime': data.CreateTime || '',
         'ProjectEndTime': data.ProjectEndTime || '',
+        'IsActive': data.IsActive || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount,
     }

@@ -28,21 +28,51 @@ block content
             table.table.table-striped.table-bordered.text-center
                 thead
                     tr
-                        th 序号
-                        th 应用名称
-                        th 操作名称
-                        th 旧值
-                        th 操作地址
-                        th 新植
-                        th 动作名称
-                        th 日志类型
-                        th 对象名称
-                        th 操作标识
-                        th 执行参数
-                        th 备注或异常
-                        th 创建时间
-                        th 创建人
-                        th 分区
+                        th(ng-click="logSort('ID')") 序号
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('ApplicationName')") 应用名称
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('OperationName')") 操作名称
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('OldValue')") 旧值
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('OperationUrl')") 操作地址
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('NewValue')") 新植
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('Action')") 动作名称
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('Type')") 日志类型
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('ObjName')") 对象名称
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('Identifier')") 操作标识
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('CmdStr')") 执行参数
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('Memo')") 备注或异常
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('CreateTime')") 创建时间
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('CreateUserID')") 创建人
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
+                        th(ng-click="logSort('PDate')") 分区
+                            span.icon.icon-chevron-down
+                            span.icon.icon-chevron-up
                 tbody
                     tr(ng-repeat="data in datas")
                         td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}

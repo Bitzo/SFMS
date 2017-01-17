@@ -152,7 +152,7 @@ router.post('/login', function(req, res) {
   if (req.session.code.toString() !== req.body.code.toString()) {
     resultData.data.isSuccess = false;
     resultData.data.msg = "验证码输入不正确!";
-    return res.json(resultData);
+    return res.json(resultData.data);
   }
 
   // console.log(username+ " " +password);
@@ -160,7 +160,7 @@ router.post('/login', function(req, res) {
     res.status(401);
     resultData.data.isSuccess = false;
     resultData.data.msg = "帐号密码不能为空!";
-    return res.json(resultData);
+    return res.json(resultData.data);
   }
 
   var data = {
@@ -173,7 +173,7 @@ router.post('/login', function(req, res) {
       res.status(500);
       return res.json({
         "status": 500,
-        "message": "应用程序异常!",
+        "msg": "应用程序异常!",
         "error": err
       });
     }
@@ -181,7 +181,7 @@ router.post('/login', function(req, res) {
     if (!user || user.length == 0) {
       res.status(401);
       resultData.data.msg = "帐号密码不对,请重试!";
-      return res.json(resultData);
+      return res.json(resultData.data);
     }
 
     if (user.length > 0 && user[0].AccountID > 0) {

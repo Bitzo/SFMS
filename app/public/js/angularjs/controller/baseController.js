@@ -355,4 +355,15 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
                 console.log(response);
             });
         }
+
+    //查询列表点击表头排序
+    $scope.logSort = function (sortindex) {
+        if ($scope.f.sortindex == sortindex) {
+            $scope.f.sortDirection = $scope.f.sortDirection == 'asc' ? 'desc' : 'asc';
+        } else {
+            $scope.f.sortDirection = 'asc';
+        }
+        $scope.f.sortindex = sortindex;
+        getInit();
+    }
 })

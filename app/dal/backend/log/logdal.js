@@ -50,17 +50,22 @@ exports.queryLog = function(data, callback) {
         'Identifier,CmdStr,Memo,CreateTime,CreateUserID,PDate from jit_operationlog where 1=1 ',
         sort = data.sort || 'ID',
         page = data.page > 0 ? data.page : 1,
-        num = data.pageNum;
+        num = data.pageNum,
+        sortDirection = data.sortDirection || 'asc';
 
     if (data !== undefined) {
         for (var key in data) {
-            if(key !== 'page' && key !== 'pageNum' && key !== 'sort' && data[key] !== '') {
+            if(key !== 'page' && key !== 'pageNum' && key !== 'sort' && key !== 'sortDirection' && data[key] !== '' && key !== 'PDate' ) {
                 sql += "and " + key + " = '" + data[key] + "' ";
             }
         }
     }
 
-    sql += ' order by ' + sort;
+    if (data.PDate !== '') {
+        sql += "and PDate = '" + data.PDate + "'";
+    }
+
+    sql += ' order by ' + sort + ' ' + sortDirection;
     sql += " LIMIT " + (page-1)*num + "," + num;
     logger.writeInfo("查询操作日志：" + sql);
 
@@ -89,11 +94,13 @@ exports.countQuery = function (data, callback) {
 
     if (data !== undefined) {
         for(var key in data) {
-            if(data[key] !== '' && key !== 'page' && key !== 'pageNum')
+            if(data[key] !== '' && key !== 'page' && key !== 'pageNum' && key !== 'PDate' )
                 sql += 'and ' + key + "= '" + data[key] + "' ";
         }
     }
-
+    if (data.PDate !== '') {
+        sql += "and PDate = '" + data.PDate + "'";
+    }
     logger.writeInfo('操作日志查询数据统计：' + sql);
 
     db_backend.mysqlPool.getConnection(function(err, connection) {
