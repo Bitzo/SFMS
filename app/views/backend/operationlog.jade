@@ -1,0 +1,109 @@
+//
+   Created by Bitzo on 2017/1/15.
+
+link(rel='stylesheet', href='css/backend/backend.css')
+block content
+    jason-pagecontent(action='/log' conf='paginationConf')
+        div.page-content
+            ng-form.form-inline
+                span(style='font-size: 24px;') 日志查询
+                div.buttons.pull-right
+                    label.form-group.my-form-group &nbsp;应用名称
+                        jason-select.form-control(placeholder='应用名称'  style="width:100px;height:34px;" ng-model='f.ApplicationID' source='/app' stext='ApplicationName' svalue='ID')
+                    label.form-group.my-form-group &nbsp;日志类型
+                        select(ng-model='f.Type',style="width:100px;height:34px;")
+                            option(value='') 全部
+                            option(value=1) 常规日志
+                            option(value='') 异常日志
+                    label.form-group.my-form-group &nbsp;创建时间
+                        input.form-control(type='date' style="width:130px;height:34px;" ng-model='f.CreateTime')
+                    label.form-group.my-form-group &nbsp;创建用户
+                        jason-select.form-control(placeholder='用户名'  style="width:100px;height:34px;" ng-model='f.CreateUserID' source='/backuser' stext='UserName' svalue='AccountID')&nbsp;
+                    label.form-group.my-form-group
+                        a.btn.btn-sm.btn-primary(ng-click='search()')
+                            i.icon.icon-search   查询
+                    a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
+                        i.icon.icon-repeat  刷新
+            hr
+            table.table.table-striped.table-bordered.text-center
+                thead
+                    tr
+                        th
+                          a(href='',ng-click="logSort('ID')",id='ID') 序号
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('ApplicationName')",id='ApplicationName') 应用名称
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('OperationName')",id='OperationName') 操作名称
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('OldValue')",id='OldValue') 旧值
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('OperationUrl')",id='OperationUrl') 操作地址
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('NewValue')",id='NewValue') 新植
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('Action')",id='Action') 动作名称
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('Type')",id='Type') 日志类型
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('ObjName')",id='ObjName') 对象名称
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('Identifier')",id='Identifier') 操作标识
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('CmdStr')",id='CmdStr') 执行参数
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('Memo')",id='Memo') 备注或异常
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('CreateTime')",id='CreateTime') 创建时间
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('CreateUserID')",id='CreateUserID') 创建人
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                        th
+                          a(href='',ng-click="logSort('PDate')",id='PDate') 分区
+                            span.icon.arrow.icon-chevron-down.down
+                            span.icon.arrow.icon-chevron-up.up
+                tbody
+                    tr(ng-repeat="data in datas")
+                        td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
+                        td {{data.ApplicationName}}
+                        td {{data.OperationName}}
+                        td {{data.OldValue}}
+                        td {{data.OperationUrl}}
+                        td {{data.NewValue}}
+                        td {{data.Action}}
+                        td {{data.Type | logType:data.Type }}
+                        td {{data.ObjName}}
+                        td {{data.Identifier}}
+                        td {{data.CmdStr}}
+                        td {{data.Memo}}
+                        td {{data.CreateTime}}
+                        td {{data.CreateUserName}}
+                        td {{data.PDate}}
+            div.pull-right
+                jason-pagination(conf='paginationConf')

@@ -91,7 +91,7 @@ exports.updateProject = function (data, callback) {
 
 //统计数据量
 exports.countQuery = function (data, callback) {
-    var sql = 'select count(1) as num from jit_projectbaseinfo where 1=1 and IsActive = 1 ';
+    var sql = 'select count(1) as num from jit_projectbaseinfo where 1=1 ';
 
     if (data !== undefined) {
         for(var key in data) {
@@ -125,8 +125,8 @@ exports.countQuery = function (data, callback) {
 //查询项目信息
 exports.queryProject = function (data, callback) {
     var sql = 'select ID,ProjectName,ProjectDesc,ProjectManageID,ProjectManageName,ProjectEndTime,' +
-            'ProjectTimeLine,CreateTime,OperateUser,EditTime,EditUser,ProjectStatus,ProjectPrice ' +
-            'from jit_projectbaseinfo where 1=1 and IsActive = 1 ',
+            'ProjectTimeLine,CreateTime,OperateUser,EditTime,EditUser,ProjectStatus,ProjectPrice,IsActive ' +
+            'from jit_projectbaseinfo where 1=1 ',
         page = data.page || 1,
         num = data.pageNum || 20;
 
@@ -140,7 +140,7 @@ exports.queryProject = function (data, callback) {
     if (data.CreateTime !== '') sql += " and CreateTime > '" + data.CreateTime + "' ";
     if (data.ProjectEndTime !== '') sql += " and ProjectEndTime < '" + data.ProjectEndTime + "' ";
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    sql += "order by IsActive desc LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询项目信息：" + sql);
 

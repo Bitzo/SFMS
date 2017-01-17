@@ -61,7 +61,7 @@ router.post('/', function (req, res) {
         })
     };
 
-    projectservice.queryProject({ID:ProjectID, OperateUserID: req.query.jitkey}, function (err, results) {
+    projectservice.queryProject({ID:ProjectID, IsActive: 1, OperateUserID: req.query.jitkey}, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -295,8 +295,6 @@ router.put('/', function (req, res) {
             msg: '绩效分不是正确的数值'
         });
     }
-    console.log(data.Remark)
-    console.log(data.Remark.length)
     if (data.Remark.length>45) {
         res.status(400);
         return res.json({
@@ -338,7 +336,7 @@ router.put('/', function (req, res) {
         }
         if(results !== undefined && results.length>0) {
             if (results[0].KPIStatus == '待审核') {
-                projectservice.queryProject({ID:ProjectID, OperateUserID: req.query.jitkey}, function (err, results) {
+                projectservice.queryProject({ID:ProjectID, IsActive: 1, OperateUserID: req.query.jitkey}, function (err, results) {
                     if (err) {
                         res.status(500);
                         return res.json({

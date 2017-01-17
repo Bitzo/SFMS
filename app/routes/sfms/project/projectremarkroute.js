@@ -57,7 +57,7 @@ router.post('/', function (req, res) {
         }
         if (results!==undefined && results.length>0) {
             userName = results[0].UserName;
-            projectservice.queryProject({ID:projectID, OperateUserID: req.query.jitkey}, function (err, results) {
+            projectservice.queryProject({ID:projectID, IsActive: 1, OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -85,7 +85,7 @@ router.post('/', function (req, res) {
                                 if (projectID == results[i].ProjectID) isIn = true;
                             }
                             if (isIn == true) {
-                                projectservice.queryProject({ID: projectID}, function (err, results) {
+                                projectservice.queryProject({ID: projectID,IsActive:1}, function (err, results) {
                                     if (err) {
                                         res.status(500);
                                         return res.json({
@@ -234,7 +234,7 @@ router.put('/', function (req, res) {
         }
         if (results!==undefined && results.length>0) {
             userName = results[0].UserName;
-            projectservice.queryProject({ID:projectID, OperateUserID: req.query.jitkey}, function (err, results) {
+            projectservice.queryProject({ID:projectID,IsActive:1, OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -261,7 +261,7 @@ router.put('/', function (req, res) {
                                 if (projectID == results[i].ProjectID) isIn = true;
                             }
                             if (isIn == true) {
-                                projectservice.queryProject({ID: projectID, OperateUserID: req.query.jitkey}, function (err, results) {
+                                projectservice.queryProject({ID: projectID, IsActive:1, OperateUserID: req.query.jitkey}, function (err, results) {
                                     if (err) {
                                         res.status(500);
                                         return res.json({

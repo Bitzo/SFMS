@@ -62,6 +62,7 @@ router.post('/', function (req, res) {
     //验证申报财务的项目是否存在
     var data = {
         'ID': projectID,
+        'IsActive': 1,
         'OperateUserID': req.query.jitkey
     }
     projectservice.queryProject(data, function (err, results) {
@@ -272,6 +273,7 @@ router.put('/', function (req, res) {
             //验证申报财务的项目是否存在
             var data = {
                 'ID': projectID,
+                'IsActive': 1,
                 'OperateUserID': req.query.jitkey
             }
             projectservice.queryProject(data, function (err, results) {

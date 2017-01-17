@@ -51,7 +51,8 @@ block content
             th 项目进度
             th 项目预计完成时间
             th 项目状态       
-            th 项目预算                            
+            th 项目预算
+            th 是否有效
             th 操作
         tbody
           tr(ng-repeat="x in datas") 
@@ -62,7 +63,8 @@ block content
             td {{x.ProjectTimeLine}}   
             td {{x.ProjectEndTime}}  
             td {{x.ProjectStatus}}    
-            td {{x.ProjectPrice}}                                                                                                                                                                
+            td {{x.ProjectPrice}}
+            td {{x.IsActive | numToChin:x.IsActive}}
             td
               a(href='#/sfms/projectManageEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑
