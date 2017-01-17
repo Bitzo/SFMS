@@ -9,6 +9,7 @@
 var db_backend= appRequire('db/db_backend');
 var applicationMode = appRequire('model/backend/application/applicationmodel');
 var logger = appRequire('util/loghelper').helper;
+var config = appRequire('config/config');
 
 //查询目前所有应用
 exports.queryAllApp = function (data, callback) {
@@ -16,16 +17,17 @@ exports.queryAllApp = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'page' && key != 'pageNum' && data[key] != '') {
+            if (key != 'page' && key != 'pageNum' && data[key] != '' && key != 'SelectType') {
                 query_sql += ' and ' + key + " = '" + data[key] + "' ";
             }
         }
     }
 
-    var num = data.pageNum || 20,
+    var num = data.pageNum || config.pageCount,
         page = data.page || 1;
-
-    query_sql += " limit " + (page-1)*num + " , " + num;
+    console.log(data)
+    if (data.SelectType !== '' && data.SelectType === '1') query_sql += " order by IsActive desc ";
+        else  query_sql += " order by IsActive desc limit " + (page-1)*num + " , " + num;
     logger.writeInfo("查询所有应用" + query_sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
@@ -50,7 +52,7 @@ exports.countAllapps = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+            if (key !== 'page' && key !== 'pageNum' && key != 'SelectType' && data[key] != '')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }

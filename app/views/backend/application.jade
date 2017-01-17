@@ -22,6 +22,7 @@ block content
             th 应用代码          
             th 应用名称
             th 应用备注
+            th 是否有效
             th 操作
         tbody
           tr(ng-repeat="x in datas") 
@@ -29,6 +30,7 @@ block content
             td {{x.ApplicationCode}}            
             td {{x.ApplicationName}}
             td {{x.Memo}}
+            td {{x.IsActive | numToChin:x.IsActive }}
             td
               a(href='#/backend/applicationedit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑 

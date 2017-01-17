@@ -10,6 +10,7 @@ myApp.controller('sfmsApiFinanceController', function($scope, $http,$q,baseServi
                 method:'get',
                 url: '/sfms/api/project/user' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
                 params:{
+                    isPaging:1,
                     pageindex:1,
                     pagesize:10,
                     f:{
@@ -31,6 +32,7 @@ myApp.controller('sfmsApiFinanceController', function($scope, $http,$q,baseServi
             method:'get',
             url: '/sfms/api/project/user' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
+                isPaging:1,
                 pageindex:1,
                 pagesize:10,
                 f:{
@@ -53,6 +55,7 @@ myApp.controller('sfmsApiFinanceController', function($scope, $http,$q,baseServi
                 method:'get',
                 url: '/sfms/api/project/user' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
                 params:{
+                    isPaging:1,
                     pageindex:1,
                     pagesize:10,
                     f:{

@@ -11,6 +11,7 @@ jasonapp.service('jasonService', function ($http, $q) {
             method: 'get',
             url: url + accesstokenstring,
             params:{
+                isPaging:1,
                 pageindex:1,
                 pagesize:10,
                 f:{}

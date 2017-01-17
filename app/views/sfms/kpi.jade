@@ -8,7 +8,7 @@ block content
           label.form-group.my-form-group  绩效类型
             jason-select.est(ng-model='f.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue' svalue='DictionaryID')
           label.form-group.my-form-group  所属项目
-            jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
+            jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project?selectType=1',stext='ProjectName',svalue='ID')
           label.form-group.my-form-group 状态
             select(ng-model='f.KPIStatus',style="width:120px;height:34px;")
               option(value='') 全部
