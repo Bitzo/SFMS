@@ -339,7 +339,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
             //该用户不存在
             if (customerInfo == undefined || customerInfo.length == 0) {
                 console.log('查询用户失败');
-                logger.writeError("[service/jinkebro/order/orderservice-----343行]当插入订单的时候查无此用户");
+                logger.writeError("[service/jinkebro/order/orderservice-----342行]当插入订单的时候查无此用户");
                 callback(true, "当插入订单的时候查无此用户");
                 return;
             }
@@ -369,7 +369,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
         me.checkProductCount(orderInfo, function (isSussess, resultInfo) {
             if (!isSussess) {
                 var orderinfo = '对不起，您所需要的商品库存量不足';
-                logger.writeError("service/jinkebro/order/orderservice]对不起，你所需要的商品库存量不足");
+                logger.writeError("service/jinkebro/order/orderservice----372行]对不起，你所需要的商品库存量不足");
 
                 callback(false, orderinfo);
                 return;
@@ -510,10 +510,10 @@ Order.prototype.queryCount = function (queryinfo, callback) {
         }
 
         if (surplus >= 0) {
-            logger.writeInfo("[service/jinkebro/order/orderservice -----500行]库存量足够");
+            logger.writeInfo("[service/jinkebro/order/orderservice -----513行]库存量足够");
             return callback(true, updateStockInfo);
         } else {
-            logger.writeInfo("[service/jinkebro/order/orderservice -----503行]库存量不足");
+            logger.writeInfo("[service/jinkebro/order/orderservice -----516行]库存量不足");
             return callback(false, queryinfo.ProductID);
         }
 
@@ -630,6 +630,6 @@ Order.prototype.getOrderInfo = function (orderID, callback) {
         };
         callback(false, orderInfo);
     });
-}
+};
 
 module.exports = new Order();
