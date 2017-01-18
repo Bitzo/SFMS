@@ -80,7 +80,23 @@ exports.createOrder = function(data, callback) {
  * 使用事务增加订单
  * @param data
  * @param callback
+ * return
+ * success-responce:
+ * {
+    "fieldCount": 0,
+    "affectedRows": 1,
+    "insertId": 464, // 此为新增订单的OrderID
+    "serverStatus": 3,
+    "warningCount": 0,
+    "message": "",
+    "protocol41": true,
+    "changedRows": 0
+  }
+ *error-responce:
+ * 如果库存不足，就返回字符串 "ProductID为5（某个数字）的商品库存不足！"
+ *
  */
+
 exports.insertOrderFull = function(data, callback) {
     var insertSql1 = '',
         insertSql2 = '';
@@ -164,6 +180,7 @@ exports.insertOrderFull = function(data, callback) {
                             console.log("[order]执行事务失败，" + "ERROR：" + err);
                             throw err;
                         });
+                        return ;
                     }
                     console.log(info);
                     returnResult = info;
@@ -210,6 +227,7 @@ exports.insertOrderFull = function(data, callback) {
                             console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
                             throw err;
                         });
+                        return ;
                     }
                     console.log(info);
                     callback2(err, info);
@@ -237,6 +255,45 @@ exports.insertOrderFull = function(data, callback) {
                                 console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
                                 throw err;
                             });
+                            return ;
+                        }
+                        console.log(info);
+                        callbacktemp(err, info);
+                    });
+                }
+                funcArr.push(tempfunc);
+                next(index + 1);
+            })(0);
+
+            // 修改productstock表
+            (function next(index) {
+                if (index === receiveProductIDs.length) { // No items left
+                    return;
+                }
+                var tempProID = receiveProductIDs[index];
+                var tempProCount = receiveProductCounts[index];
+                var tempfunc = function(callbacktemp) {
+                    var updateStockSql = 'update jit_productstock set jit_productstock.TotalNum = jit_productstock.TotalNum - ' + tempProCount;
+                    updateStockSql += ' where jit_productstock.TotalNum >= ' + tempProCount + ' and ProductID = ' + tempProID + ';';
+
+                    console.log("updateStockSql" + index + ": " + updateStockSql);
+                    logger.writeInfo("updateStockSql" + index + ": " + updateStockSql);
+
+                    connection.query(updateStockSql, function(err, info) {
+                        if (err) {
+                            connection.rollback(function() {
+                                logger.writeError("[orderProduct]执行事务失败，" + "ERROR：" + err);
+                                console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
+                                throw err;
+                            });
+                        }
+                        if (info.affectedRows == 0) {
+                            connection.rollback(function () {
+                                logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
+                                console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
+                            });
+                            callback(false,"ProductID为" + tempProID + "的商品库存不足！");
+                            return ;
                         }
                         console.log(info);
                         callbacktemp(err, info);
@@ -251,7 +308,6 @@ exports.insertOrderFull = function(data, callback) {
                     connection.rollback(function(err) {
                         throw err;
                     });
-                    callback(true);
                     connection.release();
                     return;
                 }
@@ -261,6 +317,7 @@ exports.insertOrderFull = function(data, callback) {
                         connection.rollback(function() {
                             throw err;
                         });
+                        return ;
                     }
                     console.log('insert success');
                     connection.release();
