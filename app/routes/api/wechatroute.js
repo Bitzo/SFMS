@@ -56,60 +56,73 @@ router.get('/accesscheck', function (req, res, next) {
 
 // 监听文本消息
 wechat.textMsg(function (msg) {
-    var resMsg = {};
-
+    console.log(msg);
     switch (msg.msgType) {
         case "text":
+            var contentInfo = '等待回复';
+            var resMsg = {
+                fromUserName: msg.toUserName,
+                toUserName: msg.fromUserName,
+                msgType: "text",
+                content: contentInfo,
+                funcFlag: 0
+            };
+                    
             // 返回文本消息           
             if (/^(\d+#\d+)$/.test(msg.content) ||
                 /^((\d+#\d+\|)+(\d+#\d+))$/.test(msg.content)) {
                 console.log("收到订单的消息");
-                order.insertOrderInfo(msg.content, msg.fromUserName, function (err, resultinfo) {
-                    if (err) {
-                        console.log("[route/api/wechatroute-------74行]" + resultinfo);
-                        logger.writeError("[route/api/wechatroute-------74行]" + resultinfo);
-                        return;
-                    }
+                var p = new Promise(function (resolve, reject) {
+                    order.insertOrderInfo(msg.content, msg.fromUserName,
+                        function (err, orderInfo) {
+                            if (err) {
+                                reject(orderInfo);
+                                return;
+                            }
 
-                    var sendMsg = {
-                        fromUserName: msg.toUserName,
-                        toUserName: msg.fromUserName,
-                        msgType: "text",
-                        content: resultinfo,
-                        funcFlag: 0
-                    };
-
-                    logger.writeInfo("[route/api/wechatroute--------------86行]发送订单的消息给用户");
-                    wechat.sendMsg(sendMsg);
-                    return;
+                            var sendOrderInfo = orderInfo;
+                            resolve(sendOrderInfo);
+                        })
                 });
-            } else {
-                var articles = [];
-                var picurl = "http://mmbiz.qpic.cn/mmbiz_png/2gG8lzb9PibtXRR";
-                picurl += "a2ibT3yQS8o2IFUiboGzSRCvbhzPVfooq34aNbs7MYXiaBkjMr";
-                picurl += "IlrR7biadliafyA3EcG16iaYg9hw/0";
-                articles[0] = {
-                    title: "零食",
-                    description: "测试描述",
-                    picUrl: picurl,
-                    url: "https://www.baidu.com/"
-                };
 
-                // 返回图文消息
-                var resMsg1 = {
-                    fromUserName: msg.toUserName,
-                    toUserName: msg.fromUserName,
-                    msgType: "news",
-                    articles: articles,
-                    funcFlag: 0
-                }
-                wechat.sendNewsMsg(resMsg1);
+                p.then(function (result) {
+                    resMsg.content = result;
+                    console.log("[routes/api/wechatroute---------90行]");
+                    console.log(resMsg);                    
+                    wechat.sendMsg(resMsg);
+                }, function (err) {
+                    wechat.sendMsg(resMsg);
+                });
+
+                logger.writeInfo("[route/api/wechatroute--------------98行]发送订单的消息给用户");
+                return;
             }
+            
+            //输入其他的文字返回的是图文的信息
+            var articles = [];
+            var picurl = "http://mmbiz.qpic.cn/mmbiz_png/2gG8lzb9PibtXRR";
+            picurl += "a2ibT3yQS8o2IFUiboGzSRCvbhzPVfooq34aNbs7MYXiaBkjMr";
+            picurl += "IlrR7biadliafyA3EcG16iaYg9hw/0";
+            articles[0] = {
+                title: "零食",
+                description: "测试描述",
+                picUrl: picurl,
+                url: "https://www.baidu.com/"
+            };
+
+            var resMsg1 = {
+                fromUserName: msg.toUserName,
+                toUserName: msg.fromUserName,
+                msgType: "news",
+                articles: articles,
+                funcFlag: 0
+            }
+            wechat.sendNewsMsg(resMsg1);
             break;
 
         case "音乐":
             // 返回音乐消息
-            resMsg = {
+             var resMsg = {
                 fromUserName: msg.toUserName,
                 toUserName: msg.fromUserName,
                 msgType: "music",
@@ -119,6 +132,7 @@ wechat.textMsg(function (msg) {
                 HQMusicUrl: "高质量音乐url",
                 funcFlag: 0
             };
+            wechat.sendMsg(resMsg);
             break;
 
         case "图文":
@@ -132,21 +146,20 @@ wechat.textMsg(function (msg) {
             };
 
             // 返回图文消息
-            resMsg = {
+            var resMsg = {
                 fromUserName: msg.toUserName,
                 toUserName: msg.fromUserName,
                 msgType: "news",
                 articles: articles,
                 funcFlag: 0
             }
-    }
-
-    wechat.sendMsg(resMsg);
+             wechat.sendMsg(resMsg);
+    }  
 });
 
 // 监听图片消息
 wechat.imageMsg(function (msg) {
-    console.log("[routes/api/wechatroute----------142行]imageMsg received");
+    console.log("[routes/api/wechatroute----------165行]imageMsg received");
     console.log(JSON.stringify(msg));
     var resMsg = {};
     switch (msg.msgType) {
@@ -202,28 +215,30 @@ wechat.eventMsg(function (msg) {
             wechat.sendMsg(resMsg);
             
             //获取token
-            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
+            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, 
+                function (isSussess, token) {
                 //如果成功  
                 if (isSussess) {
-                    wechat.getCurrentAutoreplyInfo(token, function (resultInfo) {
-                        console.log("[routes/api/wechatroute-------202行]token=" + token);
-                    });
+                    //創建菜单的部分
                     // wechat.createMenu(token, function () {
                     //     console.log("创建菜单");
                     //     logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
                     // });
+
                     //用户订阅时的操作
-                    wechatCustomer.addSubscibe(token, msg, function(err, errinfo) {
+                    wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
                         if (err) {
                             console.log(errinfo);
                             return;
                         }
 
-                        console.log("成功");
+                        console.log("微信添加用户成功");
+                        return ;
                     })
                 }
             });
             break;
+            
         //取消订阅
         case 'unsubscribe':
             wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
@@ -232,11 +247,11 @@ wechat.eventMsg(function (msg) {
                     wechatCustomer.addAllList(token, function (err, errinfo) {
                         if (err) {
                             console.log(errinfo);
-                            logger.writeError("[route/api/wechatroute-------------221行]" + errinfo);
+                            logger.writeError("[route/api/wechatroute-------------250行]" + errinfo);
                             return;
                         }
 
-                        logger.writeInfo("[route/api/wechatroute---------------224行]服务器出错的时候导致漏加的用户补全");
+                        logger.writeInfo("[route/api/wechatroute---------------255行]服务器出错的时候导致漏加的用户补全");
                         return;
                     });
                 }
@@ -250,10 +265,10 @@ wechat.eventMsg(function (msg) {
                     wechatCustomer.unsubscribe(token, msg, function (err, errinfo) {
                         if (err) {
                             console.log(errinfo);
-                            logger.writeInfo("[route/api/wechatroute---------------239行]" + errinfo);
+                            logger.writeInfo("[route/api/wechatroute---------------268行]" + errinfo);
                             return;
                         }
-                        logger.writeInfo("[route/api/wechatroute---------------241行]取消成功");
+                        logger.writeInfo("[route/api/wechatroute---------------272行]取消成功");
                     });
                 }
             });
@@ -269,6 +284,7 @@ wechat.eventMsg(function (msg) {
                     return;
                 }
                 console.log("获取地址成功");
+                return ;
             });
 
             break;
@@ -281,34 +297,6 @@ wechat.eventMsg(function (msg) {
         case 'CLICK':
             switch (msg.EventKey) {
                 case 'ProductDisplay':
-                    /* 优化前的
-                    product.getProductInfoThroughHttpGet(function(productInfo) {
-                        var contentInfo = '';
-                        console.log("商品" + JSON.stringify(productInfo.data));
-
-                        for (var index in productInfo.data) {
-                            console.log("商品的序列" + index);
-                            contentInfo += "编号:" + productInfo.data[index]['ProductID'] + "  ";
-                            contentInfo += "名称:" + productInfo.data[index]['ProductName'] + "  ";
-                            contentInfo += "价格:" + productInfo.data[index]['ProductPrice'] + "  ";
-                            contentInfo += "规格:" + productInfo.data[index]['ProductTypeName'] + "  ";
-                            contentInfo += "\n";
-                        }
-
-                        contentInfo += '下单输入的格式为：编号#数量|编号#数量';
-                        console.log(contentInfo);
-                        var resMsg = {
-                            fromUserName: msg.ToUserName,
-                            toUserName: msg.FromUserName,
-                            msgType: "text",
-                            content: contentInfo,
-                            funcFlag: 0
-                        };
-                        logger.writeInfo("[routes/api/wechatroute-----------------292行]商品展示")
-                        wechat.sendMsg(resMsg);
-                        return;
-                    });
-                    */
 
                     //优化后 snail
                     var contentInfo = '商品查询失败，请稍后再试!';
@@ -319,39 +307,12 @@ wechat.eventMsg(function (msg) {
                         content: contentInfo,
                         funcFlag: 0
                     };
-
-// <<<<<<< HEAD
-//                     product.queryProducts({
-//                         page: 1,
-//                         pageNum: 10
-//                     }, function (err, productList) {
-//                         if (err) {
-//                             //记录微信获取商品信息-查询商品信息异常
-//                             resMsg.content = '查询商品异常，请稍候再试!';
-//                             wechat.sendMsg(resMsg);
-//                             return;
-//                         }
-
-//                         if (productList !== undefined && productList.length > 0) {
-//                             contentInfo = '';
-//                             productList.forEach(function (item) {
-//                                 contentInfo += "编号:" + item.ProductID + "  ";
-//                                 contentInfo += "名称:" + item.ProductName + "  ";
-//                                 contentInfo += "价格:" + item.ProductPrice + "  ";
-//                                 contentInfo += "规格:" + item.ProductTypeName + "  ";
-//                                 contentInfo += "\n";
-//                             }, this);
-
-//                             logger.writeInfo("[routes/api/wechatroute-----------------346行]商品展示")
-//                             contentInfo += '下单输入的格式为：编号#数量|编号#数量';
-//                             resMsg.content = contentInfo;
-//                         }
-// =======
-                    var p = new Promise(function(resolve, reject) {
+                    
+                    var p = new Promise(function (resolve, reject) {
                         product.queryProducts({
                             page: 1,
                             pageNum: 10
-                        }, function(err, returndata) {
+                        }, function (err, returndata) {
                             if (err) {
                                 reject(Error("没有数据"));
                             }
@@ -360,7 +321,7 @@ wechat.eventMsg(function (msg) {
 
                             if (returndata !== undefined && returndata.length > 0) {
                                 filterresult = '';
-                                returndata.forEach(function(item) {
+                                returndata.forEach(function (item) {
                                     filterresult += "编号:" + item.ProductID + "  ";
                                     filterresult += "名称:" + item.ProductName + "  ";
                                     filterresult += "价格:" + item.ProductPrice + "  ";
@@ -375,42 +336,15 @@ wechat.eventMsg(function (msg) {
                         });
                     });
 
-                    p.then(function(result) {
+                    p.then(function (result) {
                         resMsg.content = result;
                         wechat.sendMsg(resMsg);
-                    }, function(err) {
+                    }, function (err) {
                         wechat.sendMsg(resMsg);
                     });
 
-                    /**
-                                        product.queryProducts({
-                                            page: 1,
-                                            pageNum: 10
-                                        }, function(err, productList) {
-                                            if (err) {
-                                                //记录微信获取商品信息-查询商品信息异常
-                                                resMsg.content = '查询商品异常，请稍候再试!';
-                                                wechat.sendMsg(resMsg);
-                                                return;
-                                            }
-
-                                            if (productList !== undefined && productList.length > 0) {
-                                                contentInfo = '';
-                                                productList.forEach(function(item) {
-                                                    contentInfo += "编号:" + item.ProductID + "  ";
-                                                    contentInfo += "名称:" + item.ProductName + "  ";
-                                                    contentInfo += "价格:" + item.ProductPrice + "  ";
-                                                    contentInfo += "规格:" + item.ProductTypeName + "  ";
-                                                    contentInfo += "\n";
-                                                }, this);
-
-                                                contentInfo += '下单输入的格式为：编号#数量|编号#数量';
-                                                resMsg.content = contentInfo;
-                                            }
-                                            //  wechat.sendMsg(resMsg);
-                                        });
-                     */
                     break;
+
                 case 'SubmitOrder':
                     console.log("提交订单");
                     break;
@@ -432,7 +366,7 @@ wechat.eventMsg(function (msg) {
 
                 case 'OrderHistory':
                     order.getHistoryOrderInfo(msg.FromUserName, function (orderinfo) {
-                        console.log("routes/api/wechatroute------------319行");
+                        console.log("routes/api/wechatroute------------369行");
                         var historyInfo = '';
                         var totalPrice = 0;
                         var index = 1;
@@ -503,7 +437,7 @@ router.get('/addressinfo', function (req, res) {
 /**
  * 与微信接口的统一入口（消息转发）
  */
-router.post('/accesscheck', function(req, res) {
+router.post('/accesscheck', function (req, res) {
     wechat.handleWechatMsg(req, res);
 });
 

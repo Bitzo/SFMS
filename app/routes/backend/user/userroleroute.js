@@ -99,7 +99,7 @@ router.put('/', function (req, res) {
 			err += data[value] + ' ';
 		}
 	}
-
+console.log(req.params)
 	if (err != 'required: ') {
 		res.status(400);
 		res.json({
