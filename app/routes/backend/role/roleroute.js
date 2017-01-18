@@ -25,7 +25,7 @@ router.get('/',function (req, res) {
         pageNum = req.query.pagesize || config.pageCount,
         selectType = req.query.isPaging || '',
         roleName = query.RoleName || '',
-    page = page>0?page:1;
+        page = page > 0 ? page : 1;
 
     if (pageNum == '') pageNum = config.pageCount;
 

@@ -19,6 +19,16 @@ router.get('/', function (req, res, next) {
 router.get('/jitinfo', function (req, res, next) {
     res.render('jinkeBro/jitinfo', { title: 'Hi jkbro' });
 });
+router.get('/jitorder', function (req, res, next) {
+    res.render('jinkeBro/jitorder', { title: 'Hi jkbro' });
+});
+
+router.get('/jitorderAdd', function (req, res, next) {
+    res.render('jinkeBro/jitorderAdd', { title: 'Hi jkbro' });
+});
+router.get('/jitorderEdit', function (req, res, next) {
+    res.render('jinkeBro/jitorderEdit', { title: 'Hi jkbro' });
+});
 
 router.get('/jitgoods', function (req, res, next) {
     res.render('jinkeBro/jitgoods', { title: 'Hi jkbro' });
@@ -28,13 +38,11 @@ router.get('/jitgoodsAdd', function (req, res, next) {
     res.render('jinkeBro/jitgoodsAdd', { title: 'Hi jkbro' });
 });
 
-router.get('/jitorder', function (req, res, next) {
-    res.render('jinkeBro/jitorder', { title: 'Hi jkbro' });
+router.get('/jitgoodsEdit', function (req, res, next) {
+    res.render('jinkeBro/jitgoodsEdit', { title: 'Hi jkbro' });
 });
 
-router.get('/jitorderAdd', function (req, res, next) {
-    res.render('jinkeBro/jitorderAdd', { title: 'Hi jkbro' });
-});
+
 
 router.get('/jitstock', function (req, res, next) {
     res.render('jinkeBro/jitstock', { title: 'Hi jkbro' });
