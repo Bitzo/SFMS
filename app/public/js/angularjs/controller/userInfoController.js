@@ -18,7 +18,7 @@ myApp.controller('userInfoController', function($scope, $http,$q,baseService) {
         }).
         error(function(response) {
         });
-
+       
        //角色名称
         $http({
             method:'get',

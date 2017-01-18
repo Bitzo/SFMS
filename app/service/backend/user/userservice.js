@@ -67,7 +67,10 @@ exports.queryAllUsers = function (data, callback) {
             callback(true);
             return;
         }
+        
+        console.log('userservice' + '苏娜墨韵');
         callback(false, results);
+        return ;
     });
 };
 

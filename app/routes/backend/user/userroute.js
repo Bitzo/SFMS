@@ -322,6 +322,9 @@ router.get('/', function (req, res) {
         applicationName = query.ApplicationName,
         createUserName = query.CreateUserName;
 
+     //用来判断是否要分页的标志    
+     var isPage = req.query.isPaging || '';
+     
     if (page == undefined || page.length == 0) {
         page = 1;
     }
@@ -360,8 +363,7 @@ router.get('/', function (req, res) {
 
     data['page'] = page;
     data['pageNum'] = pageNum;
-    console.log(data);
-
+    
     //获取所有用户的数量
     user.countUser(data, function (err, result) {
         if (err) {
@@ -371,11 +373,15 @@ router.get('/', function (req, res) {
                 isSuccess: false,
                 msg: "获取数量失败，服务器出错"
             })
-            logger.writeError("[routes/backend/user/userroute--------------374行]" + "数量获取失败");
+            logger.writeError("[routes/backend/user/userroute--------------379行]" + "数量获取失败");
             return;
         }
         if (result !== undefined && result.length != 0) {
             allCount = result[0]['num'];
+            data['IsPage'] = isPage;
+            console.log('*********************************************');
+console.log(data);
+console.log('**************************************************');
             //查询所需要的数据
             user.queryAllUsers(data, function (err, results1) {
                 if (err) {
@@ -386,7 +392,7 @@ router.get('/', function (req, res) {
                         msg: '查询失败'
                     });
                     console.log("查询失败");
-                    logger.writeError("[routes/backend/user/userroute---------------389行]" + "查询失败");
+                    logger.writeError("[routes/backend/user/userroute---------------394行]" + "查询失败");
                     return;
                 }
                 if (results1 != undefined && results1.length != 0 && allCount != -1) {
