@@ -379,9 +379,7 @@ router.get('/', function (req, res) {
         if (result !== undefined && result.length != 0) {
             allCount = result[0]['num'];
             data['IsPage'] = isPage;
-            console.log('*********************************************');
-console.log(data);
-console.log('**************************************************');
+           
             //查询所需要的数据
             user.queryAllUsers(data, function (err, results1) {
                 if (err) {

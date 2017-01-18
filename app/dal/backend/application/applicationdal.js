@@ -42,6 +42,7 @@ exports.queryAllApp = function (data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 };
@@ -71,6 +72,7 @@ exports.countAllapps = function (data, callback) {
 
             callback(false, results);
             connection.release();
+            return ;
         })
     })
 };
@@ -102,6 +104,7 @@ exports.insert = function(data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 };
@@ -138,6 +141,7 @@ exports.update = function (data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 };
@@ -163,6 +167,7 @@ exports.delete = function (data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 };
