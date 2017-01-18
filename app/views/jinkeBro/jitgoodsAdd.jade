@@ -3,68 +3,77 @@ block content
   div.container-fluid
     span 
       h2 商品新增
-    form(method="post"  name="goodsInfo" ng-controller="selectController")
-      table.table.table-bordered.table-hover.definedwidth.m10       
+    form(method="post"  name="goodsInfo")
+      table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 仓储量的单位
           td
             input(type="textview",name="SKU",ng-model='formdata.SKU',ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-if="goodsInfo.SKU.$error.maxlength && goodsInfo.SKU.$touched") 用户姓名最多50位
+            small.error(ng-if="goodsInfo.SKU.$error.maxlength && goodsInfo.SKU.$touched") 仓储量的单位最多50位
            
         tr
-          td(width="15%",class="tableleft")  商品名称
+          td(width="15%",class="tableleft") 商品名称 
           td
             input(type="textview",name="ProductName",ng-model="formdata.ProductName",ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-if="goodsInfo.ProductName.$error.maxlength && goodsInfo.ProductName.$touched") 密码最多50位
+            small.error(ng-if="goodsInfo.ProductName.$error.maxlength && goodsInfo.ProductName.$touched") 商品名称最多50位
            
         tr
           td(width="15%",class="tableleft") 商品图片路径 
           td
-            input(type="textview",name="ProductImgPath",ng-model="formdata.ProductImgPath",ng-maxlength='200',required)
+            input(type="textview",name="ProductImgPath",ng-model="formdata.ProductImgPath",ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-if="goodsInfo.ProductImgPath.$error.maxlength && goodsInfo.ProductImgPath.$touched") 账户最多200位
+            small.error(ng-if="goodsInfo.ProductImgPath.$error.maxlength && goodsInfo.ProductImgPath.$touched") 图片路径50位
         
-         tr
+        tr
           td(width="15%",class="tableleft") 有效期
           td
-            input(type="date",name="ExpireTime",ng-model="formdata.ExpireTime")
+            input(type="datetime",name="ExpireTime",ng-model="formdata.ExpireTime")
         tr
           td(width="15%",class="tableleft") 生产日期
           td
-            input(type="date",name="ProducTime",ng-model="formdata.ProducTime")           
+            input(type="datetime",name="ProducTime",ng-model="formdata.ProducTime")           
         tr
           td(width="15%",class="tableleft") 商品类型 
           td
-            select(ng-model="formdata.ProductTypeID")
-              option 水果
-              option 糖果
-
+            select(ng-model='formdata.ProductTypeID')
+              option 1
+              option 2
+              option 3
+            //jason-select.input(placeholder='商品类型' ng-model='formdata.ProductTypeID' source='/jinkeBro/proType', stext='ProductTypeName' svalue='ProductTypeID',style="width:160px;height:30px",required)
         tr
           td(width="15%",class="tableleft") 供应商ID
           td
             select(ng-model='formdata.SupplierID')
-              option 供应商1
-              option 供应商2
-
+              option 1
+              option 2
+              option 3
         tr
-          td(width="15%",class="tableleft") 商品描述  
+          td(width="15%",class="tableleft") 商品价格
           td
-            textarea(type="textview",rows="5",cols="30",name="ProductDesc",ng-model='formdata.ProductDesc',ng-maxlength='200')
+            input(type="textview",name="ProductPrice",ng-model="formdata.ProductPrice",ng-maxlength='50',required)
             &nbsp&nbsp
-            small.error(ng-if="goodsInfo.ProductDesc.$error.maxlength && goodsInfo.ProductDesc.$touched") 填写备注   
+            small.error(ng-if="goodsInfo.ProductPrice.$error.maxlength && goodsInfo.ProductPrice.$touched") 图片路径50位
+        tr
+          td(class="tableleft") 是否在售
+          td
+            input(type="radio",name="OnSale",value="1",ng-model="formdata.OnSale",style="width:15px;height:15px",checked)
+            &nbsp在售
+            &nbsp&nbsp          
+            input(type="radio",name="OnSale",value="0",ng-model="formdata.OnSale",style="width:15px;height:15px")
+            &nbsp不在售
+        tr
+          td(width="15%",class="tableleft") 商品描述   
+          td
+            textarea(type="textview",name="ProductDesc",ng-model='formdata.ProductDesc',rows="5",cols="30",ng-maxlength='200')
+            &nbsp&nbsp
+            small.error(ng-if="goodsInfo.ProductDesc.$error.maxlength && goodsInfo.ProductDesc.$touched") 备注最多200位  
 
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/jinkeBro/product')") 添加
- 
+            button.btn.btn-sm.btn-primary(type="submit" ng-click="addnew(formdata,'/jinkeBro/product')") 添加
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-sm.btn-success(href='#jinkeBro/jitgoods' ng-click="search()") 返回列表
+            a.btn.btn-sm.btn-success(href='#jinkeBro/jitgoods',ng-click='search()') 返回列表
 
-
-
-
-      
-    
