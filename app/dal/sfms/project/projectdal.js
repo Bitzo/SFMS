@@ -132,15 +132,17 @@ exports.queryProject = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'CreateTime' && key !== 'ProjectEndTime')
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'CreateTime' && key !== 'ProjectEndTime' && key !== 'SelectType')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
+    console.log(data)
 
     if (data.CreateTime !== '') sql += " and CreateTime > '" + data.CreateTime + "' ";
     if (data.ProjectEndTime !== '') sql += " and ProjectEndTime < '" + data.ProjectEndTime + "' ";
 
-    sql += "order by IsActive desc LIMIT " + (page-1)*num + "," + num;
+    if (data.SelectType !== '' && data.SelectType === '1') sql += "order by IsActive desc";
+    else sql += "order by IsActive desc LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询项目信息：" + sql);
 

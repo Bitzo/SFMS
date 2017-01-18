@@ -132,15 +132,18 @@ router.get('/', function (req, res) {
     var page = req.query.pageindex || 1,
         pageNum = req.query.pagesize || 20,
         ApplicationName = query.ApplicationName || '',
-        ID = query.ID || '';
+        selectType = req.query.isPaging || '',
+        ID = query.ID || '',
+        isActive = query.isActive || '';
     page = page>0?page:1;
 
     var data = {
         'page': page,
         'pageNum': pageNum,
         'ApplicationName': ApplicationName,
+        'SelectType': selectType,
         'ID': ID,
-        'IsActive': 1
+        'IsActive': isActive
 
     };
     //查找该应用

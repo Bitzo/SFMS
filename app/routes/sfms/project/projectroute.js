@@ -596,7 +596,7 @@ router.get('/user', function (req, res) {
                         });
                     }
                 }
-                console.log(projectInfo)
+                console.log()
                 res.status(200);
                 return res.json({
                     status: 200,
@@ -726,11 +726,13 @@ router.get('/person', function (req, res) {
 
 //项目基本信息查询-管理员
 router.get('/', function (req, res) {
+    console.log(req.query)
     var query =  JSON.parse(req.query.f),
         ID = query.ID || '',
         projectManageID = query.projectManageID || '',
         startTime = query.startTime || '',
         endTime = query.endTime || '',
+        selectType = req.query.isPaging || '',
         page = req.query.pageindex>0 ?req.query.pageindex:1,
         pageNum = req.query.pagesize || config.pageCount,
         totalNum = 0;
@@ -740,10 +742,12 @@ router.get('/', function (req, res) {
         'ProjectManageID': projectManageID,
         'CreateTime': startTime,
         'ProjectEndTime': endTime,
+        'SelectType': selectType,
         'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum,
     }
+    console.log(data)
     
     //查询数据量
     projectservice.countQuery(data, function (err, results) {
@@ -798,7 +802,6 @@ router.get('/', function (req, res) {
                                     msg: '操作失败，服务器出错'
                                 })
                             }
-                            logger.writeInfo(results);
                             result.data[0].userdata = {};
                             if (results !== undefined && results.length > 0) {
                                 result.data[0].userdata = results;
