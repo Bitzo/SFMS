@@ -17,7 +17,7 @@ var productService = appRequire('service/jinkebro/product/productservice'),
 
 //产品的新增
 router.post('/', function (req, res) {
-    var formdata = JSON.parse(req.body.formdata);
+    var formdata = req.body.formdata;
 
     //检查所需要的字段是否都存在
     var data = ['SKU', 'ProductName', 'SupplierID', 'ProductTypeID', 'ProductPrice'];

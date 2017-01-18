@@ -135,11 +135,23 @@ myApp.config(function($routeProvider) {
     when('/jinkeBro/jitorder', {
         templateUrl: '/jinkeBro/jitorder',
     }).
+    when('/jinkeBro/jitorderAdd', {
+        templateUrl: '/jinkeBro/jitorderAdd?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitorderEdit', {
+        templateUrl: '/jinkeBro/jitorderEdit?access_token=' + accesstokenstring,
+    }).
     when('/jinkeBro/jitinfo', {
         templateUrl: '/jinkeBro/jitinfo',
     }).
     when('/jinkeBro/jitgoods', {
         templateUrl: '/jinkeBro/jitgoods?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitgoodsAdd', {
+        templateUrl: '/jinkeBro/jitgoodsAdd?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitgoodsEdit', {
+        templateUrl: '/jinkeBro/jitgoodsEdit?access_token=' + accesstokenstring,
     }).
     when('/jinkeBro/jitstock', {
         templateUrl: '/jinkeBro/jitstock?access_token=' + accesstokenstring,
@@ -147,12 +159,8 @@ myApp.config(function($routeProvider) {
     when('/jinkeBro/jitstockAdd', {
         templateUrl: '/jinkeBro/jitstockAdd?access_token=' + accesstokenstring,
     }).
-    when('/jinkeBro/jitgoodsAdd', {
-        templateUrl: '/jinkeBro/jitgoodsAdd?access_token=' + accesstokenstring,
-    }).
-    when('/jinkeBro/jitorderAdd', {
-        templateUrl: '/jinkeBro/jitorderAdd?access_token=' + accesstokenstring,
-    }).
+   
+    
     otherwise({
         redirectTo: '/'
     });
