@@ -11,7 +11,7 @@ var db_jinkebro = appRequire('db/db_jinkebro'),
     async = require('async'),
     moment = require('moment');
 //新增订单
-exports.insertOrder = function (data, callback) {
+exports.insertOrder = function(data, callback) {
 
     var insertSql = 'insert into jit_order set ';
     var sql = '';
@@ -40,13 +40,13 @@ exports.insertOrder = function (data, callback) {
     console.log("[insertOrder func in productdal]订单新增:" + insertSql);
 
 
-    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(insertSql, function (err, results) {
+        connection.query(insertSql, function(err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -58,11 +58,30 @@ exports.insertOrder = function (data, callback) {
 }
 
 /**
+ * 创建订单（事务保证，损失性能）
+ * @param {object} data 订单对象
+ * @param {function} callback 回调方法
+ */
+exports.createOrder = function(data, callback) {
+    /**
+     * 1.校验data传过来的必要的参数是否有，并且合法（这一步其实应该在service层做）
+     * 2.校验当前订单对应的所有商品库存是否满足下单量
+     * 3.创建订单
+     * 4.创建订单与商品的关系数据
+     * 5.扣减对应的商品数量，update的时候注意where条件（where 当前商品的库存>下单的数量），如果update之后返回影响的行数如果为0，说明
+     * 商品库存不足，此时也应该回滚
+     * 6.返回创建生成的订单号
+     * 7.以上任何一步异常，回滚
+     * 8.提交
+     */
+}
+
+/**
  * 使用事务增加订单
  * @param data
  * @param callback
  */
-exports.insertOrderFull = function (data,callback) {
+exports.insertOrderFull = function(data, callback) {
     var insertSql1 = '',
         insertSql2 = '';
 
@@ -86,11 +105,11 @@ exports.insertOrderFull = function (data,callback) {
     // };
 
     var insertOrderData = {
-        OrderTime : data.OrderTime,
-        PayMethod : data.PayMethod,
-        IsValid : data.IsValid,
-        IsActive : data.IsActive,
-        OrderStatus : data.OrderStatus
+        OrderTime: data.OrderTime,
+        PayMethod: data.PayMethod,
+        IsValid: data.IsValid,
+        IsActive: data.IsActive,
+        OrderStatus: data.OrderStatus
     };
 
     var receiveProductIDs = data.ProductIDs,
@@ -100,16 +119,16 @@ exports.insertOrderFull = function (data,callback) {
     console.log("[insertOrderFull func in orderdal]订单新增.");
 
     // 从链接池得到connection
-    db_jinkebro.mysqlPool.getConnection(function (err,connection) {
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             console.error('mysql 链接失败');
             callback(true);
-            return ;
+            return;
         }
         //开始事务
-        connection.beginTransaction(function (err) {
+        connection.beginTransaction(function(err) {
             if (err) {
-                throw  err;
+                throw err;
             }
             var returnResult = {};
             var funcArr = [];
@@ -118,19 +137,19 @@ exports.insertOrderFull = function (data,callback) {
             var func1 = function(callback1) {
                 insertSql1 = 'insert into jit_order set ';
                 var sql = '';
-                if(insertOrderData !== undefined){
-                    for(var key in insertOrderData){
-                        if(sql.length == 0){
-                            if(!isNaN(insertOrderData[key])){
-                                sql += " " + key + " = " + insertOrderData[key] + " " ;
-                            }else {
-                                sql += " " + key + " = '" + insertOrderData[key] + "' " ;
+                if (insertOrderData !== undefined) {
+                    for (var key in insertOrderData) {
+                        if (sql.length == 0) {
+                            if (!isNaN(insertOrderData[key])) {
+                                sql += " " + key + " = " + insertOrderData[key] + " ";
+                            } else {
+                                sql += " " + key + " = '" + insertOrderData[key] + "' ";
                             }
-                        }else{
-                            if(!isNaN(insertOrderData[key])){
-                                sql += ", " + key + " = " + insertOrderData[key] + " " ;
-                            }else {
-                                sql += ", " + key + " = '" + insertOrderData[key] + "' " ;
+                        } else {
+                            if (!isNaN(insertOrderData[key])) {
+                                sql += ", " + key + " = " + insertOrderData[key] + " ";
+                            } else {
+                                sql += ", " + key + " = '" + insertOrderData[key] + "' ";
                             }
                         }
                     }
@@ -138,9 +157,9 @@ exports.insertOrderFull = function (data,callback) {
                 insertSql1 += sql + ' ;';
                 console.log("insert into order,sql: " + insertSql1);
                 logger.writeInfo("insert into order,sql: " + insertSql1);
-                connection.query(insertSql1, function (err,info) {
+                connection.query(insertSql1, function(err, info) {
                     if (err) {
-                        connection.rollback(function () {
+                        connection.rollback(function() {
                             logger.writeError("[order]执行事务失败，" + "ERROR：" + err);
                             console.log("[order]执行事务失败，" + "ERROR：" + err);
                             throw err;
@@ -148,15 +167,15 @@ exports.insertOrderFull = function (data,callback) {
                     }
                     console.log(info);
                     returnResult = info;
-                    callback1(err,info);
+                    callback1(err, info);
                 });
             };
             funcArr.push(func1);
 
             // 添加记录到ordercustomer表
-            var func2 = function (callback2) {
+            var func2 = function(callback2) {
                 var InsertUserOrderData = {
-                    CustomerID : data.CustomerID,
+                    CustomerID: data.CustomerID,
                     OrderID: returnResult.insertId,
                     IsActive: data.IsActive,
                     CreateTime: moment().format('YYYY-MM-DD HH:mm:ss')
@@ -184,9 +203,9 @@ exports.insertOrderFull = function (data,callback) {
                 insertSql2 += sql + ' ;';
                 console.log("insert into ordercustomer,sql: " + insertSql2);
                 logger.writeInfo("insert into ordercustomer,sql: " + insertSql2)
-                connection.query(insertSql2, function (err, info) {
+                connection.query(insertSql2, function(err, info) {
                     if (err) {
-                        connection.rollback(function () {
+                        connection.rollback(function() {
                             logger.writeError("[ordercustomer]执行事务失败，" + "ERROR：" + err);
                             console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
                             throw err;
@@ -205,58 +224,56 @@ exports.insertOrderFull = function (data,callback) {
                 }
                 var tempProID = receiveProductIDs[index];
                 var tempProCount = receiveProductCounts[index];
-                var tempfunc = function (callbacktemp) {
+                var tempfunc = function(callbacktemp) {
                     var insertSqlTemp = ' insert into jit_orderproduct set OrderID = ' + returnResult.insertId + ' , ';
                     insertSqlTemp += ' ProductID = ' + tempProID + ' , ';
-                    insertSqlTemp += ' ProductCount = ' + tempProCount + ' ;' ;
+                    insertSqlTemp += ' ProductCount = ' + tempProCount + ' ;';
                     console.log("insertSqlTemp" + index + ": " + insertSqlTemp);
                     logger.writeInfo("insertSqlTemp" + index + ": " + insertSqlTemp);
-                    connection.query(insertSqlTemp, function (err,info) {
+                    connection.query(insertSqlTemp, function(err, info) {
                         if (err) {
-                            connection.rollback(function () {
+                            connection.rollback(function() {
                                 logger.writeError("[orderProduct]执行事务失败，" + "ERROR：" + err);
                                 console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
                                 throw err;
                             });
                         }
                         console.log(info);
-                        callbacktemp(err,info);
+                        callbacktemp(err, info);
                     });
                 }
                 funcArr.push(tempfunc);
                 next(index + 1);
             })(0);
 
-            async.series(funcArr
-                , function (err, result) {
+            async.series(funcArr, function(err, result) {
+                if (err) {
+                    connection.rollback(function(err) {
+                        throw err;
+                    });
+                    callback(true);
+                    connection.release();
+                    return;
+                }
+
+                connection.commit(function(err) {
                     if (err) {
-                        connection.rollback(function (err) {
+                        connection.rollback(function() {
                             throw err;
                         });
-                        callback(true);
-                        connection.release();
-                        return;
                     }
-
-                    connection.commit(function (err) {
-                        if (err) {
-                            connection.rollback(function () {
-                                throw err;
-                            });
-                        }
-                        console.log('insert success');
-                        connection.release();
-                        callback(false, returnResult);
-                    });
-                }
-            );
+                    console.log('insert success');
+                    connection.release();
+                    callback(false, returnResult);
+                });
+            });
         });
 
     });
 }
 
 //新增订单产品表的一条记录
-exports.insertOrderProduct = function (data, callback) {
+exports.insertOrderProduct = function(data, callback) {
 
     var insertSql = 'insert into jit_orderproduct set ';
     var sql = '';
@@ -285,13 +302,13 @@ exports.insertOrderProduct = function (data, callback) {
     console.log("[insertOrderProduct func in orderdal]订单新增:" + insertSql);
 
 
-    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(insertSql, function (err, results) {
+        connection.query(insertSql, function(err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -303,7 +320,7 @@ exports.insertOrderProduct = function (data, callback) {
 }
 
 //新增用户订单表的一条记录
-exports.insertOrderCustomer = function (data, callback) {
+exports.insertOrderCustomer = function(data, callback) {
 
     var insertSql = 'insert into jit_ordercustomer set ';
     var sql = '';
@@ -332,13 +349,13 @@ exports.insertOrderCustomer = function (data, callback) {
     console.log("[insertOrderCustomer func in productdal]订单用户表的新增:" + insertSql);
 
 
-    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(insertSql, function (err, results) {
+        connection.query(insertSql, function(err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -354,18 +371,18 @@ exports.insertOrderCustomer = function (data, callback) {
  * @param data
  * @param callback
  */
-exports.deleteOrder = function (data, callback) {
+exports.deleteOrder = function(data, callback) {
     var delete_sql = 'delete from jit_order where 1 = 0 ;  ';
 
     console.log(delete_sql);
 
-    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(delete_sql, function (err, results) {
+        connection.query(delete_sql, function(err, results) {
             if (err) {
                 callback(true);
                 return;
@@ -381,7 +398,7 @@ exports.deleteOrder = function (data, callback) {
  * @param data
  * @param callback
  */
-exports.updateOrder = function (data, callback) {
+exports.updateOrder = function(data, callback) {
     //接收的data数据形式如下：
     // var dat = {
     //     order: {
@@ -423,21 +440,21 @@ exports.updateOrder = function (data, callback) {
     var receiveProductCounts = ordprodtTabDt.ProductCounts; //array
     console.log(receiveProductIDs == undefined);
     console.log(receiveProductCounts == undefined);
-    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             console.error('mysql 链接失败');
             callback(true);
             return;
         }
         //开始事务
-        connection.beginTransaction(function (err) {
+        connection.beginTransaction(function(err) {
             if (err) {
                 throw err;
             }
             var returnResult = {};
             var funcArr = [];
             // 修改Order表
-            var func1 = function (callback1) {
+            var func1 = function(callback1) {
                 var update_sql = 'update jit_order set  ';
                 var temp_sql = '';
                 if (orderTableData !== undefined) {
@@ -446,13 +463,13 @@ exports.updateOrder = function (data, callback) {
                             if (temp_sql.length == 0) {
                                 if (!isNaN(orderTableData[key])) {
                                     temp_sql += " " + key + " = " + orderTableData[key] + " ";
-                                }else {
+                                } else {
                                     temp_sql += " " + key + " = '" + orderTableData[key] + "' ";
                                 }
-                            }else {
+                            } else {
                                 if (!isNaN(orderTableData[key])) {
                                     temp_sql += " , " + key + " = " + orderTableData[key] + " ";
-                                }else {
+                                } else {
                                     temp_sql += " , " + key + " = '" + orderTableData[key] + "' ";
                                 }
                             }
@@ -465,7 +482,7 @@ exports.updateOrder = function (data, callback) {
                 logger.writeInfo('修改order表中记录的sql:' + update_sql);
                 connection.query(update_sql, function (err, info) {
                     if (err) {
-                        connection.rollback(function () {
+                        connection.rollback(function() {
                             logger.writeError("[updateOrder]执行事务失败，" + "ERROR：" + err);
                             console.log("[updateOrder]执行事务失败，" + "ERROR：" + err);
                             throw err;
@@ -480,13 +497,13 @@ exports.updateOrder = function (data, callback) {
 
             // 修改orderproduct表
             if (receiveProductIDs !== undefined && receiveProductIDs.length !== undefined && receiveProductIDs.length > 0) {
-                var func2 = function (callback2) {
+                var func2 = function(callback2) {
                     var orderProDelSql = 'delete from jit_orderproduct where jit_orderproduct.OrderID = ' + orderTableData.OrderID;
                     console.log('删除orderproduct表中指定记录的sql：' + orderProDelSql);
                     logger.writeInfo('删除orderproduct表中指定记录的sql：' + orderProDelSql);
-                    connection.query(orderProDelSql, function (err, info) {
+                    connection.query(orderProDelSql, function(err, info) {
                         if (err) {
-                            connection.rollback(function () {
+                            connection.rollback(function() {
                                 logger.writeError("[ordercustomer]执行事务失败，" + "ERROR：" + err);
                                 console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
                                 throw err;
@@ -503,23 +520,23 @@ exports.updateOrder = function (data, callback) {
             // 新增orderproduct表的记录
             (function next(index) {
                 if (receiveProductIDs === undefined || receiveProductIDs.length === undefined || receiveProductIDs.length <= 0) {
-                    return ;
+                    return;
                 }
                 if (index === receiveProductIDs.length) { // No items left
                     return;
                 }
                 var tempProID = receiveProductIDs[index];
                 var tempProCount = receiveProductCounts[index];
-                var orderProAddSqlTemp = 'insert into jit_orderproduct set jit_orderproduct.OrderID = ' + orderTableData.OrderID + ' , ' ;
+                var orderProAddSqlTemp = 'insert into jit_orderproduct set jit_orderproduct.OrderID = ' + orderTableData.OrderID + ' , ';
                 orderProAddSqlTemp += ' jit_orderproduct.ProductID = ' + tempProID + ' , ';
-                orderProAddSqlTemp += ' jit_orderproduct.ProductCount = ' + tempProCount + ' ;' ;
+                orderProAddSqlTemp += ' jit_orderproduct.ProductCount = ' + tempProCount + ' ;';
 
                 console.log("orderProAddSqlTemp" + index + ": " + orderProAddSqlTemp);
                 logger.writeInfo("orderProAddSqlTemp" + index + ": " + orderProAddSqlTemp);
-                var tempfunc = function (callbacktemp) {
-                    connection.query(orderProAddSqlTemp, function (err, info) {
+                var tempfunc = function(callbacktemp) {
+                    connection.query(orderProAddSqlTemp, function(err, info) {
                         if (err) {
-                            connection.rollback(function () {
+                            connection.rollback(function() {
                                 logger.writeError("[orderProduct]执行事务失败，" + "ERROR：" + err);
                                 console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
                                 throw err;
@@ -532,28 +549,27 @@ exports.updateOrder = function (data, callback) {
                 next(index + 1);
             })(0);
 
-            async.series(funcArr
-                , function (err, result) {
+            async.series(funcArr, function(err, result) {
+                if (err) {
+                    connection.rollback(function(err) {
+                        throw err;
+                    });
+                    callback(true);
+                    connection.release();
+                    return;
+                }
+
+                connection.commit(function(err) {
                     if (err) {
-                        connection.rollback(function (err) {
+                        connection.rollback(function() {
                             throw err;
                         });
-                        callback(true);
-                        connection.release();
-                        return;
                     }
-
-                    connection.commit(function (err) {
-                        if (err) {
-                            connection.rollback(function () {
-                                throw err;
-                            });
-                        }
-                        console.log('success');
-                        connection.release();
-                        callback(false, returnResult);
-                    });
+                    console.log('success');
+                    connection.release();
+                    callback(false, returnResult);
                 });
+            });
         });
 
     });
@@ -565,7 +581,7 @@ exports.updateOrder = function (data, callback) {
  * @param data
  * @param callback
  */
-exports.queryOrders = function (data, callback) {
+exports.queryOrders = function(data, callback) {
     var arr = new Array();
     // data的格式如下
     // {
@@ -603,7 +619,7 @@ exports.queryOrders = function (data, callback) {
 
     // 接收service传来的数据
     var pageManageData = data.pageManage;
-    var orderProductData =  data.orderProduct;
+    var orderProductData = data.orderProduct;
     var orderData = data.order;
 
     // OrderID,WechatUserCode,CustomerID,OrderStatus,IsActive的拼接
@@ -625,11 +641,10 @@ exports.queryOrders = function (data, callback) {
         tempArr = orderProductData['jit_orderproduct.ProductID'],
         tempArrLength = tempArr.length;
     if (tempArrLength != 0) {
-        for(var i=0; i<tempArrLength; i++) {
+        for (var i = 0; i < tempArrLength; i++) {
             if (tempSql.length == 0) {
                 tempSql += ' and jit_orderproduct.ProductID in (' + tempArr[i];
-            }
-            else {
+            } else {
                 tempSql += ' ,' + tempArr[i];
             }
         }
@@ -641,11 +656,10 @@ exports.queryOrders = function (data, callback) {
     tempArr = orderProductData['jit_orderproduct.ProductCount'];
     tempArrLength = tempArr.length;
     if (tempArrLength != 0) {
-        for(var i=0; i<tempArrLength; i++) {
+        for (var i = 0; i < tempArrLength; i++) {
             if (tempSql.length == 0) {
                 tempSql += ' and jit_orderproduct.ProductCount in (' + tempArr[i];
-            }
-            else {
+            } else {
                 tempSql += ' ,' + tempArr[i];
             }
         }
@@ -663,20 +677,20 @@ exports.queryOrders = function (data, callback) {
     logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
     console.log("[queryOrders func in productdal]订单查询:" + query_sql);
 
-    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
             return;
         }
 
-        connection.query(query_sql, function (err, results) {
+        connection.query(query_sql, function(err, results) {
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
             connection.release();
-            return ;
+            return;
         });
     });
 
@@ -688,7 +702,7 @@ exports.queryOrders = function (data, callback) {
  * @param callback
  * @constructor
  */
-exports.CountOrders = function (data, callback) {
+exports.CountOrders = function(data, callback) {
     var arr = new Array();
     arr.push(' select count(1) as num ');
     arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer ');
@@ -699,7 +713,7 @@ exports.CountOrders = function (data, callback) {
     var sql = arr.join(' ');
 
     // 接收service传来的数据
-    var orderProductData =  data.orderProduct;
+    var orderProductData = data.orderProduct;
     var orderData = data.order;
 
     // OrderID,WechatUserCode,CustomerID,OrderStatus的拼接
@@ -721,11 +735,10 @@ exports.CountOrders = function (data, callback) {
         tempArr = orderProductData['jit_orderproduct.ProductID'],
         tempArrLength = tempArr.length;
     if (tempArrLength != 0) {
-        for(var i=0; i<tempArrLength; i++) {
+        for (var i = 0; i < tempArrLength; i++) {
             if (tempSql.length == 0) {
                 tempSql += ' and jit_orderproduct.ProductID in (' + tempArr[i];
-            }
-            else {
+            } else {
                 tempSql += ' ,' + tempArr[i];
             }
         }
@@ -737,11 +750,10 @@ exports.CountOrders = function (data, callback) {
     tempArr = orderProductData['jit_orderproduct.ProductCount'];
     tempArrLength = tempArr.length;
     if (tempArrLength != 0) {
-        for(var i=0; i<tempArrLength; i++) {
+        for (var i = 0; i < tempArrLength; i++) {
             if (tempSql.length == 0) {
                 tempSql += ' and jit_orderproduct.ProductCount in (' + tempArr[i];
-            }
-            else {
+            } else {
                 tempSql += ' ,' + tempArr[i];
             }
         }
@@ -749,18 +761,18 @@ exports.CountOrders = function (data, callback) {
         sql += tempSql;
     }
 
-    sql += ';';   //sql拼接结束
+    sql += ';'; //sql拼接结束
 
     logger.writeInfo("查询指定条件的订单个数,sql:" + sql);
     console.log("查询指定条件的订单个数,sql:" + sql);
 
-    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             logger.writeError('数据库连接错误：' + err);
             callback(true);
             return;
         }
-        connection.query(sql, function (err, results) {
+        connection.query(sql, function(err, results) {
             if (err) {
                 logger.writeError('查询指定条件的订单个数：' + err);
                 callback(true);
