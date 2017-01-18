@@ -22,7 +22,8 @@ router.get('/',function (req, res) {
     var appID = query.ApplicationID || '',
         roleID = query.RoleID || '',
         page = req.query.pageindex || 1,
-        pageNum = req.query.pagesize || 20,
+        pageNum = req.query.pagesize || config.pageCount,
+        selectType = req.query.isPaging || '',
         roleName = query.RoleName || '',
     page = page>0?page:1;
 
@@ -31,6 +32,7 @@ router.get('/',function (req, res) {
     var data = {
         'ApplicationID': appID,
         'RoleID': roleID,
+        'SelectType': selectType,
         'page': page,
         'pageNum': pageNum,
         'RoleName': roleName,

@@ -46,7 +46,7 @@ exports.insertBizLog = function(data, callback) {
 
 //日志查询
 exports.queryLog = function(data, callback) {
-    var sql = 'select ApplicationName,OperationName,OldValue,OperationUrl,NewValue,Action,Type,ObjName,' +
+    var sql = 'select ID,ApplicationName,OperationName,OldValue,OperationUrl,NewValue,Action,Type,ObjName,' +
         'Identifier,CmdStr,Memo,CreateTime,CreateUserID,PDate from jit_operationlog where 1=1 ',
         sort = data.sort || 'ID',
         page = data.page > 0 ? data.page : 1,
