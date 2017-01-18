@@ -59,7 +59,7 @@ Weixin.prototype.handleWechatMsg = function (req, res) {
     req.on('end', function () {
         xml2js.parseString(buf, function (err, json) {
             if (err) {
-                err.status = 400;
+                err.status = 400;                                                    
             } else {
                 req.body = json;
             }

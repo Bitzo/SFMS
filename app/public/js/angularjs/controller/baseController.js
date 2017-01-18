@@ -129,10 +129,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
     //获取编辑信息
     $scope.show=function(index,action){
-        getInitmenu(index,action);
-    };
-    function getInitmenu(index,action){
-        console.log(index);
+         console.log(index);
         console.log(action);
         $http({
             method:'get',
@@ -147,6 +144,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
+            console.log(response);
             console.log($scope.paginationConf.formdata);
             console.log('修改成功');
             console.log(response);
@@ -155,7 +153,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             console.log('修改失败');
             console.log(response);
         });
-    }
+    };
+    
 
 //------基础模块------
     //用户管理--首页  更多

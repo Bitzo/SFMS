@@ -29,7 +29,7 @@ router.get('/', function (req, res) {
                 EditTime: query.EditTime || ''
             };
     }
-
+                        
     console.log(data.ProductID);
     proStockService.queryProStock(data, function (err, results) {
         if (err) {

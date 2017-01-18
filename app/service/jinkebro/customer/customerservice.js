@@ -238,7 +238,7 @@ Customer.prototype.addSubscibe = function(token, msg, callback) {
                     }
                 });
                 
-                logger.writeError("[service/jinkebro/customer/customerservice-----------240行]添加微信用户的时候查询失败");
+                logger.writeError("[service/jinkebro/customer/customerservice-----------241行]添加微信用户的时候查询失败");
                 return callback(true, errinfo);
             }
 
@@ -266,7 +266,7 @@ Customer.prototype.addSubscibe = function(token, msg, callback) {
                             }
                         });
                         
-                        logger.writeError("[service/jinkebro/customer/customerservice----------266行]添加微信用户时的更新出错");
+                        logger.writeError("[service/jinkebro/customer/customerservice----------269行]添加微信用户时的更新出错");
                         return callback(true, errinfo);
                     }
 
@@ -288,7 +288,7 @@ Customer.prototype.addSubscibe = function(token, msg, callback) {
                             }
                         });
                         
-                        logger.writeInfo("[service/jinkebro/customer/customerservice------------272行]微信添加用户的时候更新成功");
+                        logger.writeInfo("[service/jinkebro/customer/customerservice------------291行]微信添加用户的时候更新成功");
                         return callback(false, '');
                     }
                 });
@@ -313,7 +313,7 @@ Customer.prototype.addSubscibe = function(token, msg, callback) {
                             }
                         });
                         
-                        logger.writeError("[service/jinkebro/customer/customerservice-----------296行]添加微信用户的时候插入失败");
+                        logger.writeError("[service/jinkebro/customer/customerservice-----------316行]添加微信用户的时候插入失败");
                         return callback(true, errinfo);
                     }
 
@@ -335,7 +335,7 @@ Customer.prototype.addSubscibe = function(token, msg, callback) {
                             }
                         });
                         
-                        logger.writeInfo("[service/jinkebro/customer/customerservice-------------302行]添加微信用户的时候插入成功");
+                        logger.writeInfo("[service/jinkebro/customer/customerservice-------------338行]添加微信用户的时候插入成功");
                         return callback(false, '');
                     }
                 });
@@ -373,7 +373,7 @@ Customer.prototype.unsubscribe = function(token, msg, callback) {
                         logger.writeError('微信用户取消关注的查询失败，生成操作日志异常' + new Date());
                     }
                 });
-                logger.writeInfo("[service/jinkebro/customer/customerservice-------------339行]" + errinfo);
+                logger.writeInfo("[service/jinkebro/customer/customerservice-------------376行]" + errinfo);
                 return callback(true, errinfo);
             }
 
@@ -401,7 +401,7 @@ Customer.prototype.unsubscribe = function(token, msg, callback) {
                                 logger.writeError('微信用户取消关注时更新失败，生成操作日志异常' + new Date());
                             }
                         });
-                        logger.writeError("[service/jinkebro/customer/customerservice----------366行]" + errinfo);
+                        logger.writeError("[service/jinkebro/customer/customerservice----------404行]" + errinfo);
                         return callback(true, errinfo);
                     }
 
@@ -464,7 +464,7 @@ Customer.prototype.addLocation = function(msg, callback) {
                 }
             });
             
-            logger.writeError("[service/jinkebro/customer/customerservice--------------412行]" + errinfo);
+            logger.writeError("[service/jinkebro/customer/customerservice--------------467行]" + errinfo);
             return callback(true, errinfo);
         }
 
@@ -491,7 +491,7 @@ Customer.prototype.addLocation = function(msg, callback) {
                         }
                     });
                     
-                    logger.writeError("[service/jinkebro/customer/customerservice-------------436行]" + errinfo);
+                    logger.writeError("[service/jinkebro/customer/customerservice-------------494行]" + errinfo);
                     return callback(true, errinfo);
                 }
                 if (updataInfo != undefined && updataInfo.affectedRows != 0) {
@@ -512,7 +512,7 @@ Customer.prototype.addLocation = function(msg, callback) {
                         }
                     });
                     
-                    logger.writeInfo("[service/jinkebro/customer/customerservice--------441行]" + "更新成功");
+                    logger.writeInfo("[service/jinkebro/customer/customerservice--------515行]" + "更新成功");
                     return callback(false);
                 }
             });
@@ -568,7 +568,7 @@ Customer.prototype.addListFunction = function(token, data, callback) {
                     logger.writeError('添加微信客户端所有用户时的查询，生成操作日志异常' + new Date());
                 }
             });
-            logger.writeError("[service/jinkebro/customer/customerservice-------------499行]" + errinfo);
+            logger.writeError("[service/jinkebro/customer/customerservice-------------571行]" + errinfo);
             return callback(true, errinfo);
         }
 
@@ -610,7 +610,7 @@ Customer.prototype.addListFunction = function(token, data, callback) {
                                 logger.writeError('添加微信客户端所有用户时的插入，生成操作日志异常' + new Date());
                             }
                         });
-                        logger.writeError("[service/jinkebro/customer/customerservice-------------499行]" + errinfo);
+                        logger.writeError("[service/jinkebro/customer/customerservice-------------613行]" + errinfo);
                         return callback(true, errinfo);
                     }
                     
@@ -631,7 +631,7 @@ Customer.prototype.addListFunction = function(token, data, callback) {
                             }
                         });
                         
-                        logger.writeInfo("[service/jinkebro/customer/customerservice--------546行]" + "获取所有列表成功");
+                        logger.writeInfo("[service/jinkebro/customer/customerservice--------635行]" + "获取所有列表成功");
                         return callback(false, '获取所有列表的填补成功');
                     }
                 });

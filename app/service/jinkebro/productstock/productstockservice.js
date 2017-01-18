@@ -8,9 +8,9 @@
 
 var proStockDAL = appRequire('dal/jinkebro/productstock/productstockdal');
 var moment = require('moment'),
-logService = appRequire('service/backend/log/logservice'),
-operationConfig = appRequire('config/operationconfig'),
-logModel = appRequire('model/jinkebro/log/logmodel');
+    logService = appRequire('service/backend/log/logservice'),
+    operationConfig = appRequire('config/operationconfig'),
+    logModel = appRequire('model/jinkebro/log/logmodel');
 var config = appRequire('config/config');
 var logger = appRequire("util/loghelper").helper;
 var http = require('http');
@@ -144,82 +144,43 @@ function loggerWrite() {
 
 //通过http get的方法来获取库存的数据,通过商品的ID来查库存
 ProStock.prototype.getStockInfo = function (productID, callback) {
-    console.log(productID);
-    var getUrl = config.jinkebro.baseUrl + config.jinkebro.productstock + '?ProductID=' + productID;
-    console.log("库存的获取数量的url" + getUrl);
-    http.get(getUrl, function (res) {
-        var datas = [];
-        var size = 0;
-        res.on('data', function (data) {
-            datas.push(data);
-            size += data.length;
-        });
-        res.on('end', function () {
-            var buff = Buffer.concat(datas, size);
-            var result = JSON.parse(buff);
-
-            if (callback && typeof (callback) === 'function') {
-                callback(result);
-                console.log(result);
-                return;
+    
+    proStockDAL.queryProStock({
+        'ProductID': productID,
+        'StockAreaID': '',
+        'CreateUserID': '',
+        'CreateTime': '',
+        'EditUserID': '',
+        'EditTime': ''
+    }, function (err, stockInfo) {
+        {
+            if(err) {
+                callback(true, '查询库存量失败');
+                return ;
             }
-        }).on('error', function (e) {
-            logger.writeError()
-            console.log("通过http.get来获取http失败");
-            return;
-        });
+            
+            logger.writeInfo('[service/productstockservice -------162行]' + stockInfo);
+            callback(false, stockInfo);
+            return ;
+        }
     });
-    return;
+
 }
 
-//通过http put来修改商品的已减少的库存量
+/**
+ * function:订单结束改变库存的量
+ */
 ProStock.prototype.updateStockInfo = function (data, callback) {
-    console.log("数量为：" + data.TotalNum);
-    var me = this;
-    var putUrl = config.jinkebro.baseUrl + config.jinkebro.productstock;
-    me.getStockInfo(data.ProductID, function (queryInfo) {
-        queryInfo.data[0].TotalNum = data.TotalNum;
-        var body = queryInfo.data[0];
-        var bodyString = JSON.stringify(body);
-            
-        //头文件
-        var headers = {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': bodyString.length
-        };
-
-        var options = {
-            host: config.jinkebro.host,
-            port: '80',
-            path: putUrl,
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': Buffer.byteLength(bodyString)
-            }
-        };
-        var put_req = http.request(options, function (res) {
-            console.log("statusCode: ", res.statusCode);
-            console.log("headers: ", res.headers);
-
-            res.setEncoding('utf8');
-            res.on('data', function (chunk) {
-                console.log('Response: ' + chunk);
-                callback(chunk);
-                return;
-            })
-        });
-
-        put_req.on('error', function (e) {
-            console.log('problem with request: ' + e.message);
-            callback(e.message);
-            return;
-        });
-
-        put_req.write(bodyString);
-        put_req.end();
-        return;
-    });
+   proStockDAL.update(data, function (err, updateInfo) {
+       if (err) {
+           callback(true);
+           logger.writeError('[service/jinkebro/productstockservice -----181行]' + '改变库存的时候失败')
+           return ;
+       }
+       
+       logger.writeInfo('[service/jinkebro/productstockservice-----181行 改变库存量成功]');
+       callback(false, updateInfo);
+   });
 
 }
 module.exports = new ProStock();
