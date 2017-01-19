@@ -292,7 +292,7 @@ exports.insertOrderFull = function(data, callback) {
                                 logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                                 console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                             });
-                            callback(false,"ProductID为" + tempProID + "的商品库存不足！");
+                            callback(false, tempProID);
                             return ;
                         }
                         console.log(info);
