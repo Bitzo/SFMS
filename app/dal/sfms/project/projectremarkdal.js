@@ -84,9 +84,18 @@ exports.queryRemark = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== '')
+            if (key !== 'page' && key !== 'pageNum' && key !== 'projectID' && data[key] !== '')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
+    }
+
+    if (data.projectID !== '') {
+        sql += ' and ( ';
+        for (var i=0;i<data.projectID.length;++i) {
+            if (i == 0) sql += 'ProjectID = ' + data.projectID[i].ProjectID;
+            else sql += ' or ProjectID = ' + data.projectID[i].ProjectID;
+        }
+        sql += ' ) '
     }
 
     var num = data.pageNum || 20; //每页显示的个数
@@ -122,9 +131,18 @@ exports.countRemark = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== '')
+            if (key !== 'page' && key !== 'pageNum' && key !== 'projectID' && data[key] !== '')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
+    }
+
+    if (data.projectID !== '') {
+        sql += ' and ( ';
+        for (var i=0;i<data.projectID.length;++i) {
+            if (i == 0) sql += 'ProjectID = ' + data.projectID[i].ProjectID;
+            else sql += ' or ProjectID = ' + data.projectID[i].ProjectID;
+        }
+        sql += ' ) '
     }
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {

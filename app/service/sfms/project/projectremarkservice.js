@@ -107,6 +107,9 @@ exports.queryRemark = function(data, callback) {
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount
     }
+    if (data.projectID.length == 0) {
+        formdata.projectID = '';
+    }
     logModel.OperationName = operationConfig.sfmsApp.projectManage.projectRemarkQuery.actionName;
     logModel.Action = operationConfig.sfmsApp.projectManage.projectRemarkQuery.actionName;
     logModel.Identifier = operationConfig.sfmsApp.projectManage.projectRemarkQuery.identifier;
@@ -142,6 +145,9 @@ exports.countRemark = function (data, callback) {
         'userID': data.userID || '',
         'jit_projectremark.ID': data.ID || '',
         'projectID': data.projectID || ''
+    }
+    if (data.projectID.length == 0) {
+        formdata.projectID = '';
     }
     projectremarkDAL.countRemark(formdata, function (err, results) {
         if (err) {
