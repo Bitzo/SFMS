@@ -11,7 +11,13 @@ var db_backend = appRequire('db/db_backend'),
 
 //修改用户菜单
 exports.delUserMenu = function (data, callback) {
-    var sql =  'update jit_usermenu set isActive = ' + data.isActive + ' where userID = ' + data.userID;
+    var sql =  'update jit_usermenu set isActive = ' + data.isActive + ' where ';
+
+    if (data.userID !== '') sql += 'userID = ' + data.userID;
+    if (data.menuID !== '') {
+        sql += 'menuID = ' + data.menuID;
+        sql += ' or meneID in select MenuID from jit_menu where ParentID = ' + data.menuID;
+    }
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {

@@ -8,14 +8,11 @@
 var usermenuDAl = appRequire('dal/backend/menu/usermenudal'),
     logger = appRequire('util/loghelper').helper;
 
-var db_backend = appRequire('db/db_backend'),
-    usermenuModel = appRequire('model/backend/menu/usermenumodel'),
-    logger = appRequire('util/loghelper').helper;
-
 exports.delUserMenu = function (data, callback) {
     var formdata = {
-        'userID': data.userID,
-        'isActive': data.isActive
+        'userID': data.userID || '',
+        'menuID': data.menuID || '',
+        'isActive': 0
     }
     usermenuDAl.delUserMenu(formdata, function (err, results) {
         if (err) {
