@@ -11,6 +11,7 @@ myApp.controller('sfmsProjectController', function($scope, $http,$q,baseService)
             params:{
                 pageindex:1,
                 pagesize:10,
+                isPaging:1,
                 f:{}
             }
         }).
@@ -29,6 +30,7 @@ myApp.controller('sfmsProjectController', function($scope, $http,$q,baseService)
             params:{
                 pageindex:1,
                 pagesize:10,
+                isPaging:1,
                 f:{}
             }
         }).

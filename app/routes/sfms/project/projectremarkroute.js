@@ -379,7 +379,6 @@ router.get('/person', function (req, res) {
     page > 0? page :1;
 
     var data = {
-        'userID': userID,
         'projectID': projectID,
         'OperateUserID': req.query.jitkey,
         'page': page,
@@ -425,7 +424,17 @@ router.get('/person', function (req, res) {
             if (projectID === '') {
                 data.projectID = projectInfo;
             } else {
-                data.projectID[0].ProjectID = projectID;
+                data.projectID = [];
+                for (var i in projectInfo) {
+                    if (projectID == projectInfo[i].ProjectID) {
+                        data.projectID[0] = {
+                            ProjectID: projectID
+                        }
+                    }
+                }
+                if (data.projectID.length == 0) {
+                    data.projectID = projectInfo;
+                }
             }
             projectRemarkservice.countRemark(data, function (err, results) {
                 if (err) {

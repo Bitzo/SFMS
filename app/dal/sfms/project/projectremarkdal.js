@@ -80,7 +80,7 @@ exports.updateRemark = function (data, callback) {
 
 //项目用户备注查询
 exports.queryRemark = function (data, callback) {
-    var sql = 'select jit_projectremark.ID,ProjectID,jit_projectremark.ProjectName,UserID,UserName,Remark,jit_projectremark.CreateTime,jit_projectremark.EditTime from jit_projectremark,jit_projectbaseinfo where 1=1 and jit_projectremark.ProjectID = jit_projectbaseinfo.ID and jit_projectbaseinfo.IsActive = 1 ';
+    var sql = 'select jit_projectremark.ID,ProjectID,jit_projectremark.ProjectName,IsActive,UserID,UserName,Remark,jit_projectremark.CreateTime,jit_projectremark.EditTime from jit_projectremark,jit_projectbaseinfo where 1=1 and jit_projectremark.ProjectID = jit_projectbaseinfo.ID ';
 
     if (data !== undefined) {
         for (var key in data) {
@@ -101,7 +101,7 @@ exports.queryRemark = function (data, callback) {
     var num = data.pageNum || 20; //每页显示的个数
     var page = data.page || 1;
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    sql += "  order by IsActive desc,ProjectID LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("项目用户备注查询：" + sql);
 
@@ -127,7 +127,7 @@ exports.queryRemark = function (data, callback) {
 
 //计数，统计对应数据总个数
 exports.countRemark = function (data, callback) {
-    var sql =  'select count(1) AS num from jit_projectremark,jit_projectbaseinfo where 1=1 and jit_projectremark.ProjectID = jit_projectbaseinfo.ID and jit_projectbaseinfo.IsActive = 1 ';
+    var sql =  'select count(1) AS num from jit_projectremark,jit_projectbaseinfo where 1=1 and jit_projectremark.ProjectID = jit_projectbaseinfo.ID ';
 
     if (data !== undefined) {
         for (var key in data) {
