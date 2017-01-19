@@ -6,7 +6,7 @@
  * @Function:queryAllMenus()查询所有的菜单，菜单新增，菜单修改，菜单删除
  */
 var menuDAl = appRequire('dal/backend/menu/menudal'),
-    getTree = appRequire('service/backend/menu/gettreemenu'),
+    getTreeMenu = appRequire('service/backend/menu/gettreemenu'),
     logger = appRequire('util/loghelper').helper,
     logModel = appRequire('model/jinkebro/log/logmodel'),
     logService = appRequire('service/backend/log/logservice'),
@@ -20,7 +20,7 @@ logModel.PDate = moment().format('YYYY-MM-DD');
 delete logModel.ID;
 
 /**
- * 树形展示菜单
+ * 树形展示某一用户（userID）菜单
  * @param data
  * @param callback
  */
@@ -83,7 +83,7 @@ exports.queryAllMenusFormTree = function(data, callback){
 };
 
 /**
- * 以表格形式展示所有菜单
+ * 展示所有菜单
  * @param data
  * @param callback
  */
@@ -94,7 +94,36 @@ exports.queryAllMenusFormTreeInTable = function(data, callback){
     logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
     logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
     logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
-    menuDAl.queryAllMenus(data,function (err,results) {
+    //接收的data数据形式如下：
+    // {
+    //     page: 1,
+    //     pageNum: 20,
+    //     ApplicationID: '',
+    //     MenuID: '',
+    //     ParentID: '',
+    //     MenuLevel: '',
+    //     MenuName: '',
+    //     IsActive: ''
+    // }
+    console.log('树形展示所有菜单');
+    console.log(data);
+    var formdata = {
+        pageManage : {
+            page: data.page,
+            pageNum: data.pageNum,
+            isPaging : 0
+        },
+        MenuManage : {
+            ApplicationID: '',
+            MenuID: '',
+            ParentID: '',
+            MenuLevel: '',
+            MenuName: '',
+            IsActive: ''
+        }
+    };
+
+    menuDAl.queryAllMenus(formdata,function (err,results) {
         if(err){
             callback(true);
             return ;
@@ -142,49 +171,12 @@ exports.queryAllMenusFormTreeIByRecursion  = function(data, callback){
             return ;
         }
 
-        //返回的结果
-        var returnResults = new Array();
-
-        var appIDs = [results[0].ApplicationID];
-        var k = 0;
-
-        for(var i=0; i< results.length; i++){
-            for(var j=0; j <= k; j++){
-                if(results[i].ApplicationID == appIDs[j])
-                    break;
-            }
-
-            if(j > k){
-                k++;
-                appIDs[k] = results[i].ApplicationID;
-            }
-        }
-
-        for(var i=0; i < appIDs.length; i++){
-            var appGroup = new Array();
-
-            for(var j=0; j < results.length; j++){
-                if(results[j].ApplicationID == appIDs[i]){
-                    appGroup.push(results[j]);
-                }
-            }
-
-            appGroup = getTree.getTreeMenu(appGroup,0);
-
-            var objOfApp = new Object();
-
-            if(appGroup[0] !== undefined && appGroup[0].ApplicationName !== undefined){
-                objOfApp.appName = appGroup[0].ApplicationName;
-                objOfApp.menuData = appGroup;
-            }
-
-            returnResults.push(objOfApp);
-        }
+        results = getTreeMenu.getTreeMenu(data,0);
 
         console.log('queryAllMenusFormTreeIByRecursion func in service');
         logger.writeInfo('queryAllMenusFormTreeIByRecursion func in service');
         //返回菜单树形JSON
-        callback(false,returnResults);
+        callback(false,results);
     });
 };
 
@@ -218,7 +210,24 @@ exports.queryAllMenus = function(data, callback){
     logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
     logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
     logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
-    menuDAl.queryAllMenus(data,function (err,results) {
+
+    var formdata = {
+        pageManage : {
+            page: data.page,
+            pageNum: data.pageNum,
+            isPaging : 1
+        },
+        MenuManage : {
+            ApplicationID: '',
+            MenuID: '',
+            ParentID: '',
+            MenuLevel: '',
+            MenuName: '',
+            IsActive: ''
+        }
+    };
+
+    menuDAl.queryAllMenus(formdata,function (err,results) {
         if(err){
             callback(true);
             return ;

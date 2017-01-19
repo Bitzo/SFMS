@@ -29,7 +29,7 @@ block content
                 thead
                     tr
                         th
-                          a(href='',ng-click="logSort('ID')",id='ID') 序号
+                          a(href='',ng-click="logSort('ID')",id='ID') 日志ID
                             span.icon.arrow.icon-chevron-down.down
                             span.icon.arrow.icon-chevron-up.up
                         th
@@ -48,7 +48,7 @@ block content
                           a(href='',ng-click="logSort('OperationUrl')",id='OperationUrl') 操作地址
                             span.icon.arrow.icon-chevron-down.down
                             span.icon.arrow.icon-chevron-up.up
-                        th
+                        th(style='width:200px;')
                           a(href='',ng-click="logSort('NewValue')",id='NewValue') 新植
                             span.icon.arrow.icon-chevron-down.down
                             span.icon.arrow.icon-chevron-up.up
@@ -84,13 +84,9 @@ block content
                           a(href='',ng-click="logSort('CreateUserID')",id='CreateUserID') 创建人
                             span.icon.arrow.icon-chevron-down.down
                             span.icon.arrow.icon-chevron-up.up
-                        th
-                          a(href='',ng-click="logSort('PDate')",id='PDate') 分区
-                            span.icon.arrow.icon-chevron-down.down
-                            span.icon.arrow.icon-chevron-up.up
                 tbody
                     tr(ng-repeat="data in datas")
-                        td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
+                        td {{data.ID}}
                         td {{data.ApplicationName}}
                         td {{data.OperationName}}
                         td {{data.OldValue}}
@@ -104,6 +100,5 @@ block content
                         td {{data.Memo}}
                         td {{data.CreateTime}}
                         td {{data.CreateUserName}}
-                        td {{data.PDate}}
             div.pull-right
                 jason-pagination(conf='paginationConf')

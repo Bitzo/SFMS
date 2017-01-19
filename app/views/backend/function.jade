@@ -31,8 +31,8 @@ block content
                         div.col-sm-10
                             input(type='checkbox' ng-model='currentData.IsActive' ng-checked='currentData.IsActive==1',ng-disabled='disable')
                     div.form-group.row.text-center
-                        button.btn.btn-primary(ng-click='edit()') {{btnSaveMessage}}
-                        button.btn.btn-primary(style='margin-left:20px;' ng-click='cancel()') 取消
+                        button.btn.btn-primary(ng-click='edit()',href='') {{btnSaveMessage}}
+                        button.btn.btn-primary(style='margin-left:20px;' ng-click='cancel()',href='') 取消
         div.modal.fade(id='functionModel')
             div.modal-dialog
                 div.modal-content

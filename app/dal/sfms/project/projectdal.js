@@ -136,7 +136,6 @@ exports.queryProject = function (data, callback) {
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
-    console.log(data)
 
     if (data.CreateTime !== '') sql += " and CreateTime > '" + data.CreateTime + "' ";
     if (data.ProjectEndTime !== '') sql += " and ProjectEndTime < '" + data.ProjectEndTime + "' ";

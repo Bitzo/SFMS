@@ -181,15 +181,16 @@ router.get('/userID/:userID',function (req,res) {
 });
 
 router.post('/', function (req, res) {
-    var userID = req.body.userID,
-        menuData = req.body.menuData,
-        data = ['userID', 'menuID'],
+    console.log(req.body)
+    var userID = req.body.AccountID,
+        menuData = req.body.data,
+        data = ['AccountID', 'MenuID'],
         err = 'required: ';
 
     for(var value in data)
     {
-        if (req.body.menuData.length>0) {
-            if((!(data[value] in req.body.menuData[0]))&&(!(data[value] in req.body)))
+        if (req.body.data.length>0) {
+            if((!(data[value] in req.body.data[0]))&&(!(data[value] in req.body)))
             {
                 logger.writeError("require " + data[value]);
                 err += data[value] + ' ';
@@ -211,7 +212,7 @@ router.post('/', function (req, res) {
         i = 0;
 
     for (i=0;i<menuData.length;++i) {
-        menuID[i] = menuData[i].menuID;
+        menuID[i] = menuData[i].MenuID;
     }
 
     data = {

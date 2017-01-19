@@ -106,7 +106,6 @@ exports.countQuery = function (data, callback) {
 
 //根据用户ID，查找所在的项目
 exports.queryProjectByUserID = function (data, callback) {
-    console.log(data)
     projectuserDAL.queryProjectByUserID(data, function (err, results) {
         if (err) {
             callback(true, '查询失败');

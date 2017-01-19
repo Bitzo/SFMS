@@ -596,7 +596,6 @@ router.get('/user', function (req, res) {
                         });
                     }
                 }
-                console.log()
                 res.status(200);
                 return res.json({
                     status: 200,
@@ -726,7 +725,6 @@ router.get('/person', function (req, res) {
 
 //项目基本信息查询-管理员
 router.get('/', function (req, res) {
-    console.log(req.query)
     var query =  JSON.parse(req.query.f),
         ID = query.ID || '',
         projectManageID = query.projectManageID || '',
@@ -747,8 +745,7 @@ router.get('/', function (req, res) {
         'page': page,
         'pageNum': pageNum,
     }
-    console.log(data)
-    
+
     //查询数据量
     projectservice.countQuery(data, function (err, results) {
         if (err) {

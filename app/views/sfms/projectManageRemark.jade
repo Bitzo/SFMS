@@ -20,7 +20,8 @@ block content
         thead
           tr
             th 序号
-            th 项目名称         
+            th 项目名称
+            th 项目是否有效
             th 用户名
             th 项目备注
             th 备注时间                        
@@ -28,7 +29,8 @@ block content
         tbody
           tr(ng-repeat="x in datas") 
             td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
-            td {{x.ProjectName}}           
+            td {{x.ProjectName}}
+            td {{x.IsActive | numToChin:x.IsActive }}
             td {{x.UserName}}
             td {{x.Remark}}
             td {{x.EditTime}}                                                                                                                                                                

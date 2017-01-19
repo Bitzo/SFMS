@@ -20,10 +20,11 @@ exports.queryAllRoles = function (data, callback) {
    
     sql += data.AccountID;
 
-    var num = data.pageNum || 20; //每页显示的个数
+    var num = data.pageNum || config.pageCount; //每页显示的个数
     var page = data.page || 1;
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    if (data.SelectType !== '' && data.SelectType === '1') sql += " and jit_role.IsActive = 1 order by IsActive desc ";
+    else  sql += " order by IsActive desc LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询角色信息：" + sql);
 
@@ -50,11 +51,11 @@ exports.queryAllRoles = function (data, callback) {
 
 //计数，统计对应数据总个数
 exports.countAllRoles = function (data, callback) {
-    var sql =  'select count(1) AS num from jit_role where 1=1 and IsActive = 1 ';
+    var sql =  'select count(1) AS num from jit_role where 1=1 ';
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '')
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'SelectType')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
