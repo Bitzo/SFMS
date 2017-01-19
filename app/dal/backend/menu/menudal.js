@@ -10,13 +10,17 @@ var db_backend = appRequire('db/db_backend'),
     menuModel = appRequire('model/backend/menu/menumodel'),
     logger = appRequire('util/loghelper').helper;
 
-//查询目前所有菜单，提供所有菜单的信息，菜单属性展示
+/**
+ * 查询目前所有菜单，提供所有菜单的信息，菜单属性展示
+ * @param data
+ * @param callback
+ */
 exports.queryAllMenus = function(data, callback) {
     var arr = new Array();
 
-    arr.push(" select C.ApplicationName,jit_menu.ApplicationID,jit_menu.MenuID,jit_menu.MenuLevel, ");
-    arr.push(" jit_menu.ParentID,B.MenuName as ParentMenuName,jit_menu.SortIndex,jit_menu.MenuName, ")
-    arr.push(" jit_menu.IconPath,jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ");
+    arr.push(" select jit_menu.MenuName,jit_menu.IconPath,jit_menu.MenuID,jit_menu.MenuLevel, ");
+    arr.push(" jit_menu.ParentID,B.MenuName as ParentMenuName,jit_menu.SortIndex, ")
+    arr.push(" C.ApplicationName,jit_menu.ApplicationID,jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ");
     arr.push(" from jit_menu ");
     arr.push(" left join jit_application C on jit_menu.ApplicationID = C.ID ");
     arr.push(" left join jit_menu B on jit_menu.ParentID = B.MenuID ");
@@ -24,26 +28,30 @@ exports.queryAllMenus = function(data, callback) {
 
     var sql = arr.join(' ');
 
-    if(data !== undefined){
-        for(var key in data){
-            if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
+    var MenuData = data.MenuManage;
+    if(MenuData !== undefined){
+        for(var key in MenuData){
+            if (MenuData[key] != ''){
                 //判断data[key]是否是数值类型
-                if(!isNaN(data[key])){
-                    sql += ' and ' + 'jit_menu.' + key + ' = '+ data[key] + ' ';
+                if(!isNaN(MenuData[key])){
+                    sql += ' and ' + 'jit_menu.' + key + ' = '+ MenuData[key] + ' ';
                 }else {
-                    sql += ' and ' + 'jit_menu.' + key + ' = "'+ data[key] + '" ';
+                    sql += ' and ' + 'jit_menu.' + key + ' = "'+ MenuData[key] + '" ';
                 }
             }
         }
     }
 
-    var num = data.pageNum; //每页显示的个数
-    var page = data.page || 1;
+    var num = data.pageManage.pageNum; //每页显示的个数
+    var page = data.pageManage.page || 1;
+    var IsPaging = data.pageManage.isPaging;
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    if (IsPaging == 1) {
+        sql += " LIMIT " + (page-1)*num + "," + num;
+    }
 
     logger.writeInfo("[queryAllMenus func in menudal]查询所有菜单：" + sql);
-    //console.log("in dal,查询所有的菜单：" + sql);
+    console.log("in dal,查询所有的菜单：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
