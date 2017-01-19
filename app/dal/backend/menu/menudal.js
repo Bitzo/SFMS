@@ -10,40 +10,47 @@ var db_backend = appRequire('db/db_backend'),
     menuModel = appRequire('model/backend/menu/menumodel'),
     logger = appRequire('util/loghelper').helper;
 
-//查询目前所有菜单，提供所有菜单的信息，菜单属性展示
+/**
+ * 查询目前所有菜单，提供所有菜单的信息，菜单属性展示
+ * @param data
+ * @param callback
+ */
 exports.queryAllMenus = function(data, callback) {
     var arr = new Array();
 
-    arr.push(" select C.ApplicationName,jit_menu.ApplicationID,jit_menu.MenuID,jit_menu.MenuLevel, ");
-    arr.push(" jit_menu.ParentID,B.MenuName as ParentMenuName,jit_menu.SortIndex,jit_menu.MenuName, ")
-    arr.push(" jit_menu.IconPath,jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ");
-    arr.push(" from jit_menu ");
-    arr.push(" left join jit_application C on jit_menu.ApplicationID = C.ID ");
-    arr.push(" left join jit_menu B on jit_menu.ParentID = B.MenuID ");
-    arr.push(" where 1=1 ");
+    arr.push(' select jit_menu.MenuName,jit_menu.MenuID,jit_menu.ApplicationID,jit_application.ApplicationName, ');
+    arr.push(' jit_menu.MenuLevel,jit_menu.ParentID,jit_menu.IconPath, ');
+    arr.push(' jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ');
+    arr.push(' from jit_menu ');
+    arr.push(' left join jit_application on jit_application.ID = jit_menu.ApplicationID ');
+    arr.push(' where 1=1 ');
 
     var sql = arr.join(' ');
 
-    if(data !== undefined){
-        for(var key in data){
-            if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
+    var MenuData = data.MenuManage;
+    if(MenuData !== undefined){
+        for(var key in MenuData){
+            if (MenuData[key] != ''){
                 //判断data[key]是否是数值类型
-                if(!isNaN(data[key])){
-                    sql += ' and ' + 'jit_menu.' + key + ' = '+ data[key] + ' ';
+                if(!isNaN(MenuData[key])){
+                    sql += ' and ' + 'jit_menu.' + key + ' = '+ MenuData[key] + ' ';
                 }else {
-                    sql += ' and ' + 'jit_menu.' + key + ' = "'+ data[key] + '" ';
+                    sql += ' and ' + 'jit_menu.' + key + ' = "'+ MenuData[key] + '" ';
                 }
             }
         }
     }
 
-    var num = data.pageNum; //每页显示的个数
-    var page = data.page || 1;
+    var num = data.pageManage.pageNum; //每页显示的个数
+    var page = data.pageManage.page || 1;
+    var IsPaging = data.pageManage.isPaging;
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    if (IsPaging == 1) {
+        sql += " LIMIT " + (page-1)*num + "," + num;
+    }
 
     logger.writeInfo("[queryAllMenus func in menudal]查询所有菜单：" + sql);
-    //console.log("in dal,查询所有的菜单：" + sql);
+    console.log("in dal,查询所有的菜单：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -147,7 +154,11 @@ exports.countAllMenus = function (data, callback) {
     })
 };
 
-//菜单新增
+/**
+ * 菜单新增
+ * @param data
+ * @param callback
+ */
 exports.menuInsert = function (data,callback) {
     var insert_sql = 'insert into jit_menu set ';
     var sql = '';
@@ -189,7 +200,11 @@ exports.menuInsert = function (data,callback) {
 
 }
 
-//菜单编辑，即修改菜单
+/**
+ * 菜单编辑
+ * @param data
+ * @param callback
+ */
 exports.menuUpdate = function(data, callback) {
     var update_sql = 'update jit_menu set ';
     var sql = '';
@@ -233,7 +248,11 @@ exports.menuUpdate = function(data, callback) {
 }
 
 
-//菜单删除
+/**
+ * 菜单删除
+ * @param data
+ * @param callback
+ */
 exports.menuDelete = function (data, callback) {
     var update_sql = 'update jit_menu set IsActive = 0 where IsActive = 1 and MenuID = ' + data['MenuID'];
 
@@ -261,8 +280,11 @@ exports.menuDelete = function (data, callback) {
 }
 
 
-
-//根据UserID,获取用户的角色
+/**
+ * 根据UserID,获取用户的角色
+ * @param data
+ * @param callback
+ */
 exports.queryRoleByUserID = function (data,callback) {
     var arr = new Array();
     arr.push(' select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleName,jit_roleuser.AccountID ');
@@ -296,7 +318,11 @@ exports.queryRoleByUserID = function (data,callback) {
     })
 }
 
-//根据UserID,获取用户相应地菜单
+/**
+ * 根据UserID,获取用户相应地菜单
+ * @param data
+ * @param callback
+ */
 exports.queryMenuByUserID = function (data,callback) {
     var arr = new Array();
     arr.push(' select  jit_menu.ApplicationID,jit_application.ApplicationName,jit_menu.MenuID,jit_menu.MenuLevel,jit_menu.ParentID, ');

@@ -58,11 +58,11 @@ exports.querySingleID = function (accountid, callback) {
 exports.queryAllUsers = function (data, callback) {
     // var sql = ' from jit_application,jit_user where jit_user.ApplicationID = jit_application.ID';
     var arr = new Array();
-    arr.push('select A.ApplicationID,A.Account,A.AccountID,A.UserName,A.Pwd,A.CollegeID,A.GradeYear,A.Phone,A.ClassID,A.Memo,A.CreateTime,A.CreateUserID,A.EditUserID,A.EditTime,A.IsActive,A.Email,A.Address');
-    arr.push(',B.UserName as CreateUserName,C.ApplicationName,D.DictionaryValue as College,E.DictionaryValue as Class,F.RoleID,G.RoleName from jit_user A left join  jit_user B on A.CreateUserID=B.AccountID');
+    arr.push('select distinct A.ApplicationID,A.Account,A.AccountID,A.UserName,A.Pwd,A.CollegeID,A.GradeYear,A.Phone,A.ClassID,A.Memo,A.CreateTime,A.CreateUserID,A.EditUserID,A.EditTime,A.IsActive,A.Email,A.Address');
+    arr.push(',B.UserName as CreateUserName,C.ApplicationName,D.DictionaryValue as College,E.DictionaryValue as Class from jit_user A left join  jit_user B on A.CreateUserID=B.AccountID');
     arr.push('left join jit_application C on A.ApplicationID = C.ID left join jit_datadictionary D on A.CollegeID = D.DictionaryID ');
     arr.push('left join jit_datadictionary E on A.ClassID = E.DictionaryID left join jit_roleuser F on');
-    arr.push('A.AccountID = F.AccountID left join jit_role G on F.RoleID = G.RoleID where 1=1');
+    arr.push('A.AccountID = F.AccountID  where 1=1');
     var sql = arr.join(' ');
     for (var key in data) {
         if (key != 'page' && key != 'pageNum' && key != 'IsPage') {

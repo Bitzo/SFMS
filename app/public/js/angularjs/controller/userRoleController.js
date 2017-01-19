@@ -3,7 +3,6 @@
  */
 
 myApp.controller('userRoleController', function($scope, $http,$q,baseService,$location) {
-       console.log('role')
        $scope.tree_data = [];
        //获取树形角色数据
        $http({
@@ -15,23 +14,18 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
         })
         .success(function (response) {
             $scope.tree_data = response.data;
-            console.log($scope.tree_data);
         });
-        
         //获取该用户的角色信息
         var account = $location.search().AccountID;
         console.log(account);
-        $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
+        $http.get('/userrole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-            console.log(response.data);
-            $scope.roleTree = response.data || [];
-            console.log($scope.roleTree);
-            console.log($scope.tree_data);
+            console.log(response)
+            $scope.roleTree = response.data.Role || [];
             $scope.tree_data.map(function (data, index) {
                     foreachtree(data);
                 }
             );
-            console.log($scope.tree_data);
         });
         //显示已经勾选的用户角色
         function foreachtree(data){
@@ -43,7 +37,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
             var roleTree= $scope.roleTree;
             for(var i=0;i<roleTree.length;i++)
             {
-                if(roleTree[i].Role==data.RoleID){
+                if(roleTree[i].RoleID==data.RoleID){
                     data.myselected=true;
                     break;
                 }

@@ -43,12 +43,12 @@ router.get('/tree',function (req,res) {
     var data = {
         page : page,
         pageNum : pageNum,
-        ApplicationID : applicationID,
-        MenuID : menuID,
-        ParentID : parentID,
-        MenuLevel : menuLevel,
-        MenuName : menuName,
-        IsActive : isActive
+        ApplicationID : applicationID || '',
+        MenuID : menuID || '',
+        ParentID : parentID || '',
+        MenuLevel : menuLevel || '',
+        MenuName : menuName || '',
+        IsActive : isActive || ''
     };
 
     var intdata = {
@@ -86,8 +86,7 @@ router.get('/tree',function (req,res) {
             countNum = results[0]['num'];
 
             //查询所需的详细数据
-            console.log(data);
-            menuService.queryAllMenusFormTreeIByRecursion(data, function (err, result) {
+            menuService.queryAllMenusFormTreeInTable(data, function (err, result) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -369,7 +368,7 @@ router.get('/parent',function (req,res) {
 
 });
 
-//获得树形Menu结构
+//通过jitkey获得树形Menu结构
 router.get('/',function (req,res) {
     var userID = req.query.jitkey;
     var data = {
