@@ -9,7 +9,7 @@ block content
             jason-select.est(ng-model='f.FIType',source='/datadict/plain',selectparams='{"Category":"dc_fitype"}',stext='DictionaryValue',svalue='DictionaryID')
           label.form-group.my-form-group  收支类型  
             jason-select.est(ng-model='f.InOutType',source='/datadict/plain',selectparams='{"Category":"dc_fiinouttype"}',stext='DictionaryValue',svalue='DictionaryID')
-          label.form-group.my-form-group   项目  
+          label.form-group.my-form-group   项目
             jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
           label.form-group.my-form-group  状态 
             select.est(ng-model='f.FIStatus')
@@ -30,15 +30,15 @@ block content
             th 序号
             th 财务名称          
             th 财务类型
-            th 收入支出类型
+            th 输入支出类型
             th 财务金额
             th 项目名称      
             th 申请人
             th 申请时间
+            th 审核状态
             th 审核人
             th 审核时间
             th 备注
-            th 审核状态
             th 是否有效
             th(style="width:80px;") 操作
         tbody
@@ -51,11 +51,11 @@ block content
             td {{x.ProjectName}}
             td {{x.UserName}}            
             td {{x.CreateTime}}
+            td {{x.FIStatu}}
             td {{x.CheckUser}}
             td {{x.CheckTime}}
             td {{x.Remark}}
-            td {{x.FIStatu}}
-            td {{x.IsActive | numToChin:x.IsActive }}
+            td {{x.IsActi}}
             td
               a(href='#/sfms/financeEdit?ID={{x.ID}}')
                 i.icon.icon-edit 编辑            

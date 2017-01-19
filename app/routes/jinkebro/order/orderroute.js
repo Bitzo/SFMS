@@ -145,6 +145,22 @@ router.get('/', function (req, res) {
     });
 });
 
+/**
+ * 使用事务新增一条订单的路由
+ * success-responce:
+ * {
+ *  "code": 200,
+ *  "isSuccess": true,
+ *  "insertId": 463
+ * }
+ *
+ * fail-responce:
+ * {
+ *   "code": 400,
+ *   "isSuccess": true,
+ *   "msg": "库存不足"
+ * }
+ */
 router.post('/full',function (req,res) {
     var stringinfo = '';
     // 获取到传到的值
@@ -157,7 +173,7 @@ router.post('/full',function (req,res) {
         PayMethod = formdata.PayMethod || 1,
         IsValid = formdata.IsValid || 1,
         IsActive = formdata.IsActive || 1,
-        ProductIDs = formdata.ProductIDs || [1,2,3],//数组，表示ProductID的集合
+        ProductIDs = formdata.ProductIDs || [1,2,5],//数组，表示ProductID的集合
         ProductCounts = formdata.ProductCounts || [2,1,3],
         CustomerID = formdata.CustomerID || 1,
         OrderStatus = formdata.OrderStatus || 1;
@@ -219,12 +235,13 @@ router.post('/full',function (req,res) {
             });
             return ;
         }
-        if (result !== undefined && result.affectedRows != 0) {
+        if (result !== undefined && result.insertId != undefined) {
             res.status(200);
             res.json({
                 code : 200,
                 isSuccess : true,
-                msg : result
+                insertId : result.insertId,
+                result : result
             });
             return ;
         }else {
@@ -232,7 +249,7 @@ router.post('/full',function (req,res) {
             res.json({
                 code : 400,
                 isSuccess : true,
-                msg : '订单新增失败'
+                msg : result
             });
             return ;
         }

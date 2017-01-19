@@ -82,19 +82,35 @@ wechat.textMsg(function (msg) {
 
                             var sendOrderInfo = orderInfo;
                             resolve(sendOrderInfo);
-                        })
+                        });
                 });
 
                 p.then(function (result) {
-                    resMsg.content = result;
-                    console.log("[routes/api/wechatroute---------90行]");
-                    console.log(resMsg);                    
+                    //判断库存是否满足
+                    var sendMsg = '';
+                    if (result[0].OrderID === undefined) {
+                        sendMsg = result;
+                        resMsg.content = sendMsg;
+                    }
+                    else {
+                        var totalPrice = 0;
+                        sendMsg = '亲，您的订单号为：' + result[0].OrderID + '\n' + '您所订购的商品为:\n';
+                        result.forEach(function (item) {
+                            sendMsg += item.ProductName + ' 数量为 ' + item.ProductCount + ' \n';
+                            totalPrice += item.ProductPrice * item.ProductCount;
+                        });
+                        sendMsg += '总共消费' + totalPrice + '元， 正在准备配送';
+
+                        resMsg.content = sendMsg;
+                        logger.writeInfo("[routes/api/wechatroute]订单成功");                       
+                    }                    
                     wechat.sendMsg(resMsg);
+                    
                 }, function (err) {
                     wechat.sendMsg(resMsg);
                 });
 
-                logger.writeInfo("[route/api/wechatroute--------------98行]发送订单的消息给用户");
+                logger.writeInfo("[route/api/wechatroute]发送订单的消息给用户");
                 return;
             }
             
@@ -122,7 +138,7 @@ wechat.textMsg(function (msg) {
 
         case "音乐":
             // 返回音乐消息
-             var resMsg = {
+            var resMsg = {
                 fromUserName: msg.toUserName,
                 toUserName: msg.fromUserName,
                 msgType: "music",
@@ -153,8 +169,8 @@ wechat.textMsg(function (msg) {
                 articles: articles,
                 funcFlag: 0
             }
-             wechat.sendMsg(resMsg);
-    }  
+            wechat.sendMsg(resMsg);
+    }
 });
 
 // 监听图片消息
@@ -215,28 +231,28 @@ wechat.eventMsg(function (msg) {
             wechat.sendMsg(resMsg);
             
             //获取token
-            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, 
+            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,
                 function (isSussess, token) {
-                //如果成功  
-                if (isSussess) {
-                    //創建菜单的部分
-                    // wechat.createMenu(token, function () {
-                    //     console.log("创建菜单");
-                    //     logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
-                    // });
+                    //如果成功  
+                    if (isSussess) {
+                        //創建菜单的部分
+                        // wechat.createMenu(token, function () {
+                        //     console.log("创建菜单");
+                        //     logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
+                        // });
 
-                    //用户订阅时的操作
-                    wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
-                        if (err) {
-                            console.log(errinfo);
+                        //用户订阅时的操作
+                        wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
+                            if (err) {
+                                console.log(errinfo);
+                                return;
+                            }
+
+                            console.log("微信添加用户成功");
                             return;
-                        }
-
-                        console.log("微信添加用户成功");
-                        return ;
-                    })
-                }
-            });
+                        })
+                    }
+                });
             break;
             
         //取消订阅
@@ -284,7 +300,7 @@ wechat.eventMsg(function (msg) {
                     return;
                 }
                 console.log("获取地址成功");
-                return ;
+                return;
             });
 
             break;
@@ -307,7 +323,7 @@ wechat.eventMsg(function (msg) {
                         content: contentInfo,
                         funcFlag: 0
                     };
-                    
+
                     var p = new Promise(function (resolve, reject) {
                         product.queryProducts({
                             page: 1,
