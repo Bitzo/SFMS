@@ -16,13 +16,13 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
                 if(tree_data[i].IsActive==0){
                     console.log(i)                    
                     console.log(tree_data[i])
-                    tree_data[i].ApplicationName+='(失效)'
+                    tree_data[i].MenuName+='(失效)'
                 }
                 for(var j=0;j<tree_data[i].children.length;j++)
                 { 
                     console.log(tree_data[i].children[j])
                     if(tree_data[i].children[j].IsActive==0){
-                        tree_data[i].children[j].ApplicationName+='(失效)'
+                        tree_data[i].children[j].MenuName+='(失效)'
                     }
                 }
             }
