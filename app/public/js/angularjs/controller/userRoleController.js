@@ -20,7 +20,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
         console.log(account);
         $http.get('/userrole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-            console.log(response)
+            console.log(response.data.Role)
             $scope.roleTree = response.data.Role || [];
             $scope.tree_data.map(function (data, index) {
                     foreachtree(data);
@@ -51,45 +51,34 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
 
         //勾选点击效果
         $scope.clickHander=function(branch,parent){
-        if(branch.myselected==false) {
-            parent.myselected = false;
-        }
-        changeseletedChild(branch,branch.myselected)
-        }
-        function changeseletedChild(branch,val){
-            if(branch.children&&branch.children.length!=0){
-                branch.children.map(function(branch){
-                    changeseletedChild(branch,val);
-                })
+            
+            if(branch.myselected==false) {
+                // parent.myselected = false;
             }
-            branch.myselected=val;
-            branch.expanded=true;
+            changeseletedChild(branch,branch.myselected)
         }
         //确认提交传递数据
         $scope.submit=function(){
         var  data=[];
-        $scope.tree_data.map(function(tree){
-            foreachsubmit(tree,data);
-        })
-        var param={
-            "AccountID": $location.search().AccountID,
-            "data":data
-        }
-        console.log(data);
-        console.log(param);                   
-        // $http({
-        //     method:'put',
-        //     url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //     data:param1
-        // }).success(function(data){
-        //     $http({
-        //         method:'post',
-        //         url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //         data:param
-        //     }).success(function(data){
-        //         $("#functionModel").modal('show');
-        //     })
-        // });
+            $scope.tree_data.map(function(tree){
+                foreachsubmit(tree,data);
+            })
+            var f={
+                "AccountID": $location.search().AccountID,
+                "data":data
+            }
+            console.log(data);
+            console.log(f);                   
+            $http({
+                method:'post',
+                url:"/usermenurole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data:f
+            }).success(function(response) {
+                alert(response.msg);
+            }).
+            error(function(response) {
+                alert(response.msg);  
+            });
         }
         //获取勾选角色的ID
         function foreachsubmit(data,dataparam){
