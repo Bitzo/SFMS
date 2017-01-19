@@ -5,24 +5,40 @@
 myApp.controller('userMenuController', function($scope, $http,$q,baseService,$location) {
        $scope.tree_data = [];
        //获取树形菜单数据
-       $http.get("/backrole?access_token=" + accesstokenstring)
+       $http.get('/backmenu?'+"access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
             $scope.tree_data = response.data.Menu;
             console.log($scope.tree_data);
+            console.log('hh')
+            var tree_data= $scope.tree_data;     
+            for(var i=0;i<tree_data.length;i++)
+            { 
+                if(tree_data[i].IsActive==0){
+                    console.log(i)                    
+                    console.log(tree_data[i])
+                    tree_data[i].ApplicationName+='(失效)'
+                }
+                for(var j=0;j<tree_data[i].children.length;j++)
+                { 
+                    console.log(tree_data[i].children[j])
+                    if(tree_data[i].children[j].IsActive==0){
+                        tree_data[i].children[j].ApplicationName+='(失效)'
+                    }
+                }
+            }
         });
         
+        
+       
         //获取该用户的菜单信息
-        var account = $location.search().AccountID;
-        console.log(account);
         $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-            console.log(response.data.Menu);
+            console.log(response);
             $scope.menuTree = response.data.Menu || [];
-            console.log($scope.menuTree);
             console.log($scope.tree_data);
-                $scope.tree_data.map(function (data, index) {
-                        foreachtree(data);
-                    }
+            $scope.tree_data.map(function (data, index) {
+                    foreachtree(data);
+                }
             );
             console.log($scope.tree_data);
         });
@@ -32,9 +48,10 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
                     foreachtree(branch);
                 })
             }
-            var menuTree= $scope.menuTree;
+            var menuTree= $scope.menuTree;     
             for(var i=0;i<menuTree.length;i++)
-            {
+            { 
+                
                 if(menuTree[i].MenuID==data.MenuID){
                     data.myselected=true;
                     break;
@@ -69,25 +86,22 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
         $scope.tree_data.map(function(tree){
             foreachsubmit(tree,data);
         })
-        var param={
+        var f={
             "AccountID": $location.search().AccountID,
             "data":data
         }
         console.log(data);
-        console.log(param);                   
-        // $http({
-        //     method:'put',
-        //     url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //     data:param1
-        // }).success(function(data){
-        //     $http({
-        //         method:'post',
-        //         url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //         data:param
-        //     }).success(function(data){
-        //         $("#functionModel").modal('show');
-        //     })
-        // });
+        console.log(f);                   
+        $http({
+            method:'post',
+            url:"/usermenurole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:f
+        }).success(function(response) {
+            alert(response.msg);
+        }).
+        error(function(response) {
+            alert(response.msg);  
+        });
         }
         //获取勾选菜单的ID
         function foreachsubmit(data,dataparam){

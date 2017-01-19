@@ -379,25 +379,64 @@ router.get('/person', function (req, res) {
     page > 0? page :1;
 
     var data = {
-        'userID': userID,
         'projectID': projectID,
         'OperateUserID': req.query.jitkey,
         'page': page,
         'pageNum': pageNum
     }
-    projectRemarkservice.countRemark(data, function (err, results) {
+
+    projectuserservice.queryProjectByUserID({UserID: userID}, function (err, results) {
         if (err) {
             res.status(500);
-            res.json({
-                code: 500,
+            return res.json({
+                status: 500,
                 isSuccess: false,
-                msg: "查询失败，服务器内部错误"
-            });
-            return;
+                msg: '操作失败，服务器出错'
+            })
         }
-        if (results !==undefined && results.length != 0) {
-            countNum = results[0]['num'];
-            projectRemarkservice.queryRemark(data, function (err, results) {
+        var projectInfo = [];
+        if (results.length>0) {
+            projectInfo = results;
+        }
+        projectservice.queryProject({ProjectManageID:userID, OperateUserID: req.query.jitkey}, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                })
+            }
+            if (results.length>0) {
+                var i=0,j=0;
+                for (i=0;i<results.length;++i) {
+                    for (j=0;j<projectInfo.length;++j) {
+                        if (results[i].ID == projectInfo[j].ProjectID) break;
+                    }
+                    if (j==projectInfo.length) {
+                        projectInfo.push({
+                            ProjectID: results[i].ID,
+                            ProjectName: results[i].ProjectName
+                        });
+                    }
+                }
+            }
+            if (projectID === '') {
+                data.projectID = projectInfo;
+            } else {
+                data.projectID = [];
+                for (var i in projectInfo) {
+                    if (projectID == projectInfo[i].ProjectID) {
+                        data.projectID[0] = {
+                            ProjectID: projectID
+                        }
+                    }
+                }
+                if (data.projectID.length == 0) {
+                    data.projectID = projectInfo;
+                }
+            }
+            projectRemarkservice.countRemark(data, function (err, results) {
                 if (err) {
                     res.status(500);
                     res.json({
@@ -407,22 +446,43 @@ router.get('/person', function (req, res) {
                     });
                     return;
                 }
-                if (results!==undefined && results.length > 0) {
-                    var result = {
-                        code: 200,
-                        isSuccess: true,
-                        msg: '查询成功',
-                        dataNum: countNum,
-                        curPage: page,
-                        curPageNum:pageNum,
-                        totalPage: Math.ceil(countNum/pageNum),
-                        data: results
-                    };
-                    if(result.curPage == result.totalPage) {
-                        result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
-                    }
-                    res.status(200);
-                    return res.json(result);
+                if (results !==undefined && results.length != 0) {
+                    countNum = results[0]['num'];
+                    projectRemarkservice.queryRemark(data, function (err, results) {
+                        if (err) {
+                            res.status(500);
+                            res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: "查询失败，服务器内部错误"
+                            });
+                            return;
+                        }
+                        if (results!==undefined && results.length > 0) {
+                            var result = {
+                                code: 200,
+                                isSuccess: true,
+                                msg: '查询成功',
+                                dataNum: countNum,
+                                curPage: page,
+                                curPageNum:pageNum,
+                                totalPage: Math.ceil(countNum/pageNum),
+                                data: results
+                            };
+                            if(result.curPage == result.totalPage) {
+                                result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
+                            }
+                            res.status(200);
+                            return res.json(result);
+                        } else {
+                            res.status(200);
+                            return res.json({
+                                code: 200,
+                                isSuccess: false,
+                                msg: "未查询到相关信息"
+                            });
+                        }
+                    })
                 } else {
                     res.status(200);
                     return res.json({
@@ -432,14 +492,7 @@ router.get('/person', function (req, res) {
                     });
                 }
             })
-        } else {
-            res.status(200);
-            return res.json({
-                code: 200,
-                isSuccess: false,
-                msg: "未查询到相关信息"
-            });
-        }
+        })
     })
 })
 
@@ -460,6 +513,13 @@ router.get('/', function (req, res) {
         'page': page,
         'pageNum': pageNum
     }
+    if (projectID !== '') {
+        data.projectID = [];
+        data.projectID[0] = {
+            ProjectID: projectID
+        };
+    }
+
     projectRemarkservice.countRemark(data, function (err, results) {
         if (err) {
             res.status(500);
