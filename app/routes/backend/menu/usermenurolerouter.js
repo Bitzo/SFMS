@@ -181,7 +181,6 @@ router.get('/userID/:userID',function (req,res) {
 });
 
 router.post('/', function (req, res) {
-    console.log(req.body)
     var userID = req.body.AccountID,
         menuData = req.body.data,
         data = ['AccountID', 'MenuID'],
