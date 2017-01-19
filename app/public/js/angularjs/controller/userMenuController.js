@@ -9,20 +9,36 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
        .success(function (response) {
             $scope.tree_data = response.data.Menu;
             console.log($scope.tree_data);
+            console.log('hh')
+            var tree_data= $scope.tree_data;     
+            for(var i=0;i<tree_data.length;i++)
+            { 
+                if(tree_data[i].IsActive==0){
+                    console.log(i)                    
+                    console.log(tree_data[i])
+                    tree_data[i].ApplicationName+='(失效)'
+                }
+                for(var j=0;j<tree_data[i].children.length;j++)
+                { 
+                    console.log(tree_data[i].children[j])
+                    if(tree_data[i].children[j].IsActive==0){
+                        tree_data[i].children[j].ApplicationName+='(失效)'
+                    }
+                }
+            }
         });
         
+        
+       
         //获取该用户的菜单信息
-        var account = $location.search().AccountID;
-        console.log(account);
         $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
             console.log(response);
             $scope.menuTree = response.data.Menu || [];
-            console.log($scope.menuTree);
             console.log($scope.tree_data);
-                $scope.tree_data.map(function (data, index) {
-                        foreachtree(data);
-                    }
+            $scope.tree_data.map(function (data, index) {
+                    foreachtree(data);
+                }
             );
             console.log($scope.tree_data);
         });
@@ -32,9 +48,10 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
                     foreachtree(branch);
                 })
             }
-            var menuTree= $scope.menuTree;
+            var menuTree= $scope.menuTree;     
             for(var i=0;i<menuTree.length;i++)
-            {
+            { 
+                
                 if(menuTree[i].MenuID==data.MenuID){
                     data.myselected=true;
                     break;
@@ -81,17 +98,9 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
             data:f
         }).success(function(response) {
             alert(response.msg);
-            console.log('成功')            
-            // if(response.isSuccess){
-            //     alert(response.msg);
-            // }else{
-            //     alert(response.msg);
-            // }
         }).
         error(function(response) {
-            alert(response.msg);
-            console.log('失败')            
-            
+            alert(response.msg);  
         });
         }
         //获取勾选菜单的ID
