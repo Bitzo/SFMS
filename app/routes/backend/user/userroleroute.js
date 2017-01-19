@@ -290,6 +290,7 @@ router.get('/', function (req, res) {
 	});
 
 });
+
 router.get('/userID/:userID', function (req, res) {
 	var userID = req.params.userID;
 	if (userID === undefined || userID === '') {
@@ -300,6 +301,7 @@ router.get('/userID/:userID', function (req, res) {
 			msg: 'require userID'
 		});
 	}
+	
 	if (isNaN(userID)) {
         res.status(400);
         return res.json({
@@ -308,67 +310,47 @@ router.get('/userID/:userID', function (req, res) {
 			msg: 'userID不是数字'
 		});
 	}
-	var uniqueData = {
-		"userID": userID
+	
+	var data = {
+		'AccountID': userID
 	};
-
-	//判断user是否存在
-	userService.querySingleID(userID, function (err, result) {
+	userRole.query(data, function (err, RoleInfo) {
 		if (err) {
-            res.status(500);
-            return res.json({
+			res.status(500);
+			res.json({
+				code: 500,
+				isSuccess: true,
+				msg: '查询失败'
+			});
+			console.log("查询失败");
+			logger.writeError("[routes/backend/userrole]" + "查询失败");
+			return;
+		}
+		
+		if (RoleInfo == undefined && RoleInfo.length == 0) {
+			res.status(200);
+			res.json({
 				code: 500,
 				isSuccess: false,
-				msg: '服务器出错'
+				msg: "未查到数据"
 			});
+			logger.writeWarn("[routes/backend/user/userroleroute]" + "未查到数据");
+			return;
 		}
-		//user存在，则可以进行查询
-		if (result !== undefined && result.length != 0) {
-			menuService.queryMenuAndRoleByUserID(uniqueData, function (err, results) {
-				if (err) {
-                    res.status(500);
-                    return res.json({
-						code: 500,
-						isSuccess: false,
-						msg: '服务器出错'
-					});
 
-				}
-
-				if (results.Menu !== undefined && results.Menu.length != 0) {
-					if (results.Role !== undefined && results.Role.length != 0) {
-						return res.json({
-							code: 200,
-							isSuccess: true,
-							data: results,
-							msg: '查询菜单和角色成功'
-						});
-					} else {
-                        res.status(200);
-                        return res.json({
-							code: 404,
-							isSuccess: false,
-							msg: '未查到角色'
-						});
-					}
-
-				} else {
-					return res.json({
-						code: 404,
-						isSuccess: false,
-						msg: '未查到菜单'
-					});
-				}
-			});
-		} else {
-			return res.json({
-				code: 404,
-				isSuccess: false,
-				msg: '用户不存在'
-			});
+console.log(RoleInfo);
+		if (RoleInfo != undefined && RoleInfo.length != 0) {			
+			var results = {
+				code: 200,
+				isSuccess: true,
+				msg: '查询成功',
+				data: RoleInfo
+			};
+			res.status(200);
+			res.json(results);
+			return;
 		}
-	});
-
+	});	
 });
 
 module.exports = router;
