@@ -7,7 +7,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
        //获取树形角色数据
        $http({
             method:'get',
-            url: '/backrole' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url: '/backuserrole' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
                 f:{}
             }
@@ -68,28 +68,25 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
         //确认提交传递数据
         $scope.submit=function(){
         var  data=[];
-        $scope.tree_data.map(function(tree){
-            foreachsubmit(tree,data);
-        })
-        var param={
-            "AccountID": $location.search().AccountID,
-            "data":data
-        }
-        console.log(data);
-        console.log(param);                   
-        // $http({
-        //     method:'put',
-        //     url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //     data:param1
-        // }).success(function(data){
-        //     $http({
-        //         method:'post',
-        //         url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //         data:param
-        //     }).success(function(data){
-        //         $("#functionModel").modal('show');
-        //     })
-        // });
+            $scope.tree_data.map(function(tree){
+                foreachsubmit(tree,data);
+            })
+            var f={
+                "AccountID": $location.search().AccountID,
+                "data":data
+            }
+            console.log(data);
+            console.log(f);                   
+            $http({
+                method:'post',
+                url:"/usermenurole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data:f
+            }).success(function(response) {
+                alert(response.msg);
+            }).
+            error(function(response) {
+                alert(response.msg);  
+            });
         }
         //获取勾选角色的ID
         function foreachsubmit(data,dataparam){

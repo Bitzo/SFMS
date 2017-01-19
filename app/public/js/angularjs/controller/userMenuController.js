@@ -9,8 +9,6 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
        .success(function (response) {
            console.log(response)
             $scope.tree_data = response.data;
-            console.log($scope.tree_data);
-            console.log('hh')
             var tree_data= $scope.tree_data;     
             for(var i=0;i<tree_data.length;i++)
             { 
@@ -19,13 +17,16 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
                     console.log(tree_data[i])
                     tree_data[i].MenuName+='(失效)'
                 }
-                for(var j=0;j<tree_data[i].children.length;j++)
+                if(tree_data[i].children.length){
+                    for(var j=0;j<tree_data[i].children.length;j++)
                 { 
-                    console.log(tree_data[i].children[j])
                     if(tree_data[i].children[j].IsActive==0){
                         tree_data[i].children[j].MenuName+='(失效)'
                     }
                 }
+
+                }
+                
             }
         });
         
@@ -34,14 +35,14 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
         //获取该用户的菜单信息
         $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-            console.log(response);
+          
             $scope.menuTree = response.data.Menu || [];
-            console.log($scope.tree_data);
+     
             $scope.tree_data.map(function (data, index) {
                     foreachtree(data);
                 }
             );
-            console.log($scope.tree_data);
+
         });
         function foreachtree(data){
             if(data.children&&data.children.length!=0){
@@ -83,26 +84,26 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
         }
         //确认提交传递数据
         $scope.submit=function(){
-        var  data=[];
-        $scope.tree_data.map(function(tree){
-            foreachsubmit(tree,data);
-        })
-        var f={
-            "AccountID": $location.search().AccountID,
-            "data":data
-        }
-        console.log(data);
-        console.log(f);                   
-        $http({
-            method:'post',
-            url:"/usermenurole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            data:f
-        }).success(function(response) {
-            alert(response.msg);
-        }).
-        error(function(response) {
-            alert(response.msg);  
-        });
+            var  data=[];
+            $scope.tree_data.map(function(tree){
+                foreachsubmit(tree,data);
+            })
+            var f={
+                "AccountID": $location.search().AccountID,
+                "data":data
+            }
+            console.log(data);
+            console.log(f);                   
+            $http({
+                method:'post',
+                url:"/usermenurole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data:f
+            }).success(function(response) {
+                alert(response.msg);
+            }).
+            error(function(response) {
+                alert(response.msg);  
+            });
         }
         //获取勾选菜单的ID
         function foreachsubmit(data,dataparam){
