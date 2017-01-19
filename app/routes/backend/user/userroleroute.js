@@ -99,7 +99,7 @@ router.put('/', function (req, res) {
 			err += data[value] + ' ';
 		}
 	}
-console.log(req.params)
+	console.log(req.params)
 	if (err != 'required: ') {
 		res.status(400);
 		res.json({
@@ -238,6 +238,58 @@ router.get('/', function (req, res) {
 
 });
 
+router.get('/', function (req, res) {
+	var query = JSON.parse(req.query.f);
+	var accountID = query.userID;
+	var data = {
+		'AccountID': accountID
+	};
+
+	if (isNaN(data.AccountID)) {
+		res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: 'AccountID不是数字'
+        });
+	};
+
+	userRole.query(data, function (err, RoleInfo) {
+		if (err) {
+			res.status(500);
+			res.json({
+				code: 500,
+				isSuccess: true,
+				msg: '查询失败'
+			});
+			console.log("查询失败");
+			logger.writeError("[routes/backend/userrole]" + "查询失败");
+			return;
+		}
+		if (RoleInfo == undefined && RoleInfo.length == 0) {
+			res.status(200);
+			res.json({
+				code: 500,
+				isSuccess: false,
+				msg: "未查到数据"
+			});
+			logger.writeWarn("[routes/backend/user/userroleroute]" + "未查到数据");
+			return;
+		}
+
+		if (RoleInfo != undefined && RoleInfo.length != 0) {
+			res.status(200);
+			var results = {
+				code: 200,
+				isSuccess: true,
+				msg: '查询成功',
+				data: RoleInfo
+			};
+			return;
+		}
+	});
+
+});
 router.get('/userID/:userID', function (req, res) {
 	var userID = req.params.userID;
 	if (userID === undefined || userID === '') {

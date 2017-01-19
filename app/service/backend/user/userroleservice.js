@@ -52,6 +52,7 @@ exports.queryAppByUserID = function (data, callback) {
 			callback(true, '查询失败');
 			return;
 		}
+		
 		console.log("查询用户所在的项目");
         callback(false, results);
     })
@@ -73,7 +74,7 @@ exports.query = function (data, callback) {
 	}
 
 
-	userRoleDAL.query(data, function (err, results) {
+	userRoleDAL.queryAllRoles(data, function (err, results) {
 		if (err) {
 			console.log("查询出错");
 			return;

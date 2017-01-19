@@ -399,7 +399,7 @@ router.get('/', function (req, res) {
                     for (var key in results1) {
                         results1[key].CreateTime = moment(results1[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');
                     }
-                    console.log("查询成功");
+                    console.log(results1);
                     var results = {
                         code: 200,
                         isSuccess: true,
