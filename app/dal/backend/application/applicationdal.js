@@ -25,7 +25,6 @@ exports.queryAllApp = function (data, callback) {
 
     var num = data.pageNum || config.pageCount,
         page = data.page || 1;
-    console.log(data)
     if (data.SelectType !== '' && data.SelectType === '1') query_sql += " order by IsActive desc ";
         else  query_sql += " order by IsActive desc limit " + (page-1)*num + " , " + num;
     logger.writeInfo("查询所有应用" + query_sql);
@@ -42,6 +41,7 @@ exports.queryAllApp = function (data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 };
@@ -71,6 +71,7 @@ exports.countAllapps = function (data, callback) {
 
             callback(false, results);
             connection.release();
+            return ;
         })
     })
 };
@@ -102,6 +103,7 @@ exports.insert = function(data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 };
@@ -138,6 +140,7 @@ exports.update = function (data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 };
@@ -163,6 +166,7 @@ exports.delete = function (data, callback) {
             }
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 };

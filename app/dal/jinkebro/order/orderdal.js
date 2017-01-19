@@ -322,6 +322,7 @@ exports.insertOrderFull = function(data, callback) {
                     console.log('insert success');
                     connection.release();
                     callback(false, returnResult);
+                    return;
                 });
             });
         });

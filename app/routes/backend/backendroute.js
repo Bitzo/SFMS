@@ -21,6 +21,8 @@ var userMenuRoleRouter = appRequire('routes/backend/menu/usermenurolerouter');
 var datadictionaryRouter = appRequire('routes/backend/datadictionary/datadictionaryrouter');
 //操作日志路由
 var logrouter = appRequire('routes/backend/operationlog/operationlogroute');
+//用户功能点验证路由
+var userfuncrouter = appRequire('routes/backend/user/userfuncroute');
 
 var userService = appRequire('service/backend/user/userservice');
 var jwtHelper = appRequire('util/jwthelper');
@@ -73,6 +75,11 @@ router.get('/userinfo', function(req, res, next) {
 
 router.get('/useredit', function(req, res, next) {
         res.render('backend/useredit', { title: 'Hi backend' });
+
+});
+
+router.get('/userrole', function(req, res, next) {
+        res.render('backend/userrole', { title: 'Hi backend' });
 
 });
 
@@ -217,5 +224,8 @@ router.use('/userrole', userRole);
 router.use('/app', approuter);
 //操作日志模块
 router.use('/log', logrouter);
+//用户功能点验证
+router.use('/userfunc', userfuncrouter);
+
 
 module.exports = router;

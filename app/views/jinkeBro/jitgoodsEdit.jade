@@ -1,0 +1,59 @@
+link(rel='stylesheet' href="css/backend/role.css")
+block content
+  div.container-fluid
+    span 
+      h2 商品编辑
+    jason-form(method="post" source='/jinkeBro/order' conf='paginationConf' tocc="OrderID")
+      form( name="jitorderEdit")
+        table.table.table-bordered.table-hover.definedwidth.m10
+          tr
+            td(width="15%",class="tableleft") 仓储量的单位 
+            td
+              input(type="textview",name="SKU",ng-model='paginationConf.formdata.SKU',ng-maxlength='50',required)
+              &nbsp&nbsp
+              small.error(ng-if="jitorderEdit.SKU.$error.maxlength && jitorderEdit.SKU.$touched") 用户姓名最多50位
+            
+          tr
+            td(width="15%",class="tableleft") 商品名称 
+            td
+              input(type="textview",name="ProductName",ng-model="paginationConf.formdata.ProductName",ng-maxlength='50',required)
+              &nbsp&nbsp
+              small.error(ng-if="jitorderEdit.ProductName.$error.maxlength && jitorderEdit.ProductName.$touched") 密码最多50位
+            
+          tr
+            td(width="15%",class="tableleft") 商品图片路径
+            td
+              input(type="textview",name="ProductImgPath",ng-model="paginationConf.formdata.ProductImgPath",ng-maxlength='50',required)
+              &nbsp&nbsp
+              small.error(ng-if="jitorderEdit.ProductImgPath.$error.maxlength && jitorderEdit.ProductImgPath.$touched") 账户最多50位
+          
+          tr
+            td(width="15%",class="tableleft") 有效期
+            td 
+              input(type="date",name="ExpireTime",ng-model="paginationConf.formdata.ExpireTime",value='{{paginationConf.formdata.ExpireTime}}',required)
+          tr
+            td(width="15%",class="tableleft") 生产日期
+            td 
+              input(type="date",name="ProducTime",ng-model="paginationConf.formdata.ProducTime",value='{{paginationConf.formdata.ProducTime}}',required)
+          tr
+            td(width="15%",class="tableleft") 商品类型
+            td
+                jason-select.input(placeholder='商品类型' ng-model='formdata.ProductTypeID' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
+          tr
+            td(width="15%",class="tableleft") 供应商ID
+            td
+               jason-select.input(placeholder='供应商ID' ng-model='formdata.SupplierID' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
+
+          tr
+            td(width="15%",class="tableleft") 商品描述  
+            td
+              textarea(type="textview",name="ProductDesc",ng-model='paginationConf.formdata.ProductDesc',rows="5",cols="30",ng-maxlength='200')
+              &nbsp&nbsp
+              small.error(ng-if="jitorderEdit.ProductDesc.$error.maxlength && jitorderEdit.ProductDesc.$touched") 备注最多200位 
+
+          tr
+            td(class="tableleft")
+            td
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="jitorderEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/jinkeBro/order')") 确认修改
+              &nbsp&nbsp&nbsp&nbsp
+              a.btn.btn-sm.btn-success(href='#backend/user',ng-click='search()') 返回列表

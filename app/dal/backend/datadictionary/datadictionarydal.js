@@ -48,6 +48,7 @@ exports.datadictionaryInsert = function (data,callback) {
             }
             callback(false, result);
             connection.release();
+            return ;
         })
     })
 }
@@ -99,6 +100,7 @@ exports.datadictionaryUpdate = function (data,callback) {
 
             callback(false, results);
             connection.release();
+            return ;
         })
 
     });
@@ -127,6 +129,7 @@ exports.datadictionaryDelete = function (data,callback) {
 
             callback(false, results);
             connection.release();
+            return ;
         })
     })
 }
@@ -167,6 +170,7 @@ exports.queryDatadictionary = function (data,callback) {
             logger.writeInfo("查询成功");
             callback(false, results);
             connection.release();
+            return ;
         })
     })
 }
@@ -204,6 +208,7 @@ exports.countAllDataDicts = function (data, callback) {
             logger.writeInfo("查询成功");
             callback(false, results);
             connection.release();
+            return ;
         })
     })
 };
@@ -243,6 +248,7 @@ exports.countAllDataDictsBySubcode = function (data, callback) {
             logger.writeInfo("查询成功");
             callback(false, results);
             connection.release();
+            return ;
         })
     })
 };
@@ -290,6 +296,7 @@ exports.queryDatadictionaryBySubcode = function (data,callback) {
             logger.writeInfo("查询成功");
             callback(false, results);
             connection.release();
+            return ;
         })
     })
 
@@ -322,6 +329,7 @@ exports.queryDatadictionaryByID = function (data,callback) {
             logger.writeInfo("查询成功");
             callback(false, results);
             connection.release();
+            return ;
         })
     })
 }

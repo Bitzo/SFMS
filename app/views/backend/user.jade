@@ -72,7 +72,9 @@ block content
                 i.icon.icon-trash  删除
               a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'userrole/userID/')",href='') 
                 i.icon.icon-zoom-in  更多 
+              a(href='#/backend/userrole/?AccountID={{x.AccountID}}')
+                i.icon.icon-edit  角色 
               a(href='#/backend/usermenu/?AccountID={{x.AccountID}}')
-                i.icon.icon-edit  菜单配置 
+                i.icon.icon-edit  菜单 
       div.pull-right
         jason-pagination(conf='paginationConf')
