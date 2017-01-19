@@ -169,11 +169,17 @@ exports.signCheck = function (data, callback) {
 
 //签到信息统计
 exports.signCount = function (data, callback) {
-    console.log(data)
     var sql = 'select UserID,CreateTime,SignType from jit_signinfo where 1=1';
 
     if (data !== undefined) {
-        if (data.userID !== '') sql += ' and UserID = ' + data.userID;
+        if (data.userID !== '') {
+            sql += ' and (';
+            for (var i=0;i<data.userID.length;++i) {
+                if (i==0) sql += ' UserID = ' + data.userID[i];
+                else sql += ' or UserID = ' + data.userID[i];
+            }
+            sql += ' ) '
+        }
         if (data.startTime !== '') sql += " and CreateTime >= '" + data.startTime + "'";
         if (data.endTime !== '') sql += " and CreateTime <= '" + data.endTime + "'";
     }

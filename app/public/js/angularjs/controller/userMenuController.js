@@ -9,6 +9,8 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
        .success(function (response) {
            console.log(response)
             $scope.tree_data = response.data;
+                        console.log($scope.tree_data)
+
             var tree_data= $scope.tree_data;     
             for(var i=0;i<tree_data.length;i++)
             { 
@@ -35,10 +37,11 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
         //获取该用户的菜单信息
         $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-          
+            console.log(response.data.Menu)
             $scope.menuTree = response.data.Menu || [];
-     
+            console.log($scope.menuTree)            
             $scope.tree_data.map(function (data, index) {
+                console.log(data)
                     foreachtree(data);
                 }
             );
@@ -68,7 +71,9 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
 
         //勾选点击效果
         $scope.clickHander=function(branch,parent){
-         
+            if(parent){
+                parent.myselected = true;
+            }
             changeseletedChild(branch,branch.myselected)
         }
         function changeseletedChild(branch,val){
