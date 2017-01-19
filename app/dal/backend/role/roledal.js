@@ -13,7 +13,7 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询所有角色信息
 exports.queryAllRoles = function (data, callback) {
-    var sql = 'select ApplicationID,ApplicationName,RoleID, RoleCode, RoleName, jit_role.IsActive from jit_role,jit_application ' +
+    var sql = 'select  RoleName,RoleCode,ApplicationID,ApplicationName,RoleID,  jit_role.IsActive from jit_role,jit_application ' +
         'where 1=1 and jit_role.ApplicationID = jit_application.ID ';
 
     if (data !== undefined) {

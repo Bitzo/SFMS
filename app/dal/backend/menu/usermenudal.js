@@ -42,7 +42,7 @@ exports.addUserMenu = function (data, callback) {
     var userID = data.userID;
     var menuID = data.menuData;
     for (var key in menuID) {
-        sql += "( " + userID + ", " + menuID[key].menuID + ", 1)";
+        sql += "( " + userID + ", " + menuID[key].MenuID + ", 1)";
         if(key < menuID.length-1) sql += ", ";
     }
 

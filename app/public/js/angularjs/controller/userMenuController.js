@@ -5,7 +5,7 @@
 myApp.controller('userMenuController', function($scope, $http,$q,baseService,$location) {
        $scope.tree_data = [];
        //获取树形菜单数据
-       $http.get("/backrole?access_token=" + accesstokenstring)
+       $http.get('/backmenu?'+"access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
             $scope.tree_data = response.data.Menu;
             console.log($scope.tree_data);
@@ -16,7 +16,7 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
         console.log(account);
         $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-            console.log(response.data.Menu);
+            console.log(response);
             $scope.menuTree = response.data.Menu || [];
             console.log($scope.menuTree);
             console.log($scope.tree_data);
@@ -69,25 +69,30 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
         $scope.tree_data.map(function(tree){
             foreachsubmit(tree,data);
         })
-        var param={
+        var f={
             "AccountID": $location.search().AccountID,
             "data":data
         }
         console.log(data);
-        console.log(param);                   
-        // $http({
-        //     method:'put',
-        //     url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //     data:param1
-        // }).success(function(data){
-        //     $http({
-        //         method:'post',
-        //         url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //         data:param
-        //     }).success(function(data){
-        //         $("#functionModel").modal('show');
-        //     })
-        // });
+        console.log(f);                   
+        $http({
+            method:'post',
+            url:"/usermenurole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:f
+        }).success(function(response) {
+            alert(response.msg);
+            console.log('成功')            
+            // if(response.isSuccess){
+            //     alert(response.msg);
+            // }else{
+            //     alert(response.msg);
+            // }
+        }).
+        error(function(response) {
+            alert(response.msg);
+            console.log('失败')            
+            
+        });
         }
         //获取勾选菜单的ID
         function foreachsubmit(data,dataparam){

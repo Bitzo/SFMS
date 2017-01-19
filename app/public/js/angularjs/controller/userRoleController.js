@@ -5,20 +5,26 @@
 myApp.controller('userRoleController', function($scope, $http,$q,baseService,$location) {
        console.log('role')
        $scope.tree_data = [];
-       //获取树形菜单数据
-       $http.get('/backrole?'+"access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
-       .success(function (response) {
-            $scope.tree_data = response;
+       //获取树形角色数据
+       $http({
+            method:'get',
+            url: '/backrole' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:{}
+            }
+        })
+        .success(function (response) {
+            $scope.tree_data = response.data;
             console.log($scope.tree_data);
         });
         
-        //获取该用户的菜单信息
+        //获取该用户的角色信息
         var account = $location.search().AccountID;
         console.log(account);
         $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-            console.log(response.data.Role);
-            $scope.roleTree = response.data.Role || [];
+            console.log(response.data);
+            $scope.roleTree = response.data || [];
             console.log($scope.roleTree);
             console.log($scope.tree_data);
             $scope.tree_data.map(function (data, index) {
@@ -27,7 +33,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
             );
             console.log($scope.tree_data);
         });
-        //显示已经勾选的用户菜单
+        //显示已经勾选的用户角色
         function foreachtree(data){
             if(data.children&&data.children.length!=0){
                 data.children.map(function(branch){
@@ -91,7 +97,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
         //     })
         // });
         }
-        //获取勾选菜单的ID
+        //获取勾选角色的ID
         function foreachsubmit(data,dataparam){
             if(data.children&&data.children.length!=0){
                 data.children.map(function(branch){
