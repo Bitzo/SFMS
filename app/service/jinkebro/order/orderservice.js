@@ -17,6 +17,7 @@ var orderDAL = appRequire('dal/jinkebro/order/orderdal'),
     logModel = appRequire('model/jinkebro/log/logmodel'),
     logger = appRequire("util/loghelper").helper;
 
+var productService = appRequire('service/jinkebro/product/productservice');
 var productStock = appRequire('service/jinkebro/productstock/productstockservice');
 //关于客户方面的service
 var customer = appRequire("service/jinkebro/customer/customerservice");
@@ -365,7 +366,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
         return orderInfo;
 
     }).then(function (orderInfo) {
-        
+
         me.checkIsRepeatOrder(orderInfo, function (err, orderQueryInfo) {
             if (err) {
                 console.log('查询订单的失败');
@@ -374,6 +375,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
 
             if (orderQueryInfo.length !== 0) {
                 console.log('已存在订单，不需要重复的插入');
+                console.log(orderQueryInfo);
                 return;
             }
             
@@ -386,9 +388,19 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
                 /**
                  * 库存量不足
                  */
-                if(orderInsertInfo.insertId === undefined){
-                    callback(false, orderInsertInfo);
-                    return ;
+                if (orderInsertInfo.insertId === undefined) {
+                    productService.queryProducts({
+                        'jit_product.ProductID': orderInsertInfo
+                    }, function (err, productInfo) {
+                        if (err) {
+                            console.log('查询商品的时候出错');
+                            logger.writeError('[service/jinkebro/order/orderservice------396行] 查询商品的时候出错');
+                            return;
+                        }
+                        callback(false, productInfo[0].ProductName);
+                        return;
+                    });
+                    return;
                 }
                 
                 /**
@@ -397,13 +409,13 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
                 me.getOrderInfo({
                     'OrderID': orderInsertInfo.insertId
                 }, function (err, insertOrderInfo) {
-                    if(err) {
+                    if (err) {
                         console.log('查询订单');
-                        return ;
+                        return;
                     }
-                    
+
                     callback(false, insertOrderInfo);
-                    return ; 
+                    return;
                 });
             });
         });
@@ -437,7 +449,7 @@ Order.prototype.insertWechatOrder = function (productInfo, callback) {
         'CustomerID': CustomerID
     };
 
-console.log(insertdata);
+    console.log(insertdata);
     this.insertOrderFull(insertdata, function (err, insertOrderInfo) {
         if (err) {
             console.log('增加产品出错');
@@ -452,9 +464,9 @@ console.log(insertdata);
             });
             return;
         }
-        
+
         callback(false, insertOrderInfo);
-        return ;
+        return;
     });
 
 

@@ -79,7 +79,7 @@ exports.queryAllUsers = function (data, callback) {
         }
     }
     var num = data['pageNum']; //每一页要显示的数据量
-    sql += 'order by A.AccountID DESC';
+    sql += ' order by A.AccountID ';
     
     if(data['IsPage'] ==  '' && data['IsPage'] !== 1){      
     sql += " limit " + (data['page'] - 1) * num + " , " + num;

@@ -106,7 +106,9 @@ exports.queryAppByUserID = function (data, callback) {
 
 //查询用户角色表的ID
 exports.query = function (data, callback) {
-    var sql = 'Select distinct ID, RoleID from jit_roleuser where AccountID = ' + data.AccountID;
+    var sql = 'select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleName,jit_roleuser.AccountID '; 
+		sql += 'from jit_role left join jit_roleuser on  jit_role.RoleID = jit_roleuser.RoleID ';
+		sql += 'where jit_roleuser.AccountID = ' + data.AccountID;
 
 	console.log('查询用户所在项目' + sql);
 
