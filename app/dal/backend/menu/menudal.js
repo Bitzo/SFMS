@@ -18,13 +18,12 @@ var db_backend = appRequire('db/db_backend'),
 exports.queryAllMenus = function(data, callback) {
     var arr = new Array();
 
-    arr.push(" select jit_menu.MenuName,jit_menu.IconPath,jit_menu.MenuID,jit_menu.MenuLevel, ");
-    arr.push(" jit_menu.ParentID,B.MenuName as ParentMenuName,jit_menu.SortIndex, ")
-    arr.push(" C.ApplicationName,jit_menu.ApplicationID,jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ");
-    arr.push(" from jit_menu ");
-    arr.push(" left join jit_application C on jit_menu.ApplicationID = C.ID ");
-    arr.push(" left join jit_menu B on jit_menu.ParentID = B.MenuID ");
-    arr.push(" where 1=1 ");
+    arr.push(' select jit_menu.MenuName,jit_menu.MenuID,jit_menu.ApplicationID,jit_application.ApplicationName, ');
+    arr.push(' jit_menu.MenuLevel,jit_menu.ParentID,jit_menu.IconPath, ');
+    arr.push(' jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ');
+    arr.push(' from jit_menu ');
+    arr.push(' left join jit_application on jit_application.ID = jit_menu.ApplicationID ');
+    arr.push(' where 1=1 ');
 
     var sql = arr.join(' ');
 
@@ -155,7 +154,11 @@ exports.countAllMenus = function (data, callback) {
     })
 };
 
-//菜单新增
+/**
+ * 菜单新增
+ * @param data
+ * @param callback
+ */
 exports.menuInsert = function (data,callback) {
     var insert_sql = 'insert into jit_menu set ';
     var sql = '';
@@ -197,7 +200,11 @@ exports.menuInsert = function (data,callback) {
 
 }
 
-//菜单编辑，即修改菜单
+/**
+ * 菜单编辑
+ * @param data
+ * @param callback
+ */
 exports.menuUpdate = function(data, callback) {
     var update_sql = 'update jit_menu set ';
     var sql = '';
@@ -241,7 +248,11 @@ exports.menuUpdate = function(data, callback) {
 }
 
 
-//菜单删除
+/**
+ * 菜单删除
+ * @param data
+ * @param callback
+ */
 exports.menuDelete = function (data, callback) {
     var update_sql = 'update jit_menu set IsActive = 0 where IsActive = 1 and MenuID = ' + data['MenuID'];
 
@@ -269,8 +280,11 @@ exports.menuDelete = function (data, callback) {
 }
 
 
-
-//根据UserID,获取用户的角色
+/**
+ * 根据UserID,获取用户的角色
+ * @param data
+ * @param callback
+ */
 exports.queryRoleByUserID = function (data,callback) {
     var arr = new Array();
     arr.push(' select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleName,jit_roleuser.AccountID ');
@@ -304,7 +318,11 @@ exports.queryRoleByUserID = function (data,callback) {
     })
 }
 
-//根据UserID,获取用户相应地菜单
+/**
+ * 根据UserID,获取用户相应地菜单
+ * @param data
+ * @param callback
+ */
 exports.queryMenuByUserID = function (data,callback) {
     var arr = new Array();
     arr.push(' select  jit_menu.ApplicationID,jit_application.ApplicationName,jit_menu.MenuID,jit_menu.MenuLevel,jit_menu.ParentID, ');
