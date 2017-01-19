@@ -7,7 +7,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
        //获取树形角色数据
        $http({
             method:'get',
-            url: '/backuserrole' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url: '/backrole' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
                 f:{}
             }
@@ -20,7 +20,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
         console.log(account);
         $http.get('/userrole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-            console.log(response)
+            console.log(response.data.Role)
             $scope.roleTree = response.data.Role || [];
             $scope.tree_data.map(function (data, index) {
                     foreachtree(data);
@@ -51,19 +51,11 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
 
         //勾选点击效果
         $scope.clickHander=function(branch,parent){
-        if(branch.myselected==false) {
-            parent.myselected = false;
-        }
-        changeseletedChild(branch,branch.myselected)
-        }
-        function changeseletedChild(branch,val){
-            if(branch.children&&branch.children.length!=0){
-                branch.children.map(function(branch){
-                    changeseletedChild(branch,val);
-                })
+            
+            if(branch.myselected==false) {
+                // parent.myselected = false;
             }
-            branch.myselected=val;
-            branch.expanded=true;
+            changeseletedChild(branch,branch.myselected)
         }
         //确认提交传递数据
         $scope.submit=function(){

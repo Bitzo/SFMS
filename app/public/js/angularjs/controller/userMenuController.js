@@ -68,10 +68,8 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
 
         //勾选点击效果
         $scope.clickHander=function(branch,parent){
-        if(branch.myselected==false) {
-            parent.myselected = false;
-        }
-        changeseletedChild(branch,branch.myselected)
+         
+            changeseletedChild(branch,branch.myselected)
         }
         function changeseletedChild(branch,val){
             if(branch.children&&branch.children.length!=0){
