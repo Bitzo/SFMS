@@ -325,12 +325,16 @@ exports.queryRoleByUserID = function (data,callback) {
  */
 exports.queryMenuByUserID = function (data,callback) {
     var arr = new Array();
-    arr.push(' select  jit_menu.ApplicationID,jit_application.ApplicationName,jit_menu.MenuID,jit_menu.MenuLevel,jit_menu.ParentID, ');
+
+    arr.push(' select jit_menu.ApplicationID,jit_application.ApplicationName,jit_menu.MenuID, ');
+    arr.push(' jit_menu.MenuLevel,jit_menu.ParentID,');
     arr.push(' jit_menu.SortIndex,jit_menu.MenuName,jit_menu.IconPath,jit_menu.Url,jit_menu.Memo ');
-    arr.push(' from jit_menu ');
-    arr.push(' left join jit_usermenu on jit_menu.MenuID = jit_usermenu.menuID ');
-    arr.push(' left join jit_application on jit_menu.ApplicationID = jit_application.ID ')
-    arr.push(' where jit_usermenu.userID =  ');
+    arr.push(' from jit_menu,jit_usermenu,jit_application ');
+    arr.push(' where jit_menu.MenuID = jit_usermenu.menuID ');
+    arr.push(' and jit_menu.ApplicationID = jit_application.ID ');
+    arr.push(' and jit_usermenu.isActive = 1 ');
+    arr.push(' and jit_menu.IsActive = 1 ');
+    arr.push(' and jit_usermenu.userID =  ');
 
     var sql = arr.join(' ');
     sql = sql + data.userID;

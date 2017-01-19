@@ -375,7 +375,7 @@ router.get('/',function (req,res) {
         "userID":userID
     };
 
-    if (userID === undefined||parseInt(userID)<=0) {
+    if (userID === undefined || parseInt(userID) <= 0) {
         res.status(404);
         return res.json({
             code: 404,
@@ -394,7 +394,7 @@ router.get('/',function (req,res) {
             });
         }
         if(result !== undefined && result.length != 0){
-            menuService.queryAllMenusFormTree(data,function (err,results) {
+            menuService.queryMenuTreeByUserID(data,function (err,results) {
                 if(err){
                     res.status(500);
                     return res.json({

@@ -24,7 +24,7 @@ delete logModel.ID;
  * @param data
  * @param callback
  */
-exports.queryAllMenusFormTree = function(data, callback){
+exports.queryMenuTreeByUserID = function(data, callback){
     //要写入operationlog表的
     logModel.ApplicationID = operationConfig.backendApp.applicationID;
     logModel.ApplicationName = operationConfig.backendApp.applicationName;
