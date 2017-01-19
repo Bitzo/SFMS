@@ -16,7 +16,7 @@ exports.delUserMenu = function (data, callback) {
     if (data.userID !== '') sql += 'userID = ' + data.userID;
     if (data.menuID !== '') {
         sql += 'menuID = ' + data.menuID;
-        sql += ' or meneID in select MenuID from jit_menu where ParentID = ' + data.menuID;
+        sql += ' or menuID in (select MenuID from jit_menu where ParentID = ' + data.menuID + ');';
     }
 
     db_backend.mysqlPool.getConnection(function (err, connection) {

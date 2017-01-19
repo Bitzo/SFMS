@@ -218,12 +218,12 @@ exports.queryAllMenus = function(data, callback){
             isPaging : 1
         },
         MenuManage : {
-            ApplicationID: '',
-            MenuID: '',
-            ParentID: '',
-            MenuLevel: '',
-            MenuName: '',
-            IsActive: ''
+            ApplicationID: data.ApplicationID,
+            MenuID: data.MenuID,
+            ParentID: data.ParentID,
+            MenuLevel: data.MenuLevel,
+            MenuName: data.MenuName,
+            IsActive: data.IsActive
         }
     };
 
@@ -321,7 +321,16 @@ exports.menuInsert = function (data,callback) {
         callback(false,results);
     });
 }
+exports.updateMenuIsActive = function (data,callback) {
+    menuDAl.updateMenuIsActive(data,function (err,results) {
+        if(err){
+            callback(true);
+            return ;
+        }
 
+        return callback(false,results);
+    });
+}
 /**
  * 菜单编辑
  * @param data
@@ -348,9 +357,12 @@ exports.menuUpdate = function (data,callback) {
         callback(true);
         return ;
     }
-    var tempId = data.jitkey;
-    delete data.jitkey;
-    menuDAl.menuUpdate(data,function (err,results) {
+
+    var formData = data;
+    var tempId = formData.jitkey;
+    delete formData.jitkey;
+
+    menuDAl.menuUpdate(formData,function (err,results) {
         if(err){
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = tempId || 0;  //0代表系统管理员操作
