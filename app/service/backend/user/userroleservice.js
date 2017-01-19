@@ -74,7 +74,7 @@ exports.query = function (data, callback) {
 	}
 
 
-	userRoleDAL.queryAllRoles(data, function (err, results) {
+	userRoleDAL.query(data, function (err, results) {
 		if (err) {
 			console.log("查询出错");
 			return;
