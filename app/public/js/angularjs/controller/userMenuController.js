@@ -68,7 +68,9 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
 
         //勾选点击效果
         $scope.clickHander=function(branch,parent){
-         
+            if(parent){
+                parent.myselected = true;
+            }
             changeseletedChild(branch,branch.myselected)
         }
         function changeseletedChild(branch,val){
