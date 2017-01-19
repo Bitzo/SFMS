@@ -5,9 +5,10 @@
 myApp.controller('userMenuController', function($scope, $http,$q,baseService,$location) {
        $scope.tree_data = [];
        //获取树形菜单数据
-       $http.get('/backmenu?'+"access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
+       $http.get('/backmenu/tree?'+"access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-            $scope.tree_data = response.data.Menu;
+           console.log(response)
+            $scope.tree_data = response.data;
             console.log($scope.tree_data);
             console.log('hh')
             var tree_data= $scope.tree_data;     
