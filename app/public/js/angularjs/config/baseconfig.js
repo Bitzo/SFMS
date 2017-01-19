@@ -21,6 +21,9 @@ myApp.config(function($routeProvider) {
     when('/backend/usermenu', {
         templateUrl: '/usermenu?access_token=' + accesstokenstring,
     }).
+    when('/backend/userrole', {
+        templateUrl: '/userrole?access_token=' + accesstokenstring,
+    }).
     when('/backend/role', {
         templateUrl: '/role?access_token=' + accesstokenstring,
     }).

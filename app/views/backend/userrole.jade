@@ -1,0 +1,33 @@
+block content
+  div.container-fluid
+    span 
+      h2 用户角色设置
+    jason-form(method="post", source='/backuser' name="userMenu" conf='paginationConf')
+       form(name="userMenu" ng-controller='userRoleController')
+        table.table.table-bordered.table-hover.definedwidth.m10              
+          tr
+            td(width="15%",class="tableleft") 用户姓名 
+            td
+              span(name='UserName',ng-model='paginationConf.formdata.UserName') {{paginationConf.formdata.UserName}}
+
+          tr
+            td(width="15%",class="tableleft") 账户名 
+            td
+              span(name='Account',ng-model="paginationConf.formdata.Account") {{paginationConf.formdata.Account}}
+
+          tr
+            td(width="15%",class="tableleft") 用户ID 
+            td
+              span(name='AccountID',ng-model='paginationConf.formdata.AccountID' ) {{paginationConf.formdata.AccountID}}
+
+          tr
+            td(class="tableleft") 权限树
+            td
+              div
+                tree-grid(tree-data="tree_data"  on-check='clickHander(branch,parent)' showCheck='true')
+          tr
+            td(class="tableleft")
+            td
+              button.btn.btn-sm.btn-primary(type="submit",ng-click="submit()") 确认修改
+              &nbsp&nbsp&nbsp&nbsp
+              a.btn.btn-sm.btn-success(href='#backend/user') 返回列表

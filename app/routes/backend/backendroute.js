@@ -78,6 +78,11 @@ router.get('/useredit', function(req, res, next) {
 
 });
 
+router.get('/userrole', function(req, res, next) {
+        res.render('backend/userrole', { title: 'Hi backend' });
+
+});
+
 router.get('/usermenu', function(req, res, next) {
         res.render('backend/usermenu', { title: 'Hi backend' });
 
