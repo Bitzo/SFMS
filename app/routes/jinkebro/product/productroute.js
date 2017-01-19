@@ -42,8 +42,9 @@ router.post('/', function (req, res) {
         ProductName = formdata.ProductName,
         ProductDesc = formdata.ProductDesc || '',
         ProductImgPath = formdata.ProductImgPath || '',
-        ExpireTime = (formdata.ExpireTime) ? (formdata.ExpireTime) : moment().format('YYYY-MM-DD HH:mm:ss'),
-        ProducTime = (formdata.ProducTime) ? (formdata.ProducTime) : moment().format('YYYY-MM-DD HH:mm:ss'),
+        ExpireTime = (formdata.ExpireTime) ? (moment(formdata.ExpireTime).format("YYYY-MM-DD HH:mm:ss")) : moment().format('YYYY-MM-DD HH:mm:ss'),
+        ProducTime = (formdata.ProducTime) ? (moment(formdata.ProducTime).format("YYYY-MM-DD HH:mm:ss")) : moment().format('YYYY-MM-DD HH:mm:ss'),
+
         SupplierID = formdata.SupplierID,
         ProductTypeID = formdata.ProductTypeID,
         ProductPrice = formdata.ProductPrice,
