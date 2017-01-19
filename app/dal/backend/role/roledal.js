@@ -13,12 +13,16 @@ var logger = appRequire("util/loghelper").helper;
 
 //查询所有角色信息
 exports.queryAllRoles = function (data, callback) {
-    var sql = 'select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleName,';
-    sql += 'jit_roleuser.AccountID from jit_role '; 
-    sql += 'left join jit_roleuser on  jit_role.RoleID = jit_roleuser.RoleID ';
-    sql += 'where jit_roleuser.AccountID = '
-   
-    sql += data.AccountID;
+    var sql = 'select RoleName,ApplicationID,ApplicationName,RoleCode,jit_role.IsActive from jit_role,jit_application ' +
+        'where 1=1 and jit_role.ApplicationID = jit_application.ID '
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'pageNum' && key !== 'SelectType' && data[key]!=='') {
+                sql += ' and ' + key + "='" + data[key] + "' ";
+            }
+        }
+    }
 
     var num = data.pageNum || config.pageCount; //每页显示的个数
     var page = data.page || 1;
