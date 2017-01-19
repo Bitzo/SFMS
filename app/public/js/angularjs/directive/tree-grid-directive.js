@@ -27,9 +27,9 @@ angular.module('template/treeGrid/treeGrid.html', []).run([
             "         <div ng-if=\"col.cellTemplate\" compile=\"col.cellTemplate\" cell-template-scope=\"col.cellTemplateScope\"></div>\n" +
             "         <div ng-if=\"!col.cellTemplate\">{{row.branch[col.field]}}</div>\n" +
             "       </td>\n" +
-            "       <td ng-if=\"showHead\"><a ng-click=\"on_user_clickedit(row.branch)\"><i class=\"icon.icon-edit\"></i>编辑</a>"+
-            "           <a ng-click=\"on_user_clickadd(row.branch)\"><i class=\"icon.icon-plus\"></i>新增子元素</a>"+
-            "           <a ng-click=\"on_user_clickdelete(row.branch)\"><i class=\"icon.icon-delete\"></i>删除</a>"+
+            "       <td ng-if=\"showHead\"><a href='' ng-click=\"on_user_clickedit(row.branch)\"><i class=\"icon.icon-edit\"></i>编辑</a>"+
+            "           <a href='' ng-click=\"on_user_clickadd(row.branch)\"><i class=\"icon.icon-plus\"></i>新增子元素</a>"+
+            "           <a href='' ng-click=\"on_user_clickdelete(row.branch)\"><i class=\"icon.icon-delete\"></i>删除</a>"+
             "       </td>\n" +
             "     </tr>\n" +
             "   </tbody>\n" +
