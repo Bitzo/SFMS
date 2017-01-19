@@ -24,7 +24,7 @@ block content
             td(class="tableleft") 权限树
             td
               div
-                tree-grid(tree-data="tree_data" col_defs='col_defs' expandOn="MenuID"  showCheck='true')
+                tree-grid(tree-data="tree_data"  on-check='clickHander(branch,parent)' showCheck='true')
           tr
             td(class="tableleft")
             td
