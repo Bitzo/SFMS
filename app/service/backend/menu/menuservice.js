@@ -213,24 +213,37 @@ exports.queryAllMenus = function(data, callback){
 
     var formdata = {
         pageManage : {
-            page: data.page,
-            pageNum: data.pageNum,
-            isPaging : 1
+            page: data.page || 1,
+            pageNum: data.pageNum || 20,
+            isPaging : (data.isPaging != undefined) ? (data.isPaging) : 1
         },
         MenuManage : {
-            ApplicationID: data.ApplicationID,
-            MenuID: data.MenuID,
-            ParentID: data.ParentID,
-            MenuLevel: data.MenuLevel,
-            MenuName: data.MenuName,
-            IsActive: data.IsActive
+            ApplicationID: data.ApplicationID || '',
+            MenuID: data.MenuID || '',
+            ParentID: data.ParentID || '',
+            MenuLevel: data.MenuLevel || '',
+            MenuName: data.MenuName || '',
+            IsActive: data.IsActive || ''
         }
     };
 
     menuDAl.queryAllMenus(formdata,function (err,results) {
-        if(err){
+        if (err){
             callback(true);
             return ;
+        }
+        for (var i=0; i<results.length; i++) {
+            switch (results[i].IsActive){
+                case 0 :
+                    results[i]['IsActiveDesc'] = '无效';
+                    break;
+                case 1 :
+                    results[i]['IsActiveDesc'] = '有效';
+                    break;
+                default :
+                    results[i]['IsActiveDesc'] = '无此状态';
+                    break;
+            }
         }
 
         console.log('queryAllMenus func in service');
@@ -321,6 +334,31 @@ exports.menuInsert = function (data,callback) {
         callback(false,results);
     });
 }
+/**
+ * 启用菜单
+ * @param data
+ * @param callback
+ */
+exports.reuseMenu = function (data,callback) {
+    var formdata = {
+        MenuID : data.MenuID,
+        IsActive : data.IsActive
+    };
+    menuDAl.reuseMenu(formdata,function (err,results) {
+        if(err){
+            callback(true);
+            return ;
+        }
+
+        return callback(false,results);
+    });
+}
+
+/**
+ * 把菜单置为无效
+ * @param data
+ * @param callback
+ */
 exports.updateMenuIsActive = function (data,callback) {
     menuDAl.updateMenuIsActive(data,function (err,results) {
         if(err){

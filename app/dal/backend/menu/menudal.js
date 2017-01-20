@@ -200,6 +200,50 @@ exports.menuInsert = function (data,callback) {
 
 }
 /**
+ * 启用菜单
+ * @param data
+ * @param callback
+ */
+exports.reuseMenu = function (data,callback) {
+    var MenuID = data.MenuID;
+    var update_sql = '';
+    if (MenuID instanceof Array) {
+        var update_sql = 'update jit_menu set IsActive = ' + data.IsActive + ' where MenuID in (';
+        for (var i=0; i<MenuID.length;i++){
+            if (i == (MenuID.length - 1)) {
+                update_sql += MenuID[i] + ');';
+            }else {
+                update_sql += MenuID[i] + ',';
+            }
+        }
+    }else {
+        update_sql = 'update jit_menu set IsActive = ' + data.IsActive + ' where MenuID = ' + MenuID + ';';
+    }
+
+    db_backend.mysqlPool.getConnection(function (err,connection) {
+        if(err) {
+            logger.writeError("[menudal]数据库连接错误：" + err);
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo("in menudal,菜单启用:" + update_sql);
+        console.log("in menudal,菜单启用:" + update_sql);
+
+        connection.query(update_sql, function(err, results) {
+            if (err) {
+                throw err;
+                callback(true);
+                return;
+            }
+
+            callback(false, results);
+            connection.release();
+        })
+
+    });
+}
+/**
  * 把菜单置为无效
  * @param data
  * @param callback

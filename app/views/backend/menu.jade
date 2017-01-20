@@ -24,17 +24,23 @@ block content
             th 应用名称
             th 菜单名称
             th 菜单路径
+            th 是否有效
             th 操作
         tbody
           tr(ng-repeat="x in datas")
             td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
             td {{x.ApplicationName}}
             td {{x.MenuName}}
-            td {{x.Url}} 
+            td {{x.Url}}
+            td {{x.IsActiveDesc}}
             td
               a(href='#/backend/menuedit/?MenuID={{x.MenuID}}' )
                 i.icon.icon-edit 编辑 
               a(ng-click="remove($index,x.MenuName,'/backmenu')",href='')
-                i.icon.icon-trash  删除
+                i.icon.icon-trash 删除
+              a(ng-click="reuse()",href='')
+                i.icon.icon-ok 启用
+              a(ng-click="forbidden()",href='')
+                i.icon.icon-remove 禁用
       div.pull-right
         jason-pagination(conf='paginationConf')

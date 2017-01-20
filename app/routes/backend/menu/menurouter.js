@@ -152,10 +152,6 @@ router.get('/plain',function (req,res) {
         pageNum = config.pageCount;
     }
 
-    if(isActive === undefined || isActive == ''){
-        isActive = 1;
-    }
-
     //用于查询结果总数的计数
     var countNum = 0;
 
@@ -564,6 +560,121 @@ router.post('/',function(req,res,next) {
 });
 
 /**
+ * 启用某些菜单，将IsActive置为1
+ * 1、如果启动子菜单，也要启动父菜单
+ * 2、如果启动父菜单，可不用启动子菜单
+ */
+router.put('/reuse',function (req,res) {
+    var formdata = JSON.parse(req.body.formdata);
+
+    var MenuID = formdata.MenuID,
+        IsActive = formdata.IsActive;
+
+    var menuLevel = -1;
+    var parentID = -1;
+    menuService.queryAllMenus({"MenuID":MenuID,"isPaging":0},function (err,queryResult) {
+        if (err){
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
+            });
+        }
+
+        if (queryResult != undefined && queryResult.length != 0){
+            menuLevel = queryResult[0].MenuLevel;
+            parentID = queryResult[0].ParentID;
+            if (menuLevel == 1){
+                //如果启动父菜单，可不用启动子菜单
+                menuService.reuseMenu({"MenuID":MenuID,"IsActive":1},function (err,updateResult1) {
+                    if (err){
+                        res.status(500);
+                        return res.json({
+                            code: 500,
+                            isSuccess: false,
+                            msg: "查询失败，服务器内部错误"
+                        });
+                    }
+
+                    if (updateResult1 != undefined && updateResult1.affectedRows != 0) {
+                        res.status(200);
+                        return res.json({
+                            code: 200,
+                            isSuccess: true,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单启用成功"
+                        });
+                    }else {
+                        res.status(404);
+                        return res.json({
+                            code: 404,
+                            isSuccess: true,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单启用失败"
+                        });
+                    }
+
+                });
+
+            }else if (menuLevel == 2){
+                // 如果启动子菜单，也要启动父菜单
+                var updateData = {
+                    "MenuID": [MenuID,parentID],
+                    "IsActive": 1
+                };
+                menuService.reuseMenu(updateData,function (err,updateResult2) {
+                    if (err){
+                        res.status(500);
+                        return res.json({
+                            code: 500,
+                            isSuccess: false,
+                            msg: "查询失败，服务器内部错误"
+                        });
+                    }
+
+                    if (updateResult2 != undefined && updateResult2.affectedRows != 0) {
+                        res.status(200);
+                        return res.json({
+                            code: 200,
+                            isSuccess: true,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单启用成功"
+                        });
+                    }else {
+                        res.status(404);
+                        return res.json({
+                            code: 404,
+                            isSuccess: true,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单启用失败"
+                        });
+                    }
+                });
+            }else {
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: true,
+                    MenuLevel : menuLevel,
+                    msg: "菜单级别错误"
+                });
+            }
+
+        }else {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "菜单不存在"
+            });
+        }
+    });
+
+
+});
+
+/**
  *菜单修改
  * 1、如果MenuID为a的IsActive将被修改为0，则需要将ParentID = a 的IsActive 要被置为0
  * 然后将usermenu表的MenuID = a 的记录的IsActive 置为0
@@ -665,7 +776,7 @@ router.put('/',function (req,res) {
                 return res.json({
                     code: 500,
                     isSuccess: false,
-                    errorMsg: "查询失败，服务器内部错误"
+                    msg: "查询失败，服务器内部错误"
                 });
             }
 
