@@ -299,7 +299,11 @@ var operationConfig = {
             financeCheck: {
                 actionName: "财务审核",
                 identifier: 3106
-            }
+            },
+            financeCount: {
+                actionName: "财务统计",
+                identifier: 3107
+            },
         },
         KPIManage: {
             module: "绩效模块",

@@ -84,4 +84,14 @@ describe("财务单元测试", function() {
             done();
         })
     });
+
+    it("财务统计", function (done) {
+        financeService.financeCount({OperateUserID:1}, function (err, results) {
+            if (err) {
+                return done(err);
+            }
+            results.length.should.be.a.num;
+            done();
+        })
+    });
 })

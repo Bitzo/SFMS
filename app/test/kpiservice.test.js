@@ -89,7 +89,7 @@ describe("绩效单元测试", function() {
             results.affectedRows.should.be.above(0).and.should.be.a.Number;
             done();
         })
-    })
+    });
 
     it("绩效统计", function (done) {
         KPIService.countKPI({OperateUserID:1}, function (err, results) {
