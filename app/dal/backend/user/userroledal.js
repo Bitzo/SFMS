@@ -133,3 +133,69 @@ exports.query = function (data, callback) {
 	});
 
 }
+
+/**
+ * 删除用户角色
+ */
+ exports.delete = function (data, callback) {
+	 var sql = 'delete from jit_roleuser where AccountID = ' + data.AccountID;
+	 console.log('删除用户角色表的信息' + sql);
+	 
+	 db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            connection.release();
+			logger.writeError("[dal/user/userrole]数据库链接失败");
+            return;
+        }
+
+        connection.query(sql, function (err, results) {
+            if (err) {
+                callback(true);
+				logger.writeError("[dal/user/userrole行]用户角色删除失败");
+                return;
+            }
+            callback(false, results);
+            connection.release();
+			return;
+        });
+	});	  
+ }
+ 
+ /**
+ * @param {Array} data
+ * @param callback
+ * 增加用户的角色
+ */
+ exports.addUserRole = function (data, callback) {
+	 var insert_sql = 'insert into jit_roleuser (AccountID,RoleID) VALUES ';
+	 var sql = '';
+	 var accountID = data.AccountID;
+	 var roleID = data.data;
+	 
+	 for(var key in roleID) {
+		 sql += '(' + accountID + ', ' + roleID[key].RoleID + ')';
+		 if(key < roleID.length-1) sql += ", ";
+	 }
+	 
+	 insert_sql += sql;
+	 
+	 logger.writeInfo('新增用户角色：' + insert_sql);
+	 
+	 db_backend.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(insert_sql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+	 
+ }

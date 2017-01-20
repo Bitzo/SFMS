@@ -40,6 +40,7 @@ angular.module('jason.pagination').directive('jasonPagination',[function(){
                 }else{
                     scope.conf.currentPage = item;
                 }
+                console.log(scope.conf.currentPage)
             };
 
             // 定义分页的长度必须为奇数 (default:9)

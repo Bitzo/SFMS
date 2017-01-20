@@ -73,3 +73,35 @@ exports.updateRole = function (data, callback) {
         callback(false, results);
     })
 }
+
+/**
+ * @param {array} RoleID:[]
+ * function: 检验roleid是否存在
+ */
+ 
+ exports.queryRoleByID = function (data, callback) {
+     if(!checkData (data)) {
+         callback(true, '数据有误');
+         return ;
+     }
+     
+     roleDAL.queryRoleByID (data, function (err, results) {
+        if(err) {
+            callback(true, results);
+            return ;
+        } 
+        callback(false, results);
+        return ;
+     });
+ }
+ 
+ //验证数据是否都已定义
+function checkData(data) {
+    for (var key in data) {
+        if (data[key] === undefined) {
+            console.log('data' + key);
+            return false;
+        }
+    }
+    return true;
+}
