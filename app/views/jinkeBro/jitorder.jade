@@ -1,6 +1,65 @@
 link(rel='stylesheet', href='css/backend/backend.css')
 block content
     jason-pagecontent(action='/jinkeBro/order/order' conf='paginationConf')
+        div.modal.fade(id="Edit",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                   div.modal-body 
+                        h4.modal-title(id="myModalLabel") 订单修改
+                          button.close(type="button",data-dismiss="modal")
+                            span(aria-hidden="true")&times;                
+                        table.table.table-striped.table-bordered.text-center
+                            thead
+                                tr
+                                  th 订单ID
+                                  th 订单状态
+                            tbody
+                                tr
+                                    td {{a.OrderID}}
+                                    td 
+                                      input(type="radio",name="IsActive",value="0",ng-model="paginationConf.formdata.IsActive",checked)
+                                      &nbsp已取消         
+                                      input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive")
+                                      &nbsp配送中         
+                                      input(type="radio",name="IsActive",value="2",ng-model="paginationConf.formdata.IsActive")
+                                      &nbsp配送成功
+
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
+        div.modal.fade(id="Details",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                   div.modal-body 
+                        h4.modal-title(id="myModalLabel") 订单详情
+                          button.close(type="button",data-dismiss="modal")
+                            span(aria-hidden="true")&times;                
+                        table.table.table-striped.table-bordered.text-center
+                            thead
+                                tr
+                                  th 订单ID
+                                  th 订单详情
+                            tbody
+                                tr
+                                    td {{a.RoleID}}
+                                    td {{a.RoleName}}
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
+        div.modal.fade(id="Allocate",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                   div.modal-body 
+                        h4.modal-title(id="myModalLabel") 分配
+                          button.close(type="button",data-dismiss="modal")
+                            span(aria-hidden="true")&times;                
+                        table.table.table-striped.table-bordered.text-center
+                            thead
+                                tr
+                                  th 订单ID
+                                  th 配送员
+                            tbody
+                                tr
+                                    td {{a.RoleID}}
+                                    td 
+                                      jason-select.form-control(ng-model='f.UserName',source='/backuser',stext='UserName',svalue='UserName' )
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.page-content
             ng-form.form-inline
                 span.title 订单管理
@@ -32,11 +91,11 @@ block content
                         td {{x.OrderTime}}
                         td {{x.OrderStatusDesc}}
                         td
-                            a(href='#/jinkeBro/jitorderEdit/?OrderID={{x.OrderID}}' )
+                            a(data-toggle="modal" ,data-target="#Edit",ng-click="moreuser($index,'userrole/userID/')",href='' )
                                 i.icon.icon-edit 修改
-                            a(ng-click="")
+                            a(data-toggle="modal" ,data-target="#Allocate",ng-click="moreuser($index,'userrole/userID/')",href='')
                                 i.icon.icon-edit 分配
-                            a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'userrole/userID/')")
+                            a(data-toggle="modal",data-target="#Details",ng-click="moreuser($index,'userrole/userID/')",href='')
                                 i.icon.icon-zoom-in  订单详情
             div.pull-right
                 jason-pagination(conf='paginationConf')
