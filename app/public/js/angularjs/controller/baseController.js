@@ -17,7 +17,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
     //首页 数据显示
     $scope.f={};
-
     function getInit(){
         if($scope.paginationConf&&$scope.paginationConf.action&&$scope.paginationConf.action!="") {
             $http({
@@ -232,7 +231,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         };
         $scope.jumpPageNum = page;
         $scope.currentPage = page;
-        
         
         $http({
             method:'get',
