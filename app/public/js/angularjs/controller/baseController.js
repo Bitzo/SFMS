@@ -29,6 +29,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
                 }
             }).success(function (response) {
                 $scope.datas = response.data;
+                console.log( $scope.datas)
                 $scope.paginationConf.totalItems = response.dataNum;
             }).error(function (response) {
             });

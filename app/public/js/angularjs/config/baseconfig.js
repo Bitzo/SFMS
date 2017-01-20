@@ -218,4 +218,15 @@ myApp.config(function($routeProvider) {
                 return '无效记录';
         }
     }
+}).filter('IsActive', function() {
+    return function(val) {
+        switch (val) {
+            case 0:
+                return '无效';
+            case 1:
+                return '有效';
+            default:
+                return '无效';
+        }
+    }
 })
