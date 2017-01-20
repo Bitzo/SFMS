@@ -82,6 +82,53 @@ exports.query = function (data, callback) {
 
 		callback(false, results);
 	})
+}
 
+/**
+ * @param data
+ * @param callback
+ * 删除用户角色的部分
+ */
+exports.delete = function (data, callback) {
+	var formdata = {
+		'AccountID': data.AccountID || '',
+		'RoleID': data.roleID || ''
+	}
+	
+	userRoleDAL.delete(formdata, function (err, results) {
+		if(err) {
+			callback (true);
+			return ;
+		}
+		
+		callback(false, results);
+		return ;
+	});
+}
 
+exports.addUserRole = function (data,  callback) {
+	function checkData(data) {
+		for (var key in data) {
+			if (data[key] === undefined) {
+				console.log('undefined:' + key);
+				return false; 
+			}
+		}
+		return true;
+	}
+	
+	if(!checkData(data)) {
+		callback (true);
+		return ;
+	}
+	
+	userRoleDAL.addUserRole(data, function (err, results) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        
+        callback(false, results);
+		return ;
+    });
 }

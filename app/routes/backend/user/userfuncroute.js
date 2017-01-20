@@ -34,9 +34,8 @@ router.get('/', function (req, res) {
         return res.json({
             code: 400,
             isSuccess: false,
-            msg: '用户ID有误！',
-            data: req.query
-        })
+            msg: '用户ID有误！'
+        });
     }
 
     if (functionCode === undefined || functionCode.trim() == '') {

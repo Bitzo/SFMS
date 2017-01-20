@@ -160,3 +160,43 @@ exports.updateRole = function (data, callback) {
         });
     });
 }
+
+/**
+ * 通过roleid来确定角色是否存在
+ */
+ 
+exports.queryRoleByID = function (data, callback) {
+    var sql = 'select count(*) as count from jit_role where IsActive = 1';
+    sql += ' and (';
+    
+    console.log(data);
+    var RoleID = data.RoleID;
+    
+    for(var i in RoleID) {
+        if (i == RoleID.length - 1) {
+            sql += ' RoleID = ' + RoleID[i] + ' ) ';
+        } else {
+            sql += ' RoleID = ' + RoleID[i] + ' or ';
+        }
+    }
+    
+    logger.writeInfo('判断角色是否存在:' + sql);
+    console.log(sql);
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            logger.writeError('角色连接：err' + err);
+            callback(true);
+            return;
+        }
+        connection.query(sql, function (err, results) {
+            if (err) {
+                logger.writeError('根据RoleID判断该功能点是否存在err:' + err);
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+            return ;
+        });
+    });
+}

@@ -1,6 +1,6 @@
 link(rel='stylesheet', href='css/backend/backend.css')
 block content
-    jason-pagecontent(action='/jinkeBro/order' conf='paginationConf')
+    jason-pagecontent(action='/jinkeBro/order/order' conf='paginationConf')
         div.page-content
             ng-form.form-inline
                 span.title 订单管理
@@ -18,10 +18,8 @@ block content
                     tr
                         th 序号
                         th 订单ID
-                        th 商品名称
-                        th 商品数量
                         th 支付方式
-                        th 商品的价格
+                        td 是否有效
                         th 下单时间
                         th 配送状态
                         th 操作
@@ -29,19 +27,17 @@ block content
                     tr(ng-repeat="x in datas" )
                         td {{$index+1}}
                         td {{x.OrderID}}
-                        td {{x.ProductName}}
-                        td {{x.ProductCount}}
-                        td {{x.PayMethod}}
-                        td {{x.ProductPrice}}
+                        td {{x.PayMethodDesc}}
+                        td {{x.IsActiveDesc}}
                         td {{x.OrderTime}}
                         td {{x.OrderStatusDesc}}
                         td
                             a(href='#/jinkeBro/jitorderEdit/?OrderID={{x.OrderID}}' )
-                                i.icon.icon-edit 编辑
-                            a(ng-click="remove($index,'/backuser')")
-                                i.icon.icon-trash 删除
+                                i.icon.icon-edit 修改
+                            a(ng-click="")
+                                i.icon.icon-edit 分配
                             a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'userrole/userID/')")
-                                i.icon.icon-zoom-in  更多
+                                i.icon.icon-zoom-in  订单详情
             div.pull-right
                 jason-pagination(conf='paginationConf')
 

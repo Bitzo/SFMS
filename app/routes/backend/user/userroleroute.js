@@ -14,79 +14,128 @@ var express = require('express'),
 //菜单业务、用户业务逻辑组件
 var userRole = appRequire('service/backend/user/userroleservice'),
 	menuService = appRequire('service/backend/menu/menuservice'),
+	roleservice = appRequire('service/backend/role/roleservice'),
 	userService = appRequire('service/backend/user/userservice');
 
 
+/**
+ * method: {post}
+ * @param {int} AccountID
+ * @param {Array} RoleID
+ * {
+ * 		Account: 1,
+ * 		data: [
+ *			{RoleID: 12},
+ * 			{RoleID: 16}
+ *    ]
+ * }
+ * function: 为用户插入多个角色
+ */
 router.post('/', function (req, res) {
-	var data = ['AccountID', 'RoleID'];
-	var err = 'require: ';
-	for (var value in data) {
-		console.log(data[value]);
-		if (!(data[value] in req.body)) {
-			err += data[value] + ' ';
+	var userID = req.body.AccountID,
+		roleData = req.body.data,
+		data = ['AccountID', 'RoleID'],
+		err = 'required: ';
+		
+		if(userID == undefined || userID.length == 0) {
+			err += 'AccountID';
 		}
-	}
+		
+		if(roleData == undefined || roleData.length ==0) {
+			err += 'RoleID';
+		}
 
-	if (err != 'require: ') {
+	if (err != 'required: ') {
 		res.status(400);
-		res.json({
+		return res.json({
 			code: 400,
 			isSuccess: false,
 			msg: err
 		});
-		logger.writeError(err);
-		return;
 	}
 
-	//获取参数
-	var ID = req.body.ID,
-		accountID = req.body.AccountID,
-		roleID = req.body.RoleID;
+	var roleID = [],
+		i = 0;
 
-	data = {
-		'AccountID': accountID,
+	for (i = 0; i < roleData.length; i++) {
+		roleID.push(roleData[i].RoleID);
+	}
+
+	var insertdata = {
 		'RoleID': roleID
 	}
 
-	//判断传过来的数据是否为空
-	var requireValue = '缺少值：';
-	for (var value in data) {
-
-		if (data[value].length == 0) {
-			requireValue += value + ' ';
-		}
-	}
-
-	if (requireValue != '缺少值：') {
-		res.status(400);
-		res.json({
-			code: 400,
-			isSuccess: false,
-			msg: requireValue
-		});
-		logger.writeError("[routes/backend/user/userroleroute--------------67行]" + requireValue);
-		return;
-	}
-	userRole.insert(data, function (err, results) {
+	roleservice.queryRoleByID(insertdata, function (err, results) {
 		if (err) {
-			res.status(404);
-			res.json({
-				code: 404,
+			res.status(500);
+			return res.json({
+				code: 500,
 				isSuccess: false,
-				msg: '操作失败'
+				msg: '用户角色的增加失败'
 			});
-			logger.writeError("[routes/backend/user/userroleroute---------------78行]用户插入失败");
-			return;
-		}
-		if (results.insertId != 0) {
-			res.json({
-				code: 200,
-				isSuccess: true,
-				msg: '操作成功'
-			});
-			return;
 		}
 
+		var count = results[0]['count'];
+		if (results !== undefined && count == i) {
+			insertdata = {
+				'AccountID': userID,
+				'data': roleData
+			}
+				
+			//先删除原来的角色
+			userRole.delete(insertdata, function (err, results) {
+				logger.writeInfo(results);
+				if (err) {
+					res.status(500);
+					return res.json({
+						code: 500,
+						isSuccess: false,
+						msg: '操作失败，服务器出错'
+					});
+				}
+
+				if (results !== undefined) {
+					//新增
+					userRole.addUserRole(insertdata, function (err, insertInfo) {
+						logger.writeInfo(insertInfo);
+						if (err) {
+                            res.status(500);
+                            return res.json({
+								code: 500,
+								isSuccess: false,
+								msg: "操作失败，服务器出错"
+							})
+                        }
+
+						if (insertInfo !== undefined && insertInfo.insertId > 0) {
+                            var senddata = {
+                                code: 200,
+                                isSuccess: true,
+                                funcData: data.data,
+                                msg: "操作成功"
+                            };
+                            res.status(200);
+                            return res.json(senddata)
+                        } else {
+                            res.status(400);
+                            return res.json({
+                                code: 400,
+                                isSuccess: false,
+                                msg: "操作失败"
+                            });
+                        }
+					});
+				}
+			});
+		} else {
+			//数据非法，重新输入
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: "角色数据有误，请重新编辑"
+            })
+		}
 	});
 });
 
@@ -153,17 +202,24 @@ router.put('/', function (req, res) {
 	})
 });
 
-//根据UserID获取用户的菜单和角色信息
-router.get('/', function (req, res) {
-	var userID = req.query.jitkey;
+
+
+/**
+ * method {get} /userrole/userID/1
+ * @param {int} userID
+ * function: 通过用户的ID来查询用户所在的角色
+ */
+router.get('/userID/:userID', function (req, res) {
+	var userID = req.params.userID;
 	if (userID === undefined || userID === '') {
-		res.status(400);
-		return res.json({
+        res.status(400);
+        return res.json({
 			code: 404,
 			isSuccess: false,
 			msg: 'require userID'
 		});
 	}
+
 	if (isNaN(userID)) {
         res.status(400);
         return res.json({
@@ -172,86 +228,9 @@ router.get('/', function (req, res) {
 			msg: 'userID不是数字'
 		});
 	}
-	var uniqueData = {
-		"userID": userID
-	};
 
-	//判断user是否存在
-	userService.querySingleID(userID, function (err, result) {
-		if (err) {
-            res.status(500);
-            return res.json({
-				code: 500,
-				isSuccess: false,
-				msg: '服务器出错'
-			});
-		}
-		//user存在，则可以进行查询
-		if (result !== undefined && result.length != 0) {
-			menuService.queryMenuAndRoleByUserID(uniqueData, function (err, results) {
-				if (err) {
-                    res.status(500);
-                    return res.json({
-						code: 500,
-						isSuccess: false,
-						msg: '服务器出错'
-					});
-
-				}
-
-				if (results.Menu !== undefined && results.Menu.length != 0) {
-					if (results.Role !== undefined && results.Role.length != 0) {
-                        res.status(200);
-                        return res.json({
-							code: 200,
-							isSuccess: true,
-							data: results,
-							msg: '查询菜单和角色成功'
-						});
-					} else {
-                        res.status(200);
-                        return res.json({
-							code: 404,
-							isSuccess: false,
-							msg: '未查到角色'
-						});
-					}
-
-				} else {
-                    res.status(200);
-                    return res.json({
-						code: 404,
-						isSuccess: false,
-						msg: '未查到菜单'
-					});
-				}
-			});
-		} else {
-            res.status(400);
-            return res.json({
-				code: 400,
-				isSuccess: false,
-				msg: '用户不存在'
-			});
-		}
-	});
-
-});
-
-router.get('/', function (req, res) {
-	var query = JSON.parse(req.query.f);
-	var accountID = query.userID;
 	var data = {
-		'AccountID': accountID
-	};
-
-	if (isNaN(data.AccountID)) {
-		res.status(400);
-        return res.json({
-            code: 400,
-            isSuccess: false,
-            msg: 'AccountID不是数字'
-        });
+		'AccountID': userID
 	};
 
 	userRole.query(data, function (err, RoleInfo) {
@@ -266,6 +245,7 @@ router.get('/', function (req, res) {
 			logger.writeError("[routes/backend/userrole]" + "查询失败");
 			return;
 		}
+
 		if (RoleInfo == undefined && RoleInfo.length == 0) {
 			res.status(200);
 			res.json({
@@ -278,67 +258,6 @@ router.get('/', function (req, res) {
 		}
 
 		if (RoleInfo != undefined && RoleInfo.length != 0) {
-			res.status(200);
-			var results = {
-				code: 200,
-				isSuccess: true,
-				msg: '查询成功',
-				data: RoleInfo
-			};
-			return;
-		}
-	});
-
-});
-
-router.get('/userID/:userID', function (req, res) {
-	var userID = req.params.userID;
-	if (userID === undefined || userID === '') {
-        res.status(400);
-        return res.json({
-			code: 404,
-			isSuccess: false,
-			msg: 'require userID'
-		});
-	}
-	
-	if (isNaN(userID)) {
-        res.status(400);
-        return res.json({
-			code: 400,
-			isSuccess: false,
-			msg: 'userID不是数字'
-		});
-	}
-	
-	var data = {
-		'AccountID': userID
-	};
-	userRole.query(data, function (err, RoleInfo) {
-		if (err) {
-			res.status(500);
-			res.json({
-				code: 500,
-				isSuccess: true,
-				msg: '查询失败'
-			});
-			console.log("查询失败");
-			logger.writeError("[routes/backend/userrole]" + "查询失败");
-			return;
-		}
-		
-		if (RoleInfo == undefined && RoleInfo.length == 0) {
-			res.status(200);
-			res.json({
-				code: 500,
-				isSuccess: false,
-				msg: "未查到数据"
-			});
-			logger.writeWarn("[routes/backend/user/userroleroute]" + "未查到数据");
-			return;
-		}
-
-		if (RoleInfo != undefined && RoleInfo.length != 0) {			
 			var results = {
 				code: 200,
 				isSuccess: true,
@@ -349,7 +268,7 @@ router.get('/userID/:userID', function (req, res) {
 			res.json(results);
 			return;
 		}
-	});	
+	});
 });
 
 module.exports = router;
