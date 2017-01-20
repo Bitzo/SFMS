@@ -142,12 +142,11 @@ router.get('/count', function (req, res) {
                             var temp = {
                                 status: 200,
                                 isSuccess: true,
+                                dataNum: totalNum,
                                 curPage: page,
-                                curNum: pagesize,
-                                totalNum: totalNum,
-                                totalPage: Math.ceil(totalNum / pagesize),
-                                dataNum: pagesize,
-                                data: data
+                                totalPage: Math.ceil(totalNum/pagesize),
+                                curPageNum: pagesize,
+                                data: userInfo
                             }
                             if(temp.curPage == temp.totalPage) {
                                 temp.curPageNum = temp.dataNum - (temp.totalPage-1)*pagesize;

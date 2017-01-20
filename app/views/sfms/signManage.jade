@@ -7,8 +7,8 @@ block content
                    jason-pagecontent(conf='paginationConf')
                         h4.modal-title(id="myModalLabel") 签到详细信息
                           button.close(type="button",data-dismiss="modal")
-                            span(aria-hidden="true")&times;      
-                        br          
+                            span(aria-hidden="true")&times;
+                        br
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
@@ -25,12 +25,12 @@ block content
                                     td {{data.UserAgent}}
                                     td {{data.CreateTime}}
                                     td {{data.SignType | signType:data.SignType }}
-                        button.btn.btn-default(type="button",data-dismiss="modal") Close  
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
                         div.pull-right
                           div.page-total.pull-left 第
-                            input(type="text" style="width:30px;" ng-model="jumpPageNum",value='{{jumpPageNum}}' ng-keyup="jumpToPage(this)") 
-                            span 页                           
-                            span 共{{length}}条 
+                            input(type="text" style="width:30px;" ng-model="jumpPageNum",value='{{jumpPageNum}}' ng-keyup="jumpToPage(this)")
+                            span 页
+                            span 共{{length}}条
                           ul.pagination.pull-right(style="line-height:60px;background-color:#ccc;")
                             li(ng-click="prevPage()")
                               span&laquo
@@ -76,7 +76,7 @@ block content
             td {{x.signNum}}
             td {{x.signTime}}
             td
-              a(data-toggle="modal",data-target="#myModal",ng-click="moresign(x.userID,1,'/sfms/api/sign/')",href='') 
-                i.icon.icon-zoom-in  更多       
+              a(data-toggle="modal",data-target="#myModal",ng-click="moresign(x.userID,1,'/sfms/api/sign/')",href='')
+                i.icon.icon-zoom-in  更多
       div.pull-right
         jason-pagination(conf='paginationConf')
