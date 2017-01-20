@@ -231,3 +231,41 @@ exports.delKPI = function (data, callback) {
         });
     });
 }
+
+exports.countKPI = function (data, callback) {
+    var sql = 'select UserId,sum(KPIScore) as sum from jit_kpiinfo,jit_projectbaseinfo where ' +
+        'jit_kpiinfo.IsActive = 1 and jit_kpiinfo.ProjectId = jit_projectbaseinfo.ID and jit_projectbaseinfo.IsActive = 1' +
+        " and KPIStatus = '通过'" ;
+    if (data.startTime !== '') sql += " and CheckTime > '" + data.startTime + "' ";
+    if (data.endTime !== '') sql += " and CheckTime < '" + data.endTime + "' ";
+
+    sql += ' group by UserId ';
+
+    if (data.userID!=='') {
+        sql += ' having (';
+        for (var i=0;i<data.userID.length;++i) {
+            if (i==0) sql += ' UserId = ' + data.userID[i];
+            else sql += ' or UserId = ' + data.userID[i];
+        }
+        sql += ' ) '
+    }
+
+    logger.writeInfo('绩效统计： ' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '统计失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}

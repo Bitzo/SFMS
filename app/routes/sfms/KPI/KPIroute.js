@@ -455,6 +455,126 @@ router.put('/', function (req, res) {
     })
 })
 
+router.get('/count', function (req, res) {
+    var query = JSON.parse(req.query.f),
+        startTime = query.startTime || '',
+        endTime = query.endTime || '',
+        page = req.query.pageindex || 1,
+        pagesize = req.query.pagesize || config.pageCount;
+    page = page > 0 ? page : 1;
+
+    if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
+    if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
+
+    var data = {
+        'startTime': startTime,
+        'endTime': endTime,
+        'OperateUserID': req.query.jitkey
+    }
+
+    userservice.countUser({isActive: 1}, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '操作失败，服务器出错'
+            })
+        }
+        if (results!==undefined&&results.length>0) {
+            var totalNum = results[0].num;
+            userservice.queryAllUsers({page: page, pageNum: pagesize, IsPage: 0, isActive: 1}, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '操作失败，服务器出错'
+                    })
+                }
+                if (results !== undefined && results.length > 0) {
+                    var ID = [], userInfo = [];
+                    for (var i in results) {
+                        ID[i] = results[i].AccountID;
+                        userInfo[i] = {
+                            'userID': results[i].AccountID,
+                            'userName': results[i].UserName,
+                            'college': results[i].College,
+                            'class': results[i].Class,
+                            'kpiScore': 0
+                        }
+                    }
+                    data.userID = ID;
+                    KPIservice.countKPI(data, function (err, results) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            });
+                        }
+                        if (results!==undefined&&results.length>0) {
+                            console.log(results)
+                            for (var i in results) {
+                                for (var j in userInfo) {
+                                    if (userInfo[j].userID == results[i].UserId) {
+                                        userInfo[j].kpiScore = results[i].sum;
+                                        break;
+                                    }
+                                }
+                            }
+                            var temp = {
+                                status: 200,
+                                isSuccess: true,
+                                dataNum: totalNum,
+                                curPage: page,
+                                totalPage: Math.ceil(totalNum/pagesize),
+                                curPageNum: pagesize,
+                                data: userInfo
+                            }
+                            if(temp.curPage == temp.totalPage) {
+                                temp.curPageNum = temp.dataNum - (temp.totalPage-1)*pagesize;
+                            }
+                            res.status(200);
+                            return res.json(temp)
+                        } else {
+                            var temp = {
+                                status: 200,
+                                isSuccess: true,
+                                dataNum: totalNum,
+                                curPage: page,
+                                totalPage: Math.ceil(totalNum/pagesize),
+                                curPageNum: pagesize,
+                                data: userInfo
+                            }
+                            if(temp.curPage == temp.totalPage) {
+                                temp.curPageNum = temp.dataNum - (temp.totalPage-1)*pagesize;
+                            }
+                            res.status(200);
+                            return res.json(temp)
+                        }
+                    })
+                } else {
+                    res.status(200);
+                    return res.json({
+                        status: 200,
+                        isSuccess: true,
+                        msg: '暂无数据'
+                    })
+                }
+            })
+        } else {
+            res.status(200);
+            return res.json({
+                status: 200,
+                isSuccess: true,
+                msg: '暂无数据'
+            })
+        }
+    })
+})
+
 //KPI查询，用于个人查询
 router.get('/person', function (req, res) {
     var UserID = req.query.jitkey,
