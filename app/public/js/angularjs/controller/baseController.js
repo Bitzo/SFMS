@@ -375,4 +375,33 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         $scope.f.sortindex = sortindex;
         getInit();
     }
+
+    //绩效统计--首页 更多
+    $scope.moreKPI = function(index,page,f,action){
+        $scope.f={
+            "UserID":$scope.datas[index].userID,
+            "StartTime":f.startTime,
+            "EndTime":f.endTime,
+            'KPIStatus': '通过',
+            'IsActive':1
+        };
+        $scope.jumpPageNum = page;
+        $scope.currentPage = page;
+        $http({
+            method:'get',
+            params:{
+                pageindex: $scope.jumpPageNum,
+                pagesize: 10,
+                f:$scope.f
+            },
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+        }).
+        success(function(response) {
+            $scope.data = response.data;
+
+        }).
+        error(function(response) {
+            console.log(response);
+        });
+    }
 })

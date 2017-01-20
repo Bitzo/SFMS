@@ -515,7 +515,6 @@ router.get('/count', function (req, res) {
                             });
                         }
                         if (results!==undefined&&results.length>0) {
-                            console.log(results)
                             for (var i in results) {
                                 for (var j in userInfo) {
                                     if (userInfo[j].userID == results[i].UserId) {
