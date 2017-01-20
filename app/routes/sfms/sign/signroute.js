@@ -16,7 +16,6 @@ var logger = appRequire("util/loghelper").helper;
 
 //签到记录的统计
 router.get('/count', function (req, res) {
-    var type = req.params.type;
     var query = JSON.parse(req.query.f);
     var userID = query.accountID || '',
         startTime = query.startTime || '',
@@ -24,8 +23,7 @@ router.get('/count', function (req, res) {
         page = req.query.pageindex || 1,
         pagesize = req.query.pagesize || config.pageCount;
     page = page > 0? page : 1;
-    if (type == 'person') userID = req.query.jitkey;
-    
+
     if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
     if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
 
@@ -174,7 +172,6 @@ router.get('/count', function (req, res) {
 
 //签到记录的统计
 router.get('/count/person', function (req, res) {
-    var type = req.params.type;
     var query = JSON.parse(req.query.f);
     var userID = req.query.jitkey || '',
         startTime = query.startTime || '',
