@@ -337,33 +337,33 @@ router.post('/',function (req,res) {
  */
 router.put('/', function (req, res) {
     // 使string(req.body.formdata)变成object(formdata)
-    var formdata = JSON.parse(req.body.formdata);
+    //var formdata = JSON.parse(req.body.formdata);
 
     // 接收前端传过来的变量
-    var OrderID = formdata.OrderID ,     //not null
-        OrderTime = formdata.OrderTime || '',  //not null
-        PayMethod = formdata.PayMethod || '', //not null
-        IsValid = (formdata.IsValid != undefined) ? (formdata.IsValid) : '',       //not null
-        IsActive = (formdata.IsActive != undefined) ? (formdata.IsActive) : '',    //not null
-        PayTime = formdata.PayTime,
-        DeliveryTime = formdata.DeliveryTime,
-        DeliveryUserID = formdata.DeliveryUserID,
-        IsCancel = formdata.IsCancel,
-        CancelTime = formdata.CancelTime,
-        DiscountMoney = formdata.DiscountMoney,
-        DiscountType = formdata.DiscountType,
-        BizID = formdata.BizID,
-        Memo = formdata.Memo,
-        IsCheck = formdata.IsCheck,
-        PDate = formdata.PDate,
-        OrderStatus = (formdata.OrderStatus != undefined) ? (formdata.OrderStatus) : '';  //not null
+    var OrderID = req.body.formdata.OrderID ,     //not null
+        OrderTime = req.body.formdata.OrderTime || '',  //not null
+        PayMethod = req.body.formdata.PayMethod || '', //not null
+        IsValid = (req.body.formdata.IsValid != undefined) ? (req.body.formdata.IsValid) : '',       //not null
+        IsActive = (req.body.formdata.IsActive != undefined) ? (req.body.formdata.IsActive) : '',    //not null
+        PayTime = req.body.formdata.PayTime,
+        DeliveryTime = req.body.formdata.DeliveryTime,
+        DeliveryUserID = req.body.formdata.DeliveryUserID,
+        IsCancel = req.body.formdata.IsCancel,
+        CancelTime = req.body.formdata.CancelTime,
+        DiscountMoney = req.body.formdata.DiscountMoney,
+        DiscountType = req.body.formdata.DiscountType,
+        BizID = req.body.formdata.BizID,
+        Memo = req.body.formdata.Memo,
+        IsCheck = req.body.formdata.IsCheck,
+        PDate = req.body.formdata.PDate,
+        OrderStatus = (req.body.formdata.OrderStatus != undefined) ? (req.body.formdata.OrderStatus) : '';  //not null
 
     //检查必填字段是否存在
     // var mandatoryFieldData = ['OrderID','OrderTime','PayMethod', 'IsValid', 'IsActive','OrderStatus'];
     if (orderService.checkInput(res, OrderID, 'OrderID') !== undefined) {
         return;
     }
-
+    console.log(OrderID + ' ' + OrderStatus);
     /**
      * 检验一个变量的值是否为正整数
      * @param intData
@@ -422,7 +422,6 @@ router.put('/', function (req, res) {
 
     var sendData = {
         OrderStatus : OrderStatus,
-        IsActive : IsActive,
         OrderID : OrderID
     };
 
