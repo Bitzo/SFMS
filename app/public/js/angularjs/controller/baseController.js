@@ -408,10 +408,11 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 //------金科小哥------
     //订单管理--首页  模态框
      //修改
-     $scope.jitOrderEdit = function(OrderID,OrderStatus){
+     $scope.jitOrderEdit = function(OrderID,OrderStatus,OrderStatusDesc){
          $scope.order = {
              'OrderID': OrderID ,
              'OrderStatus':OrderStatus,
+             'OrderStatusDesc':OrderStatusDesc
          }
          $http({
             method:'get',
@@ -433,12 +434,15 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     }
     //确认修改
     $scope.saveOrderEdit = function(){
-         $scope.formdata=$scope.order  
+         $scope.formdata= {
+             "OrderID" : $scope.order.OrderID,
+             "OrderStatus" : parseInt($scope.order.OrderStatus),
+         }
          $http({
             method:'put',
             url: "jinkeBro/order"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:{
-                formdata:$scope.formdata
+                formdata : $scope.formdata
             }
         }).
         success(function(response) {

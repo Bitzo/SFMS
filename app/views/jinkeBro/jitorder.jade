@@ -17,7 +17,7 @@ block content
                             tbody
                                 tr
                                     td {{order.OrderID}}
-                                    td {{order.OrderStatus}}
+                                    td {{order.OrderStatusDesc}}
                                     td 
                                       select(ng-model='order.OrderStatus')
                                          option(ng-repeat="item in orderStatus",value='{{item.DictionaryCode}}') {{item.DictionaryValue}}
@@ -99,7 +99,7 @@ block content
                         td {{x.OrderTime}}
                         td {{x.OrderStatusDesc}}
                         td
-                            a(data-toggle="modal" ,data-target="#Edit",ng-click="jitOrderEdit(x.OrderID,x.OrderStatusDesc)",href='' )
+                            a(data-toggle="modal" ,data-target="#Edit",ng-click="jitOrderEdit(x.OrderID,x.OrderStatus,x.OrderStatusDesc)",href='' )
                                 i.icon.icon-edit 修改
                             a(data-toggle="modal" ,data-target="#Allocate",ng-click="Allocate(x.OrderID,x.OrderStatusDesc)",href='')
                                 i.icon.icon-edit 分配
