@@ -90,4 +90,14 @@ describe("绩效单元测试", function() {
             done();
         })
     });
+
+    it("绩效统计", function (done) {
+        KPIService.countKPI({OperateUserID:1}, function (err, results) {
+            if (err) {
+                return done(err);
+            }
+            results.length.should.be.a.num;
+            done();
+        })
+    });
 })

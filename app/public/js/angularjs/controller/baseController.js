@@ -413,7 +413,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
              'OrderStatus':OrderStatus,
              'OrderStatusDesc':OrderStatusDesc
          }
-         console.log($scope.order);
          $http({
             method:'get',
             url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -432,14 +431,12 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         error(function(response) {
         });    
     }
-
     //确认修改
     $scope.saveOrderEdit = function(){
          $scope.formdata= {
              "OrderID" : $scope.order.OrderID,
              "OrderStatus" : parseInt($scope.order.OrderStatus),
          }
-         console.log($scope.formdata);
          $http({
             method:'put',
             url: "jinkeBro/order"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -454,11 +451,56 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             }else{
                 alert(response.msg);
             }
-
         }).
         error(function(response) {
             alert(response.msg);
         });  
     }
+    //分配
+    // $scope.Allocate = function(OrderID,OrderStatus){
+    //      $scope.order = {
+    //          'OrderID': OrderID ,
+    //          'OrderStatus':OrderStatus,
+    //      }
+    //      $http({
+    //         method:'get',
+    //         url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //         params:{
+    //             isPaging:1,
+    //             pageindex:1,
+    //             pagesize:10,
+    //             f:{
+    //                 Category:"dc_orderstatus"
+    //             }
+    //         }
+    //     }).
+    //     success(function(response) {
+    //         $scope.orderStatus=response.data;
+    //     }).
+    //     error(function(response) {
+    //     });    
+    // }
+
+    //订单详情
+    $scope.moreDetails = function(OrderID,OrderStatus){
+         $scope.f = {
+             'OrderID': OrderID ,
+         }
+         console.log($scope.f)
+         $http({
+            method:'get',
+            url: 'jinkeBro/order' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:$scope.f
+            }
+        }).
+        success(function(response) {
+            $scope.orderDetails=response.data;
+            console.log($scope.orderDetails)
+        }).
+        error(function(response) {
+        });    
+    }
+
 
 })

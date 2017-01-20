@@ -31,20 +31,27 @@ block content
                           button.close(type="button",data-dismiss="modal")
                             span(aria-hidden="true")&times;                
                         table.table.table-striped.table-bordered.text-center
+                            br
+                            span 订单ID :  {{f.OrderID}}
+                         
                             thead
                                 tr
-                                  th 订单ID
-                                  th 订单详情
+                                  th 商品名称
+                                  th 商品数量
+                                  th 商品单价
+                                  th 商品规格
                             tbody
-                                tr
-                                    td {{a.RoleID}}
-                                    td {{a.RoleName}}
+                                tr(ng-repeat="a in orderDetails")
+                                    td {{a.ProductName}}
+                                    td {{a.ProductCount}}
+                                    td {{a.ProductPrice}}
+                                    td {{a.ProductTypeName}}
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.modal.fade(id="Allocate",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
                 div.modal-content
                    div.modal-body 
-                        h4.modal-title(id="myModalLabel") 分配
+                        h4.modal-title(id="myModalLabel") 订单修改
                           button.close(type="button",data-dismiss="modal")
                             span(aria-hidden="true")&times;                
                         table.table.table-striped.table-bordered.text-center
@@ -52,11 +59,14 @@ block content
                                 tr
                                   th 订单ID
                                   th 配送员
+                                  th 配送员修改
                             tbody
                                 tr
-                                    td {{a.RoleID}}
+                                    td {{order.OrderID}}
+                                    td {{order.OrderStatus}}
                                     td 
-                                      jason-select.form-control(ng-model='f.UserName',source='/backuser',stext='UserName',svalue='UserName' )
+                                        jason-select.form-control(ng-model='f.UserName',source='/backuser',stext='UserName',svalue='UserName' )
+                        button.btn.btn-info.pull-right(ng-click="") 确定
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.page-content
             ng-form.form-inline
@@ -91,9 +101,9 @@ block content
                         td
                             a(data-toggle="modal" ,data-target="#Edit",ng-click="jitOrderEdit(x.OrderID,x.OrderStatus,x.OrderStatusDesc)",href='' )
                                 i.icon.icon-edit 修改
-                            a(data-toggle="modal" ,data-target="#Allocate",ng-click="moreuser($index,'userrole/userID/')",href='')
+                            a(data-toggle="modal" ,data-target="#Allocate",ng-click="Allocate(x.OrderID,x.OrderStatusDesc)",href='')
                                 i.icon.icon-edit 分配
-                            a(data-toggle="modal",data-target="#Details",ng-click="moreuser($index,'userrole/userID/')",href='')
+                            a(data-toggle="modal",data-target="#Details",ng-click="moreDetails(x.OrderID,' jinkeBro/order')",href='')
                                 i.icon.icon-zoom-in  订单详情
             div.pull-right
                 jason-pagination(conf='paginationConf')

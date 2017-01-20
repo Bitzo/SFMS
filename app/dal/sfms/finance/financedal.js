@@ -231,3 +231,33 @@ exports.delFinance = function (data, callback) {
         });
     });
 }
+
+exports.financeCount = function (data, callback) {
+    var sql = 'select FIType,InOutType,sum(FIPrice) as sum from jit_financeinfo,jit_projectbaseinfo ' +
+        'where jit_projectbaseinfo.IsActive = 1 and jit_financeinfo.IsActive = 1 ' +
+        "and FIStatu = '通过'";
+
+    if (data.startTime !== '') sql += " and CheckTime > '" + data.startTime + "' ";
+    if (data.endTime !== '') sql += " and CheckTime < '" + data.endTime + "' ";
+
+    sql += ' group by InOutType,FIType ';
+
+    logger.writeInfo('财务统计： ' + sql);
+
+    db_sfms.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('err: '+ err);
+            callback(true, '连接数据库失败');
+            return;
+        }
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('err: '+ err);
+                callback(true, '修改失败');
+                return;
+            }
+            callback(false, results);
+            connection.release();
+        });
+    });
+}
