@@ -12,6 +12,7 @@ var express = require('express'),
 //菜单业务逻辑组件
 var menuService = appRequire('service/backend/menu/menuservice'),
     userService = appRequire('service/backend/user/userservice'),
+    usermenuService = appRequire('service/backend/menu/usermenuservice'),
     logger = appRequire("util/loghelper").helper,
     config = appRequire('config/config');
 
@@ -562,6 +563,11 @@ router.post('/',function(req,res,next) {
 
 });
 
+/**
+ *菜单修改
+ * 1、如果MenuID为a的IsActive将被修改为0，则需要将ParentID = a 的IsActive 要被置为0
+ * 然后将usermenu表的MenuID = a 的记录的IsActive 置为0
+ */
 router.put('/',function (req,res) {
 
     // 检查所需要的字段是否都存在
@@ -646,66 +652,169 @@ router.put('/',function (req,res) {
 
     }
 
-    // 修改MenuID之前，先判断是否存在这个MenuID,MenuID不可以更改
-    var JudgeData = {
-        "MenuID" : menuID,
-        "pageNum": 1,
-        "page": 1
+    // 如果菜单的IsActive要被修改为0，那么它和它的的子菜单将修改为0
+    if (isActive == 0) {
+        var cancelData = {
+            "IsActive" : isActive,
+            "MenuID" : menuID
+        };
+        // 判断要修改的菜单是否存在
+        menuService.countAllMenus({"MenuID" : menuID}, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    errorMsg: "查询失败，服务器内部错误"
+                });
+            }
+
+            if (results !== undefined && results.length != 0 && results[0]['num'] != 0) {
+                 //菜单存在
+                menuService.updateMenuIsActive(cancelData,function (err,result) {
+                    if(err){
+                        res.status(500);
+                        return res.json({
+                            code :500,
+                            isSuccess : false,
+                            msg : '操作失败，服务器出错'
+                        });
+                    }
+
+                    if(result !== undefined && result.affectedRows != 0){
+                        //修改菜单表成功
+                        usermenuService.delUserMenu({"menuID" : menuID},function (err,userMenuResult) {
+                            if(err){
+                                res.status(500);
+                                return res.json({
+                                    code :500,
+                                    isSuccess : false,
+                                    msg : '操作失败，服务器出错'
+                                });
+                            }
+                            if(userMenuResult !== undefined && userMenuResult.affectedRows != 0){
+                                menuService.menuUpdate(data,function (err,menuResult) {
+                                    if(err){
+                                        res.status(500);
+                                        return res.json({
+                                            code :500,
+                                            isSuccess : false,
+                                            msg : '操作失败，服务器出错'
+                                        });
+                                    }
+
+                                    if(menuResult !== undefined && menuResult.affectedRows != 0){
+                                        res.status(200);
+                                        return res.json({
+                                            code : 200,
+                                            isSuccess : true,
+                                            updateResults : results,
+                                            msg : '菜单修改操作成功'
+                                        });
+
+                                    }else {
+                                        res.status(404);
+                                        return res.json({
+                                            code: 404,
+                                            isSuccess: false,
+                                            msg: "菜单修改操作失败"
+                                        });
+                                    }
+                                });
+
+                            }else {
+                                res.status(404);
+                                return res.json({
+                                    code: 404,
+                                    isSuccess: false,
+                                    msg: "取消用户菜单失败"
+                                });
+                            }
+                        });
+
+                    }else {
+                        res.status(404);
+                        return res.json({
+                            code: 404,
+                            isSuccess: false,
+                            msg: "取消菜单失败"
+                        });
+                    }
+                });
+            }else {
+                //菜单不存在
+                res.status(404);
+                return res.json({
+                    code :404,
+                    isSuccess : false,
+                    msg : '操作失败，所要修改的菜单不存在'
+                });
+                return ;
+            }
+        });
     }
 
-    menuService.queryAllMenus(JudgeData,function (err,result) {
-        if(err){
-            res.status(500);
-            return res.json({
-                code : 500,
-                isSuccess : false,
-                updateResult: result,
-                msg : '操作失败，服务器出错'
-            });
-        }
-        // 所要修改的菜单存在
-        if(result !== undefined && result.length !== 0){
-            menuService.menuUpdate(data,function (err,results) {
-                if(err){
-                    res.status(500);
-                    return res.json({
-                        code :500,
-                        isSuccess : false,
-                        updateResults:results,
-                        msg : '操作失败，服务器出错'
-                    });
-                }
+    if (isActive != 0){
+        // 修改MenuID之前，先判断是否存在这个MenuID,MenuID不可以更改
+        var JudgeData = {
+            "MenuID" : menuID,
+            "pageNum": 1,
+            "page": 1
+        };
 
+        menuService.countAllMenus({"MenuID" : menuID}, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    errorMsg: "查询失败，服务器内部错误"
+                });
+            }
 
-                if(results !== undefined && results.affectedRows != 0){
-                    res.status(200);
-                    return res.json({
-                        code : 200,
-                        isSuccess : true,
-                        updateResults : results,
-                        msg : '菜单修改操作成功'
-                    });
+            if (results !== undefined && results.length != 0 && results[0]['num'] != 0) {
+                //菜单存在
+                menuService.menuUpdate(data,function (err,results) {
+                    if(err){
+                        res.status(500);
+                        return res.json({
+                            code :500,
+                            isSuccess : false,
+                            updateResults:results,
+                            msg : '操作失败，服务器出错'
+                        });
+                    }
 
-                }else {
-                    res.status(404);
-                    return res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "菜单修改操作失败"
-                    });
-                }
-            });
-        }else{
-            // 所要修改的菜单不存在
-            res.status(404);
-            return res.json({
-                code :404,
-                isSuccess : false,
-                updateResult:result,
-                msg : '操作失败，所要修改的菜单不存在'
-            });
-        }
-    });
+                    if(results !== undefined && results.affectedRows != 0){
+                        res.status(200);
+                        return res.json({
+                            code : 200,
+                            isSuccess : true,
+                            updateResults : results,
+                            msg : '菜单修改操作成功'
+                        });
+
+                    }else {
+                        res.status(404);
+                        return res.json({
+                            code: 404,
+                            isSuccess: false,
+                            msg: "菜单修改操作失败"
+                        });
+                    }
+                });
+            }else{
+                // 所要修改的菜单不存在
+                res.status(404);
+                return res.json({
+                    code :404,
+                    isSuccess : false,
+                    updateResult:result,
+                    msg : '操作失败，所要修改的菜单不存在'
+                });
+            }
+        });
+    }
 
 });
 
@@ -737,57 +846,76 @@ router.delete('/',function(req,res) {
     var deleteData = {
         "MenuID" : menuID
     };
-    //查询要删除的菜单是否存在
-    menuService.countAllMenus(deleteData,function (err,result) {
-        if(err){
+
+    // 判断要修改的菜单是否存在
+    menuService.countAllMenus({"MenuID" : menuID}, function (err, results) {
+        if (err) {
             res.status(500);
             return res.json({
-                code : 500,
-                isSuccess : false,
-                deleteResult:result,
-                msg : '操作失败，服务器出错'
+                code: 500,
+                isSuccess: false,
+                errorMsg: "查询失败，服务器内部错误"
             });
         }
-        //所要删除的菜单存在，执行删除操作
-        if(result !== undefined && result.length !== 0){
-            menuService.menuUpdate(data,function (err,results) {
+
+        if (results !== undefined && results.length != 0 && results[0]['num'] != 0) {
+            //菜单存在
+            menuService.updateMenuIsActive(data,function (err,result) {
                 if(err){
                     res.status(500);
                     return res.json({
                         code :500,
                         isSuccess : false,
-                        deleteResults: results,
                         msg : '操作失败，服务器出错'
                     });
                 }
 
-                //判断是否删除成功
-                if(results !== undefined && results.affectedRows != 0){
-                    res.status(200);
-                    return res.json({
-                        code : 200,
-                        isSuccess : true,
-                        deleteResult : results,
-                        msg : '菜单删除操作成功'
+                if(result !== undefined && result.affectedRows != 0){
+                    //修改菜单表成功
+                    usermenuService.delUserMenu({"menuID" : menuID},function (err,userMenuResult) {
+                        if(err){
+                            res.status(500);
+                            return res.json({
+                                code :500,
+                                isSuccess : false,
+                                msg : '操作失败，服务器出错'
+                            });
+                        }
+                        if(userMenuResult !== undefined && userMenuResult.affectedRows != 0){
+                            res.status(200);
+                            return res.json({
+                                code: 200,
+                                isSuccess: true,
+                                msg: "删除菜单、用户菜单成功"
+                            });
+                        }else {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "删除用户菜单失败"
+                            });
+                        }
                     });
+
                 }else {
                     res.status(404);
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "菜单删除操作失败"
+                        msg: "删除菜单失败"
                     });
                 }
             });
-        }else{
-            // 所要删除的菜单不存在
+        }else {
+            //菜单不存在
             res.status(404);
             return res.json({
                 code :404,
                 isSuccess : false,
-                deleteResult:result,
-                msg : '操作失败，所要删除的菜单不存在'
+                msg : '操作失败，所要修改的菜单不存在'
             });
+            return ;
         }
     });
 });

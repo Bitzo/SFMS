@@ -40,7 +40,7 @@ block content
             th 审核时间
             th 备注
             th 是否有效
-            th(style="width:80px;") 操作
+            th(style="width:100px;") 操作
         tbody
           tr(ng-repeat="x in datas") 
             td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
@@ -55,9 +55,11 @@ block content
             td {{x.CheckUser}}
             td {{x.CheckTime}}
             td {{x.Remark}}
-            td {{x.IsActi}}
+            td {{x.IsActive | numToChin:x.IsActive }}
             td
               a(href='#/sfms/financeEdit?ID={{x.ID}}')
-                i.icon.icon-edit 编辑            
+                i.icon.icon-edit 编辑
+              a(ng-click="remove($index,x.FIName,'/sfms/api/finance')",href='')
+                i.icon.icon-trash 删除
       div.pull-right
         jason-pagination(conf='paginationConf')

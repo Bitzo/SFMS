@@ -14,7 +14,7 @@ angular.module('jason.pagination').directive('jasonPagination',[function(){
         '<li ng-class="{disabled: conf.currentPage == 1}" ng-click="prevPage()"><span>&laquo;</span></li>' +
         '<li ng-repeat="item in pageList track by $index" ng-class="{active: item == conf.currentPage, separate: item == \'...\'}" ' +
         'ng-click="changeCurrentPage(item)">' +
-        '<span>{{ item }}</span>' +
+        '<span ><a href="" style="color:blue">{{ item }}</a></span>' +
         '</li>' +
         '<li ng-class="{disabled: conf.currentPage == conf.numberOfPages}" ng-click="nextPage()"><span>&raquo;</span></li>' +
         '</ul>' +
@@ -40,6 +40,7 @@ angular.module('jason.pagination').directive('jasonPagination',[function(){
                 }else{
                     scope.conf.currentPage = item;
                 }
+                console.log(scope.conf.currentPage)
             };
 
             // 定义分页的长度必须为奇数 (default:9)

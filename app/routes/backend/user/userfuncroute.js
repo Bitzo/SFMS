@@ -49,9 +49,6 @@ router.get('/', function (req, res) {
 
     functionCode = functionCode.trim();
 
-    console.log('UserID: ' + accountID)
-    console.log('FunctionCode: ' + functionCode)
-
     userRoleService.query({AccountID: accountID}, function(err, results) {
         if (err) {
             res.status(500);
@@ -66,7 +63,6 @@ router.get('/', function (req, res) {
             for (var i in results) {
                 roleID[i] = results[i].RoleID;
             }
-            console.log(roleID)
             userfuncService.queryUserFunc({RoleID:roleID}, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -77,7 +73,6 @@ router.get('/', function (req, res) {
                     })
                 }
                 if (results!==undefined && results.length > 0) {
-                    console.log(results)
                     for (var i in results) {
                         if (functionCode === results[i].FunctionCode) {
                             res.status(200);

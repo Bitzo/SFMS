@@ -199,6 +199,36 @@ exports.menuInsert = function (data,callback) {
 
 
 }
+/**
+ * 把菜单置为无效
+ * @param data
+ * @param callback
+ */
+exports.updateMenuIsActive = function (data,callback) {
+    var update_sql = 'update jit_menu set IsActive = ' + data.IsActive + ' where MenuID = ' + data.MenuID + ' or ParentID = ' + data.MenuID +';';
+    db_backend.mysqlPool.getConnection(function (err,connection) {
+        if(err) {
+            logger.writeError("[menudal]数据库连接错误：" + err);
+            callback(true);
+            return;
+        }
+
+        logger.writeInfo("in menudal,修改订单状态:" + update_sql);
+        console.log("in menudal,修改订单状态:" + update_sql);
+
+        connection.query(update_sql, function(err, results) {
+            if (err) {
+                throw err;
+                callback(true);
+                return;
+            }
+
+            callback(false, results);
+            connection.release();
+        })
+
+    });
+}
 
 /**
  * 菜单编辑
@@ -219,8 +249,7 @@ exports.menuUpdate = function(data, callback) {
             }
         }
     }
-    sql += " where IsActive = 1 and MenuID = " + data['MenuID'];
-
+    sql += " where MenuID = " + data['MenuID'];
     update_sql = update_sql + sql;
 
     logger.writeInfo("[menuUpdate func in menudal]菜单编辑:" + update_sql);
@@ -362,6 +391,11 @@ exports.queryMenuByUserID = function (data,callback) {
     });
 }
 
+/**
+ * 查询多个菜单
+ * @param data
+ * @param callback
+ */
 exports.queryMenuByID = function (data, callback) {
     var sql = 'select count(1) as count from jit_menu where IsActive=1';
     sql += " and (";

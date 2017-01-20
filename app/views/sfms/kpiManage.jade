@@ -37,7 +37,7 @@ block content
             th 备注
             th 审核状态
             th 是否有效
-            th(style="width:80px;") 操作
+            th(style="width:100px;") 操作
         tbody
           tr(ng-repeat="x in datas") 
             td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
@@ -54,6 +54,8 @@ block content
             td {{x.IsActive | numToChin:data.IsActive }}
             td
               a(href='#/sfms/kpiManageCheck/?ID={{x.ID}}' )
-                i.icon.icon-edit 审核        
+                i.icon.icon-edit 审核
+              a(ng-click="remove($index,x.KPIName,'/sfms/api/kpi')",href='')
+                i.icon.icon-trash 删除
       div.pull-right
         jason-pagination(conf='paginationConf')
