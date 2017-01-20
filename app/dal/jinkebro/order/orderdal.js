@@ -10,52 +10,6 @@ var db_jinkebro = appRequire('db/db_jinkebro'),
     logger = appRequire("util/loghelper").helper,
     async = require('async'),
     moment = require('moment');
-//新增订单
-exports.insertOrder = function(data, callback) {
-
-    var insertSql = 'insert into jit_order set ';
-    var sql = '';
-
-    if (data !== undefined) {
-        for (var key in data) {
-            if (sql.length == 0) {
-                if (!isNaN(data[key])) {
-                    sql += " " + key + " = " + data[key] + " ";
-                } else {
-                    sql += " " + key + " = '" + data[key] + "' ";
-                }
-            } else {
-                if (!isNaN(data[key])) {
-                    sql += ", " + key + " = " + data[key] + " ";
-                } else {
-                    sql += ", " + key + " = '" + data[key] + "' ";
-                }
-            }
-        }
-    }
-
-    insertSql += sql;
-
-    logger.writeInfo("[insertOrder func in productdal]订单新增:" + insertSql);
-    console.log("[insertOrder func in productdal]订单新增:" + insertSql);
-
-
-    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
-        if (err) {
-            callback(true);
-            return;
-        }
-
-        connection.query(insertSql, function(err, results) {
-            if (err) {
-                callback(true);
-                return;
-            }
-            callback(false, results);
-            connection.release();
-        });
-    });
-}
 
 /**
  * 创建订单（事务保证，损失性能）
@@ -330,100 +284,6 @@ exports.insertOrderFull = function(data, callback) {
     });
 }
 
-//新增订单产品表的一条记录
-exports.insertOrderProduct = function(data, callback) {
-
-    var insertSql = 'insert into jit_orderproduct set ';
-    var sql = '';
-
-    if (data !== undefined) {
-        for (var key in data) {
-            if (sql.length == 0) {
-                if (!isNaN(data[key])) {
-                    sql += " " + key + " = " + data[key] + " ";
-                } else {
-                    sql += " " + key + " = '" + data[key] + "' ";
-                }
-            } else {
-                if (!isNaN(data[key])) {
-                    sql += ", " + key + " = " + data[key] + " ";
-                } else {
-                    sql += ", " + key + " = '" + data[key] + "' ";
-                }
-            }
-        }
-    }
-
-    insertSql += sql + ";";
-
-    logger.writeInfo("[insertOrderProduct func in orderdal]订单新增:" + insertSql);
-    console.log("[insertOrderProduct func in orderdal]订单新增:" + insertSql);
-
-
-    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
-        if (err) {
-            callback(true);
-            return;
-        }
-
-        connection.query(insertSql, function(err, results) {
-            if (err) {
-                callback(true);
-                return;
-            }
-            callback(false, results);
-            connection.release();
-        });
-    });
-}
-
-//新增用户订单表的一条记录
-exports.insertOrderCustomer = function(data, callback) {
-
-    var insertSql = 'insert into jit_ordercustomer set ';
-    var sql = '';
-
-    if (data !== undefined) {
-        for (var key in data) {
-            if (sql.length == 0) {
-                if (!isNaN(data[key])) {
-                    sql += " " + key + " = " + data[key] + " ";
-                } else {
-                    sql += " " + key + " = '" + data[key] + "' ";
-                }
-            } else {
-                if (!isNaN(data[key])) {
-                    sql += ", " + key + " = " + data[key] + " ";
-                } else {
-                    sql += ", " + key + " = '" + data[key] + "' ";
-                }
-            }
-        }
-    }
-
-    insertSql += sql + ";";
-
-    logger.writeInfo("[insertOrderCustomer func in productdal]订单用户表的新增:" + insertSql);
-    console.log("[insertOrderCustomer func in productdal]订单用户表的新增:" + insertSql);
-
-
-    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
-        if (err) {
-            callback(true);
-            return;
-        }
-
-        connection.query(insertSql, function(err, results) {
-            if (err) {
-                callback(true);
-                return;
-            }
-            callback(false, results);
-            connection.release();
-        });
-    });
-}
-
 /**
  * 删除订单,物理删除
  * @param data
@@ -458,15 +318,15 @@ exports.deleteOrder = function(data, callback) {
  */
 exports.updateOrder = function(data, callback) {
     //接收的data数据形式如下：
-    // var dat = {
+    // {
     //     order: {
-    //             OrderID: 1,
-    //             OrderTime: '2017-01-1318: 29: 52',
+    //         OrderID: '1',
+    //             OrderTime: '',
     //             PayTime: '',
     //             DeliveryTime: '',
-    //             PayMethod: '0',
-    //             IsValid: 1,
-    //             IsActive: 1,
+    //             PayMethod: '',
+    //             IsValid: '',
+    //             IsActive: 0,
     //             DeliveryUserID: '',
     //             IsCancel: '',
     //             CancelTime: '',
@@ -476,170 +336,67 @@ exports.updateOrder = function(data, callback) {
     //             Memo: '',
     //             IsCheck: '',
     //             PDate: '',
-    //             OrderStatus: 1
-    //     },
-    //     orderProduct: {
-    //         ProductIDs: [
-    //             1,
-    //             2,
-    //             5
-    //         ],
-    //             ProductCounts: [
-    //             2,
-    //             3,
-    //             1
-    //         ]
+    //             OrderStatus: ''
     //     }
     // }
     var orderTableData = data.order;
-    var ordprodtTabDt = data.orderProduct;
-    // 订购商品的ID及其数量
-    var receiveProductIDs = ordprodtTabDt.ProductIDs; //array
-    var receiveProductCounts = ordprodtTabDt.ProductCounts; //array
-    console.log(receiveProductIDs == undefined);
-    console.log(receiveProductCounts == undefined);
+    for (var key in orderTableData) {
+        if (orderTableData[key] == 0){
+            orderTableData[key] = orderTableData[key].toString();
+        }
+    }
+
+    var update_sql = 'update jit_order set ';
+    var temp_sql = '';
+    if (orderTableData !== undefined) {
+        for (var key in orderTableData) {
+            if (orderTableData[key] != '') {
+                if (temp_sql.length == 0) {
+                    if (!isNaN(orderTableData[key]) && orderTableData[key] != 0) {
+                        temp_sql += " " + key + " = " + orderTableData[key] + " ";
+                    } else {
+                        temp_sql += " " + key + " = '" + orderTableData[key] + "' ";
+                    }
+                } else {
+                    if (!isNaN(orderTableData[key]) && orderTableData[key] != 0) {
+                        temp_sql += " , " + key + " = " + orderTableData[key] + " ";
+                    } else {
+                        temp_sql += " , " + key + " = '" + orderTableData[key] + "' ";
+                    }
+                }
+            }
+        }
+    }
+
+    update_sql += temp_sql;
+    update_sql += ' where OrderID = ' + orderTableData.OrderID + ';';
+    console.log('修改order表中记录的sql:' + update_sql);
+    logger.writeInfo('修改order表中记录的sql:' + update_sql);
+
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             console.error('mysql 链接失败');
             callback(true);
             return;
         }
-        //开始事务
-        connection.beginTransaction(function(err) {
+
+        connection.query(update_sql, function(err, results) {
             if (err) {
-                throw err;
+                callback(true);
+                return;
             }
-            var returnResult = {};
-            var funcArr = [];
-            // 修改Order表
-            var func1 = function(callback1) {
-                var update_sql = 'update jit_order set  ';
-                var temp_sql = '';
-                if (orderTableData !== undefined) {
-                    for (var key in orderTableData) {
-                        if (orderTableData[key] != '') {
-                            if (temp_sql.length == 0) {
-                                if (!isNaN(orderTableData[key])) {
-                                    temp_sql += " " + key + " = " + orderTableData[key] + " ";
-                                } else {
-                                    temp_sql += " " + key + " = '" + orderTableData[key] + "' ";
-                                }
-                            } else {
-                                if (!isNaN(orderTableData[key])) {
-                                    temp_sql += " , " + key + " = " + orderTableData[key] + " ";
-                                } else {
-                                    temp_sql += " , " + key + " = '" + orderTableData[key] + "' ";
-                                }
-                            }
-                        }
-                    }
-                }
-                update_sql += temp_sql;
-                update_sql += ' where OrderID = ' + orderTableData.OrderID + ';';
-                console.log('修改order表中记录的sql:' + update_sql);
-                logger.writeInfo('修改order表中记录的sql:' + update_sql);
-                connection.query(update_sql, function (err, info) {
-                    if (err) {
-                        connection.rollback(function() {
-                            logger.writeError("[updateOrder]执行事务失败，" + "ERROR：" + err);
-                            console.log("[updateOrder]执行事务失败，" + "ERROR：" + err);
-                            throw err;
-                        });
-                    }
-                    console.log(info);
-                    returnResult = info;
-                    callback1(err, info);
-                });
-            };
-            funcArr.push(func1);
-
-            // 修改orderproduct表
-            if (receiveProductIDs !== undefined && receiveProductIDs.length !== undefined && receiveProductIDs.length > 0) {
-                var func2 = function(callback2) {
-                    var orderProDelSql = 'delete from jit_orderproduct where jit_orderproduct.OrderID = ' + orderTableData.OrderID;
-                    console.log('删除orderproduct表中指定记录的sql：' + orderProDelSql);
-                    logger.writeInfo('删除orderproduct表中指定记录的sql：' + orderProDelSql);
-                    connection.query(orderProDelSql, function(err, info) {
-                        if (err) {
-                            connection.rollback(function() {
-                                logger.writeError("[ordercustomer]执行事务失败，" + "ERROR：" + err);
-                                console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
-                                throw err;
-                            });
-                        }
-                        console.log(info);
-                        callback2(err, info);
-                    });
-                };
-                funcArr.push(func2);
-            }
-
-
-            // 新增orderproduct表的记录
-            (function next(index) {
-                if (receiveProductIDs === undefined || receiveProductIDs.length === undefined || receiveProductIDs.length <= 0) {
-                    return;
-                }
-                if (index === receiveProductIDs.length) { // No items left
-                    return;
-                }
-                var tempProID = receiveProductIDs[index];
-                var tempProCount = receiveProductCounts[index];
-                var orderProAddSqlTemp = 'insert into jit_orderproduct set jit_orderproduct.OrderID = ' + orderTableData.OrderID + ' , ';
-                orderProAddSqlTemp += ' jit_orderproduct.ProductID = ' + tempProID + ' , ';
-                orderProAddSqlTemp += ' jit_orderproduct.ProductCount = ' + tempProCount + ' ;';
-
-                console.log("orderProAddSqlTemp" + index + ": " + orderProAddSqlTemp);
-                logger.writeInfo("orderProAddSqlTemp" + index + ": " + orderProAddSqlTemp);
-                var tempfunc = function(callbacktemp) {
-                    connection.query(orderProAddSqlTemp, function(err, info) {
-                        if (err) {
-                            connection.rollback(function() {
-                                logger.writeError("[orderProduct]执行事务失败，" + "ERROR：" + err);
-                                console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
-                                throw err;
-                            });
-                        }
-                        callbacktemp(err, info);
-                    });
-                }
-                funcArr.push(tempfunc);
-                next(index + 1);
-            })(0);
-
-            async.series(funcArr, function(err, result) {
-                if (err) {
-                    connection.rollback(function(err) {
-                        throw err;
-                    });
-                    callback(true);
-                    connection.release();
-                    return;
-                }
-
-                connection.commit(function(err) {
-                    if (err) {
-                        connection.rollback(function() {
-                            throw err;
-                        });
-                    }
-                    console.log('success');
-                    connection.release();
-                    callback(false, returnResult);
-                });
-            });
+            callback(false, results);
+            connection.release();
         });
-
     });
-
 }
 
 /**
- * 查询订单
+ * 查询订单、产品信息
  * @param data
  * @param callback
  */
-exports.queryOrders = function(data, callback) {
+exports.queryOrderProduct = function(data, callback) {
     var arr = new Array();
     // data的格式如下
     // {
@@ -663,7 +420,7 @@ exports.queryOrders = function(data, callback) {
     //             'jit_order.OrderStatus': ''
     //     }
     // }
-    arr.push(' select  jit_customer.CustomerID,jit_ordercustomer.OrderID, ');
+    arr.push(' select jit_customer.CustomerID,jit_ordercustomer.OrderID, ');
     arr.push(' jit_order.OrderTime,jit_orderproduct.ProductID,jit_product.ProductName,jit_orderproduct.ProductCount, ');
     arr.push(' jit_product.ProductPrice,jit_productype.ProductTypeName,jit_order.PayMethod,jit_order.OrderStatus,jit_order.IsValid,jit_order.IsActive ');
     arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer,jit_productype ');
@@ -755,12 +512,12 @@ exports.queryOrders = function(data, callback) {
 }
 
 /**
- * 查询指定条件订单的个数
+ * 查询指定条件订单产品的个数
  * @param data
  * @param callback
  * @constructor
  */
-exports.CountOrders = function(data, callback) {
+exports.CountOrderProduct = function(data, callback) {
     var arr = new Array();
     arr.push(' select count(1) as num ');
     arr.push(' from jit_ordercustomer ,jit_order,jit_orderproduct,jit_product,jit_customer ');
@@ -817,6 +574,126 @@ exports.CountOrders = function(data, callback) {
         }
         tempSql += ' ) ';
         sql += tempSql;
+    }
+
+    sql += ';'; //sql拼接结束
+
+    logger.writeInfo("查询指定条件的订单个数,sql:" + sql);
+    console.log("查询指定条件的订单个数,sql:" + sql);
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError('数据库连接错误：' + err);
+            callback(true);
+            return;
+        }
+        connection.query(sql, function(err, results) {
+            if (err) {
+                logger.writeError('查询指定条件的订单个数：' + err);
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+            return;
+        });
+    });
+}
+
+/**
+ * 查询订单信息，只查询订单表
+ * @param data
+ * @param callback
+ */
+exports.queryOrders = function(data, callback) {
+    var arr = new Array();
+    console.log(data);
+    arr.push(' select jit_order.OrderID,jit_order.OrderTime,jit_order.PayTime, ');
+    arr.push(' jit_order.DeliveryTime,jit_order.PayMethod, ')
+    arr.push(' jit_order.IsValid,jit_order.IsActive,jit_order.DeliveryUserID, ');
+    arr.push(' jit_order.IsCancel,jit_order.CancelTime,jit_order.DiscountMoney,jit_order.DiscountType, ');
+    arr.push(' jit_order.BizID,jit_order.Memo,jit_order.IsCheck,jit_order.PDate,jit_order.OrderStatus ');
+    arr.push(' from jit_order ');
+    arr.push(' where 1=1 ');
+
+    var query_sql = arr.join(' ');
+
+    // 接收service传来的数据
+    var pageManageData = data.pageManage;
+    var orderData = data.order;
+
+    // OrderID,OrderStatus,IsActive的拼接
+    if (orderData !== undefined) {
+        for (var key in orderData) {
+            if (orderData[key] != '') {
+                //判断data[key]是否是数值类型
+                if (!isNaN(orderData[key])) {
+                    query_sql += " and " + key + " = " + orderData[key] + " ";
+                } else {
+                    query_sql += " and " + key + " = '" + orderData[key] + "' ";
+                }
+            }
+        }
+    }
+
+    var num = pageManageData.pageNum; //每页显示的个数
+    var page = pageManageData.page || 1;
+
+    if (pageManageData.isPaging == 1) {
+        query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
+    }
+
+    logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
+    console.log("[queryOrders func in productdal]订单查询:" + query_sql);
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(query_sql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+            return;
+        });
+    });
+
+}
+
+/**
+ * 查询指定条件订单的个数（只查询订单表）
+ * @param data
+ * @param callback
+ * @constructor
+ */
+exports.CountOrders = function(data, callback) {
+    var arr = new Array();
+    arr.push(' select count(1) as num ');
+    arr.push(' from jit_order ');
+    arr.push(' where 1 = 1 ');
+
+    var sql = arr.join(' ');
+
+    // 接收service传来的数据
+    var orderData = data.order;
+
+    // OrderID,IsActive,OrderStatus的拼接
+    if (orderData !== undefined) {
+        for (var key in orderData) {
+            if (orderData[key] != '') {
+                //判断data[key]是否是数值类型
+                if (!isNaN(orderData[key])) {
+                    sql += " and " + key + " = " + orderData[key] + " ";
+                } else {
+                    sql += " and " + key + " = '" + orderData[key] + "' ";
+                }
+            }
+        }
     }
 
     sql += ';'; //sql拼接结束

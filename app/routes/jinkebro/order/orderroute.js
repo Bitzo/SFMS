@@ -15,21 +15,103 @@ var orderService = appRequire('service/jinkebro/order/orderservice'),
     moment = require('moment'),
     validator = require('validator');
 
-router.get('/', function (req, res) {
-    for (var key1 in req.query) {
-        console.log("获取等到的url为" + key1);
-    }
+/**
+ * 查询order表的信息
+ */
+router.get('/order',function (req,res) {
     //接收前端数据
     var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
         pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
         OrderID = req.query.OrderID || '',
+        isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
+        IsActive = (req.query.IsActive !== undefined) ? (req.query.IsActive) : '',
+        OrderStatus = req.query.OrderStatus || '';
+
+    var sendData = {
+        page :page,
+        pageNum : pageNum,
+        OrderID : OrderID,
+        isPaging : isPaging,
+        IsActive : IsActive,
+        OrderStatus : OrderStatus
+    };
+    var countNum = -1;
+    orderService.CountOrders(sendData, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                errorMsg: "查询失败，服务器内部错误"
+            });
+        }
+        if (results !== undefined && results.length != 0) {
+            countNum = results[0]['num'];
+
+            //查询所需的详细数据
+            orderService.queryOrders(sendData, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                }
+
+                if (result !== undefined && result.length != 0 && countNum != -1) {
+                    var resultBack = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        dataNum: countNum,
+                        curPage: page,
+                        curPageNum: pageNum,
+                        totalPage: Math.ceil(countNum / pageNum),
+                        data: result
+                    };
+                    if (resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
+                    }
+                    res.status(200);
+                    //console.log(resultBack);
+                    return res.json(resultBack);
+                } else {
+                    res.status(200);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相应订单"
+                    });
+                }
+            });
+        } else {
+            res.status(200);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相应订单"
+            });
+        }
+    });
+});
+
+/**
+ * 查询订单产品信息
+ */
+router.get('/', function (req, res) {
+    var f = JSON.parse(req.query.f);
+    //接收前端数据
+    var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
+        pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
+        OrderID = f.OrderID || '',
         WechatUserCode = req.query.WechatUserCode || '',
-        isPaging = req.query.isPaging || 1, //是否分页 0表示不分页,1表示分页
+        isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
         IsActive = (req.query.IsActive !== undefined) ? (req.query.IsActive) : 1,
         CustomerID = req.query.CustomerID || '',
         ProductID = req.query.ProductID || [],
-        OrderStatus = req.query.OrderStatus || '',
-        ProductCount = req.query.ProductCount || []
+        OrderStatus = f.OrderStatus || '',
+        ProductCount = req.query.ProductCount || [];
     //前端传来的是字符串,转化为对象
     if (typeof ProductID == "string") {
         ProductID = JSON.parse(ProductID);
@@ -50,22 +132,16 @@ router.get('/', function (req, res) {
 
     // 传到dal的数据
     var sendData = {
-        pageManage : {
-            page : page,
-            pageNum : pageNum,
-            isPaging : isPaging
-        },
-        orderProduct : {
-            "jit_orderproduct.ProductID" : ProductID,
-            "jit_orderproduct.ProductCount" : ProductCount
-        },
-        order : {
-            "jit_ordercustomer.OrderID" : OrderID,
-            "jit_customer.WechatUserCode" : WechatUserCode,
-            "jit_customer.CustomerID" : CustomerID,
-            "jit_order.OrderStatus" : OrderStatus,
-            "jit_order.IsActive" : IsActive
-        }
+        page : page,
+        pageNum : pageNum,
+        isPaging : isPaging,
+        ProductID : ProductID,
+        ProductCount : ProductCount,
+        OrderID : OrderID,
+        WechatUserCode : WechatUserCode,
+        CustomerID : CustomerID,
+        OrderStatus : OrderStatus,
+        IsActive : IsActive
     };
 
     // 应该是整型的数据
@@ -85,7 +161,7 @@ router.get('/', function (req, res) {
         }
     }
 
-    orderService.CountOrders(sendData, function (err, results) {
+    orderService.CountOrderProduct(sendData, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -98,7 +174,7 @@ router.get('/', function (req, res) {
             countNum = results[0]['num'];
 
             //查询所需的详细数据
-            orderService.queryOrders(sendData, function (err, result) {
+            orderService.queryOrderProduct(sendData, function (err, result) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -264,11 +340,11 @@ router.put('/', function (req, res) {
     var formdata = JSON.parse(req.body.formdata);
 
     // 接收前端传过来的变量
-    var OrderID = formdata.OrderID || 256,     //not null
-        OrderTime = formdata.OrderTime || moment().format('YYYY-MM-DD HH:mm:ss'),  //not null
-        PayMethod = (formdata.PayMethod !== undefined) ? (formdata.PayMethod) : 1, //not null
-        IsValid = (formdata.IsValid !== undefined) ? (formdata.IsValid) : 1,       //not null
-        IsActive = (formdata.IsActive !== undefined) ? (formdata.IsActive) : 1,    //not null
+    var OrderID = formdata.OrderID ,     //not null
+        OrderTime = formdata.OrderTime || '',  //not null
+        PayMethod = formdata.PayMethod || '', //not null
+        IsValid = (formdata.IsValid != undefined) ? (formdata.IsValid) : '',       //not null
+        IsActive = (formdata.IsActive != undefined) ? (formdata.IsActive) : '',    //not null
         PayTime = formdata.PayTime,
         DeliveryTime = formdata.DeliveryTime,
         DeliveryUserID = formdata.DeliveryUserID,
@@ -280,52 +356,11 @@ router.put('/', function (req, res) {
         Memo = formdata.Memo,
         IsCheck = formdata.IsCheck,
         PDate = formdata.PDate,
-        OrderStatus = (formdata.OrderStatus !== undefined) ? (formdata.OrderStatus) : 1,  //not null
-        ProductIDs = formdata.ProductIDs,  // 可选
-        ProductCounts = formdata.ProductCounts; // 可选
+        OrderStatus = (formdata.OrderStatus != undefined) ? (formdata.OrderStatus) : '';  //not null
 
-    // orderModelData传到dal里
-    var orderModelData = orderModel;
-    delete orderModelData.PK;
-
-    //整合数据
-    orderModelData.OrderID = OrderID;
-    orderModelData.OrderTime = OrderTime;
-    orderModelData.PayMethod = PayMethod;
-    orderModelData.IsValid = IsValid;
-    orderModelData.IsActive = IsActive;
-    orderModelData.OrderStatus = OrderStatus;
-
-    var sendData = {
-        order : orderModelData,
-        orderProduct : {
-            ProductIDs : ProductIDs,
-            ProductCounts : ProductCounts
-        }
-    }
     //检查必填字段是否存在
     // var mandatoryFieldData = ['OrderID','OrderTime','PayMethod', 'IsValid', 'IsActive','OrderStatus'];
     if (orderService.checkInput(res, OrderID, 'OrderID') !== undefined) {
-        return;
-    }
-
-    if (orderService.checkInput(res, OrderTime, 'OrderTime') !== undefined) {
-        return;
-    }
-
-    if (orderService.checkInput(res, PayMethod, 'PayMethod') !== undefined) {
-        return;
-    }
-
-    if (orderService.checkInput(res, IsValid, 'IsValid') !== undefined) {
-        return;
-    }
-
-    if (orderService.checkInput(res, IsActive, 'IsActive') !== undefined) {
-        return;
-    }
-
-    if (orderService.checkInput(res, OrderStatus, 'OrderStatus') !== undefined) {
         return;
     }
 
@@ -338,6 +373,9 @@ router.put('/', function (req, res) {
         var returnErrInfo = {
             "msg": "参数不能为空!"
         };
+        if(intData == undefined){
+            return ;
+        }
         if (isNaN(intData)) {
             returnErrInfo.msg = intDataDesc + "必须是一个整数!";
             res.status(400);
@@ -364,57 +402,81 @@ router.put('/', function (req, res) {
     }
 
     // 数据完整性校验
-    if (checkIsInt(orderModelData.OrderID,'OrderID') !== undefined) {
+    if (OrderID != undefined && checkIsInt(OrderID,'OrderID') !== undefined) {
         return ;
     }
 
-    if (checkIsInt(orderModelData.PayMethod,'PayMethod') !== undefined) {
+    if (IsActive != undefined && checkIsInt(IsActive,'IsActive') !== undefined) {
         return ;
     }
 
-    if (checkIsInt(orderModelData.IsActive,'IsActive') !== undefined) {
+    if (OrderStatus != undefined && checkIsInt(OrderStatus,'OrderStatus') !== undefined) {
         return ;
     }
 
-    if (checkIsInt(orderModelData.IsValid,'IsValid') !== undefined) {
-        return ;
-    }
+    var countData = {
+        OrderID : OrderID,
+        OrderStatus : '',
+        IsActive : '',
+    };
 
-    if (checkIsInt(orderModelData.OrderStatus,'OrderStatus') !== undefined) {
-        return ;
-    }
+    var sendData = {
+        OrderStatus : OrderStatus,
+        IsActive : IsActive,
+        OrderID : OrderID
+    };
 
-    // 订单修改
-    orderService.updateOrder(sendData,function (err,result) {
+    orderService.CountOrders(countData, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
                 code: 500,
                 isSuccess: false,
-                msg: '服务器出错，产品修改操作失败'
+                errorMsg: "查询失败，服务器内部错误"
             });
-            return ;
         }
-        console.log("result.affectedRows: " + result.affectedRows);
-        console.log("result.affectedRows != 0的结果：" + (result.affectedRows != 0));  //true
-        if (result !== undefined && result.affectedRows != 0) {
-            res.status(200);
-            res.json({
-                code : 200,
-                isSuccess : true,
-                msg : result
+        if (results !== undefined && results.length != 0 && results[0]['num'] != 0) {
+            // 订单修改
+            orderService.updateOrder(sendData,function (err,result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '服务器出错，产品修改操作失败'
+                    });
+                    return ;
+                }
+
+                if (result !== undefined && result.affectedRows != 0) {
+                    res.status(200);
+                    res.json({
+                        code : 200,
+                        isSuccess : true,
+                        msg : '订单修改成功'
+                    });
+                    return ;
+                }else {
+                    res.status(400);
+                    res.json({
+                        code : 400,
+                        isSuccess : true,
+                        msg : '订单修改失败'
+                    });
+                    return ;
+                }
             });
-            return ;
         }else {
-            res.status(400);
+            res.status(404);
             res.json({
-                code : 400,
+                code : 404,
                 isSuccess : true,
-                msg : '订单新增失败'
+                msg : '要修改的订单不存在，订单修改失败'
             });
             return ;
         }
     });
+
 
 });
 
