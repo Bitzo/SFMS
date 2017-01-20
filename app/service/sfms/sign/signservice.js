@@ -134,6 +134,9 @@ exports.signCount = function (data, callback) {
         'startTime': data.startTime || '',
         'endTime': data.endTime || '',
     }
+    if( data.userID.length == 0) {
+        formdata.userID = '';
+    }
 
     logModel.OperationName = operationConfig.sfmsApp.SignManage.SignCount.actionName;
     logModel.Action = operationConfig.sfmsApp.SignManage.SignCount.actionName;

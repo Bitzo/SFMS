@@ -89,7 +89,7 @@ wechat.textMsg(function (msg) {
                     //判断库存是否满足
                     var sendMsg = '';
                     if (result[0].OrderID === undefined) {
-                        sendMsg = result;
+                        sendMsg = '对不起，' + result + '库存数量不足';
                         resMsg.content = sendMsg;
                     }
                     else {

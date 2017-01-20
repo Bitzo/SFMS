@@ -338,7 +338,6 @@ router.get('/userID/:userID', function (req, res) {
 			return;
 		}
 
-console.log(RoleInfo);
 		if (RoleInfo != undefined && RoleInfo.length != 0) {			
 			var results = {
 				code: 200,

@@ -1,6 +1,6 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-  jason-pagecontent(action='/sfms/api/sign/count/all' conf='paginationConf')
+  jason-pagecontent(action='/sfms/api/sign/count' conf='paginationConf')
     div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
                 div.modal-content
@@ -61,13 +61,19 @@ block content
         thead
           tr
             th 序号
-            th 用户名          
+            th 用户名
+            th 学院
+            th 班级
+            th 签到次数
             th 签到总时长
             th 操作
         tbody
           tr(ng-repeat="x in datas") 
-            td {{$index+1}}
-            td {{x.userName}}         
+            td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
+            td {{x.userName}}
+            td {{x.college}}
+            td {{x.class}}
+            td {{x.signNum}}
             td {{x.signTime}}
             td
               a(data-toggle="modal",data-target="#myModal",ng-click="moresign(x.userID,1,'/sfms/api/sign/')",href='') 
