@@ -143,29 +143,39 @@ router.get('/userID/:userID',function (req,res) {
                     });
 
                 }
-
-                if(results.Menu !== undefined && results.Menu.length != 0 ){
-                    if(results.Role !== undefined &&  results.Role.length != 0){
-                        results.UserInfo = result;
-                        results.UserInfo[0].UserID = result[0].AccountID;
-                        return res.json({
-                            code : 200,
-                            isSuccess :true,
-                            data : results,
-                            msg : '查询菜单和角色成功'
-                        });
+                if (results!==undefined) {
+                    results.UserInfo = result;
+                    results.UserInfo[0].UserID = result[0].AccountID;
+                    if(results.Menu !== undefined && results.Menu.length != 0 ){
+                        if(results.Role !== undefined &&  results.Role.length != 0){
+                            return res.json({
+                                code : 200,
+                                isSuccess :true,
+                                data : results,
+                                msg : '查询菜单和角色成功'
+                            });
+                        }else {
+                            return res.json({
+                                code : 404,
+                                isSuccess :false,
+                                data: results,
+                                msg : '未查到角色'
+                            });
+                        }
                     }else {
                         return res.json({
                             code : 404,
                             isSuccess :false,
-                            msg : '未查到角色'
+                            data: results,
+                            msg : '未查到菜单'
                         });
                     }
-
-                }else {
+                } else {
+                    result.UserInfo = result;
                     return res.json({
                         code : 404,
                         isSuccess :false,
+                        data: result,
                         msg : '未查到菜单'
                     });
                 }
