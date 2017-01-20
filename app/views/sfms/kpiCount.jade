@@ -1,0 +1,81 @@
+//
+   Created by Lenovo on 2017/1/20.
+
+link(rel='stylesheet', href='css/backend/backend.css')
+block content
+    jason-pagecontent(action='/sfms/api/kpi/count' conf='paginationConf')
+        div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                    jason-pagecontent(conf='paginationConf')
+                        h4.modal-title(id="myModalLabel") 绩效详细信息
+                            button.close(type="button",data-dismiss="modal")
+                                span(aria-hidden="true")&times;
+                        br
+                        table.table.table-striped.table-bordered.text-center
+                            thead
+                                tr
+                                    th 序号
+                                    th 申请时间
+                                    th 申请类别
+                                    th 审核时间
+                                    th 审核人
+                                    th 分数
+                            tbody
+                                tbody
+                                tr(ng-repeat="data in data")
+                                    td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
+                                    td {{data.CreateTime}}
+                                    td {{data.KPITypeValue}}
+                                    td {{data.CheckTime}}
+                                    td {{data.CheckUser}}
+                                    td {{data.KPIScore}}
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
+                        div.pull-right
+                            div.page-total.pull-left 第
+                                input(type="text" style="width:30px;" ng-model="jumpPageNum",value='{{jumpPageNum}}' ng-keyup="jumpToPage(this)")
+                                span 页
+                                span 共{{length}}条
+                            ul.pagination.pull-right(style="line-height:60px;background-color:#ccc;")
+                                li(ng-click="prevPage()")
+                                    span&laquo
+                                li(ng-repeat="item in pageList track by $index" ng-click="pageChanged(this)")
+                                    span {{item}}
+                                li(ng-click="nextPage()")
+                                    span&raquo
+
+        div.page-content
+            ng-form.form-inline
+                span(style='font-size: 24px;')  绩效统计
+                div.buttons.pull-right
+                    label.form-group.my-form-group  开始时间
+                        input.form-control.ext(type='date',ng-model='f.startTime')
+                    label.form-group.my-form-group  结束时间
+                        input.form-control.ext(type='date',ng-model='f.endTime')
+                    label.form-group.my-form-group
+                        a.btn.btn-sm.btn-primary(ng-click='search()')
+                            i.icon.icon-search   查询
+                        a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
+                            i.icon.icon-repeat  刷新
+            hr
+            table.table.table-striped.table-bordered.text-center
+                thead
+                    tr
+                        th 序号
+                        th 用户名
+                        th 学院
+                        th 班级
+                        th 绩效分
+                        th 操作
+                tbody
+                    tr(ng-repeat="x in datas")
+                        td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
+                        td {{x.userName}}
+                        td {{x.college}}
+                        td {{x.class}}
+                        td {{x.kpiScore}}
+                        td
+                            a(data-toggle="modal",data-target="#myModal",ng-click="moreKPI($index,1,f,'/sfms/api/kpi/')",href='')
+                                i.icon.icon-zoom-in  更多
+            div.pull-right
+                jason-pagination(conf='paginationConf')

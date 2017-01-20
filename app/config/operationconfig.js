@@ -327,6 +327,10 @@ var operationConfig = {
                 actionName: "绩效审核",
                 identifier: 3206
             },
+            KPICount: {
+                actionName: "绩效统计",
+                identifier: 3207
+            },
         },
         SignManage: {
             module: "签到模块",

@@ -114,6 +114,9 @@ myApp.config(function($routeProvider) {
     when('/sfms/kpiManageCheck', {
         templateUrl: '/sfms/kpiManageCheck?access_token=' + accesstokenstring,
     }).
+    when('/sfms/kpiCount', {
+        templateUrl: '/sfms/kpiCount?access_token=' + accesstokenstring,
+    }).
     when('/sfms/finance', {
         templateUrl: '/sfms/finance?access_token=' + accesstokenstring,
     }).
