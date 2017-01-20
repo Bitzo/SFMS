@@ -7,16 +7,12 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
        //获取树形菜单数据
        $http.get('/backmenu/tree?'+"access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
-           console.log(response)
             $scope.tree_data = response.data;
-                        console.log($scope.tree_data)
-
             var tree_data= $scope.tree_data;     
             for(var i=0;i<tree_data.length;i++)
             { 
                 if(tree_data[i].IsActive==0){
-                    console.log(i)                    
-                    console.log(tree_data[i])
+
                     tree_data[i].MenuName+='(失效)'
                 }
                 if(tree_data[i].children.length){
@@ -36,12 +32,9 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
        
         //获取该用户的菜单信息
         $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
-       .success(function (response) {
-            console.log(response.data.Menu)
-            $scope.menuTree = response.data.Menu || [];
-            console.log($scope.menuTree)            
+       .success(function (response) {   
+            $scope.menuTree = response.data.Menu || [];           
             $scope.tree_data.map(function (data, index) {
-                console.log(data)
                     foreachtree(data);
                 }
             );
@@ -73,8 +66,17 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
         $scope.clickHander=function(branch,parent){
             if(parent){
                 parent.myselected = true;
+                for(var i=0,j=0;i<parent.children.length;i++){
+                if(!parent.children[i].myselected){
+                     j++;
+                }
+                }
+                if(j == parent.children.length){
+                    parent.myselected = false;
+                }
             }
-            changeseletedChild(branch,branch.myselected)
+            changeseletedChild(branch,branch.myselected);
+            
         }
         function changeseletedChild(branch,val){
             if(branch.children&&branch.children.length!=0){
@@ -85,6 +87,7 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
             branch.myselected=val;
             branch.expanded=true;
         }
+       
         //确认提交传递数据
         $scope.submit=function(){
             var  data=[];
