@@ -208,7 +208,7 @@ exports.reuseMenu = function (data,callback) {
     var MenuID = data.MenuID;
     var update_sql = '';
     if (MenuID instanceof Array) {
-        var update_sql = 'update jit_menu set IsActive = ' + data.IsActive + ' where MenuID in (';
+        update_sql = 'update jit_menu set IsActive = ' + data.IsActive + ' where MenuID in (';
         for (var i=0; i<MenuID.length;i++){
             if (i == (MenuID.length - 1)) {
                 update_sql += MenuID[i] + ');';

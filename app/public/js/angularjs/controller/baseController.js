@@ -223,7 +223,53 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         error(function(response) {
         });
     }
-    
+
+    //点击checkbox修改菜单的IsActive
+    $scope.changeMenuStatus = function (MenuID,checkboxValue) {
+        $scope.MenuData = {
+            "MenuID" : MenuID
+        };
+        if (checkboxValue) {
+            $http({
+                method:'put',
+                url: "backmenu/reuse"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data:{
+                    formdata : $scope.MenuData
+                }
+            }).
+            success(function(response) {
+                if(response.isSuccess){
+                    alert(response.msg);
+                    console.log($scope.formdata);
+                }else{
+                    alert(response.msg);
+                }
+            }).
+            error(function(response) {
+                alert(response.msg);
+            });
+        }else {
+            $http({
+                method:'put',
+                url: "backmenu/forbid"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data:{
+                    formdata : $scope.MenuData
+                }
+            }).
+            success(function(response) {
+                if(response.isSuccess){
+                    alert(response.msg);
+                    console.log($scope.formdata);
+                }else{
+                    alert(response.msg);
+                }
+            }).
+            error(function(response) {
+                alert(response.msg);
+            });
+        }
+    }
+
 //------实验室管理系统------
     //签到管理--首页  更多
     $scope.moresign = function(index,page,action){

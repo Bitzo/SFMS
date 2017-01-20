@@ -32,14 +32,14 @@ block content
             td {{x.ApplicationName}}
             td {{x.MenuName}}
             td {{x.Url}}
-            td(ng-model="all") {{x.IsActive}}
+            td {{x.IsActive | menuIsActive:x.IsActive }}
             td
-              a(href='#/backend/menuedit/?MenuID={{x.MenuID}}' )
+              a(href='#/backend/menuedit/?MenuID={{x.MenuID}}')
                 i.icon.icon-edit 编辑 
               a(ng-click="remove($index,x.MenuName,'/backmenu')",href='')
                 i.icon.icon-trash 删除  
-              span(ng-click="isActive()",href='')
-                a.i.icon.icon-ok 是否有效 
-                input(type="checkbox" ng-model="x.IsActive")   
+              span(ng-click="changeMenuStatus(x.MenuID,x.IsActive)",href='')
+                i.icon.icon-ok 是否有效
+                input(type="checkbox" ng-model="x.IsActive")
       div.pull-right
         jason-pagination(conf='paginationConf')

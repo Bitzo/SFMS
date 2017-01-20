@@ -218,7 +218,7 @@ myApp.config(function($routeProvider) {
                 return '无效记录';
         }
     }
-}).filter('IsActive', function() {
+}).filter('menuIsActive', function() {
     return function(val) {
         switch (val) {
             case 0:
