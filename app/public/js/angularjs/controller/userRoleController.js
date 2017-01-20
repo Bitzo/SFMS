@@ -63,7 +63,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
             console.log(f);                   
             $http({
                 method:'post',
-                url:"/usermenurole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                url:"/userrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
                 data:f
             }).success(function(response) {
                 alert(response.msg);

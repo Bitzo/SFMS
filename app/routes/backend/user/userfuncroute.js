@@ -35,7 +35,7 @@ router.get('/', function (req, res) {
             code: 400,
             isSuccess: false,
             msg: '用户ID有误！'
-        })
+        });
     }
 
     if (functionCode === undefined || functionCode.trim() == '') {
