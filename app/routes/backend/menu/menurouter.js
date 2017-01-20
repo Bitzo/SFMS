@@ -567,8 +567,23 @@ router.post('/',function(req,res,next) {
 router.put('/reuse',function (req,res) {
     var formdata = JSON.parse(req.body.formdata);
 
-    var MenuID = formdata.MenuID,
-        IsActive = formdata.IsActive;
+    if (formdata.MenuID == undefined) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: "菜单为空"
+        });
+    }
+    if (isNaN(formdata.MenuID)) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: "菜单ID不是数字"
+        });
+    }
+    var MenuID = formdata.MenuID;
 
     var menuLevel = -1;
     var parentID = -1;
@@ -609,7 +624,7 @@ router.put('/reuse',function (req,res) {
                         res.status(404);
                         return res.json({
                             code: 404,
-                            isSuccess: true,
+                            isSuccess: false,
                             MenuLevel : menuLevel,
                             msg: "菜单存在 菜单启用失败"
                         });
@@ -645,7 +660,7 @@ router.put('/reuse',function (req,res) {
                         res.status(404);
                         return res.json({
                             code: 404,
-                            isSuccess: true,
+                            isSuccess: false,
                             MenuLevel : menuLevel,
                             msg: "菜单存在 菜单启用失败"
                         });
@@ -655,7 +670,7 @@ router.put('/reuse',function (req,res) {
                 res.status(404);
                 return res.json({
                     code: 404,
-                    isSuccess: true,
+                    isSuccess: false,
                     MenuLevel : menuLevel,
                     msg: "菜单级别错误"
                 });

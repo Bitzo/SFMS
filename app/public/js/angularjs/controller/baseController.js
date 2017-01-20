@@ -404,4 +404,55 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             console.log(response);
         });
     }
+//------金科小哥------
+    //订单管理--首页  模态框
+     //修改
+     $scope.jitOrderEdit = function(OrderID,OrderStatus){
+         $scope.order = {
+             'OrderID': OrderID ,
+             'OrderStatus':OrderStatus
+         }
+         $http({
+            method:'get',
+            url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                isPaging:1,
+                pageindex:1,
+                pagesize:10,
+                f:{
+                    Category:"dc_orderstatus"
+                }
+            }
+        }).
+        success(function(response) {
+            $scope.orderStatus=response.data;
+        }).
+        error(function(response) {
+        });    
+    }
+
+    //确认修改
+    $scope.saveOrderEdit = function(){
+         $scope.formdata=$scope.order  
+         $http({
+            method:'put',
+            url: "jinkeBro/order"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata:$scope.formdata
+            }
+        }).
+        success(function(response) {
+            if(response.isSuccess){
+                alert(response.msg);
+                console.log($scope.formdata);
+            }else{
+                alert(response.msg);
+            }
+
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });  
+    }
+
 })
