@@ -13,17 +13,15 @@ block content
                                 tr
                                   th 订单ID
                                   th 订单状态
+                                  th 状态修改
                             tbody
                                 tr
-                                    td {{a.OrderID}}
+                                    td {{order.OrderID}}
+                                    td {{order.OrderStatus}}
                                     td 
-                                      input(type="radio",name="IsActive",value="0",ng-model="paginationConf.formdata.IsActive",checked)
-                                      &nbsp已取消         
-                                      input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive")
-                                      &nbsp配送中         
-                                      input(type="radio",name="IsActive",value="2",ng-model="paginationConf.formdata.IsActive")
-                                      &nbsp配送成功
-
+                                      select(ng-model='order.OrderStatus')
+                                         option(ng-repeat="item in orderStatus",value='{{item.DictionaryID}}') {{item.DictionaryValue}}
+                        button.btn.btn-info.pull-right(ng-click="saveOrderEdit()") 确定
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.modal.fade(id="Details",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
@@ -91,7 +89,7 @@ block content
                         td {{x.OrderTime}}
                         td {{x.OrderStatusDesc}}
                         td
-                            a(data-toggle="modal" ,data-target="#Edit",ng-click="moreuser($index,'userrole/userID/')",href='' )
+                            a(data-toggle="modal" ,data-target="#Edit",ng-click="jitOrderEdit(x.OrderID,x.OrderStatusDesc)",href='' )
                                 i.icon.icon-edit 修改
                             a(data-toggle="modal" ,data-target="#Allocate",ng-click="moreuser($index,'userrole/userID/')",href='')
                                 i.icon.icon-edit 分配
