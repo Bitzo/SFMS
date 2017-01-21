@@ -7,54 +7,181 @@
  */
 
 var appDAL = appRequire('dal/backend/application/applicationdal');
+var logModel = appRequire('model/backend/log/logmodel');
+var moment = require('moment');
+var config = appRequire('config/config');
+var operationConfig = appRequire('config/operationconfig');
+var logService = appRequire('service/backend/log/logservice');
+
+logModel.ApplicationID = operationConfig.sfmsApp.applicationID;
+logModel.ApplicationName = operationConfig.sfmsApp.applicationName;
+logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+logModel.PDate = moment().format('YYYY-MM-DD');
+delete logModel.ID;
 
 //查询目前所有的应用
 exports.queryAllApp = function (data, callback) {
-    appDAL.queryAllApp(data, function (err, results) {
+    var formdata = {
+        'ApplicationName': data.ApplicationName || '',
+        'SelectType': data.SelectType || '',
+        'ID': data.ID || '',
+        'IsActive': data.IsActive || '',
+        'page': data.page || 1,
+        'pageNum': data.pageNum || config.pageCount
+    }
+    if (formdata.ID !== '') {
+        logModel.OperationName = operationConfig.backendApp.appManage.appSingleQuery.actionName;
+        logModel.Action = operationConfig.backendApp.appManage.appSingleQuery.actionName;
+        logModel.Identifier = operationConfig.backendApp.appManage.appSingleQuery.identifier;
+    } else {
+        logModel.OperationName = operationConfig.backendApp.appManage.appMultiQuery.actionName;
+        logModel.Action = operationConfig.backendApp.appManage.appMultiQuery.actionName;
+        logModel.Identifier = operationConfig.backendApp.appManage.appMultiQuery.identifier;
+    }
+
+    appDAL.queryAllApp(formdata, function (err, results) {
        if (err) {
+           logModel.Type = 1;
+           logModel.Memo = "应用新增失败 ";
+           logModel.CreateUserID = data.OperateUserID || 1;
+           logService.insertOperationLog(logModel, function (err, insertID) {
+               if (err) {
+                   logger.writeError("应用新增失败，生成操作日志失败 " + logModel.CreateTime);
+               }
+           })
            callback(true);
            return;
        }
-       callback(false, results);
+       logModel.Type = 2;
+       logModel.Memo = "应用新增成功";
+       logModel.CreateUserID = data.OperateUserID || 1;
+       logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("应用新增成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+       })
+        return callback(false, results);
     });
 };
 
 exports.insert = function (data, callback) {
-    appDAL.insert(data, function (err, results) {
+    var formdata = {
+        'ApplicationCode': data.ApplicationCode,
+        'ApplicationName': data.ApplicationName,
+        'Memo': data.Memo,
+        'IsActive': data.IsActive
+    }
+    logModel.OperationName = operationConfig.backendApp.appManage.appAdd.actionName;
+    logModel.Action = operationConfig.backendApp.appManage.appAdd.actionName;
+    logModel.Identifier = operationConfig.backendApp.appManage.appAdd.identifier;
+    appDAL.insert(formdata, function (err, results) {
         if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "应用查询失败";
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("应用查询失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
             callback(true);
             return;
         }
-        callback(false, results);
+        logModel.Type = 2;
+        logModel.Memo = "应用查询成功";
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("应用查询成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
+        return callback(false, results);
     });
 };
 
 exports.countAllapps = function (data, callback) {
-    appDAL.countAllapps(data, function (err, results) {
+    var formdata = {
+        'ApplicationName': data.ApplicationName || '',
+        'ID': data.ID || '',
+        'IsActive': data.IsActive || '',
+    }
+    appDAL.countAllapps(formdata, function (err, results) {
         if (err) {
             callback(true);
             return;
         }
-        callback(false, results);
+        return callback(false, results);
     });
 };
 
 exports.update = function (data, callback) {
-    appDAL.update(data, function (err, results) {
+    var formdata = {
+        'ID': data.ID,
+        'ApplicationCode': data.ApplicationCode,
+        'ApplicationName': data.ApplicationName,
+        'Memo': data.Memo,
+        'IsActive': data.IsActive
+    }
+    logModel.OperationName = operationConfig.backendApp.appManage.appUpd.actionName;
+    logModel.Action = operationConfig.backendApp.appManage.appUpd.actionName;
+    logModel.Identifier = operationConfig.backendApp.appManage.appUpd.identifier;
+    appDAL.update(formdata, function (err, results) {
         if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "应用修改失败 ";
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("应用修改失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
             callback(true);
             return;
         }
-        callback(false, results);
+        logModel.Type = 2;
+        logModel.Memo = "应用修改成功 ";
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("应用修改成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
+        return callback(false, results);
     });
 };
 
 exports.delete = function (data, callback) {
-    appDAL.delete(data, function (err, results) {
+    var formdata = {
+        'ID': data.ID,
+        'ApplicationCode': data.ApplicationCode,
+        'ApplicationName': data.ApplicationName,
+        'Memo': data.Memo,
+        'IsActive': 0
+    }
+    logModel.OperationName = operationConfig.backendApp.appManage.appUpd.actionName;
+    logModel.Action = operationConfig.backendApp.appManage.appUpd.actionName;
+    logModel.Identifier = operationConfig.backendApp.appManage.appUpd.identifier;
+    appDAL.delete(formdata, function (err, results) {
         if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "应用删除失败 ";
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("应用删除失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
             callback(true);
             return;
         }
-        callback(false, results);
+        logModel.Type = 2;
+        logModel.Memo = "应用删除成功 ";
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("应用删除成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
+        return callback(false, results);
     });
 };

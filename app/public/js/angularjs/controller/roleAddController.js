@@ -35,36 +35,26 @@ myApp.controller('roleAddController', function($scope, $http,$q,baseService,$loc
         branch.expanded=true;
     }
     //添加角色
-    $scope.submit=function(){
-        var  data=[];
-        $scope.tree_data.map(function(tree){
-            foreachsubmit(tree,data);
+    $scope.submit=function() {
+        var data = [];
+        $scope.tree_data.map(function (tree) {
+            foreachsubmit(tree, data);
         })
-        console.log()
-        var param={
-            "RoleID": $location.search().RoleID,
-            "ApplicationID": $scope.formdata.ApplicationID,
-            "data":data
+        var param1 = {
+            formdata: $scope.formdata,
+            funcData: data
         }
-        var param1={
-            formdata:$scope.formdata
-        }
-        console.log(data)
         console.log(param1)
-        
         $http({
-            method:'post',
-            url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            data:param1
-        }).success(function(data){
-            console.log(response)
-            $http({
-                method:'post',
-                url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                data:param
-            }).success(function(data){
-                $("#functionModel").modal('show');
-            })
+            method: 'post',
+            url: "/backrole?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            data: param1
+        }).success(function (response) {
+            console.log(response.msg)
+            alert(response.msg);
+        }).error(function (response) {
+            console.log(response.msg);
+            alert(response.msg);
         });
     }
     function foreachsubmit(data,dataparam){

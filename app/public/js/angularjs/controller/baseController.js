@@ -201,28 +201,29 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
 
     //显示角色新增页面
-    $scope.addrole=function(iaction){
-        getInitrole(action);
-    };
-    function getInitrole(action){
-        $http({
-            method:'get',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                f:{
-                    MenuID:index,
-                    RoleID:index,
-                    ID:index,
-                    AccountID:index,
-                }
-            }
-        }).
-        success(function(response) {
-            $scope.formdata=response.data[0];
-        }).
-        error(function(response) {
-        });
-    }
+    // $scope.addrole=function(action,index){
+    //     getInitrole(action,index);
+    // };
+    // function getInitrole(action,index){
+    //     $http({
+    //         method:'get',
+    //         url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //         params:{
+    //             f:{
+    //                 MenuID:index,
+    //                 RoleID:index,
+    //                 ID:index,
+    //                 AccountID:index,
+    //             }
+    //         }
+    //     }).
+    //     success(function(response) {
+    //        // console.log(response)
+    //        //  $scope.formdata=response.data[0];
+    //     }).
+    //     error(function(response) {
+    //     });
+    // }
 
     //点击checkbox修改菜单的IsActive
     // $scope.changeMenuStatus = function (MenuID,checkboxValue,check) {

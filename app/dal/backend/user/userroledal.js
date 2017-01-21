@@ -82,7 +82,7 @@ exports.queryAppByUserID = function (data, callback) {
 	var sql = 'select distinct ApplicationID from jit_role where RoleID in ( select distinct RoleID from jit_roleuser where AccountID = ';
 
 	sql += data.UserID + ')';
-	console.log('查询用户所在项目' + sql);
+	logger.writeInfo('查询用户所在项目' + sql);
 
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
