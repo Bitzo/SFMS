@@ -19,9 +19,30 @@ block content
                                     td {{order.OrderID}}
                                     td {{order.OrderStatusDesc}}
                                     td 
-                                      select(ng-model='order.OrderStatus')
+                                      select(ng-model='order.OrderStatus',ng-change="orderStatusChanged()")
                                          option(ng-repeat="item in orderStatus",value='{{item.DictionaryCode}}') {{item.DictionaryValue}}
                         button.btn.btn-info.pull-right(ng-click="saveOrderEdit()") 确定
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
+         div.modal.fade(id="Allocate",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                   div.modal-body 
+                        h4.modal-title(id="myModalLabel") 订单配送
+                          button.close(type="button",data-dismiss="modal")
+                            span(aria-hidden="true")&times;                
+                        table.table.table-striped.table-bordered.text-center
+                            thead
+                                tr
+                                  th 订单ID
+                                  th 配送员
+                                  th 配送员修改
+                            tbody
+                                tr
+                                    td {{order.OrderID}}
+                                    td {{order.OrderStatus}}
+                                    td 
+                                      jason-select.form-control(ng-model='f.UserName',source='/backuser',stext='UserName',svalue='UserName' )
+                        button.btn.btn-info.pull-right(ng-click="") 确定
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.modal.fade(id="Details",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
@@ -47,27 +68,7 @@ block content
                                     td {{a.ProductPrice}}
                                     td {{a.ProductTypeName}}
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
-        div.modal.fade(id="Allocate",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
-            div.modal-dialog
-                div.modal-content
-                   div.modal-body 
-                        h4.modal-title(id="myModalLabel") 订单修改
-                          button.close(type="button",data-dismiss="modal")
-                            span(aria-hidden="true")&times;                
-                        table.table.table-striped.table-bordered.text-center
-                            thead
-                                tr
-                                  th 订单ID
-                                  th 配送员
-                                  th 配送员修改
-                            tbody
-                                tr
-                                    td {{order.OrderID}}
-                                    td {{order.OrderStatus}}
-                                    td 
-                                        jason-select.form-control(ng-model='f.UserName',source='/backuser',stext='UserName',svalue='UserName' )
-                        button.btn.btn-info.pull-right(ng-click="") 确定
-                        button.btn.btn-default(type="button",data-dismiss="modal") Close
+       
         div.page-content
             ng-form.form-inline
                 span.title 订单管理
