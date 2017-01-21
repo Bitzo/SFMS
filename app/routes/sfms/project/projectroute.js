@@ -616,6 +616,7 @@ router.get('/user', function (req, res) {
 
 //项目基本信息查询-项目负责人
 router.get('/person', function (req, res) {
+    console.log(req.query)
     var query =  JSON.parse(req.query.f),
         ID = query.ID || '',
         projectManageID = req.query.jitkey,
