@@ -14,8 +14,8 @@ var config = appRequire('config/config');
 var operationConfig = appRequire('config/operationconfig');
 var logService = appRequire('service/backend/log/logservice');
 
-logModel.ApplicationID = operationConfig.sfmsApp.applicationID;
-logModel.ApplicationName = operationConfig.sfmsApp.applicationName;
+logModel.ApplicationID = operationConfig.backendApp.applicationID;
+logModel.ApplicationName = operationConfig.backendApp.applicationName;
 logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
 logModel.PDate = moment().format('YYYY-MM-DD');
 delete logModel.ID;
@@ -124,10 +124,10 @@ exports.addRole = function (data, callback) {
 //修改角色的基本信息
 exports.updateRole = function (data, callback) {
     var formdata = {
-        'ApplicationID': data.ApplicationID,
-        'RoleID': data.RoleID,
-        'RoleCode': data.RoleCode,
-        'RoleName': data.RoleName,
+        'ApplicationID': data.ApplicationID || '',
+        'RoleID': data.RoleID || '',
+        'RoleCode': data.RoleCode || '',
+        'RoleName': data.RoleName || '',
         'IsActive': data.IsActive
     }
     if (formdata.IsActive === 0) {

@@ -13,8 +13,8 @@ var config = appRequire('config/config');
 var operationConfig = appRequire('config/operationconfig');
 var logService = appRequire('service/backend/log/logservice');
 
-logModel.ApplicationID = operationConfig.sfmsApp.applicationID;
-logModel.ApplicationName = operationConfig.sfmsApp.applicationName;
+logModel.ApplicationID = operationConfig.backendApp.applicationID;
+logModel.ApplicationName = operationConfig.backendApp.applicationName;
 logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
 logModel.PDate = moment().format('YYYY-MM-DD');
 delete logModel.ID;
@@ -122,13 +122,21 @@ exports.update = function (data, callback) {
         'Memo': data.Memo,
         'IsActive': data.IsActive
     }
-    logModel.OperationName = operationConfig.backendApp.appManage.appUpd.actionName;
-    logModel.Action = operationConfig.backendApp.appManage.appUpd.actionName;
-    logModel.Identifier = operationConfig.backendApp.appManage.appUpd.identifier;
+    if (formdata.IsActive == 0) {
+        logModel.OperationName = operationConfig.backendApp.appManage.appDel.actionName;
+        logModel.Action = operationConfig.backendApp.appManage.appDel.actionName;
+        logModel.Identifier = operationConfig.backendApp.appManage.appDel.identifier;
+        logModel.Memo = '应用删除';
+    } else {
+        logModel.OperationName = operationConfig.backendApp.appManage.appUpd.actionName;
+        logModel.Action = operationConfig.backendApp.appManage.appUpd.actionName;
+        logModel.Identifier = operationConfig.backendApp.appManage.appUpd.identifier;
+        logModel.Memo = '应用修改';
+    }
     appDAL.update(formdata, function (err, results) {
         if (err) {
             logModel.Type = 1;
-            logModel.Memo = "应用修改失败 ";
+            logModel.Memo += "失败 ";
             logModel.CreateUserID = data.OperateUserID;
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
@@ -139,47 +147,11 @@ exports.update = function (data, callback) {
             return;
         }
         logModel.Type = 2;
-        logModel.Memo = "应用修改成功 ";
+        logModel.Memo += "成功 ";
         logModel.CreateUserID = data.OperateUserID;
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("应用修改成功，生成操作日志失败 " + logModel.CreateTime);
-            }
-        })
-        return callback(false, results);
-    });
-};
-
-exports.delete = function (data, callback) {
-    var formdata = {
-        'ID': data.ID,
-        'ApplicationCode': data.ApplicationCode,
-        'ApplicationName': data.ApplicationName,
-        'Memo': data.Memo,
-        'IsActive': 0
-    }
-    logModel.OperationName = operationConfig.backendApp.appManage.appUpd.actionName;
-    logModel.Action = operationConfig.backendApp.appManage.appUpd.actionName;
-    logModel.Identifier = operationConfig.backendApp.appManage.appUpd.identifier;
-    appDAL.delete(formdata, function (err, results) {
-        if (err) {
-            logModel.Type = 1;
-            logModel.Memo = "应用删除失败 ";
-            logModel.CreateUserID = data.OperateUserID;
-            logService.insertOperationLog(logModel, function (err, insertID) {
-                if (err) {
-                    logger.writeError("应用删除失败，生成操作日志失败 " + logModel.CreateTime);
-                }
-            })
-            callback(true);
-            return;
-        }
-        logModel.Type = 2;
-        logModel.Memo = "应用删除成功 ";
-        logModel.CreateUserID = data.OperateUserID;
-        logService.insertOperationLog(logModel, function (err, insertID) {
-            if (err) {
-                logger.writeError("应用删除成功，生成操作日志失败 " + logModel.CreateTime);
             }
         })
         return callback(false, results);

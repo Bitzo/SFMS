@@ -184,12 +184,9 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
     //角色管理--首页 更多
     $scope.morerole = function(index,action){
-        $scope.f={
-            "RoleID":$scope.datas[index].RoleID,
-        };
         $http({
             method:'get',
-            url:action+$scope.f.RoleID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url:action+$scope.datas[index].RoleID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
         }).
         success(function(response) {
             $scope.data = response.data;

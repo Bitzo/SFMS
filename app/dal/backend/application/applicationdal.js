@@ -17,7 +17,7 @@ exports.queryAllApp = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'page' && key != 'pageNum' && data[key] != '' && key != 'SelectType') {
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'SelectType') {
                 query_sql += ' and ' + key + " = '" + data[key] + "' ";
             }
         }
@@ -52,7 +52,7 @@ exports.countAllapps = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && key != 'SelectType' && data[key] != '')
+            if (key !== 'page' && key !== 'pageNum' && key !== 'SelectType' && data[key] !== '')
                 sql += "and " + key + " = '" + data[key] + "' ";
         }
     }
@@ -114,7 +114,7 @@ exports.update = function (data, callback) {
     var upd_sql_length = upd_sql.length;
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'ID') {
+            if (key !== 'ID') {
                 if (upd_sql.length == upd_sql_length) {
                     upd_sql += key + " = '" + data[key] + "' ";
                 } else {
@@ -134,32 +134,6 @@ exports.update = function (data, callback) {
             return;
         }
         connection.query(upd_sql, function (err, results) {
-            if (err) {
-                callback(true);
-                return;
-            }
-            callback(false, results);
-            connection.release();
-            return ;
-        });
-    });
-};
-
-//删除应用
-exports.delete = function (data, callback) {
-    var del_sql = 'delete from jit_application where 1=1 ';
-    if (data !== undefined) {
-        del_sql += 'and ID = ' + data['ID'];
-    }
-
-    logger.writeInfo("删除用户" + del_sql);
-
-    db_backend.mysqlPool.getConnection(function (err, connection) {
-        if (err) {
-            callback(true);
-            return;
-        }
-        connection.query(del_sql, function (err, results) {
             if (err) {
                 callback(true);
                 return;
