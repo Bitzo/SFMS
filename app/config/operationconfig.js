@@ -54,6 +54,10 @@ var operationConfig = {
                 actionName: "角色批量查询",
                 identifier: 104
             },
+            roleUpdate: {
+                actionName: "角色修改",
+                identifier: 105
+            },
         },
         memuManage: {
             module: "菜单模块",

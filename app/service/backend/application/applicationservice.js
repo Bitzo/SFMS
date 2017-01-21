@@ -102,7 +102,6 @@ exports.insert = function (data, callback) {
 exports.countAllapps = function (data, callback) {
     var formdata = {
         'ApplicationName': data.ApplicationName || '',
-        'SelectType': data.SelectType || '',
         'ID': data.ID || '',
         'IsActive': data.IsActive || '',
     }
