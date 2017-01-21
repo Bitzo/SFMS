@@ -44,7 +44,7 @@ block content
           tr
             td(width="15%",class="tableleft") 对应的菜单排序顺序  
             td
-              input(type="number",name="SortIndex",ng-model='paginationConf.formdata.SortIndex',ng-maxlength='11',required)
+              input(type="textview",name="SortIndex",ng-model='paginationConf.formdata.SortIndex',ng-maxlength='11',required)
               &nbsp&nbsp
               small.error(ng-if="menuEdit.SortIndex.$error.maxlength && menuEdit.SortIndex.$touched") 对应的菜单排序顺序最多11位
           
