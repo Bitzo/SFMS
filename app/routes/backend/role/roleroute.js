@@ -126,7 +126,7 @@ router.post('/',function (req, res) {
         err = 'required: ';
 
     //增加角色功能点所需要的数据
-    var funcData = req.body.formdata.data;
+    var funcData = req.body.funcData;
 
     for(var value in data)
     {
@@ -195,10 +195,10 @@ router.post('/',function (req, res) {
                 if (err) {
                     res.status(500);
                     return res.json({
-                                code: 500,
-                                isSuccess: false,
-                                msg: "操作失败，服务器出错"
-                            })
+                        code: 500,
+                        isSuccess: false,
+                        msg: "操作失败，服务器出错"
+                    })
                 }
                 //角色信息增添成功
                 if (results !== undefined && results.length != 0) {
@@ -221,10 +221,10 @@ router.post('/',function (req, res) {
                             if (err) {
                                 res.status(500);
                                 return res.json({
-                                            code: 500,
-                                            isSuccess: false,
-                                            msg: "角色添加成功，功能点添加失败，服务器出错"
-                                        })
+                                    code: 500,
+                                    isSuccess: false,
+                                    msg: "角色添加成功，功能点添加失败，服务器出错"
+                                })
                             }
                             var count = results[0]['count'];
                             if (results!==undefined && count == i) {
@@ -239,62 +239,66 @@ router.post('/',function (req, res) {
                                     if (err) {
                                         res.status(500);
                                         return res.json({
-                                                    code: 500,
-                                                    isSuccess: false,
-                                                    msg: "角色添加成功，功能点添加失败，服务器出错"
-                                                })
+                                            code: 500,
+                                            isSuccess: false,
+                                            funcData: {},
+                                            msg: "角色添加成功，功能点添加失败，服务器出错"
+                                        })
                                     }
                                     //增添成功
                                     if (results !== undefined && results.affectedRows != 0) {
                                         res.status(200);
                                         return res.json({
-                                                    code: 200,
-                                                    isSuccess: true,
-                                                    msg: "操作成功"
-                                                })
+                                            code: 200,
+                                            isSuccess: true,
+                                            funcData: funcData,
+                                            msg: "操作成功"
+                                        })
                                     } else {
                                         res.status(200);
                                         return res.json({
-                                                    code: 404,
-                                                    isSuccess: false,
-                                                    msg: "角色已添加，功能点添加失败"
-                                                })
+                                            code: 404,
+                                            isSuccess: false,
+                                            funcData: {},
+                                            msg: "角色已添加，功能点添加失败"
+                                        })
                                     }
                                 })
                             } else {
                                 //数据非法，重新输入
                                 res.status(200);
                                 return res.json({
-                                            code: 400,
-                                            isSuccess: false,
-                                            msg: "角色已添加，功能点数据有误，请重新编辑"
-                                        })
+                                    code: 400,
+                                    isSuccess: false,
+                                    funcData: {},
+                                    msg: "角色已添加，功能点数据有误，请重新编辑"
+                                })
                             }
                         })
                     } else {
                         res.status(200);
                         return res.json({
-                                   code: 200,
-                                   isSuccess: true,
-                                   msg: "操作成功"
-                               })
+                            code: 200,
+                            isSuccess: true,
+                            msg: "操作成功"
+                        })
                     }
                 } else {
                     res.status(400);
                     return res.json({
-                                code: 404,
-                                isSuccess: false,
-                                msg: "添加角色失败"
-                            })
+                        code: 404,
+                        isSuccess: false,
+                        msg: "添加角色失败"
+                    })
                 }
             })
         }else {
             res.status(400);
             return res.json({
-                        code: 400,
-                        isSuccess: false,
-                        msg: "角色数据重复，添加失败"
-                    })
+                code: 400,
+                isSuccess: false,
+                msg: "角色数据重复，添加失败"
+            })
         }
     })
 });
