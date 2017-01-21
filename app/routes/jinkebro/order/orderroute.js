@@ -7,7 +7,8 @@
  */
 var express = require('express'),
     router = express.Router(),
-    url = require('url');
+    url = require('url'),
+    async = require('async');
 
 //订单业务逻辑组件
 var orderService = appRequire('service/jinkebro/order/orderservice'),
@@ -35,7 +36,9 @@ router.get('/order',function (req,res) {
         IsActive : IsActive,
         OrderStatus : OrderStatus
     };
+    var queueAllResult = [];
     var countNum = -1;
+    var flag = 0;
     orderService.CountOrders(sendData, function (err, results) {
         if (err) {
             res.status(500);
@@ -49,6 +52,7 @@ router.get('/order',function (req,res) {
             countNum = results[0]['num'];
 
             //查询所需的详细数据
+            //所有的订单数据 result
             orderService.queryOrders(sendData, function (err, result) {
                 if (err) {
                     res.status(500);
@@ -70,12 +74,38 @@ router.get('/order',function (req,res) {
                         totalPage: Math.ceil(countNum / pageNum),
                         data: result
                     };
+
+                    // 去计算价格
+                    async.map(result, function(item, callback) {
+                        var tempOrderID = item.OrderID;
+                        orderService.queryOrderProduct({"OrderID":tempOrderID},function (err,tags) {
+                            var tempSumOfMoney = 0;
+                            for (var i=0; i<tags.length; i++) {
+                                tempSumOfMoney += tags[i].ProductPrice * tags[i].ProductCount;
+                            }
+                            item['totalMoney'] = tempSumOfMoney.toFixed(2);
+                            callback(null,item);
+                        })
+                    }, function(err,results1) {
+                        // !!!!!! 在此res.status() 、 res.json()  !!!!!!
+                        //执行顺序2
+                        for (var i=0; i<results1.length; i++) {
+                            queueAllResult[i] = results1[i];
+                            if (i == results1.length - 1) {
+                                flag = 1;
+                            }
+                        }
+                        if(flag == 1) {
+                            res.status(200);
+                            return res.json(resultBack);
+                        }
+                        console.log(queueAllResult);
+                    });
+
                     if (resultBack.curPage == resultBack.totalPage) {
                         resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
                     }
-                    res.status(200);
-                    //console.log(resultBack);
-                    return res.json(resultBack);
+                    //执行顺序1
                 } else {
                     res.status(200);
                     return res.json({
@@ -363,6 +393,7 @@ router.put('/', function (req, res) {
     if (orderService.checkInput(res, OrderID, 'OrderID') !== undefined) {
         return;
     }
+    console.log('put-------------');
     console.log(OrderID + ' ' + OrderStatus);
     /**
      * 检验一个变量的值是否为正整数

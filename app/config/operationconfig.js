@@ -58,6 +58,18 @@ var operationConfig = {
                 actionName: "角色修改",
                 identifier: 105
             },
+            roleFuncAdd: {
+                actionName: "角色功能点新增",
+                identifier: 106
+            },
+            roleFuncDel: {
+                actionName: "角色功能点删除",
+                identifier: 107
+            },
+            roleFuncQuery: {
+                actionName: "角色功能点查询",
+                identifier: 108
+            },
         },
         memuManage: {
             module: "菜单模块",

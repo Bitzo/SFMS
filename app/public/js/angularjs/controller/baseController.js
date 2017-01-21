@@ -184,12 +184,9 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
     //角色管理--首页 更多
     $scope.morerole = function(index,action){
-        $scope.f={
-            "RoleID":$scope.datas[index].RoleID,
-        };
         $http({
             method:'get',
-            url:action+$scope.f.RoleID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url:action+$scope.datas[index].RoleID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
         }).
         success(function(response) {
             $scope.data = response.data;
@@ -556,8 +553,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     $scope.moreDetails = function(OrderID,OrderStatus){
          $scope.f = {
              'OrderID': OrderID ,
+             'totalMoney' : 0
          }
-         console.log($scope.f)
          $http({
             method:'get',
             url: 'jinkeBro/order' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -567,6 +564,13 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             $scope.orderDetails=response.data;
+            // 计算总金额
+            var productInfoArr = response.data;
+            var sumMoney = 0;
+            for (var i=0; i<productInfoArr.length; i++) {
+                sumMoney += productInfoArr[i].ProductCount * productInfoArr[i].ProductPrice;
+            }
+            $scope.f.totalMoney = sumMoney.toFixed(2);
             console.log($scope.orderDetails)
         }).
         error(function(response) {

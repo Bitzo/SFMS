@@ -173,7 +173,7 @@ Order.prototype.queryOrders = function (data, callback) {
             isPaging : data.isPaging
         },
         order : {
-            "OrderID" : data.OrderID,
+            "jit_order.OrderID" : data.OrderID,
             "jit_order.OrderStatus" : data.OrderStatus,
             "jit_order.IsActive" : data.IsActive
         }
@@ -272,7 +272,7 @@ Order.prototype.CountOrders = function (data, callback) {
             isPaging : data.isPaging
         },
         order : {
-            "OrderID" : data.OrderID,
+            "jit_order.OrderID" : data.OrderID,
             "jit_order.OrderStatus" : data.OrderStatus,
             "jit_order.IsActive" : data.IsActive
         }
@@ -319,20 +319,20 @@ Order.prototype.queryOrderProduct = function (data, callback) {
 
     var formdata = {
         pageManage : {
-            page : data.page,
-            pageNum : data.pageNum,
-            isPaging : data.isPaging
+            page : data.page || 1,
+            pageNum : data.pageNum || 20,
+            isPaging : data.isPaging || 1
         },
         orderProduct : {
-            "jit_orderproduct.ProductID" : data.ProductID,
-            "jit_orderproduct.ProductCount" : data.ProductCount
+            "jit_orderproduct.ProductID" : data.ProductID || [],
+            "jit_orderproduct.ProductCount" : data.ProductCount || []
         },
         order : {
-            "jit_ordercustomer.OrderID" : data.OrderID,
-            "jit_customer.WechatUserCode" : data.WechatUserCode,
-            "jit_customer.CustomerID" : data.CustomerID,
-            "jit_order.OrderStatus" : data.OrderStatus,
-            "jit_order.IsActive" : data.IsActive
+            "jit_ordercustomer.OrderID" : data.OrderID || '',
+            "jit_customer.WechatUserCode" : data.WechatUserCode || '',
+            "jit_customer.CustomerID" : data.CustomerID || '',
+            "jit_order.OrderStatus" : data.OrderStatus || '',
+            "jit_order.IsActive" : data.IsActive || ''
         }
     };
 

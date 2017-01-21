@@ -83,7 +83,7 @@ router.get('/',function (req, res) {
                     }
                     //当查询结果数量仅为1时， 添加其功能点数据
                     if (countNum == 1) {
-                        rolefuncservice.queryRoleFunc({'RoleID': roleID}, function (err, results) {
+                        rolefuncservice.queryRoleFunc({'RoleID': roleID,'OperateUserID':req.query.jitkey}, function (err, results) {
                             if (err) {
                                 res.status(500);
                                 return res.json({
@@ -235,7 +235,8 @@ router.post('/',function (req, res) {
                                 //数据相同可以添加功能点
                                 data = {
                                     'RoleID': roleID,
-                                    'data': funcData
+                                    'data': funcData,
+                                    'OperateUserID': req.query.jitkey
                                 }
                                 logger.writeInfo("成功获取RoleID: "+roleID);
                                 //通过获取到的RoleID 与前端传输的功能点数据，为角色增加功能点
@@ -401,7 +402,8 @@ router.put('/', function (req, res) {
                             //数据相同可以添加功能点
                             data = {
                                 "RoleID":roleID,
-                                "data":funcData
+                                "data":funcData,
+                                'OperateUserID': req.query.jitkey
                             }
                             //先删除原先的功能点
                             rolefuncservice.delRoleFunc(data, function (err, results) {
@@ -415,7 +417,7 @@ router.put('/', function (req, res) {
                                 }
                                 //已删除原来的功能点准备新增
                                 if (results!==undefined) {
-                                    rolefuncservice.updateRoleFunc(data, function (err, results) {
+                                    rolefuncservice.addRoleFunc(data, function (err, results) {
                                         if (err) {
                                             res.status(200);
                                             return res.json({
