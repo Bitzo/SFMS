@@ -26,8 +26,8 @@ block content
                     label.form-group.my-form-group 应用名称
                         jason-select.form-control(placeholder='应用名称'  style="width:120px;height:34px;" ng-model='f.ApplicationID' source='/app' stext='ApplicationName' svalue='ID')
                     label.form-group.my-form-group 是否有效
-                        select(placeholder='角色名称' style="width:120px;height:34px;" ng-model="f.RoleName")
-                          option(value='')
+                        select(placeholder='角色名称' style="width:120px;height:34px;" ng-model="f.IsActive")
+                          option(value='')   全部显示
                           option(value='1')  有效
                           option(value='0')  无效
                     label.form-group.my-form-group

@@ -11,6 +11,7 @@ var proTyperoute = appRequire('routes/jinkebro/productype/productyperoute');
 //库存信息路由
 var proStockroute = appRequire('routes/jinkebro/productstock/productstockroute');
 //金科小哥主站点
+var orderdelivery = appRequire('routes/jinkebro/orderdelivery/orderdeliveryroute');
 
 router.get('/', function (req, res, next) {
     res.render('sfms', { title: 'Hi jkbro' });
@@ -62,9 +63,9 @@ router.use('/product', product);
 //订单
 router.use('/order', order);
 //库存信息
-router.use('/proStock', proStockroute)
-
-
+router.use('/proStock', proStockroute);
+//订单的配送员信息
+router.use('/orderDelivery', orderdelivery);
 
 module.exports = router;
 
