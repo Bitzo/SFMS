@@ -273,3 +273,38 @@ exports.delFinance = function (data, callback) {
         callback(false, results);
     })
 }
+
+//财务统计
+exports.financeCount = function (data, callback) {
+    var formdata = {
+        'startTime': data.startTime || '',
+        'endTime': data.endTime || ''
+    }
+    logModel.OperationName = operationConfig.sfmsApp.financeManage.financeCount.actionName;
+    logModel.Action = operationConfig.sfmsApp.financeManage.financeCount.actionName;
+    logModel.Identifier = operationConfig.sfmsApp.financeManage.financeCount.identifier;
+    financeDAL.financeCount(formdata, function (err, results) {
+        if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "财务统计失败";
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("财务统计失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
+            callback(true, results);
+            return;
+        }
+        logModel.Type = 2;
+        logModel.Memo = "财务统计成功";
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("财务统计成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
+        logger.writeInfo('统计财务');
+        callback(false, results);
+    })
+}

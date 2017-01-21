@@ -7,6 +7,7 @@
  */
 
 var db_backend = appRequire('db/db_backend');
+var logger = appRequire('util/loghelper').helper;
 
 exports.queryUserFunc = function (data, callback) {
     var sql = 'select ID,RoleID,jit_rolefunction.FunctionID,FunctionCode from jit_rolefunction,jit_function ' +
@@ -29,7 +30,7 @@ exports.queryUserFunc = function (data, callback) {
 
     sql += query_sql + ')' ;
 
-    console.log('查询用户功能点信息' + sql);
+    logger.writeInfo('查询用户功能点信息' + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {

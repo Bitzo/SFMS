@@ -122,6 +122,9 @@ router.get('/kpiManageAdd', function(req, res, next) {
 router.get('/kpiManageCheck', function(req, res, next) {
         res.render('sfms/kpiManageCheck', { title: 'Hi sfms' });
 });
+router.get('/kpiCount', function(req, res, next) {
+    res.render('sfms/kpiCount', { title: 'Hi sfms' });
+});
 
 router.get('/signManage', function(req, res, next) {
         res.render('sfms/signManage', { title: 'Hi sfms' });

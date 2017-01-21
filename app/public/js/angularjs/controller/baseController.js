@@ -29,6 +29,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
                 }
             }).success(function (response) {
                 $scope.datas = response.data;
+                console.log( $scope.datas)
                 $scope.paginationConf.totalItems = response.dataNum;
             }).error(function (response) {
             });
@@ -200,29 +201,77 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
 
     //显示角色新增页面
-    $scope.addrole=function(iaction){
-        getInitrole(action);
-    };
-    function getInitrole(action){
-        $http({
-            method:'get',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                f:{
-                    MenuID:index,
-                    RoleID:index,
-                    ID:index,
-                    AccountID:index,
-                }
-            }
-        }).
-        success(function(response) {
-            $scope.formdata=response.data[0];
-        }).
-        error(function(response) {
-        });
-    }
-    
+    // $scope.addrole=function(action,index){
+    //     getInitrole(action,index);
+    // };
+    // function getInitrole(action,index){
+    //     $http({
+    //         method:'get',
+    //         url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //         params:{
+    //             f:{
+    //                 MenuID:index,
+    //                 RoleID:index,
+    //                 ID:index,
+    //                 AccountID:index,
+    //             }
+    //         }
+    //     }).
+    //     success(function(response) {
+    //        // console.log(response)
+    //        //  $scope.formdata=response.data[0];
+    //     }).
+    //     error(function(response) {
+    //     });
+    // }
+
+    //点击checkbox修改菜单的IsActive
+    // $scope.changeMenuStatus = function (MenuID,checkboxValue,check) {
+    //     console.log(check)
+    //     $scope.MenuData = {
+    //         "MenuID" : MenuID
+    //     };
+    //     if (checkboxValue) {
+    //         $http({
+    //             method:'put',
+    //             url: "backmenu/reuse"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //             data:{
+    //                 formdata : $scope.MenuData
+    //             }
+    //         }).
+    //         success(function(response) {
+    //             if(response.isSuccess){
+    //                 alert(response.msg);
+    //                 console.log($scope.formdata);
+    //             }else{
+    //                 alert(response.msg);
+    //             }
+    //         }).
+    //         error(function(response) {
+    //             alert(response.msg);
+    //         });
+    //     }else {
+    //         $http({
+    //             method:'put',
+    //             url: "backmenu/forbid"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //             data:{
+    //                 formdata : $scope.MenuData
+    //             }
+    //         }).
+    //         success(function(response) {
+    //             if(response.isSuccess){
+    //                 alert(response.msg);
+    //                 console.log($scope.formdata);
+    //             }else{
+    //                 alert(response.msg);
+    //             }
+    //         }).
+    //         error(function(response) {
+    //             alert(response.msg);
+    //         });
+    //     }
+    // }
+
 //------实验室管理系统------
     //签到管理--首页  更多
     $scope.moresign = function(index,page,action){
@@ -375,4 +424,154 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         $scope.f.sortindex = sortindex;
         getInit();
     }
+
+    //绩效统计--首页 更多
+    $scope.moreKPI = function(index,page,f,action){
+        $scope.f={
+            "UserID":$scope.datas[index].userID,
+            "StartTime":f.startTime,
+            "EndTime":f.endTime,
+            'KPIStatus': '通过',
+            'IsActive':1
+        };
+        $scope.jumpPageNum = page;
+        $scope.currentPage = page;
+        $http({
+            method:'get',
+            params:{
+                pageindex: $scope.jumpPageNum,
+                pagesize: 10,
+                f:$scope.f
+            },
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+        }).
+        success(function(response) {
+            $scope.data = response.data;
+
+        }).
+        error(function(response) {
+            console.log(response);
+        });
+    }
+//------金科小哥------
+    //订单管理--首页  模态框
+     //修改
+     $scope.jitOrderEdit = function(OrderID,OrderStatus,OrderStatusDesc){
+         $scope.order = {
+             'OrderID': OrderID ,
+             'OrderStatus':OrderStatus,
+             'OrderStatusDesc':OrderStatusDesc
+         }
+         $http({
+            method:'get',
+            url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                isPaging:1,
+                pageindex:1,
+                pagesize:10,
+                f:{
+                    Category:"dc_orderstatus"
+                }
+            }
+        }).
+        success(function(response) {
+            $scope.orderStatus=response.data;
+        }).
+        error(function(response) {
+        });    
+    }
+    //确认修改
+    $scope.saveOrderEdit = function(){
+         $scope.formdata= {
+             "OrderID" : $scope.order.OrderID,
+             "OrderStatus" : parseInt($scope.order.OrderStatus),
+         }
+         $http({
+            method:'put',
+            url: "jinkeBro/order"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata : $scope.formdata
+            }
+        }).
+        success(function(response) {
+            if(response.isSuccess){
+                alert(response.msg);
+                console.log($scope.formdata);
+            }else{
+                alert(response.msg);
+            }
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });  
+    }
+    //订单状态修改
+    $scope.orderStatusChanged = function() {
+            console.log($scope.formdata.CollegeID)
+            $http({
+                method:'get',
+                url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                params:{
+                    isPaging:1,
+                    pageindex:1,
+                    pagesize:10,
+                    f:{
+                        Category:"dc_cls",
+                        ParentID:$scope.paginationConf.formdata.CollegeID
+                    }
+                }
+            }).
+            success(function(response) {
+                $scope.cls=response.data;
+            }).
+            error(function(response) {
+            });
+        }
+    //分配
+    // $scope.Allocate = function(OrderID,OrderStatus){
+    //      $scope.order = {
+    //          'OrderID': OrderID ,
+    //          'OrderStatus':OrderStatus,
+    //      }
+    //      $http({
+    //         method:'get',
+    //         url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //         params:{
+    //             isPaging:1,
+    //             pageindex:1,
+    //             pagesize:10,
+    //             f:{
+    //                 Category:"dc_orderstatus"
+    //             }
+    //         }
+    //     }).
+    //     success(function(response) {
+    //         $scope.orderStatus=response.data;
+    //     }).
+    //     error(function(response) {
+    //     });    
+    // }
+
+    //订单详情
+    $scope.moreDetails = function(OrderID,OrderStatus){
+         $scope.f = {
+             'OrderID': OrderID ,
+         }
+         console.log($scope.f)
+         $http({
+            method:'get',
+            url: 'jinkeBro/order' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:$scope.f
+            }
+        }).
+        success(function(response) {
+            $scope.orderDetails=response.data;
+            console.log($scope.orderDetails)
+        }).
+        error(function(response) {
+        });    
+    }
+
+
 })

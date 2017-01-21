@@ -256,3 +256,38 @@ exports.delKPI = function (data, callback) {
         callback(false, results);
     })
 }
+
+exports.countKPI = function (data, callback) {
+    var formdata = {
+        'userID': data.userID || '',
+        'startTime': data.startTime || '',
+        'endTime': data.endTime || ''
+    }
+    logModel.OperationName = operationConfig.sfmsApp.KPIManage.KPICount.actionName;
+    logModel.Action = operationConfig.sfmsApp.KPIManage.KPICount.actionName;
+    logModel.Identifier = operationConfig.sfmsApp.KPIManage.KPICount.identifier;
+    KPIdal.countKPI(formdata, function (err, results) {
+        if (err) {
+            logModel.Type = 1;
+            logModel.Memo = "绩效统计失败";
+            logModel.CreateUserID = data.OperateUserID;
+            logService.insertOperationLog(logModel, function (err, insertID) {
+                if (err) {
+                    logger.writeError("绩效统计失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            })
+            callback(true, results);
+            return;
+        }
+        logModel.Type = 2;
+        logModel.Memo = "绩效统计成功";
+        logModel.CreateUserID = data.OperateUserID;
+        logService.insertOperationLog(logModel, function (err, insertID) {
+            if (err) {
+                logger.writeError("绩效统计成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        })
+        logger.writeInfo('逻辑删除KPI');
+        callback(false, results);
+    })
+}

@@ -164,7 +164,6 @@ router.get('/count', function (req, res) {
                     })
                 }
             })
-
         }
     })
 })

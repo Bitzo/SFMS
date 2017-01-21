@@ -152,10 +152,6 @@ router.get('/plain',function (req,res) {
         pageNum = config.pageCount;
     }
 
-    if(isActive === undefined || isActive == ''){
-        isActive = 1;
-    }
-
     //用于查询结果总数的计数
     var countNum = 0;
 
@@ -562,6 +558,220 @@ router.post('/',function(req,res,next) {
     });
 
 });
+/**
+ * 禁用某些菜单，将IsActive置为0
+ */
+router.put('/forbid',function (req,res) {
+
+    if (req.body.formdata.MenuID == undefined) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: "菜单为空"
+        });
+    }
+    if (isNaN(req.body.formdata.MenuID)) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: "菜单ID不是数字"
+        });
+    }
+    var MenuID = req.body.formdata.MenuID;
+    var menuLevel = -1;
+    menuService.queryAllMenus({"MenuID":MenuID,"isPaging":0},function (err,queryResult) {
+        if (err){
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
+            });
+        }
+
+        if (queryResult != undefined && queryResult.length != 0){
+            menuLevel = queryResult[0].MenuLevel;
+            parentID = queryResult[0].ParentID;
+            if (menuLevel == 1 || menuLevel == 2) {
+                menuService.reuseMenu({"MenuID":MenuID,"IsActive":0},function (err,updateResult1) {
+                    if (err){
+                        res.status(500);
+                        return res.json({
+                            code: 500,
+                            isSuccess: false,
+                            msg: "查询失败，服务器内部错误"
+                        });
+                    }
+                    if (updateResult1 != undefined && updateResult1.affectedRows != 0) {
+                        res.status(200);
+                        return res.json({
+                            code: 200,
+                            isSuccess: true,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单禁用成功"
+                        });
+                    }else {
+                        res.status(404);
+                        return res.json({
+                            code: 404,
+                            isSuccess: false,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单禁用失败"
+                        });
+                    }
+
+                });
+            }else {
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    MenuLevel : menuLevel,
+                    msg: "菜单级别错误"
+                });
+            }
+        }else {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "菜单不存在"
+            });
+        }
+    });
+
+});
+
+/**
+ * 启用某些菜单，将IsActive置为1
+ * 1、如果启动子菜单，也要启动父菜单
+ * 2、如果启动父菜单，可不用启动子菜单
+ */
+router.put('/reuse',function (req,res) {
+
+    if (req.body.formdata.MenuID == undefined) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: "菜单为空"
+        });
+    }
+    if (isNaN(req.body.formdata.MenuID)) {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: "菜单ID不是数字"
+        });
+    }
+    var MenuID = req.body.formdata.MenuID;
+
+    var menuLevel = -1;
+    var parentID = -1;
+    menuService.queryAllMenus({"MenuID":MenuID,"isPaging":0},function (err,queryResult) {
+        if (err){
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
+            });
+        }
+
+        if (queryResult != undefined && queryResult.length != 0){
+            menuLevel = queryResult[0].MenuLevel;
+            parentID = queryResult[0].ParentID;
+            if (menuLevel == 1){
+                //如果启动父菜单，可不用启动子菜单
+                menuService.reuseMenu({"MenuID":MenuID,"IsActive":1},function (err,updateResult1) {
+                    if (err){
+                        res.status(500);
+                        return res.json({
+                            code: 500,
+                            isSuccess: false,
+                            msg: "查询失败，服务器内部错误"
+                        });
+                    }
+
+                    if (updateResult1 != undefined && updateResult1.affectedRows != 0) {
+                        res.status(200);
+                        return res.json({
+                            code: 200,
+                            isSuccess: true,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单启用成功"
+                        });
+                    }else {
+                        res.status(404);
+                        return res.json({
+                            code: 404,
+                            isSuccess: false,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单启用失败"
+                        });
+                    }
+
+                });
+
+            }else if (menuLevel == 2){
+                // 如果启动子菜单，也要启动父菜单
+                var updateData = {
+                    "MenuID": [MenuID,parentID],
+                    "IsActive": 1
+                };
+                menuService.reuseMenu(updateData,function (err,updateResult2) {
+                    if (err){
+                        res.status(500);
+                        return res.json({
+                            code: 500,
+                            isSuccess: false,
+                            msg: "查询失败，服务器内部错误"
+                        });
+                    }
+
+                    if (updateResult2 != undefined && updateResult2.affectedRows != 0) {
+                        res.status(200);
+                        return res.json({
+                            code: 200,
+                            isSuccess: true,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单启用成功"
+                        });
+                    }else {
+                        res.status(404);
+                        return res.json({
+                            code: 404,
+                            isSuccess: false,
+                            MenuLevel : menuLevel,
+                            msg: "菜单存在 菜单启用失败"
+                        });
+                    }
+                });
+            }else {
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    MenuLevel : menuLevel,
+                    msg: "菜单级别错误"
+                });
+            }
+
+        }else {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "菜单不存在"
+            });
+        }
+    });
+
+
+});
 
 /**
  *菜单修改
@@ -665,7 +875,7 @@ router.put('/',function (req,res) {
                 return res.json({
                     code: 500,
                     isSuccess: false,
-                    errorMsg: "查询失败，服务器内部错误"
+                    msg: "查询失败，服务器内部错误"
                 });
             }
 

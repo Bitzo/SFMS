@@ -1,6 +1,5 @@
-link(rel='stylesheet' href="css/backend/role.css")
 block content
-  div.container-fluid
+  div.container-fluid(ng-controller='roleAddController')
     span 
       h2 角色新增
     form(method="post",name="roleAddForm") 
@@ -8,24 +7,22 @@ block content
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(placeholder='应用名称' ng-model='f.ApplicationName' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
+            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationID' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
 
          tr
           td(width="15%",class="tableleft") 角色名称
           td
-            input(type="text",name="RoleName",ng-model="formdata.RoleName",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
+            input(type="text",name="RoleName",ng-model="formdata.RoleName",style="width:160px;height:30px",required)
             &nbsp&nbsp
             span.error(ng-show="roleAddForm.RoleName.$dirty &&roleAddForm.RoleName.$invalid")
-              small.error(ng-show="roleAddForm.RoleName.$error.minlength") 角色名称至少三位
-              small.error(ng-show="roleAddForm.RoleName.$error.maxlength") 角色名称最多十位
+              
         tr
           td(width="15%",class="tableleft") 角色代码
           td
-            input(type="text",name="RoleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
+            input(type="text",name="RoleCode",ng-model="formdata.RoleCode",style="width:160px;height:30px",required)
             &nbsp&nbsp
             span.error(ng-show="roleAddForm.RoleCode.$dirty &&roleAddForm.RoleCode.$invalid")
-              small.error(ng-show="roleAddForm.RoleCode.$error.minlength") 角色号至少三位
-              small.error(ng-show="roleAddForm.RoleCode.$error.maxlength") 角色号最多十位     
+            
         tr
           td(class="tableleft") 是否有效
           td
@@ -34,127 +31,29 @@ block content
             &nbsp&nbsp&nbsp
             input(type="radio",name="isActive",ng-model="formdata.IsActive",value="0",style="width:15px;height:15px")
             无效
+
         tr
           td(class="tableleft") 权限树
-          td(class="tree well")
-            ul
-              li
-                  span
-                    i(class="icon-folder-open")
-                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent1",style="width:15px;height:15px")
-                  权限
-                  ul
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="1",class="tree_node_child_checkbox",ng-model="formdata.child11",style="width:15px;height:15px")
-                        权限列表
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="2",class="tree_node_child_checkbox",ng-model="formdata.child12",style="width:15px;height:15px")
-                        添加权限
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="3",class="tree_node_child_checkbox",ng-model="formdata.child13",style="width:15px;height:15px")
-                        编辑权限
-                     li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="4",class="tree_node_child_checkbox",ng-model="formdata.child14",style="width:15px;height:15px")
-                        删除权限
-              li
-                  span
-                    i(class="icon-folder-open")
-                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent2",style="width:15px;height:15px")
-                  角色
-                  ul
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="5",class="tree_node_child_checkbox",ng-model="formdata.child21")
-                        角色列表
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="6",class="tree_node_child_checkbox",ng-model="formdata.child22")
-                        添加角色
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="7",class="tree_node_child_checkbox",ng-model="formdata.child23")
-                        编辑角色
-                     li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="8",class="tree_node_child_checkbox",ng-model="formdata.child24")
-                        删除角色
-
-              li
-                  span
-                    i(class="icon-folder-open")
-                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent3")
-                  用户
-                  ul
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="9",class="tree_node_child_checkbox",ng-model="formdata.child31")
-                        用户列表
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="10",class="tree_node_child_checkbox",ng-model="formdata.child32")
-                        添加用户
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="11",class="tree_node_child_checkbox",ng-model="formdata.child33")
-                        编辑用户
-                     li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="12",class="tree_node_child_checkbox",ng-model="formdata.child34")
-                        删除用户
-              li
-                  span
-                    i(class="icon-folder-open")
-                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent4")
-                  菜单
-                  ul
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="13",class="tree_node_child_checkbox",ng-model="formdata.child41")
-                        菜单列表
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="14",class="tree_node_child_checkbox",ng-model="formdata.child42")
-                        添加菜单
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="15",class="tree_node_child_checkbox",ng-model="formdata.child43")
-                        编辑菜单
-                     li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="16",class="tree_node_child_checkbox",ng-model="formdata.child44")
-                        删除菜单
-              li
-                  span
-                    i(class="icon-folder-open")
-                  input(type="checkbox",value="",class="tree_node_parent_checkbox",ng-model="formdata.parent5")
-                  功能点
-                  ul
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="17",class="tree_node_child_checkbox",ng-model="formdata.child51")
-                        功能点
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="18",class="tree_node_child_checkbox",ng-model="formdata.child52")
-                        添加功能点
-                    li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="19",class="tree_node_child_checkbox",ng-model="formdata.child53")
-                        编辑功能点
-                     li
-                      i(class="icon-leaf")
-                        input(type="checkbox",value="20",class="tree_node_child_checkbox",ng-model="formdata.child54")
-                        删除功能点
+          td
+            div
+              tree-grid(tree-data="tree_data"  on-check='clickHander(branch,parent)' showCheck='true')
+  
         tr
           td(class="tableleft")
           td
-            button.btn.btn-primary(type="submit",ng-disabled="roleAddForm.$invalid",ng-click="addnew(formdata,'/role')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="submit()") 添加角色
             &nbsp&nbsp&nbsp&nbsp
-            a.btn.btn-success(href="#backend/role",ng-click='search()') 返回列表
-
-
-script(src="js/roleAdd.js")
+            a.btn.btn-success(href="#backend/role") 返回列表
+    div.modal.fade(id='functionModel')
+        div.modal-dialog
+            div.modal-content
+                    div.modal-header
+                        button.close(type='button', data-dismiss='modal')
+                            span(aria-hidden='true') ×
+                            span.sr-only Close
+                        h4.modal-title {{Config.ModelTitle}}
+                    div.modal-body
+                        p {{Config.ModelBody}}
+                    div.modal-footer
+                        button.btn.btn-default(type='button', ng-click='Config.Cancel()') {{Config.BtnCancel}}
+                        button.btn.btn-primary(type='button',ng-click='Config.Save()') {{Config.BtnSave}}

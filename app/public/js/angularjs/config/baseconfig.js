@@ -114,6 +114,9 @@ myApp.config(function($routeProvider) {
     when('/sfms/kpiManageCheck', {
         templateUrl: '/sfms/kpiManageCheck?access_token=' + accesstokenstring,
     }).
+    when('/sfms/kpiCount', {
+        templateUrl: '/sfms/kpiCount?access_token=' + accesstokenstring,
+    }).
     when('/sfms/finance', {
         templateUrl: '/sfms/finance?access_token=' + accesstokenstring,
     }).
@@ -213,6 +216,17 @@ myApp.config(function($routeProvider) {
                 return '签退';
             default:
                 return '无效记录';
+        }
+    }
+}).filter('menuIsActive', function() {
+    return function(val) {
+        switch (val) {
+            case 0:
+                return '无效';
+            case 1:
+                return '有效';
+            default:
+                return '无效';
         }
     }
 })

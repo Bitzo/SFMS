@@ -445,6 +445,101 @@ router.put('/', function (req, res) {
     })
 })
 
+router.get('/count', function(req, res) {
+    var query = JSON.parse(req.query.f),
+        startTime = query.startTime || '',
+        endTime = query.endTime || '';
+
+    if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
+    if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
+
+    var data = {
+        'startTime': startTime,
+        'endTime': endTime,
+        'OperateUserID': req.query.jitkey
+    }
+
+    financeService.financeCount(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                status: 500,
+                isSuccess: false,
+                msg: '操作失败，服务器出错'
+            })
+        }
+        if (results!==undefined&&results.length>0) {
+            var DicID = [];
+            for (var i=0;i<results.length;++i) {
+                if (i==0) {
+                    DicID[0] = results[i].FIType;
+                    DicID[1] = results[i].InOutType;
+                }
+                else {
+                    var k=0;
+                    for (k=0;k<DicID.length;++k) {
+                        if (DicID[k] == results[i].FIType) break;
+                    }
+                    if (k == DicID.length) DicID[k] = results[i].FIType;
+                    for (k=0;k<DicID.length;++k) {
+                        if (DicID[k] == results[i].InOutType) break;
+                    }
+                    if (k == DicID.length) DicID[k] = results[i].InOutType;
+                }
+            }
+            //查询字典表 更新所有字典表数据
+            dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '操作失败，服务器出错'
+                    })
+                }
+                if (data!==undefined && data.length>0) {
+                    for (var i in results) {
+                        var j=0;
+                        for (j=0;j<data.length;++j) {
+                            if (results[i].FIType == data[j].DictionaryID) results[i].FITypeValue = data[j].DictionaryValue;
+                            if (results[i].InOutType == data[j].DictionaryID) results[i].InOutTypeValue = data[j].DictionaryValue;
+                        }
+                    }
+                    data = {
+                        'InSum': 0,
+                        'OutSum': 0,
+                        'detail': results
+                    }
+                    for (var i in results) {
+                        if (results[i].InOutTypeValue == '收入') data.InSum +=  results[i].sum;
+                        if (results[i].InOutTypeValue == '支出') data.OutSum +=  results[i].sum;
+                    }
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        data: data
+                    });
+                } else {
+                    res.status(200);
+                    return res.json({
+                        status: 200,
+                        isSuccess: false,
+                        msg: '无数据'
+                    })
+                }
+            })
+        } else {
+            res.status(200);
+            return res.json({
+                status: 200,
+                isSuccess: true,
+                msg: '暂无数据'
+            })
+        }
+    })
+})
+
 //财务信息查询
 router.get('/', function (req, res) {
     var query = JSON.parse(req.query.f),
