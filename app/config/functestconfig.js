@@ -1,18 +1,10 @@
 /**
- * @Author: snail
- * @Date: 2016-12-13
  * @Function:
- * 这里作为OperationLog的动作配置
- * identifier设置的数值，按照每个应用递增1000开始，也就是说每次新增第n个应用，第一个identifier=n*1000+1
- * 原则上只在记录operationlog方法中作为其参数使用
+ * 这里作为功能点的测验的动作配置
  */
 
-var operationConfig = {
-    operationType: {
-        error: 1, //异常
-        operation: 2 //操作
-    },
-    backendApp: {
+var functestConfig = {
+	backendApp: {
         applicationID: 1, //应用的唯一id
         applicationName: "jit后台", //应用的名称
         //模块
@@ -54,22 +46,6 @@ var operationConfig = {
                 actionName: "角色批量查询",
                 identifier: 104
             },
-            roleUpdate: {
-                actionName: "角色修改",
-                identifier: 105
-            },
-            roleFuncAdd: {
-                actionName: "角色功能点新增",
-                identifier: 106
-            },
-            roleFuncDel: {
-                actionName: "角色功能点删除",
-                identifier: 107
-            },
-            roleFuncQuery: {
-                actionName: "角色功能点查询",
-                identifier: 108
-            },
         },
         memuManage: {
             module: "菜单模块",
@@ -97,29 +73,6 @@ var operationConfig = {
                 actionName: "通过jitkey查询菜单",
                 identifier: 1206
             },
-        },
-        appManage: {
-            module: "应用模块",
-            appAdd: {
-                actionName: "应用新增",
-                identifier: 1301
-            },
-            appDel: {
-                actionName: "应用删除",
-                identifier: 1302
-            },
-            appUpd: {
-                actionName: "应用修改",
-                identifier: 1303
-            },
-            appSingleQuery: {
-                actionName: "应用单个查询",
-                identifier: 1304
-            },
-            appMultiQuery: {
-                actionName: "应用批量查询",
-                identifier: 1305
-            }
         },
     },
     jinkeBroApp: {
@@ -394,31 +347,5 @@ var operationConfig = {
                 identifier: 3304
             },
         },
-    },
-    weChat: {
-        applicationID: 4,
-        applicationName: "微信端",
-        infoManage: {
-            module: "获取信息模块",
-            access_tokenGet: {
-                actionName: "获取token",
-                identifier: 4001
-            },
-            customerInfo: {
-                actionName: "消费者信息获取",
-                identifier: 4002
-            },
-            customerList: {
-                actionName: "消费者列表的获取",
-                identifier: 4003
-            },
-            customerNextList: {
-                actionName: "指定消费者列表的获取",
-                identifier: 4004
-            }
-        }
     }
-};
-
-
-module.exports = operationConfig;
+}

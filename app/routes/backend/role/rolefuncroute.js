@@ -18,9 +18,9 @@ var logger = appRequire("util/loghelper").helper;
 router.get('/:roleID', function (req, res) {
     var roleID = req.params.roleID;
     var data = {
-        'RoleID': roleID
+        'RoleID': roleID,
+        'OperateUserID': req.query.jitkey
     };
-    console.log('roleID' + roleID);
     if (roleID === undefined) {
         res.status(404);
         return res.json({
@@ -92,7 +92,7 @@ router.post('/', function (req, res) {
         funcID[i] = funcData[i].FunctionID;
     }
     data = {
-        'FunctionID': funcID
+        'FunctionID': funcID,
     }
     //验证传入的functionID是否都存在或有效
     functionservice.queryFuncByID(data, function (err, results) {
@@ -109,7 +109,8 @@ router.post('/', function (req, res) {
             //数据相同可以添加功能点
             data = {
                 'RoleID': roleID,
-                'data': funcData
+                'data': funcData,
+                'OperateUserID': req.query.jitkey
             }
             //先删除原来的功能点
             rolefuncservice.delRoleFunc(data, function (err, results) {
@@ -217,7 +218,8 @@ router.put('/', function (req, res) {
             //数据相同可以添加功能点
             data = {
                 'RoleID': roleID,
-                'data': funcData
+                'data': funcData,
+                'OperateUserID': req.query.jitkey
             }
             //先删除原先的功能点
             rolefuncservice.delRoleFunc(data, function (err, results) {
@@ -232,7 +234,7 @@ router.put('/', function (req, res) {
                 }
                 //删除成功，开始修改
                 if (results !== undefined) {
-                    rolefuncservice.updateRoleFunc(data, function (err, results) {
+                    rolefuncservice.addRoleFunc(data, function (err, results) {
                         logger.writeInfo(results);
                         if (err) {
                             res.status(500);
@@ -285,7 +287,8 @@ router.delete('/', function (req, res) {
     }
 
     var data = {
-        "RoleID": req.body.RoleID
+        "RoleID": req.body.RoleID,
+        'OperateUserID': req.query.jitkey
     };
 
     rolefuncservice.delRoleFunc(data, function (err, results) {

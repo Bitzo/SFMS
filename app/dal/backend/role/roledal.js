@@ -59,7 +59,7 @@ exports.countAllRoles = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key != 'SelectType')
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'SelectType')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
@@ -129,7 +129,7 @@ exports.updateRole = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'RoleID') {
+            if (key !== 'RoleID' && data[key]!== '' && data[key]!==undefined) {
                 if(update_sql.length == 0) {
                     update_sql += key + " = '" + data[key] +"' ";
                 } else {
