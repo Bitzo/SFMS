@@ -7,11 +7,70 @@
  */
 var datadictionaryDal = appRequire('dal/backend/datadictionary/datadictionarydal'),
     logger = appRequire('util/loghelper').helper,
-    getTree = appRequire('service/backend/datadictionary/gettreedatadict');
+    getTree = appRequire('service/backend/datadictionary/gettreedatadict'),
+    config = appRequire('config/config');
 
-//字典平面展示
+/**
+ * 查询字典信息
+ * @param data
+  data = {
+        "page": page,
+        "pageNum": pageNum,
+        "ApplicationID" : applicationID,
+        "DictionaryID" : dictionaryID,
+        "DictionaryLevel" : dictionaryLevel,
+        "ParentID" : parentID,
+        "Category" : category,
+        "DictionaryCode" : dictionaryCode,
+        "DictionaryValue" : dictionaryValue,
+        "IsActive" : isActive,
+        "isPaging" : isPaging
+    };  // 全部可选
+ * @param callback
+ * 返回数据（类似于）
+ * [{
+    ApplicationID: 1,
+    DictionaryID: 87,
+    DictionaryLevel: 1,
+    ParentID: 0,
+    Category: 'dc_orderstatus',
+    DictionaryCode: '1',
+    DictionaryValue: '等待配送',
+    Memo: '等待配送',
+    IsActive: 1
+},{
+    ApplicationID: 1,
+    DictionaryID: 87,
+    DictionaryLevel: 1,
+    ParentID: 0,
+    Category: 'dc_orderstatus',
+    DictionaryCode: '1',
+    DictionaryValue: '等待配送',
+    Memo: '等待配送',
+    IsActive: 1
+}]
+ *
+ */
 exports.queryDatadictionary = function (data,callback) {
-    datadictionaryDal.queryDatadictionary(data, function (err, results) {
+    var formdata = {
+        pageManage : {
+            page : data.page || 1,
+            pageNum : data.pageNum || (config.pageCount),
+            isPaging : data.isPaging || 0
+        },
+        datadict : {
+            ApplicationID : data.ApplicationID || '',
+            DictionaryID : data.DictionaryID || '',
+            DictionaryLevel : data.DictionaryLevel || '',
+            ParentID : data.ParentID || '',
+            Category : data.Category || '',
+            DictionaryCode : data.DictionaryCode || '',
+            DictionaryValue : data.DictionaryValue || '',
+            IsActive : data.IsActive || ''
+        }
+    };
+
+    datadictionaryDal.queryDatadictionary(formdata, function (err, results) {
         if (err) {
             callback(true);
             return;

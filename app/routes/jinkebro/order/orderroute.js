@@ -137,7 +137,7 @@ router.get('/', function (req, res) {
         OrderID = f.OrderID || '',
         WechatUserCode = req.query.WechatUserCode || '',
         isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
-        IsActive = (req.query.IsActive !== undefined) ? (req.query.IsActive) : 1,
+        IsActive = (req.query.IsActive !== undefined) ? (req.query.IsActive) : '',
         CustomerID = req.query.CustomerID || '',
         ProductID = req.query.ProductID || [],
         OrderStatus = f.OrderStatus || '',
@@ -393,8 +393,7 @@ router.put('/', function (req, res) {
     if (orderService.checkInput(res, OrderID, 'OrderID') !== undefined) {
         return;
     }
-    console.log('put-------------');
-    console.log(OrderID + ' ' + OrderStatus);
+
     /**
      * 检验一个变量的值是否为正整数
      * @param intData
