@@ -201,74 +201,76 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
 
 
     //显示角色新增页面
-    $scope.addrole=function(iaction){
-        getInitrole(action);
-    };
-    function getInitrole(action){
-        $http({
-            method:'get',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                f:{
-                    MenuID:index,
-                    RoleID:index,
-                    ID:index,
-                    AccountID:index,
-                }
-            }
-        }).
-        success(function(response) {
-            $scope.formdata=response.data[0];
-        }).
-        error(function(response) {
-        });
-    }
+    // $scope.addrole=function(action,index){
+    //     getInitrole(action,index);
+    // };
+    // function getInitrole(action,index){
+    //     $http({
+    //         method:'get',
+    //         url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //         params:{
+    //             f:{
+    //                 MenuID:index,
+    //                 RoleID:index,
+    //                 ID:index,
+    //                 AccountID:index,
+    //             }
+    //         }
+    //     }).
+    //     success(function(response) {
+    //        // console.log(response)
+    //        //  $scope.formdata=response.data[0];
+    //     }).
+    //     error(function(response) {
+    //     });
+    // }
 
     //点击checkbox修改菜单的IsActive
-    $scope.changeMenuStatus = function (MenuID,checkboxValue) {
-        $scope.MenuData = {
-            "MenuID" : MenuID
-        };
-        if (checkboxValue) {
-            $http({
-                method:'put',
-                url: "backmenu/reuse"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                data:{
-                    formdata : $scope.MenuData
-                }
-            }).
-            success(function(response) {
-                if(response.isSuccess){
-                    alert(response.msg);
-                    console.log($scope.formdata);
-                }else{
-                    alert(response.msg);
-                }
-            }).
-            error(function(response) {
-                alert(response.msg);
-            });
-        }else {
-            $http({
-                method:'put',
-                url: "backmenu/forbid"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                data:{
-                    formdata : $scope.MenuData
-                }
-            }).
-            success(function(response) {
-                if(response.isSuccess){
-                    alert(response.msg);
-                    console.log($scope.formdata);
-                }else{
-                    alert(response.msg);
-                }
-            }).
-            error(function(response) {
-                alert(response.msg);
-            });
-        }
-    }
+    // $scope.changeMenuStatus = function (MenuID,checkboxValue,check) {
+    //     console.log(check)
+    //     $scope.MenuData = {
+    //         "MenuID" : MenuID
+    //     };
+    //     if (checkboxValue) {
+    //         $http({
+    //             method:'put',
+    //             url: "backmenu/reuse"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //             data:{
+    //                 formdata : $scope.MenuData
+    //             }
+    //         }).
+    //         success(function(response) {
+    //             if(response.isSuccess){
+    //                 alert(response.msg);
+    //                 console.log($scope.formdata);
+    //             }else{
+    //                 alert(response.msg);
+    //             }
+    //         }).
+    //         error(function(response) {
+    //             alert(response.msg);
+    //         });
+    //     }else {
+    //         $http({
+    //             method:'put',
+    //             url: "backmenu/forbid"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //             data:{
+    //                 formdata : $scope.MenuData
+    //             }
+    //         }).
+    //         success(function(response) {
+    //             if(response.isSuccess){
+    //                 alert(response.msg);
+    //                 console.log($scope.formdata);
+    //             }else{
+    //                 alert(response.msg);
+    //             }
+    //         }).
+    //         error(function(response) {
+    //             alert(response.msg);
+    //         });
+    //     }
+    // }
 
 //------实验室管理系统------
     //签到管理--首页  更多
@@ -503,6 +505,28 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             alert(response.msg);
         });  
     }
+    //订单状态修改
+    $scope.orderStatusChanged = function() {
+            console.log($scope.formdata.CollegeID)
+            $http({
+                method:'get',
+                url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                params:{
+                    isPaging:1,
+                    pageindex:1,
+                    pagesize:10,
+                    f:{
+                        Category:"dc_cls",
+                        ParentID:$scope.paginationConf.formdata.CollegeID
+                    }
+                }
+            }).
+            success(function(response) {
+                $scope.cls=response.data;
+            }).
+            error(function(response) {
+            });
+        }
     //分配
     // $scope.Allocate = function(OrderID,OrderStatus){
     //      $scope.order = {

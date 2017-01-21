@@ -83,7 +83,7 @@ router.get('/order',function (req,res) {
                             for (var i=0; i<tags.length; i++) {
                                 tempSumOfMoney += tags[i].ProductPrice * tags[i].ProductCount;
                             }
-                            item['totalMoney'] = tempSumOfMoney;
+                            item['totalMoney'] = tempSumOfMoney.toFixed(2);
                             callback(null,item);
                         })
                     }, function(err,results1) {
@@ -393,6 +393,7 @@ router.put('/', function (req, res) {
     if (orderService.checkInput(res, OrderID, 'OrderID') !== undefined) {
         return;
     }
+    console.log('put-------------');
     console.log(OrderID + ' ' + OrderStatus);
     /**
      * 检验一个变量的值是否为正整数

@@ -272,7 +272,7 @@ Order.prototype.CountOrders = function (data, callback) {
             isPaging : data.isPaging
         },
         order : {
-            "OrderID" : data.OrderID,
+            "jit_order.OrderID" : data.OrderID,
             "jit_order.OrderStatus" : data.OrderStatus,
             "jit_order.IsActive" : data.IsActive
         }

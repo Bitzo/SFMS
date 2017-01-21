@@ -54,6 +54,10 @@ var operationConfig = {
                 actionName: "角色批量查询",
                 identifier: 104
             },
+            roleUpdate: {
+                actionName: "角色修改",
+                identifier: 105
+            },
         },
         memuManage: {
             module: "菜单模块",
@@ -81,6 +85,29 @@ var operationConfig = {
                 actionName: "通过jitkey查询菜单",
                 identifier: 1206
             },
+        },
+        appManage: {
+            module: "应用模块",
+            appAdd: {
+                actionName: "应用新增",
+                identifier: 1301
+            },
+            appDel: {
+                actionName: "应用删除",
+                identifier: 1302
+            },
+            appUpd: {
+                actionName: "应用修改",
+                identifier: 1303
+            },
+            appSingleQuery: {
+                actionName: "应用单个查询",
+                identifier: 1304
+            },
+            appMultiQuery: {
+                actionName: "应用批量查询",
+                identifier: 1305
+            }
         },
     },
     jinkeBroApp: {

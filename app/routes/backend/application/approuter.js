@@ -41,6 +41,7 @@ router.post('/', function (req, res) {
 
     var data = {
         'ApplicationName': ApplicationName,
+        'OperateUserID': req.query.jitkey,
         'pageNum': config.pageCount
     };
 
@@ -62,7 +63,8 @@ router.post('/', function (req, res) {
                 'ApplicationCode': ApplicationCode,
                 'ApplicationName': ApplicationName,
                 'Memo': memo,
-                'IsActive': IsActive
+                'IsActive': IsActive,
+                'OperateUserID': req.query.jitkey,
             }
             if (data.ApplicationCode.length>50) {
                 res.status(400);
@@ -143,8 +145,8 @@ router.get('/', function (req, res) {
         'ApplicationName': ApplicationName,
         'SelectType': selectType,
         'ID': ID,
+        'OperateUserID': req.query.jitkey,
         'IsActive': isActive
-
     };
     //查找该应用
     var countNum = 0;
@@ -235,8 +237,7 @@ router.put('/', function(req, res) {
 
     data = {
         'ID': ID,
-        page: 1,
-        pageNum: 20
+        'OperateUserID': req.query.jitkey,
     }
 
     userSpring.queryAllApp(data, function (err, results) {
@@ -257,7 +258,8 @@ router.put('/', function(req, res) {
                 'ApplicationCode': ApplicationCode,
                 'ApplicationName': ApplicationName,
                 'Memo': Memo,
-                'IsActive': IsActive
+                'IsActive': IsActive,
+                'OperateUserID': req.query.jitkey
             }
             if (data.ApplicationCode.length>50) {
                 res.status(400);
@@ -329,7 +331,7 @@ router.delete('/', function (req, res) {
         'ID': ID,
         'IsActive': 0,
         'pageNum': config.pageCount,
-        'page':1,
+        'OperateUserID': req.query.jitkey
     }
 
     userSpring.queryAllApp(data, function (err, results) {
@@ -349,7 +351,8 @@ router.delete('/', function (req, res) {
                 'ApplicationCode': results[0].ApplicationCode,
                 'ApplicationName': results[0].ApplicationName,
                 'Memo': results[0].Memo,
-                'IsActive': 0
+                'IsActive': 0,
+                'OperateUserID': req.query.jitkey
             }
             userSpring.update(data, function (err, results) {
                 if (err) {
