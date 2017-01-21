@@ -11,7 +11,7 @@ block content
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
-                                  th 订单ID
+                                  th 订单号
                                   th 订单状态
                                   th 状态修改
                             tbody
@@ -32,7 +32,9 @@ block content
                             span(aria-hidden="true")&times;                
                         table.table.table-striped.table-bordered.text-center
                             br
-                            span 订单ID :  {{f.OrderID}}
+                            span 订单号 :  {{f.OrderID}}
+                            br
+                            span 总金额 :  {{f.totalMoney}} 元
                          
                             thead
                                 tr
@@ -57,7 +59,7 @@ block content
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
-                                  th 订单ID
+                                  th 订单号
                                   th 配送员
                                   th 配送员修改
                             tbody
@@ -84,9 +86,12 @@ block content
                 thead
                     tr
                         th 序号
-                        th 订单ID
+                        th 订单号
+                        th 微信昵称
+                        th 手机号码
                         th 支付方式
-                        td 是否有效
+                        th 订单总金额
+                        th 是否有效
                         th 下单时间
                         th 配送状态
                         th 操作
@@ -94,7 +99,10 @@ block content
                     tr(ng-repeat="x in datas" )
                         td {{$index+1}}
                         td {{x.OrderID}}
+                        td {{x.NickName}}
+                        td {{x.Phone}}
                         td {{x.PayMethodDesc}}
+                        td {{x.totalMoney}}元
                         td {{x.IsActiveDesc}}
                         td {{x.OrderTime}}
                         td {{x.OrderStatusDesc}}

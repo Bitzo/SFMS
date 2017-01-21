@@ -607,14 +607,16 @@ exports.CountOrderProduct = function(data, callback) {
  */
 exports.queryOrders = function(data, callback) {
     var arr = new Array();
-    console.log(data);
+
     arr.push(' select jit_order.OrderID,jit_order.OrderTime,jit_order.PayTime, ');
     arr.push(' jit_order.DeliveryTime,jit_order.PayMethod, ')
     arr.push(' jit_order.IsValid,jit_order.IsActive,jit_order.DeliveryUserID, ');
     arr.push(' jit_order.IsCancel,jit_order.CancelTime,jit_order.DiscountMoney,jit_order.DiscountType, ');
-    arr.push(' jit_order.BizID,jit_order.Memo,jit_order.IsCheck,jit_order.PDate,jit_order.OrderStatus ');
-    arr.push(' from jit_order ');
-    arr.push(' where 1=1 ');
+    arr.push(' jit_order.BizID,jit_order.Memo,jit_order.IsCheck,jit_order.PDate,jit_order.OrderStatus, ');
+    arr.push(' jit_customer.NickName,jit_customer.Phone ');
+    arr.push(' from jit_order,jit_customer,jit_ordercustomer ');
+    arr.push(' where 1=1 and jit_customer.CustomerID = jit_ordercustomer.CustomerID ');
+    arr.push(' and jit_order.OrderID = jit_ordercustomer.OrderID ');
 
     var query_sql = arr.join(' ');
 
@@ -636,9 +638,10 @@ exports.queryOrders = function(data, callback) {
         }
     }
 
+    query_sql += ' ORDER BY jit_order.OrderTime DESC ';
+
     var num = pageManageData.pageNum; //每页显示的个数
     var page = pageManageData.page || 1;
-
     if (pageManageData.isPaging == 1) {
         query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     }
@@ -674,8 +677,9 @@ exports.queryOrders = function(data, callback) {
 exports.CountOrders = function(data, callback) {
     var arr = new Array();
     arr.push(' select count(1) as num ');
-    arr.push(' from jit_order ');
-    arr.push(' where 1 = 1 ');
+    arr.push(' from jit_order,jit_customer,jit_ordercustomer ');
+    arr.push(' where 1=1 and jit_customer.CustomerID = jit_ordercustomer.CustomerID ');
+    arr.push(' and jit_order.OrderID = jit_ordercustomer.OrderID ');
 
     var sql = arr.join(' ');
 

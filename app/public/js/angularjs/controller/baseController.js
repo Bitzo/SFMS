@@ -532,8 +532,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     $scope.moreDetails = function(OrderID,OrderStatus){
          $scope.f = {
              'OrderID': OrderID ,
+             'totalMoney' : 0
          }
-         console.log($scope.f)
          $http({
             method:'get',
             url: 'jinkeBro/order' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -543,6 +543,13 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             $scope.orderDetails=response.data;
+            // 计算总金额
+            var productInfoArr = response.data;
+            var sumMoney = 0;
+            for (var i=0; i<productInfoArr.length; i++) {
+                sumMoney += productInfoArr[i].ProductCount * productInfoArr[i].ProductPrice;
+            }
+            $scope.f.totalMoney = sumMoney.toFixed(2);
             console.log($scope.orderDetails)
         }).
         error(function(response) {
