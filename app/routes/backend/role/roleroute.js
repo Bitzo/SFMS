@@ -204,7 +204,7 @@ router.post('/',function (req, res) {
                 if (results !== undefined && results.length != 0) {
                     var roleID = results.insertId;
                     //若存在功能点数据，则继续新增该角色的功能点
-                    if (funcData !== undefined){
+                    if (funcData !== undefined && funcData.length>0){
                         //声明空数组存放FunctionID
                         var funcID = [],
                             i = 0;
