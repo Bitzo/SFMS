@@ -7,7 +7,7 @@
  */
 
 var db_jinkebro = appRequire('db/db_jinkebro'),
-	orderdelivery = appRequire('model/jinkebro/orderdelivery'),
+	orderdelivery = appRequire('model/jinkebro/orderdelivery/orderdeliverymodel'),
 	logger = appRequire('util/loghelper').helper,
 	moment = require('moment'); 
 	 

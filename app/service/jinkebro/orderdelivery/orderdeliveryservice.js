@@ -1,6 +1,6 @@
 var orderdeliveryDAL = appRequire('dal/jinkebro/orderdelivery/orderdeliverydal'),
 	moment = require('moment'),
-	logService = appRequire('service/bankend/log/logservice'),
+	logService = appRequire('service/backend/log/logservice'),
 	config = appRequire('config/config'),
 	operationConfig = appRequire ('config/operationconfig'),
 	logModel = appRequire('model/jinkebro/log/logmodel');
