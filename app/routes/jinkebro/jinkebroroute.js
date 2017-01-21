@@ -62,9 +62,8 @@ router.use('/product', product);
 //订单
 router.use('/order', order);
 //库存信息
-router.use('/proStock', proStockroute)
-
-
+router.use('/proStock', proStockroute);
+//订单的配送员信息
 
 module.exports = router;
 
