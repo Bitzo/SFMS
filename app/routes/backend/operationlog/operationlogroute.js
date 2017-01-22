@@ -17,7 +17,6 @@ var userservice = appRequire('service/backend/user/userservice');
 
 //日志查询
 router.get('/', function (req, res) {
-    console.log(req.query)
     var query = JSON.parse(req.query.f),
         applicationID = query.ApplicationID || '',
         type = query.Type || '',

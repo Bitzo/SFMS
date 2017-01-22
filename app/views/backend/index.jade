@@ -76,7 +76,7 @@ html(lang='en')
                // b.arrow.icon-angle-down
               ul.submenu
                 li(ng-repeat='menuchid in menu.children')
-                  a(href='{{menuchid.Url}}')
+                  a(href='{{menuchid.Url}}' ng-click='pageInit()')
                     i.icon-double-angle-right
                     span {{menuchid.MenuName}}
              // /.nav-list
