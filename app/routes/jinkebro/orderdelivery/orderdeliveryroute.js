@@ -90,4 +90,10 @@ router.post('/', function (req, res) {
 
 });
 
+router.get('/', function (req, res) {
+    var page = req.query.Page || 1,
+        num = req.query.Num || 20,
+        orderID = req.query.OrderID,
+        deliveryUserID = req.query.DeliveryUserID
+});
 module.exports = router;

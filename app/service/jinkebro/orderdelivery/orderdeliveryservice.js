@@ -54,3 +54,42 @@ OrderDelivery.prototype.insertOrderDelivery = function (data, callback) {
     });
 }
 	
+//订单配送员的查询
+OrderDelivery.prototype.insertOrderDelivery = function (data, callback) {
+	 //要写入operationlog表的
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
+    logModel.OperationName = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
+    logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
+    logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier;
+	
+	orderdeliveryDAL.insertOrderDelivery (data, function (err, insertResult) {
+		if (err) {
+			logModel.Type = operationConfig.operationType.error;
+            logModel.CreateUserID = data.CustomerID;
+            logModel.Memo = "订单配送员查询失败";
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("订单查询失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+            callback(true, '订单配送员查询失败');
+            return;
+		}
+        
+        //查询成功
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.CreateUserID = data.CustomerID;
+        logModel.Memo = "订单配送员查询成功";
+        logService.queryOrderDelivery(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("订单查询成功，生成操作日志失败" + logModel.CreateTime);
+            }
+        });
+        logger.writeInfo('订单查询成功');
+        callback(false, insertResult);
+    });
+}
+    

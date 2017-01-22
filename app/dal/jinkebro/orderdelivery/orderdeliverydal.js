@@ -42,7 +42,43 @@ exports.insertOrderDelivery = function (data, callback) {
         });
     });
 }
- 
+
+/**
+ * @function: 订单配送员表的查询工作
+ */
+exports.queryOrderDelivery = function (data, callback) {
+    var sql = 'SELECT ID,RoleID,DeliveryUserID,DeliveryBeginTime,DeliveryEndTime FROM jit_orderdelivery where 1 = 1 ';
+    
+    for (var key in data) {
+        if( key != 'num' && key != 'page' )
+        sql += 'and ' + key + ' = ' + data.key;
+    }
+    
+    var num = data.num;
+    var page = data.page;
+    if (data.isPaging == 1) {
+        sql += '　LIMIT　'　+ (page -1) * num + ',' + num + ';';
+    }
+    
+    logger.writeInfo("[dal/jinkebro/orderdelivery]订单配送员查询:" + sql);
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(sql, function(err, results) {
+            if (err) {
+                callback(true);
+                return;
+            }
+            callback(false, results);
+            connection.release();
+            return;
+        });
+    });
+}
 	  
  	
  

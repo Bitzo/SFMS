@@ -12,11 +12,11 @@ var functestConfig = {
             module: "用户模块",
             //改模块下对应的功能
             userAdd: {
-                actionName: "用户新增",
+                actionName: "backendApp-userManger-userAdd",
                 identifier: 1
             },
             userDel: {
-                actionName: "用户删除",
+                actionName: "backendApp-userManger-userDel",
                 identifier: 2
             },
             userSingleQuery: {

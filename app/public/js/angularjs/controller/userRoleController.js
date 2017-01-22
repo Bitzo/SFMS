@@ -43,7 +43,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
             var roleTree= $scope.roleTree;
             for(var i=0;i<roleTree.length;i++)
             {
-                if(roleTree[i].RoleName==data.RoleName){
+                if(roleTree[i].RoleID==data.RoleID){
                     data.myselected=true;
                     break;
                 }
