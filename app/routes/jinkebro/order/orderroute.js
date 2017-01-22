@@ -337,15 +337,15 @@ router.post('/',function (req,res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                msg: '服务器出错，产品新增操作失败'
+                msg: '服务器内部出错！'
             });
-            return ;
         }
         if (result !== undefined && result.insertId != undefined) {
             res.status(200);
             res.json({
                 code : 200,
                 isSuccess : true,
+                msg : '下单成功，您的订单号是' + result.insertId,
                 insertId : result.insertId,
                 result : result
             });
@@ -355,7 +355,8 @@ router.post('/',function (req,res) {
             res.json({
                 code : 400,
                 isSuccess : true,
-                msg : result
+                msg : '下单失败',
+                result : result
             });
             return ;
         }

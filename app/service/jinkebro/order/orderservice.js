@@ -59,7 +59,7 @@ Order.prototype.insertOrderFull = function (data, callback) {
         };
 
     //新增订单
-    orderDAL.insertOrderFull(formdata, function (err, result) {
+    orderDAL.createOrder(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.CustomerID;

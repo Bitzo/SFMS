@@ -28,6 +28,218 @@ exports.createOrder = function(data, callback) {
      * 7.以上任何一步异常，回滚
      * 8.提交
      */
+    var insertOrderData = {
+        OrderTime: data.OrderTime,
+        PayMethod: data.PayMethod,
+        IsValid: data.IsValid,
+        IsActive: data.IsActive,
+        OrderStatus: data.OrderStatus
+    };
+
+    var receiveProductIDs = data.ProductIDs,
+        receiveProductCounts = data.ProductCounts;
+
+    // 从链接池得到connection
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            console.error('mysql 链接失败');
+            callback(true);
+            return;
+        }
+        //开始事务
+        connection.beginTransaction(function(err) {
+            if (err) {
+                throw err;
+            }
+            var returnResult = {};
+            var funcArr = [];
+
+            // 添加记录到order表
+            var func1 = function(callback1) {
+                var insertSql1 = 'insert into jit_order set ';
+                var sql = '';
+                if (insertOrderData !== undefined) {
+                    for (var key in insertOrderData) {
+                        if (sql.length == 0) {
+                            if (!isNaN(insertOrderData[key])) {
+                                sql += " " + key + " = " + insertOrderData[key] + " ";
+                            } else {
+                                sql += " " + key + " = '" + insertOrderData[key] + "' ";
+                            }
+                        } else {
+                            if (!isNaN(insertOrderData[key])) {
+                                sql += ", " + key + " = " + insertOrderData[key] + " ";
+                            } else {
+                                sql += ", " + key + " = '" + insertOrderData[key] + "' ";
+                            }
+                        }
+                    }
+                }
+                insertSql1 += sql + ' ;';
+                console.log("insert into order,sql: " + insertSql1);
+                logger.writeInfo("insert into order,sql: " + insertSql1);
+                connection.query(insertSql1, function(err, info) {
+                    if (err) {
+                        connection.rollback(function() {
+                            logger.writeError("[order]执行事务失败，" + "ERROR：" + err);
+                            console.log("[order]执行事务失败，" + "ERROR：" + err);
+                            throw err;
+                        });
+                        return ;
+                    }
+                    console.log(info);
+                    returnResult = info;
+                    callback1(err, info);
+                });
+            };
+            funcArr.push(func1);
+
+            // 添加记录到ordercustomer表
+            var func2 = function(callback2) {
+                var InsertUserOrderData = {
+                    CustomerID: data.CustomerID,
+                    OrderID: returnResult.insertId,
+                    IsActive: data.IsActive,
+                    CreateTime: moment().format('YYYY-MM-DD HH:mm:ss')
+                };
+
+                var insertSql2 = ' insert into jit_ordercustomer set  ';
+                var sql = '';
+                if (InsertUserOrderData !== undefined) {
+                    for (var key in InsertUserOrderData) {
+                        if (sql.length == 0) {
+                            if (!isNaN(InsertUserOrderData[key])) {
+                                sql += " " + key + " = " + InsertUserOrderData[key] + " ";
+                            } else {
+                                sql += " " + key + " = '" + InsertUserOrderData[key] + "' ";
+                            }
+                        } else {
+                            if (!isNaN(InsertUserOrderData[key])) {
+                                sql += ", " + key + " = " + InsertUserOrderData[key] + " ";
+                            } else {
+                                sql += ", " + key + " = '" + InsertUserOrderData[key] + "' ";
+                            }
+                        }
+                    }
+                }
+                insertSql2 += sql + ' ;';
+                console.log("insert into ordercustomer,sql: " + insertSql2);
+                logger.writeInfo("insert into ordercustomer,sql: " + insertSql2)
+                connection.query(insertSql2, function(err, info) {
+                    if (err) {
+                        connection.rollback(function() {
+                            logger.writeError("[ordercustomer]执行事务失败，" + "ERROR：" + err);
+                            console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
+                            throw err;
+                        });
+                        return ;
+                    }
+                    console.log(info);
+                    callback2(err, info);
+                });
+            };
+            funcArr.push(func2);
+
+            // 修改productstock表
+            (function next(index) {
+                if (index === receiveProductIDs.length) { // No items left
+                    return;
+                }
+                var tempProID = receiveProductIDs[index];
+                var tempProCount = receiveProductCounts[index];
+                var tempfunc = function(callbacktemp) {
+                    var updateStockSql = 'update jit_productstock set jit_productstock.TotalNum = jit_productstock.TotalNum - ' + tempProCount;
+                    updateStockSql += ' where jit_productstock.TotalNum >= ' + tempProCount + ' and ProductID = ' + tempProID + ';';
+
+                    console.log("updateStockSql" + index + ": " + updateStockSql);
+                    logger.writeInfo("updateStockSql" + index + ": " + updateStockSql);
+
+                    connection.query(updateStockSql, function(err, info) {
+                        if (err) {
+                            connection.rollback(function() {
+                                logger.writeError("[orderProduct]执行事务失败，" + "ERROR：" + err);
+                                console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
+                                throw err;
+                            });
+                            return ;
+                        }
+                        if (info.affectedRows == 0) {
+                            connection.rollback(function () {
+                                logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
+                                console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
+                            });
+                            callback(false, tempProID);
+                            return ;
+                        }
+                        console.log(info);
+                        callbacktemp(err, info);
+                    });
+                }
+                funcArr.push(tempfunc);
+                next(index + 1);
+            })(0);
+
+            // 插入记录到orderProduct表
+            var func3 = function(callback3) {
+                var insertSql3 = 'insert into jit_orderproduct (OrderID,ProductID,ProductCount) values ';
+                var receiveProductIDsLength = receiveProductIDs.length;
+                for (var i=0; i<receiveProductIDsLength; i++) {
+                    if (i == receiveProductIDsLength -1 ) {
+                        insertSql3 += "(" + returnResult.insertId + "," + receiveProductIDs[i] + "," + receiveProductCounts[i] + ");";
+                    }else {
+                        insertSql3 += "(" + returnResult.insertId + "," + receiveProductIDs[i] + "," + receiveProductCounts[i] + "),";
+                    }
+                }
+                console.log(insertSql3);
+                connection.query(insertSql3, function(err, info) {
+                    if (err) {
+                        connection.rollback(function() {
+                            logger.writeError("[order]执行事务失败，" + "ERROR：" + err);
+                            console.log("[order]执行事务失败，" + "ERROR：" + err);
+                            throw err;
+                        });
+                        return ;
+                    }
+                    console.log(info);
+                    if (info.affectedRows != receiveProductIDsLength) {
+                        connection.rollback(function () {
+                            logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
+                            console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
+                        });
+                        callback(false, '下单失败');
+                        return ;
+                    }
+                    callback3(err, info);
+                });
+            };
+            funcArr.push(func3);
+
+            async.series(funcArr, function(err, result) {
+                if (err) {
+                    connection.rollback(function(err) {
+                        throw err;
+                    });
+                    connection.release();
+                    return;
+                }
+
+                connection.commit(function(err) {
+                    if (err) {
+                        connection.rollback(function() {
+                            throw err;
+                        });
+                        return ;
+                    }
+                    console.log('insert success');
+                    connection.release();
+                    callback(false, returnResult);
+                    return;
+                });
+            });
+        });
+
+    });
+
 }
 
 /**
