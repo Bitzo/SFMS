@@ -44,31 +44,24 @@ describe("订单单元测试", function () {
 
     it("订单修改", function (done) {
         var updateOrderData = {
-            order: {
-                OrderID: insertOrderID,
-                OrderTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-                PayTime: '',
-                DeliveryTime: '',
-                PayMethod: 1,
-                IsValid: 1,
-                IsActive: '0',
-                DeliveryUserID: '',
-                IsCancel: '',
-                CancelTime: '',
-                DiscountMoney: '',
-                DiscountType: '',
-                BizID: '',
-                Memo: '',
-                IsCheck: '',
-                PDate: '',
-                OrderStatus: 1
-            },
-            orderProduct: {
-                ProductIDs: [],
-                ProductCounts: []
-            }
+            OrderID: insertOrderID,
+            OrderTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+            PayTime: '',
+            DeliveryTime: '',
+            PayMethod: 1,
+            IsValid: 1,
+            IsActive: '0',
+            DeliveryUserID: '',
+            IsCancel: '',
+            CancelTime: '',
+            DiscountMoney: '',
+            DiscountType: '',
+            BizID: '',
+            Memo: '',
+            IsCheck: '',
+            PDate: '',
+            OrderStatus: 3
         };
-
         orderService.updateOrder(updateOrderData, function (err, result) {
             if (err) return done(err);
             result.affectedRows.should.be.above(0).and.should.be.a.Number;
@@ -79,21 +72,16 @@ describe("订单单元测试", function () {
     it("订单查询", function (done) {
         // data的格式如下
         var queryOrderData = {
-            pageManage: {
-                page: 1,
-                pageNum: 20,
-                isPaging: 0
-            },
-            orderProduct: {
-                'jit_orderproduct.ProductID': [],
-                'jit_orderproduct.ProductCount': []
-            },
-            order: {
-                'jit_ordercustomer.OrderID': insertOrderID,
-                'jit_customer.WechatUserCode': '',
-                'jit_customer.CustomerID': '',
-                'jit_order.OrderStatus': ''
-            }
+            page : 1,
+            pageNum : 20,
+            isPaging : 0,
+            ProductID : [],
+            ProductCount : [],
+            OrderID : insertOrderID,
+            WechatUserCode : '',
+            CustomerID : '',
+            OrderStatus : '',
+            IsActive : ''
         };
 
         orderService.queryOrders(queryOrderData, function (err, result) {

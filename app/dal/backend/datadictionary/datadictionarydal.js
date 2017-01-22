@@ -136,19 +136,51 @@ exports.datadictionaryDelete = function (data,callback) {
 
 //字典查询
 exports.queryDatadictionary = function (data,callback) {
-    var sql = 'select ApplicationID, DictionaryID, DictionaryLevel, ParentID,Category,DictionaryCode,DictionaryValue,Memo, IsActive from jit_datadictionary where 1=1 ';
+    // 从service传来的数据的格式
+    // var formdata = {
+    //     pageManage : {
+    //         page : data.page || 1,
+    //         pageNum : data.pageNum || (config.pageCount),
+    //         isPaging : data.isPaging || 0
+    //     },
+    //     datadict : {
+    //         ApplicationID : data.ApplicationID || '',
+    //         DictionaryID : data.DictionaryID || '',
+    //         DictionaryLevel : data.DictionaryLevel || '',
+    //         ParentID : data.ParentID || '',
+    //         Category : data.Category || '',
+    //         DictionaryCode : data.DictionaryCode || '',
+    //         DictionaryValue : data.DictionaryValue || '',
+    //         IsActive : data.IsActive || ''
+    //     }
+    // };
 
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging')
-                sql += " and " + key + " = '" + data[key] + "' ";
+    var pageManage = {},
+        datadict = {};
+    if (data != undefined) {
+        pageManage = data.pageManage;
+        datadict = data.datadict;
+    }else {
+        return callback(true);
+    }
+
+    var arr = new Array();
+    arr.push('select ApplicationID,DictionaryID,DictionaryLevel,ParentID,Category,DictionaryCode,DictionaryValue,Memo,IsActive');
+    arr.push('from jit_datadictionary');
+    arr.push('where 1=1');
+    var sql = arr.join(' ');
+
+    if (datadict != undefined) {
+        for (var key in datadict) {
+            if (datadict[key] != '')
+                sql += " and " + key + " = '" + datadict[key] + "' ";
         }
     }
 
-    var num = data.pageNum; //每页显示的个数
-    var page = data.page || 1;
+    var num = pageManage.pageNum; //每页显示的个数
+    var page = pageManage.page || 1;
 
-    if (data['isPaging'] == 1){
+    if (pageManage['isPaging'] == 1){
         sql += " LIMIT " + (page-1)*num + "," + num;
     }
 

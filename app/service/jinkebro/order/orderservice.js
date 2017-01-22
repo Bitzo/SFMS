@@ -46,8 +46,20 @@ Order.prototype.insertOrderFull = function (data, callback) {
     logModel.OperationName = operationConfig.jinkeBroApp.orderManger.orderAdd.actionName;
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderAdd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderAdd.identifier;
+
+    var formdata = {
+            "OrderTime": data.OrderTime,
+            "PayMethod": data.PayMethod,
+            "IsValid": data.IsValid,
+            "IsActive": data.IsActive,
+            "ProductIDs": data.ProductIDs,
+            "ProductCounts": data.ProductCounts,
+            "CustomerID": data.CustomerID,
+            "OrderStatus": data.OrderStatus
+        };
+
     //新增订单
-    orderDAL.insertOrderFull(data, function (err, result) {
+    orderDAL.createOrder(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.CustomerID;
@@ -125,7 +137,25 @@ Order.prototype.updateOrder = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderUpd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderUpd.identifier;
     var formdata = {
-        order : data
+        order : {
+            OrderID: data.OrderID,
+            OrderTime: data.OrderTime || '',
+            PayTime: data.PayTime || '',
+            DeliveryTime: data.DeliveryTime || '',
+            PayMethod: data.PayMethod || '',
+            IsValid: data.IsValid || '',
+            IsActive: data.IsActive || '',
+            DeliveryUserID: data.DeliveryUserID || '',
+            IsCancel: data.IsCancel || '',
+            CancelTime: data.CancelTime || '',
+            DiscountMoney: data.DiscountMoney || '',
+            DiscountType: data.DiscountType || '',
+            BizID: data.BizID || '',
+            Memo: data.Memo || '',
+            IsCheck: data.IsCheck || '',
+            PDate: data.PDate || '',
+            OrderStatus: data.OrderStatus || ''
+        }
     };
     //修改订单
     orderDAL.updateOrder(formdata, function (err, result) {

@@ -137,7 +137,7 @@ router.get('/', function (req, res) {
         OrderID = f.OrderID || '',
         WechatUserCode = req.query.WechatUserCode || '',
         isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
-        IsActive = (req.query.IsActive !== undefined) ? (req.query.IsActive) : 1,
+        IsActive = (req.query.IsActive !== undefined) ? (req.query.IsActive) : '',
         CustomerID = req.query.CustomerID || '',
         ProductID = req.query.ProductID || [],
         OrderStatus = f.OrderStatus || '',
@@ -337,15 +337,15 @@ router.post('/',function (req,res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                msg: '服务器出错，产品新增操作失败'
+                msg: '服务器内部出错！'
             });
-            return ;
         }
         if (result !== undefined && result.insertId != undefined) {
             res.status(200);
             res.json({
                 code : 200,
                 isSuccess : true,
+                msg : '下单成功，您的订单号是' + result.insertId,
                 insertId : result.insertId,
                 result : result
             });
@@ -355,7 +355,8 @@ router.post('/',function (req,res) {
             res.json({
                 code : 400,
                 isSuccess : true,
-                msg : result
+                msg : '下单失败',
+                result : result
             });
             return ;
         }
@@ -393,8 +394,7 @@ router.put('/', function (req, res) {
     if (orderService.checkInput(res, OrderID, 'OrderID') !== undefined) {
         return;
     }
-    console.log('put-------------');
-    console.log(OrderID + ' ' + OrderStatus);
+
     /**
      * 检验一个变量的值是否为正整数
      * @param intData
