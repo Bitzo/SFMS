@@ -150,6 +150,10 @@ router.get('/financeManage', function(req, res, next) {
         res.render('sfms/financeManage', { title: 'Hi sfms' });
 });
 
+router.get('/financeCharts', function(req, res, next) {
+        res.render('sfms/financeCharts', { title: 'Hi sfms' });
+});
+
 router.get('/financeManageCheck', function(req, res, next) {
         res.render('sfms/financeManageCheck', { title: 'Hi sfms' });
 });
