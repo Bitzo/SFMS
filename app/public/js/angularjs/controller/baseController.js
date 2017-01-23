@@ -531,8 +531,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
     //分配
     $scope.Allocate = function(OrderID,OrderStatus){
          $scope.order = {
-             'OrderID': OrderID ,
-             'OrderStatus':OrderStatus,
+             'OrderID': OrderID 
          }
          $http({
             method:'get',
@@ -547,21 +546,21 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
-            $scope.orderStatus=response.data;
+            $scope.order.UserName=response.data.UserName;
             console.log(response.data)
         }).
         error(function(response) {
         });    
     }
-
+    //确认分配
     $scope.saveAllocate = function(){
          $scope.formdata= {
              "OrderID" : $scope.order.OrderID,
-             "OrderStatus" : parseInt($scope.order.OrderStatus),
+             "DeliveryUserID" : $scope.order.UserID
          }
          $http({
-            method:'put',
-            url: "jinkeBro/order"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            method:'post',
+            url: "/jinkeBro/orderDelivery"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             data:{
                 formdata : $scope.formdata
             }
@@ -575,6 +574,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             }
         }).
         error(function(response) {
+            console.log($scope.formdata);
             alert(response.msg);
         });  
     }

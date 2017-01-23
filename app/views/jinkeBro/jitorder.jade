@@ -1,6 +1,7 @@
 link(rel='stylesheet', href='css/backend/backend.css')
 block content
     jason-pagecontent(action='/jinkeBro/order/order' conf='paginationConf')
+        //订单修改
         div.modal.fade(id="Edit",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
                 div.modal-content
@@ -23,6 +24,7 @@ block content
                                          option(ng-repeat="item in orderStatus",value='{{item.DictionaryCode}}') {{item.DictionaryValue}}
                         button.btn.btn-info.pull-right(ng-click="saveOrderEdit()") 确定
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
+         //订单配送               
          div.modal.fade(id="Allocate",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
                 div.modal-content
@@ -41,9 +43,10 @@ block content
                                     td {{order.OrderID}}
                                     td {{order.UserName}}
                                     td 
-                                      jason-select.form-control(ng-model='order.UserName',source='/backuser',stext='UserName',svalue='UserID' )
+                                      jason-select.form-control(ng-model='order.UserID',source='/backuser',stext='UserName',svalue='AccountID' )
                         button.btn.btn-info.pull-right(ng-click="saveAllocate()") 确定
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
+        //订单详情                
         div.modal.fade(id="Details",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
                 div.modal-content
@@ -129,9 +132,9 @@ block content
                         td {{x.OrderStatusDesc}}
                         td
                             a(data-toggle="modal" ,data-target="#Edit",ng-click="jitOrderEdit(x.OrderID,x.OrderStatus,x.OrderStatusDesc)",href='' )
-                                i.icon.icon-edit 修改
-                            a(data-toggle="modal" ,data-target="#Allocate",ng-click="Allocate(x.OrderID,x.OrderStatusDesc)",href='')
-                                i.icon.icon-edit 分配
+                                i.icon.icon-edit 订单修改 
+                            a(data-toggle="modal" ,data-target="#Allocate",ng-click="Allocate(x.OrderID)",href='')
+                                i.icon.icon-edit 订单配送 
                             a(data-toggle="modal",data-target="#Details",ng-click="moreDetails(x.OrderID,' jinkeBro/order')",href='')
                                 i.icon.icon-zoom-in  订单详情
             div.pull-right
