@@ -2,7 +2,7 @@
  * Created by Administrator on 2016/11/21.
  */
 var accesstokenstring = localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key');
-var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination', 'treeGrid']);
+var myApp = angular.module('myApp', ['ngRoute', 'jason.pagination', 'treeGrid','Lee.canvas']);
 
 myApp.config(function($routeProvider) {
     $routeProvider.
@@ -128,6 +128,9 @@ myApp.config(function($routeProvider) {
     }).
     when('/sfms/financeManage', {
         templateUrl: '/sfms/financeManage?access_token=' + accesstokenstring,
+    }).
+    when('/sfms/financeCharts', {
+        templateUrl: '/sfms/financeCharts?access_token=' + accesstokenstring,
     }).
     when('/sfms/financeManageCheck', {
         templateUrl: '/sfms/financeManageCheck?access_token=' + accesstokenstring,

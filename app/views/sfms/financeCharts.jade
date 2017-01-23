@@ -1,0 +1,11 @@
+link(rel='stylesheet', href='css/backend/backend.css')   
+block content
+  jason-pagecontent(action='/sfms/api/finance',conf='paginationConf')
+    div.page-content
+      ng-form.form-inline
+        span.title  财务饼状图
+        hr
+        jason-canvas
+        hr
+      div.pull-right
+        jason-pagination(conf='paginationConf')

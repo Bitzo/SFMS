@@ -39,10 +39,10 @@ block content
                             tbody
                                 tr
                                     td {{order.OrderID}}
-                                    td {{order.OrderStatus}}
+                                    td {{order.UserName}}
                                     td 
-                                      jason-select.form-control(ng-model='f.UserName',source='/backuser',stext='UserName',svalue='UserName' )
-                        button.btn.btn-info.pull-right(ng-click="") 确定
+                                      jason-select.form-control(ng-model='order.UserName',source='/backuser',stext='UserName',svalue='UserID' )
+                        button.btn.btn-info.pull-right(ng-click="saveAllocate()") 确定
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.modal.fade(id="Details",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
             div.modal-dialog
