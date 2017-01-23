@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/12/6.
  */
-jasonapp.factory('myData', function($http){
+jasonapp.service('myData', function($http){
      return $http({
         method: 'get',
         url: ' /sfms/api/finance/count'+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -9,7 +9,14 @@ jasonapp.factory('myData', function($http){
                  startTime:'',
                  endTime:''
         }
-    })
+    }).
+    success(function(response) {
+        return 1;
+    }).
+    error(function(response) {
+        console.log($scope.formdata);
+        alert(response.msg);
+    });  
      
  });
 
