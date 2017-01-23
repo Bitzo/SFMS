@@ -10,123 +10,149 @@ var express = require('express'),
     router = express.Router(),
     userSpring = appRequire('service/backend/application/applicationservice'),
     logger = appRequire('util/loghelper').helper,
-    config = appRequire('config/config');
+    config = appRequire('config/config'),
+    functionConfig = appRequire('config/functionconfig'),
+    userfuncService = appRequire('service/backend/user/userfuncservice');
 
 router.post('/', function (req, res) {
-    var query = req.body.formdata;
-        data = ['ApplicationCode', 'ApplicationName', 'IsActive'],
-        err = 'required: ';
-    for(var value in data)
-    {
-        if(!(data[value] in query))
-        {
-            err += data[value] + ' ';
-        }
-    }
-
-    if (err != 'required: ') {
-        res.status(400);
-        res.json({
-            code: 400,
-            isSuccess: false,
-            msg: err
-        });
-        return;
-    }
-
-    var ApplicationCode = query.ApplicationCode,
-        ApplicationName = query.ApplicationName,
-        IsActive = query.IsActive,
-        memo = query.Memo || '';
-
+    var functionCode = functionConfig.backendApp.appManage.appAdd.functionCode;
     var data = {
-        'ApplicationName': ApplicationName,
-        'OperateUserID': req.query.jitkey,
-        'pageNum': config.pageCount
-    };
-
-    //检查是否有该应用
-    userSpring.queryAllApp(data, function (err, results) {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    }
+    userfuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
-            res.json({
+            return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
-            logger.writeError('新增应用,出错信息: ' + err);
-            return;
         }
+        if (results !== undefined&& results.isSuccess === true) {
+            var query = req.body.formdata,
+                err = 'required: ';
+            data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
+            for(var value in data)
+            {
+                if(!(data[value] in query))
+                {
+                    err += data[value] + ' ';
+                }
+            }
 
-        if (results === undefined || results.length == 0) {
-            data = {
-                'ApplicationCode': ApplicationCode,
+            if (err != 'required: ') {
+                res.status(400);
+                res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: err
+                });
+                return;
+            }
+
+            var ApplicationCode = query.ApplicationCode,
+                ApplicationName = query.ApplicationName,
+                IsActive = query.IsActive,
+                memo = query.Memo || '';
+
+            var data = {
                 'ApplicationName': ApplicationName,
-                'Memo': memo,
-                'IsActive': IsActive,
                 'OperateUserID': req.query.jitkey,
-            }
-            if (data.ApplicationCode.length>50) {
-                res.status(400);
-                return res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: '应用代码过长,请勿超过50个字符'
-                });
-            }
-            if (data.ApplicationName.length>50) {
-                res.status(400);
-                return res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: '应用名称过长,请勿超过50个字符'
-                });
-            }
+                'pageNum': config.pageCount
+            };
 
-            if (data.Memo!==undefined&&data.Memo.length>200) {
-                res.status(400);
-                return res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: '备注过长,请勿超过200个字符'
-                });
-            }
-            userSpring.insert(data, function (err, results) {
+            //检查是否有该应用
+            userSpring.queryAllApp(data, function (err, results) {
                 if (err) {
                     res.status(500);
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '服务器出错'
+                        msg: '查询失败，服务器出错'
                     });
                     logger.writeError('新增应用,出错信息: ' + err);
                     return;
                 }
-                res.status(200);
-                res.json({
-                    code: 200,
-                    isSuccess: true,
-                    data: {
-                        ID: results.insertId,
-                        ApplicationCode: data.ApplicationCode,
-                        ApplicationName: data.ApplicationName,
-                        Memo: data.Memo,
-                        IsActive: data.IsActive
-                    },
-                    msg: '操作成功'
-                });
+
+                if (results === undefined || results.length == 0) {
+                    data = {
+                        'ApplicationCode': ApplicationCode,
+                        'ApplicationName': ApplicationName,
+                        'Memo': memo,
+                        'IsActive': IsActive,
+                        'OperateUserID': req.query.jitkey,
+                    }
+                    if (data.ApplicationCode.length>50) {
+                        res.status(400);
+                        return res.json({
+                            code: 400,
+                            isSuccess: false,
+                            msg: '应用代码过长,请勿超过50个字符'
+                        });
+                    }
+                    if (data.ApplicationName.length>50) {
+                        res.status(400);
+                        return res.json({
+                            code: 400,
+                            isSuccess: false,
+                            msg: '应用名称过长,请勿超过50个字符'
+                        });
+                    }
+
+                    if (data.Memo!==undefined&&data.Memo.length>200) {
+                        res.status(400);
+                        return res.json({
+                            code: 400,
+                            isSuccess: false,
+                            msg: '备注过长,请勿超过200个字符'
+                        });
+                    }
+                    userSpring.insert(data, function (err, results) {
+                        if (err) {
+                            res.status(500);
+                            res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: '服务器出错'
+                            });
+                            logger.writeError('新增应用,出错信息: ' + err);
+                            return;
+                        }
+                        res.status(200);
+                        res.json({
+                            code: 200,
+                            isSuccess: true,
+                            data: {
+                                ID: results.insertId,
+                                ApplicationCode: data.ApplicationCode,
+                                ApplicationName: data.ApplicationName,
+                                Memo: data.Memo,
+                                IsActive: data.IsActive
+                            },
+                            msg: '操作成功'
+                        });
+                    });
+                } else {
+                    res.status(400);
+                    res.json({
+                        code: 404,
+                        isSucess: false,
+                        msg: '应用已存在'
+                    });
+                    logger.writeError('新增应用,出错信息: 新增用户已存在');
+                    return;
+                }
             });
         } else {
             res.status(400);
-            res.json({
-                code: 404,
-                isSucess: false,
-                msg: '应用已存在'
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
             });
-            logger.writeError('新增应用,出错信息: 新增用户已存在');
-            return;
         }
-    });
+    })
 });
 
 router.get('/', function (req, res) {
