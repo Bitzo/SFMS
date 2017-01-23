@@ -15,7 +15,7 @@ var express = require('express'),
 var orderDelivery = appRequire('service/jinkebro/orderdelivery/orderdeliveryservice'),
     orderDelieveryModel = appRequire('model/jinkebro/orderdelivery/orderdeliverymodel'),
     userService = appRequire('service/backend/user/userservice')
-moment = require('moment');
+    moment = require('moment');
 
 router.post('/', function (req, res) {
     //接受前端的数据
@@ -49,7 +49,7 @@ router.post('/', function (req, res) {
     }
 
     for (var key in insertData) {
-        if (isNaN(insertData[key])) {
+        if (!(isNaN(insertData[key]))) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -230,7 +230,7 @@ router.put('/', function (req, res) {
     }
 
     for (var key in insertData) {
-        if (isNaN(insertData[key])) {
+        if (!(isNaN(insertData[key]))) {
             res.status(400);
             return res.json({
                 code: 400,
