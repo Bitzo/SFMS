@@ -66,7 +66,6 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier;
 	
-    console.log('*******************************************************************************************');
     for(var key in data)
     console.log(key + ':  ' + data[key] + '  ');
 	orderdeliveryDAL.queryOrderDelivery (data, function (err, insertResult) {
