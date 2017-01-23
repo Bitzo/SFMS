@@ -496,9 +496,11 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             if(response.isSuccess){
                 alert(response.msg);
                 console.log($scope.formdata);
+                location.reload();
             }else{
                 alert(response.msg);
             }
+            
         }).
         error(function(response) {
             alert(response.msg);
@@ -552,7 +554,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         });    
     }
 
-    $scope.saveOrderEdit = function(){
+    $scope.saveAllocate = function(){
          $scope.formdata= {
              "OrderID" : $scope.order.OrderID,
              "OrderStatus" : parseInt($scope.order.OrderStatus),
