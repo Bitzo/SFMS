@@ -34,24 +34,26 @@ exports.checkUserFunc = function (data, callback) {
      *   'functionCode': 'TEST'
      * }
      */
-    var accountID = data.userID,
-        functionCode = data.functionCode,
+    var accountID = data.userID || '',
+        functionCode = data.functionCode || '',
         checkResult = {
             isSuccess: false,
             msg: ''
         };
-
-    if (accountID === undefined || isNaN(accountID)) {
+    if (accountID === undefined || accountID === '' || isNaN(accountID)) {
         checkResult.msg = '用户ID错误！'
         return callback(false, checkResult);
     }
 
-    if (functionCode === undefined || functionCode.trim() == '') {
-        checkResult.msg = '功能点Code有误！'
+    if (functionCode === undefined || functionCode === '') {
+        checkResult.msg = '功能点Code有误！';
         return callback(false, checkResult);
     }
 
-    functionCode = functionCode.trim();
+    if (functionCode === '') {
+        checkResult.msg = '功能点Code有误！'
+        return callback(false, checkResult);
+    }
 
     userRoleService.query({AccountID: accountID}, function(err, results) {
         if (err) {
@@ -59,6 +61,7 @@ exports.checkUserFunc = function (data, callback) {
             return callback(true, checkResult);
         }
         if (results!==undefined && results.length>0) {
+            console.log(3)
             var roleID = [];
             for (var i in results) {
                 roleID[i] = results[i].RoleID;
@@ -76,15 +79,15 @@ exports.checkUserFunc = function (data, callback) {
                             return callback(false, checkResult);
                         }
                     }
-                    checkResult.msg = '无权限！'
+                    checkResult.msg = '您无此操作的权限！'
                     return callback(false, checkResult);
                 } else {
-                    checkResult.msg = '无权限！'
+                    checkResult.msg = '您无此操作的权限！'
                     return callback(false, checkResult);
                 }
             })
         } else {
-            checkResult.msg = '无权限！'
+            checkResult.msg = '您无此操作的权限！'
             return callback(false, checkResult);
         }
     })

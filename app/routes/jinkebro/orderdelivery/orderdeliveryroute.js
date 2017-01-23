@@ -140,7 +140,7 @@ router.get('/', function (req, res) {
                 msg: '查询失败'
             });
             console.log("查询失败");
-            logger.writeError("[routes/backend/userrole]" + "查询失败");
+            logger.writeError("[routes/jinkebro/orderdelivery/orderdeliveryroute]" + "查询失败");
             return;
         }
 
@@ -151,7 +151,7 @@ router.get('/', function (req, res) {
                 isSuccess: false,
                 msg: "未查到数据"
             });
-            logger.writeWarn("[routes/backend/user/userroleroute]" + "未查到数据");
+            logger.writeWarn("[routes/jinkebro/orderdelivery/orderdeliveryroute]" + "未查到数据");
             return;
         }
 
@@ -166,7 +166,7 @@ router.get('/', function (req, res) {
                             msg: '查询失败'
                         });
                         console.log("查询失败");
-                        logger.writeError("[routes/backend/userrole]" + "查询失败");
+                        logger.writeError("[routes/jinkebro/orderdelivery/orderdeliveryroute]" + "查询失败");
                         return;
                     }
 

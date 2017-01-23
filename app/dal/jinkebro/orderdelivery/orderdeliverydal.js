@@ -18,12 +18,18 @@ var db_jinkebro = appRequire('db/db_jinkebro'),
  */
 exports.insertOrderDelivery = function (data, callback) {
     var sql = 'INSERT INTO jit_orderdelivery SET ';
+    var  i = 0;
+    
     for (var key in data) {
-        sql += key + ' = ' + data.key + ' ';
+        if(i == 0){
+        sql += key + ' = ' + data[key] + ' ';
+        i++;
+        } else{
+         sql += ', ' + key + ' = ' + data[key] + ' ';   
+        }
     }
 
     logger.writeInfo('[dal/jinkebro/orderdelivery]商品配送的员新增');
-
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -47,11 +53,11 @@ exports.insertOrderDelivery = function (data, callback) {
  * @function: 订单配送员表的查询工作
  */
 exports.queryOrderDelivery = function (data, callback) {
-    var sql = 'SELECT ID,RoleID,DeliveryUserID,DeliveryBeginTime,DeliveryEndTime FROM jit_orderdelivery where 1 = 1 ';
+    var sql = 'SELECT ID,OrderID,DeliveryUserID,DeliveryBeginTime,DeliveryEndTime FROM jit_orderdelivery where 1 = 1 ';
 
     for (var key in data) {
         if (key != 'num' && key != 'page')
-            sql += 'and ' + key + ' = ' + data.key;
+            sql += ' and ' + key + ' = ' + data[key];
     }
 
     var num = data.num;
@@ -61,7 +67,6 @@ exports.queryOrderDelivery = function (data, callback) {
     }
 
     logger.writeInfo("[dal/jinkebro/orderdelivery]订单配送员查询:" + sql);
-
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);

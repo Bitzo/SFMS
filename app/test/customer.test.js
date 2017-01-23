@@ -38,7 +38,7 @@ describe("微信客户的单元测试", function () {
 		customerService.insert(data, function(err, result) {
 			if(err) return done(err);
 			result.insertId.should.be.above(0).and.should.be.a.Number;
-			console.log("[test/customer.test.js---------------43行]" + result.insertId);
+			console.log("[test/customer.test.js---------------40行]" + result.insertId);
 			insertCustomerID = result.insertId;
 			done();
 		});
