@@ -29,7 +29,7 @@ OrderDelivery.prototype.insertOrderDelivery = function (data, callback) {
 	orderdeliveryDAL.insertOrderDelivery (data, function (err, insertResult) {
 		if (err) {
 			logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = data.CustomerID;
+            logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
             logModel.Memo = "订单配送员新增失败";
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
@@ -42,7 +42,7 @@ OrderDelivery.prototype.insertOrderDelivery = function (data, callback) {
         
         //新增成功
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = data.CustomerID;
+        logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
         logModel.Memo = "订单新增成功";
         logService.insertOperationLog(logModel, function (err, logResult) {
             if (err) {
@@ -51,6 +51,7 @@ OrderDelivery.prototype.insertOrderDelivery = function (data, callback) {
         });
         logger.writeInfo('订单新增成功');
         callback(false, insertResult);
+        return;
     });
 }
 	
@@ -65,10 +66,13 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier;
 	
-	orderdeliveryDAL.insertOrderDelivery (data, function (err, insertResult) {
+    console.log('*******************************************************************************************');
+    for(var key in data)
+    console.log(key + ':  ' + data[key] + '  ');
+	orderdeliveryDAL.queryOrderDelivery (data, function (err, insertResult) {
 		if (err) {
 			logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = data.CustomerID;
+            logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
             logModel.Memo = "订单配送员查询失败";
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
@@ -81,11 +85,11 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
         
         //查询成功
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = data.CustomerID;
+        logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
         logModel.Memo = "订单配送员查询成功";
-        logService.queryOrderDelivery(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function (err, logResult) {
             if (err) {
-                logger.writeError("订单查询成功，生成操作日志失败" + logModel.CreateTime);
+                logger.writeError("订单配送员查询成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
         logger.writeInfo('订单查询成功');
@@ -104,10 +108,10 @@ OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryUpd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryUpd.identifier;
 	
-	orderdeliveryDAL.insertOrderDelivery (data, function (err, insertResult) {
+	orderdeliveryDAL.updateOrderDelivery (data, function (err, insertResult) {
 		if (err) {
 			logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = data.CustomerID;
+            logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
             logModel.Memo = "订单配送单修改失败";
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
@@ -120,9 +124,9 @@ OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
         
         //单修改成功
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = data.CustomerID;
+        logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
         logModel.Memo = "订单配送单修改成功";
-        logService.queryOrderDelivery(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function (err, logResult) {
             if (err) {
                 logger.writeError("订单修改成功，生成操作日志失败" + logModel.CreateTime);
             }
@@ -133,3 +137,4 @@ OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
     });
 }
         
+module.exports = new OrderDelivery();
