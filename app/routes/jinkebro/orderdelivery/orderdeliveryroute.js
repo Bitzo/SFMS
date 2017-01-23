@@ -5,49 +5,50 @@
  * @Last Modified time: 
  * @Function: 订单的配送员
  */
- 
- var express = require('express'),
+
+var express = require('express'),
     router = express.Router(),
     logger = appRequire('util/loghelper').helper,
     url = require('url');
 	
 //订单配送员的逻辑组件
 var orderDelivery = appRequire('service/jinkebro/orderdelivery/orderdeliveryservice'),
-	orderDelieveryModel = appRequire('model/jinkebro/orderdelivery/orderdeliverymodel'),
-	moment = require('moment');
-	
+    orderDelieveryModel = appRequire('model/jinkebro/orderdelivery/orderdeliverymodel'),
+    userService = appRequire('service/backend/user/userservice')
+moment = require('moment');
+
 router.post('/', function (req, res) {
-	//接受前端的数据
-	var formdata = req.body.formdata;
-	
-	var data =['OrderID', 'DeliveryUserID'];
-	var err = 'require: ';
-	for (var value in data) {
-		if (!(data[value] in formdata)) {
-			err += data[value] + ' ';
-		}
-	}
-	
-	if (err !== 'require: ') {
-		logger.writeError(err); 
-		res.status(400);
-		return res.json({
-			code: 400,
-			isSuccess: false,
-			msg: '存在未填写的必填的字段' + err
-		});
-	}
-	
-	var OrderID = formdata.OrderID,
-		DeliveryUserID = formdata.UserID;
+    //接受前端的数据
+    var formdata = req.body.formdata;
+
+    var data = ['OrderID', 'DeliveryUserID'];
+    var err = 'require: ';
+    for (var value in data) {
+        if (!(data[value] in formdata)) {
+            err += data[value] + ' ';
+        }
+    }
+
+    if (err !== 'require: ') {
+        logger.writeError(err);
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '存在未填写的必填的字段' + err
+        });
+    }
+
+    var OrderID = formdata.OrderID,
+        DeliveryUserID = formdata.UserID;
 		
-		//接收的数据进行object然后来插入
-	var insertData = {
-		'OrderID': OrderID,
-		'DeliveryUserID': DeliveryUserID
-	}	
-	
-	for (var key in insertData) {
+    //接收的数据进行object然后来插入
+    var insertData = {
+        'OrderID': OrderID,
+        'DeliveryUserID': DeliveryUserID
+    }
+
+    for (var key in insertData) {
         if (isNaN(insertData[key])) {
             res.status(400);
             return res.json({
@@ -58,7 +59,7 @@ router.post('/', function (req, res) {
         }
     }
 	
-	//执行插入操作
+    //执行插入操作
     orderDelivery.insertOrderDelivery(insertData, function (err, result) {
         if (err) {
             res.status(500);
@@ -97,11 +98,11 @@ router.get('/', function (req, res) {
         deliveryUserID = req.query.DeliveryUserID,
         deliveryBeginTime = req.query.DeliveryBeginTime || '',
         deliveryEndTime = req.query.DeliveryEndTime || '';
-        
+
     var data = {};
-    if (orderID != undefined && orderID.length !=0) {
+    if (orderID != undefined && orderID.length != 0) {
         data.OrderID = orderID;
-        if(isNaN(orderID)) {
+        if (isNaN(orderID)) {
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -109,10 +110,10 @@ router.get('/', function (req, res) {
             });
         };
     }
-    
-    if (deliveryUserID !== undefined && deliveryUserID.length !== 0 ) {
+
+    if (deliveryUserID !== undefined && deliveryUserID.length !== 0) {
         data.DeliveryUserID = deliveryUserID;
-        if(isNaN(deliveryUserID)) {
+        if (isNaN(deliveryUserID)) {
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -120,85 +121,115 @@ router.get('/', function (req, res) {
             });
         };
     }
-    
+
     if (deliveryBeginTime !== undefined && deliveryBeginTime.length !== 0) {
         data.DeliveryBeginTime = deliveryBeginTime;
     }
-    
-    if(deliveryEndTime !== undefined && deliveryEndTime.length !== 0) {
+
+    if (deliveryEndTime !== undefined && deliveryEndTime.length !== 0) {
         data.DeliveryEndTime = deliveryEndTime;
     }
-    
-    orderDelivery.queryOrderDelivery (data, function (err,orderDeliveryInfo) {
-       if (err) {
-           res.status(500);
-			res.json({
-				code: 500,
-				isSuccess: true,
-				msg: '查询失败'
-			});
-			console.log("查询失败");
-			logger.writeError("[routes/backend/userrole]" + "查询失败");
-			return;
-       } 
-       
-       if (orderDeliveryInfo == undefined && orderDeliveryInfo.length == 0) {
-           res.status(200);
-			res.json({
-				code: 500,
-				isSuccess: false,
-				msg: "未查到数据"
-			});
-			logger.writeWarn("[routes/backend/user/userroleroute]" + "未查到数据");
-			return;
-       }
-       
-       if (orderDeliveryInfo != undefined && orderDeliveryInfo.length != 0) {
-           var results = {
-				code: 200,
-				isSuccess: true,
-				msg: '查询成功',
-				data: RoleInfo
-			};
-			res.status(200);
-			res.json(results);
-			return;
-       }
-    }); 
+
+
+    orderDelivery.queryOrderDelivery(data, function (err, orderDeliveryInfo) {
+        if (err) {
+            res.status(500);
+            res.json({
+                code: 500,
+                isSuccess: true,
+                msg: '查询失败'
+            });
+            console.log("查询失败");
+            logger.writeError("[routes/backend/userrole]" + "查询失败");
+            return;
+        }
+
+        if (orderDeliveryInfo == undefined && orderDeliveryInfo.length == 0) {
+            res.status(200);
+            res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "未查到数据"
+            });
+            logger.writeWarn("[routes/backend/user/userroleroute]" + "未查到数据");
+            return;
+        }
+
+        if (orderDeliveryInfo != undefined && orderDeliveryInfo.length != 0) {
+            if (orderDeliveryInfo.DeliveryUserID != undefined && orderDeliveryInfo.DeliveryUserID.length != 0) {
+                userService.querySingleID(orderDeliveryInfo.DeliveryUserID, function (err, queryUserInfo) {
+                    if (err) {
+                        res.status(500);
+                        res.json({
+                            code: 500,
+                            isSuccess: true,
+                            msg: '查询失败'
+                        });
+                        console.log("查询失败");
+                        logger.writeError("[routes/backend/userrole]" + "查询失败");
+                        return;
+                    }
+
+                    var userName = queryUserInfo.UserName;
+                    var sendOrderDeliveryInfo = orderDeliveryInfo;
+                    sendOrderDeliveryInfo.UserName = userName;
+                    var results = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        data: sendOrderDeliveryInfo
+                    };
+                    res.status(200);
+                    res.json(results);
+                    return;
+                });
+            } else {
+                var results = {
+                    code: 200,
+                    isSuccess: true,
+                    msg: '查询成功',
+                    data: orderDeliveryInfo
+                };
+                res.status(200);
+                res.json(results);
+                return;
+            }
+        }
+    });
 });
 
 router.put('/', function (req, res) {
-	//接受前端的数据
-	var formdata = req.body.formdata;
-	
-	var data =['OrderID', 'DeliveryUserID','ID'];
-	var err = 'require: ';
-	for (var value in data) {
-		if (!(data[value] in formdata)) {
-			err += data[value] + ' ';
-		}
-	}
-	
-	if (err !== 'require: ') {
-		logger.writeError(err); 
-		res.status(400);
-		return res.json({
-			code: 400,
-			isSuccess: false,
-			msg: '存在未填写的必填的字段' + err
-		});
-	}
-	
-	var OrderID = formdata.OrderID,
-		DeliveryUserID = formdata.UserID;
+    //接受前端的数据
+    var formdata = req.body.formdata;
+
+    var data = ['OrderID', 'DeliveryUserID', 'ID'];
+    var err = 'require: ';
+    for (var value in data) {
+        if (!(data[value] in formdata)) {
+            err += data[value] + ' ';
+        }
+    }
+
+    if (err !== 'require: ') {
+        logger.writeError(err);
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '存在未填写的必填的字段' + err
+        });
+    }
+
+    var OrderID = formdata.OrderID,
+        DeliveryUserID = formdata.UserID;
 		
-		//接收的数据进行object然后来插入
-	var insertData = {
-		'OrderID': OrderID,
-		'DeliveryUserID': DeliveryUserID
-	}	
-	
-	for (var key in insertData) {
+    //接收的数据进行object然后来插入
+    var insertData = {
+        'OrderID': OrderID,
+        'DeliveryUserID': DeliveryUserID
+    }
+
+    for (var key in insertData) {
         if (isNaN(insertData[key])) {
             res.status(400);
             return res.json({
@@ -209,7 +240,7 @@ router.put('/', function (req, res) {
         }
     }
 	
-	//执行插入操作
+    //执行插入操作
     orderDelivery.updateOrderDelivery(insertData, function (err, result) {
         if (err) {
             res.status(500);
