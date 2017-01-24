@@ -137,7 +137,6 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-    console.log(req.query);
     var query = JSON.parse(req.query.f);
     console.log(query);
     var page = req.query.pageindex || 1,
