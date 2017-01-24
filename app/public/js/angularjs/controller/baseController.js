@@ -533,12 +533,18 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
          $scope.order = {
              'OrderID': OrderID 
          }
+          $scope.f = {
+             'OrderID': OrderID 
+         }
          $http({
             method:'get',
             url: '/jinkeBro/orderDelivery' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            f:$scope.order
+            params:{
+                    f:$scope.f
+                 }
         }).
         success(function(response) {
+            console.log($scope.f)
             $scope.order.UserName=response.data.UserName;
             console.log(response.data)
         }).
