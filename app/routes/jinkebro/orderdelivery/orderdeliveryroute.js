@@ -40,7 +40,7 @@ router.post('/', function (req, res) {
     }
 
     var OrderID = formdata.OrderID,
-        DeliveryUserID = formdata.UserID;
+        DeliveryUserID = formdata.DeliveryUserID;
 		
     //接收的数据进行object然后来插入
     var insertData = {
@@ -49,7 +49,8 @@ router.post('/', function (req, res) {
     }
 
     for (var key in insertData) {
-        if (!(isNaN(insertData[key]))) {
+        console.log(key + ': ' + insertData[key]);
+        if (isNaN(insertData[key])) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -92,8 +93,9 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-    var page = req.query.Page || 1,
-        num = req.query.Num || 20,
+    console.log(req.query);
+    var page = req.query.pageindex || 1,
+        num = req.query.pagesize || 20,
         orderID = req.query.OrderID,
         deliveryUserID = req.query.DeliveryUserID,
         deliveryBeginTime = req.query.DeliveryBeginTime || '',
@@ -230,7 +232,7 @@ router.put('/', function (req, res) {
     }
 
     for (var key in insertData) {
-        if (!(isNaN(insertData[key]))) {
+        if (isNaN(insertData[key])) {
             res.status(400);
             return res.json({
                 code: 400,
