@@ -674,7 +674,7 @@ router.get('/person', function (req, res) {
                 pageNum = req.query.pagesize || config.pageCount,
                 totalNum = 0;
 
-            var data = {
+            data = {
                 'ID': ID,
                 'ProjectID': ProjectID,
                 'UserID': UserID,
