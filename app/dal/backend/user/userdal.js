@@ -34,7 +34,7 @@ exports.querySingleUser = function (account, pwd, callback) {
 }
 
 exports.querySingleID = function (accountid, callback) {
-    var sql = 'select  ApplicationID,AccountID,Account,UserName,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime from jit_user where IsActive=1 and AccountID=?';
+    var sql = 'select  ApplicationID,AccountID,Account,UserName,CollegeID,GradeYear,Phone,ClassID,Memo,CreateUserID,CreateTime from jit_user where IsActive=1 and AccountID = ' + accountid;
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -44,12 +44,13 @@ exports.querySingleID = function (accountid, callback) {
         connection.query(sql, [accountid], function (err, results) {
             if (err) {
                 callback(true);
-                logger.writeError('[dal/user/userdal----------27行]数据库查询用户的时候出错');
+                logger.writeError('[dal/user/userdal]数据库查询用户的时候出错');
                 return;
             }
 
             callback(false, results);
             connection.release();
+            return ;
         });
     });
 }

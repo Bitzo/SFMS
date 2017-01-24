@@ -67,8 +67,6 @@ exports.queryOrderDelivery = function (data, callback) {
     }
 
     logger.writeInfo("[dal/jinkebro/orderdelivery]订单配送员查询:" + sql);
-    console.log('***********************************************************');
-    console.log(sql);
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
