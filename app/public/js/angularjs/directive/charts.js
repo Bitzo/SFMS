@@ -22,7 +22,7 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
         restrict: 'EA',
         template:
            ' <p>'+
-           ' <canvas id="canvas_circle" width="500" height="300" '+
+           ' <canvas id="inOutSum" width="500" height="300" '+
            ' 浏览器不支持canvas  '+
            '  </canvas> '+
            ' </p>',
@@ -33,27 +33,41 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
         replace:true,
         transclude:true,
         link: function (scope, element, attrs) {
+
           myData.Iint().then(function(response){
-                console.log(response)
+                console.log(response);
+
+                var InSum = response.data.data.InSum;
+                var OutSum =  response.data.data.OutSum;        
+                var Sum = InSum + OutSum;   
+
+                var a = InSum / Sum;
+                var b = OutSum / Sum;                        
+ 
+                console.log(a)
+                console.log(b)
+                
+                var data_arr = [a, b];  
+                var color_arr = ["#92c5e2",  "#f5de69"];  
+                var text_arr = ["{{chartName}}", "支出"];  
+                drawCircle("inOutSum", data_arr, color_arr, text_arr,0);  
             });
-          
-         
+      
+        //   $scope.changed = function(valueID){
+        //             console.log(scope.chartName)
+        //   }
 
-            //绘制饼图  
-            //比例数据和颜色  
-            var data_arr = [0.05, 0.25, 0.6, 0.1];  
-            var color_arr = ["#92c5e2", "#f5d3d3", "#bdf3c2", "#fdfb9d"];  
-            var text_arr = ["办公耗材消费", "图书", "餐饮", "其他"];  
+            
 
-            drawCircle("canvas_circle", data_arr, color_arr, text_arr);  
-
-             function drawCircle(canvasId, data_arr, color_arr, text_arr)  
+             function drawCircle(canvasId, data_arr, color_arr, text_arr,a)  
             {  
+
                 var c = document.getElementById(canvasId);  
                 var ctx = c.getContext("2d");  
   
                 var radius = c.height / 2 - 20; //半径  
-                var ox = radius + 20, oy = radius + 20; //圆心  
+                var ox = radius + 20 + a, oy = radius + 20 + a; //圆心  
+                console.log(ox,oy)
   
                 var width = 30, height = 10; //图例宽和高  
                 var posX = ox * 2 + 20, posY = 30;   //  
@@ -83,6 +97,8 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
                     ctx.fillText(percent, textX, textY + 20 * i);  
                 }  
             }  
+            
+           
   
            
         }
