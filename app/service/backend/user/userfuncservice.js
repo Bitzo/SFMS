@@ -6,17 +6,22 @@
  * @Function:
  */
 
-var userfuncDAL = appRequire('dal/backend/user/userfuncdal');
+var userFuncDAL = appRequire('dal/backend/user/userfuncdal');
 var userRoleService = appRequire('service/backend/user/userroleservice');
-var userfuncService = appRequire('service/backend/user/userfuncservice');
+var userFuncService = appRequire('service/backend/user/userfuncservice');
 var logger = appRequire("util/loghelper").helper;
 
-
+/**
+ * @function 根据RoleID查询用户的功能点数据
+ * @param data
+ * @param callback
+ * @returns {*}
+ */
 exports.queryUserFunc = function (data, callback) {
     if (data.RoleID === undefined || data.RoleID.length == 0) {
-        return callback(true)
+        return callback(true);
     }
-    userfuncDAL.queryUserFunc(data, function (err, results) {
+    userFuncDAL.queryUserFunc(data, function (err, results) {
         if (err) {
             callback(true);
             return;
@@ -24,9 +29,14 @@ exports.queryUserFunc = function (data, callback) {
         logger.writeInfo('根据用户查询功能代码');
         callback(false, results);
     })
-
 };
 
+/**
+ * @function 用户功能的鉴定
+ * @param data {userID: 1, functionCode: 'CODE'}
+ * @param callback
+ * @returns {isSuccess: true/false, msg: ''}
+ */
 exports.checkUserFunc = function (data, callback) {
     /**
      * data = {
@@ -41,7 +51,7 @@ exports.checkUserFunc = function (data, callback) {
             msg: ''
         };
     if (accountID === undefined || accountID === '' || isNaN(accountID)) {
-        checkResult.msg = '用户ID错误！'
+        checkResult.msg = '用户ID错误！';
         return callback(false, checkResult);
     }
 
@@ -51,44 +61,43 @@ exports.checkUserFunc = function (data, callback) {
     }
 
     if (functionCode === '') {
-        checkResult.msg = '功能点Code有误！'
+        checkResult.msg = '功能点Code有误！';
         return callback(false, checkResult);
     }
 
     userRoleService.query({AccountID: accountID}, function(err, results) {
         if (err) {
-            checkResult.msg = '服务器内部错误！'
+            checkResult.msg = '服务器内部错误！';
             return callback(true, checkResult);
         }
         if (results!==undefined && results.length>0) {
-            console.log(3)
             var roleID = [];
             for (var i in results) {
                 roleID[i] = results[i].RoleID;
             }
-            userfuncService.queryUserFunc({RoleID:roleID}, function (err, results) {
+            userFuncService.queryUserFunc({RoleID:roleID}, function (err, results) {
                 if (err) {
-                    checkResult.msg = '服务器内部错误！'
+                    checkResult.msg = '服务器内部错误！';
                     return callback(true, checkResult);
                 }
                 if (results!==undefined && results.length > 0) {
                     for (var i in results) {
                         if (functionCode === results[i].FunctionCode) {
-                            checkResult.msg = '权限正确！'
+                            checkResult.msg = '权限正确！';
                             checkResult.isSuccess = true;
                             return callback(false, checkResult);
                         }
                     }
-                    checkResult.msg = '您无此操作的权限！'
+                    checkResult.msg = '您无此操作的权限！';
                     return callback(false, checkResult);
                 } else {
-                    checkResult.msg = '您无此操作的权限！'
+                    checkResult.msg = '您无此操作的权限！';
                     return callback(false, checkResult);
                 }
             })
         } else {
-            checkResult.msg = '您无此操作的权限！'
+            checkResult.msg = '您无此操作的权限！';
             return callback(false, checkResult);
         }
     })
-}
+};
