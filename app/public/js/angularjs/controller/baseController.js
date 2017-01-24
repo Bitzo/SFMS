@@ -533,19 +533,18 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
          $scope.order = {
              'OrderID': OrderID 
          }
+          $scope.f = {
+             'OrderID': OrderID 
+         }
          $http({
             method:'get',
             url: '/jinkeBro/orderDelivery' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
-                isPaging:1,
-                pageindex:1,
-                pagesize:10,
-                f:{
-                    Category:"dc_orderstatus"
-                }
-            }
+                    f:$scope.f
+                 }
         }).
         success(function(response) {
+            console.log($scope.f)
             $scope.order.UserName=response.data.UserName;
             console.log(response.data)
         }).
@@ -575,7 +574,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         error(function(response) {
             console.log($scope.formdata);
-            alert(response.msg);
+            alert(response.msg);5
         });  
     }
 
