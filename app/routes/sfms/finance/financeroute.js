@@ -508,9 +508,8 @@ router.get('/count', function(req, res) {
             });
         }
         if (results !== undefined && results.isSuccess === true) {
-            var query = JSON.parse(req.query.f),
-                startTime = query.startTime || '',
-                endTime = query.endTime || '';
+            var startTime = req.query.startTime || '',
+                endTime = req.query.endTime || '';
 
             if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
             if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
