@@ -449,7 +449,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         }).
         success(function(response) {
             $scope.data = response.data;
-
+            $scope.f = {};
         }).
         error(function(response) {
             console.log(response);

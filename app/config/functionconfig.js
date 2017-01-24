@@ -449,31 +449,6 @@ var functionConfig = {
             },
         },
     },
-    weChat: {
-        applicationID: 4,
-        applicationName: "微信端",
-        infoManage: {
-            functionName: "获取信息模块",
-            functionCode: "",
-            access_tokenGet: {
-                functionName: "获取token",
-                functionCode: 4001
-            },
-            customerInfo: {
-                functionName: "消费者信息获取",
-                functionCode: 4002
-            },
-            customerList: {
-                functionName: "消费者列表获取",
-                functionCode: 4003
-            },
-            customerNextList: {
-                functionName: "指定消费者列表获取",
-                functionCode: 4004
-            }
-        }
-    }
 };
-
 
 module.exports = functionConfig;

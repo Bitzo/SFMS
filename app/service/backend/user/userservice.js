@@ -42,7 +42,7 @@ exports.querySingleID = function (accountid, callback) {
             callback(true);
             return;
         }
-        callback(false, result);
+        return callback(false, result);
     });
 };
 
@@ -86,7 +86,7 @@ exports.insert = function (data, callback) {
             callback(true);
             return;
         }
-        callback(false, results);
+        return callback(false, results);
     });
 };
 
@@ -103,7 +103,7 @@ exports.update = function (data, callback) {
             callback(true);
             return;
         }
-        callback(false, results);
+        return callback(false, results);
     });
 };
 
@@ -120,7 +120,7 @@ exports.delete = function (data, callback) {
             callback(true);
             return;
         }
-        callback(false);
+        return callback(false);
     });
 };
 
@@ -130,7 +130,7 @@ exports.login = function (data, callback) {
         username: 'snail'
     };
 
-    callback(false, userObj);
+    return callback(false, userObj);
 };
 
 //查询数量的service
@@ -140,7 +140,7 @@ exports.countUser = function (data, callback) {
             callback(true);
             return;
         }
-        callback(false, results);
+        return callback(false, results);
     });
 }
 
@@ -158,7 +158,7 @@ exports.queryAccount = function (data, callback) {
             callback(true);
             return;
         }
-        callback(false, results);
+        return callback(false, results);
     });
 }
 
@@ -169,6 +169,6 @@ exports.queryAccountByID = function (data, callback) {
             callback(true);
             return;
         }
-        callback(false, results);
+         return callback(false, results);
     });
 }

@@ -306,6 +306,7 @@ router.post('/', function (req, res) {
 //查询用户的资料
 router.get('/', function (req, res) {
     var query = JSON.parse(req.query.f);
+    console.log(req.query);
     logger.writeInfo("查询用户的记录");
     var data = {},
         allCount,
