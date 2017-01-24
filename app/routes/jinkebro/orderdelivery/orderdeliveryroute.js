@@ -15,7 +15,7 @@ var express = require('express'),
 var orderDelivery = appRequire('service/jinkebro/orderdelivery/orderdeliveryservice'),
     orderDelieveryModel = appRequire('model/jinkebro/orderdelivery/orderdeliverymodel'),
     userService = appRequire('service/backend/user/userservice')
-    moment = require('moment');
+moment = require('moment');
 
 router.post('/', function (req, res) {
     //接受前端的数据
@@ -59,35 +59,79 @@ router.post('/', function (req, res) {
             });
         }
     }
-	
-    //执行插入操作
-    orderDelivery.insertOrderDelivery(insertData, function (err, result) {
+
+    orderDelivery.queryOrderDelivery({ 'OrderID': OrderID }, function (err, queryInfo) {
         if (err) {
-            res.status(500);
-            return res.json({
-                code: 500,
-                isSuccess: false,
-                addProductResult: result,
-                msg: '服务器出错，订单配送员新增操作失败'
+            console.log("查询订单的配送员失败");
+            return;
+        }
+        //判断表中是否有数据
+        console.log(queryInfo);
+        if (queryInfo.length == 0) {
+            //执行插入操作
+            orderDelivery.insertOrderDelivery(insertData, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        addProductResult: result,
+                        msg: '服务器出错，订单配送员新增操作失败'
+                    });
+                }
+
+
+                if (result !== undefined && result.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        addProductResult: result,
+                        msg: '配送员分配成功'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "订单配送员添加操作失败"
+                    });
+                }
             });
         }
 
+        if (queryInfo.length != 0) {
+            insertData.ID = queryInfo[0].ID;
+            orderDelivery.updateOrderDelivery(insertData, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        addProductResult: result,
+                        msg: '服务器出错，订单配送员修改操作失败'
+                    });
+                }
 
-        if (result !== undefined && result.affectedRows != 0) {
-            res.status(200);
-            return res.json({
-                code: 200,
-                isSuccess: true,
-                addProductResult: result,
-                msg: '一条订单配送员记录添加成功'
+
+                if (result !== undefined && result.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        addProductResult: result,
+                        msg: '订单配送员修改成功'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "订单配送员修改操作失败"
+                    });
+                }
             });
-        } else {
-            res.status(404);
-            return res.json({
-                code: 404,
-                isSuccess: false,
-                msg: "订单配送员添加操作失败"
-            });
+
         }
     });
 });
