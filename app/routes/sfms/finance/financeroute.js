@@ -446,6 +446,7 @@ router.put('/', function (req, res) {
 })
 
 router.get('/count', function(req, res) {
+ console.log(req.query.f)
     var query = JSON.parse(req.query.f),
         startTime = query.startTime || '',
         endTime = query.endTime || '';
