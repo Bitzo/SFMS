@@ -5,14 +5,13 @@ block content
       ng-form.form-inline
         span.title  财务饼状图
         hr
-        ul.pull-left 
-          li
-            a(ng-click='changeChart("inOutSum")' ) 收入支出饼状图
-          li
-            a(ng-click='changeChart("inDetail")' ) 收入明细饼状图
-          li
-            a(ng-click='changeChart("outDetail")' ) 支出明细饼状图
+        p
+            jason-canvas(source='inOutSum')
+        p(style='height:0px') 
+            jason-canvas(source='inDetail')
+        p(style='height:0px')  
+            jason-canvas(source='outDetail')
+            
         div.pull-right
-         span {{chartName}}
-         jason-canvas
-      
+         
+        
