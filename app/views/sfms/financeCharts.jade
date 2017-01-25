@@ -5,14 +5,13 @@ block content
       ng-form.form-inline
         span.title  财务饼状图
         hr
-        p 收入支出饼状统计图
-         jason-canvas
-    
-        hr
-        p 收入明细饼状统计图
-    
-        hr
-        p 支出明细饼状统计图
-    
-        hr
-      
+        p
+            jason-canvas(source='inOutSum')
+        p(style='height:0px') 
+            jason-canvas(source='inDetail')
+        p(style='height:0px')  
+            jason-canvas(source='outDetail')
+            
+        div.pull-right
+         
+        

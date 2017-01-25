@@ -455,6 +455,20 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
             console.log(response);
         });
     }
+
+    //财务饼状图
+    // $scope.changeChart = function(valueID){
+    //     $scope.chartID = valueID;
+    //     console.log($scope.chartID)
+    //     if(valueID == 'outDetail'){
+    //            $scope.chartName = '支出明细饼状图'
+    //     }else if (valueID == 'inDetail'){
+    //            $scope.chartName = '收入明细饼状图'
+    //     }else{
+    //            $scope.chartName = '收入支出饼状图'
+    //     }
+        
+    // }
 //------金科小哥------
     //订单管理--首页  模态框
      //修改
