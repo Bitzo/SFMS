@@ -81,7 +81,7 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
                             if(InDetail[i].InOutType == 13){
                                 in_data_arr[a] = InDetail[i].sum / InSum ;
                                 in_text_arr[a] = InDetail[i].FITypeValue; 
-                                in_color_arr = ["#92c5e2"];
+                                in_color_arr = ["#92c5e2","#f5de69",'red'];
                                 a++;
                             }else{
                                 console.log(InDetail[i].sum)
@@ -113,11 +113,11 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
                 var ctx = c.getContext("2d");  
   
                 var radius = 80; //半径  
-                var ox = radius + 20 + a, oy = radius + 20 + a; //圆心  
+                var ox = radius + 180, oy = radius + 20 + a; //圆心  
                 console.log(ox,oy)
   
                 var width = 30, height = 10; //图例宽和高  
-                var posX = ox + 90, posY = oy + 30;   //  
+                var posX = ox + 120, posY = oy + 30;   //  
                 var textX = posX + width + 5, textY = posY + 10;  
 
                 var width = 30, height = 10; //名称宽和高  
@@ -132,8 +132,8 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
                 ctx.font = "18px Courier New";
                 //设置字体填充颜色
                 ctx.fillStyle = "black";
-                //从坐标点(50,50)开始绘制文字
-                ctx.fillText(name, 200+a, 30+a);                  
+                //从坐标点(200+a,30+a)开始绘制文字
+                ctx.fillText(name, ox-200, 30+a);                  
 
                 for (var i = 0; i < data_arr.length; i++)  
                 {  
