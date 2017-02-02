@@ -7,6 +7,11 @@ myApp.controller('baseController', function($scope, $http,$q,baseService) {
         $scope.menus = response.data.data.Menu;
     });
 
+     $scope.turn = function(a){
+        console.log(a)
+        
+    }
+
 //------所有模块------
     //分页初始化数据
     $scope.paginationConf = {

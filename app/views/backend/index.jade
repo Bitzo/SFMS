@@ -23,7 +23,7 @@ html(lang='en')
         .navbar-header.pull-right(role='navigation')
           ul.nav.ace-nav
             li.light-blue
-              a.dropdown-toggle(data-toggle='dropdown', href='#')
+              a.dropdown-toggle(data-toggle='dropdown', href='')
                 img.nav-user-photo(src='assets/avatars/user.jpg', alt="Jason's Photo")
                 span.user-info
                   small 欢迎光临,
@@ -35,12 +35,12 @@ html(lang='en')
                     i.icon-cog
                     |                                 设置
                 li
-                  a(href='#')
+                  a(ng-click="turn(this)",href='#/backend/peredit')
                     i.icon-user
                     |                                 个人资料
                 li.divider
                 li
-                  a(href='http://localhost:3000')
+                  a(href='#')
                     i.icon-off
                     |                                 退出
           // /.ace-nav
