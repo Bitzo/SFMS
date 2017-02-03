@@ -1068,7 +1068,7 @@ router.put('/',function (req,res) {
 
                             if(result !== undefined && result.affectedRows != 0){
                                 //修改菜单表成功
-                                usermenuService.delUserMenu({"menuID" : menuID},function (err,userMenuResult) {
+                                menuService.menuUpdate(data,function (err,menuResult) {
                                     if(err){
                                         res.status(500);
                                         return res.json({
@@ -1077,34 +1077,14 @@ router.put('/',function (req,res) {
                                             msg : '操作失败，服务器出错'
                                         });
                                     }
-                                    if(userMenuResult !== undefined && userMenuResult.affectedRows != 0){
-                                        menuService.menuUpdate(data,function (err,menuResult) {
-                                            if(err){
-                                                res.status(500);
-                                                return res.json({
-                                                    code :500,
-                                                    isSuccess : false,
-                                                    msg : '操作失败，服务器出错'
-                                                });
-                                            }
 
-                                            if(menuResult !== undefined && menuResult.affectedRows != 0){
-                                                res.status(200);
-                                                return res.json({
-                                                    code : 200,
-                                                    isSuccess : true,
-                                                    updateResults : results,
-                                                    msg : '菜单修改操作成功'
-                                                });
-
-                                            }else {
-                                                res.status(404);
-                                                return res.json({
-                                                    code: 404,
-                                                    isSuccess: false,
-                                                    msg: "菜单修改操作失败"
-                                                });
-                                            }
+                                    if(menuResult !== undefined && menuResult.affectedRows != 0){
+                                        res.status(200);
+                                        return res.json({
+                                            code : 200,
+                                            isSuccess : true,
+                                            updateResults : results,
+                                            msg : '菜单修改操作成功'
                                         });
 
                                     }else {
@@ -1112,11 +1092,10 @@ router.put('/',function (req,res) {
                                         return res.json({
                                             code: 404,
                                             isSuccess: false,
-                                            msg: "取消用户菜单失败"
+                                            msg: "菜单修改操作失败"
                                         });
                                     }
                                 });
-
                             }else {
                                 res.status(404);
                                 return res.json({
@@ -1278,35 +1257,15 @@ router.delete('/',function(req,res) {
                             });
                         }
 
-                        if(result !== undefined && result.affectedRows != 0){
+                        if (result !== undefined && result.affectedRows != 0) {
                             //修改菜单表成功
-                            usermenuService.delUserMenu({"menuID" : menuID},function (err,userMenuResult) {
-                                if(err){
-                                    res.status(500);
-                                    return res.json({
-                                        code :500,
-                                        isSuccess : false,
-                                        msg : '操作失败，服务器出错'
-                                    });
-                                }
-                                if(userMenuResult !== undefined && userMenuResult.affectedRows != 0){
-                                    res.status(200);
-                                    return res.json({
-                                        code: 200,
-                                        isSuccess: true,
-                                        msg: "删除菜单、用户菜单成功"
-                                    });
-                                }else {
-                                    res.status(404);
-                                    return res.json({
-                                        code: 404,
-                                        isSuccess: false,
-                                        msg: "删除用户菜单失败"
-                                    });
-                                }
+                            res.status(200);
+                            return res.json({
+                                code: 200,
+                                isSuccess: true,
+                                msg: "删除菜单成功"
                             });
-
-                        }else {
+                        } else {
                             res.status(404);
                             return res.json({
                                 code: 404,
@@ -1315,7 +1274,7 @@ router.delete('/',function(req,res) {
                             });
                         }
                     });
-                }else {
+                } else {
                     //菜单不存在
                     res.status(404);
                     return res.json({
