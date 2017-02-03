@@ -10,7 +10,7 @@ jasonapp.service('jasonformService', function ($http, $q) {
         })
     }
 });
-angular.module('jason.pagination').directive('jasonForm',function($location,jasonformService){
+angular.module('jason.pagination').directive('ljbForm',function($location,jasonformService){
     return {
         restrict: 'EA',
         template:"<div class='form-horizontal' role='form'><div ng-transclude=''>" +
@@ -22,21 +22,17 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
         replace:true,
         transclude:true,
         link: function (scope, element, attrs) {
-            scope.conf.formactionsubmit = attrs.action;
             
             var url= attrs.source+"?access_token=";
+            // var params={f:$location.search()};
             var a = localStorage.getItem('jit_key');
-            var b = $location.search()
-            if(b.AccountID){
-                console.log(b)
-                var params={f:$location.search()};
-            }else{
-                console.log($location.search())                 
-                var params={f:{'AccountID':a}};
-            }
+            var params={f:{'AccountID':a}};
             console.log(params)
+            console.log($location.search())
             jasonformService.IintGrid(url,params).then(function(response){
-                scope.conf.formdata=response.data.data[0];
+                scope.per=response.data.data[0];
+                console.log(response)
+                console.log(scope.per)
                 var toCharColArr= attrs.tocc==null?[]:attrs.tocc.split(',');
                 toCharColArr.forEach(function(o){
                     scope.conf.formdata[o]+='';    
