@@ -576,6 +576,79 @@ router.get('/:userID', function (req, res) {
     });
 });
 
+/**
+ * @api {get} /backuser/singleID/ 通过userid来获取用户的信息
+ * @apiParam {Number} AccountID ID unique sign
+ */
+
+router.get('/singID', function (req, res) {
+    var functionCode = functionConfig.backendApp.userManage.userQuery.functionCode;
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    }
+
+    userFuncService.checkUserFunc(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+        if (results !== undefined && results.isSuccess === true) {
+            var accountID = data.userID;
+            if (accountID === undefined || accountID === '') {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: 'require accountID'
+                });
+            }
+            
+            if (isNaN(accountID)) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: 'accountID不是数字'
+                });
+            }
+            
+            user.querySingleID(accountID, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '服务器出错'
+                    });
+                }
+                
+                if (result == undefined && result.length == 0) {
+                    res.status(200);
+                    return res.json({
+                       code: 200,
+                       isSuccess: true,
+                       msg: '未找到该用户' 
+                    });
+                }
+                
+                if(result !== undefined && result.length !=0) {
+                    res.status(200);
+                    return res.json({
+                       code: 200,
+                       isSuccess: true,
+                       msg: result 
+                    });
+                }
+            });
+        }
+    });
+});
+      
 //用户的编辑功能
 router.put('/', function (req, res) {
     var functionCode = functionConfig.backendApp.userManage.userEdit.functionCode;
