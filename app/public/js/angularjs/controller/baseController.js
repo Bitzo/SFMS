@@ -1,11 +1,35 @@
 /**
  * Created by Administrator on 2016/12/14.
  */
-myApp.controller('baseController', function($scope, $http,$q,baseService) {
+myApp.controller('baseController', function($scope, $http,$q,baseService,$location) {
     //显示左侧菜单栏
     $scope.menus =baseService.InitMenu().then(function(response){
         $scope.menus = response.data.data.Menu;
     });
+
+     $scope.turn = function(){
+        location.href = './index#/backend/peredit'; 
+        var a = localStorage.getItem('jit_key');
+        var params={f:a};
+        console.log(params)
+        $http({
+            method: 'get',
+            url: '/backuser' + "?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:params
+        }).
+        success(function (response) {
+            console.log(response)
+            
+          $scope.per =response.data[0];
+        }).
+        error(function (response) {
+            console.log(response)
+            console.log('hhh')
+            
+            
+        });
+       
+    }
 
 //------所有模块------
     //分页初始化数据
