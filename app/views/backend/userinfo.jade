@@ -31,13 +31,7 @@ block content
             input(type="textview",name="Account",ng-model="formdata.Account",ng-maxlength='50',required)
             &nbsp&nbsp
             small.error(ng-if="userInfo.Account.$error.maxlength && userInfo.Account.$touched") 账户最多50位
-        
-         tr
-          td(width="15%",class="tableleft") 角色名称
-          td
-            select(name="RoleID",ng-model='formdata.RoleID')
-              option   
-              option(ng-repeat="item in roleNames" value='{{item.RoleID}}' ) {{item.RoleName}}
+  
 
         tr
           td(class="tableleft") 是否有效
