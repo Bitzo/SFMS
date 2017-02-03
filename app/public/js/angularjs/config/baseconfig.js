@@ -9,6 +9,9 @@ myApp.config(function($routeProvider) {
     when('/backend/index', {
         templateUrl: '/index?access_token=' + accesstokenstring,
     }).
+    when('/backend/peredit', {
+        templateUrl: '/peredit?access_token=' + accesstokenstring,
+    }).
     when('/backend/user', {
         templateUrl: '/user?access_token=' + accesstokenstring,
     }).

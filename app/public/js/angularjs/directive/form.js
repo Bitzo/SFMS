@@ -25,7 +25,16 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
             scope.conf.formactionsubmit = attrs.action;
             
             var url= attrs.source+"?access_token=";
-            var params={f:$location.search()};
+            var a = localStorage.getItem('jit_key');
+            var b = $location.search()
+            if(b.AccountID){
+                console.log(b)
+                var params={f:$location.search()};
+            }else{
+                console.log($location.search())                 
+                var params={f:{'AccountID':a}};
+            }
+            console.log(params)
             jasonformService.IintGrid(url,params).then(function(response){
                 scope.conf.formdata=response.data.data[0];
                 var toCharColArr= attrs.tocc==null?[]:attrs.tocc.split(',');

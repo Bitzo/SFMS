@@ -48,6 +48,11 @@ router.get('/index', function(req, res, next) {
 
 });*/
 
+router.get('/peredit', function(req, res, next) {
+        res.render('backend/peredit', { title: 'Hi backend' });
+        
+});
+
 router.get('/user', function(req, res, next) {
         res.render('backend/user', { title: 'Hi backend' });
 

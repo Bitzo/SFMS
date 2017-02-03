@@ -1,0 +1,57 @@
+link(rel='stylesheet' href="css/backend/role.css")
+block content
+  div.container-fluid
+    span 
+      h2 个人资料
+    jason-form(method="post" source='/backuser' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
+      form(source='/backuser')
+        table.table.table-bordered.table-hover.definedwidth.m10        
+          tr
+            td(width="15%",class="tableleft") 用户姓名 
+            td
+              input(type="textview",name="UserName",ng-model='paginationConf.formdata.UserName',ng-maxlength='50',required)
+              &nbsp&nbsp
+              small.error(ng-if="userEdit.UserName.$error.maxlength && userEdit.UserName.$touched") 用户姓名最多50位
+            
+          tr
+            td(width="15%",class="tableleft") 密码 
+            td
+              input(type="textview",name="Pwd",ng-model="paginationConf.formdata.Pwd",ng-maxlength='50',required)
+              &nbsp&nbsp
+              small.error(ng-if="userEdit.Pwd.$error.maxlength && userEdit.Pwd.$touched") 密码最多50位
+            
+          tr
+            td(width="15%",class="tableleft") 账户名 
+            td
+              input(type="textview",name="Account",ng-model="paginationConf.formdata.Account",ng-maxlength='50',required)
+              &nbsp&nbsp
+              small.error(ng-if="userEdit.Account.$error.maxlength && userEdit.Account.$touched") 账户最多50位
+          
+          tr
+            td(width="15%",class="tableleft") 手机号码 
+            td
+              input(type="phone",name="Phone",ng-model="paginationConf.formdata.Phone",ng-maxlength='11',ng-minlength='11')  
+              &nbsp&nbsp
+              small.error(ng-if="(userEdit.Phone.$error.maxlength||userEdit.Phone.$error.minlength)&& userEdit.Phone.$touched") 电话号码11位
+
+          tr
+            td(width="15%",class="tableleft") 邮箱 
+            td
+              input(type="textview",name="Email",ng-model='paginationConf.formdata.Email',ng-maxlength='50')
+              &nbsp&nbsp
+              small.error(ng-if="formdata.Email.$error.maxlength && formdata.Email.$touched") 请填写正确的邮箱地址
+                    
+      
+          tr
+            td(width="15%",class="tableleft") 地址
+            td
+              textarea(type="textview",name="Address",ng-model="paginationConf.formdata.Address",rows="2",cols="30",ng-maxlength='200')
+              &nbsp&nbsp
+              small.error(ng-if="userEdit.Address.$error.maxlength && userEdit.Address.$touched") 地址最多200位
+
+
+          tr
+            td(class="tableleft")
+            td
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="userEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/backuser')") 确认修改
+              

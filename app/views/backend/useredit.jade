@@ -34,12 +34,6 @@ block content
               &nbsp&nbsp
               small.error(ng-if="userEdit.Account.$error.maxlength && userEdit.Account.$touched") 账户最多50位
           
-          tr
-            td(width="15%",class="tableleft") 角色名称
-            td
-              select(ng-model='paginationConf.formdata.RoleID')
-                option   
-                option(ng-repeat="item in roleNames",value='{{item.RoleID}}' ) {{item.RoleName}}
 
           tr
             td(class="tableleft") 是否有效

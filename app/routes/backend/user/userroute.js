@@ -285,36 +285,12 @@ router.post('/', function (req, res) {
                         return;
                     }
                     if (results.insertId != 0) {
-                        // res.json({
-                        //     code: 200,
-                        //     isSuccess: true,
-                        //     msg: '操作成功'
-                        // });
+                         res.json({
+                             code: 200,
+                             isSuccess: true,
+                             msg: '操作成功'
+                         });
                         logger.writeInfo("[routes/backend/user/userrole]" + "插入成功");
-                        console.log(results.insertId);
-                        if (roledata.RoleID != undefined && roledata.RoleID != 0) {
-                            roledata.AccountID = results.insertId;
-                            userRole.insert(roledata, function (err, resultInsert) {
-                                if (err) {
-                                    res.status(400);
-                                    res.json({
-                                        code: 400,
-                                        isSuccess: false,
-                                        msg: '插入角色失败'
-                                    });
-                                    logger.writeError("[routes/backend/user/userrole]" + "插入角色失败");
-                                    return;
-                                }
-                                if (resultInsert.insertId != 0) {
-                                    res.json({
-                                        code: 200,
-                                        isSuccess: true,
-                                        msg: '插入成功'
-                                    });
-                                    return;
-                                }
-                            });
-                        }
                         return;
                     }
                 });
@@ -576,6 +552,79 @@ router.get('/:userID', function (req, res) {
     });
 });
 
+/**
+ * @api {get} /backuser/singleID/ 通过userid来获取用户的信息
+ * @apiParam {Number} AccountID ID unique sign
+ */
+
+router.get('/singID', function (req, res) {
+    var functionCode = functionConfig.backendApp.userManage.userQuery.functionCode;
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    }
+
+    userFuncService.checkUserFunc(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+        if (results !== undefined && results.isSuccess === true) {
+            var accountID = data.userID;
+            if (accountID === undefined || accountID === '') {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: 'require accountID'
+                });
+            }
+
+            if (isNaN(accountID)) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: 'accountID不是数字'
+                });
+            }
+
+            user.querySingleID(accountID, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '服务器出错'
+                    });
+                }
+
+                if (result == undefined && result.length == 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: '未找到该用户'
+                    });
+                }
+
+                if (result !== undefined && result.length != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: result
+                    });
+                }
+            });
+        }
+    });
+});
+      
 //用户的编辑功能
 router.put('/', function (req, res) {
     var functionCode = functionConfig.backendApp.userManage.userEdit.functionCode;
@@ -612,7 +661,7 @@ router.put('/', function (req, res) {
                     isSuccess: false,
                     msg: err
                 });
-                logger.writeError("[routes/backend/user/userrole---------538行]" + err);
+                logger.writeError("[routes/backend/user/userrole]" + err);
                 return;
             }
 
@@ -647,12 +696,7 @@ router.put('/', function (req, res) {
                 'IsActive': isActive,
                 'EditUserID': editUserID
             }
-
-            var roledata = {
-                'AccountID': accountID,
-                'RoleID': roleID
-            }
-
+            
             var requireValue = '缺少值：';
             for (var value in data) {
                 if (data[value].length == 0) {
@@ -680,7 +724,6 @@ router.put('/', function (req, res) {
                 'IsActive': isActive,
                 'EditUserID': editUserID,
                 'AccountID': accountID,
-                'RoleID': roleID
             }
 
             for (var key in intNum) {
@@ -806,83 +849,6 @@ router.put('/', function (req, res) {
                 }
                 data['Memo'] = memo;
             }
-
-            userRole.query(roledata, function (err, queryinfo) {
-
-                if (err) {
-                    res.status(500);
-                    res.json(
-                        {
-                            code: 500,
-                            isSuccess: false,
-                            msg: '修改信息失败，服务器出错'
-                        });
-                    logger.writeError("[routes/backend/user/userroute]" + "修改信息失败，服务器出错");
-                    return;
-                }
-
-                if (queryinfo != undefined && queryinfo.length != 0) {
-
-                    roledata.ID = queryinfo[0].ID;
-
-                    userRole.updateUserRole(roledata, function (err, updatinfo) {
-                        if (err) {
-                            res.status(500);
-                            res.json(
-                                {
-                                    code: 500,
-                                    isSuccess: false,
-                                    msg: '修改信息失败，服务器出错'
-                                });
-
-                            console.log("修改角色失败");
-                            logger.writeError("[routes/backend/user/userroute]" + "修改信息失败，服务器出错");
-                            return;
-                        }
-
-
-                        if (updatinfo !== undefined && updatinfo.affectedRows != 0) {
-
-                            console.log("检查错误");
-                            console.log("修改角色成功");
-                            logger.writeInfo("[routes/bcakend/user/userroute]" + "修改信息成功");
-                            return;
-                        } else {
-                            res.status(400);
-                            res.json({
-                                code: 400,
-                                isSuccess: false,
-                                msg: "修改信息失败"
-                            })
-                            logger.writeError("[routes/backend/user/userroute]" + "修改信息失败");
-                            return;
-                        }
-                    });
-                }
-                else {
-                    userRole.insert(roledata, function (err, resultInsert) {
-                        if (err) {
-                            res.status(400);
-                            res.json({
-                                code: 400,
-                                isSuccess: false,
-                                errorMsg: '插入角色失败'
-                            });
-                            logger.writeError("[routes/backend/user/userroute]" + "插入角色失败");
-                            return;
-                        }
-                        if (resultInsert.insertId != 0) {
-                            // res.json({
-                            //     code:200,
-                            //     isSuccess: true,
-                            //     msg:'插入成功'                  
-                            //    });
-                            return;
-                        }
-                    });
-                }
-            });
-
 
             user.update(data, function (err, results) {
                 if (err) {
