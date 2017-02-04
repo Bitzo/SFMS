@@ -9,25 +9,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
      $scope.turn = function(){
         location.href = './index#/backend/peredit'; 
-        // var a = localStorage.getItem('jit_key');
-        // var params={f:{'AccountID':a}};
-        // console.log(params)
-        // $http({
-        //     method: 'get',
-        //     url: '/backuser' + "?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //     params:params
-        // }).
-        // success(function (response) {
-        //     console.log(response)
-            
-        //   $scope.per =response.data[0];
-        // }).
-        // error(function (response) {
-        //     console.log(response)
-        //     console.log('hhh')
-            
-            
-        // });
        
     }
 

@@ -27,7 +27,13 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
             var url= attrs.source+"?access_token=";
             var a = localStorage.getItem('jit_key');
             var b = $location.search()
-            if(b.AccountID){
+            function isObject(obj) {
+                for (var key in obj) {
+                    return true;
+                }
+                return false;
+            }
+            if(isObject(b)){
                 console.log(b)
                 var params={f:$location.search()};
             }else{
