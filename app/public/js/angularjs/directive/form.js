@@ -27,13 +27,27 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
             var url= attrs.source+"?access_token=";
             var a = localStorage.getItem('jit_key');
             var b = $location.search()
-            if(b.AccountID){
-                console.log(b)
-                var params={f:$location.search()};
-            }else{
+            function isObject(obj) {
+                for (var key in obj) {
+                    return true;
+                }
+                return false;
+            }
+            if(JSON.stringify(b) == "{}"){
                 console.log($location.search())                 
                 var params={f:{'AccountID':a}};
+               
+            }else{
+                 console.log(b)
+                var params={f:$location.search()};
             }
+            // if(isObject(b)){
+            //     console.log(b)
+            //     var params={f:$location.search()};
+            // }else{
+            //     console.log($location.search())                 
+            //     var params={f:{'AccountID':a}};
+            // }
             console.log(params)
             jasonformService.IintGrid(url,params).then(function(response){
                 scope.conf.formdata=response.data.data[0];

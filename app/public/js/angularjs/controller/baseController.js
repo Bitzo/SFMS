@@ -6,29 +6,13 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.menus =baseService.InitMenu().then(function(response){
         $scope.menus = response.data.data.Menu;
     });
-
+    //跳转到个人资料界面
      $scope.turn = function(){
-        location.href = './index#/backend/peredit'; 
-        // var a = localStorage.getItem('jit_key');
-        // var params={f:{'AccountID':a}};
-        // console.log(params)
-        // $http({
-        //     method: 'get',
-        //     url: '/backuser' + "?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-        //     params:params
-        // }).
-        // success(function (response) {
-        //     console.log(response)
-            
-        //   $scope.per =response.data[0];
-        // }).
-        // error(function (response) {
-        //     console.log(response)
-        //     console.log('hhh')
-            
-            
-        // });
-       
+        location.href = './index#/backend/peredit';   
+    }
+    //返回首页
+     $scope.back = function(){
+        location.href ='.';   
     }
 
 //------所有模块------
