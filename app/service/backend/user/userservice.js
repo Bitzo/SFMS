@@ -37,6 +37,7 @@ exports.querySingleID = function (accountid, callback) {
         });
 
     }
+    
     userDAL.querySingleID(accountid, function (err, result) {
         if (err) {
             callback(true);
