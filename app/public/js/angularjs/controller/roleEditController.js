@@ -41,12 +41,10 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
         $http.get("/rolefunc/" + $location.search().RoleID + "?access_token=" + accesstokenstring)
             .success(function (response) {
                 $scope.rolefunction = response.data || [];
-                console.log($scope.tree_data);
                 $scope.tree_data.map(function (data, index) {
                         foreachtree(data);
                     }
                 );
-                console.log($scope.tree_data);
             });
     }
     function foreachtree(data){
@@ -118,27 +116,23 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
         var  data=[];
         $scope.tree_data.map(function(tree){
             foreachsubmit(tree,data);
-        })
+        });
+
         var param={
-            "RoleID": $location.search().RoleID,
-            "ApplicationID": $scope.formdata.ApplicationID,
-            "data":data
-        }
-        var param1={
-            formdata:$scope.formdata
-        }
+            formdata:$scope.formdata,
+            funcdata:data
+        };
+
         $http({
             method:'put',
             url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            data:param1
-        }).success(function(data){
-            $http({
-                method:'post',
-                url:"/rolefunc?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                data:param
-            }).success(function(data){
-                $("#functionModel").modal('show');
-            })
+            data:param
+        }).success(function(response){
+            console.log(response.msg)
+            alert(response.msg);
+        }).error(function (response) {
+            console.log(response.msg);
+            alert(response.msg);
         });
     }
     function foreachsubmit(data,dataparam){

@@ -32,7 +32,7 @@ block content
             td {{x.ApplicationName}}
             td {{x.MenuName}}
             td {{x.Url}}
-            td( ng-style="{color: x.IsActiveDesc === '有效' ? 'green' : 'red'}") {{x.IsActiveDesc}}
+            td( ng-style="{color: x.IsActive == '1' ? 'green' : 'red'}") {{x.IsActive | menuIsActive:x.IsActive }}
             td
               a(href='#/backend/menuedit/?MenuID={{x.MenuID}}')
                 i.icon.icon-edit 编辑 

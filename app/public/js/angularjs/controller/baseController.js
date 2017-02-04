@@ -71,27 +71,28 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.remove = function(index,a,action){
         var mymessage=confirm("是否确认删除  "+a);  
         if(mymessage==true){
-        $scope.d={
-            "AccountID":$scope.datas[index].AccountID,
-            "MenuID":$scope.datas[index].MenuID,
-            "ID":$scope.datas[index].ID,
-            "RoleID" : $scope.datas[index].RoleID
-        };
-        $http({
-            method:'delete',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                d:$scope.d
-            }
-        }).
-        success(function(response) {   
-            alert(response.msg)  
-        }).
-        error(function(response) {
-            alert("操作失败")
-        });
-        $scope.datas.splice(index,1);
-        location.reload();
+            $scope.d={
+                "AccountID":$scope.datas[index].AccountID,
+                "MenuID":$scope.datas[index].MenuID,
+                "ID":$scope.datas[index].ID,
+                "RoleID" : $scope.datas[index].RoleID
+            };
+            $http({
+                method:'delete',
+                url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                params:{
+                    d:$scope.d
+                }
+            }).
+            success(function(response) {
+                alert(response.msg)
+                if(response.isSuccess === true) {
+                    $scope.datas[index].IsActive = 0;
+                }
+            }).
+            error(function(response) {
+                alert("操作失败")
+            });
         }else{
 
         }
@@ -129,7 +130,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             alert(response.msg)  
         }).
         error(function(response) {
-            alert("操作失败");
+            alert(response.msg);
         });
     };
 

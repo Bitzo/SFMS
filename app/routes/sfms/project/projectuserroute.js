@@ -374,7 +374,7 @@ router.get('/:projectID', function (req, res) {
                             res.status(200);
                             return res.json({
                                 status: 200,
-                                isSuccess: false,
+                                isSuccess: true,
                                 msg: '无数据'
                             })
                         }
@@ -383,7 +383,7 @@ router.get('/:projectID', function (req, res) {
                     res.status(200);
                     return res.json({
                         status: 200,
-                        isSuccess: false,
+                        isSuccess: true,
                         msg: '无数据'
                     })
                 }

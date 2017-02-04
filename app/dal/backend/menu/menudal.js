@@ -19,7 +19,7 @@ exports.queryAllMenus = function(data, callback) {
     var arr = new Array();
 
     arr.push(' select jit_menu.MenuName,jit_menu.MenuID,jit_menu.ApplicationID,jit_application.ApplicationName, ');
-    arr.push(' jit_menu.MenuLevel,jit_menu.ParentID,jit_menu.IconPath, ');
+    arr.push(' jit_menu.MenuLevel,jit_menu.ParentID,jit_menu.SortIndex,jit_menu.IconPath, ');
     arr.push(' jit_menu.Url,jit_menu.Memo,jit_menu.IsActive ');
     arr.push(' from jit_menu ');
     arr.push(' left join jit_application on jit_application.ID = jit_menu.ApplicationID ');
