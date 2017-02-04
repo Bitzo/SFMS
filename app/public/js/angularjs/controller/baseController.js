@@ -6,10 +6,13 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.menus =baseService.InitMenu().then(function(response){
         $scope.menus = response.data.data.Menu;
     });
-
+    //跳转到个人资料界面
      $scope.turn = function(){
-        location.href = './index#/backend/peredit'; 
-       
+        location.href = './index#/backend/peredit';   
+    }
+    //返回首页
+     $scope.back = function(){
+        location.href ='.';   
     }
 
 //------所有模块------
