@@ -41,13 +41,6 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
                  console.log(b)
                 var params={f:$location.search()};
             }
-            // if(isObject(b)){
-            //     console.log(b)
-            //     var params={f:$location.search()};
-            // }else{
-            //     console.log($location.search())                 
-            //     var params={f:{'AccountID':a}};
-            // }
             console.log(params)
             jasonformService.IintGrid(url,params).then(function(response){
                 scope.conf.formdata=response.data.data[0];

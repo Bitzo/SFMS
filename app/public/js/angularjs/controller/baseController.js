@@ -48,7 +48,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                     alert(response.msg);
                 };
             }).error(function (response) {
-                alert('查询失败');
+                alert(response.msg);
             });
         }
     }
@@ -88,7 +88,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             alert(response.msg)  
         }).
         error(function(response) {
-            alert("操作失败")
+            alert(response.msg)
         });
         $scope.datas.splice(index,1);
         location.reload();
@@ -111,7 +111,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             alert(response.msg);
         }).
         error(function(response) {
-            alert("操作失败");
+            alert(response.msg);
         });
     };
 
@@ -129,7 +129,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             alert(response.msg)  
         }).
         error(function(response) {
-            alert("操作失败");
+            alert(response.msg);
         });
     };
 
@@ -156,7 +156,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             };
         }).
         error(function(response) {
-            alert('查询失败');
+            alert(response.msg);
         });
     };
     
@@ -178,7 +178,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             };
         }).
         error(function(response) {
-             alert('查询失败');
+             alert(response.msg);
         });
     }
 
@@ -195,7 +195,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             };
         }).
         error(function(response) {
-             alert('查询失败');
+             alert(response.msg);
         });
     }
 
@@ -329,7 +329,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 };
             }).
             error(function(response) {
-                 alert('查询失败');
+                 alert(response.msg);
             });
         }
 
@@ -384,7 +384,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             };
         }).
         error(function(response) {
-            alert('查询失败');
+            alert(response.msg);
         });
     }
 
@@ -426,7 +426,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             };
         }).
         error(function(response) {
-             alert('查询失败');
+             alert(response.msg);
         });    
     }
     //确认修改
@@ -447,7 +447,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 alert(response.msg);
                 location.reload();
             }else{
-              alert("操作失败");
+              alert(response.msg);
             }
             
         }).
@@ -478,7 +478,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 };
             }).
             error(function(response) {
-                 alert('查询失败');
+                 alert(response.msg);
             });
         }
     //分配
@@ -503,7 +503,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             };
         }).
         error(function(response) {
-             alert('查询失败');
+             alert(response.msg);
         });    
     }
     //确认分配
@@ -523,7 +523,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
            alert(response.msg)  
         }).
         error(function(response) {
-           alert("操作失败");
+           alert(response.msg);
         });  
     }
 
@@ -554,7 +554,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             };
         }).
         error(function(response) {
-             alert('查询失败');
+             alert(response.msg);
         });    
     }
 
