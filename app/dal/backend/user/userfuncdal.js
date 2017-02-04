@@ -11,7 +11,7 @@ var logger = appRequire('util/loghelper').helper;
 
 exports.queryUserFunc = function (data, callback) {
     var sql = 'select ID,RoleID,jit_rolefunction.FunctionID,FunctionCode from jit_rolefunction,jit_function ' +
-            'where jit_rolefunction.FunctionID = jit_function.FunctionID and (',
+            'where jit_rolefunction.FunctionID = jit_function.FunctionID and jit_function.IsActive = 1 and (',
         query_sql = '',
         roleID = data.RoleID;
 

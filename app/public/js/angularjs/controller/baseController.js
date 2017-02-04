@@ -42,7 +42,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.pageInit = function () {
         $scope.paginationConf.currentPage = 1;
         $scope.paginationConf.itemsPerPage = 10;
-    }
+    };
 
     //首页 数据显示
     $scope.f={};
