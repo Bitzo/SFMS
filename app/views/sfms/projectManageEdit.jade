@@ -86,12 +86,21 @@ block content
           tr
             td(width="15%",class="tableleft") 项目状态
             td
-              input(type="radio",name="IsActive",value="结项",ng-model='paginationConf.formdata.ProjectStatus',style="width:15px;height:15px",checked)
+              input(type="radio",name="ProjectStatus",value="结项",ng-model='paginationConf.formdata.ProjectStatus',style="width:15px;height:15px",checked)
               &nbsp结项
               &nbsp&nbsp          
-              input(type="radio",name="IsActive",value="待完成",ng-model="paginationConf.formdata.ProjectStatus",style="width:15px;height:15px")
-              &nbsp待完成        
-      
+              input(type="radio",name="ProjectStatus",value="待完成",ng-model="paginationConf.formdata.ProjectStatus",style="width:15px;height:15px")
+              &nbsp待完成
+
+          tr
+            td(class="tableleft") 是否有效
+            td
+              input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive",style="width:15px;height:15px",checked)
+              &nbsp有效
+              &nbsp&nbsp
+              input(type="radio",name="IsActive",value="0",ng-model="paginationConf.formdata.IsActive",style="width:15px;height:15px")
+              &nbsp无效
+
           tr
             td(width="15%",class="tableleft") 项目描述 
             td

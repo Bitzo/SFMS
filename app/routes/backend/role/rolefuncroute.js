@@ -69,7 +69,7 @@ router.get('/:roleID', function (req, res) {
                     res.status(200);
                     return res.json({
                         code: 404,
-                        isSuccess: false,
+                        isSuccess: true,
                         msg: '未查到结果'
                     })
                 }
