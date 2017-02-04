@@ -12,6 +12,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     }
     //返回首页
      $scope.back = function(){
+        localStorage.clear();
         location.href ='.';   
     }
 
@@ -42,9 +43,12 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 }
             }).success(function (response) {
                 $scope.datas = response.data;
-                console.log( $scope.datas)
                 $scope.paginationConf.totalItems = response.dataNum;
+                if(!response.isSuccess){
+                    alert(response.msg);
+                };
             }).error(function (response) {
+                alert('查询失败');
             });
         }
     }
@@ -80,9 +84,11 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 d:$scope.d
             }
         }).
-        success(function(response) {     
+        success(function(response) {   
+            alert(response.msg)  
         }).
         error(function(response) {
+            alert("操作失败")
         });
         $scope.datas.splice(index,1);
         location.reload();
@@ -102,18 +108,10 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }
         }).
         success(function(response) {
-            if(response.isSuccess){
-                alert(response.msg);
-                console.log($scope.formdata);
-                //$scope.datas.push($scope.formdata);
-                //$scope.formdata={};
-            }else{
-                alert(response.msg);
-            }
-
+            alert(response.msg);
         }).
         error(function(response) {
-            alert(response.msg);
+            alert("操作失败");
         });
     };
 
@@ -128,14 +126,10 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }
         }).
         success(function(response) {
-            if(response.isSuccess){
-                alert(response.msg);
-            }else{
-                alert(response.msg);
-            }
+            alert(response.msg)  
         }).
         error(function(response) {
-            alert(response.msg);
+            alert("操作失败");
         });
     };
 
@@ -157,14 +151,12 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }
         }).
         success(function(response) {
-            console.log(response);
-            console.log($scope.paginationConf.formdata);
-            console.log('修改成功');
-            console.log(response);
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
         }).
         error(function(response) {
-            console.log('修改失败');
-            console.log(response);
+            alert('查询失败');
         });
     };
     
@@ -180,18 +172,13 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             url:action+$scope.f.userID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
         }).
         success(function(response) {
-
             $scope.dataRole = response.data.Role;
-
-            // console.log(response);
-            // $scope.dataRole = response.data.Role;
-            // console.log($scope.dataRole);
-            // $scope.dataMenu = response.data.Menu;
-            // console.log($scope.dataMenu);
-
-
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
         }).
         error(function(response) {
+             alert('查询失败');
         });
     }
 
@@ -203,84 +190,15 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }).
         success(function(response) {
             $scope.data = response.data;
-
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
         }).
         error(function(response) {
+             alert('查询失败');
         });
     }
 
-
-    //显示角色新增页面
-    // $scope.addrole=function(action,index){
-    //     getInitrole(action,index);
-    // };
-    // function getInitrole(action,index){
-    //     $http({
-    //         method:'get',
-    //         url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-    //         params:{
-    //             f:{
-    //                 MenuID:index,
-    //                 RoleID:index,
-    //                 ID:index,
-    //                 AccountID:index,
-    //             }
-    //         }
-    //     }).
-    //     success(function(response) {
-    //        // console.log(response)
-    //        //  $scope.formdata=response.data[0];
-    //     }).
-    //     error(function(response) {
-    //     });
-    // }
-
-    //点击checkbox修改菜单的IsActive
-    // $scope.changeMenuStatus = function (MenuID,checkboxValue,check) {
-    //     console.log(check)
-    //     $scope.MenuData = {
-    //         "MenuID" : MenuID
-    //     };
-    //     if (checkboxValue) {
-    //         $http({
-    //             method:'put',
-    //             url: "backmenu/reuse"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-    //             data:{
-    //                 formdata : $scope.MenuData
-    //             }
-    //         }).
-    //         success(function(response) {
-    //             if(response.isSuccess){
-    //                 alert(response.msg);
-    //                 console.log($scope.formdata);
-    //             }else{
-    //                 alert(response.msg);
-    //             }
-    //         }).
-    //         error(function(response) {
-    //             alert(response.msg);
-    //         });
-    //     }else {
-    //         $http({
-    //             method:'put',
-    //             url: "backmenu/forbid"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-    //             data:{
-    //                 formdata : $scope.MenuData
-    //             }
-    //         }).
-    //         success(function(response) {
-    //             if(response.isSuccess){
-    //                 alert(response.msg);
-    //                 console.log($scope.formdata);
-    //             }else{
-    //                 alert(response.msg);
-    //             }
-    //         }).
-    //         error(function(response) {
-    //             alert(response.msg);
-    //         });
-    //     }
-    // }
 
 //------实验室管理系统------
     //签到管理--首页  更多
@@ -367,6 +285,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                        
         }).
         error(function(response) {
+          
         });
         //页数点击按钮
         $scope.pageChanged = function(n) {
@@ -405,10 +324,12 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }).
             success(function(response) {
                 $scope.data = response.data;
-
+                if(!response.isSuccess){
+                  alert(response.msg);
+                };
             }).
             error(function(response) {
-                console.log(response);
+                 alert('查询失败');
             });
         }
 
@@ -458,9 +379,12 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         success(function(response) {
             $scope.data = response.data;
             $scope.f = {};
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
         }).
         error(function(response) {
-            console.log(response);
+            alert('查询失败');
         });
     }
 
@@ -497,8 +421,12 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }).
         success(function(response) {
             $scope.orderStatus=response.data;
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
         }).
         error(function(response) {
+             alert('查询失败');
         });    
     }
     //确认修改
@@ -517,10 +445,9 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         success(function(response) {
             if(response.isSuccess){
                 alert(response.msg);
-                console.log($scope.formdata);
                 location.reload();
             }else{
-                alert(response.msg);
+              alert("操作失败");
             }
             
         }).
@@ -546,8 +473,12 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }).
             success(function(response) {
                 $scope.cls=response.data;
+                if(!response.isSuccess){
+                  alert(response.msg);
+                };
             }).
             error(function(response) {
+                 alert('查询失败');
             });
         }
     //分配
@@ -566,11 +497,13 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                  }
         }).
         success(function(response) {
-            console.log($scope.f)
             $scope.order.UserName=response.data.UserName;
-            console.log(response.data)
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
         }).
         error(function(response) {
+             alert('查询失败');
         });    
     }
     //确认分配
@@ -587,16 +520,10 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }
         }).
         success(function(response) {
-            if(response.isSuccess){
-                alert(response.msg);
-                console.log($scope.formdata);
-            }else{
-                alert(response.msg);
-            }
+           alert(response.msg)  
         }).
         error(function(response) {
-            console.log($scope.formdata);
-            alert(response.msg);5
+           alert("操作失败");
         });  
     }
 
@@ -622,9 +549,12 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 sumMoney += productInfoArr[i].ProductCount * productInfoArr[i].ProductPrice;
             }
             $scope.f.totalMoney = sumMoney.toFixed(2);
-            console.log($scope.orderDetails)
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
         }).
         error(function(response) {
+             alert('查询失败');
         });    
     }
 
