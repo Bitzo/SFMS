@@ -35,9 +35,11 @@ block content
             td( ng-style="{color: x.IsActive == '1' ? 'green' : 'red'}") {{x.IsActive | menuIsActive:x.IsActive }}
             td
               a(href='#/backend/menuedit/?MenuID={{x.MenuID}}')
-                i.icon.icon-edit 编辑 
-              a(ng-click="remove($index,x.MenuName,'/backmenu')",href='')
-                i.icon.icon-trash 删除  
+                i.icon.icon-edit 编辑
+              a(ng-click="shiftStatus('/backmenu/reuse',$index,x.MenuName)",href='')
+                i.icon.icon-ok 启用
+              a(ng-click="shiftStatus('/backmenu/forbid',$index,x.MenuName)",href='')
+                i.icon.icon-ban-circle 禁用
               //- span(ng-click="changeMenuStatus(x.MenuID,x.IsActive)",href='')
               //-   i.icon.icon-ok 是否有效
               //-   input(type="checkbox" ng-model="x.IsActive")

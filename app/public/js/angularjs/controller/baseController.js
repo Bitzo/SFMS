@@ -6,15 +6,22 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.menus =baseService.InitMenu().then(function(response){
         $scope.menus = response.data.data.Menu;
     });
+
+    //登录用户的个人信息
+    $scope.loginUserInfo = baseService.getLoginUserInfo().then(function(response){
+        $scope.loginUserInfo = response.data.data;
+    });
+    
     //跳转到个人资料界面
      $scope.turn = function(){
         location.href = './index#/backend/peredit';   
-    }
+    };
+
     //返回首页
      $scope.back = function(){
         localStorage.clear();
         location.href ='.';   
-    }
+    };
 
 //------所有模块------
     //分页初始化数据
@@ -94,6 +101,37 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 alert("操作失败")
             });
         }else{
+
+        }
+    };
+
+    //菜单的启用与禁用
+    $scope.shiftStatus = function(action,index,name) {
+        var str = '是否确认删除';
+        if(action=='/backmenu/reuse') str = '是否确认要启用 ';
+        var mymessage=confirm(str + name);
+        if(mymessage==true){
+            var formdata = {
+                MenuID: $scope.datas[index].MenuID
+            };
+
+            $http({
+                method:'put',
+                url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data:{
+                    formdata:formdata
+                }
+            }).
+            success(function(response) {
+                if(response.isSuccess === true) {
+                    $scope.datas[index].IsActive = -$scope.datas[index].IsActive+1;
+                }
+                alert(response.msg)
+            }).
+            error(function(response) {
+                alert(response.msg);
+            });
+        } else {
 
         }
     };

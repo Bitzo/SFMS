@@ -9,9 +9,16 @@ myApp.service('baseService', function($http, $q) {
             method: 'get',
             url: '/backmenu?' + me.getPassToken()
         })
-    }
+    };
 
     this.getPassToken = function() {
         return "access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key');
-    }
+    };
+
+    this.getLoginUserInfo = function() {
+        return $http({
+            method:'get',
+            url:'backuser/singID?' + me.getPassToken()
+        });
+    };
 });

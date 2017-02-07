@@ -71,10 +71,10 @@ block content
               a(ng-click="remove($index,x.Account,'/backuser')",href='')
                 i.icon.icon-trash  删除
               a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'userrole/userID/')",href='') 
-                i.icon.icon-zoom-in  更多 
+                i.icon.icon-zoom-in  更多
               a(href='#/backend/userrole/?AccountID={{x.AccountID}}')
-                i.icon.icon-edit  角色 
+                i.icon.icon-user  角色
               a(href='#/backend/usermenu/?AccountID={{x.AccountID}}')
-                i.icon.icon-edit  菜单 
+                i.icon.icon-list  菜单
       div.pull-right
         jason-pagination(conf='paginationConf')

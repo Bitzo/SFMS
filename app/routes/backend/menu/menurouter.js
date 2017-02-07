@@ -681,6 +681,7 @@ router.post('/',function(req,res,next) {
  * 禁用某些菜单，将IsActive置为0
  */
 router.put('/forbid',function (req,res) {
+    console.log(req.body)
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuEdit.functionCode
