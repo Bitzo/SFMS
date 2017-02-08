@@ -34,7 +34,7 @@ router.post('/', function (req, res) {
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
-    }
+    };
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
         if (err) {
@@ -295,6 +295,13 @@ router.post('/', function (req, res) {
                     }
                 });
             });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
         }
     });
 });
@@ -451,6 +458,13 @@ router.get('/', function (req, res) {
                     return;
                 }
             });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
         }
     });
 });
@@ -523,6 +537,13 @@ router.get('/singID', function (req, res) {
                         data: result[0]
                     });
                 }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
             });
         }
     });
@@ -620,6 +641,13 @@ router.get('/:userID', function (req, res) {
                         msg: '用户不存在'
                     });
                 }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
             });
         }
     });
@@ -881,6 +909,13 @@ router.put('/', function (req, res) {
                     return;
                 }
             });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
         }
     });
 });
@@ -894,43 +929,60 @@ router.delete('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(data, function (err, results) {
-        var query = JSON.parse(req.query.d),
-            accountID = query.AccountID;
-        var data = {
-            'AccountID': accountID,
-            'IsActive': 0
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
         }
-        user.update(data, function (err, results) {
-            if (err) {
-                res.status(500);
-                res.json(
-                    {
-                        code: 500,
+        if (results !== undefined && results.isSuccess === true) {
+            var query = JSON.parse(req.query.d),
+                accountID = query.AccountID;
+            var data = {
+                'AccountID': accountID,
+                'IsActive': 0
+            }
+            user.update(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    res.json(
+                        {
+                            code: 500,
+                            isSuccess: false,
+                            msg: '操作失败，服务器出错'
+                        });
+                    logger.writeError("[routes/backend/user/userroute]" + "修改信息失败，服务器出错");
+                    return;
+                }
+                if (results !== undefined && results.affectedRows != 0) {
+                    res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: "操作成功"
+                    })
+                    logger.writeInfo("[routes/backend/user/userroute]" + "修改信息成功");
+                    return;
+                } else {
+                    res.status(400);
+                    res.json({
+                        code: 400,
                         isSuccess: false,
-                        msg: '操作失败，服务器出错'
-                    });
-                logger.writeError("[routes/backend/user/userroute]" + "修改信息失败，服务器出错");
-                return;
-            }
-            if (results !== undefined && results.affectedRows != 0) {
-                res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: "操作成功"
-                })
-                logger.writeInfo("[routes/backend/user/userroute]" + "修改信息成功");
-                return;
-            } else {
-                res.status(400);
-                res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: "操作失败"
-                })
-                logger.writeError("[routes/backend/user/userroute]" + "修改信息失败");
-                return;
-            }
-        });
+                        msg: "操作失败"
+                    })
+                    logger.writeError("[routes/backend/user/userroute]" + "修改信息失败");
+                    return;
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
     });
 });
 
