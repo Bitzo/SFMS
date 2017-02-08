@@ -121,6 +121,25 @@ var operationConfig = {
                 identifier: 1305
             }
         },
+        operationManage: {
+            module: "日志模块",
+            opertaionAdd: {
+                actionName: "日志新增",
+                identifier: 1401
+            },
+            opertaionDel: {
+                actionName: "日志删除",
+                identifier: 1402
+            },
+            opertaionUpd: {
+                actionName: "日志修改",
+                identifier: 1403
+            },
+            opertaionQuery: {
+                actionName: "日志查询",
+                identifier: 1404
+            }
+        },
     },
     jinkeBroApp: {
         applicationID: 2,
