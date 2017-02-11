@@ -211,7 +211,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             url:action+$scope.f.userID+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
         }).
         success(function(response) {
-            $scope.dataRole = response.data.Role;
+            $scope.dataRole = response.data;
             if(!response.isSuccess){
                 alert(response.msg);
             };

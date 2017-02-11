@@ -21,8 +21,8 @@ var userFuncService = appRequire('service/backend/user/userfuncservice');
 router.get('/', function (req, res) {
     var data = {
         userID: req.query.jitkey,
-        functionCode: functionConfig.backendApp.operationManage.opertaionQuery.functionCode
-    }
+        functionCode: functionConfig.backendApp.operationManage.operationQuery.functionCode
+    };
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);

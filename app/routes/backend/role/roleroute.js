@@ -378,7 +378,7 @@ router.put('/', function (req, res) {
                 roleName = req.body.formdata.RoleName,
                 isActive = req.body.formdata.IsActive;
             //增加角色功能点所需要的数据
-            var funcData = req.body.formdata.funcdata;
+            var funcData = req.body.funcdata;
             for(var value in data)
             {
                 if(!(data[value] in req.body.formdata))

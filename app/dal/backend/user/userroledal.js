@@ -21,7 +21,7 @@ exports.insert = function (data, callback) {
 			insert_sql += " , " + key + " = '" + data[key] + "' ";
 		}
 	}
-	console.log('用户新增角色：' + insert_sql);
+	logger.writeInfo('用户新增角色：' + insert_sql);
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
 			callback(true);
@@ -36,7 +36,6 @@ exports.insert = function (data, callback) {
 				return;
 			}
 			callback(false, results);
-			connection.release();
 			return;
 		});
 	});
@@ -55,11 +54,9 @@ exports.updateUserRole = function (data, callback) {
 		}
 	}
 	sql += " where " + userModel.PK + " = '" + data[userModel.PK] + "' ";
-	console.log(sql);
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
 			callback(true);
-			connection.release();
 			logger.writeError("[dal/user/userroledal---------------63行]数据库的链接失败");
 			return;
 		}
@@ -70,7 +67,6 @@ exports.updateUserRole = function (data, callback) {
 				return;
 			}
 			callback(false, results);
-			connection.release();
 			return;
 		});
 	});
@@ -87,7 +83,6 @@ exports.queryAppByUserID = function (data, callback) {
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
 			callback(true);
-			connection.release();
 			logger.writeError("[dal/user/userrole-------------91行]数据库的链接失败");
 			return;
 		}
@@ -98,7 +93,6 @@ exports.queryAppByUserID = function (data, callback) {
 				return;
 			}
 			callback(false, results);
-			connection.release();
 			return;
 		});
 	});
@@ -106,16 +100,15 @@ exports.queryAppByUserID = function (data, callback) {
 
 //查询用户角色表的ID
 exports.query = function (data, callback) {
-    var sql = 'select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleName,jit_roleuser.AccountID '; 
+    var sql = 'select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleCode,jit_role.RoleName,jit_roleuser.AccountID ';
 		sql += 'from jit_role left join jit_roleuser on  jit_role.RoleID = jit_roleuser.RoleID ';
 		sql += 'where jit_roleuser.AccountID = ' + data.AccountID;
 
-	console.log('查询用户所在项目' + sql);
+    logger.writeInfo('查询用户所在项目' + sql);
 
 	db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            connection.release();
 			logger.writeError("[dal/user/userrole-----------------117行]数据库链接失败");
             return;
         }
@@ -127,7 +120,6 @@ exports.query = function (data, callback) {
                 return;
             }
             callback(false, results);
-            connection.release();
 			return;
         });
 	});
@@ -144,7 +136,6 @@ exports.query = function (data, callback) {
 	 db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            connection.release();
 			logger.writeError("[dal/user/userrole]数据库链接失败");
             return;
         }
@@ -156,7 +147,6 @@ exports.query = function (data, callback) {
                 return;
             }
             callback(false, results);
-            connection.release();
 			return;
         });
 	});	  
@@ -194,7 +184,6 @@ exports.query = function (data, callback) {
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 	 

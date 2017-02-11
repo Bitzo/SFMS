@@ -168,6 +168,26 @@ var functionConfig = {
                 functionCode: "BACKEND-ROLE-FUNC-QUERY"
             },
         },
+        operationManage: {
+            functionName: "日志管理",
+            functionCode: "BACKEND-OPERATIONLOG-MANAGE",
+            operationAdd: {
+                functionName: "日志新增",
+                functionCode: "BACKEND-OPERATIONLOG-ADD"
+            },
+            operationDel: {
+                functionName: "日志删除",
+                functionCode: "BACKEND-OPERATIONLOG-DELETE"
+            },
+            operationEdit: {
+                functionName: "日志修改",
+                functionCode: "BACKEND-OPERATIONLOG-EDIT"
+            },
+            operationQuery: {
+                functionName: "日志查询",
+                functionCode: "BACKEND-OPERATIONLOG-QUERY"
+            },
+        },
     },
     jinkeBroApp: {
         applicationID: 2,
