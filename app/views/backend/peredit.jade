@@ -9,9 +9,7 @@ block content
           tr
             td(width="15%",class="tableleft") 用户姓名 
             td
-              input(type="textview",name="UserName",ng-model='paginationConf.formdata.UserName',ng-maxlength='50',required)
-              &nbsp&nbsp
-              small.error(ng-if="userEdit.UserName.$error.maxlength && userEdit.UserName.$touched") 用户姓名最多50位
+              {{paginationConf.formdata.UserName}}
             
           tr
             td(width="15%",class="tableleft") 密码 
@@ -23,9 +21,7 @@ block content
           tr
             td(width="15%",class="tableleft") 账户名 
             td
-              input(type="textview",name="Account",ng-model="paginationConf.formdata.Account",ng-maxlength='50',required)
-              &nbsp&nbsp
-              small.error(ng-if="userEdit.Account.$error.maxlength && userEdit.Account.$touched") 账户最多50位
+              {{paginationConf.formdata.Account}}
           
           tr
             td(width="15%",class="tableleft") 手机号码 
@@ -34,16 +30,14 @@ block content
               &nbsp&nbsp
               small.error(ng-if="(userEdit.Phone.$error.maxlength||userEdit.Phone.$error.minlength)&& userEdit.Phone.$touched") 电话号码11位
           tr
-            td(width="15%",class="tableleft") 所在学院 (可选) 
+            td(width="15%",class="tableleft") 所在学院
             td
-              select(ng-model='paginationConf.formdata.CollegeID',ng-change="collegeChanged()")
-                option(ng-repeat="item in college",value='{{item.DictionaryID}}') {{item.DictionaryValue}}
+              {{paginationConf.formdata.College}}
 
           tr
-            td(width="15%",class="tableleft") 所在班级 (可选)  
+            td(width="15%",class="tableleft") 所在班级
             td
-              select(ng-model='paginationConf.formdata.ClassID')
-                option(ng-repeat="item in cls",value='{{item.DictionaryID}}') {{item.DictionaryValue}})
+              {{paginationConf.formdata.Class}}
           tr
             td(width="15%",class="tableleft") 邮箱 
             td

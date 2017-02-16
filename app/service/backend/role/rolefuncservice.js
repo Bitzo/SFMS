@@ -122,4 +122,4 @@ exports.delRoleFunc = function (data, callback) {
         logger.writeInfo("已删除该用户所有的功能点");
         callback(false, results);
     })
-}
+};

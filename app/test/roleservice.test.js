@@ -14,7 +14,8 @@ var data = {
     "ApplicationID": 1,
     "RoleCode": "TestName",
     "RoleName": "单元测试角色",
-    "IsActive": 1
+    "IsActive": 1,
+    "OperateUserID": 1
 }
 insertRoleID = -1;
 
@@ -30,7 +31,7 @@ describe("角色单元测试", function() {
 
     it("角色查询", function(done) {
         data.RoleID = insertRoleID;
-        roleService.queryAllRoles({}, function(err, result) {
+        roleService.queryAllRoles({"OperateUserID": 1}, function(err, result) {
             if (err) {
                 return done(err);
             }
