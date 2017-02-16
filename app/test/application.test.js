@@ -15,8 +15,9 @@ var data = {
     'ApplicationCode': '单元测试代码',
     'ApplicationName': '单元测试应用',
     'Memo': '描述',
-    'IsActive': 1
-}
+    'IsActive': 1,
+    'OperateUserID': 1
+};
 
 insertID = -1;
 
@@ -47,6 +48,7 @@ describe("应用单元测试", function () {
         data.ApplicationCode = "应用编辑测试";
         data.ApplicationName = "应用编辑";
         data.Memo = "应用编辑描述";
+        data.IsActive = 0;
         appService.update(data, function (err, results) {
             if (err) {
                 done(err);

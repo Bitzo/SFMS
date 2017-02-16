@@ -19,20 +19,13 @@ var data = {
         {
             "FunctionID":2
         }
-    ]
-}
+    ],
+    "OperateUserID": 1
+};
 
 describe("角色功能点单元测试", function() {
     it("角色功能点新增", function (done) {
         rolefuncService.addRoleFunc(data, function (err, result) {
-            if (err) return done(err);
-            result.affectedRows.should.be.above(0).and.should.be.a.Number;
-            done();
-        });
-    });
-
-    it("角色功能点修改", function (done) {
-        rolefuncService.updateRoleFunc(data, function (err, result) {
             if (err) return done(err);
             result.affectedRows.should.be.above(0).and.should.be.a.Number;
             done();
@@ -47,4 +40,12 @@ describe("角色功能点单元测试", function() {
         });
     });
 
-})
+    it("角色功能点删除", function (done) {
+        rolefuncService.delRoleFunc(data, function (err, result) {
+            if (err) return done(err);
+            result.affectedRows.should.be.above(0).and.should.be.a.Number;
+            done();
+        });
+    });
+
+});

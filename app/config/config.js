@@ -1,8 +1,8 @@
 /**
  * @Author: snail
  * @Date: 2016-12-13
- * @Last Modified by: 
- * @Last Modified time: 
+ * @Last Modified by:
+ * @Last Modified time:
  * @Function:配置
  */
 var path = require('path');

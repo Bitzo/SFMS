@@ -32,26 +32,6 @@ describe("项目备注单元测试", function() {
         })
     });
 
-    it("项目备注查询", function (done) {
-        projectremarkService.queryRemark({"OperateUserID": 1}, function (err, results) {
-            if (err) {
-                return done(err);
-            }
-            results[0].ID.should.be.above(0).and.should.be.a.Number;
-            done();
-        })
-    });
-
-    it("项目备注查询统计", function (done) {
-        projectremarkService.countRemark({}, function (err, results) {
-            if (err) {
-                return done(err);
-            }
-            results[0].num.should.be.above(0).and.should.be.a.Number;
-            done();
-        })
-    });
-
     it("项目备注修改", function (done) {
         data.ID = insertID;
         data.remark = '项目备注单元测试-'
@@ -73,4 +53,24 @@ describe("项目备注单元测试", function() {
             done();
         })
     });
-})
+
+    it("项目备注查询", function (done) {
+        projectremarkService.queryRemark({"projectID": [],"OperateUserID": 1}, function (err, results) {
+            if (err) {
+                return done(err);
+            }
+            results[0].ID.should.be.above(0).and.should.be.a.Number;
+            done();
+        })
+    });
+
+    it("项目备注查询统计", function (done) {
+        projectremarkService.countRemark({"projectID": []}, function (err, results) {
+            if (err) {
+                return done(err);
+            }
+            results[0].num.should.be.above(0).and.should.be.a.Number;
+            done();
+        })
+    });
+});
