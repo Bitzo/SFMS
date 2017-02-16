@@ -139,6 +139,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     //新增页面  添加
     $scope.formdata={};
     $scope.addnew = function(formdata,action) {
+        console.log(11111)
+        console.log($scope.formdata)
         $http({
             method:'post',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),

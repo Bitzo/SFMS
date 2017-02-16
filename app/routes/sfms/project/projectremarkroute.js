@@ -21,6 +21,7 @@ var userFuncService = appRequire('service/backend/user/userfuncservice');
 
 //项目备注信息新增
 router.post('/', function (req, res) {
+    console.log(req.body)
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.projectRemarkManage.projectRemarkAdd.functionCode
@@ -136,6 +137,7 @@ router.post('/', function (req, res) {
                                                         msg: '请填写备注信息'
                                                     })
                                                 }
+                                                console.log(data)
                                                 projectRemarkservice.addRemark(data, function (err, results) {
                                                     if (err) {
                                                         res.status(500);
