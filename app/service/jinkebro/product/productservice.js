@@ -141,7 +141,21 @@ Product.prototype.queryProducts = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.product.productQuery.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productQuery.identifier;
 
-    productDAL.queryProducts(data, function (err, result) {
+    var formdata = {
+        page: data.page || 1,
+        pageNum: data.pageNum || config.pageCount,
+        SKU: data.SKU || '',
+        "jit_product.ProductID" : data.ProductID || '',
+        ProductName: data.ProductName || '',
+        ExpireTime: data.ExpireTime || '',
+        SupplierID: data.SupplierID || '',
+        ProductTypeID: data.ProductTypeID || '',
+        ProductPrice: data.ProductPrice || '',
+        OnSale: data.OnSale || '',
+        isPaging: data.isPaging || ''
+    };
+
+    productDAL.queryProducts(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
@@ -163,8 +177,8 @@ Product.prototype.queryProducts = function (data, callback) {
             tempTimeStamp = (Date.parse(result[i].ExpireTime) - Date.parse(new Date())) / days;
             temp = Math.ceil(tempTimeStamp.toFixed(4));
             result[i]['remainTime'] = temp;
-            result[i].ExpireTime = moment(result[i].ExpireTime).format('YYYY-MM-DD HH:mm:SS');
-            result[i].ProducTime = moment(result[i].ProducTime).format('YYYY-MM-DD HH:mm:SS');
+            result[i].ExpireTime = moment(result[i].ExpireTime).format('YYYY-MM-DD');
+            result[i].ProducTime = moment(result[i].ProducTime).format('YYYY-MM-DD');
         }
 
         //查询成功

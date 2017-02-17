@@ -267,7 +267,7 @@ router.put('/', function (req, res) {
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
-    }
+    };
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
         if (err) {
@@ -433,11 +433,12 @@ router.put('/', function (req, res) {
 
 //查看产品
 router.get('/', function (req, res) {
+    console.log(req.query);
     var functionCode = functionConfig.jinkeBroApp.product.productQuery.functionCode;
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
-    }
+    };
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
         if (err) {

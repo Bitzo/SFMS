@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 商品编辑
-    jason-form(method="post" source='/jinkeBro/order' conf='paginationConf' tocc="OrderID")
+    jason-form(method="post" source='/jinkeBro/product' conf='paginationConf' tocc="OrderID")
       form( name="jitorderEdit")
         table.table.table-bordered.table-hover.definedwidth.m10
           tr
@@ -38,22 +38,38 @@ block content
           tr
             td(width="15%",class="tableleft") 商品类型
             td
-                jason-select.input(placeholder='商品类型' ng-model='formdata.ProductTypeID' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
+                jason-select.input(placeholder='商品类型' ng-model='formdata.ProductTypeID' source='/jinkeBro/proType', stext='ProductTypeName' svalue='ID',style="width:160px;height:30px",required)
           tr
             td(width="15%",class="tableleft") 供应商ID
             td
                jason-select.input(placeholder='供应商ID' ng-model='formdata.SupplierID' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
 
           tr
-            td(width="15%",class="tableleft") 商品描述  
+            td(width="15%",class="tableleft") 商品价格
+            td
+              input(type="number",name="ProductPrice",ng-model="paginationConf.formdata.ProductPrice",ng-maxlength='10',required)
+              &nbsp&nbsp
+              small.error(ng-if="jitorderEdit.ProductPrice.$error.maxlength && jitorderEdit.ProductPrice.$touched")
+
+          tr
+            td(class="tableleft") 是否在售
+            td
+              input(type="radio",name="OnSale",value="1",ng-model="paginationConf.formdata.OnSale",style="width:15px;height:15px")
+              &nbsp在售
+              &nbsp&nbsp
+              input(type="radio",name="OnSale",value="0",ng-model="paginationConf.formdata.OnSale",style="width:15px;height:15px")
+              &nbsp未售
+
+          tr
+            td(width="15%",class="tableleft") 商品描述
             td
               textarea(type="textview",name="ProductDesc",ng-model='paginationConf.formdata.ProductDesc',rows="5",cols="30",ng-maxlength='200')
               &nbsp&nbsp
-              small.error(ng-if="jitorderEdit.ProductDesc.$error.maxlength && jitorderEdit.ProductDesc.$touched") 备注最多200位 
+              small.error(ng-if="jitorderEdit.ProductDesc.$error.maxlength && jitorderEdit.ProductDesc.$touched") 备注最多200位
 
           tr
             td(class="tableleft")
             td
               button.btn.btn-sm.btn-primary(type="submit",ng-disabled="jitorderEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/jinkeBro/order')") 确认修改
               &nbsp&nbsp&nbsp&nbsp
-              a.btn.btn-sm.btn-success(href='#backend/user',ng-click='search()') 返回列表
+              a.btn.btn-sm.btn-success(href='#jinkeBro/jitgoods',ng-click='search()') 返回列表

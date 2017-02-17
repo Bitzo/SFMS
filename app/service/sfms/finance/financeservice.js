@@ -139,7 +139,7 @@ exports.queryFinance = function (data, callback) {
         'jit_financeinfo.IsActive': data.IsActive || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount,
-    }
+    };
 
     if (data.ID !== '' && data.ID !== undefined) {
         logModel.OperationName = operationConfig.sfmsApp.financeManage.financeSingleQuery.actionName;
