@@ -214,6 +214,26 @@ exports.createOrder = function(data, callback) {
             };
             funcArr.push(func3);
 
+            // 插入记录到orderdelivery表
+            var func4 = function(callback4) {
+                var insertSql4 = "insert into jit_orderdelivery set jit_orderdelivery.OrderID = " + returnResult.insertId;
+
+                console.log(insertSql4);
+                connection.query(insertSql4, function(err, info) {
+                    if (err) {
+                        connection.rollback(function() {
+                            logger.writeError("[order]执行事务失败，" + "ERROR：" + err);
+                            console.log("[order]执行事务失败，" + "ERROR：" + err);
+                            throw err;
+                        });
+                        return ;
+                    }
+                    console.log(info);
+                    callback4(err, info);
+                });
+            };
+            funcArr.push(func4);
+
             async.series(funcArr, function(err, result) {
                 if (err) {
                     connection.rollback(function(err) {
