@@ -28,6 +28,7 @@ block content
             th 商品类型
             th 价格
             th 库存量
+            th 是否在售
             th(style="width:150px;") 操作
         tbody
           tr(ng-repeat="x in datas" )
@@ -43,6 +44,7 @@ block content
             td {{x.ProductTypeName}}
             td {{x.ProductPrice}}元
             td {{x.TotalNum}}
+            td {{x.OnSale}}
             td 
               a(href='#/jinkeBro/jitgoodsEdit/?ProductID={{x.ProductID}}' )
                 i.icon.icon-edit 编辑 

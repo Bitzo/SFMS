@@ -171,8 +171,15 @@ myApp.config(function($routeProvider) {
     when('/jinkeBro/jitstockAdd', {
         templateUrl: '/jinkeBro/jitstockAdd?access_token=' + accesstokenstring,
     }).
-   
-    
+    when('/jinkeBro/jitstaffmanage', {
+        templateUrl: '/jinkeBro/jitstaffmanage?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitdelivery', {
+        templateUrl: '/jinkeBro/jitdelivery?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitproducttype', {
+        templateUrl: '/jinkeBro/jitproducttype?access_token=' + accesstokenstring,
+    }).
     otherwise({
         redirectTo: '/'
     });

@@ -42,12 +42,12 @@ block content
           tr
             td(width="15%",class="tableleft") 供应商ID
             td
-               jason-select.input(placeholder='供应商ID' ng-model='formdata.SupplierID' source='/app', stext='ApplicationName' svalue='ID',style="width:160px;height:30px",required)
+               jason-select.input(placeholder='供应商ID' ng-model='formdata.SupplierID' source='/jinkeBro/staff', stext='StaffName' svalue='StaffID',style="width:160px;height:30px",required)
 
           tr
             td(width="15%",class="tableleft") 商品价格
             td
-              input(type="number",name="ProductPrice",ng-model="paginationConf.formdata.ProductPrice",ng-maxlength='10',required)
+              input(type="number",name="ProductPrice",min="0.00",step="0.01",ng-model="paginationConf.formdata.ProductPrice",ng-maxlength='10',required)
               &nbsp&nbsp
               small.error(ng-if="jitorderEdit.ProductPrice.$error.maxlength && jitorderEdit.ProductPrice.$touched")
 

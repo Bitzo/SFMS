@@ -433,7 +433,18 @@ router.put('/', function (req, res) {
 
 //查看产品
 router.get('/', function (req, res) {
-    console.log(req.query);
+
+    // req.query的内容如下：
+    // {
+    //     access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0ODc0MjgyODkwMTN9._kAZlxEinELePO5vfnW2ckhGaoiLy0ogGmqKDgGcG6s',
+    //         jitkey: '1',
+    //     f: '{
+    //
+    //     }',
+    //     pageindex: '1',
+    //         pagesize: '10'
+    // }
+
     var functionCode = functionConfig.jinkeBroApp.product.productQuery.functionCode;
     var funcData = {
         userID: req.query.jitkey,

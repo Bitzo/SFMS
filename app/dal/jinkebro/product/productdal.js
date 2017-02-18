@@ -132,10 +132,10 @@ exports.queryProducts = function(data, callback) {
 
     //这边待优化，jit_producttype表不会很大，可以先查出来放入字典，从内存去map，不必要join
     arr.push(' select SKU,jit_product.ProductID,ProductName,ProductDesc,ProductImgPath, ');
-    arr.push(' ExpireTime,ProducTime,SupplierID,ProductTypeID,jit_productype.ProductTypeName,ProductPrice,jit_productstock.TotalNum ');
+    arr.push(' ExpireTime,ProducTime,SupplierID,ProductTypeID,jit_productype.ProductTypeName,ProductPrice,jit_productstock.TotalNum,jit_product.OnSale ');
     arr.push(' from jit_product ');
     arr.push(' left join jit_productype on jit_product.ProductTypeID = jit_productype.ID ');
-    arr.push(' left join jit_productstock on jit_productstock.ProductID = jit_product.ProductID ')
+    arr.push(' left join jit_productstock on jit_productstock.ProductID = jit_product.ProductID ');
     arr.push(' where 1 = 1 ');
 
     var query_sql = arr.join(' ');
@@ -155,6 +155,8 @@ exports.queryProducts = function(data, callback) {
 
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
+
+    query_sql += ' order by jit_product.ProductID desc ';
 
     if (data['isPaging'] == 1) {
         query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
