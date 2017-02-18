@@ -65,10 +65,20 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
     logModel.OperationName = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
     logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier;
-	
-    for(var key in data)
-    console.log(key + ':  ' + data[key] + '  ');
-	orderdeliveryDAL.queryOrderDelivery (data, function (err, insertResult) {
+
+    var formdata = {
+        "jit_orderdelivery.OrderID" : data.OrderID || '',
+        "jit_orderdelivery.DeliveryUserID" : data.DeliveryUserID || '',
+        "jit_orderdelivery.DeliveryBeginTime" : data.DeliveryBeginTime || '',
+        "jit_orderdelivery.DeliveryEndTime" : data.DeliveryEndTime || '',
+        pagedata : {
+            page : data.page || 1,
+            pageNum : data.pageNum || (config.pageCount),
+            isPaging : data.isPaging || 1,
+        }
+    };
+
+    orderdeliveryDAL.queryOrderDelivery (formdata, function (err, queryResult) {
 		if (err) {
 			logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
@@ -81,7 +91,6 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
             callback(true, '订单配送员查询失败');
             return;
 		}
-        
         //查询成功
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
@@ -92,10 +101,30 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
             }
         });
         logger.writeInfo('订单查询成功');
-        callback(false, insertResult);
+        callback(false, queryResult);
     });
 }
-  
+
+//订单配送员的计数
+OrderDelivery.prototype.countOrderDelivery = function (data, callback) {
+    var formdata = {
+        "jit_orderdelivery.OrderID" : data.OrderID || '',
+        "jit_orderdelivery.DeliveryUserID" : data.DeliveryUserID || '',
+        "jit_orderdelivery.DeliveryBeginTime" : data.DeliveryBeginTime || '',
+        "jit_orderdelivery.DeliveryEndTime" : data.DeliveryEndTime || '',
+    };
+
+    orderdeliveryDAL.countOrderDelivery (formdata, function (err, countResult) {
+        if (err) {
+            callback(true, '订单配送员查询失败！');
+            return;
+        }
+
+        logger.writeInfo('订单配送员查询成功！');
+        callback(false, countResult);
+    });
+}
+
 //订单配送员的修改
 OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
 	 //要写入operationlog表的

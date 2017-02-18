@@ -36,11 +36,11 @@ block content
             td 
               input(type="date",name="ProducTime",ng-model="paginationConf.formdata.ProducTime",value='{{paginationConf.formdata.ProducTime}}',required)
           tr
-            td(width="15%",class="tableleft") 商品类型
+            td(width="15%",class="tableleft") 商品类型 {{paginationConf.formdata.ProductTypeID}}
             td
                 jason-select.input(placeholder='商品类型' ng-model='formdata.ProductTypeID' source='/jinkeBro/proType', stext='ProductTypeName' svalue='ID',style="width:160px;height:30px",required)
           tr
-            td(width="15%",class="tableleft") 供应商ID
+            td(width="15%",class="tableleft") 供应商 {{paginationConf.formdata.SupplierID}}
             td
                jason-select.input(placeholder='供应商ID' ng-model='formdata.SupplierID' source='/jinkeBro/staff', stext='StaffName' svalue='StaffID',style="width:160px;height:30px",required)
 
@@ -70,6 +70,6 @@ block content
           tr
             td(class="tableleft")
             td
-              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="jitorderEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/jinkeBro/order')") 确认修改
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="jitorderEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/jinkeBro/product')") 确认修改
               &nbsp&nbsp&nbsp&nbsp
               a.btn.btn-sm.btn-success(href='#jinkeBro/jitgoods',ng-click='search()') 返回列表

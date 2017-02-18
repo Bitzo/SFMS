@@ -52,6 +52,10 @@ router.get('/jitstockAdd', function (req, res, next) {
     res.render('jinkeBro/jitstockAdd', { title: 'Hi jkbro' });
 });
 
+router.get('/jitstockedit', function (req, res, next) {
+    res.render('jinkeBro/jitstockedit', { title: 'Hi jkbro' });
+});
+
 router.get('/jitstaffmanage', function (req, res, next) {
     res.render('jinkeBro/jitstaffmanage', { title: 'Hi jkbro' });
 });

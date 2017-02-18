@@ -53,20 +53,67 @@ exports.insertOrderDelivery = function (data, callback) {
  * @function: 订单配送员表的查询工作
  */
 exports.queryOrderDelivery = function (data, callback) {
-    var sql = 'SELECT ID,OrderID,DeliveryUserID,DeliveryBeginTime,DeliveryEndTime FROM jit_orderdelivery where 1 = 1 ';
+    var num = data.pagedata.pageNum;
+    var page = data.pagedata.page;
+    var isPaging = data.pagedata.isPaging;
+    delete data.pagedata;
+
+    var arr = new Array();
+    arr.push('select jit_orderdelivery.OrderID,jit_orderdelivery.DeliveryUserID,jit_orderdelivery.DeliveryBeginTime,jit_orderdelivery.DeliveryEndTime,');
+    arr.push('jit_staff.StaffName');
+    arr.push('from jit_orderdelivery,jit_staff');
+    arr.push('where jit_orderdelivery.DeliveryUserID = jit_staff.StaffID');
+    arr.push('and  jit_staff.StaffType = 2 ');
+
+    var sql = arr.join(' ');
 
     for (var key in data) {
-        if (key != 'num' && key != 'page')
-            sql += ' and ' + key + ' = ' + data[key];
+        if (data[key] != '')
+            sql += ' and ' + key + ' = ' + data[key] + ' ';
     }
 
-    var num = data.num;
-    var page = data.page;
-    if (data.isPaging == 1) {
-        sql += '　LIMIT　' 　+ (page - 1) * num + ',' + num + ';';
+    if (isPaging == 1) {
+        sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     }
 
     logger.writeInfo("[dal/jinkebro/orderdelivery]订单配送员查询:" + sql);
+
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(sql, function (err, results) {
+            if (err) {
+                connection.release();
+                return callback(true);
+            }
+            connection.release();
+            return callback(false, results);
+        });
+    });
+}
+
+/**
+ * @function: 订单配送员表的查询工作
+ */
+exports.countOrderDelivery = function (data, callback) {
+    var arr = new Array();
+    arr.push('select count(1) as num');
+    arr.push('from jit_orderdelivery,jit_staff');
+    arr.push('where jit_orderdelivery.DeliveryUserID = jit_staff.StaffID');
+    arr.push('and  jit_staff.StaffType = 2');
+
+    var sql = arr.join(' ');
+
+    for (var key in data) {
+        if (data[key] != '')
+            sql += " and " + key + " = " + data[key] + " ";
+    }
+
+    logger.writeInfo("[dal/jinkebro/orderdelivery]订单配送员计数:" + sql);
+
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -78,13 +125,13 @@ exports.queryOrderDelivery = function (data, callback) {
                 callback(true);
                 return;
             }
-            callback(false, results);
             connection.release();
-            return;
+            return callback(false, results);
         });
     });
 }
-	  
+
+
 /**
  * function: 修改配送员
  */
