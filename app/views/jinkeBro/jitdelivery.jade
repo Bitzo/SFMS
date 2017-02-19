@@ -1,6 +1,40 @@
 link(rel='stylesheet', href='css/backend/backend.css')
 block content
   jason-pagecontent(action='/jinkeBro/orderDelivery',conf='paginationConf')
+    div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+      div.modal-dialog
+        div.modal-content
+          div.modal-body
+            h4.modal-title(id="myModalLabel") 配送信息编辑
+              button.close(type="button",data-dismiss="modal")
+                span(aria-hidden="true")&times;
+            br
+            table.table.table-striped.table-bordered.text-center
+              tr
+                td(width="25%") 订单ID
+                td(width="25%") {{editInfo.OrderID}}
+
+              tr
+                td(width="25%") 配送员ID
+                td(width="25%") {{editInfo.DeliveryUserID}}
+
+              tr
+                td(width="25%") 配送员姓名
+                td(width="25%") {{editInfo.StaffName}}
+
+              tr
+                td(width="25%") 配送开始时间
+                td(width="25%")
+                  input(type="date",name="projectEndTime",ng-model="editInfo.DeliveryBeginTime",value='{{editInfo.DeliveryBeginTime}}',required)
+
+              tr
+                td(width="25%") 配送完成时间
+                td(width="25%")
+                  input(type="date",name="projectEndTime",ng-model="editInfo.DeliveryEndTime",value='{{editInfo.DeliveryEndTime}}',required)
+
+            button.btn.btn-default.pull-right(type="button" ng-click="ensureEditDelivery('/jinkeBro/orderDelivery')") 提交
+
+            button.btn.btn-default(type="button",data-dismiss="modal") Close
     div.page-content
       ng-form.form-inline
         span.title  订单配送管理
@@ -32,11 +66,11 @@ block content
             td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
             td {{x.OrderID}}
             td {{x.DeliveryUserID}}
-            td {{x.DeliveryUserName}}
+            td {{x.StaffName}}
             td {{x.DeliveryBeginTime}}
             td {{x.DeliveryEndTime}}
             td
-              a(href='#/?ID={{x.ID}}')
-                i.icon.icon-edit 编辑
+              a(data-toggle="modal",data-target="#myModal",ng-click='editDelivery(x.OrderID, "/jinkeBro/orderDelivery")' href='')
+                i.icon.icon-edit  编辑
       div.pull-right
         jason-pagination(conf='paginationConf')

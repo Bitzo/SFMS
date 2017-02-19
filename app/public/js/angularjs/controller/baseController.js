@@ -598,6 +598,49 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
              alert(response.msg);
         });    
     }
+    //订单配送管理
+    //配送信息编辑
+    $scope.editDelivery = function (orderID, action) {
+        $scope.editInfo = {};
+        $scope.f = {
+            'OrderID':  orderID
+        }
+        $http({
+            method:'get',
+            url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:$scope.f
+            }
+        }).
+        success(function(response) {
+            $scope.editInfo = response.data[0];
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
+            $scope.f = {};
+        }).
+        error(function(response) {
+            alert(response.msg);
+            $scope.f = {};
+        });
+    };
 
+    //配送信息编辑完成
+    $scope.ensureEditDelivery = function (action) {
+        var data = $scope.editInfo;
 
-})
+        $http({
+            method:'post',
+            url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata : data
+            }
+        }).
+        success(function(response) {
+            alert(response.msg)
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+});

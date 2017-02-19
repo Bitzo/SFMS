@@ -66,7 +66,7 @@ router.post('/', function (req, res) {
             var insertData = {
                 'OrderID': OrderID,
                 'DeliveryUserID': DeliveryUserID
-            }
+            };
 
             for (var key in insertData) {
                 console.log(key + ': ' + insertData[key]);
