@@ -33,6 +33,25 @@ Product.prototype.insertProduct = function (data, callback) {
     logModel.OperationName = operationConfig.jinkeBroApp.product.productAdd.actionName;
     logModel.Action = operationConfig.jinkeBroApp.product.productAdd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productAdd.identifier;
+
+    var formdata = {
+        "SKU": data.SKU,
+        "ProductName": data.ProductName,
+        "ProductDesc": data.ProductDesc || '',
+        "ProductImgPath": data.ProductImgPath || '',
+        "ExpireTime": data.ExpireTime,
+        "ProducTime": data.ProducTime,
+        "SupplierID": data.SupplierID,
+        "ProductTypeID": data.ProductTypeID,
+        "ProductPrice": data.ProductPrice,
+        "OnSale": data.OnSale,
+        "TotalNum" : data.TotalNum,
+        "StockAreaID" : data. StockAreaID,
+        "CreateUserID" : data.CreateUserID,
+        "CreateTime" : data.CreateTime,
+        "newProductTypeName" : data.newProductTypeName || ''
+    };
+
     productDAL.insertProduct(data, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
@@ -43,8 +62,7 @@ Product.prototype.insertProduct = function (data, callback) {
                     logger.writeError("商品新增失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
-            callback(true,'商品新增失败');
-            return;
+            return callback(true,'商品新增失败');
         }
 
         //新增成功
@@ -56,11 +74,12 @@ Product.prototype.insertProduct = function (data, callback) {
                 logger.writeError("商品新增成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
+
+
         logger.writeInfo('商品新增成功');
-        callback(false, result);
-        return;
+        return callback(false, result);
     });
-}
+};
 
 //删除商品
 Product.prototype.deleteProduct = function (data, callback) {
@@ -95,7 +114,7 @@ Product.prototype.deleteProduct = function (data, callback) {
         callback(false, result);
         return;
     });
-}
+};
 
 //编辑商品信息
 Product.prototype.updateProduct = function (data, callback) {
@@ -130,7 +149,7 @@ Product.prototype.updateProduct = function (data, callback) {
         callback(false, result);
         return;
     });
-}
+};
 
 //查询商品信息
 Product.prototype.queryProducts = function (data, callback) {
@@ -194,7 +213,7 @@ Product.prototype.queryProducts = function (data, callback) {
 
         callback(false, result);
     });
-}
+};
 
 //查询商品信息
 Product.prototype.CountProducts = function (data, callback) {
@@ -208,7 +227,7 @@ Product.prototype.CountProducts = function (data, callback) {
         callback(false, result);
         return;
     });
-}
+};
 
 //根据商品类型ID得到该商品类型下商品的个数
 Product.prototype.getProCountByID = function (data, callback) {
@@ -223,7 +242,30 @@ Product.prototype.getProCountByID = function (data, callback) {
         }
         return callback(false, result);
     });
-}
+};
+
+Product.prototype.getMaxSKU = function (callback) {
+    productDAL.getMaxSKU(function (err,result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        return callback(false, result);
+    });
+};
+
+Product.prototype.getMaxSKUNext = function (callback) {
+    productDAL.getMaxSKU(function (err,result) {
+        if (err) {
+            callback(true);
+            return;
+        }
+        var maxSKU = result[0].SKU;
+        var rearStr = (parseInt(maxSKU.substr(10,5)) + 1).toString();
+        result[0].SKU = maxSKU.substr(0,10) + rearStr;
+        return callback(false, result);
+    });
+};
 
 
 module.exports = new Product();

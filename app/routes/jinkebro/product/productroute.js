@@ -17,7 +17,7 @@ var productService = appRequire('service/jinkebro/product/productservice'),
     userFuncService = appRequire('service/backend/user/userfuncservice'),
     moment = require('moment');
 
-//产品的新增
+//商品新增
 router.post('/', function (req, res) {
     var functionCode = functionConfig.jinkeBroApp.product.productAdd.functionCode;
     var funcData = {
@@ -36,9 +36,23 @@ router.post('/', function (req, res) {
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var formdata = req.body.formdata;
+            // var formdata = JSON.parse(req.body.formdata);
 
             //检查所需要的字段是否都存在
-            var data = ['SKU', 'ProductName', 'SupplierID', 'ProductTypeID', 'ProductPrice'];
+            var data = ['SKU',
+                'ProductName',
+                'ExpireTime',
+                'ProducTime',
+                'SupplierID',
+                'ProductTypeID',
+                'ProductPrice',
+                'OnSale',
+                'TotalNum',
+                'StockAreaID',
+                'CreateUserID',
+                'CreateTime'
+            ];
+
             var err = 'require: ';
             for (var value in data) {
                 if (!(data[value] in formdata)) {
@@ -56,19 +70,131 @@ router.post('/', function (req, res) {
                 });
             }
 
+            // var productstockmodel = {
+            //     ID : '',
+            //     ProductID : '',
+            //     TotalNum : '',
+            //     StockAreaID : '',
+            //     CreateUserID : '',
+            //     CreateTime : '',
+            //     EditUserID : '', // can be null
+            //     EditTime : '' // can be null
+            // };
+
+            // var producttypemodel = {
+            //     ID : '',
+            //     ProductTypeName : ''
+            // };
+
+            // var SKU = formdata.SKU || "123",
+            //     ProductName = formdata.ProductName || "德芙巧克力",
+            //     ProductDesc = formdata.ProductDesc || '',
+            //     ProductImgPath = formdata.ProductImgPath || '',
+            //     ExpireTime = formdata.ExpireTime || moment().format("YYYY-MM-DD"),
+            //     ProducTime = formdata.ProducTime || moment().format("YYYY-MM-DD"),
+            //     SupplierID = formdata.SupplierID || 1,
+            //     ProductTypeID = formdata.ProductTypeID || 4,
+            //     ProductPrice = formdata.ProductPrice || 29.5,
+            //     OnSale = formdata.OnSale || 1,
+            //     TotalNum = formdata.TotalNum || 100,
+            //     StockAreaID = formdata.StockAreaID || 1,
+            //     CreateUserID = formdata.CreateUserID || 41,
+            //     CreateTime = formdata.CreateTime || moment().format("YYYY-MM-DD HH:mm:ss"),
+            //     newProductTypeName = formdata.newProductTypeName || '德芙 香浓黑巧克力 碗装 252克/碗';
             var SKU = formdata.SKU,
                 ProductName = formdata.ProductName,
-                ProductDesc = formdata.ProductDesc || '',
-                ProductImgPath = formdata.ProductImgPath || '',
-                ExpireTime = (formdata.ExpireTime) ? (moment(formdata.ExpireTime).format("YYYY-MM-DD HH:mm:ss")) : moment().format('YYYY-MM-DD HH:mm:ss'),
-                ProducTime = (formdata.ProducTime) ? (moment(formdata.ProducTime).format("YYYY-MM-DD HH:mm:ss")) : moment().format('YYYY-MM-DD HH:mm:ss'),
-
+                ProductDesc = formdata.ProductDesc,
+                ProductImgPath = formdata.ProductImgPath,
+                ExpireTime = formdata.ExpireTime,
+                ProducTime = formdata.ProducTime,
                 SupplierID = formdata.SupplierID,
                 ProductTypeID = formdata.ProductTypeID,
                 ProductPrice = formdata.ProductPrice,
-                OnSale = formdata.OnSale;
+                OnSale = formdata.OnSale,
+                TotalNum = formdata.TotalNum,
+                StockAreaID = formdata.StockAreaID,
+                CreateUserID = formdata.CreateUserID,
+                CreateTime = formdata.CreateTime,
+                newProductTypeName = formdata.newProductTypeName || '';
 
-            // 存放接收的数据
+            var requiredValue = '缺少输入参数 ：',
+                requiredData = {
+                    "SKU": SKU,
+                    "ProductName": ProductName,
+                    "SupplierID": SupplierID,
+                    "ProductTypeID": ProductTypeID,
+                    "ProductPrice": ProductPrice,
+                    "OnSale": OnSale,
+                    "TotalNum" : TotalNum,
+                    "StockAreaID" :  StockAreaID,
+                    "CreateUserID" : CreateUserID,
+                };
+
+            for (var key in requiredData) {
+                if (requiredData[key] == undefined) {
+                    requiredValue += key;
+                    logger.writeError(requiredValue);
+                    res.status(400);
+                    return res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: requiredValue
+                    });
+                }
+            }
+
+            if (ExpireTime != undefined) {
+                ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");
+            } else {
+                res.status(400);
+                res.json({
+                    code : 400,
+                    isSuccess : false,
+                    msg : '商品过期时间必须设置！'
+                });
+            }
+
+            if (ProducTime != undefined) {
+                ProducTime = moment(formdata.ProducTime).format("YYYY-MM-DD");
+            } else {
+                res.status(400);
+                res.json({
+                    code : 400,
+                    isSuccess : false,
+                    msg : '商品生产日期必须设置！'
+                });
+            }
+
+            if (CreateTime != undefined) {
+                CreateTime = moment(formdata.CreateTime).format("YYYY-MM-DD HH:mm:ss");
+            } else {
+                res.status(400);
+                res.json({
+                    code : 400,
+                    isSuccess : false,
+                    msg : '入库时间必须设置！'
+                });
+            }
+
+            var shouldIntData = {
+                "SupplierID" : SupplierID,
+                "ProductTypeID" : ProductTypeID,
+                "OnSale" : OnSale,
+                "TotalNum" : TotalNum,
+                "StockAreaID" :  StockAreaID,
+                "CreateUserID" : CreateUserID
+            };
+            for (var key in shouldIntData) {
+                if (isNaN(shouldIntData[key])) {
+                    res.status(400);
+                    return res.json({
+                        code : 400,
+                        isSuccess : false,
+                        msg : key + " : " + shouldIntData[key] + '不是数字！'
+                    });
+                }
+            }
+
             var insertdata = {
                 "SKU": SKU,
                 "ProductName": ProductName,
@@ -79,70 +205,61 @@ router.post('/', function (req, res) {
                 "SupplierID": SupplierID,
                 "ProductTypeID": ProductTypeID,
                 "ProductPrice": ProductPrice,
-                "OnSale": OnSale
+                "OnSale": OnSale,
+                "TotalNum" : TotalNum,
+                "StockAreaID" :  StockAreaID,
+                "CreateUserID" : CreateUserID,
+                "CreateTime" : CreateTime,
+                "newProductTypeName" : newProductTypeName
             };
 
-            var intdata = {
-                "SupplierID": SupplierID,
-                "ProductTypeID": ProductTypeID,
-                "OnSale": OnSale
-            };
-
-            for (var key in intdata) {
-                if (isNaN(intdata[key])) {
-                    res.status(400);
-                    return res.json({
-                        code: 400,
-                        isSuccess: false,
-                        msg: key + ": " + intdata[key] + '不是数字'
-                    });
-                }
-            }
-
-            var requiredvalue = '缺少输入参数：';
-            for (var key in insertdata) {
-                if (key != 'ProductDesc' && key != 'ProductImgPath') {
-                    if (insertdata[key].length == 0) {
-                        requiredvalue += key + ' ';
-                        logger.writeError(requiredvalue);
-                        res.status(404);
-                        return res.json({
-                            code: 404,
-                            isSuccess: false,
-                            msg: requiredvalue
-                        });
-                    }
-                }
-
-            }
-
-            //执行插入操作
-            productService.insertProduct(insertdata, function (err, result) {
+            productService.getMaxSKUNext(function (err,skuResult) {
                 if (err) {
                     res.status(500);
                     return res.json({
                         code: 500,
                         isSuccess: false,
-                        addProductResult: result,
-                        msg: '服务器出错，产品新增操作失败'
+                        msg: '服务器内部错误！'
                     });
                 }
 
+                if (skuResult != undefined && skuResult.length == 1) {
+                    insertdata.SKU = skuResult[0].SKU;
 
-                if (result !== undefined && result.affectedRows != 0) {
-                    res.status(200);
-                    return res.json({
-                        code: 200,
-                        isSuccess: true,
-                        addProductResult: result,
-                        msg: '一条产品记录添加成功'
+                    productService.insertProduct(insertdata, function (err, result) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: '服务器内部错误！'
+                            });
+                        }
+
+                        if (result !== undefined && result.affectedRows != 0) {
+                            res.status(200);
+                            return res.json({
+                                code: 200,
+                                isSuccess: true,
+                                addProductResult: result,
+                                msg: '一条产品记录添加成功！'
+                            });
+                        } else {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "产品添加操作失败！"
+                            });
+                        }
                     });
+
                 } else {
                     res.status(404);
                     return res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "产品添加操作失败"
+                        code : 404,
+                        isSuccess : false,
+                        msg : '获得最大SKU失败！'
                     });
                 }
             });

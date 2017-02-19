@@ -345,9 +345,9 @@ router.post('/', function (req, res) {
                 PayMethod = formdata.PayMethod || 1,
                 IsValid = formdata.IsValid || 1,
                 IsActive = formdata.IsActive || 1,
-                ProductIDs = formdata.ProductIDs || [1, 2, 5],//数组，表示ProductID的集合
+                ProductIDs = formdata.ProductIDs || [1, 2, 3],//数组，表示ProductID的集合
                 ProductCounts = formdata.ProductCounts || [2, 1, 3],
-                CustomerID = formdata.CustomerID || 1,
+                CustomerID = formdata.CustomerID || 2,
                 OrderStatus = formdata.OrderStatus || 1;
 
             // 存放接收的数据

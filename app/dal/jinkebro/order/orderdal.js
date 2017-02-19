@@ -230,7 +230,7 @@ exports.createOrder = function(data, callback) {
                         });
                         return ;
                     }
-                    console.log('insert success');
+                    console.log('insert order success');
                     connection.release();
                     callback(false, returnResult);
                     return;
