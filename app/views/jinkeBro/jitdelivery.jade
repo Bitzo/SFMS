@@ -1,7 +1,42 @@
-//
-   Created by Cecurio on 2017/2/18.
-link(rel='stylesheet' href="css/backend/role.css")
+link(rel='stylesheet', href='css/backend/backend.css')
 block content
-  div.container-fluid
-    span
-      h2 商品配送
+  jason-pagecontent(action='/jinkeBro/orderDelivery',conf='paginationConf')
+    div.page-content
+      ng-form.form-inline
+        span.title  订单配送管理
+        div.buttons.pull-right
+          label.form-group.my-form-group 配送员
+            jason-select.select.ext(ng-model='f.DeliveryUserID',source='/jinkeBro/staff',selectparams='{"StaffType":2}',stext='StaffName',svalue='StaffID')
+          label.form-group.my-form-group  配送开始时间
+            input.form-control.ext(type='date',ng-model='f.DeliveryBeginTime')
+          label.form-group.my-form-group  配送完成时间
+            input.form-control.ext(type='date',ng-model='f.DeliveryEndTime')
+          label.form-group.my-form-group
+            a.btn.btn-sm.btn-primary(ng-click='search()')
+              i.icon.icon-search   查询
+            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
+              i.icon.icon-repeat  刷新
+      hr
+      table.table.table-striped.table-bordered.text-center
+        thead
+          tr
+            th 序号
+            th 订单ID
+            th 配送员ID
+            th 配送员姓名
+            th 配送开始时间
+            th 配送完成时间
+            th(style="width:100px;") 操作
+        tbody
+          tr(ng-repeat="x in datas")
+            td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
+            td {{x.OrderID}}
+            td {{x.DeliveryUserID}}
+            td {{x.DeliveryUserName}}
+            td {{x.DeliveryBeginTime}}
+            td {{x.DeliveryEndTime}}
+            td
+              a(href='#/?ID={{x.ID}}')
+                i.icon.icon-edit 编辑
+      div.pull-right
+        jason-pagination(conf='paginationConf')
