@@ -19,17 +19,29 @@ var db_jinkebro = appRequire('db/db_jinkebro'),
 exports.insertOrderDelivery = function (data, callback) {
     var sql = 'INSERT INTO jit_orderdelivery SET ';
     var  i = 0;
-    
+
     for (var key in data) {
-        if(i == 0){
-        sql += key + ' = ' + data[key] + ' ';
-        i++;
-        } else{
-         sql += ', ' + key + ' = ' + data[key] + ' ';   
+        if (key != 'ID') {
+            if (i == 0) {
+                if (!isNaN(data[key])) {
+                    sql += key + " = " + data[key] + " ";
+                    i++;
+                } else {
+                    sql += key + " = '" + data[key] + "' ";
+                    i++;
+                }
+            } else {
+                if (!isNaN(data[key])) {
+                    sql += " , " + key + " = " + data[key] + " ";
+                } else {
+                    sql += " , " + key + " = '" + data[key] + "' ";
+                }
+            }
         }
     }
 
-    logger.writeInfo('[dal/jinkebro/orderdelivery]商品配送的员新增');
+    logger.writeInfo('[dal/jinkebro/orderdelivery]商品配送员的新增');
+
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -59,7 +71,7 @@ exports.queryOrderDelivery = function (data, callback) {
     delete data.pagedata;
 
     var arr = new Array();
-    arr.push('select jit_orderdelivery.OrderID,jit_orderdelivery.DeliveryUserID,jit_orderdelivery.DeliveryBeginTime,jit_orderdelivery.DeliveryEndTime,');
+    arr.push('select jit_orderdelivery.ID,jit_orderdelivery.OrderID,jit_orderdelivery.DeliveryUserID,jit_orderdelivery.DeliveryBeginTime,jit_orderdelivery.DeliveryEndTime,');
     arr.push('jit_staff.StaffName');
     arr.push('from jit_orderdelivery,jit_staff');
     arr.push('where jit_orderdelivery.DeliveryUserID = jit_staff.StaffID');
@@ -136,21 +148,28 @@ exports.countOrderDelivery = function (data, callback) {
  * function: 修改配送员
  */
 exports.updateOrderDelivery = function (data, callback) {
-    var upd_sql = 'UPDATE jit_orderdelivery set ';
+    var upd_sql = "update jit_orderdelivery set ";
     var i = 0;
     for (var key in data) {
-        if (key != 'ID') {
-            if (i == 0) {
-                upd_sql += key + ' = ' + data[key] + ' ';
+        if (i == 0) {
+            if (!isNaN(data[key])) {
+                upd_sql += key + " = " + data[key] + " ";
                 i++;
             } else {
-                upd_sql += ' , ' + key + ' = ' + data[key] + ' ';
+                upd_sql += key + " = '" + data[key] + "' ";
+                i++;
+            }
+        } else {
+            if (!isNaN(data[key])) {
+                upd_sql += " , " + key + " = " + data[key] + " ";
+            } else {
+                upd_sql += " , " + key + " = '" + data[key] + "' ";
             }
         }
     }
 
-    upd_sql += 'WHERE ' + orderdelivery.PK + ' = ' + data[orderdelivery.PK] + ' ';
-    console.log(upd_sql);
+    upd_sql += 'WHERE OrderID ' + ' = ' + data['OrderID'] + ' ';
+
     logger.writeInfo('修改用户： ' + upd_sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
