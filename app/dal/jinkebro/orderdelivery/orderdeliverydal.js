@@ -84,6 +84,8 @@ exports.queryOrderDelivery = function (data, callback) {
             sql += ' and ' + key + ' = ' + data[key] + ' ';
     }
 
+    sql += ' order by jit_orderdelivery.OrderID desc ';
+
     if (isPaging == 1) {
         sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     }

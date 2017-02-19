@@ -108,7 +108,14 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
             }
         });
         logger.writeInfo('订单查询成功');
-        callback(false, queryResult);
+
+        var resultLength = queryResult.length;
+        for (var i = 0; i < resultLength; i++) {
+            queryResult[i].DeliveryBeginTime = (queryResult[i].DeliveryBeginTime == undefined) ? '' : moment(queryResult[i].DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss');
+            queryResult[i].DeliveryEndTime = (queryResult[i].DeliveryEndTime == undefined) ? '' : moment(queryResult[i].DeliveryEndTime).format('YYYY-MM-DD HH:mm:ss');
+        }
+
+        return callback(false, queryResult);
     });
 }
 
