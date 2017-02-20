@@ -1,7 +1,44 @@
-//
-   Created by Cecurio on 2017/2/18.
-link(rel='stylesheet' href="css/backend/role.css")
+link(rel='stylesheet', href='css/backend/backend.css')
 block content
-  div.container-fluid
-    span
-      h2 员工管理
+  jason-pagecontent(action='/jinkeBro/staff' conf='paginationConf')
+    div.page-content
+      ng-form.form-inline
+        span.title 员工管理
+          div.buttons.pull-right
+            label.form-group.my-form-group
+              a.btn.btn-sm.btn-primary(ng-click='search()')
+                i.icon.icon-search 查询
+              a.btn.btn-sm.btn-success(href='#/jinkeBro/stuffmanage')
+                i.icon.icon-plus 新建
+              a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
+                i.icon.icon-repeat 刷新
+      hr
+      table.table.table-striped.table-bordered.text-center
+        thead
+          tr
+            th 序号
+            th 员工姓名
+            th 性别
+            th 员工类型
+            th 电话号码
+            th 职位
+            th 是否有效
+            th(style="width:150px;") 操作
+        tbody
+          tr(ng-repeat="x in datas" )
+            td {{$index+1}}
+            td {{x.StaffName}}
+            td {{x.Sex | sexToChin:x.Sex }}
+            td {{x.StaffType | jinkeBroStuffType:x.StaffType }}
+            td {{x.Phone}}
+            td {{x.Position}}
+            td {{x.IsActive | numToChin:x.IsActive }}
+            td
+              a(href='#/jinkeBro/jitgoodsEdit/?ProductID={{x.ProductID}}' )
+                i.icon.icon-edit 编辑
+              a(ng-click="remove($index,'/')")
+                i.icon.icon-trash 删除
+              a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'')")
+                i.icon.icon-zoom-in  更多
+      div.pull-right
+        jason-pagination(conf='paginationConf')
