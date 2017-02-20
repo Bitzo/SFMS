@@ -214,16 +214,12 @@ exports.insertProduct = function(data, callback) {
                 });
             });
         });
-
     });
-
-
-
 };
 
 //删除产品
 exports.deleteProduct = function(data, callback) {
-    var delete_sql = 'delete from jit_product where ProductID = ' + data['ProductID'] + ';';
+    var delete_sql = "update jit_product set jit_product.OnSale = 0 where ProductID = " + data['ProductID'] + ";";
 
     logger.writeInfo("[menuDelete func in productdal]产品删除：" + delete_sql);
     console.log("in dal,产品删除：" + delete_sql);
@@ -241,10 +237,8 @@ exports.deleteProduct = function(data, callback) {
                 callback(true);
                 return;
             }
-
-            callback(false, results);
             connection.release();
-            return;
+            return callback(false, results);
         });
     });
 };
@@ -288,13 +282,10 @@ exports.updateProduct = function(data, callback) {
                 return;
             }
 
-            callback(false, results);
             connection.release();
-            return;
-        })
-
+            return callback(false, results);
+        });
     });
-
 };
 
 //查询商品
