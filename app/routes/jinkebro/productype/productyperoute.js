@@ -95,15 +95,17 @@ router.post('/', function (req, res) {
             });
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
-            if (req.body.formdata == undefined)
+            console.log(req.body)
+            if (req.body.formdata == undefined) {
                 res.status(400);
-            return res.json({
-                code: 404,
-                isSuccess: false,
-                msg: '存在未填写的必填字段'
-            });
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: '存在未填写的必填字段'
+                });
+            }
 
-            var formdata = JSON.parse(req.body.formdata);
+            var formdata = req.body.formdata;
 
             //检查所需要的字段是否都存在
             var data = ['ProductTypeName'];
@@ -189,7 +191,7 @@ router.put('/', function (req, res) {
             });
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
-            var formdata = JSON.parse(req.body.formdata);
+            var formdata = req.body.formdata;
 
             //检查所需要的字段是否都存在
             var data = ['ID', 'ProductTypeName'];
