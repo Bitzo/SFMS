@@ -1,0 +1,52 @@
+link(rel='stylesheet' href="css/backend/role.css")
+block content
+    div.container-fluid
+        span
+            h2 员工编辑
+        jason-form(method="put" source='/jinkeBro/staff' conf='paginationConf' tocc="StaffID")
+            form( name="staffedit")
+                table.table.table-bordered.table-hover.definedwidth.m10
+                    tr
+                        td(width="15%",class="tableleft") 员工姓名
+                        td
+                            input(type="textview",name="StaffName",ng-model='paginationConf.formdata.StaffName',ng-maxlength='50',required)
+                            &nbsp&nbsp
+                            small.error(ng-if="staffedit.SKU.$error.maxlength && staffedit.SKU.$touched") 姓名最多10位
+
+                    tr
+                        td(width="15%",class="tableleft") 员工性别
+                        td
+                            input(type="radio",name="Sex",value="1",ng-model="paginationConf.formdata.Sex",style="width:15px;height:15px",checked)
+                            &nbsp 男
+                            &nbsp&nbsp
+                            input(type="radio",name="Sex",value="2",ng-model="paginationConf.formdata.Sex",style="width:15px;height:15px")
+                            &nbsp 女
+
+                    tr
+                        td(width="15%",class="tableleft") 员工类型
+                        td
+                            input(type="radio",name="StaffType",value="1",ng-model="paginationConf.formdata.StaffType",style="width:15px;height:15px",checked)
+                            &nbsp 供应商
+                            &nbsp&nbsp
+                            input(type="radio",name="StaffType",value="2",ng-model="paginationConf.formdata.StaffType",style="width:15px;height:15px")
+                            &nbsp 配送员
+                            &nbsp&nbsp
+                            input(type="radio",name="StaffType",value="3",ng-model="paginationConf.formdata.StaffType",style="width:15px;height:15px")
+                            &nbsp 管理员
+
+                    tr
+                        td(width="15%",class="tableleft") 电话号码
+                        td
+                            input(type="date",name="Phone",ng-model="paginationConf.formdata.Phone",value='{{paginationConf.formdata.Phone}}',ng-maxlength='11',required)
+                            small.error(ng-if="staffedit.Phone.$error.maxlength && stuffAdd.Phone.$touched") 电话号码最多10位
+                    tr
+                        td(width="15%",class="tableleft") 员工职位
+                        td
+                            input(type="text",name="Position",ng-model="paginationConf.formdata.Position",value='{{paginationConf.formdata.Position}}',required)
+                            small.error(ng-if="staffedit.Phone.$error.maxlength && stuffAdd.Phone.$touched") 职位名称最多50位
+                    tr
+                        td(class="tableleft")
+                        td
+                            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="staffedit.$invalid",ng-click="newedit(paginationConf.formdata,'/jinkeBro/staff')") 确认修改
+                            &nbsp&nbsp&nbsp&nbsp
+                            a.btn.btn-sm.btn-success(href='#jinkeBro/jitstaffmanage',ng-click='search()') 返回列表
