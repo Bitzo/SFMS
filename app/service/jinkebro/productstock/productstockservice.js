@@ -16,7 +16,7 @@ var logger = appRequire("util/loghelper").helper;
 var http = require('http');
 var ProStock = function () {
     this.createTime = moment().format("YYYY-MM-DD HH:mm:ss");
-}
+};
 
 //查询库存信息
 ProStock.prototype.queryProStock = function (data, callback) {
@@ -28,13 +28,52 @@ ProStock.prototype.queryProStock = function (data, callback) {
         loggerWrite();
         return callback(true, logModel.OperationName);
     }
-    proStockDAL.queryProStock(data, function (err, results) {
+    var formdata = {
+        page : data.page,
+        pageNum : data.pageNum,
+        ProductID: data.ProductID || '',
+        StockAreaID: data.StockAreaID || '',
+        CreateUserID: data.CreateUserID || '',
+        CreateTime: data.CreateTime || '',
+        EditUserID: data.EditUserID || '',
+        EditTime: data.EditTime || ''
+    };
+
+    proStockDAL.queryProStock(formdata, function (err, results) {
         if (err) {
             callback(true, results);
             return;
         }
         callback(false, results);
         return;
+    });
+};
+
+//查询库存信息
+ProStock.prototype.countProStock = function (data, callback) {
+    if (!checkData(data)) {
+        logModel.OperationName = '查询库存信息时,库存信息为undefined';
+        logModel.Action = operationConfig.jinkeBroApp.productStock.productStockQuery.actionName;
+        logModel.Memo = '查询库存信息失败';
+        logModel.Type = operationConfig.operationType.operation;
+        loggerWrite();
+        return callback(true, logModel.OperationName);
+    }
+    var formdata = {
+        ProductID: data.ProductID || '',
+        StockAreaID: data.StockAreaID || '',
+        CreateUserID: data.CreateUserID || '',
+        CreateTime: data.CreateTime || '',
+        EditUserID: data.EditUserID || '',
+        EditTime: data.EditTime || ''
+    };
+
+    proStockDAL.countProStock(formdata, function (err, results) {
+        if (err) {
+            callback(true, results);
+            return;
+        }
+        return callback(false, results);
     });
 };
 
