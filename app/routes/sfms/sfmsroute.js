@@ -154,6 +154,10 @@ router.get('/financeCharts', function(req, res, next) {
         res.render('sfms/financeCharts', { title: 'Hi sfms' });
 });
 
+router.get('/financeChartsAlt', function(req, res, next) {
+        res.render('sfms/financeChartsAlt', { title: 'Hi sfms' });
+});
+
 router.get('/financeManageCheck', function(req, res, next) {
         res.render('sfms/financeManageCheck', { title: 'Hi sfms' });
 });

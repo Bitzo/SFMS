@@ -29,13 +29,14 @@ exports.addRemark = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '新增失败');
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 }
@@ -67,13 +68,14 @@ exports.updateRemark = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '编辑失败');
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 }
@@ -113,13 +115,14 @@ exports.queryRemark = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '编辑失败');
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 }
@@ -153,13 +156,14 @@ exports.countRemark = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 };
@@ -177,13 +181,14 @@ exports.delRemark = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '删除失败');
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 };

@@ -135,6 +135,9 @@ myApp.config(function($routeProvider) {
     when('/sfms/financeCharts', {
         templateUrl: '/sfms/financeCharts?access_token=' + accesstokenstring,
     }).
+    when('/sfms/financeChartsAlt', {
+        templateUrl: '/sfms/financeChartsAlt?access_token=' + accesstokenstring,
+    }).
     when('/sfms/financeManageCheck', {
         templateUrl: '/sfms/financeManageCheck?access_token=' + accesstokenstring,
     }).
@@ -176,6 +179,12 @@ myApp.config(function($routeProvider) {
     }).
     when('/jinkeBro/jitstaffmanage', {
         templateUrl: '/jinkeBro/jitstaffmanage?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitstaffadd', {
+        templateUrl: '/jinkeBro/jitstaffadd?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitstaffedit', {
+        templateUrl: '/jinkeBro/jitstaffedit?access_token=' + accesstokenstring,
     }).
     when('/jinkeBro/jitdelivery', {
         templateUrl: '/jinkeBro/jitdelivery?access_token=' + accesstokenstring,

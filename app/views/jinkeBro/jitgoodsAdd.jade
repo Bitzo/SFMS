@@ -3,14 +3,8 @@ block content
   div.container-fluid
     span 
       h2 商品新增
-    form(method="post"  name="goodsInfo")
+    form(method="post"  name="goodsInfo" ng-controller="jitgoodsAddController")
       table.table.table-bordered.table-hover.definedwidth.m10
-        tr
-          td(width="15%",class="tableleft") 仓储量的单位
-          td
-            input(type="textview",name="SKU",ng-model='formdata.SKU',ng-maxlength='50',required)
-            &nbsp&nbsp
-            small.error(ng-if="goodsInfo.SKU.$error.maxlength && goodsInfo.SKU.$touched") 仓储量的单位最多50位
            
         tr
           td(width="15%",class="tableleft") 商品名称 
@@ -30,31 +24,49 @@ block content
           td(width="15%",class="tableleft") 有效期
           td
             input(type="date",name="ExpireTime",ng-model="formdata.ExpireTime")
+        
         tr
           td(width="15%",class="tableleft") 生产日期
           td
             input(type="date",name="ProducTime",ng-model="formdata.ProducTime")
+        
         tr
           td(width="15%",class="tableleft") 商品类型 
           td
-            select(ng-model='formdata.ProductTypeID')
-              option 1
-              option 2
-              option 3
-            //jason-select.input(placeholder='商品类型' ng-model='formdata.ProductTypeID' source='/jinkeBro/proType', stext='ProductTypeName' svalue='ProductTypeID',style="width:160px;height:30px",required)
+            input(type="textview",name="newProductTypeName",ng-model="formdata.newProductTypeName",ng-maxlength='50',required)
+            &nbsp&nbsp
+            small.error(ng-if="goodsInfo.newProductTypeName.$error.maxlength && goodsInfo.newProductTypeName.$touched") 
+
         tr
-          td(width="15%",class="tableleft") 供应商ID
+          td(width="15%",class="tableleft") 供应商
           td
-            select(ng-model='formdata.SupplierID')
-              option 1
-              option 2
-              option 3
+            jason-select.input(placeholder='供应商ID' ng-model='formdata.SupplierID' source='/jinkeBro/staff', stext='StaffName' svalue='StaffID',style="width:160px;height:30px",required)
+        
         tr
           td(width="15%",class="tableleft") 商品价格
           td
             input(type="number",name="ProductPrice",ng-model="formdata.ProductPrice",ng-maxlength='50',required)
             &nbsp&nbsp
             small.error(ng-if="goodsInfo.ProductPrice.$error.maxlength && goodsInfo.ProductPrice.$touched") 图片路径50位
+        
+        tr
+          td(width="15%",class="tableleft") 商品总数 
+          td
+            input(type="textview",name="TotalNum",ng-model="formdata.TotalNum",ng-maxlength='50',required)
+            &nbsp&nbsp
+            small.error(ng-if="goodsInfo.TotalNum.$error.maxlength && goodsInfo.TotalNum.$touched") 
+
+        tr
+          td(width="15%",class="tableleft") 存储区域
+          td
+            select(ng-model='formdata.StockAreaID')
+              option(ng-repeat="item in StockArea",value='{{item.DictionaryID}}') {{item.DictionaryValue}}
+
+        tr
+          td(width="15%",class="tableleft") 创建者
+          td
+            jason-select.input(ng-model='formdata.CreateUserID' source='/jinkeBro/staff', stext='StaffName' svalue='StaffID',style="width:160px;height:30px",required)
+                
         tr
           td(class="tableleft") 是否在售
           td
@@ -63,6 +75,7 @@ block content
             &nbsp&nbsp          
             input(type="radio",name="OnSale",value="0",ng-model="formdata.OnSale",style="width:15px;height:15px")
             &nbsp不在售
+        
         tr
           td(width="15%",class="tableleft") 商品描述   
           td

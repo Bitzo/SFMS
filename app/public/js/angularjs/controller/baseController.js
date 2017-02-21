@@ -159,6 +159,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     //编辑页面   确认修改
     var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
+        console.log(formdata);
         $http({
             method:'put',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -429,19 +430,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         });
     }
 
-    //财务饼状图
-    // $scope.changeChart = function(valueID){
-    //     $scope.chartID = valueID;
-    //     console.log($scope.chartID)
-    //     if(valueID == 'outDetail'){
-    //            $scope.chartName = '支出明细饼状图'
-    //     }else if (valueID == 'inDetail'){
-    //            $scope.chartName = '收入明细饼状图'
-    //     }else{
-    //            $scope.chartName = '收入支出饼状图'
-    //     }
-        
-    // }
+
 //------金科小哥------
     //订单管理--首页  模态框
      //修改
@@ -646,7 +635,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
     //商品类型添加
     $scope.addProductType = function (action) {
-        var productType = $scope.formdata.ProductTypeName;
+        var productType = $scope.form.ProductTypeName;
         $http({
             method:'post',
             url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),

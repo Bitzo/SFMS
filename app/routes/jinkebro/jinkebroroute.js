@@ -60,6 +60,14 @@ router.get('/jitstaffmanage', function (req, res, next) {
     res.render('jinkeBro/jitstaffmanage', { title: 'Hi jkbro' });
 });
 
+router.get('/jitstaffadd', function (req, res, next) {
+    res.render('jinkeBro/jitstaffadd', { title: 'Hi jkbro' });
+});
+
+router.get('/jitstaffedit', function (req, res, next) {
+    res.render('jinkeBro/jitstaffedit', { title: 'Hi jkbro' });
+});
+
 router.get('/jitdelivery', function (req, res, next) {
     res.render('jinkeBro/jitdelivery', { title: 'Hi jkbro' });
 });
