@@ -100,6 +100,8 @@ exports.insertProduct = function(data, callback) {
                     });
                 };
                 funcArr.push(addProductTypeFunc);
+            }else {
+                return callback(false, '请为商品设置类型！');
             }
 
             // 添加记录到product表

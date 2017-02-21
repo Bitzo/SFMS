@@ -165,6 +165,7 @@ var getStaff = function (data,callback) {
         }
     }
 
+    querySql += " order by StaffID desc ";
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 

@@ -36,14 +36,13 @@ router.post('/',function (req,res) {
     //     PK : 'StaffID'
     // };
 
-    var data = ['StaffName', 'StaffType','Phone','Sex','CreateTime','IsActive'];
+    var data = ['StaffName', 'StaffType','Phone','Sex','Position'];
     var err = 'require: ';
     for (var value in data) {
         if (!(data[value] in formdata)) {
             err += data[value] + ' ';
         }
     }
-
     if (err !== 'require: ') {
         logger.writeError(err);
         res.status(400);
@@ -58,10 +57,26 @@ router.post('/',function (req,res) {
         StaffType = formdata.StaffType,
         Phone = formdata.Phone,
         Sex = formdata.Sex,
-        Position = formdata.Position || '',
+        Position = formdata.Position,
         CreateTime = moment().format('YYYY-MM-DD HH:mm:ss'),
         LeaveTime = formdata.LeaveTime || '',
-        IsActive = formdata.IsActive;
+        IsActive = (formdata.IsActive != undefined) ? (formdata.IsActive) : 1;
+
+    var intData = {
+        StaffType : StaffType,
+        Sex : Sex,
+        Phone : Phone
+    };
+    for (var key in intData) {
+        if (isNaN(intData[key])) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intData[key] + '不是数字!'
+            });
+        }
+    }
 
     //接收的数据进行object然后来插入
     var insertData = {
@@ -73,27 +88,26 @@ router.post('/',function (req,res) {
         CreateTime : CreateTime,
         IsActive : IsActive
     };
-
-    var intData = {
-        StaffType : StaffType,
-        Sex : Sex,
-        IsActive : IsActive
-    };
-
-    for (var key in intData) {
-        console.log(key + ': ' + intData[key]);
-        if (isNaN(insertData[key])) {
+    for (var key in insertData) {
+        if (insertData[key] == undefined) {
             res.status(400);
             return res.json({
                 code: 400,
                 isSuccess: false,
-                msg: key + ": " + intData[key] + '不是数字'
+                msg: '请设置' + key + '！'
             });
         }
     }
 
+    var checkExist = {
+        StaffName : StaffName,
+        StaffType : StaffType,
+        Phone : Phone,
+        Sex : Sex,
+        Position : Position,
+    };
 
-    staffService.addStaff(insertData,function (err,result) {
+    staffService.countStaff(checkExist, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -103,20 +117,40 @@ router.post('/',function (req,res) {
             });
         }
 
-        if (result != undefined && result.affectedRows != 0) {
-            res.status(200);
-            return res.json({
-                code : 200,
-                isSuccess: true,
-                data : {},
-                msg : '增加员工成功！'
+        if (results !== undefined && results.length != 0 && (results[0]['num']) == 0) {
+            staffService.addStaff(insertData,function (err,result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        errorMsg: "查询失败，服务器内部错误"
+                    });
+                }
+
+                if (result != undefined && result.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code : 200,
+                        isSuccess: true,
+                        data : {},
+                        msg : '增加员工成功！'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code : 404,
+                        isSuccess : false,
+                        msg : '增加员工失败！'
+                    });
+                }
             });
         } else {
             res.status(404);
             return res.json({
-                code : 404,
-                isSuccess : false,
-                msg : '增加员工失败！'
+                code: 404,
+                isSuccess: true,
+                msg: "此员工已经存在，请检查！"
             });
         }
     });
@@ -146,7 +180,6 @@ router.delete('/',function (req,res) {
         "StaffID": StaffID
     };
 
-    //查询要删除的菜单是否存在
     staffService.countStaff(deleteData, function (err, result) {
         if (err) {
             res.status(500);
@@ -158,39 +191,35 @@ router.delete('/',function (req,res) {
             });
         }
 
-        //所要删除的产品存在，执行删除操作
-        if (result !== undefined && result[0]['num'] !== 0) {
+        if (result !== undefined &&  result.length != 0 && result[0]['num'] !== 0) {
             staffService.deleteStaff(deleteData, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
                         code: 500,
                         isSuccess: false,
-                        deleteResults: results,
                         msg: '服务器出错，操作失败'
                     });
                 }
 
-                //判断是否删除成功
                 if (results !== undefined && results.affectedRows != 0) {
                     res.status(200);
                     return res.json({
                         code: 200,
                         isSuccess: true,
                         deleteResult: results,
-                        msg: '员工删除操作成功'
+                        msg: '员工删除操作成功!'
                     });
                 } else {
                     res.status(404);
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "员工删除操作失败"
+                        msg: "员工删除操作失败!"
                     });
                 }
             });
         } else {
-            // 所要删除的菜单不存在
             res.status(404);
             return res.json({
                 code: 404,
@@ -213,7 +242,6 @@ router.put('/',function (req,res) {
             err += data[value] + ' ';
         }
     }
-
     if (err !== 'require: ') {
         logger.writeError(err);
         res.status(400);
@@ -229,17 +257,54 @@ router.put('/',function (req,res) {
         StaffType = formdata.StaffType,
         Phone = formdata.Phone,
         Sex = formdata.Sex,
-        Position = formdata.Position || '',
+        Position = formdata.Position,
         CreateTime = formdata.CreateTime,
         LeaveTime = formdata.LeaveTime || '',
         IsActive = formdata.IsActive;
+
+    var intData = {
+        StaffID : StaffID,
+        StaffType : StaffType,
+        Sex : Sex,
+        IsActive : IsActive,
+        Phone : Phone
+    };
+    for (var key in intData) {
+        if (isNaN(intData[key])) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intData[key] + '不是数字'
+            });
+        }
+    }
+
     if (CreateTime != undefined) {
         CreateTime = moment(CreateTime).format('YYYY-MM-DD HH:mm:ss');
+    } else {
+        res.status(400);
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '请设置创建时间！'
+        });
     }
 
     if (LeaveTime != undefined) {
         LeaveTime = moment(LeaveTime).format('YYYY-MM-DD HH:mm:ss');
     }
+
+    var mustData = {
+        StaffID : StaffID,
+        StaffName : StaffName,
+        StaffType : StaffType,
+        Phone : Phone,
+        Sex : Sex,
+        Position : Position,
+        IsActive : IsActive
+    };
+
     //接收的数据进行object然后来插入
     var updateData = {
         StaffID : StaffID,
@@ -253,25 +318,16 @@ router.put('/',function (req,res) {
         IsActive : IsActive
     };
 
-    var intData = {
-        StaffID : StaffID,
-        StaffType : StaffType,
-        Sex : Sex,
-        IsActive : IsActive
-    };
-
-    for (var key in intData) {
-        console.log(key + ': ' + intData[key]);
-        if (isNaN(insertData[key])) {
+    for (var key in mustData) {
+        if (mustData[key] == undefined) {
             res.status(400);
             return res.json({
                 code: 400,
                 isSuccess: false,
-                msg: key + ": " + intData[key] + '不是数字'
+                msg: '请设置' + key + '！'
             });
         }
     }
-
 
     staffService.getStaff({staffID : StaffID}, function (err, result) {
         if (err) {
