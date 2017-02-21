@@ -135,6 +135,9 @@ myApp.config(function($routeProvider) {
     when('/sfms/financeCharts', {
         templateUrl: '/sfms/financeCharts?access_token=' + accesstokenstring,
     }).
+    when('/sfms/financeChartsAlt', {
+        templateUrl: '/sfms/financeChartsAlt?access_token=' + accesstokenstring,
+    }).
     when('/sfms/financeManageCheck', {
         templateUrl: '/sfms/financeManageCheck?access_token=' + accesstokenstring,
     }).
