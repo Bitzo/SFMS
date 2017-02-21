@@ -40,13 +40,13 @@ exports.addKPI = function (data, callback) {
         }
 
         connection.query(insert_sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '新增失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -82,13 +82,13 @@ exports.updateKPI = function (data, callback) {
         }
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '修改失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -117,13 +117,13 @@ exports.countQuery = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -158,13 +158,13 @@ exports.queryKPI = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -196,13 +196,13 @@ exports.checkKPI = function (data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '修改失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -221,13 +221,13 @@ exports.delKPI = function (data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '修改失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -259,13 +259,13 @@ exports.countKPI = function (data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '统计失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }

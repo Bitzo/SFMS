@@ -40,13 +40,13 @@ exports.addFinance = function (data, callback) {
         }
 
         connection.query(insert_sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '新增失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -82,13 +82,13 @@ exports.updateFinance = function (data, callback) {
         }
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '修改失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -118,13 +118,13 @@ exports.countQuery = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -158,13 +158,13 @@ exports.queryFinance = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -195,13 +195,13 @@ exports.checkFinance = function (data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '修改失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -221,13 +221,13 @@ exports.delFinance = function (data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '修改失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -251,13 +251,13 @@ exports.financeCount = function (data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '修改失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
