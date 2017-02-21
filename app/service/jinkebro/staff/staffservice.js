@@ -77,9 +77,37 @@ Staff.prototype.getStaff = function (data,callback) {
         CreateTime : data.CreateTime || '',
         LeaveTime : data.LeaveTime || '',
         IsActive : data.IsActive || '',
+        page : data.page || 1,
+        pageNum : data.pageNum || (config.pageCount),
+        isPaging : (data.isPaging != undefined) ? data.isPaging : 1
     };
 
     staffDal.getStaff(formdata, function (err, result) {
+        if (err) {
+            callback(true,'失败！');
+            return;
+        }
+
+        logger.writeInfo('');
+        return callback(false, result);
+    });
+};
+
+
+Staff.prototype.countStaff = function (data,callback) {
+    var formdata = {
+        StaffID : data.StaffID || '',
+        StaffName : data.StaffName || '',
+        StaffType : data.StaffType || '',
+        Phone : data.Phone || '',
+        Sex : data.Sex || '',
+        Position : data.Position || '',
+        CreateTime : data.CreateTime || '',
+        LeaveTime : data.LeaveTime || '',
+        IsActive : data.IsActive || '',
+    };
+
+    staffDal.countStaff(formdata, function (err, result) {
         if (err) {
             callback(true,'失败！');
             return;

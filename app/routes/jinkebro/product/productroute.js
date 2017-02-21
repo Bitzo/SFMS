@@ -554,12 +554,12 @@ router.get('/', function (req, res) {
     // req.query的内容如下：
     // {
     //     access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0ODc0MjgyODkwMTN9._kAZlxEinELePO5vfnW2ckhGaoiLy0ogGmqKDgGcG6s',
-    //         jitkey: '1',
+    //     jitkey: '1',
     //     f: '{
     //
     //     }',
     //     pageindex: '1',
-    //         pagesize: '10'
+    //     pagesize: '10'
     // }
 
     var functionCode = functionConfig.jinkeBroApp.product.productQuery.functionCode;
@@ -580,7 +580,7 @@ router.get('/', function (req, res) {
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var query = JSON.parse(req.query.f);
             var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
-                pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
+                pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : (config.pageCount),
                 SKU = query.SKU || '',
                 ProductID = query.ProductID || '',
                 ProductName = query.ProductName || '',

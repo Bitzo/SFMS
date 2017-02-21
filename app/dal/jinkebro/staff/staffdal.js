@@ -110,6 +110,70 @@ var getStaff = function (data,callback) {
             }
         }
     }
+
+    var num = data.pageNum; //每页显示的个数
+    var page = data.page || 1;
+
+    if (data['isPaging'] == 1) {
+        querySql += " LIMIT " + (page - 1) * num + "," + num + " ;";
+    } else {
+        querySql += ';';
+    }
+
+    console.log(querySql);
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError("[staffdal]数据库连接错误：" + err);
+            callback(true,'数据库连接失败！');
+            return;
+        }
+        connection.query(querySql, function(err, result) {
+            if (err) {
+                connection.release();
+                throw err;
+                callback(true,'失败！');
+                return;
+            }
+            logger.writeInfo('成功！');
+            connection.release();
+            return callback(false, result);
+        });
+    });
+};
+
+var countStaff = function (data,callback) {
+    console.log(data);
+    var queryData = {
+        StaffID : data.StaffID,
+        StaffName : data.StaffName,
+        StaffType : data.StaffType,
+        Phone : data.Phone,
+        Sex : data.Sex,
+        Position : data.Position,
+        CreateTime : data.CreateTime,
+        LeaveTime : data.LeaveTime,
+        IsActive : data.IsActive,
+    };
+
+    var arr = new Array();
+    arr.push('select count(1) as num ');
+    arr.push('from jit_staff');
+    arr.push('where 1=1');
+
+    var querySql = arr.join(' ');
+
+    if (queryData != undefined) {
+        for(var key in queryData) {
+            if (queryData[key] != '') {
+                if (!isNaN(queryData[key])) {
+                    querySql += ' and ' + key + ' = ' + queryData[key] + ' ';
+                } else {
+                    querySql += ' and ' + key + ' = "' + queryData[key] + '" ';
+                }
+            }
+        }
+    }
     console.log(querySql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
@@ -136,4 +200,5 @@ exports.addStaff = addStaff;
 exports.deleteStaff = deleteStaff;
 exports.updateStaff = updateStaff;
 exports.getStaff = getStaff;
+exports.countStaff = countStaff;
 

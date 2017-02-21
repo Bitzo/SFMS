@@ -16,8 +16,54 @@ exports.queryProStock= function (data, callback) {
               +' left join jit_product b on a.ProductID=b.ProductID'
               +' left join jit_backend.jit_user c on a.CreateUserID=c.AccountID where 1=1';
 
-    for(var key in data)
-    {
+    var queryData = {
+        ProductID: data.ProductID || '',
+        StockAreaID: data.StockAreaID || '',
+        CreateUserID: data.CreateUserID || '',
+        CreateTime: data.CreateTime || '',
+        EditUserID: data.EditUserID || '',
+        EditTime: data.EditTime || ''
+    };
+
+    for(var key in queryData) {
+        if(queryData[key]!='')
+            sql += " and a."+ key +" = '" + queryData[key]+"' ";
+    }
+
+    var num = data.pageNum; //每页显示的个数
+    var page = data.page || 1;
+
+    sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
+
+
+    logger.writeInfo("根据条件查询库存:" + sql);
+    console.log(sql);
+
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            logger.writeError('根据条件查询库存连接：err' + err);
+            callback(true,'连接出错');
+            return;
+        }
+        connection.query(sql, function (err, results) {
+            if (err) {
+                logger.writeError('根据条件查询库存，出错信息：' + err);
+                connection.release();
+                callback(true,'系统内部错误');
+                return;
+            }
+            connection.release();
+            return callback(false, results);
+        });
+    });
+};
+
+exports.countProStock = function (data,callback) {
+    var sql = 'select count(1) as num from jit_productstock a'
+        +' left join jit_product b on a.ProductID=b.ProductID'
+        +' left join jit_backend.jit_user c on a.CreateUserID=c.AccountID where 1=1';
+
+    for(var key in data) {
         if(data[key]!='')
             sql += " and a."+key +" = '" + data[key]+"' ";
     }
@@ -32,12 +78,13 @@ exports.queryProStock= function (data, callback) {
         }
         connection.query(sql, function (err, results) {
             if (err) {
-                logger.writeError('根据条件查询库存，出错信息：' + err)
+                logger.writeError('根据条件查询库存，出错信息：' + err);
+                connection.release();
                 callback(true,'系统内部错误');
                 return;
             }
-            callback(false, results);
             connection.release();
+            return callback(false, results);
         });
     });
 };

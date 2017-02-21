@@ -23,12 +23,24 @@ router.get('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        var data = {};
-        if (req.query !== undefined) {
-            var query = req.query;
-            var page = (query.pageindex || query.pageindex) ? (query.pageindex || query.pageindex) : 1,
-                pageNum = (query.pagesize || query.pagesize) ? (query.pagesize || query.pagesize) : 20,
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '服务器内部错误！'
+            });
+        }
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            var data = {};
+            if (req.query !== undefined) {
+                var query = req.query;
+                var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
+                    pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : 20;
+
                 data = {
+                    page: page,
+                    pageNum: pageNum,
                     ProductID: query.ProductID || '',
                     StockAreaID: query.StockAreaID || '',
                     CreateUserID: query.CreateUserID || '',
@@ -36,38 +48,74 @@ router.get('/', function (req, res) {
                     EditUserID: query.EditUserID || '',
                     EditTime: query.EditTime || ''
                 };
+            }
+
+            var countNum = -1;
+            proStockService.countProStock(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        errorMsg: "查询失败，服务器内部错误"
+                    });
+                }
+                if (results !== undefined && results.length != 0 && (results[0]['num']) > 0) {
+                    countNum = results[0]['num'];
+                    proStockService.queryProStock(data, function (err, result) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: "查询失败，服务器内部错误！"
+                            });
+
+                        }
+                        if (result !== undefined && result.length != 0 && countNum != -1) {
+                            var resultBack = {
+                                code: 200,
+                                isSuccess: true,
+                                msg: '查询成功！',
+                                dataNum: countNum,
+                                curPage: page,
+                                curPageNum: pageNum,
+                                totalPage: Math.ceil(countNum / pageNum),
+                                data: result
+                            };
+                            if (resultBack.curPage == resultBack.totalPage) {
+                                resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
+                            }
+                            res.status(200);
+                            return res.json(resultBack);
+                        } else {
+                            res.status(200);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "未查询到相应库存！"
+                            });
+                        }
+                    });
+                } else {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: "未查询到相应库存！"
+                    });
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
         }
-
-        console.log(data.ProductID);
-        proStockService.queryProStock(data, function (err, results) {
-            if (err) {
-                res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: "操作失败，服务器内部错误"
-                })
-                return;
-            }
-
-            if (results !== undefined && results.length != 0) {
-                var result = {
-                    code: 200,
-                    isSuccess: true,
-                    data: results
-                };
-                res.json(result);
-            } else {
-                res.json({
-                    code: 404,
-                    isSuccess: false,
-                    msg: "未查询到相关信息"
-                });
-            }
-        });
     });
 });
-
-
 
 //库存信息的新增
 router.post('/', function (req, res) {

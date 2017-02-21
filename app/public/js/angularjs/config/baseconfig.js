@@ -180,6 +180,12 @@ myApp.config(function($routeProvider) {
     when('/jinkeBro/jitstaffmanage', {
         templateUrl: '/jinkeBro/jitstaffmanage?access_token=' + accesstokenstring,
     }).
+    when('/jinkeBro/jitstaffadd', {
+        templateUrl: '/jinkeBro/jitstaffadd?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitstaffedit', {
+        templateUrl: '/jinkeBro/jitstaffedit?access_token=' + accesstokenstring,
+    }).
     when('/jinkeBro/jitdelivery', {
         templateUrl: '/jinkeBro/jitdelivery?access_token=' + accesstokenstring,
     }).
@@ -246,6 +252,30 @@ myApp.config(function($routeProvider) {
                 return '有效';
             default:
                 return '无效';
+        }
+    }
+}).filter('jinkeBroStuffType', function() {
+    return function(val) {
+        switch (val) {
+            case 1:
+                return '供货商';
+            case 2:
+                return '配送员';
+            case 3:
+                return '管理员';
+            default:
+                return '错误数据';
+        }
+    }
+}).filter('sexToChin', function() {
+    return function(val) {
+        switch (val) {
+            case 1:
+                return '男';
+            case 2:
+                return '女';
+            default:
+                return '男';
         }
     }
 })
