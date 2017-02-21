@@ -210,7 +210,7 @@ Product.prototype.queryProducts = function (data, callback) {
                 logger.writeError("商品查询成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
-
+        console.log(result);
         callback(false, result);
     });
 };
