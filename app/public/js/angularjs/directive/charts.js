@@ -6,18 +6,13 @@ jasonapp.service('myData', function($http){
         return $http({
             method: 'get',
             url: ' /sfms/api/finance/count'+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            params:{
-                f:{
-                    startTime:'',
-                    endTime:''
-                }
-            }
+            params:params
         })
 
     }
        
  });
-angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myData){
+angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',function(location,myData){
     return {
         restrict: 'EA',
         template:
@@ -33,14 +28,15 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
         replace:true,
         transclude:true,
         link: function (scope, element, attrs) {
-            
+             var params = location.search()
+             console.log(params)
+
             if(attrs.source){
                 var url= attrs.source;
-                console.log(url)              
+                
             }
 
-          myData.Iint().then(function(response){
-                console.log(response);
+          myData.Iint(url,params).then(function(response){
 
                 if(url == 'inOutSum'){
                     
@@ -51,8 +47,6 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
                     var a = InSum / Sum;
                     var b = OutSum / Sum;                        
     
-                    console.log(a)
-                    console.log(b)
                     
                     var data_arr = [a, b];  
                     var color_arr = ["#92c5e2",  "#f5de69"];  
@@ -62,7 +56,7 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
                 }else{
                     
                    var InDetail = response.data.data.detail;
-                    console.log(InDetail.length)
+             
                     var InSum = response.data.data.InSum;
                     var OutSum =  response.data.data.OutSum;  
 
@@ -77,25 +71,22 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
 
                    
                        for(var i = 0;i < InDetail.length;i++){    
-                           console.log(InDetail[i].FIType)               
+                                      
                             if(InDetail[i].InOutType == 13){
                                 in_data_arr[a] = InDetail[i].sum / InSum ;
                                 in_text_arr[a] = InDetail[i].FITypeValue; 
-                                in_color_arr = ["#92c5e2","#f5de69",'red'];
+                                in_color_arr = ["#E5A2C1","#F8CCD1",'#9EA3D2','#7A8EC7'];
                                 a++;
                             }else{
-                                console.log(InDetail[i].sum)
-                                console.log(InSum)                                
+                                                               
                                 data_arr[b] = InDetail[i].sum / OutSum ;
                                 text_arr[b] = InDetail[i].FITypeValue; 
-                                color_arr = ["#92c5e2","#f5de69"];
+                                color_arr = ["#E5A2C1","#F8CCD1",'#9EA3D2','#7A8EC7'];
                                 b++;
                             }   
                        }
 
-                       console.log(data_arr)
-                       console.log(text_arr)
-                       console.log(color_arr)
+                     
 
                    drawCircle("inOutSum", in_data_arr, in_color_arr, in_text_arr,250,'收入明细饼状图');  
                    drawCircle("inOutSum", data_arr, color_arr, text_arr,500,'支出明细饼状图');  
@@ -114,7 +105,7 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
   
                 var radius = 80; //半径  
                 var ox = radius + 180, oy = radius + 20 + a; //圆心  
-                console.log(ox,oy)
+               
   
                 var width = 30, height = 10; //图例宽和高  
                 var posX = ox + 120, posY = oy + 30;   //  
@@ -128,7 +119,7 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['myData',function(myDat
                 var endAngle = 0;   //结束弧度  
 
 
-                console.log(name)  
+               
                 ctx.font = "18px Courier New";
                 //设置字体填充颜色
                 ctx.fillStyle = "black";

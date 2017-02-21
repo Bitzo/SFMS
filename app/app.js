@@ -104,8 +104,8 @@ exports.logger = function(name) {
   return logger;
 };
 
-var  http=require('http');
-http.createServer(app).listen(config.port, function () {
-  console.log("Express server listening on port 80" );
-});
+// var  http=require('http');
+// http.createServer(app).listen(config.port, function () {
+//   console.log("Express server listening on port 80" );
+// });
 module.exports = app;

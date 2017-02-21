@@ -429,16 +429,14 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         });
     }
 
-    //财务饼状图
-    // $scope.changeChart = function(valueID){
-    //     $scope.chartID = valueID;
-    //     console.log($scope.chartID)
-    //     if(valueID == 'outDetail'){
-    //            $scope.chartName = '支出明细饼状图'
-    //     }else if (valueID == 'inDetail'){
-    //            $scope.chartName = '收入明细饼状图'
+    // 财务饼状图
+    // $scope.changeChart = function(siteName){
+    //     console.log($scope.f);
+    //     console.log(siteName)
+    //     if(siteName == 'financeChartsAlt'){
+    //        location.href = './index#/backend/peredit'; 
     //     }else{
-    //            $scope.chartName = '收入支出饼状图'
+
     //     }
         
     // }

@@ -6,11 +6,11 @@ block content
         span(style='font-size: 24px;') 财务收支饼状图
         div.buttons.pull-right
           label.form-group.my-form-group  创建时间
-            input.form-control.ext(type='date',ng-model='startTime')
+            input.form-control.ext(type='date',ng-change="changeStart()",ng-model='startTime')
           label.form-group.my-form-group  结项时间
-            input.form-control.ext(type='date',ng-model='endTime')
+            input.form-control.ext(type='date',ng-change="changeEnd()",ng-model='endTime')
           label.form-group.my-form-group
-            a.btn.btn-sm.btn-primary(href='#/sfms/financeChartsAlt?startTime={{startTime}}&endTime={{endTime}}')
+            a.btn.btn-sm.btn-primary(href='#/sfms/financeCharts?startTime={{startTime}}&endTime={{endTime}}')
               i.icon.icon-search   查询
         hr
         p
