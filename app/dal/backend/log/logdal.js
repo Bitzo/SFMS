@@ -33,13 +33,14 @@ exports.insertBizLog = function(data, callback) {
         }
 
         connection.query(insert_sql, function(err, results) {
+            connection.release();            
             if (err) {
                 callback(true,results);
                 return;
             }
 
             callback(false, results);
-            connection.release();
+            return ;
         });
     });
 };
@@ -77,13 +78,14 @@ exports.queryLog = function(data, callback) {
         }
 
         connection.query(sql, function (err, result) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
             callback(false, result);
-            connection.release();
+            return;
         })
     })
 };
@@ -111,13 +113,14 @@ exports.countQuery = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '失败');
                 return;
             }
             callback(false, results);
-            connection.release();
+          
         });
     });
 };

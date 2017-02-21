@@ -28,11 +28,11 @@ exports.queryAllFunctions = function (data, callback) {
             return callback(true, '系统内部错误');
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('得到所有功能点，出错信息：' + err)
                 return callback(true, '系统内部错误');
             }
-            connection.release();
             return callback(false, results);
         });
     });
@@ -49,11 +49,11 @@ exports.insert = function (data, callback) {
         }
         logger.writeInfo('新增功能点' + insert_sql);
         connection.query(insert_sql, data, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('新增功能点，出错信息：' + err)
                 return callback(true, '系统内部错误');
             }
-            connection.release();
             return callback(false, results);
         });
     });
@@ -74,13 +74,13 @@ exports.update = function (data, callback) {
         }
 
         connection.query(upd_sql, data, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('修改功能点，出错信息：' + err)
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 };
@@ -107,12 +107,12 @@ exports.delete = function (data, callback) {
         }
 
         connection.query(upd_sql, data, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('修改功能点，出错信息：' + err)
                 return callback(true, '系统内部错误');
             }
             callback(false, results);
-            connection.release();
         });
     });
 };
@@ -138,13 +138,14 @@ exports.queryFuncByID = function (data, callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('根据FunctionID判断该功能点是否存在err:' + err);
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
+            return ;
         });
     });
 };
@@ -162,13 +163,13 @@ exports.HasChildernByID = function (data, callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('根据FunctionID得到该功能点的子节点的个数：err' + err);
                 callback(true, '系统内部错误');
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });

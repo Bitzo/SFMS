@@ -26,17 +26,17 @@ exports.insert = function(data, callback) {
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
-            logger.writeError("[dal/jinkebro/customer/customerdal----------------29行]数据库的链接失败");
+            logger.writeError("[dal/jinkebro/customer/customerdal]数据库的链接失败");
             return;
         }
         connection.query(insert_sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError("[dal/jinkebro/customer/customerdal-------------35行]微信客户的插入的时候失败");
+                logger.writeError("[dal/jinkebro/customer/customerdal]微信客户的插入的时候失败");
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -62,17 +62,17 @@ exports.update = function(data, callback) {
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
-            logger.writeError("[dal/jinkebro/customer/customerdal----------------73行]数据库的链接失败");
+            logger.writeError("[dal/jinkebro/customer/customerdal]数据库的链接失败");
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeErroe("[dal/jinkebro/customer/customerdal---------------81行]微信的客户修改信息失败");
+                logger.writeErroe("[dal/jinkebro/customer/customerdal]微信的客户修改信息失败");
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -89,16 +89,16 @@ exports.query = function(data, callback) {
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             callback(true);
-            logger.writeError("[dal/jinkebro/customer/customerdal---------------------106行]数据库链接失败");
+            logger.writeError("[dal/jinkebro/customer/customerdal]数据库链接失败");
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError("[dal/jinkebro/customer/customerdal---------------------114行]微信根据wechatUserCode来查询用户的信息失败");
+                logger.writeError("[dal/jinkebro/customer/customerdal]微信根据wechatUserCode来查询用户的信息失败");
                 return;
             }
-            connection.release();
             return callback(false, results);
         });
     });

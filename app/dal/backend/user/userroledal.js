@@ -25,14 +25,15 @@ exports.insert = function (data, callback) {
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
 			callback(true);
-			logger.writeError("[dal/user/userroledal----------------28行]数据库的链接失败");
+			logger.writeError("[dal/user/userroledal]数据库的链接失败");
 			return;
 		}
 
 		connection.query(insert_sql, function (err, results) {
+			connection.release();
 			if (err) {
 				callback(true);
-				logger.writeError("[dal/user/userroledal-----------------35行]用户角色的新增失败");
+				logger.writeError("[dal/user/userroledal]用户角色的新增失败");
 				return;
 			}
 			callback(false, results);
@@ -57,13 +58,14 @@ exports.updateUserRole = function (data, callback) {
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
 			callback(true);
-			logger.writeError("[dal/user/userroledal---------------63行]数据库的链接失败");
+			logger.writeError("[dal/user/userroledal]数据库的链接失败");
 			return;
 		}
 		connection.query(sql, function (err, results) {
+			connection.release();
 			if (err) {
 				callback(true);
-				logger.writeError("[dal/user/userrolrdal--------------69行]用户角色的更新失败");
+				logger.writeError("[dal/user/userrolrdal]用户角色的更新失败");
 				return;
 			}
 			callback(false, results);
@@ -83,13 +85,14 @@ exports.queryAppByUserID = function (data, callback) {
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
 			callback(true);
-			logger.writeError("[dal/user/userrole-------------91行]数据库的链接失败");
+			logger.writeError("[dal/user/userrole]数据库的链接失败");
 			return;
 		}
 		connection.query(sql, function (err, results) {
+			connection.release();
 			if (err) {
 				callback(true);
-				logger.writeError("[dal/user/userrole-----------------97行]用户角色的查询");
+				logger.writeError("[dal/user/userrole]用户角色的查询");
 				return;
 			}
 			callback(false, results);
@@ -109,14 +112,15 @@ exports.query = function (data, callback) {
 	db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-			logger.writeError("[dal/user/userrole-----------------117行]数据库链接失败");
+			logger.writeError("[dal/user/userrole]数据库链接失败");
             return;
         }
 
         connection.query(sql, function (err, results) {
+			connection.release();
             if (err) {
                 callback(true);
-				logger.writeError("[dal/user/userrole----------------124行]用户角色查询失败");
+				logger.writeError("[dal/user/userrole]用户角色查询失败");
                 return;
             }
             callback(false, results);
@@ -141,6 +145,7 @@ exports.query = function (data, callback) {
         }
 
         connection.query(sql, function (err, results) {
+			connection.release();
             if (err) {
                 callback(true);
 				logger.writeError("[dal/user/userrole行]用户角色删除失败");
@@ -179,11 +184,13 @@ exports.query = function (data, callback) {
         }
 
         connection.query(insert_sql, function(err, results) {
+			connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
+			return ;
         });
     });
 	 

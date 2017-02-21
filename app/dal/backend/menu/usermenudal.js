@@ -29,13 +29,14 @@ exports.delUserMenu = function (data, callback) {
         logger.writeInfo(sql);
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             };
             logger.writeInfo("查询成功");
             callback(false, results);
-            connection.release();
+            return ;
         })
     })
 };
@@ -63,12 +64,13 @@ exports.addUserMenu = function (data, callback) {
         }
 
         connection.query(insert_sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
+            return ;
         });
     });
 };

@@ -17,18 +17,19 @@ exports.querySingleUser = function (account, pwd, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            logger.writeError('[dal/user/userdal-------20行]数据库链接的时候出错');
+            logger.writeError('[dal/user/userdal]数据库链接的时候出错');
             return;
         }
 
         connection.query(querySql, [account, pwd], function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError('[dal/user/userdal----------27行]数据库查询用户的时候出错');
+                logger.writeError('[dal/user/userdal]数据库查询用户的时候出错');
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 }
@@ -38,10 +39,11 @@ exports.querySingleID = function (accountid, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            logger.writeError('[dal/user/userdal-------------41行]数据库链接的时候出错');
+            logger.writeError('[dal/user/userdal]数据库链接的时候出错');
             return;
         }
         connection.query(sql, [accountid], function (err, results) {
+           connection.release();
             if (err) {
                 callback(true);
                 logger.writeError('[dal/user/userdal]数据库查询用户的时候出错');
@@ -49,8 +51,7 @@ exports.querySingleID = function (accountid, callback) {
             }
 
             callback(false, results);
-            connection.release();
-            return ;
+            return;
         });
     });
 }
@@ -91,17 +92,17 @@ exports.queryAllUsers = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            logger.writeError('[dal/user/userdal-----------93行] 数据库链接错误');
+            logger.writeError('[dal/user/userdal] 数据库链接错误');
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError('[dal/user/userdal---------99行]数据库的查询出错');
+                logger.writeError('[dal/user/userdal]数据库的查询出错');
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -126,17 +127,19 @@ exports.insert = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            logger.writeError("[dal/user/userdal--------------128行]数据库的链接错误");
+            logger.writeError("[dal/user/userdal]数据库的链接错误");
             return;
         }
+        
         connection.query(insert_sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError("[dal/user/userdal-----------------134行]数据库的插入错误");
+                logger.writeError("[dal/user/userdal]数据库的插入错误");
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 };
@@ -161,19 +164,19 @@ exports.update = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            logger.writeError("[dal/user/userdal-----------163行]数据库的链接失败");
-            connection.release();
+            logger.writeError("[dal/user/userdal]数据库的链接失败");
             return;
+          
         }
 
         connection.query(upd_sql, function (err, results) {
+            connection.release();
             if (err) {
-                logger.writeError("[dal/user/userdal--------------170行]数据库修改用户的失败");
+                logger.writeError("[dal/user/userdal]数据库修改用户的失败");
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -191,19 +194,18 @@ exports.delete = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            logger.writeError("[dal/user/userdal--------------193行]数据库的链接出错")
-            connection.release();
+            logger.writeError("[dal/user/userdal]数据库的链接出错")
             return;
         }
 
         connection.query(del_sql, function (err) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError("[dal/user/userdal---------------201行]数据库的删除时出错")
+                logger.writeError("[dal/user/userdal]数据库的删除时出错")
                 return;
             }
             callback(false);
-            connection.release();
             return;
         });
     });
@@ -219,17 +221,17 @@ exports.countUser = function (data, callback) {
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            logger.writeError("[dal/user/userdal------------------221行]数据库的链接出错")
+            logger.writeError("[dal/user/userdal]数据库的链接出错")
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError("[dal/user/userdal-------------------227行]数据库获取数量时出错");
+                logger.writeError("[dal/user/userdal]数据库获取数量时出错");
                 return;
             };
             callback(false, results);
-            connection.release();
             return;
         })
     })
@@ -243,18 +245,18 @@ exports.queryAccount = function (data, callback) {
         sql += ' and Account = "' + data[key] + '" ';
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
-            logger.writeError("[dal/user/userdal-----------------------245行]数据库链接的错误");
+            logger.writeError("[dal/user/userdal]数据库链接的错误");
             callback(true);
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError("[dal/user/userdal---------------252行]数据库查询账户失败")
+                logger.writeError("[dal/user/userdal]数据库查询账户失败")
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
 
@@ -270,18 +272,18 @@ exports.queryAccountByID = function (data, callback) {
     logger.writeInfo('查询多个用户：' + sql);
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
-            logger.writeError("[dal/user/userdal-------------------272行]数据库链接的错误");
+            logger.writeError("[dal/user/userdal]数据库链接的错误");
             callback(true);
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
-                logger.writeError("[dal/user/userdal----------------279行]数据库的多用户查询出错");
+                logger.writeError("[dal/user/userdal]数据库的多用户查询出错");
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
 

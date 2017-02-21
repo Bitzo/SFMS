@@ -37,13 +37,13 @@ exports.insertProduct = function(data, callback) {
             return;
         }
         connection.query(insert_sql, function(err, result) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
             callback(false, result);
-            connection.release();
             return;
         });
     });
@@ -65,6 +65,7 @@ exports.deleteProduct = function(data, callback) {
         }
 
         connection.query(delete_sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -72,7 +73,6 @@ exports.deleteProduct = function(data, callback) {
             }
 
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -111,6 +111,7 @@ exports.updateProduct = function(data, callback) {
         }
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -118,7 +119,6 @@ exports.updateProduct = function(data, callback) {
             }
 
             callback(false, results);
-            connection.release();
             return;
         })
 
@@ -172,6 +172,7 @@ exports.queryProducts = function(data, callback) {
         }
 
         connection.query(query_sql, function(err, results) {
+            connection.release();
             if (err) {
                 console.log('connection.query查询商品失败');
                 callback(true, JSON.stringify(results));
@@ -179,7 +180,6 @@ exports.queryProducts = function(data, callback) {
             }
 
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -212,13 +212,13 @@ exports.CountProducts = function(data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('查询指定条件的商品个数：' + err);
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -239,13 +239,13 @@ exports.getProCountByID = function(data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('查询：' + err);
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });

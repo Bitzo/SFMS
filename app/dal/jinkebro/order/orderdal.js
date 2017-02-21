@@ -593,12 +593,13 @@ exports.updateOrder = function(data, callback) {
         }
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 }
@@ -711,12 +712,12 @@ exports.queryOrderProduct = function(data, callback) {
         }
 
         connection.query(query_sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -800,13 +801,13 @@ exports.CountOrderProduct = function(data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('查询指定条件的订单个数：' + err);
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -868,12 +869,12 @@ exports.queryOrders = function(data, callback) {
         }
 
         connection.query(query_sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
@@ -924,13 +925,13 @@ exports.CountOrders = function(data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('查询指定条件的订单个数：' + err);
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return;
         });
     });
