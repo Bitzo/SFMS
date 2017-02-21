@@ -132,6 +132,7 @@ exports.countQuery = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -162,6 +163,7 @@ exports.signCheck = function (data, callback) {
             }
             logger.writeInfo("查询成功");
             callback(false, results);
+            return;
         });
     });
 }
@@ -203,6 +205,7 @@ exports.signCount = function (data, callback) {
             }
             console.log("查询成功");
             callback(false, results);
+            return;
         });
     });
 }

@@ -36,6 +36,7 @@ exports.addRemark = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -74,6 +75,7 @@ exports.updateRemark = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -120,6 +122,7 @@ exports.queryRemark = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -160,6 +163,7 @@ exports.countRemark = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 };
@@ -184,6 +188,7 @@ exports.delRemark = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 };

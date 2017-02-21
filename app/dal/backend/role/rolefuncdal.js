@@ -36,6 +36,7 @@ exports.queryRoleFunc = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         })
     })
 }
@@ -70,6 +71,7 @@ exports.addRoleFunc = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 };
@@ -106,6 +108,7 @@ exports.updateRoleFunc = function(data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 };
@@ -133,6 +136,7 @@ exports.delRoleFunc = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }

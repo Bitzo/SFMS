@@ -47,6 +47,7 @@ exports.addFinance = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -89,6 +90,7 @@ exports.updateFinance = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -125,6 +127,7 @@ exports.countQuery = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -165,6 +168,7 @@ exports.queryFinance = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -202,6 +206,7 @@ exports.checkFinance = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -228,6 +233,7 @@ exports.delFinance = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -258,6 +264,7 @@ exports.financeCount = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
