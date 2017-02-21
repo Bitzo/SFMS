@@ -635,7 +635,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
     //商品类型添加
     $scope.addProductType = function (action) {
-        var productType = $scope.formdata.ProductTypeName;
+        var productType = $scope.form.ProductTypeName;
         $http({
             method:'post',
             url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),

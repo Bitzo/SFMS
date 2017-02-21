@@ -50,15 +50,14 @@ exports.signLogInsert = function (data, callback) {
         }
 
         connection.query(insert_sql, function (err, result) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true);
                 return;
             }
             result.time = data.CreateTime;
-
             callback(false, result);
-            connection.release();
         })
     })
 };
@@ -91,13 +90,13 @@ exports.querySign = function (data, callback) {
         }
 
         connection.query(sql, function (err, result) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '查询失败');
                 return;
             }
             callback(false, result);
-            connection.release();
         })
     })
 }
@@ -126,13 +125,13 @@ exports.countQuery = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '失败');
                 return;
             }
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -155,6 +154,7 @@ exports.signCheck = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('err: '+ err);
                 callback(true, '失败');
@@ -162,7 +162,6 @@ exports.signCheck = function (data, callback) {
             }
             logger.writeInfo("查询成功");
             callback(false, results);
-            connection.release();
         });
     });
 }
@@ -196,6 +195,7 @@ exports.signCount = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 console.log('err: '+ err);
                 callback(true, '失败');
@@ -203,7 +203,6 @@ exports.signCount = function (data, callback) {
             }
             console.log("查询成功");
             callback(false, results);
-            connection.release();
         });
     });
 }

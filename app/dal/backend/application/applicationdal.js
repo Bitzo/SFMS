@@ -35,12 +35,12 @@ exports.queryAllApp = function (data, callback) {
             return;
         }
         connection.query(query_sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return ;
         });
     });
@@ -64,13 +64,13 @@ exports.countAllapps = function (data, callback) {
         }
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             };
 
             callback(false, results);
-            connection.release();
             return ;
         })
     })
@@ -97,12 +97,12 @@ exports.insert = function(data, callback) {
             return;
         }
         connection.query(insert_sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return ;
         });
     });
@@ -134,12 +134,12 @@ exports.update = function (data, callback) {
             return;
         }
         connection.query(upd_sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
             return ;
         });
     });
