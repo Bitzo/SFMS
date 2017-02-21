@@ -102,12 +102,14 @@ exports.insert = function (data, callback) {
         logger.writeInfo('新增库存信息' + insert_sql);
         connection.query(insert_sql, data, function (err, results) {
             if (err) {
+                connection.release();
                 logger.writeError('新增库存信息，出错信息：' + err)
                 callback(true,'系统内部错误');
                 return;
             }
-            callback(false, results);
             connection.release();
+            return callback(false, results);
+
         });
     });
 };
@@ -128,12 +130,13 @@ exports.update = function (data, callback) {
 
         connection.query(upd_sql, data, function (err, results) {
             if (err) {
+                connection.release();
                 logger.writeError('修改库存信息，出错信息：' + err)
                 callback(true);
                 return;
             }
-            callback(false, results);
             connection.release();
+            return callback(false, results);
         });
     });
 };
@@ -155,13 +158,13 @@ exports.delete = function (data, callback) {
 
         connection.query(del_sql, function (err, results) {
             if (err) {
+                connection.release();
                 callback(true);
                 logger.writeError('删除库存信息，出错信息：' + err)
-                connection.release();
                 return;
             }
-            callback(false, results);
             connection.release();
+            return callback(false, results);
         });
     });
 };

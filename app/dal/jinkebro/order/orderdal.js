@@ -39,6 +39,10 @@ exports.createOrder = function(data, callback) {
     var receiveProductIDs = data.ProductIDs,
         receiveProductCounts = data.ProductCounts;
 
+    var failResponse = {
+        msg : '出错啦！！'
+    };
+
     // 从链接池得到connection
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -49,6 +53,7 @@ exports.createOrder = function(data, callback) {
         //开始事务
         connection.beginTransaction(function(err) {
             if (err) {
+                connection.release();
                 throw err;
             }
             var returnResult = {};
@@ -80,6 +85,7 @@ exports.createOrder = function(data, callback) {
                 logger.writeInfo("insert into order,sql: " + insertSql1);
                 connection.query(insertSql1, function(err, info) {
                     if (err) {
+                        connection.release();
                         connection.rollback(function() {
                             logger.writeError("[order]执行事务失败，" + "ERROR：" + err);
                             console.log("[order]执行事务失败，" + "ERROR：" + err);
@@ -127,6 +133,7 @@ exports.createOrder = function(data, callback) {
                 logger.writeInfo("insert into ordercustomer,sql: " + insertSql2)
                 connection.query(insertSql2, function(err, info) {
                     if (err) {
+                        connection.release();
                         connection.rollback(function() {
                             logger.writeError("[ordercustomer]执行事务失败，" + "ERROR：" + err);
                             console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
@@ -156,6 +163,7 @@ exports.createOrder = function(data, callback) {
 
                     connection.query(updateStockSql, function(err, info) {
                         if (err) {
+                            connection.release();
                             connection.rollback(function() {
                                 logger.writeError("[orderProduct]执行事务失败，" + "ERROR：" + err);
                                 console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
@@ -164,6 +172,7 @@ exports.createOrder = function(data, callback) {
                             return ;
                         }
                         if (info.affectedRows == 0) {
+                            connection.release();
                             connection.rollback(function () {
                                 logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                                 console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
@@ -193,6 +202,7 @@ exports.createOrder = function(data, callback) {
                 console.log(insertSql3);
                 connection.query(insertSql3, function(err, info) {
                     if (err) {
+                        connection.release();
                         connection.rollback(function() {
                             logger.writeError("[order]执行事务失败，" + "ERROR：" + err);
                             console.log("[order]执行事务失败，" + "ERROR：" + err);
@@ -202,6 +212,7 @@ exports.createOrder = function(data, callback) {
                     }
                     console.log(info);
                     if (info.affectedRows != receiveProductIDsLength) {
+                        connection.release();
                         connection.rollback(function () {
                             logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                             console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
@@ -216,15 +227,16 @@ exports.createOrder = function(data, callback) {
             
             async.series(funcArr, function(err, result) {
                 if (err) {
+                    connection.release();
                     connection.rollback(function(err) {
                         throw err;
                     });
-                    connection.release();
                     return;
                 }
 
                 connection.commit(function(err) {
                     if (err) {
+                        connection.release();
                         connection.rollback(function() {
                             throw err;
                         });
@@ -232,15 +244,14 @@ exports.createOrder = function(data, callback) {
                     }
                     console.log('insert order success');
                     connection.release();
-                    callback(false, returnResult);
-                    return;
+                    return callback(false, returnResult);
                 });
             });
         });
 
     });
 
-}
+};
 
 /**
  * 使用事务增加订单
@@ -494,7 +505,7 @@ exports.insertOrderFull = function(data, callback) {
         });
 
     });
-}
+};
 
 /**
  * 删除订单,物理删除
@@ -514,14 +525,15 @@ exports.deleteOrder = function(data, callback) {
 
         connection.query(delete_sql, function(err, results) {
             if (err) {
+                connection.release();
                 callback(true);
                 return;
             }
-            callback(false, results);
             connection.release();
+            return callback(false, results);
         });
     });
-}
+};
 
 /**
  * 修改订单,包括修改order表，orderproduct表
@@ -594,14 +606,15 @@ exports.updateOrder = function(data, callback) {
 
         connection.query(update_sql, function(err, results) {
             if (err) {
+                connection.release();
                 callback(true);
                 return;
             }
-            callback(false, results);
             connection.release();
+            return callback(false, results);
         });
     });
-}
+};
 
 /**
  * 查询订单、产品信息
@@ -712,16 +725,16 @@ exports.queryOrderProduct = function(data, callback) {
 
         connection.query(query_sql, function(err, results) {
             if (err) {
+                connection.release();
                 callback(true);
                 return;
             }
-            callback(false, results);
             connection.release();
-            return;
+            return callback(false, results);
         });
     });
 
-}
+};
 
 /**
  * 查询指定条件订单产品的个数
@@ -801,16 +814,16 @@ exports.CountOrderProduct = function(data, callback) {
         }
         connection.query(sql, function(err, results) {
             if (err) {
+                connection.release();
                 logger.writeError('查询指定条件的订单个数：' + err);
                 callback(true);
                 return;
             }
-            callback(false, results);
             connection.release();
-            return;
+            return callback(false, results);
         });
     });
-}
+};
 
 /**
  * 查询订单信息，只查询订单表
@@ -869,16 +882,16 @@ exports.queryOrders = function(data, callback) {
 
         connection.query(query_sql, function(err, results) {
             if (err) {
+                connection.release();
                 callback(true);
                 return;
             }
-            callback(false, results);
             connection.release();
-            return;
+            return callback(false, results);
         });
     });
 
-}
+};
 
 /**
  * 查询指定条件订单的个数（只查询订单表）
@@ -925,13 +938,13 @@ exports.CountOrders = function(data, callback) {
         }
         connection.query(sql, function(err, results) {
             if (err) {
+                connection.release();
                 logger.writeError('查询指定条件的订单个数：' + err);
                 callback(true);
                 return;
             }
-            callback(false, results);
             connection.release();
-            return;
+            return callback(false, results);
         });
     });
-}
+};

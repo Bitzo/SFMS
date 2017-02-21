@@ -10,7 +10,39 @@ var db_jinkebro = appRequire('db/db_jinkebro'),
     logger = appRequire("util/loghelper").helper;
 
 var addStaff = function (data,callback) {
+    var staffData = {
+        StaffName : data.StaffName,
+        StaffType : data.StaffType,
+        Phone : data.Phone,
+        Sex : data.Sex,
+        Position : data.Position,
+        CreateTime : data.CreateTime,
+        IsActive : data.IsActive
+    };
 
+    var insertSql = "insert into jit_staff set ";
+
+    var sql = "";
+    if (staffData != undefined) {
+        for (var key in staffData) {
+            if (staffData[key] != '') {
+                if (sql.length == 0) {
+                    if (!isNaN(staffData[key])) {
+                        sql += " " + key + " = " + staffData[key] + " ";
+                    } else {
+                        sql += " " + key + " = '" + staffData[key] + "' ";
+                    }
+                } else {
+                    if (!isNaN(staffData[key])) {
+                        sql += ", " + key + " = " + staffData[key] + " ";
+                    } else {
+                        sql += ", " + key + " = '" + staffData[key] + "' ";
+                    }
+                }
+            }
+        }
+    }
+    insertSql += sql + ' ;';
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -18,7 +50,7 @@ var addStaff = function (data,callback) {
             callback(true,'数据库连接失败！');
             return;
         }
-        connection.query('', function(err, result) {
+        connection.query(insertSql, function(err, result) {
             if (err) {
                 connection.release();
                 throw err;
@@ -33,7 +65,10 @@ var addStaff = function (data,callback) {
 };
 
 var deleteStaff = function (data,callback) {
+    var delete_sql = "update jit_staff set jit_staff.IsActive = 0 where StaffID = " + data['StaffID'] + ";";
 
+    logger.writeInfo("[deleteStaff func in staffdal]员工删除：" + delete_sql);
+    console.log("in dal,员工删除：" + delete_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -41,7 +76,7 @@ var deleteStaff = function (data,callback) {
             callback(true,'数据库连接失败！');
             return;
         }
-        connection.query('', function(err, result) {
+        connection.query(delete_sql, function(err, result) {
             if (err) {
                 connection.release();
                 throw err;
@@ -56,7 +91,27 @@ var deleteStaff = function (data,callback) {
 };
 
 var updateStaff = function (data,callback) {
+    var update_sql = 'update jit_staff set ';
+    var sql = '';
 
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key != 'StaffID') {
+                if (sql.length == 0) {
+                    sql += " " + key + " = '" + data[key] + "' ";
+                } else {
+                    sql += ", " + key + " = '" + data[key] + "' ";
+                }
+            }
+        }
+    }
+
+    sql += " where StaffID = " + data['StaffID'];
+
+    update_sql = update_sql + sql;
+
+    logger.writeInfo("[updateStaff func in staffdal]员工修改：" + update_sql);
+    console.log("in dal,员工修改：" + update_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -64,7 +119,7 @@ var updateStaff = function (data,callback) {
             callback(true,'数据库连接失败！');
             return;
         }
-        connection.query('', function(err, result) {
+        connection.query(update_sql, function(err, result) {
             if (err) {
                 connection.release();
                 throw err;
@@ -79,7 +134,6 @@ var updateStaff = function (data,callback) {
 };
 
 var getStaff = function (data,callback) {
-    console.log(data);
     var queryData = {
         StaffID : data.StaffID,
         StaffName : data.StaffName,
@@ -143,7 +197,7 @@ var getStaff = function (data,callback) {
 };
 
 var countStaff = function (data,callback) {
-    console.log(data);
+
     var queryData = {
         StaffID : data.StaffID,
         StaffName : data.StaffName,
@@ -174,7 +228,7 @@ var countStaff = function (data,callback) {
             }
         }
     }
-    console.log(querySql);
+    logger.writeInfo('员工计数：' + querySql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
