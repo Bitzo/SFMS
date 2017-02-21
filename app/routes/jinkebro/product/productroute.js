@@ -39,8 +39,7 @@ router.post('/', function (req, res) {
             // var formdata = JSON.parse(req.body.formdata);
 
             //检查所需要的字段是否都存在
-            var data = ['SKU',
-                'ProductName',
+            var data = ['ProductName',
                 'ExpireTime',
                 'ProducTime',
                 'SupplierID',
@@ -101,20 +100,18 @@ router.post('/', function (req, res) {
             //     CreateUserID = formdata.CreateUserID || 41,
             //     CreateTime = formdata.CreateTime || moment().format("YYYY-MM-DD HH:mm:ss"),
             //     newProductTypeName = formdata.newProductTypeName || '德芙 香浓黑巧克力 碗装 252克/碗';
-            var SKU = formdata.SKU,
-                ProductName = formdata.ProductName,
+            var ProductName = formdata.ProductName,
                 ProductDesc = formdata.ProductDesc,
                 ProductImgPath = formdata.ProductImgPath,
                 ExpireTime = formdata.ExpireTime,
                 ProducTime = formdata.ProducTime,
                 SupplierID = formdata.SupplierID,
-                ProductTypeID = formdata.ProductTypeID,
                 ProductPrice = formdata.ProductPrice,
                 OnSale = formdata.OnSale,
                 TotalNum = formdata.TotalNum,
                 StockAreaID = formdata.StockAreaID,
                 CreateUserID = formdata.CreateUserID,
-                CreateTime = formdata.CreateTime,
+                CreateTime = moment.format("YYYY-MM-DD HH:mm:ss"),
                 newProductTypeName = formdata.newProductTypeName || '';
 
             var requiredValue = '缺少输入参数 ：',
@@ -164,17 +161,7 @@ router.post('/', function (req, res) {
                     msg : '商品生产日期必须设置！'
                 });
             }
-
-            if (CreateTime != undefined) {
-                CreateTime = moment(formdata.CreateTime).format("YYYY-MM-DD HH:mm:ss");
-            } else {
-                res.status(400);
-                res.json({
-                    code : 400,
-                    isSuccess : false,
-                    msg : '入库时间必须设置！'
-                });
-            }
+            
 
             var shouldIntData = {
                 "SupplierID" : SupplierID,
@@ -396,7 +383,7 @@ router.put('/', function (req, res) {
             });
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
-            var formdata = JSON.parse(req.body.formdata);
+            var formdata = req.body.formdata;
 
             //检查所需要的字段是否都存在
             var data = ['SKU', 'ProductID', 'ProductName', 'SupplierID', 'ProductTypeID', 'ProductPrice'];
@@ -675,7 +662,7 @@ router.get('/', function (req, res) {
                                 resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
                             }
                             res.status(200);
-                            //console.log(resultBack);
+                            console.log(resultBack);
                             return res.json(resultBack);
                         } else {
                             res.status(200);
