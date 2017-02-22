@@ -40,6 +40,7 @@ router.post('/', function (req, res) {
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var formdata = req.body.formdata;
 
+            console.log(req.body);
             var data = ['OrderID', 'DeliveryUserID'];
             var err = 'require: ';
             for (var value in data) {
@@ -60,9 +61,20 @@ router.post('/', function (req, res) {
 
             var OrderID = formdata.OrderID,
                 DeliveryUserID = formdata.DeliveryUserID,
-                DeliveryBeginTime = (formdata.DeliveryBeginTime != undefined) ? moment(formdata.DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss') : '',
-                DeliveryEndTime = (formdata.DeliveryEndTime != undefined) ? moment(formdata.DeliveryEndTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                DeliveryBeginTime = formdata.DeliveryBeginTime,
+                DeliveryEndTime = formdata.DeliveryEndTime;
 
+            if (DeliveryBeginTime != undefined) {
+                DeliveryBeginTime = moment(formdata.DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss');
+            } else {
+                DeliveryBeginTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            }
+
+            if (DeliveryEndTime != undefined) {
+                DeliveryEndTime = moment(formdata.DeliveryEndTime).format('YYYY-MM-DD HH:mm:ss');
+            } else {
+                DeliveryEndTime = '';
+            }
 
             //接收的数据进行object然后来插入
             var insertData = {

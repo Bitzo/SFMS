@@ -21,7 +21,7 @@ exports.insertOrderDelivery = function (data, callback) {
     var  i = 0;
 
     for (var key in data) {
-        if (key != 'ID') {
+        if (key != 'ID' && data[key] != '') {
             if (i == 0) {
                 if (!isNaN(data[key])) {
                     sql += key + " = " + data[key] + " ";
@@ -41,7 +41,7 @@ exports.insertOrderDelivery = function (data, callback) {
     }
 
     logger.writeInfo('[dal/jinkebro/orderdelivery]商品配送员的新增');
-
+    console.log(sql);
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);

@@ -43,7 +43,7 @@ block content
                                     td {{order.OrderID}}
                                     td {{order.UserName}}
                                     td 
-                                      jason-select.form-control(ng-model='order.UserID',source='/backuser',stext='UserName',svalue='AccountID' )
+                                      jason-select.form-control(ng-model='order.StaffID',source='/jinkeBro/staff',stext='StaffName',svalue='StaffID' )
                         button.btn.btn-info.pull-right(ng-click="saveAllocate()") 确定
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         //订单详情                

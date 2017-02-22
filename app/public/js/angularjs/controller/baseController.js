@@ -83,7 +83,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 "MenuID":$scope.datas[index].MenuID,
                 "ID":$scope.datas[index].ID,
                 "RoleID" : $scope.datas[index].RoleID,
-                "StaffID": $scope.datas[index].StaffID
+                "StaffID": $scope.datas[index].StaffID,
+                "ProductID" : $scope.datas[index].ProductID
             };
             $http({
                 method:'delete',
@@ -550,7 +551,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.saveAllocate = function(){
          $scope.formdata= {
              "OrderID" : $scope.order.OrderID,
-             "DeliveryUserID" : $scope.order.UserID
+             "DeliveryUserID" : $scope.order.StaffID
          }
          $http({
             method:'post',
