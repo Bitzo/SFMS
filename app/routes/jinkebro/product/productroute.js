@@ -43,13 +43,11 @@ router.post('/', function (req, res) {
                 'ExpireTime',
                 'ProducTime',
                 'SupplierID',
-                'ProductTypeID',
                 'ProductPrice',
                 'OnSale',
                 'TotalNum',
                 'StockAreaID',
                 'CreateUserID',
-                'CreateTime'
             ];
 
             var err = 'require: ';
@@ -105,26 +103,25 @@ router.post('/', function (req, res) {
                 ProductImgPath = formdata.ProductImgPath,
                 ExpireTime = formdata.ExpireTime,
                 ProducTime = formdata.ProducTime,
+                newProductTypeName = formdata.newProductTypeName,
                 SupplierID = formdata.SupplierID,
                 ProductPrice = formdata.ProductPrice,
                 OnSale = formdata.OnSale,
                 TotalNum = formdata.TotalNum,
                 StockAreaID = formdata.StockAreaID,
                 CreateUserID = formdata.CreateUserID,
-                CreateTime = moment.format("YYYY-MM-DD HH:mm:ss"),
-                newProductTypeName = formdata.newProductTypeName || '';
+                CreateTime = moment().format("YYYY-MM-DD HH:mm:ss"); // 创建库存时间
 
             var requiredValue = '缺少输入参数 ：',
                 requiredData = {
-                    "SKU": SKU,
                     "ProductName": ProductName,
                     "SupplierID": SupplierID,
-                    "ProductTypeID": ProductTypeID,
                     "ProductPrice": ProductPrice,
                     "OnSale": OnSale,
                     "TotalNum" : TotalNum,
                     "StockAreaID" :  StockAreaID,
                     "CreateUserID" : CreateUserID,
+                    "newProductTypeName" : newProductTypeName
                 };
 
             for (var key in requiredData) {
@@ -165,7 +162,6 @@ router.post('/', function (req, res) {
 
             var shouldIntData = {
                 "SupplierID" : SupplierID,
-                "ProductTypeID" : ProductTypeID,
                 "OnSale" : OnSale,
                 "TotalNum" : TotalNum,
                 "StockAreaID" :  StockAreaID,
@@ -183,14 +179,12 @@ router.post('/', function (req, res) {
             }
 
             var insertdata = {
-                "SKU": SKU,
                 "ProductName": ProductName,
                 "ProductDesc": ProductDesc,
                 "ProductImgPath": ProductImgPath,
                 "ExpireTime": ExpireTime,
                 "ProducTime": ProducTime,
                 "SupplierID": SupplierID,
-                "ProductTypeID": ProductTypeID,
                 "ProductPrice": ProductPrice,
                 "OnSale": OnSale,
                 "TotalNum" : TotalNum,
@@ -199,7 +193,8 @@ router.post('/', function (req, res) {
                 "CreateTime" : CreateTime,
                 "newProductTypeName" : newProductTypeName
             };
-
+            console.log('router!');
+            console.log(insertdata);
             productService.getMaxSKUNext(function (err,skuResult) {
                 if (err) {
                     res.status(500);
@@ -410,13 +405,33 @@ router.put('/', function (req, res) {
                 ProductName = formdata.ProductName,
                 ProductDesc = formdata.ProductDesc ? formdata.ProductDesc : '',
                 ProductImgPath = formdata.ProductImgPath ? formdata.ProductImgPath : '',
-                ExpireTime = (formdata.ExpireTime) ? (formdata.ExpireTime) : moment().format('YYYY-MM-DD HH:mm:ss'),
-                ProducTime = (formdata.ProducTime) ? (formdata.ProducTime) : moment().format('YYYY-MM-DD HH:mm:ss'),
+                ExpireTime = formdata.ExpireTime,
+                ProducTime = formdata.ProducTime,
                 SupplierID = formdata.SupplierID,
                 ProductTypeID = formdata.ProductTypeID,
                 ProductPrice = formdata.ProductPrice,
                 OnSale = formdata.OnSale;
+            if (ExpireTime != undefined) {
+                ExpireTime = moment(ExpireTime).format('YYYY-MM-DD HH:mm:ss');
+            } else {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '请设置过期时间！'
+                });
+            }
 
+            if (ProducTime != undefined) {
+                ProducTime = moment(ProducTime).format('YYYY-MM-DD HH:mm:ss');
+            } else {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '请设置生产日期！'
+                });
+            }
 
             // 存放接收的数据
             var updatedata = {
@@ -662,7 +677,6 @@ router.get('/', function (req, res) {
                                 resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
                             }
                             res.status(200);
-                            console.log(resultBack);
                             return res.json(resultBack);
                         } else {
                             res.status(200);

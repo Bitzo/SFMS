@@ -6,6 +6,7 @@
  * @Function:
  */
 var staffDal = appRequire('dal/jinkebro/staff/staffdal.js');
+var staffModel = appRequire('model/jinkebro/staff/staffmodel');
 //引入日志中间件
 var logger = appRequire("util/loghelper").helper;
 var config = appRequire('config/config');
@@ -20,9 +21,15 @@ var Staff = function () {
 
 Staff.prototype.addStaff = function (data,callback) {
     var formdata = {
-
+        StaffName : data.StaffName,
+        StaffType : data.StaffType,
+        Phone : data.Phone,
+        Sex : data.Sex,
+        Position : data.Position,
+        CreateTime : data.CreateTime,
+        IsActive : data.IsActive
     };
-    formdata = data;
+
     staffDal.addStaff(formdata, function (err, result) {
         if (err) {
             callback(true,'失败！');
@@ -36,9 +43,8 @@ Staff.prototype.addStaff = function (data,callback) {
 
 Staff.prototype.deleteStaff = function (data,callback) {
     var formdata = {
-
+        StaffID : data.StaffID
     };
-    formdata = data;
     staffDal.deleteStaff(formdata, function (err, result) {
         if (err) {
             callback(true,'失败！');
@@ -52,9 +58,16 @@ Staff.prototype.deleteStaff = function (data,callback) {
 
 Staff.prototype.updateStaff = function (data,callback) {
     var formdata = {
-
+        StaffID : data.StaffID,
+        StaffName : data.StaffName || '',
+        StaffType : data.StaffType || '',
+        Phone : data.Phone || '',
+        Sex : data.Sex || '',
+        Position : data.Position || '',
+        CreateTime : data.CreateTime || '',
+        LeaveTime : data.LeaveTime || '',
+        IsActive : data.IsActive || ''
     };
-    formdata = data;
     staffDal.updateStaff(formdata, function (err, result) {
         if (err) {
             callback(true,'失败！');
@@ -89,6 +102,16 @@ Staff.prototype.getStaff = function (data,callback) {
         }
 
         logger.writeInfo('');
+
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].CreateTime != undefined) {
+                result[i].CreateTime = moment(result[i].CreateTime).format('YYYY-MM-DD');
+            }
+            if (result[i].LeaveTime != undefined) {
+                result[i].LeaveTime = moment(result[i].LeaveTime).format('YYYY-MM-DD');
+            }
+        }
+
         return callback(false, result);
     });
 };

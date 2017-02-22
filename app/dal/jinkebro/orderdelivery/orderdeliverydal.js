@@ -55,6 +55,7 @@ exports.insertOrderDelivery = function (data, callback) {
                 logger.writeError("[dal/jinkebro/customer/customerdal]订单的配送员的插入的时候失败");
                 return;
             }
+
             callback(false, results);
             return;
         });
@@ -137,6 +138,7 @@ exports.countOrderDelivery = function (data, callback) {
         connection.query(sql, function (err, results) {
             connection.release();
             if (err) {
+                connection.release();
                 callback(true);
                 return;
             }
@@ -187,6 +189,7 @@ exports.updateOrderDelivery = function (data, callback) {
                 callback(true);
                 return;
             }
+
             callback(false, results);
             return;
         });

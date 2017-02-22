@@ -44,6 +44,7 @@ exports.queryAllProType = function (data, callback) {
                 callback(true,'系统内部错误');
                 return;
             }
+
             callback(false, results);
             return ;
         });
@@ -68,6 +69,7 @@ exports.insert = function (data, callback) {
                 callback(true,'系统内部错误');
                 return;
             }
+
             callback(false, results);
             return;
         });
@@ -95,6 +97,7 @@ exports.update = function (data, callback) {
                 callback(true);
                 return;
             }
+
             callback(false, results);
             return;
         });

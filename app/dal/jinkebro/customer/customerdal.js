@@ -32,6 +32,7 @@ exports.insert = function(data, callback) {
         connection.query(insert_sql, function(err, results) {
             connection.release();
             if (err) {
+                connection.release();
                 callback(true);
                 logger.writeError("[dal/jinkebro/customer/customerdal]微信客户的插入的时候失败");
                 return;
@@ -68,10 +69,12 @@ exports.update = function(data, callback) {
         connection.query(sql, function(err, results) {
             connection.release();
             if (err) {
+                connection.release();
                 callback(true);
                 logger.writeErroe("[dal/jinkebro/customer/customerdal]微信的客户修改信息失败");
                 return;
             }
+
             callback(false, results);
             return;
         });
@@ -95,6 +98,7 @@ exports.query = function(data, callback) {
         connection.query(sql, function(err, results) {
             connection.release();
             if (err) {
+                connection.release();
                 callback(true);
                 logger.writeError("[dal/jinkebro/customer/customerdal]微信根据wechatUserCode来查询用户的信息失败");
                 return;

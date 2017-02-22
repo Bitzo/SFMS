@@ -102,6 +102,8 @@ exports.insertProduct = function(data, callback) {
                     });
                 };
                 funcArr.push(addProductTypeFunc);
+            }else {
+                return callback(false, '请为商品设置类型！');
             }
 
             // 添加记录到product表
@@ -236,6 +238,7 @@ exports.deleteProduct = function(data, callback) {
         connection.query(delete_sql, function(err, results) {
             connection.release();
             if (err) {
+                connection.release();
                 throw err;
                 callback(true);
                 return;
@@ -282,6 +285,7 @@ exports.updateProduct = function(data, callback) {
         connection.query(update_sql, function(err, results) {
             connection.release();
             if (err) {
+                connection.release();
                 throw err;
                 callback(true);
                 return;
@@ -388,10 +392,11 @@ exports.CountProducts = function(data, callback) {
                 callback(true);
                 return;
             }
+
             callback(false, results);
             return;
-        });
     });
+});
 };
 
 //根据ID得到该商品类型的个数
@@ -410,11 +415,12 @@ exports.getProCountByID = function(data, callback) {
         }
         connection.query(sql, function(err, results) {
             connection.release();
-            if (err) {
+            if (err) {               
                 logger.writeError('查询：' + err);
                 callback(true);
                 return;
             }
+
             callback(false, results);
             return;
         });
@@ -431,6 +437,7 @@ exports.getMaxSKU = function (callback) {
         }
         connection.query(sql, function(err, results) {
             if (err) {
+                connection.release();
                 logger.writeError('查询：' + err);
                 callback(true);
                 return;

@@ -2,8 +2,7 @@
  * Created by Administrator on 2016/12/14.
  */
 myApp.controller('jitgoodsAddController', function($scope, $http,$q,baseService) {
-      //
-        //所在学院
+        //库存区域
         $http({
             method:'get',
             url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),

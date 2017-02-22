@@ -109,6 +109,7 @@ exports.insert = function (data, callback) {
                 callback(true,'系统内部错误');
                 return;
             }
+
             callback(false, results);
             return;
         });
@@ -136,6 +137,7 @@ exports.update = function (data, callback) {
                 callback(true);
                 return;
             }
+
             callback(false, results);
             return;
         });
@@ -162,9 +164,9 @@ exports.delete = function (data, callback) {
             if (err) {
                 callback(true);
                 logger.writeError('删除库存信息，出错信息：' + err)
-                connection.release();
                 return;
             }
+
             callback(false, results);
             return ;
         });
