@@ -9,10 +9,12 @@ var express = require('express'),
     router = express.Router(),
     url = require('url'),
     proStockService = appRequire('service/jinkebro/productstock/productstockservice'),
+    datadictionaryService = appRequire('service/backend/datadictionary/datadictionaryservice'),
     functionConfig = appRequire('config/functionconfig'),
     userFuncService = appRequire('service/backend/user/userfuncservice'),
     logger = appRequire("util/loghelper").helper,
-    moment = require('moment');
+    moment = require('moment'),
+    async = require('async');
 
 //查看库存信息
 router.get('/', function (req, res) {
@@ -52,6 +54,8 @@ router.get('/', function (req, res) {
             }
 
             var countNum = -1;
+            var queueAllResult = [];
+            var flag = 0;
             proStockService.countProStock(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -84,11 +88,33 @@ router.get('/', function (req, res) {
                                 totalPage: Math.ceil(countNum / pageNum),
                                 data: result
                             };
+
+                            // 去计算价格
+                            async.map(result, function (item, callback) {
+                                var tempStockAreaID = item.StockAreaID;
+                                datadictionaryService.queryDatadictionary({ "DictionaryID": tempStockAreaID }, function (err, tags) {
+                                    item['StockAreaName'] = tags[0].DictionaryValue;
+                                    callback(null, item);
+                                })
+                            }, function (err, results1) {
+                                // !!!!!! 在此res.status() 、 res.json()  !!!!!!
+                                //执行顺序2
+                                for (var i = 0; i < results1.length; i++) {
+                                    queueAllResult[i] = results1[i];
+                                    if (i == results1.length - 1) {
+                                        flag = 1;
+                                    }
+                                }
+                                if (flag == 1) {
+                                    res.status(200);
+                                    return res.json(resultBack);
+                                }
+                            });
+
                             if (resultBack.curPage == resultBack.totalPage) {
                                 resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
                             }
-                            res.status(200);
-                            return res.json(resultBack);
+                            //执行顺序1
                         } else {
                             res.status(200);
                             return res.json({
@@ -127,62 +153,78 @@ router.post('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        var formdata = JSON.parse(req.body.formdata);
-
-        //检查所需要的字段是否都存在
-        var data = ['ProductID', 'TotalNum', 'StockAreaID', 'CreateUserID'];
-        var err = 'require: ';
-        for (var value in data) {
-            if (!(data[value] in formdata)) {
-                err += data[value] + ' ';
-            }
-        }
-        //如果要求的字段不在req的参数中
-        if (err !== 'require: ') {
-            logger.writeError(err);
-            res.status(400);
+        if (err) {
+            res.status(500);
             return res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
-                msg: '存在未填写的必填字段' + err
+                msg: '服务器内部错误！'
             });
         }
-        // 存放接收的数据
-        var data = {
-            "ProductID": formdata.ProductID || '',
-            'TotalNum': formdata.TotalNum || '',
-            'StockAreaID': formdata.StockAreaID || '',
-            'CreateUserID': formdata.CreateUserID || '',
-            'CreateTime': moment().format("YYYY-MM-DD HH:mm:ss"),
-        };
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            var formdata = JSON.parse(req.body.formdata);
 
-        proStockService.insert(data, function (err, result) {
-            if (err) {
-                res.status(500);
-                return res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: result,
-                });
+            //检查所需要的字段是否都存在
+            var data = ['ProductID', 'TotalNum', 'StockAreaID', 'CreateUserID'];
+            var err = 'require: ';
+            for (var value in data) {
+                if (!(data[value] in formdata)) {
+                    err += data[value] + ' ';
+                }
             }
-
-
-            if (result !== undefined && result.affectedRows != 0) {
-                res.status(200);
-                return res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: '库存信息添加成功'
-                });
-            } else {
-                res.status(404);
+            //如果要求的字段不在req的参数中
+            if (err !== 'require: ') {
+                logger.writeError(err);
+                res.status(400);
                 return res.json({
                     code: 404,
                     isSuccess: false,
-                    msg: "库存信息添加操作失败"
+                    msg: '存在未填写的必填字段' + err
                 });
             }
-        });
+            // 存放接收的数据
+            var data = {
+                "ProductID": formdata.ProductID || '',
+                'TotalNum': formdata.TotalNum || '',
+                'StockAreaID': formdata.StockAreaID || '',
+                'CreateUserID': formdata.CreateUserID || '',
+                'CreateTime': moment().format("YYYY-MM-DD HH:mm:ss"),
+            };
+
+            proStockService.insert(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: result,
+                    });
+                }
+
+                if (result !== undefined && result.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: '库存信息添加成功'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "库存信息添加操作失败"
+                    });
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
     });
 });
 
@@ -195,15 +237,10 @@ router.put('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        var datainfo = '';
-        for (var key in req.body) {
-            datainfo = key;
-        }
+        var formdata = req.body.formdata;
 
-        console.log(datainfo);
-        var formdata = JSON.parse(datainfo);
         //检查所需要的字段是否都存在
-        var data = ['ID', 'ProductID', 'TotalNum'];
+        var data = ['ProductID', 'TotalNum'];
         var err = 'require: ';
         for (var value in data) {
             if (!(data[value] in formdata)) {
