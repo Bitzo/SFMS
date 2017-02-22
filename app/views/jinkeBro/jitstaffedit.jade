@@ -37,7 +37,7 @@ block content
                     tr
                         td(width="15%",class="tableleft") 电话号码
                         td
-                            input(type="date",name="Phone",ng-model="paginationConf.formdata.Phone",value='{{paginationConf.formdata.Phone}}',ng-maxlength='11',required)
+                            input(type="text",name="Phone",ng-model="paginationConf.formdata.Phone",value='{{paginationConf.formdata.Phone}}',ng-maxlength='11',required)
                             small.error(ng-if="staffedit.Phone.$error.maxlength && stuffAdd.Phone.$touched") 电话号码最多10位
                     tr
                         td(width="15%",class="tableleft") 员工职位
