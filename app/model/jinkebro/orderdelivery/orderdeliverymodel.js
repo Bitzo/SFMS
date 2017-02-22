@@ -10,8 +10,8 @@
 	ID:  0,
 	OrderID: 0,
 	DeliveryUserID: 0,
-	DelliveryBeginTime: '',
-	DeliveryEndTime: '',
+    DeliveryBeginTime: '',
+    DeliveryEndTime: '',
 	PK: 'ID'
  };
  //共有5个属性

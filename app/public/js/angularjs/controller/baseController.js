@@ -71,7 +71,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         $scope.paginationConf.currentPage = 1;
         getInit();
         $scope.formdata={};
-    }
+    };
 
     //首页 删除
     $scope.d={};
@@ -159,6 +159,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     //编辑页面   确认修改
     var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
+        console.log(formdata);
         $http({
             method:'put',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -429,19 +430,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         });
     }
 
-    //财务饼状图
-    // $scope.changeChart = function(valueID){
-    //     $scope.chartID = valueID;
-    //     console.log($scope.chartID)
-    //     if(valueID == 'outDetail'){
-    //            $scope.chartName = '支出明细饼状图'
-    //     }else if (valueID == 'inDetail'){
-    //            $scope.chartName = '收入明细饼状图'
-    //     }else{
-    //            $scope.chartName = '收入支出饼状图'
-    //     }
-        
-    // }
+
 //------金科小哥------
     //订单管理--首页  模态框
      //修改
@@ -598,6 +587,117 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
              alert(response.msg);
         });    
     }
+    //订单配送管理
+    //配送信息编辑
+    $scope.editDelivery = function (orderID, action) {
+        $scope.editInfo = {};
+        $scope.f = {
+            'OrderID':  orderID
+        }
+        $http({
+            method:'get',
+            url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:$scope.f
+            }
+        }).
+        success(function(response) {
+            $scope.editInfo = response.data[0];
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
+            $scope.f = {};
+        }).
+        error(function(response) {
+            alert(response.msg);
+            $scope.f = {};
+        });
+    };
 
+    //配送信息编辑完成
+    $scope.ensureEditDelivery = function (action) {
+        var data = $scope.editInfo;
 
-})
+        $http({
+            method:'put',
+            url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata : data
+            }
+        }).
+        success(function(response) {
+            alert(response.msg)
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+
+    //商品类型添加
+    $scope.addProductType = function (action) {
+        var productType = $scope.form.ProductTypeName;
+        $http({
+            method:'post',
+            url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata: {
+                    ProductTypeName: productType
+                }
+            }
+        }).
+        success(function(response) {
+            alert(response.msg);
+            getInit();
+            $scope.formdata = {};
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+
+    //商品类型信息编辑
+    $scope.moreProductType = function (ID, action) {
+        $scope.f = {
+            'ID':  ID
+        }
+        $http({
+            method:'get',
+            url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:$scope.f
+            }
+        }).
+        success(function(response) {
+            $scope.formdata = response.data[0];
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
+            $scope.f = {};
+        }).
+        error(function(response) {
+            alert(response.msg);
+            $scope.f = {};
+        });
+    };
+
+    //商品类型编辑完成
+    $scope.editProductType = function (action) {
+        var data = $scope.formdata;
+
+        $http({
+            method:'put',
+            url: action +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata : data
+            }
+        }).
+        success(function(response) {
+            alert(response.msg);
+            getInit();
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+    $scope.formdata = {};
+});

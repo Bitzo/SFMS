@@ -28,6 +28,7 @@ block content
             th 商品类型
             th 价格
             th 库存量
+            th 是否在售
             th(style="width:150px;") 操作
         tbody
           tr(ng-repeat="x in datas" )
@@ -43,13 +44,13 @@ block content
             td {{x.ProductTypeName}}
             td {{x.ProductPrice}}元
             td {{x.TotalNum}}
+            td {{x.OnSale}}
             td 
               a(href='#/jinkeBro/jitgoodsEdit/?ProductID={{x.ProductID}}' )
                 i.icon.icon-edit 编辑 
               a(ng-click="remove($index,'/backuser')")
                 i.icon.icon-trash 删除
-              a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'userrole/userID/')") 
-                i.icon.icon-zoom-in  更多
+              
       div.pull-right
         jason-pagination(conf='paginationConf')
 

@@ -2,17 +2,11 @@ link(rel='stylesheet' href="css/backend/role.css")
 block content
   div.container-fluid
     span 
-      h2 商品编辑
+      h2 库存编辑
     jason-form(method="post" source='/jinkeBro/product' conf='paginationConf' tocc="ProductTypeID,SupplierID")
       form( name="jitorderEdit")
         table.table.table-bordered.table-hover.definedwidth.m10
-          tr
-            td(width="15%",class="tableleft") 仓储量的单位 
-            td
-              input(type="textview",name="SKU",ng-model='paginationConf.formdata.SKU',ng-maxlength='50',required)
-              &nbsp&nbsp
-              small.error(ng-if="jitorderEdit.SKU.$error.maxlength && jitorderEdit.SKU.$touched") 用户姓名最多50位
-            
+          
           tr
             td(width="15%",class="tableleft") 商品名称 
             td
@@ -28,7 +22,7 @@ block content
               small.error(ng-if="jitorderEdit.ProductImgPath.$error.maxlength && jitorderEdit.ProductImgPath.$touched") 账户最多50位
           
           tr
-            td(width="15%",class="tableleft") 有效期
+            td(width="15%",class="tableleft") 库存量
             td 
               input(type="date",name="ExpireTime",ng-model="paginationConf.formdata.ExpireTime",value='{{paginationConf.formdata.ExpireTime}}',required)
           

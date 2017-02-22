@@ -30,12 +30,13 @@ exports.queryRoleFunc = function (data, callback) {
         }
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         })
     })
 }
@@ -64,12 +65,13 @@ exports.addRoleFunc = function (data, callback) {
         }
 
         connection.query(insert_sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 };
@@ -100,12 +102,13 @@ exports.updateRoleFunc = function(data, callback) {
         }
 
         connection.query(upd_sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 };
@@ -127,12 +130,13 @@ exports.delRoleFunc = function (data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
+            return;
         });
     });
 }

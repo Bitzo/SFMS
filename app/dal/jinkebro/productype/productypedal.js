@@ -11,7 +11,23 @@ var logger = appRequire("util/loghelper").helper,
 
 //得到所有产品类别
 exports.queryAllProType = function (data, callback) {
-    var sql = 'select ID,ProductTypeName from `jit_productype`';
+    // data like this
+    // { ID: '', ProductTypeName: '' }
+
+    var sql = 'select ID,ProductTypeName from jit_productype where 1=1';
+
+    if (data !== undefined) {
+        for (var key in data) {
+            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging') {
+                //判断data[key]是否是数值类型
+                if (!isNaN(data[key])) {
+                    sql += ' and ' + key + ' = ' + data[key] + ' ';
+                } else {
+                    sql += ' and ' + key + ' = "' + data[key] + '" ';
+                }
+            }
+        }
+    }
 
     logger.writeInfo("得到所有产品类别得到所有产品类别:" + sql);
 

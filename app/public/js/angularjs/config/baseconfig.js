@@ -135,6 +135,9 @@ myApp.config(function($routeProvider) {
     when('/sfms/financeCharts', {
         templateUrl: '/sfms/financeCharts?access_token=' + accesstokenstring,
     }).
+    when('/sfms/financeChartsAlt', {
+        templateUrl: '/sfms/financeChartsAlt?access_token=' + accesstokenstring,
+    }).
     when('/sfms/financeManageCheck', {
         templateUrl: '/sfms/financeManageCheck?access_token=' + accesstokenstring,
     }).
@@ -171,8 +174,24 @@ myApp.config(function($routeProvider) {
     when('/jinkeBro/jitstockAdd', {
         templateUrl: '/jinkeBro/jitstockAdd?access_token=' + accesstokenstring,
     }).
-   
-    
+    when('/jinkeBro/jitstockedit', {
+        templateUrl: '/jinkeBro/jitstockedit?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitstaffmanage', {
+        templateUrl: '/jinkeBro/jitstaffmanage?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitstaffadd', {
+        templateUrl: '/jinkeBro/jitstaffadd?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitstaffedit', {
+        templateUrl: '/jinkeBro/jitstaffedit?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitdelivery', {
+        templateUrl: '/jinkeBro/jitdelivery?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/jitproducttype', {
+        templateUrl: '/jinkeBro/jitproducttype?access_token=' + accesstokenstring,
+    }).
     otherwise({
         redirectTo: '/'
     });
@@ -233,6 +252,30 @@ myApp.config(function($routeProvider) {
                 return '有效';
             default:
                 return '无效';
+        }
+    }
+}).filter('jinkeBroStuffType', function() {
+    return function(val) {
+        switch (val) {
+            case 1:
+                return '供货商';
+            case 2:
+                return '配送员';
+            case 3:
+                return '管理员';
+            default:
+                return '错误数据';
+        }
+    }
+}).filter('sexToChin', function() {
+    return function(val) {
+        switch (val) {
+            case 1:
+                return '男';
+            case 2:
+                return '女';
+            default:
+                return '男';
         }
     }
 })

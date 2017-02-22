@@ -3,7 +3,7 @@
  * @Date: 2016/12/14 20:25
  * @Last Modified by: Cecurio
  * @Last Modified time: 2016/12/14 20:25
- * @Function:
+ * @Function: 商品模型
  */
 var productmodel = {
     ProductID : 0,       //商品ID

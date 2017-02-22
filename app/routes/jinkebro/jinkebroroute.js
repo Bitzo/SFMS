@@ -6,6 +6,7 @@ var url = require("url");
 var customer = appRequire('routes/jinkebro/customer/customerroute');
 var product = appRequire('routes/jinkebro/product/productroute');
 var order = appRequire('routes/jinkebro/order/orderroute');
+var staff = appRequire('routes/jinkebro/staff/staffroute');
 //产品类别路由
 var proTyperoute = appRequire('routes/jinkebro/productype/productyperoute');
 //库存信息路由
@@ -43,8 +44,6 @@ router.get('/jitgoodsEdit', function (req, res, next) {
     res.render('jinkeBro/jitgoodsEdit', { title: 'Hi jkbro' });
 });
 
-
-
 router.get('/jitstock', function (req, res, next) {
     res.render('jinkeBro/jitstock', { title: 'Hi jkbro' });
 });
@@ -52,6 +51,31 @@ router.get('/jitstock', function (req, res, next) {
 router.get('/jitstockAdd', function (req, res, next) {
     res.render('jinkeBro/jitstockAdd', { title: 'Hi jkbro' });
 });
+
+router.get('/jitstockedit', function (req, res, next) {
+    res.render('jinkeBro/jitstockedit', { title: 'Hi jkbro' });
+});
+
+router.get('/jitstaffmanage', function (req, res, next) {
+    res.render('jinkeBro/jitstaffmanage', { title: 'Hi jkbro' });
+});
+
+router.get('/jitstaffadd', function (req, res, next) {
+    res.render('jinkeBro/jitstaffadd', { title: 'Hi jkbro' });
+});
+
+router.get('/jitstaffedit', function (req, res, next) {
+    res.render('jinkeBro/jitstaffedit', { title: 'Hi jkbro' });
+});
+
+router.get('/jitdelivery', function (req, res, next) {
+    res.render('jinkeBro/jitdelivery', { title: 'Hi jkbro' });
+});
+router.get('/jitproducttype', function (req, res, next) {
+    res.render('jinkeBro/jitproducttype', { title: 'Hi jkbro' });
+});
+
+
 
 //管理产品类别
 router.use('/proType', proTyperoute);
@@ -66,6 +90,8 @@ router.use('/order', order);
 router.use('/proStock', proStockroute);
 //订单的配送员信息
 router.use('/orderDelivery', orderdelivery);
+//员工
+router.use('/staff',staff);
 
 module.exports = router;
 

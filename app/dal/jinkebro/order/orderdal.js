@@ -213,7 +213,7 @@ exports.createOrder = function(data, callback) {
                 });
             };
             funcArr.push(func3);
-
+            
             async.series(funcArr, function(err, result) {
                 if (err) {
                     connection.rollback(function(err) {
@@ -230,7 +230,7 @@ exports.createOrder = function(data, callback) {
                         });
                         return ;
                     }
-                    console.log('insert success');
+                    console.log('insert order success');
                     connection.release();
                     callback(false, returnResult);
                     return;

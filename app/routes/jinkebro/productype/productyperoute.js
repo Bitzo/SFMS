@@ -23,40 +23,57 @@ router.get('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        data = {};
-        if (req.query.f != undefined) {
-            var query = JSON.parse(req.query.f);
-            data = {
-                ID: query.ID || '',
-                ProductTypeName: query.ProductTypeName || ''
-            };
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '服务器内部错误！'
+            });
         }
-
-        productypeService.queryAllProType(data, function (err, results) {
-            if (err) {
-                res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: results
-                })
-                return;
-            }
-
-            if (results !== undefined && results.length != 0) {
-                var result = {
-                    code: 200,
-                    isSuccess: true,
-                    data: results
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            var data = {};
+            if (req.query.f != undefined) {
+                var query = JSON.parse(req.query.f);
+                data = {
+                    ID: query.ID || '',
+                    ProductTypeName: query.ProductTypeName || ''
                 };
-                res.json(result);
-            } else {
-                res.json({
-                    code: 404,
-                    isSuccess: false,
-                    msg: "未查询到相关信息"
-                });
             }
-        });
+
+            productypeService.queryAllProType(data, function (err, results) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: results
+                    })
+                    return;
+                }
+
+                if (results !== undefined && results.length != 0) {
+                    var result = {
+                        code: 200,
+                        isSuccess: true,
+                        data: results
+                    };
+                    res.json(result);
+                } else {
+                    res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
     });
 });
 
@@ -69,71 +86,90 @@ router.post('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        if (req.body.formdata == undefined)
-            res.status(400);
-        return res.json({
-            code: 404,
-            isSuccess: false,
-            msg: '存在未填写的必填字段'
-        });
-
-        var formdata = JSON.parse(req.body.formdata);
-
-        //检查所需要的字段是否都存在
-        var data = ['ProductTypeName'];
-        var err = 'require: ';
-        for (var value in data) {
-            if (!(data[value] in formdata)) {
-                err += data[value] + ' ';
-            }
-        }
-        //如果要求的字段不在req的参数中
-        if (err !== 'require: ') {
-            logger.writeError(err);
-            res.status(400);
+        if (err) {
+            res.status(500);
             return res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
-                msg: '存在未填写的必填字段' + err
+                msg: '服务器内部错误！'
             });
         }
-
-        var ProductTypeName = formdata.ProductTypeName || '';
-
-        // 存放接收的数据
-        var data = {
-            "ProductTypeName": ProductTypeName
-        };
-        console.log(data.ProductTypeName)
-        //执行插入操作
-        productypeService.insert(data, function (err, result) {
-            if (err) {
-                res.status(500);
-                return res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: results
-                });
-            }
-
-
-            if (result !== undefined && result.affectedRows != 0) {
-                res.status(200);
-                return res.json({
-                    code: 200,
-                    isSuccess: true,
-                    data: result,
-                    msg: '产品类别添加成功'
-                });
-            } else {
-                res.status(404);
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            console.log(req.body)
+            if (req.body.formdata == undefined) {
+                res.status(400);
                 return res.json({
                     code: 404,
                     isSuccess: false,
-                    msg: "产品类别添加操作失败"
+                    msg: '存在未填写的必填字段'
                 });
             }
-        });
+
+            var formdata = req.body.formdata;
+
+            //检查所需要的字段是否都存在
+            var data = ['ProductTypeName'];
+            var err = 'require: ';
+            for (var value in data) {
+                if (!(data[value] in formdata)) {
+                    err += data[value] + ' ';
+                }
+            }
+            //如果要求的字段不在req的参数中
+            if (err !== 'require: ') {
+                logger.writeError(err);
+                res.status(400);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: '存在未填写的必填字段' + err
+                });
+            }
+
+            var ProductTypeName = formdata.ProductTypeName || '';
+
+            // 存放接收的数据
+            var data = {
+                "ProductTypeName": ProductTypeName
+            };
+
+            //执行插入操作
+            productypeService.insert(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: results
+                    });
+                }
+
+
+                if (result !== undefined && result.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        data: result,
+                        msg: '产品类别添加成功'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "产品类别添加操作失败"
+                    });
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
     });
 });
 
@@ -146,68 +182,85 @@ router.put('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        var formdata = JSON.parse(req.body.formdata);
-
-        //检查所需要的字段是否都存在
-        var data = ['ID', 'ProductTypeName'];
-        var err = 'require: ';
-        for (var value in data) {
-            if (!(data[value] in formdata)) {
-                err += data[value] + ' ';
-            }
-        }
-
-        //如果要求的字段不在req的参数中
-        if (err !== 'require: ') {
-            logger.writeError(err);
-            res.status(400);
+        if (err) {
+            res.status(500);
             return res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
-                msg: '存在未填写的必填字段' + err
+                msg: '服务器内部错误！'
             });
         }
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            var formdata = req.body.formdata;
 
-        // 存放接收的数据
-        var updatedata = {
-            "ID": formdata.ID,
-            'ProductTypeName': formdata.ProductTypeName
-        };
-        if (isNaN(formdata.ID)) {
+            //检查所需要的字段是否都存在
+            var data = ['ID', 'ProductTypeName'];
+            var err = 'require: ';
+            for (var value in data) {
+                if (!(data[value] in formdata)) {
+                    err += data[value] + ' ';
+                }
+            }
+
+            //如果要求的字段不在req的参数中
+            if (err !== 'require: ') {
+                logger.writeError(err);
+                res.status(400);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: '存在未填写的必填字段' + err
+                });
+            }
+
+            // 存放接收的数据
+            var updatedata = {
+                "ID": formdata.ID,
+                'ProductTypeName': formdata.ProductTypeName
+            };
+            if (isNaN(formdata.ID)) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: key + ": " + intdata[key] + '不是数字'
+                });
+            }
+            console.log(updatedata)
+            productypeService.update(updatedata, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: results
+                    });
+                }
+
+                if (results !== undefined && results.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: '产品类别修改成功'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "产品类别修改失败"
+                    });
+                }
+            });
+        } else {
             res.status(400);
             return res.json({
                 code: 400,
                 isSuccess: false,
-                msg: key + ": " + intdata[key] + '不是数字'
+                msg: funcResult.msg
             });
         }
-        console.log(updatedata)
-        productypeService.update(updatedata, function (err, results) {
-            if (err) {
-                res.status(500);
-                return res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: results
-                });
-            }
-
-            if (results !== undefined && results.affectedRows != 0) {
-                res.status(200);
-                return res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: '产品类别修改成功'
-                });
-            } else {
-                res.status(404);
-                return res.json({
-                    code: 404,
-                    isSuccess: false,
-                    msg: "产品类别修改失败"
-                });
-            }
-        });
     });
 });
 
@@ -220,53 +273,70 @@ router.delete('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        var d = JSON.parse(req.query.d);
-        var ID = d.ID;
-        if (ID === undefined) {
-            res.status(404);
+        if (err) {
+            res.status(500);
             return res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
-                msg: 'require ID'
+                msg: '服务器内部错误！'
             });
         }
-        if (isNaN(ID)) {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: 'ID不是数字'
-            });
-        }
-        var deleteData = {
-            "ID": ID
-        };
-        productypeService.delete(deleteData, function (err, results) {
-            if (err) {
-                res.status(500);
-                return res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: results,
-                });
-            }
-            //判断是否删除成功
-            if (results !== undefined && results.affectedRows != 0) {
-                res.status(200);
-                return res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: '产品类别删除操作成功'
-                });
-            } else {
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            var d = JSON.parse(req.query.d);
+            var ID = d.ID;
+            if (ID === undefined) {
                 res.status(404);
                 return res.json({
                     code: 404,
                     isSuccess: false,
-                    msg: "产品类删除操作失败"
+                    msg: 'require ID'
                 });
             }
-        });
+            if (isNaN(ID)) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: 'ID不是数字'
+                });
+            }
+            var deleteData = {
+                "ID": ID
+            };
+            productypeService.delete(deleteData, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: results,
+                    });
+                }
+                //判断是否删除成功
+                if (results !== undefined && results.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: '产品类别删除操作成功'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "产品类删除操作失败"
+                    });
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
     });
 });
 module.exports = router;

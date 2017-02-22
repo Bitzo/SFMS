@@ -18,7 +18,12 @@ var Productype = function() {
 
 //查询所有产品类别
 Productype.prototype.queryAllProType = function(data, callback) {
-    productypeDAL.queryAllProType(data, function(err, results) {
+    var formdata = {
+        ID: data.ID || '',
+        ProductTypeName: data.ProductTypeName || ''
+    };
+
+    productypeDAL.queryAllProType(formdata, function(err, results) {
         if (err) {
             callback(true, results);
             return;
