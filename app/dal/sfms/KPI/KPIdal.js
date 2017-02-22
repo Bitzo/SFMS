@@ -47,6 +47,7 @@ exports.addKPI = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -89,6 +90,7 @@ exports.updateKPI = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -124,6 +126,7 @@ exports.countQuery = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -165,6 +168,7 @@ exports.queryKPI = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -203,6 +207,7 @@ exports.checkKPI = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -228,6 +233,7 @@ exports.delKPI = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -266,6 +272,7 @@ exports.countKPI = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }

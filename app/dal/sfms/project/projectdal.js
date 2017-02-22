@@ -47,6 +47,7 @@ exports.addProject = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -85,6 +86,7 @@ exports.updateProject = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -119,6 +121,7 @@ exports.countQuery = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -160,6 +163,7 @@ exports.queryProject = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }

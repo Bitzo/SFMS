@@ -493,6 +493,7 @@ router.put('/', function (req, res) {
     });
 });
 
+//财务统计
 router.get('/count', function(req, res) {
     var data = {
         userID: req.query.jitkey,
@@ -508,11 +509,9 @@ router.get('/count', function(req, res) {
             });
         }
         if (results !== undefined && results.isSuccess === true) {
+            console.log(req.query)
             var startTime = req.query.startTime || '',
                 endTime = req.query.endTime || '';
-
-            if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
-            if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
 
             var data = {
                 'startTime': startTime,

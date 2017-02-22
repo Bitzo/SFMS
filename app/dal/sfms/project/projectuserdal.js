@@ -44,6 +44,7 @@ exports.addProjectUser = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -87,6 +88,7 @@ exports.updateProjectUser = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -123,6 +125,7 @@ exports.queryProjectUser = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -155,6 +158,7 @@ exports.countQuery = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
@@ -181,6 +185,7 @@ exports.queryProjectByUserID = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }

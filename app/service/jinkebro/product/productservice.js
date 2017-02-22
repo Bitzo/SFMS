@@ -51,8 +51,7 @@ Product.prototype.insertProduct = function (data, callback) {
         "CreateTime" : data.CreateTime,
         "newProductTypeName" : data.newProductTypeName || ''
     };
-
-    productDAL.insertProduct(data, function (err, result) {
+    productDAL.insertProduct(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
@@ -210,7 +209,6 @@ Product.prototype.queryProducts = function (data, callback) {
                 logger.writeError("商品查询成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
-        console.log(result);
         callback(false, result);
     });
 };

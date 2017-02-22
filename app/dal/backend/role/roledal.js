@@ -48,6 +48,7 @@ exports.queryAllRoles = function (data, callback) {
             };
             logger.writeInfo("查询成功");
             callback(false, results);
+            return;
         })
     })
 
@@ -81,6 +82,7 @@ exports.countAllRoles = function (data, callback) {
             };
             logger.writeInfo("查询成功");
             callback(false, results);
+            return;
         })
     })
 };
@@ -118,6 +120,7 @@ exports.addRole = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 };
@@ -157,6 +160,7 @@ exports.updateRole = function (data, callback) {
                 return;
             }
             callback(false, results);
+            return;
         });
     });
 }
