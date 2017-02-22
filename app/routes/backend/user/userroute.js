@@ -306,6 +306,169 @@ router.post('/', function (req, res) {
     });
 });
 
+//查询个人信息
+router.get('/person', function (req, res) {
+    var functionCode = functionConfig.backendApp.userManage.userPersonQuery.functionCode;
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+        if (results !== undefined && results.isSuccess === true) {
+            var query = JSON.parse(req.query.f);
+            console.log(req.query);
+            logger.writeInfo("查询用户的记录");
+            var data = {},
+                allCount,
+                page = req.query.pageindex,//页数
+                accountID = query.AccountID,
+                applicationID = query.ApplicationID,
+                account = query.Account,
+                userName = query.UserName,
+                classID = query.ClassID,
+                createUserID = query.CreateUserID,
+                editUserID = query.EditUserID,
+                isActive = 1,
+                pageNum = req.query.pagesize,
+                applicationName = query.ApplicationName,
+                createUserName = query.CreateUserName;
+
+            //用来判断是否要分页的标志
+            var isPage = req.query.isPaging || '';
+
+            if (page == undefined || page.length == 0) {
+                page = 1;
+            }
+            //选定筛选的条件
+            if (accountID !== undefined && accountID.length != 0) {
+                data['AccountID'] = accountID;
+            }
+            if (applicationName !== undefined && applicationName.length != 0) {
+                data['ApplicationName'] = applicationName;
+            }
+            if (createUserName !== undefined && createUserName.length != 0) {
+                data['CreateUserName'] = createUserName;
+            }
+            if (applicationID !== undefined && applicationID.length != 0) {
+                data['ApplicationID'] = applicationID;
+            }
+            if (account !== undefined && account.length != 0) {
+                data['Account'] = account;
+            }
+            if (userName !== undefined && userName.length != 0) {
+                data['UserName'] = userName;
+            }
+            if (classID !== undefined && classID.length != 0) {
+                data['ClassID'] = classID;
+            }
+            if (createUserID !== undefined && createUserID.length != 0) {
+                data['CreateUserID'] = createUserID;
+            }
+            if (editUserID !== undefined && editUserID.length != 0) {
+                data['EditUserID'] = editUserID;
+            }
+            data['IsActive'] = isActive;
+            if (pageNum == undefined) {
+                pageNum = config.pageCount;
+            }
+
+            data['page'] = page;
+            data['pageNum'] = pageNum;
+
+            //获取所有用户的数量
+            user.countUser(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "获取数量失败，服务器出错"
+                    })
+                    logger.writeError("[routes/backend/user/userroute]" + "数量获取失败");
+                    return;
+                }
+                if (result !== undefined && result.length != 0) {
+                    allCount = result[0]['num'];
+                    data['IsPage'] = isPage;
+
+                    //查询所需要的数据
+                    user.queryAllUsers(data, function (err, results1) {
+                        if (err) {
+                            res.status(500);
+                            res.json({
+                                code: 500,
+                                isSuccess: true,
+                                msg: '查询失败'
+                            });
+                            console.log("查询失败");
+                            logger.writeError("[routes/backend/user/userroute]" + "查询失败");
+                            return;
+                        }
+                        if (results1 != undefined && results1.length != 0 && allCount != -1) {
+                            //将时间格式化，并且将CreateUser的名字改一下
+                            var dataApplication = {};
+                            for (var key in results1) {
+                                results1[key].CreateTime = moment(results1[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');
+                            }
+                            var results = {
+                                code: 200,
+                                isSuccess: true,
+                                msg: '查询成功',
+                                dataNum: allCount,
+                                curPage: page,
+                                curpageNum: pageNum,
+                                totalPage: Math.ceil(allCount / pageNum),
+                                data: results1
+                            };
+
+                            if (results.curPage == results.totlePage) {
+                                results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
+                            }
+                            res.status(200);
+                            res.json(results);
+                            return;
+                        } else {
+                            res.status(200);
+                            res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: "未查到数据"
+                            });
+                            logger.writeWarn("[routes/backend/user/userroute]" + "未查到数据");
+                            return;
+                        }
+                    });
+                } else {
+                    res.status(200);
+                    res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                    logger.writeError("[routes/backend/user/userroute]" + "为查询到相关的信息");
+                    return;
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+    });
+});
+
 //查询用户的资料
 router.get('/', function (req, res) {
     var functionCode = functionConfig.backendApp.userManage.userQuery.functionCode;
@@ -640,6 +803,273 @@ router.get('/:userID', function (req, res) {
                         isSuccess: false,
                         msg: '用户不存在'
                     });
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+    });
+});
+
+//用户个人信息编辑
+router.put('/person', function (req, res) {
+    var functionCode = functionConfig.backendApp.userManage.userPersonEdit.functionCode;
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    }
+
+    userFuncService.checkUserFunc(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+        if (results !== undefined && results.isSuccess === true) {
+
+            var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
+            var err = 'require: ';
+
+            for (var value in data) {
+                if (!(data[value] in req.body.formdata)) {
+                    ///if(data[value]!='Email'&&data[value]!='Address')
+                    err += data[value] + ' ';//检查post传输的数据
+                }
+            }
+
+            if (err != 'require: ') {
+                res.status(400);
+                res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: err
+                });
+                logger.writeError("[routes/backend/user/userrole]" + err);
+                return;
+            }
+
+            //插入要传的参数
+            var applicationID = req.body.formdata.ApplicationID,
+                accountID = req.body.formdata.AccountID,
+                account = req.body.formdata.Account,
+                userName = req.body.formdata.UserName,
+                pwd = req.body.formdata.Pwd,
+                collegeID = req.body.formdata.CollegeID,
+                gradeYear = req.body.formdata.GradeYear,
+                phone = req.body.formdata.Phone,
+                classID = req.body.formdata.ClassID,
+                memo = req.body.formdata.Memo,
+                createUserID = req.body.formdata.CreateUserID,
+                editUserID = req.query.jitkey,
+                editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
+                isActive = req.body.formdata.IsActive,
+                email = req.body.formdata.Email,
+                address = req.body.formdata.Address,
+                roleID = req.body.formdata.RoleID;
+
+
+            data = {
+                'ApplicationID': applicationID,
+                'AccountID': accountID,
+                'Account': account,
+                'UserName': userName,
+                'Pwd': pwd,
+                'EditTime': editTime,
+                'CreateUserID': createUserID,
+                'IsActive': isActive,
+                'EditUserID': editUserID
+            }
+
+            var requireValue = '缺少值：';
+            for (var value in data) {
+                if (data[value].length == 0) {
+                    requireValue += value + ' ';
+                }
+
+            }
+            if (requireValue != '缺少值：') {
+                res.status(400);
+                res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: requireValue
+                });
+
+                logger.writeError(requireValue);
+                return;
+            }
+
+            //判断是数字
+            var intNum = {
+                'ApplicationID': applicationID,
+                'AccountID': accountID,
+                'CreateUserID': createUserID,
+                'IsActive': isActive,
+                'EditUserID': editUserID,
+                'AccountID': accountID,
+            }
+
+            for (var key in intNum) {
+                if (isNaN(intNum[key])) {
+                    res.status(400);
+                    return res.json(
+                        {
+                            code: 400,
+                            isSuccess: false,
+                            msg: key + ":" + intNum[key] + " 必须是数字"
+                        });
+                }
+            }
+
+            //用来判断密码的长度
+            if (pwd.length > 50) {
+                res.status(400);
+                return res.json(
+                    {
+                        code: 400,
+                        isSuccess: false,
+                        msg: "密码的字符长度超过的50"
+                    });
+
+            }
+
+            //用来用户名判断长度
+            if (userName.length > 50) {
+                res.status(400);
+                return res.json(
+                    {
+                        code: 400,
+                        isSuccess: false,
+                        msg: "username的字符长度超过的50"
+                    });
+
+            }
+
+            //用来账户名判断长度
+            if (account.length > 50) {
+                res.status(400);
+                return res.json(
+                    {
+                        code: 400,
+                        isSuccess: false,
+                        msg: "account的字符长度超过的50"
+                    });
+
+            }
+
+            if (email != undefined && email.length != 0) {
+                if (email.length > 50) {
+                    res.status(400);
+                    return res.json(
+                        {
+                            code: 400,
+                            isSuccess: false,
+                            msg: "email的字符长度超过的50"
+                        });
+
+                }
+
+                if (!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email))) {
+                    res.status(400);
+                    return res.json(
+                        {
+                            code: 400,
+                            isSuccess: false,
+                            msg: "请输入正确的邮箱号"
+                        });
+                }
+                data['Email'] = email;
+            }
+
+            if (address != undefined && address.length != 0) {
+                if (address.length > 200) {
+                    res.status(400);
+                    return res.json(
+                        {
+                            code: 400,
+                            isSuccess: false,
+                            msg: "address的字符长度超过的200"
+                        });
+
+                }
+                data['Address'] = address;
+            }
+
+
+            if (collegeID != undefined && collegeID.length != 0) {
+                data['CollegeID'] = collegeID;
+            }
+
+            if (gradeYear != undefined && gradeYear.length != 0) {
+                data['GradeYear'] = gradeYear;
+            }
+
+            if (phone != undefined && phone.length != 0) {
+                if (!(/^1(3|4|5|7|8)\d{9}$/.test(phone))) {
+                    res.status(400);
+                    return res.json(
+                        {
+                            code: 400,
+                            isSuccess: false,
+                            msg: "请输入正确的电话号码"
+                        });
+                }
+                data['Phone'] = phone;
+            }
+
+            if (classID != undefined && classID.length != 0) {
+                data['ClassID'] = classID;
+            }
+            if (memo != undefined && memo.length != 0) {
+                if (memo.length > 200) {
+                    res.status(400);
+                    return res.json(
+                        {
+                            code: 400,
+                            isSuccess: false,
+                            msg: "memo的字符长度超过200"
+                        });
+                }
+                data['Memo'] = memo;
+            }
+
+            user.update(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    res.json(
+                        {
+                            code: 500,
+                            isSuccess: false,
+                            msg: '修改信息失败，服务器出错'
+                        });
+                    logger.writeError("[routes/backend/user/userroute]" + "修改信息失败，服务器出错");
+                    return;
+                }
+                if (results !== undefined && results.affectedRows != 0) {
+                    res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: "修改信息成功"
+                    })
+                    logger.writeInfo("[routes/backend/user/userroute]" + "修改信息成功");
+                    return;
+                } else {
+                    res.status(400);
+                    res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: "修改信息失败"
+                    })
+                    logger.writeError("[routes/backend/user/userrout]" + "修改信息失败");
+                    return;
                 }
             });
         } else {

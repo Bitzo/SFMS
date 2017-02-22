@@ -27,6 +27,14 @@ var functionConfig = {
                 functionName: "用户修改",
                 functionCode: "BACKEND-USER-EDIT"
             },
+            userPersonQuery: {
+                functionName: "用户个人信息查询",
+                functionCode: "BACKEND-USERPERSON-QUERY"
+            },
+            userPersonEdit: {
+                functionName: "用户个人信息修改",
+                functionCode: "BACKEND-USERPERSON-EDIT"
+            },
         },
         roleManage: {
             functionName: "角色管理",
