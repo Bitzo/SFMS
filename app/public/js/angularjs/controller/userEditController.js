@@ -50,6 +50,7 @@ myApp.controller('userEditController', function($scope, $http,$q,baseService) {
             }
         }).
         success(function(response) {
+            console.log(response)
             $scope.college=response.data;
         }).
         error(function(response) {

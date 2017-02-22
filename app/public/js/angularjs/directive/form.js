@@ -43,7 +43,7 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
             }
             console.log(params)
             jasonformService.IintGrid(url,params).then(function(response){
-                
+                console.log(response)
                 scope.conf.formdata=response.data.data[0];
                 var toCharColArr= attrs.tocc==null?[]:attrs.tocc.split(',');
                 toCharColArr.forEach(function(o){

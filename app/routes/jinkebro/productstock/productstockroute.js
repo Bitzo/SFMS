@@ -33,8 +33,9 @@ router.get('/', function (req, res) {
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var data = {};
+            console.log(req.query.f)
             if (req.query !== undefined) {
-                var query = req.query;
+                var query = JSON.parse(req.query.f);
                 var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
                     pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : 20;
 
