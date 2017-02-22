@@ -96,7 +96,7 @@ var updateStaff = function (data,callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'StaffID') {
+            if (key != 'StaffID' && data[key] != '') {
                 if (sql.length == 0) {
                     sql += " " + key + " = '" + data[key] + "' ";
                 } else {

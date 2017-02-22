@@ -259,7 +259,7 @@ router.put('/',function (req,res) {
         Sex = formdata.Sex,
         Position = formdata.Position,
         CreateTime = formdata.CreateTime,
-        LeaveTime = formdata.LeaveTime || '',
+        LeaveTime = formdata.LeaveTime,
         IsActive = formdata.IsActive;
 
     var intData = {
@@ -293,6 +293,8 @@ router.put('/',function (req,res) {
 
     if (LeaveTime != undefined) {
         LeaveTime = moment(LeaveTime).format('YYYY-MM-DD HH:mm:ss');
+    } else {
+        LeaveTime = '';
     }
 
     var mustData = {
