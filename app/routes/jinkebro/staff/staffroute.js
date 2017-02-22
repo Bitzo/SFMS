@@ -390,7 +390,7 @@ router.get('/',function (req,res) {
 
     var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
         pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : (config.pageCount),
-        isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 1;
+        isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 0;
 
     var data = {
         page : page || 1,

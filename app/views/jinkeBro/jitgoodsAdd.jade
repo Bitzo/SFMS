@@ -40,7 +40,9 @@ block content
         tr
           td(width="15%",class="tableleft") 供应商
           td
-            jason-select.input(placeholder='供应商ID' ng-model='formdata.SupplierID' source='/jinkeBro/staff', stext='StaffName' svalue='StaffID',style="width:160px;height:30px",required)
+            select(ng-model='formdata.SupplierID')
+              option(ng-repeat="item in Suppliers",value='{{item.StaffID}}') {{item.StaffName}}
+            //jason-select.input(placeholder='供应商ID' ng-model='formdata.SupplierID' source='/jinkeBro/staff', stext='StaffName' svalue='StaffID',style="width:160px;height:30px",required)
         
         tr
           td(width="15%",class="tableleft") 商品价格
@@ -65,7 +67,8 @@ block content
         tr
           td(width="15%",class="tableleft") 创建者
           td
-            jason-select.input(ng-model='formdata.CreateUserID' source='/jinkeBro/staff', stext='StaffName' svalue='StaffID',style="width:160px;height:30px",required)
+            select(ng-model='formdata.CreateUserID')
+              option(ng-repeat="item in CreateUsers",value='{{item.StaffID}}') {{item.StaffName}}
                 
         tr
           td(class="tableleft") 是否在售

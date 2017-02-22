@@ -172,7 +172,7 @@ var getStaff = function (data,callback) {
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-    if (data['isPaging'] == 1) {
+    if (data['isPaging'] == 0) {
         querySql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     } else {
         querySql += ';';
