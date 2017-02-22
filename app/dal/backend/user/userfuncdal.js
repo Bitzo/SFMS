@@ -39,6 +39,7 @@ exports.queryUserFunc = function (data, callback) {
         }
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;

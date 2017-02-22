@@ -523,7 +523,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
             //该用户不存在
             if (customerInfo == undefined || customerInfo.length == 0) {
                 console.log('查询用户失败');
-                logger.writeError("[service/jinkebro/order/orderservice-----342行]当插入订单的时候查无此用户");
+                logger.writeError("[service/jinkebro/order/orderservice]当插入订单的时候查无此用户");
                 callback(true, "当插入订单的时候查无此用户");
                 return;
             }
@@ -577,7 +577,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
                     }, function (err, productInfo) {
                         if (err) {
                             console.log('查询商品的时候出错');
-                            logger.writeError('[service/jinkebro/order/orderservice------396行] 查询商品的时候出错');
+                            logger.writeError('[service/jinkebro/order/orderservice] 查询商品的时候出错');
                             return;
                         }
                         callback(false, productInfo[0].ProductName);

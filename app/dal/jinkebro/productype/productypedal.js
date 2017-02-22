@@ -38,14 +38,15 @@ exports.queryAllProType = function (data, callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('得到产品类别，出错信息：' + err)
                 callback(true,'系统内部错误');
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return ;
         });
     });
 };
@@ -62,14 +63,15 @@ exports.insert = function (data, callback) {
         }
         logger.writeInfo('新增产品类别' + insert_sql);
         connection.query(insert_sql, data, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('新增产品类别，出错信息：' + err)
                 callback(true,'系统内部错误');
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 };
@@ -89,14 +91,15 @@ exports.update = function (data, callback) {
         }
 
         connection.query(upd_sql, data, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('修改产品类别，出错信息：' + err)
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 };
@@ -117,14 +120,14 @@ exports.delete = function (data, callback) {
         }
 
         connection.query(del_sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 callback(true,'系统内部错误');
-                logger.writeError('删除产品类别，出错信息：' + err);
+                logger.writeError('删除产品类别，出错信息：' + err)
                 return;
             }
-            connection.release();
-            return callback(false, results);
+            callback(false, results);
+            return ;
         });
     });
 };

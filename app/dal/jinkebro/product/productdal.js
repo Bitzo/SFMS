@@ -59,8 +59,10 @@ exports.insertProduct = function(data, callback) {
             return callback(true,'mysql链接失败！');
         }
 
+
         //开始事务
         connection.beginTransaction(function(err) {
+
             if (err) {
                 throw err;
             }
@@ -234,14 +236,16 @@ exports.deleteProduct = function(data, callback) {
         }
 
         connection.query(delete_sql, function(err, results) {
+            connection.release();
             if (err) {
                 connection.release();
                 throw err;
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 };
@@ -279,6 +283,7 @@ exports.updateProduct = function(data, callback) {
         }
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 connection.release();
                 throw err;
@@ -286,9 +291,10 @@ exports.updateProduct = function(data, callback) {
                 return;
             }
 
-            connection.release();
-            return callback(false, results);
-        });
+            callback(false, results);
+            return;
+        })
+
     });
 };
 
@@ -340,14 +346,15 @@ exports.queryProducts = function(data, callback) {
         }
 
         connection.query(query_sql, function(err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 console.log('connection.query查询商品失败');
                 callback(true, JSON.stringify(results));
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 };
@@ -379,17 +386,17 @@ exports.CountProducts = function(data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('查询指定条件的商品个数：' + err);
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
 
-        });
+            callback(false, results);
+            return;
     });
+});
 };
 
 //根据ID得到该商品类型的个数
@@ -407,15 +414,15 @@ exports.getProCountByID = function(data, callback) {
             return;
         }
         connection.query(sql, function(err, results) {
-            if (err) {
-                connection.release();
+            connection.release();
+            if (err) {               
                 logger.writeError('查询：' + err);
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
 
+            callback(false, results);
+            return;
         });
     });
 };

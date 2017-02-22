@@ -60,13 +60,14 @@ exports.queryAllMenus = function(data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
 
             callback(false, results);
-            connection.release();
+            return ;
         });
     })
 }
@@ -109,13 +110,14 @@ exports.queryAllParentMenus = function(data, callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             }
 
             callback(false, results);
-            connection.release();
+            return ;
         });
     })
 }
@@ -142,15 +144,16 @@ exports.countAllMenus = function (data, callback) {
         logger.writeInfo(sql);
         console.log(sql);
 
-        connection.query(sql, function (err, results) {
+        connection.query(sql, function (err, results) {            
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             };
             logger.writeInfo("查询成功");
             callback(false, results);
-            connection.release();
-        })
+            return; 
+        });
     })
 };
 
@@ -187,13 +190,14 @@ exports.menuInsert = function (data,callback) {
             return;
         }
         connection.query(insert_sql, function(err, result) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
             callback(false, result);
-            connection.release();
+            return;
         })
     })
 
@@ -231,6 +235,7 @@ exports.reuseMenu = function (data,callback) {
         console.log("in menudal,菜单启用:" + update_sql);
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -238,7 +243,7 @@ exports.reuseMenu = function (data,callback) {
             }
 
             callback(false, results);
-            connection.release();
+            return ;
         })
 
     });
@@ -261,6 +266,7 @@ exports.updateMenuIsActive = function (data,callback) {
         console.log("in menudal,修改订单状态:" + update_sql);
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -268,7 +274,7 @@ exports.updateMenuIsActive = function (data,callback) {
             }
 
             callback(false, results);
-            connection.release();
+            return ;
         })
 
     });
@@ -307,6 +313,7 @@ exports.menuUpdate = function(data, callback) {
         }
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -314,7 +321,7 @@ exports.menuUpdate = function(data, callback) {
             }
 
             callback(false, results);
-            connection.release();
+            return ;
         })
 
     });
@@ -340,6 +347,7 @@ exports.menuDelete = function (data, callback) {
         }
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -347,7 +355,7 @@ exports.menuDelete = function (data, callback) {
             }
 
             callback(false, results);
-            connection.release();
+            return;
         })
     })
 }
@@ -379,6 +387,7 @@ exports.queryRoleByUserID = function (data,callback) {
         }
 
         connection.query(sql,function (err, results) {
+            connection.release();
             if(err){
                 throw err;
                 callback(true);
@@ -386,7 +395,7 @@ exports.queryRoleByUserID = function (data,callback) {
             }
 
             callback(false, results);
-            connection.release();
+            return ;
         })
     })
 }
@@ -423,6 +432,7 @@ exports.queryMenuByUserID = function (data,callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -430,7 +440,7 @@ exports.queryMenuByUserID = function (data,callback) {
             }
 
             callback(false,results);
-            connection.release();
+            return ;
         });
     });
 }
@@ -459,13 +469,14 @@ exports.queryMenuByID = function (data, callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('根据MenuID判断该菜单是否存在err:' + err);
                 callback(true);
                 return;
             }
             callback(false, results);
-            connection.release();
+            return ;
         });
     });
 }

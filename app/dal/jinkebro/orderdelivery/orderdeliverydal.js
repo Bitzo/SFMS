@@ -49,14 +49,15 @@ exports.insertOrderDelivery = function (data, callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 callback(true);
                 logger.writeError("[dal/jinkebro/customer/customerdal]订单的配送员的插入的时候失败");
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 }
@@ -135,13 +136,14 @@ exports.countOrderDelivery = function (data, callback) {
         }
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 connection.release();
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
+            callback(false, results);
+            return;
         });
     });
 }
@@ -182,13 +184,14 @@ exports.updateOrderDelivery = function (data, callback) {
         }
 
         connection.query(upd_sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 }
