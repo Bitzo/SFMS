@@ -156,27 +156,28 @@ exports.updateOrderDelivery = function (data, callback) {
     var upd_sql = "update jit_orderdelivery set ";
     var i = 0;
     for (var key in data) {
-        if (i == 0) {
-            if (!isNaN(data[key])) {
-                upd_sql += key + " = " + data[key] + " ";
-                i++;
+        if (key != undefined && data[key] != '') {
+            if (i == 0) {
+                if (!isNaN(data[key])) {
+                    upd_sql += key + " = " + data[key] + " ";
+                    i++;
+                } else {
+                    upd_sql += key + " = '" + data[key] + "' ";
+                    i++;
+                }
             } else {
-                upd_sql += key + " = '" + data[key] + "' ";
-                i++;
-            }
-        } else {
-            if (!isNaN(data[key])) {
-                upd_sql += " , " + key + " = " + data[key] + " ";
-            } else {
-                upd_sql += " , " + key + " = '" + data[key] + "' ";
+                if (!isNaN(data[key])) {
+                    upd_sql += " , " + key + " = " + data[key] + " ";
+                } else {
+                    upd_sql += " , " + key + " = '" + data[key] + "' ";
+                }
             }
         }
     }
 
     upd_sql += 'WHERE OrderID ' + ' = ' + data['OrderID'] + ' ';
 
-    logger.writeInfo('修改用户： ' + upd_sql);
-
+    logger.writeInfo('修改配送员： ' + upd_sql);
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);

@@ -92,7 +92,7 @@ Staff.prototype.getStaff = function (data,callback) {
         IsActive : data.IsActive || '',
         page : data.page || 1,
         pageNum : data.pageNum || (config.pageCount),
-        isPaging : (data.isPaging != undefined) ? data.isPaging : 0
+        isPaging : (data.isPaging != undefined) ? data.isPaging : 1
     };
 
     staffDal.getStaff(formdata, function (err, result) {
