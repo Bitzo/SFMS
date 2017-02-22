@@ -351,4 +351,12 @@ router.get('/userID/:userID', function (req, res) {
 	});
 });
 
+/**
+ * method: {get} /userrole/more
+ * @param {int} userID
+ * function: 点击用户模块的更多的模态框，来获得所需要的每个用户所需要的角色名称以及角色代码
+ */
+ router.get("/more",  function(req, res) {
+     
+ });
 module.exports = router;

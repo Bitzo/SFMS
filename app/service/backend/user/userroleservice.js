@@ -80,7 +80,7 @@ exports.query = function (data, callback) {
 			return;
 		}
 
-		callback(false, results);
+		return callback(false, results);
 	})
 }
 
