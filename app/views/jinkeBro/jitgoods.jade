@@ -3,7 +3,7 @@ block content
   jason-pagecontent(action='/jinkeBro/product' conf='paginationConf')
     div.page-content
       ng-form.form-inline
-        span.title 商品管理
+        span.title 商品管理  价格  供应商 有效期
              div.buttons.pull-right
                label.form-group.my-form-group 是否在售
                  jason-select.select.ext(ng-model='f.OnSale',source='/datadict/plain',selectparams='{"Category":"dc_isOnSale"}',stext='DictionaryValue',svalue='DictionaryCode')

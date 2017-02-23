@@ -38,12 +38,9 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
                 var params={f:{'AccountID':a}};
                
             }else{
-                 console.log(b)
                 var params={f:$location.search()};
             }
-            console.log(params)
             jasonformService.IintGrid(url,params).then(function(response){
-                console.log(response)
                 scope.conf.formdata=response.data.data[0];
                 var toCharColArr= attrs.tocc==null?[]:attrs.tocc.split(',');
                 toCharColArr.forEach(function(o){
