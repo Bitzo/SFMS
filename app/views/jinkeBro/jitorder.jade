@@ -40,7 +40,7 @@ block content
                                   th 配送员修改
                             tbody
                                 tr
-                                    td {{orderDeliveryinfo.OrderID}}
+                                    td {{orderDelivery.OrderID}}
                                     td {{orderDeliveryinfo.StaffName}}
                                     td
                                       select(ng-model='orderDelivery.StaffID',ng-change="orderStatusChanged()")
@@ -112,7 +112,7 @@ block content
                         td
                             a(data-toggle="modal" ,data-target="#Edit",ng-click="jitOrderEdit(x.OrderID,x.OrderStatus,x.OrderStatusDesc)",href='' )
                                 i.icon.icon-edit 订单修改 
-                            a(data-toggle="modal" ,data-target="#Allocate",ng-click="Allocate(x.OrderID)",href='')
+                            a(data-toggle="modal" ,data-target="#Allocate",ng-click="Allocate(x.OrderID,x.OrderStatus)",href='')
                                 i.icon.icon-edit 订单配送 
                             a(data-toggle="modal",data-target="#Details",ng-click="moreDetails(x.OrderID,' jinkeBro/order')",href='')
                                 i.icon.icon-zoom-in  订单详情

@@ -111,8 +111,8 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
 
         var resultLength = queryResult.length;
         for (var i = 0; i < resultLength; i++) {
-            queryResult[i].DeliveryBeginTime = (queryResult[i].DeliveryBeginTime == undefined) ? '' : moment(queryResult[i].DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss');
-            queryResult[i].DeliveryEndTime = (queryResult[i].DeliveryEndTime == undefined) ? '' : moment(queryResult[i].DeliveryEndTime).format('YYYY-MM-DD HH:mm:ss');
+            queryResult[i].DeliveryBeginTime = (queryResult[i].DeliveryBeginTime == undefined) ? '' : moment(queryResult[i].DeliveryBeginTime).format('YYYY-MM-DD');
+            queryResult[i].DeliveryEndTime = (queryResult[i].DeliveryEndTime == undefined) ? '' : moment(queryResult[i].DeliveryEndTime).format('YYYY-MM-DD');
         }
 
         return callback(false, queryResult);

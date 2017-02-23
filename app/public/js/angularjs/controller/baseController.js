@@ -520,7 +520,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
 
     //分配
-    $scope.Allocate = function (OrderID) {
+    $scope.Allocate = function (OrderID,orderStatus) {
         $scope.orderDelivery = {
             'OrderID': OrderID
         };
@@ -558,7 +558,9 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }).success(function (response) {
             $scope.orderDeliveryinfo = response.data[0];
             if (!response.isSuccess) {
-                alert(response.msg);
+                if (orderStatus != 1) {
+                    alert(response.msg);
+                }
             }
 
         }).error(function (response) {
