@@ -81,7 +81,7 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
         pagedata : {
             page : data.page || 1,
             pageNum : data.pageNum || (config.pageCount),
-            isPaging : (data.isPaging != undefined) ? (data.isPaging) : 1,
+            isPaging : (data.isPaging != undefined) ? (data.isPaging) : 0,
         }
     };
 

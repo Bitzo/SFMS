@@ -678,20 +678,20 @@ router.get('/', function (req, res) {
                             res.status(200);
                             return res.json(resultBack);
                         } else {
-                            res.status(200);
+                            res.status(404);
                             return res.json({
-                                code: 200,
-                                isSuccess: true,
-                                msg: "未查询到相应产品"
+                                code: 404,
+                                isSuccess: false,
+                                msg: "未查询到相应商品！"
                             });
                         }
                     });
                 } else {
-                    res.status(200);
+                    res.status(404);
                     return res.json({
-                        code: 200,
-                        isSuccess: true,
-                        msg: "未查询到相应产品"
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相应商品！"
                     });
                 }
             });

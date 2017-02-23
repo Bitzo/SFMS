@@ -5,7 +5,11 @@ block content
       ng-form.form-inline
         span.title 商品管理
              div.buttons.pull-right
-              label.form-group.my-form-group
+               label.form-group.my-form-group 是否在售
+                 jason-select.select.ext(ng-model='f.OnSale',source='/datadict/plain',selectparams='{"Category":"dc_isOnSale"}',stext='DictionaryValue',svalue='DictionaryCode')
+               label.form-group.my-form-group 供货商
+                 jason-select.select.ext(ng-model='f.SupplierID',source='/jinkeBro/staff',selectparams='{"StaffType":1}',stext='StaffName',svalue='StaffID')
+               label.form-group.my-form-group
                 a.btn.btn-sm.btn-primary(ng-click='search()')
                   i.icon.icon-search   查询
                 a.btn.btn-sm.btn-success(href='#/jinkeBro/jitgoodsAdd')

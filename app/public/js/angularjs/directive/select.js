@@ -36,15 +36,18 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
             conf: '='
         },
         link: function(scope, element, attrs){
-           
 
-            if(attrs.selectparams){
-                var url= attrs.source+"?access_token=";
-                    var params={pageindex:1, pagesize:10,
-                            f:JSON.parse(attrs.selectparams)
-                    }                
-            }else{
-                 var url= attrs.source+"?access_token=";              
+
+            if (attrs.selectparams) {
+                var url = attrs.source + "?access_token=";
+                var params = {
+                    pageindex: 1,
+                    pagesize: 10,
+                    isPaging : 1,
+                    f: JSON.parse(attrs.selectparams)
+                }
+            } else {
+                var url = attrs.source + "?access_token=";
             }
 
             jasonService.IintSelect(url,params).then(function(reponse){

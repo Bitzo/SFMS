@@ -56,6 +56,7 @@ router.get('/', function (req, res) {
             var countNum = -1;
             var queueAllResult = [];
             var flag = 0;
+            console.log(data);
             proStockService.countProStock(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -116,7 +117,7 @@ router.get('/', function (req, res) {
                             }
                             //执行顺序1
                         } else {
-                            res.status(200);
+                            res.status(404);
                             return res.json({
                                 code: 404,
                                 isSuccess: false,
@@ -125,10 +126,10 @@ router.get('/', function (req, res) {
                         }
                     });
                 } else {
-                    res.status(200);
+                    res.status(404);
                     return res.json({
-                        code: 200,
-                        isSuccess: true,
+                        code: 404,
+                        isSuccess: false,
                         msg: "未查询到相应库存！"
                     });
                 }
