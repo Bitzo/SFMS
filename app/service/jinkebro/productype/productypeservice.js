@@ -20,7 +20,10 @@ var Productype = function() {
 Productype.prototype.queryAllProType = function(data, callback) {
     var formdata = {
         ID: data.ID || '',
-        ProductTypeName: data.ProductTypeName || ''
+        ProductTypeName: data.ProductTypeName || '',
+        page : data.page || 1,
+        pageNum : data.pageNum || (config.pageCount),
+        isPaging : data.isPaging || 0
     };
 
     productypeDAL.queryAllProType(formdata, function(err, results) {
@@ -31,6 +34,23 @@ Productype.prototype.queryAllProType = function(data, callback) {
         callback(false, results);
     });
 };
+
+//查询所有产品类别
+Productype.prototype.countAllProType = function(data, callback) {
+    var formdata = {
+        ID: data.ID || '',
+        ProductTypeName: data.ProductTypeName || '',
+    };
+
+    productypeDAL.countAllProType(formdata, function(err, results) {
+        if (err) {
+            callback(true, results);
+            return;
+        }
+        callback(false, results);
+    });
+};
+
 
 //产品类别的插入
 Productype.prototype.insert = function(data, callback) {

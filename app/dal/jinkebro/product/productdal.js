@@ -330,7 +330,7 @@ exports.queryProducts = function(data, callback) {
 
     query_sql += ' order by jit_product.ProductID desc ';
 
-    if (data['isPaging'] == 1) {
+    if (data['isPaging'] == 0) {
         query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     } else {
         query_sql += ';';

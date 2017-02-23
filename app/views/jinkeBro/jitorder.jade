@@ -40,8 +40,8 @@ block content
                                   th 配送员修改
                             tbody
                                 tr
-                                    td {{orderDelivery.OrderID}}
-                                    td {{order.UserName}}
+                                    td {{orderDeliveryinfo.OrderID}}
+                                    td {{orderDeliveryinfo.StaffName}}
                                     td
                                       select(ng-model='orderDelivery.StaffID',ng-change="orderStatusChanged()")
                                         option(ng-repeat="item in orderDeliverys",value='{{item.StaffID}}') {{item.StaffName}}

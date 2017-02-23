@@ -534,7 +534,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             url: '/jinkeBro/staff' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
             params: {
                 f: {
-                    StaffType : 2
+                    StaffType: 2
                 }
             }
         }).success(function (response) {
@@ -546,7 +546,25 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }).error(function (response) {
             alert(response.msg);
         });
-    }
+
+        $http({
+            method: 'get',
+            url: '/jinkeBro/orderDelivery' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            params: {
+                f: {
+                    OrderID: OrderID
+                }
+            }
+        }).success(function (response) {
+            $scope.orderDeliveryinfo = response.data[0];
+            if (!response.isSuccess) {
+                alert(response.msg);
+            }
+
+        }).error(function (response) {
+            alert(response.msg);
+        });
+    };
 
     //确认分配
     $scope.saveAllocate = function(){
