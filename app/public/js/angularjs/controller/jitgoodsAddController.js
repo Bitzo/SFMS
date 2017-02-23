@@ -29,7 +29,8 @@ myApp.controller('jitgoodsAddController', function($scope, $http,$q,baseService)
                 pageindex:1,
                 pagesize:10,
                 f:{
-                    StaffType:3
+                    StaffType:3,
+                    IsActive : 1
                 }
             }
         }).
@@ -47,7 +48,8 @@ myApp.controller('jitgoodsAddController', function($scope, $http,$q,baseService)
                 pageindex:1,
                 pagesize:10,
                 f:{
-                    StaffType:1
+                    StaffType:1,
+                    IsActive : 1
                 }
             }
         }).

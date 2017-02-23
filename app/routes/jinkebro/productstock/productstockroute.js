@@ -237,80 +237,102 @@ router.put('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        var formdata = req.body.formdata;
-
-        //检查所需要的字段是否都存在
-        var data = ['ProductID', 'TotalNum'];
-        var err = 'require: ';
-        for (var value in data) {
-            if (!(data[value] in formdata)) {
-                err += data[value] + ' ';
-            }
-        }
-        //如果要求的字段不在req的参数中
-        if (err !== 'require: ') {
-            logger.writeError(err);
-            res.status(400);
+        // console.log(req.body.formdata);
+        // res.status(200);
+        // return res.json({
+        //     msg :' 1122'
+        // })
+        if (err) {
+            res.status(500);
             return res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
-                msg: '存在未填写的必填字段' + err
+                msg: '服务器内部错误！'
             });
         }
-        var initdata = {
-            'ID': formdata.ID,
-            'ProductID': formdata.ProductID,
-            'TotalNum': formdata.TotalNum,
-            'StockAreaID': formdata.StockAreaID,
-            'EditUserID': formdata.EditUserID,
-        }
-        for (var key in initdata) {
-            if (isNaN(initdata[key])) {
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            var formdata = req.body.formdata;
+
+            //检查所需要的字段是否都存在
+            var data = ['ProductID', 'TotalNum'];
+            var err = 'require: ';
+            for (var value in data) {
+                if (!(data[value] in formdata)) {
+                    err += data[value] + ' ';
+                }
+            }
+            //如果要求的字段不在req的参数中
+            if (err !== 'require: ') {
+                logger.writeError(err);
                 res.status(400);
-                return res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: key + ": " + initdata[key] + '不是数字'
-                });
-            }
-        }
-        // 存放接收的数据
-        var updatedata = {
-            'ID': initdata.ID,
-            'ProductID': initdata.ProductID,
-            'TotalNum': initdata.TotalNum,
-            'StockAreaID': initdata.StockAreaID,
-            'EditUserID': initdata.EditUserID,
-            'EditTime': moment().format("YYYY-MM-DD HH:mm:ss"),
-        };
-
-        proStockService.update(updatedata, function (err, results) {
-            if (err) {
-                res.status(500);
-                return res.json({
-                    code: 500,
-                    isSuccess: false,
-                    msg: results
-                });
-            }
-
-            if (results !== undefined && results.affectedRows != 0) {
-                res.status(200);
-                return res.json({
-                    code: 200,
-                    isSuccess: true,
-                    addProductResult: results,
-                    msg: '产品类别修改成功'
-                });
-            } else {
-                res.status(404);
                 return res.json({
                     code: 404,
                     isSuccess: false,
-                    msg: "产品类别操作失败"
+                    msg: '存在未填写的必填字段' + err
                 });
             }
-        });
+            var initdata = {
+                'ID': formdata.ID,
+                'ProductID': formdata.ProductID,
+                'TotalNum': formdata.TotalNum,
+                'StockAreaID': formdata.StockAreaID,
+            }
+            for (var key in initdata) {
+                if (isNaN(initdata[key])) {
+                    res.status(400);
+                    return res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: key + ": " + initdata[key] + '不是数字'
+                    });
+                }
+            }
+            // 存放接收的数据
+            var updatedata = {
+                'ID': initdata.ID,
+                'ProductID': initdata.ProductID,
+                'TotalNum': initdata.TotalNum,
+                'StockAreaID': initdata.StockAreaID,
+                'EditUserID': req.query.jitkey,
+                'EditTime': moment().format("YYYY-MM-DD HH:mm:ss"),
+            };
+
+            proStockService.update(updatedata, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: results
+                    });
+                }
+
+                if (results !== undefined && results.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        addProductResult: results,
+                        msg: '库存修改成功！'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "库存操作失败！"
+                    });
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+
     });
 });
 
@@ -323,54 +345,71 @@ router.delete('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        var d = JSON.parse(req.query.d);
-        var ID = d.ID;
-        if (ID === undefined) {
-            res.status(404);
+        if (err) {
+            res.status(500);
             return res.json({
-                code: 404,
+                code: 500,
                 isSuccess: false,
-                msg: 'require ID'
+                msg: '服务器内部错误！'
             });
         }
-        if (isNaN(ID)) {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: 'ID不是数字'
-            });
-        }
-        var deleteData = {
-            "ID": ID
-        };
-        proStockService.delete(deleteData, function (err, results) {
-            if (err) {
-                res.status(500);
-                return res.json({
-                    code: 500,
-                    isSuccess: false,
-                    data: results,
-                    msg: '服务器出错，操作失败'
-                });
-            }
-            //判断是否删除成功
-            if (results !== undefined && results.affectedRows != 0) {
-                res.status(200);
-                return res.json({
-                    code: 200,
-                    isSuccess: true,
-                    msg: '库存信息删除操作成功'
-                });
-            } else {
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            var d = JSON.parse(req.query.d);
+            var ID = d.ID;
+            if (ID === undefined) {
                 res.status(404);
                 return res.json({
                     code: 404,
                     isSuccess: false,
-                    msg: "库存信息删除操作失败"
+                    msg: 'require ID'
                 });
             }
-        });
+            if (isNaN(ID)) {
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: 'ID不是数字'
+                });
+            }
+            var deleteData = {
+                "ID": ID
+            };
+            proStockService.delete(deleteData, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        data: results,
+                        msg: '服务器出错，操作失败'
+                    });
+                }
+                //判断是否删除成功
+                if (results !== undefined && results.affectedRows != 0) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: '库存信息删除操作成功'
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "库存信息删除操作失败"
+                    });
+                }
+            });
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
     });
 });
 module.exports = router;

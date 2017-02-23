@@ -317,17 +317,6 @@ router.get('/userID/:userID', function (req, res) {
                     return;
                 }
 
-                if (RoleInfo == undefined && RoleInfo.length == 0) {
-                    res.status(200);
-                    res.json({
-                        code: 500,
-                        isSuccess: false,
-                        msg: "未查到数据"
-                    });
-                    logger.writeWarn("[routes/backend/user/userroleroute]" + "未查到数据");
-                    return;
-                }
-
                 if (RoleInfo != undefined && RoleInfo.length != 0) {
                     var results = {
                         code: 200,
@@ -337,6 +326,16 @@ router.get('/userID/:userID', function (req, res) {
                     };
                     res.status(200);
                     res.json(results);
+                    return;
+                } else {
+                    res.status(200);
+                    res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: "未查到数据",
+                        data:{}
+                    });
+                    logger.writeWarn("[routes/backend/user/userroleroute]" + "未查到数据");
                     return;
                 }
             });

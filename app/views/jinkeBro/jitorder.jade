@@ -40,10 +40,12 @@ block content
                                   th 配送员修改
                             tbody
                                 tr
-                                    td {{order.OrderID}}
-                                    td {{order.UserName}}
-                                    td 
-                                      jason-select.form-control(ng-model='order.StaffID',source='/jinkeBro/staff',stext='StaffName',svalue='StaffID' )
+                                    td {{orderDeliveryinfo.OrderID}}
+                                    td {{orderDeliveryinfo.StaffName}}
+                                    td
+                                      select(ng-model='orderDelivery.StaffID',ng-change="orderStatusChanged()")
+                                        option(ng-repeat="item in orderDeliverys",value='{{item.StaffID}}') {{item.StaffName}}
+                                      //jason-select.form-control(ng-model='order.StaffID',source='/jinkeBro/staff',stext='StaffName',svalue='StaffID' )
                         button.btn.btn-info.pull-right(ng-click="saveAllocate()") 确定
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
         //订单详情                
