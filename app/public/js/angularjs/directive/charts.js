@@ -29,7 +29,6 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
         transclude:true,
         link: function (scope, element, attrs) {
              var params = location.search()
-             console.log(params)
 
             if(attrs.source){
                 var url= attrs.source;
@@ -44,28 +43,30 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                     var OutSum =  response.data.data.OutSum;        
                     var Sum = InSum + OutSum;   
 
-                    var a = InSum / Sum;
-                    var b = OutSum / Sum;                        
+                    var a = (InSum / Sum).toFixed(4);
+                    var b = (OutSum / Sum).toFixed(4);                      
     
                     
                     var data_arr = [a, b];  
                     var color_arr = ["#92c5e2",  "#f5de69"];  
                     var text_arr = ["收入", "支出"];  
-                    drawCircle("inOutSum", data_arr, color_arr, text_arr,0,'收入支出饼状图');  
+                    var mon_arr = [InSum, OutSum];                      
+                    drawCircle("inOutSum", data_arr, color_arr, text_arr,mon_arr,0,'收入支出饼状图');  
 
                 }else{
                     
                    var InDetail = response.data.data.detail;
-             
                     var InSum = response.data.data.InSum;
                     var OutSum =  response.data.data.OutSum;  
 
                     var data_arr = [];  
                     var color_arr = [];  
                     var text_arr = []; 
+                    var mon_arr = [];                                          
                     var in_data_arr = [];  
                     var in_color_arr = [];  
                     var in_text_arr = []; 
+                    var in_mon_arr = [];                                                     
                     var a = 0;
                     var b = 0;
 
@@ -73,23 +74,25 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                        for(var i = 0;i < InDetail.length;i++){    
                                       
                             if(InDetail[i].InOutType == 13){
-                                in_data_arr[a] = InDetail[i].sum / InSum ;
+                                in_data_arr[a] = (InDetail[i].sum / InSum ).toFixed(4);
                                 in_text_arr[a] = InDetail[i].FITypeValue; 
+                                in_mon_arr[a] = InDetail[i].sum;                                 
                                 in_color_arr = ["#E5A2C1","#F8CCD1",'#9EA3D2','#7A8EC7'];
                                 a++;
                             }else{
                                                                
-                                data_arr[b] = InDetail[i].sum / OutSum ;
+                                data_arr[b] = (InDetail[i].sum / OutSum).toFixed(4) ;
                                 text_arr[b] = InDetail[i].FITypeValue; 
+                                mon_arr[b] = InDetail[i].sum;  
                                 color_arr = ["#E5A2C1","#F8CCD1",'#9EA3D2','#7A8EC7'];
                                 b++;
                             }   
                        }
 
-                     
+         
 
-                   drawCircle("inOutSum", in_data_arr, in_color_arr, in_text_arr,250,'收入明细饼状图');  
-                   drawCircle("inOutSum", data_arr, color_arr, text_arr,500,'支出明细饼状图');  
+                   drawCircle("inOutSum", in_data_arr, in_color_arr, in_text_arr,in_mon_arr,250,'收入明细饼状图');  
+                   drawCircle("inOutSum", data_arr, color_arr, text_arr,mon_arr,500,'支出明细饼状图');  
                    
 
 
@@ -97,7 +100,7 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                 
             });
 
-             function drawCircle(canvasId, data_arr, color_arr, text_arr,a,name)  
+             function drawCircle(canvasId, data_arr, color_arr, text_arr,mon_arr,a,name)  
             {  
 
                 var c = document.getElementById(canvasId);  
@@ -110,10 +113,6 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                 var width = 30, height = 10; //图例宽和高  
                 var posX = ox + 120, posY = oy + 30;   //  
                 var textX = posX + width + 5, textY = posY + 10;  
-
-                var width = 30, height = 10; //名称宽和高  
-                var titX = ox , titY = oy -80;   //  
-                var titleX = titX + width + 5, titleY = titY + 10;  
   
                 var startAngle = 0; //起始弧度  
                 var endAngle = 0;   //结束弧度  
@@ -144,7 +143,7 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                     ctx.moveTo(posX, posY + 20 * i);  
                     ctx.font = 'bold 12px 微软雅黑';    //斜体 30像素 微软雅黑字体  
                     ctx.fillStyle = color_arr[i]; //"#000000";  
-                    var percent = text_arr[i] + "：" + 100 * data_arr[i] + "%";  
+                    var percent = text_arr[i] + "：" + 100 * data_arr[i] + "%" + "  " + "金额" + "："  + mon_arr[i];  
                     ctx.fillText(percent, textX, textY + 20 * i);  
                 }  
             }  
