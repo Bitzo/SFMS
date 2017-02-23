@@ -37,7 +37,7 @@ exports.queryProStock= function (data, callback) {
 
 
     logger.writeInfo("根据条件查询库存:" + sql);
-    console.log(sql);
+    console.log("根据条件查询库存:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {

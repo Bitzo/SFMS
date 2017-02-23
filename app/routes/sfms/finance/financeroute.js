@@ -509,9 +509,11 @@ router.get('/count', function(req, res) {
             });
         }
         if (results !== undefined && results.isSuccess === true) {
-            console.log(req.query)
             var startTime = req.query.startTime || '',
                 endTime = req.query.endTime || '';
+
+            if (startTime!=='') startTime = startTime.slice(1,-1);
+            if (endTime!=='') endTime = endTime.slice(1,-1);
 
             var data = {
                 'startTime': startTime,

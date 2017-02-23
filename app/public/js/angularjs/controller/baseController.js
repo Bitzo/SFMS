@@ -141,7 +141,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     //新增页面  添加
     $scope.formdata={};
     $scope.addnew = function(formdata,action) {
-        console.log(11111)
         console.log($scope.formdata)
         $http({
             method:'post',
@@ -534,7 +533,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             url: '/jinkeBro/staff' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
             params: {
                 f: {
-                    StaffType: 2
+                    StaffType : 2
                 }
             }
         }).success(function (response) {
@@ -552,7 +551,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             url: '/jinkeBro/orderDelivery' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
             params: {
                 f: {
-                    OrderID: OrderID
+                    OrderID : OrderID
                 }
             }
         }).success(function (response) {
@@ -564,7 +563,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }).error(function (response) {
             alert(response.msg);
         });
-    };
+    }
 
     //确认分配
     $scope.saveAllocate = function(){
@@ -657,8 +656,47 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }).
         success(function(response) {
             alert(response.msg)
+            getInit();
         }).
         error(function(response) {
+            alert(response.msg);
+        });
+    };
+
+    //开始配送
+    $scope.startDelivery = function (OrderID) {
+        $http({
+            method: 'put',
+            url: '/jinkeBro/orderDelivery/startDelivery' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            data: {
+                formdata: {
+                    OrderID:OrderID
+                }
+            }
+        }).success(function (response) {
+            if (response.isSuccess) {
+                alert(response.msg);
+            }
+            getInit();
+        }).error(function (response) {
+            alert(response.msg);
+        });
+    };
+
+    //配送完成
+    $scope.endDelivery = function (OrderID) {
+        $http({
+            method: 'put',
+            url: '/jinkeBro/orderDelivery/endDelivery' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            data: {
+                formdata: {
+                    OrderID:OrderID
+                }
+            }
+        }).success(function (response) {
+            alert(response.msg);
+            getInit();
+        }).error(function (response) {
             alert(response.msg);
         });
     };

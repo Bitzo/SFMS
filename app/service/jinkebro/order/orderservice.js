@@ -200,7 +200,7 @@ Order.prototype.queryOrders = function (data, callback) {
         pageManage : {
             page : data.page,
             pageNum : data.pageNum,
-            isPaging : data.isPaging
+            isPaging : data.isPaging || 0
         },
         order : {
             "jit_order.OrderID" : data.OrderID,
@@ -351,7 +351,7 @@ Order.prototype.queryOrderProduct = function (data, callback) {
         pageManage : {
             page : data.page || 1,
             pageNum : data.pageNum || 20,
-            isPaging : data.isPaging || 1
+            isPaging : data.isPaging || 0
         },
         orderProduct : {
             "jit_orderproduct.ProductID" : data.ProductID || [],

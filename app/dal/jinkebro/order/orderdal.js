@@ -711,7 +711,7 @@ exports.queryOrderProduct = function(data, callback) {
     var num = pageManageData.pageNum; //每页显示的个数
     var page = pageManageData.page || 1;
 
-    if (pageManageData.isPaging == 1) {
+    if (pageManageData.isPaging == 0) {
         query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     }
 
@@ -870,7 +870,7 @@ exports.queryOrders = function(data, callback) {
 
     var num = pageManageData.pageNum; //每页显示的个数
     var page = pageManageData.page || 1;
-    if (pageManageData.isPaging == 1) {
+    if (pageManageData.isPaging == 0) {
         query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     }
 

@@ -66,7 +66,7 @@ router.post('/', function (req, res) {
             if (DeliveryBeginTime != undefined && DeliveryBeginTime != '') {
                 DeliveryBeginTime = moment(formdata.DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss');
             } else {
-                DeliveryBeginTime = moment().format('YYYY-MM-DD HH:mm:ss');
+                DeliveryBeginTime = '';
             }
 
             if (DeliveryEndTime != undefined && DeliveryEndTime != '') {
@@ -217,7 +217,7 @@ router.get('/', function (req, res) {
                 deliveryUserID = query.DeliveryUserID || '',
                 deliveryBeginTime = query.DeliveryBeginTime || '',
                 deliveryEndTime = query.DeliveryEndTime || '',
-                isPaging = (query.isPaging != undefined) ? (query.isPaging) : 1;
+                isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 0;
 
             var data = {
                 page : page,
@@ -428,6 +428,258 @@ router.put('/', function (req, res) {
                                 code: 404,
                                 isSuccess: false,
                                 msg: "订单配送员修改操作失败！"
+                            });
+                        }
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "此条订单配送员记录不存在！"
+                    });
+                }
+
+            });
+
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+    });
+});
+
+router.put('/startDelivery', function (req, res) {
+
+    var functionCode = functionConfig.jinkeBroApp.orderDelivery.orderdeliveryQuery.functionCode;
+    var funcData = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    }
+
+    userFuncService.checkUserFunc(funcData, function (err, funcResult) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '服务器内部错误！'
+            });
+        }
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            //接受前端的数据
+            var formdata = req.body.formdata;
+
+            var data = ['OrderID'];
+            var err = 'require: ';
+            for (var value in data) {
+                if (!(data[value] in formdata)) {
+                    err += data[value] + ' ';
+                }
+            }
+
+            if (err !== 'require: ') {
+                logger.writeError(err);
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '存在未填写的必填的字段' + err
+                });
+            }
+
+            var OrderID = formdata.OrderID,
+                DeliveryBeginTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+
+            //接收的数据进行object然后来插入
+            var insertData = {
+                "OrderID" : OrderID,
+                "DeliveryBeginTime" : DeliveryBeginTime || ''
+            };
+
+            var intData = {
+                "OrderID" : OrderID,
+            };
+
+            for (var key in intData) {
+                if (isNaN(intData[key])) {
+                    res.status(400);
+                    return res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: key + ": " + intData[key] + '不是数字'
+                    });
+                }
+            }
+
+            //执行插入操作
+            orderDelivery.countOrderDelivery({OrderID : OrderID},function (err,results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '服务器内部错误！'
+                    });
+                }
+                console.log(results)
+                if (results != undefined && results.length != 0 && results[0]['num'] > 0) {
+                    orderDelivery.updateOrderDelivery(insertData, function (err, result) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: '服务器出错，订单配送员修改操作失败'
+                            });
+                        }
+
+                        if (result !== undefined && result.affectedRows != 0) {
+                            res.status(200);
+                            return res.json({
+                                code: 200,
+                                isSuccess: true,
+                                updateResult: result,
+                                msg: '开始配送操作成功！'
+                            });
+                        } else {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "开始配送操作失败！"
+                            });
+                        }
+                    });
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "此条订单配送员记录不存在！"
+                    });
+                }
+
+            });
+
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+    });
+});
+
+
+router.put('/endDelivery', function (req, res) {
+
+    var functionCode = functionConfig.jinkeBroApp.orderDelivery.orderdeliveryQuery.functionCode;
+    var funcData = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    }
+
+    userFuncService.checkUserFunc(funcData, function (err, funcResult) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '服务器内部错误！'
+            });
+        }
+        if (funcResult !== undefined && funcResult.isSuccess === true) {
+            //接受前端的数据
+
+            var formdata = req.body.formdata;
+
+            var data = ['OrderID'];
+            var err = 'require: ';
+            for (var value in data) {
+                if (!(data[value] in formdata)) {
+                    err += data[value] + ' ';
+                }
+            }
+
+            if (err !== 'require: ') {
+                logger.writeError(err);
+                res.status(400);
+                return res.json({
+                    code: 400,
+                    isSuccess: false,
+                    msg: '存在未填写的必填的字段' + err
+                });
+            }
+
+            var OrderID = formdata.OrderID,
+                DeliveryEndTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+
+            //接收的数据进行object然后来插入
+            var insertData = {
+                "OrderID" : OrderID,
+                "DeliveryEndTime" : DeliveryEndTime || ''
+            };
+
+            var intData = {
+                "OrderID" : OrderID
+            };
+
+            for (var key in intData) {
+                if (isNaN(intData[key])) {
+                    res.status(400);
+                    return res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: key + ": " + intData[key] + '不是数字'
+                    });
+                }
+            }
+
+            //执行插入操作
+            orderDelivery.countOrderDelivery({OrderID : OrderID},function (err,results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '服务器内部错误！'
+                    });
+                }
+                console.log(results)
+                if (results != undefined && results.length != 0 && results[0]['num'] > 0) {
+                    orderDelivery.updateOrderDelivery(insertData, function (err, result) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: '服务器出错，订单配送员修改操作失败'
+                            });
+                        }
+
+                        if (result !== undefined && result.affectedRows != 0) {
+                            res.status(200);
+                            return res.json({
+                                code: 200,
+                                isSuccess: true,
+                                updateResult: result,
+                                msg: '完成配送操作成功！'
+                            });
+                        } else {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "完成配送操作失败！"
                             });
                         }
                     });

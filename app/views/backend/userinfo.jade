@@ -47,14 +47,14 @@ block content
           td
             input(type="phone",name="Phone",ng-model="formdata.Phone",ng-maxlength='11',ng-minlength='11')
             &nbsp&nbsp
-            small.error(ng-if="(userEdit.Phone.$error.maxlength||userEdit.Phone.$error.minlength)&& userEdit.Phone.$touched") 电话号码11位
+            small.error(ng-if="(userInfo.Phone.$error.maxlength||userInfo.Phone.$error.minlength)&& userInfo.Phone.$touched") 电话号码11位
         
         tr
           td(width="15%",class="tableleft") 邮箱 (可选)
           td
             input(type="email",name="Email",ng-model='formdata.Email',ng-maxlength='50')
             &nbsp&nbsp
-            small.error(ng-if="formdata.Email.$error.maxlength && formdata.Email.$touched") 请填写正确的邮箱地址
+            small.error(ng-if="userInfo.Email.$error.maxlength && userInfo.Email.$touched") 请填写正确的邮箱地址
                   
         tr
           td(width="15%",class="tableleft") 所在学院 (可选) 
