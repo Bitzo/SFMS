@@ -5,6 +5,10 @@ block content
             ng-form.form-inline
                 span.title 库存管理
                     div.buttons.pull-right
+                        label.form-group.my-form-group   商品名称 
+                            jason-select.est(ng-model='f.FIType',source='/datadict/plain',selectparams='{"Category":"dc_fitype"}',stext='DictionaryValue',svalue='DictionaryID')
+                        label.form-group.my-form-group 存储位置
+                            jason-select.select.ext(ng-model='f.StockAreaID',source='/datadict/plain',selectparams='{"Category":"dc_stockArea"}',stext='DictionaryValue',svalue='DictionaryID')
                         label.form-group.my-form-group
                             a.btn.btn-sm.btn-primary(ng-click='search()')
                                 i.icon.icon-search   查询
