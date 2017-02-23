@@ -43,8 +43,8 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                     var OutSum =  response.data.data.OutSum;        
                     var Sum = InSum + OutSum;   
 
-                    var a = InSum / Sum;
-                    var b = OutSum / Sum;                        
+                    var a = (InSum / Sum).toFixed(4);
+                    var b = (OutSum / Sum).toFixed(4);                      
     
                     
                     var data_arr = [a, b];  
@@ -74,21 +74,22 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                        for(var i = 0;i < InDetail.length;i++){    
                                       
                             if(InDetail[i].InOutType == 13){
-                                in_data_arr[a] = InDetail[i].sum / InSum ;
+                                in_data_arr[a] = (InDetail[i].sum / InSum ).toFixed(4);
                                 in_text_arr[a] = InDetail[i].FITypeValue; 
                                 in_mon_arr[a] = InDetail[i].sum;                                 
                                 in_color_arr = ["#E5A2C1","#F8CCD1",'#9EA3D2','#7A8EC7'];
                                 a++;
                             }else{
                                                                
-                                data_arr[b] = InDetail[i].sum / OutSum ;
+                                data_arr[b] = (InDetail[i].sum / OutSum).toFixed(4) ;
                                 text_arr[b] = InDetail[i].FITypeValue; 
                                 mon_arr[b] = InDetail[i].sum;  
                                 color_arr = ["#E5A2C1","#F8CCD1",'#9EA3D2','#7A8EC7'];
                                 b++;
                             }   
                        }
-)
+
+         
 
                    drawCircle("inOutSum", in_data_arr, in_color_arr, in_text_arr,in_mon_arr,250,'收入明细饼状图');  
                    drawCircle("inOutSum", data_arr, color_arr, text_arr,mon_arr,500,'支出明细饼状图');  
@@ -112,14 +113,6 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                 var width = 30, height = 10; //图例宽和高  
                 var posX = ox + 120, posY = oy + 30;   //  
                 var textX = posX + width + 5, textY = posY + 10;  
-
-                // var width = 30, height = 10; //价格宽和高  
-                // var posX = ox + 120, posY = oy + 30;   //  
-                // var textX = posX + width + 5, textY = posY + 10;  
-
-                // var width = 30, height = 10; //名称宽和高  
-                // var titX = ox , titY = oy -80;   //  
-                // var titleX = titX + width + 5, titleY = titY + 10;  
   
                 var startAngle = 0; //起始弧度  
                 var endAngle = 0;   //结束弧度  
