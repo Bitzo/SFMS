@@ -656,6 +656,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }).
         success(function(response) {
             alert(response.msg)
+            getInit();
         }).
         error(function(response) {
             alert(response.msg);
@@ -676,6 +677,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             if (response.isSuccess) {
                 alert(response.msg);
             }
+            getInit();
         }).error(function (response) {
             alert(response.msg);
         });
@@ -693,6 +695,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }
         }).success(function (response) {
             alert(response.msg);
+            getInit();
         }).error(function (response) {
             alert(response.msg);
         });

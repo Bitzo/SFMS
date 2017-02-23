@@ -138,7 +138,6 @@ exports.countOrderDelivery = function (data, callback) {
         connection.query(sql, function (err, results) {
             connection.release();
             if (err) {
-                connection.release();
                 callback(true);
                 return;
             }
