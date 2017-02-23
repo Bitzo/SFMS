@@ -79,6 +79,13 @@ block content
             ng-form.form-inline
                 span.title 订单管理
                     div.buttons.pull-right
+                        label.form-group.my-form-group   订单号 
+                            input.est(ng-model='f.FIType',source='/datadict/plain',selectparams='{"Category":"dc_fitype"}',stext='DictionaryValue',svalue='DictionaryID')
+                        label.form-group.my-form-group  配送状态 
+                            select.est(ng-model='f.FIStatus')
+                                option 已送达
+                                option 配送中
+                                option(value='') 全部
                         label.form-group.my-form-group
                             a.btn.btn-sm.btn-primary(ng-click='search()')
                                 i.icon.icon-search   查询
