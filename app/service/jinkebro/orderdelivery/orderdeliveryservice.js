@@ -152,7 +152,7 @@ OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
 
     var formdata = {
         "OrderID" : data.OrderID,
-        "DeliveryUserID" : data.DeliveryUserID,
+        "DeliveryUserID" : data.DeliveryUserID || '',
         "DeliveryBeginTime" : data.DeliveryBeginTime || '',
         "DeliveryEndTime" : data.DeliveryEndTime || ''
     };

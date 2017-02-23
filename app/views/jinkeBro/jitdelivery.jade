@@ -72,5 +72,9 @@ block content
             td
               a(data-toggle="modal",data-target="#myModal",ng-click='editDelivery(x.OrderID, "/jinkeBro/orderDelivery")' href='')
                 i.icon.icon-edit  编辑
+              a(data-toggle="modal" ,data-target="#startDelivery",ng-click="startDelivery(x.OrderID)",href='')
+                i.icon.icon-edit 开始配送
+              a(data-toggle="modal",data-target="#endDelivery",ng-click="endDelivery(x.OrderID)",href='')
+                i.icon.icon-edit 配送完成
       div.pull-right
         jason-pagination(conf='paginationConf')
