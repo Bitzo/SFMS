@@ -46,13 +46,13 @@ exports.queryProStock= function (data, callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('根据条件查询库存，出错信息：' + err);
-                connection.release();
                 callback(true,'系统内部错误');
                 return;
             }
-            connection.release();
+         
             return callback(false, results);
         });
     });
@@ -155,7 +155,6 @@ exports.delete = function (data, callback) {
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
-            connection.release();
             return;
         }
 

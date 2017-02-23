@@ -238,7 +238,6 @@ exports.deleteProduct = function(data, callback) {
         connection.query(delete_sql, function(err, results) {
             connection.release();
             if (err) {
-                connection.release();
                 throw err;
                 callback(true);
                 return;
@@ -482,17 +481,16 @@ exports.getMaxSKU = function (callback) {
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             logger.writeError('数据库连接错误：' + err);
-            connection.release();
             return callback(true,'数据库连接错误！');
         }
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('查询：' + err);
                 callback(true);
                 return;
             }
-            connection.release();
+     
             return callback(false, results);
         });
     });

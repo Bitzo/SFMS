@@ -52,14 +52,13 @@ var addStaff = function (data,callback) {
             return;
         }
         connection.query(insertSql, function(err, result) {
-            if (err) {
-                connection.release();
+            connection.release();
+            if (err) {               
                 throw err;
                 callback(true,'失败！');
                 return;
             }
             logger.writeInfo('成功！');
-            connection.release();
             return callback(false, result);
         });
     });
@@ -80,14 +79,13 @@ var deleteStaff = function (data,callback) {
         }
         console.log(delete_sql);
         connection.query(delete_sql, function(err, result) {
+            connection.release();
             if (err) {
-                connection.release();
                 throw err;
                 callback(true,'失败！');
                 return;
             }
             logger.writeInfo('成功！');
-            connection.release();
             return callback(false, result);
         });
     });
@@ -123,14 +121,13 @@ var updateStaff = function (data,callback) {
             return;
         }
         connection.query(update_sql, function(err, result) {
+             connection.release();
             if (err) {
-                connection.release();
                 throw err;
                 callback(true,'失败！');
                 return;
             }
             logger.writeInfo('成功！');
-            connection.release();
             return callback(false, result);
         });
     });
@@ -187,14 +184,14 @@ var getStaff = function (data,callback) {
             return;
         }
         connection.query(querySql, function(err, result) {
+            connection.release();
             if (err) {
-                connection.release();
                 throw err;
                 callback(true,'失败！');
                 return;
             }
             logger.writeInfo('成功！');
-            connection.release();
+            
             return callback(false, result);
         });
     });
@@ -241,14 +238,13 @@ var countStaff = function (data,callback) {
             return;
         }
         connection.query(querySql, function(err, result) {
+                            connection.release();
             if (err) {
-                connection.release();
                 throw err;
                 callback(true,'失败！');
                 return;
             }
             logger.writeInfo('成功！');
-            connection.release();
             return callback(false, result);
         });
     });
