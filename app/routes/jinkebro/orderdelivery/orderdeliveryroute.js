@@ -217,7 +217,7 @@ router.get('/', function (req, res) {
                 deliveryUserID = query.DeliveryUserID || '',
                 deliveryBeginTime = query.DeliveryBeginTime || '',
                 deliveryEndTime = query.DeliveryEndTime || '',
-                isPaging = (query.isPaging != undefined) ? (query.isPaging) : 1;
+                isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 0;
 
             var data = {
                 page : page,
