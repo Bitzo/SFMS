@@ -77,14 +77,16 @@ exports.countProStock = function (data,callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 logger.writeError('根据条件查询库存，出错信息：' + err);
                 connection.release();
                 callback(true,'系统内部错误');
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 };
@@ -101,15 +103,15 @@ exports.insert = function (data, callback) {
         }
         logger.writeInfo('新增库存信息' + insert_sql);
         connection.query(insert_sql, data, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('新增库存信息，出错信息：' + err)
                 callback(true,'系统内部错误');
                 return;
             }
-            connection.release();
-            return callback(false, results);
 
+            callback(false, results);
+            return;
         });
     });
 };
@@ -129,14 +131,15 @@ exports.update = function (data, callback) {
         }
 
         connection.query(upd_sql, data, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('修改库存信息，出错信息：' + err)
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 };
@@ -157,14 +160,15 @@ exports.delete = function (data, callback) {
         }
 
         connection.query(del_sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 callback(true);
                 logger.writeError('删除库存信息，出错信息：' + err)
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return ;
         });
     });
 };

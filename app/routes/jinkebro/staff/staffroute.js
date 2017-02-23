@@ -259,7 +259,7 @@ router.put('/',function (req,res) {
         Sex = formdata.Sex,
         Position = formdata.Position,
         CreateTime = formdata.CreateTime,
-        LeaveTime = formdata.LeaveTime || '',
+        LeaveTime = formdata.LeaveTime,
         IsActive = formdata.IsActive;
 
     var intData = {
@@ -293,6 +293,8 @@ router.put('/',function (req,res) {
 
     if (LeaveTime != undefined) {
         LeaveTime = moment(LeaveTime).format('YYYY-MM-DD HH:mm:ss');
+    } else {
+        LeaveTime = '';
     }
 
     var mustData = {
@@ -379,6 +381,7 @@ router.put('/',function (req,res) {
 });
 
 router.get('/',function (req,res) {
+    console.log(req.query)
     var f = {};
     if (req.query.f == undefined) {
         f = {};
@@ -388,7 +391,7 @@ router.get('/',function (req,res) {
 
     var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
         pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : (config.pageCount),
-        isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 1;
+        isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 0;
 
     var data = {
         page : page || 1,

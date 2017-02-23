@@ -170,7 +170,7 @@ Product.prototype.queryProducts = function (data, callback) {
         ProductTypeID: data.ProductTypeID || '',
         ProductPrice: data.ProductPrice || '',
         OnSale: data.OnSale || '',
-        isPaging: data.isPaging || ''
+        isPaging: data.isPaging || 0
     };
 
     productDAL.queryProducts(formdata, function (err, result) {

@@ -7,7 +7,8 @@
  */
 var db_jinkebro = appRequire('db/db_jinkebro'),
     staff = appRequire('model/jinkebro/staff/staffmodel'),
-    logger = appRequire("util/loghelper").helper;
+    logger = appRequire("util/loghelper").helper,
+    moment = require('moment');
 
 var addStaff = function (data,callback) {
     var staffData = {
@@ -65,7 +66,8 @@ var addStaff = function (data,callback) {
 };
 
 var deleteStaff = function (data,callback) {
-    var delete_sql = "update jit_staff set jit_staff.IsActive = 0 where StaffID = " + data['StaffID'] + ";";
+    var delete_sql = "update jit_staff set jit_staff.IsActive = 0 ,jit_staff.LeaveTime = '" + moment().format('YYYY-MM-DD HH:mm:ss') +
+        "' where StaffID = " + data['StaffID'] + ";";
 
     logger.writeInfo("[deleteStaff func in staffdal]员工删除：" + delete_sql);
     console.log("in dal,员工删除：" + delete_sql);
@@ -76,6 +78,7 @@ var deleteStaff = function (data,callback) {
             callback(true,'数据库连接失败！');
             return;
         }
+        console.log(delete_sql);
         connection.query(delete_sql, function(err, result) {
             if (err) {
                 connection.release();
@@ -96,7 +99,7 @@ var updateStaff = function (data,callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'StaffID') {
+            if (key != 'StaffID' && data[key] != '') {
                 if (sql.length == 0) {
                     sql += " " + key + " = '" + data[key] + "' ";
                 } else {
@@ -169,7 +172,7 @@ var getStaff = function (data,callback) {
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-    if (data['isPaging'] == 1) {
+    if (data['isPaging'] == 0) {
         querySql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     } else {
         querySql += ';';

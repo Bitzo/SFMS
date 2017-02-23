@@ -10,11 +10,11 @@ var logger = appRequire("util/loghelper").helper,
     productypeModel = appRequire('model/jinkebro/productype/productypemodel');
 
 //得到所有产品类别
-exports.queryAllProType = function (data, callback) {
+exports.countAllProType = function (data, callback) {
     // data like this
     // { ID: '', ProductTypeName: '' }
 
-    var sql = 'select ID,ProductTypeName from jit_productype where 1=1';
+    var sql = 'select count(1) as num from jit_productype where 1=1';
 
     if (data !== undefined) {
         for (var key in data) {
@@ -29,7 +29,7 @@ exports.queryAllProType = function (data, callback) {
         }
     }
 
-    logger.writeInfo("得到所有产品类别得到所有产品类别:" + sql);
+    logger.writeInfo("得到所有产品类别得到所有产品类别的个数:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -38,14 +38,73 @@ exports.queryAllProType = function (data, callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('得到产品类别，出错信息：' + err)
                 callback(true,'系统内部错误');
                 return;
             }
+
+            callback(false, results);
+            return ;
+        });
+    });
+};
+
+//得到所有产品类别的个数
+exports.queryAllProType = function (data, callback) {
+    // data like this
+    // { ID: '', ProductTypeName: '' }
+    var queryData = {
+        ID: data.ID,
+        ProductTypeName: data.ProductTypeName,
+    };
+
+    var sql = 'select ID,ProductTypeName from jit_productype where 1=1 ';
+
+    if (queryData !== undefined) {
+        for (var key in queryData) {
+            if (queryData[key] != '' && key != undefined) {
+                //判断data[key]是否是数值类型
+                if (!isNaN(queryData[key])) {
+                    sql += ' and ' + key + ' = ' + queryData[key] + ' ';
+                } else {
+                    sql += ' and ' + key + ' = "' + queryData[key] + '" ';
+                }
+            }
+        }
+    }
+
+    var num = data.pageNum; //每页显示的个数
+    var page = data.page || 1;
+
+    sql += ' order by jit_productype.ID desc ';
+
+    if (data['isPaging'] == 0) {
+        sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
+    } else {
+        sql += ';';
+    }
+
+    logger.writeInfo("得到所有产品类别得到所有产品类别:" + sql);
+    console.log("得到所有产品类别得到所有产品类别:" + sql);
+
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            logger.writeError('产品类别连接：err' + err);
+            callback(true,'系统内部错误');
+            return;
+        }
+        connection.query(sql, function (err, results) {
             connection.release();
-            return callback(false, results);
+            if (err) {
+                logger.writeError('得到产品类别，出错信息：' + err)
+                callback(true,'系统内部错误');
+                return;
+            }
+
+            callback(false, results);
+            return ;
         });
     });
 };
@@ -62,14 +121,15 @@ exports.insert = function (data, callback) {
         }
         logger.writeInfo('新增产品类别' + insert_sql);
         connection.query(insert_sql, data, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('新增产品类别，出错信息：' + err)
                 callback(true,'系统内部错误');
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 };
@@ -89,14 +149,15 @@ exports.update = function (data, callback) {
         }
 
         connection.query(upd_sql, data, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 logger.writeError('修改产品类别，出错信息：' + err)
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 };
@@ -117,14 +178,14 @@ exports.delete = function (data, callback) {
         }
 
         connection.query(del_sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 callback(true,'系统内部错误');
-                logger.writeError('删除产品类别，出错信息：' + err);
+                logger.writeError('删除产品类别，出错信息：' + err)
                 return;
             }
-            connection.release();
-            return callback(false, results);
+            callback(false, results);
+            return ;
         });
     });
 };

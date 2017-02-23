@@ -36,7 +36,7 @@ block content
             td
               a(href='#/jinkeBro/jitstaffedit?StaffID={{x.StaffID}}' )
                 i.icon.icon-edit 编辑
-              a(ng-click="remove($index,'/')",href='')
+              a(ng-click="remove($index,x.StaffName,'/jinkeBro/staff')",href='')
                 i.icon.icon-trash 删除
       div.pull-right
         jason-pagination(conf='paginationConf')

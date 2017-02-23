@@ -60,9 +60,20 @@ router.post('/', function (req, res) {
 
             var OrderID = formdata.OrderID,
                 DeliveryUserID = formdata.DeliveryUserID,
-                DeliveryBeginTime = (formdata.DeliveryBeginTime != undefined) ? moment(formdata.DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss') : '',
-                DeliveryEndTime = (formdata.DeliveryEndTime != undefined) ? moment(formdata.DeliveryEndTime).format('YYYY-MM-DD HH:mm:ss') : '';
+                DeliveryBeginTime = formdata.DeliveryBeginTime,
+                DeliveryEndTime = formdata.DeliveryEndTime;
 
+            if (DeliveryBeginTime != undefined && DeliveryBeginTime != '') {
+                DeliveryBeginTime = moment(formdata.DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss');
+            } else {
+                DeliveryBeginTime = moment().format('YYYY-MM-DD HH:mm:ss');
+            }
+
+            if (DeliveryEndTime != undefined && DeliveryEndTime != '') {
+                DeliveryEndTime = moment(formdata.DeliveryEndTime).format('YYYY-MM-DD HH:mm:ss');
+            } else {
+                DeliveryEndTime = '';
+            }
 
             //接收的数据进行object然后来插入
             var insertData = {
@@ -78,7 +89,6 @@ router.post('/', function (req, res) {
             };
 
             for (var key in intData) {
-                console.log(key + ': ' + intData[key]);
                 if (isNaN(insertData[key])) {
                     res.status(400);
                     return res.json({
@@ -140,9 +150,7 @@ router.post('/', function (req, res) {
                 }
 
                 if (queryInfo.length != 0) {
-                    console.log(queryInfo);
                     insertData.ID = queryInfo[0].ID;
-                    console.log(insertData);
                     orderDelivery.updateOrderDelivery(insertData, function (err, result) {
                         if (err) {
                             res.status(500);
@@ -333,6 +341,7 @@ router.put('/', function (req, res) {
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             //接受前端的数据
+            console.log(req.body.formdata);
             var formdata = req.body.formdata;
 
             var data = ['OrderID', 'DeliveryUserID'];
@@ -354,9 +363,10 @@ router.put('/', function (req, res) {
             }
 
             var OrderID = formdata.OrderID,
-                DeliveryUserID = formdata.DeliveryUserID,
+                DeliveryUserID = formdata.DeliveryUserID || '',
                 DeliveryBeginTime = (formdata.DeliveryBeginTime != undefined) ? moment(formdata.DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss') : '',
                 DeliveryEndTime = (formdata.DeliveryEndTime != undefined) ? moment(formdata.DeliveryEndTime).format('YYYY-MM-DD HH:mm:ss') : '';
+
 
             //接收的数据进行object然后来插入
             var insertData = {

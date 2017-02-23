@@ -21,7 +21,7 @@ exports.insertOrderDelivery = function (data, callback) {
     var  i = 0;
 
     for (var key in data) {
-        if (key != 'ID') {
+        if (key != 'ID' && data[key] != '') {
             if (i == 0) {
                 if (!isNaN(data[key])) {
                     sql += key + " = " + data[key] + " ";
@@ -41,7 +41,7 @@ exports.insertOrderDelivery = function (data, callback) {
     }
 
     logger.writeInfo('[dal/jinkebro/orderdelivery]商品配送员的新增');
-
+    console.log(sql);
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -49,14 +49,15 @@ exports.insertOrderDelivery = function (data, callback) {
             return;
         }
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 callback(true);
                 logger.writeError("[dal/jinkebro/customer/customerdal]订单的配送员的插入的时候失败");
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 }
@@ -135,13 +136,14 @@ exports.countOrderDelivery = function (data, callback) {
         }
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 connection.release();
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
+            callback(false, results);
+            return;
         });
     });
 }
@@ -154,27 +156,28 @@ exports.updateOrderDelivery = function (data, callback) {
     var upd_sql = "update jit_orderdelivery set ";
     var i = 0;
     for (var key in data) {
-        if (i == 0) {
-            if (!isNaN(data[key])) {
-                upd_sql += key + " = " + data[key] + " ";
-                i++;
+        if (key != undefined && data[key] != '') {
+            if (i == 0) {
+                if (!isNaN(data[key])) {
+                    upd_sql += key + " = " + data[key] + " ";
+                    i++;
+                } else {
+                    upd_sql += key + " = '" + data[key] + "' ";
+                    i++;
+                }
             } else {
-                upd_sql += key + " = '" + data[key] + "' ";
-                i++;
-            }
-        } else {
-            if (!isNaN(data[key])) {
-                upd_sql += " , " + key + " = " + data[key] + " ";
-            } else {
-                upd_sql += " , " + key + " = '" + data[key] + "' ";
+                if (!isNaN(data[key])) {
+                    upd_sql += " , " + key + " = " + data[key] + " ";
+                } else {
+                    upd_sql += " , " + key + " = '" + data[key] + "' ";
+                }
             }
         }
     }
 
     upd_sql += 'WHERE OrderID ' + ' = ' + data['OrderID'] + ' ';
 
-    logger.writeInfo('修改用户： ' + upd_sql);
-
+    logger.writeInfo('修改配送员： ' + upd_sql);
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -182,13 +185,14 @@ exports.updateOrderDelivery = function (data, callback) {
         }
 
         connection.query(upd_sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 callback(true);
                 return;
             }
-            connection.release();
-            return callback(false, results);
+
+            callback(false, results);
+            return;
         });
     });
 }

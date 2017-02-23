@@ -34,7 +34,7 @@ router.get('/accesscheck', function (req, res, next) {
     var echostr = query.echostr;
     var timestamp = query['timestamp'];
     var nonce = query.nonce;
-    console.log("[routes/api/wechatroute-------------------42行]" + signature);
+    console.log("[routes/api/wechatroute]" + signature);
 
     var oriArray = new Array();
     oriArray[0] = nonce;

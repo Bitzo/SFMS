@@ -3,7 +3,7 @@ block content
   div.container-fluid
     span 
       h2 个人资料
-    jason-form(method="post" source='/backuser' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
+    jason-form(method="post" source='/backuser/person' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
       form(source='/backuser' ng-controller="userEditController")
         table.table.table-bordered.table-hover.definedwidth.m10        
           tr
@@ -57,5 +57,5 @@ block content
           tr
             td(class="tableleft")
             td
-              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="userEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/backuser')") 确认修改
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="userEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/backuser/person')") 确认修改
               

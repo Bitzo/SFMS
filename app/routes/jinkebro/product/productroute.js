@@ -459,7 +459,6 @@ router.put('/', function (req, res) {
                 "ProductID": ProductID,
                 "pageNum": 1,
                 "page": 1,
-                "OnSale": OnSale
             };
 
             for (var key in intdata) {
@@ -590,8 +589,8 @@ router.get('/', function (req, res) {
                 SupplierID = query.SupplierID || '',
                 ProductTypeID = query.ProductTypeID || '',
                 ProductPrice = query.ProductPrice || '',
-                OnSale = (query.OnSale !== undefined) ? (query.OnSale) : 1,
-                isPaging = (query.isPaging !== undefined) ? (query.isPaging) : 1; //是否分页 0表示不分页,1表示分页
+                OnSale = query.OnSale || '',
+                isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 0; //是否分页 0表示分页,1表示不分页
 
             page = page > 0 ? page : 1;
 

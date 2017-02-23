@@ -41,13 +41,13 @@ exports.datadictionaryInsert = function (data,callback) {
             return;
         }
         connection.query(insert_sql, function(err, result) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
             callback(false, result);
-            connection.release();
             return ;
         })
     })
@@ -92,6 +92,7 @@ exports.datadictionaryUpdate = function (data,callback) {
         }
 
         connection.query(update_sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -99,7 +100,6 @@ exports.datadictionaryUpdate = function (data,callback) {
             }
 
             callback(false, results);
-            connection.release();
             return ;
         })
 
@@ -121,6 +121,7 @@ exports.datadictionaryDelete = function (data,callback) {
         }
 
         connection.query(sql, function(err, results) {
+            connection.release();
             if (err) {
                 throw err;
                 callback(true);
@@ -128,7 +129,6 @@ exports.datadictionaryDelete = function (data,callback) {
             }
 
             callback(false, results);
-            connection.release();
             return ;
         })
     })
@@ -195,13 +195,13 @@ exports.queryDatadictionary = function (data,callback) {
         logger.writeInfo("连接成功");
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             };
             logger.writeInfo("查询成功");
             callback(false, results);
-            connection.release();
             return ;
         })
     })
@@ -233,13 +233,13 @@ exports.countAllDataDicts = function (data, callback) {
         logger.writeInfo(sql);
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             };
             logger.writeInfo("查询成功");
             callback(false, results);
-            connection.release();
             return ;
         })
     })
@@ -273,13 +273,13 @@ exports.countAllDataDictsBySubcode = function (data, callback) {
         logger.writeInfo(sql);
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 callback(true);
                 return;
             };
             logger.writeInfo("查询成功");
             callback(false, results);
-            connection.release();
             return ;
         })
     })
@@ -319,6 +319,7 @@ exports.queryDatadictionaryBySubcode = function (data,callback) {
         logger.writeInfo("连接成功");
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 console.log(err);
                 callback(true);
@@ -327,7 +328,6 @@ exports.queryDatadictionaryBySubcode = function (data,callback) {
 
             logger.writeInfo("查询成功");
             callback(false, results);
-            connection.release();
             return ;
         })
     })
@@ -353,6 +353,7 @@ exports.queryDatadictionaryByID = function (data,callback) {
         logger.writeInfo("连接成功");
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
                 console.log(err);
                 callback(true);
@@ -360,8 +361,12 @@ exports.queryDatadictionaryByID = function (data,callback) {
             };
             logger.writeInfo("查询成功");
             callback(false, results);
-            connection.release();
             return ;
         })
     })
 }
+
+
+
+ 
+ 

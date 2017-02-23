@@ -33,39 +33,83 @@ router.get('/', function (req, res) {
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var data = {};
+            var pageNum = 0;
+            var page = 0;
+            var isPaging = 0;
             if (req.query.f != undefined) {
                 var query = JSON.parse(req.query.f);
+                page = (req.query.pageindex) ? (req.query.pageindex) : 1;
+                pageNum = (req.query.pagesize) ? (req.query.pagesize) : (config.pageCount);
+                isPaging = (req.query.isPaging) ? (req.query.isPaging) : 0;
                 data = {
+                    page : page,
+                    pageNum : pageNum,
+                    isPaging : isPaging,
                     ID: query.ID || '',
                     ProductTypeName: query.ProductTypeName || ''
                 };
             }
-
-            productypeService.queryAllProType(data, function (err, results) {
+            var countNum = -1;
+            productypeService.countAllProType(data, function (err, results) {
                 if (err) {
-                    res.json({
+                    res.status(500);
+                    return res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: results
-                    })
-                    return;
+                        errorMsg: "查询失败，服务器内部错误"
+                    });
                 }
-
                 if (results !== undefined && results.length != 0) {
-                    var result = {
+                    countNum = results[0]['num'];
+
+                    //查询所需的详细数据
+                    productypeService.queryAllProType(data, function (err, result) {
+                        if (err) {
+                            res.status(500);
+                            return res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: "查询失败，服务器内部错误"
+                            });
+
+                            //这边要记录operationlog日志
+                        }
+
+                        if (result !== undefined && result.length != 0 && countNum != -1) {
+                            var resultBack = {
+                                code: 200,
+                                isSuccess: true,
+                                msg: '查询成功',
+                                dataNum: countNum,
+                                curPage: page,
+                                curPageNum: pageNum,
+                                totalPage: Math.ceil(countNum / pageNum),
+                                data: result
+                            };
+                            if (resultBack.curPage == resultBack.totalPage) {
+                                resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
+                            }
+                            res.status(200);
+                            return res.json(resultBack);
+                        } else {
+                            res.status(200);
+                            return res.json({
+                                code: 200,
+                                isSuccess: true,
+                                msg: "未查询到相应产品类型"
+                            });
+                        }
+                    });
+                } else {
+                    res.status(200);
+                    return res.json({
                         code: 200,
                         isSuccess: true,
-                        data: results
-                    };
-                    res.json(result);
-                } else {
-                    res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "未查询到相关信息"
+                        msg: "未查询到相应产品类型"
                     });
                 }
             });
+
         } else {
             res.status(400);
             return res.json({

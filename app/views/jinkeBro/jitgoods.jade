@@ -48,7 +48,7 @@ block content
             td 
               a(href='#/jinkeBro/jitgoodsEdit/?ProductID={{x.ProductID}}' )
                 i.icon.icon-edit 编辑 
-              a(ng-click="remove($index,'/backuser')")
+              a(ng-click="remove($index,x.ProductName,'/jinkeBro/product')")
                 i.icon.icon-trash 删除
               
       div.pull-right
