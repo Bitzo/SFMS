@@ -100,11 +100,11 @@ exports.queryOrderDelivery = function (data, callback) {
         }
 
         connection.query(sql, function (err, results) {
+            connection.release();
             if (err) {
-                connection.release();
                 return callback(true);
             }
-            connection.release();
+            
             return callback(false, results);
         });
     });
@@ -138,7 +138,6 @@ exports.countOrderDelivery = function (data, callback) {
         connection.query(sql, function (err, results) {
             connection.release();
             if (err) {
-                connection.release();
                 callback(true);
                 return;
             }

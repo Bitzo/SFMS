@@ -558,7 +558,6 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
 
             if (orderQueryInfo.length !== 0) {
                 console.log('已存在订单，不需要重复的插入');
-                console.log(orderQueryInfo);
                 return;
             }
             
@@ -727,7 +726,6 @@ Order.prototype.getOrderInfo = function (orderID, callback) {
  * function: 通过以上参数获取订单的内容，检查是否重复下单
  */
 Order.prototype.checkIsRepeatOrder = function (data, callback) {
-
     console.log(data);
     var checkInfo = {
         pageManage: {
@@ -758,7 +756,6 @@ Order.prototype.checkIsRepeatOrder = function (data, callback) {
 
     orderDAL.queryOrders(checkInfo, function (err, queryInfo) {
         if (err) {
-
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = 0;
             logModel.Memo = "订单查询失败";
@@ -782,6 +779,9 @@ Order.prototype.checkIsRepeatOrder = function (data, callback) {
             }
         });
         logger.writeInfo('订单查询成功');
+        console.log("*********************************************************");
+        console.log(queryInfo);
+        console.log("*********************************************************");
         callback(false, queryInfo);
         return;
     });
