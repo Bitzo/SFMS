@@ -14,7 +14,9 @@ jasonapp.service('jasonService', function ($http, $q) {
                 isPaging:1,
                 pageindex:1,
                 pagesize:10,
-                f:{}
+                f:{
+                    StaffType: 1
+                }
             }
         })
       }

@@ -19,6 +19,7 @@ block content
                         th 商品名称
                         th 库存量
                         th 存储位置ID
+                        th 存储位置
                         th 操作
                 tbody
                     tr(ng-repeat="x in datas" )
@@ -27,11 +28,10 @@ block content
                         td {{x.ProductName}}
                         td {{x.TotalNum}}
                         td {{x.StockAreaID}}
+                        td {{x.StockAreaName}}
                         td
                             a(href='#/jinkeBro/jitstockedit/?ProductID={{x.ProductID}}' )
                                 i.icon.icon-edit 编辑
-                            a(ng-click="remove($index,'/backuser')")
-                                i.icon.icon-trash 删除
             div.pull-right
                 jason-pagination(conf='paginationConf')
 

@@ -82,7 +82,9 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 "AccountID":$scope.datas[index].AccountID,
                 "MenuID":$scope.datas[index].MenuID,
                 "ID":$scope.datas[index].ID,
-                "RoleID" : $scope.datas[index].RoleID
+                "RoleID" : $scope.datas[index].RoleID,
+                "StaffID": $scope.datas[index].StaffID,
+                "ProductID" : $scope.datas[index].ProductID
             };
             $http({
                 method:'delete',
@@ -159,7 +161,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     //编辑页面   确认修改
     var formdata=$scope.paginationConf.formdata={};
     $scope.newedit = function(formdata,action) {
-        console.log(formdata);
         $http({
             method:'put',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -430,7 +431,17 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         });
     }
 
+    // 财务饼状图
+    // $scope.changeChart = function(siteName){
+    //     console.log($scope.f);
+    //     console.log(siteName)
+    //     if(siteName == 'financeChartsAlt'){
+    //        location.href = './index#/backend/peredit'; 
+    //     }else{
 
+    //     }
+        
+    // }
 //------金科小哥------
     //订单管理--首页  模态框
      //修改
@@ -540,7 +551,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.saveAllocate = function(){
          $scope.formdata= {
              "OrderID" : $scope.order.OrderID,
-             "DeliveryUserID" : $scope.order.UserID
+             "DeliveryUserID" : $scope.order.StaffID
          }
          $http({
             method:'post',
