@@ -590,6 +590,10 @@ router.get('/', function (req, res) {
                 ProductTypeID = query.ProductTypeID || '',
                 ProductPrice = query.ProductPrice || '',
                 OnSale = query.OnSale || '',
+                minProductPrice = query.minProductPrice || '',
+                maxProductPrice = query.maxProductPrice || '',
+                earlyExpireTime = query.earlyExpireTime || '',
+                lateExpireTime = query.lateExpireTime || '',
                 isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 0; //是否分页 0表示分页,1表示不分页
 
             page = page > 0 ? page : 1;
@@ -612,9 +616,13 @@ router.get('/', function (req, res) {
                 ProductTypeID: ProductTypeID,
                 ProductPrice: ProductPrice,
                 OnSale: OnSale,
-                isPaging: isPaging
+                isPaging: isPaging,
+                minProductPrice : minProductPrice,
+                maxProductPrice : maxProductPrice,
+                earlyExpireTime : earlyExpireTime,
+                lateExpireTime : lateExpireTime
             };
-
+            console.log(data);
             var intdata = {
                 page: page,
                 pageNum: pageNum,

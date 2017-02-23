@@ -116,6 +116,20 @@ Staff.prototype.getStaff = function (data,callback) {
     });
 };
 
+Staff.prototype.getStaffType = function (callback) {
+
+    staffDal.getStaffType(function (err, result) {
+        if (err) {
+            callback(true,'失败！');
+            return;
+        }
+
+        logger.writeInfo('获得产品类型！');
+        return callback(false, result);
+    });
+};
+
+
 
 Staff.prototype.countStaff = function (data,callback) {
     var formdata = {

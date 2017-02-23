@@ -5,10 +5,11 @@ block content
       ng-form.form-inline
         span.title 员工管理
           div.buttons.pull-right
-            label.form-group.my-form-group 员工类型: 
-              jason-select.select.ext(data-max-options='2',ng-model='f.ID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
+            label.form-group.my-form-group 员工类型:
+              jason-select.est(ng-model='f.StaffType',source='/datadict/plain',selectparams='{"Category":"dc_staffType"}',stext='DictionaryValue',svalue='DictionaryCode')
+              //jason-select.select.ext(data-max-options='2',ng-model='f.ID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
             label.form-group.my-form-group 员工职位: 
-              jason-select.select.ext(data-max-options='2',ng-model='f.ID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
+              jason-select.select.ext(ng-model='f.Position',source='/jinkeBro/staff/staffType',stext='Position',svalue='Position')
             label.form-group.my-form-group
               a.btn.btn-sm.btn-primary(ng-click='search()')
                 i.icon.icon-search 查询
