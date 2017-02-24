@@ -64,7 +64,7 @@ router.get('/',function (req, res) {
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: "查询失败，服务器内部错误"
+                        msg: "查询失败，服务器内部错误1"
                     });
                     return;
                 }
@@ -80,7 +80,6 @@ router.get('/',function (req, res) {
                                 msg: "查询失败，服务器内部错误"
                             });
                         }
-
                         if (results !== undefined && results.length != 0 && countNum != -1) {
                             var result = {
                                 code: 200,
@@ -103,7 +102,7 @@ router.get('/',function (req, res) {
                                         return res.json({
                                             code: 500,
                                             isSuccess: false,
-                                            msg: "查询失败，服务器内部错误"
+                                            msg: "查询失败，服务器内部错误2"
                                         });
                                     }
                                     if(results !== undefined) {
