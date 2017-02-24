@@ -335,19 +335,19 @@ exports.queryProducts = function(data, callback) {
         }
     }
 
-    if (data.minProductPrice != '') {
+    if (data.minProductPrice != '' && data.minProductPrice != undefined) {
         query_sql += " and jit_product.ProductPrice > " + data.minProductPrice + " ";
     }
 
-    if (data.maxProductPrice != '') {
+    if (data.maxProductPrice != '' && data.maxProductPrice != undefined) {
         query_sql += " and jit_product.ProductPrice < " + data.maxProductPrice + " ";
     }
 
-    if (data.earlyExpireTime != '') {
+    if (data.earlyExpireTime != '' && data.earlyExpireTime != undefined) {
         query_sql += " and jit_product.ExpireTime > '" + data.earlyExpireTime + "' ";
     }
 
-    if (data.lateExpireTime != '') {
+    if (data.lateExpireTime != '' && data.lateExpireTime != undefined) {
         query_sql += " and jit_product.ExpireTime < '" + data.lateExpireTime + "' ";
     }
 
@@ -389,7 +389,7 @@ exports.CountProducts = function(data, callback) {
     var sql = ' select count(1) as num from jit_product where 1=1 ';
     var queryData = {
         SKU: data.SKU || '',
-        "jit_product.ProductID" : data.ProductID || '',
+        "jit_product.ProductID" : data['jit_product.ProductID'] || '',
         ProductName: data.ProductName || '',
         ExpireTime: data.ExpireTime || '',
         SupplierID: data.SupplierID || '',
@@ -411,19 +411,19 @@ exports.CountProducts = function(data, callback) {
         }
     }
 
-    if (data.minProductPrice != '') {
+    if (data.minProductPrice != '' && data.minProductPrice != undefined) {
         sql += " and jit_product.ProductPrice > " + data.minProductPrice + " ";
     }
 
-    if (data.maxProductPrice != '') {
+    if (data.maxProductPrice != '' && data.maxProductPrice != undefined) {
         sql += " and jit_product.ProductPrice < " + data.maxProductPrice + " ";
     }
 
-    if (data.earlyExpireTime != '') {
+    if (data.earlyExpireTime != '' && data.earlyExpireTime != undefined) {
         sql += " and jit_product.ExpireTime > '" + data.earlyExpireTime + "' ";
     }
 
-    if (data.lateExpireTime != '') {
+    if (data.lateExpireTime != '' && data.lateExpireTime != undefined) {
         sql += " and jit_product.ExpireTime < '" + data.lateExpireTime + "' ";
     }
 
