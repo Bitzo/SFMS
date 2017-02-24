@@ -63,12 +63,6 @@ block content
           td
             select(ng-model='formdata.StockAreaID')
               option(ng-repeat="item in StockArea",value='{{item.DictionaryID}}') {{item.DictionaryValue}}
-
-        tr
-          td(width="15%",class="tableleft") 创建者
-          td
-            select(ng-model='formdata.CreateUserID')
-              option(ng-repeat="item in CreateUsers",value='{{item.StaffID}}') {{item.StaffName}}
                 
         tr
           td(class="tableleft") 是否在售

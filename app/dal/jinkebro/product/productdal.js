@@ -257,7 +257,7 @@ exports.updateProduct = function(data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'ProductID') {
+            if (key != 'ProductID' && data[key] != '' && key != undefined && data[key] != undefined) {
                 if (sql.length == 0) {
                     sql += " " + key + " = '" + data[key] + "' ";
                 } else {

@@ -35,7 +35,7 @@ router.get('/', function (req, res) {
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var data = {};
-            console.log(req.query.f)
+
             if (req.query !== undefined) {
                 var query = JSON.parse(req.query.f);
                 var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
@@ -46,17 +46,20 @@ router.get('/', function (req, res) {
                     pageNum: pageNum,
                     ProductID: query.ProductID || '',
                     StockAreaID: query.StockAreaID || '',
+                    TotalNum : query.TotalNum || '',
                     CreateUserID: query.CreateUserID || '',
                     CreateTime: query.CreateTime || '',
                     EditUserID: query.EditUserID || '',
-                    EditTime: query.EditTime || ''
+                    EditTime: query.EditTime || '',
+                    minTotalNum : query.minTotalNum || '',
+                    maxTotalNum : query.maxTotalNum || ''
                 };
             }
 
             var countNum = -1;
             var queueAllResult = [];
             var flag = 0;
-            console.log(data);
+
             proStockService.countProStock(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -68,6 +71,7 @@ router.get('/', function (req, res) {
                 }
                 if (results !== undefined && results.length != 0 && (results[0]['num']) > 0) {
                     countNum = results[0]['num'];
+
                     proStockService.queryProStock(data, function (err, result) {
                         if (err) {
                             res.status(500);
@@ -76,7 +80,6 @@ router.get('/', function (req, res) {
                                 isSuccess: false,
                                 msg: "查询失败，服务器内部错误！"
                             });
-
                         }
                         if (result !== undefined && result.length != 0 && countNum != -1) {
                             var resultBack = {
@@ -121,7 +124,7 @@ router.get('/', function (req, res) {
                             return res.json({
                                 code: 404,
                                 isSuccess: false,
-                                msg: "未查询到相应库存！"
+                                msg: "未查询到相应库存11！"
                             });
                         }
                     });
@@ -290,7 +293,6 @@ router.put('/', function (req, res) {
             }
             // 存放接收的数据
             var updatedata = {
-                'ID': initdata.ID,
                 'ProductID': initdata.ProductID,
                 'TotalNum': initdata.TotalNum,
                 'StockAreaID': initdata.StockAreaID,
