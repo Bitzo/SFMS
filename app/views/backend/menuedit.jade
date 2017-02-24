@@ -16,12 +16,12 @@ block content
           tr
             td(width="15%",class="tableleft") 应用名称 
             td
-              jason-select.input(name="ApplicationName",ng-model='paginationConf.formdata.ApplicationID',source='/app',stext='ApplicationName',svalue='ID',required) 
+              jason-select.input(name="ApplicationName",ng-model='paginationConf.formdata.ApplicationID',source='/app',stext='ApplicationName',sactive='1',svalue='ID',required) 
               
           tr
             td(width="15%",class="tableleft") 	对应的父级名称
             td
-              jason-select.input(name='ParentID',ng-model="paginationConf.formdata.ParentID",source='/backmenu/parent',stext='ParentMenuName',svalue='ParentID',required)
+              jason-select.input(name='ParentID',ng-model="paginationConf.formdata.ParentID",source='/backmenu/parent',stext='ParentMenuName',sactive='1',svalue='ParentID',required)
             
           tr
             td(width="15%",class="tableleft") 菜单对应的层级

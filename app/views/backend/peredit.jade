@@ -3,8 +3,8 @@ block content
   div.container-fluid
     span 
       h2 个人资料
-    jason-form(method="post" source='/backuser/person' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
-      form(source='/backuser' ng-controller="userEditController")
+    jason-form(method="post"  source='/backuser/person' conf='paginationConf' tocc="ApplicationID,RoleID,CollegeID,ClassID")
+      form(source='/backuser' name='perEdit' ng-controller="userEditController")
         table.table.table-bordered.table-hover.definedwidth.m10        
           tr
             td(width="15%",class="tableleft") 用户姓名 
@@ -16,7 +16,7 @@ block content
             td
               input(type="password",name="Pwd",ng-model="paginationConf.formdata.Pwd",ng-maxlength='50',required)
               &nbsp&nbsp
-              small.error(ng-if="userEdit.Pwd.$error.maxlength && userEdit.Pwd.$touched") 密码最多50位
+              small.error(ng-if="perEdit.Pwd.$error.maxlength && perEdit.Pwd.$touched") 密码最多50位
             
           tr
             td(width="15%",class="tableleft") 账户名 
@@ -28,7 +28,8 @@ block content
             td
               input(type="phone",name="Phone",ng-model="paginationConf.formdata.Phone",ng-maxlength='11',ng-minlength='11')  
               &nbsp&nbsp
-              small.error(ng-if="(userEdit.Phone.$error.maxlength||userEdit.Phone.$error.minlength)&& userEdit.Phone.$touched") 电话号码11位
+              small.error(ng-if="(perEdit.Phone.$error.maxlength||perEdit.Phone.$error.minlength)&& perEdit.Phone.$touched") 电话号码11位
+        
           tr
             td(width="15%",class="tableleft") 所在学院
             td
@@ -38,6 +39,7 @@ block content
             td(width="15%",class="tableleft") 所在班级
             td
               {{paginationConf.formdata.Class}}
+       
           tr
             td(width="15%",class="tableleft") 邮箱 
             td
@@ -51,11 +53,10 @@ block content
             td
               textarea(type="textview",name="Address",ng-model="paginationConf.formdata.Address",rows="2",cols="30",ng-maxlength='200')
               &nbsp&nbsp
-              small.error(ng-if="userEdit.Address.$error.maxlength && userEdit.Address.$touched") 地址最多200位
-
+              small.error(ng-if="perEdit.Address.$error.maxlength && perEdit.Address.$touched") 地址最多200位
 
           tr
             td(class="tableleft")
             td
-              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="userEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/backuser/person')") 确认修改
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="perEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/backuser/person')") 确认修改
               

@@ -1,5 +1,5 @@
 jasonapp.service('jasonService', function ($http, $q) {
-    this.IintSelect = function (url,params) {
+    this.IintSelect = function (url,params,isActive) {
         if(params){
             return $http({
             method: 'get',
@@ -7,18 +7,35 @@ jasonapp.service('jasonService', function ($http, $q) {
             params:params
         })
       }else{
-          return $http({
-            method: 'get',
-            url: url + accesstokenstring,
-            params:{
-                isPaging:1,
-                pageindex:1,
-                pagesize:10,
-                f:{
-                    StaffType: 1
+          if(isActive){
+              return $http({
+                method: 'get',
+                url: url + accesstokenstring,
+                params:{
+                    isPaging:1,
+                    pageindex:1,
+                    pagesize:10,
+                    f:{
+                        StaffType: 1,
+                        isActive : 1
+                    }
                 }
-            }
-        })
+            })
+          }else{
+              return $http({
+                method: 'get',
+                url: url + accesstokenstring,
+                params:{
+                    isPaging:1,
+                    pageindex:1,
+                    pagesize:10,
+                    f:{
+                        StaffType: 1
+                    }
+                }
+            })
+          }
+          
       }
         
     }
@@ -37,7 +54,7 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
         },
         link: function(scope, element, attrs){
 
-
+           
             if (attrs.selectparams) {
                 var url = attrs.source + "?access_token=";
                 var params = {
@@ -50,7 +67,14 @@ angular.module('jason.pagination').directive('jasonSelect',function($http,jasonS
                 var url = attrs.source + "?access_token=";
             }
 
-            jasonService.IintSelect(url,params).then(function(reponse){
+            if (attrs.sactive){
+                var isActive = 1;
+            }else{
+                var isActive = 0;
+            }
+
+
+            jasonService.IintSelect(url,params,isActive).then(function(reponse){
                 scope.options=reponse.data.data;
                 scope.options.forEach(
                     function(o){

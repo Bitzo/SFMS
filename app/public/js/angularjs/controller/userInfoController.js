@@ -10,7 +10,9 @@ myApp.controller('userInfoController', function($scope, $http,$q,baseService) {
                 isPaging:1,
                 pageindex:1,
                 pagesize:10,
-                f:{}
+                f:{
+                    isActive : 1
+                }
             }
         }).
         success(function(response) {
@@ -27,7 +29,9 @@ myApp.controller('userInfoController', function($scope, $http,$q,baseService) {
                 isPaging:1,
                 pageindex:1,
                 pagesize:10,
-                f:{}
+                f:{
+                    isActive : 1
+                }
             }
         }).
         success(function(response) {
