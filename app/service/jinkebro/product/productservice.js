@@ -170,8 +170,13 @@ Product.prototype.queryProducts = function (data, callback) {
         ProductTypeID: data.ProductTypeID || '',
         ProductPrice: data.ProductPrice || '',
         OnSale: data.OnSale || '',
-        isPaging: data.isPaging || 0
+        isPaging: data.isPaging || 0,
+        minProductPrice : data.minProductPrice || '',
+        maxProductPrice : data.maxProductPrice || '',
+        earlyExpireTime : data.earlyExpireTime || '',
+        lateExpireTime : data.lateExpireTime || ''
     };
+
 
     productDAL.queryProducts(formdata, function (err, result) {
         if (err) {
@@ -215,8 +220,22 @@ Product.prototype.queryProducts = function (data, callback) {
 
 //查询商品信息
 Product.prototype.CountProducts = function (data, callback) {
+    var formdata = {
+        SKU: data.SKU || '',
+        "jit_product.ProductID" : data.ProductID || '',
+        ProductName: data.ProductName || '',
+        ExpireTime: data.ExpireTime || '',
+        SupplierID: data.SupplierID || '',
+        ProductTypeID: data.ProductTypeID || '',
+        ProductPrice: data.ProductPrice || '',
+        OnSale: data.OnSale || '',
+        minProductPrice : data.minProductPrice || '',
+        maxProductPrice : data.maxProductPrice || '',
+        earlyExpireTime : data.earlyExpireTime || '',
+        lateExpireTime : data.lateExpireTime || ''
+    };
 
-    productDAL.CountProducts(data, function (err, result) {
+    productDAL.CountProducts(formdata, function (err, result) {
         if (err) {
             callback(true);
             return;

@@ -54,7 +54,7 @@ block content
             td {{x.IsActive | numToChin:data.IsActive }}
             td
               a(href='#/sfms/kpiManageCheck/?ID={{x.ID}}' )
-                i.icon.icon-edit 审核
+                i.icon.icon-edit 审核&nbsp
               a(ng-click="remove($index,x.KPIName,'/sfms/api/kpi')",href='')
                 i.icon.icon-trash 删除
       div.pull-right

@@ -173,7 +173,6 @@ exports.delete = function (data, callback) {
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true,'连接出错');
-            connection.release();
             return;
         }
 

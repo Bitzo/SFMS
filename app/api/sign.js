@@ -18,7 +18,7 @@ var userFuncService = appRequire('service/backend/user/userfuncservice');
 
 router.post('/', function (req, res) {
     var data = {
-        userID: req.query.jitkey,
+        userID: req.body.jitkey,
         functionCode: functionConfig.sfmsApp.SignManage.SignLogCount.functionCode
     };
     userFuncService.checkUserFunc(data, function(err, results) {
@@ -126,7 +126,7 @@ router.post('/', function (req, res) {
                                 signTime: result.time,
                                 signType: signType,
                                 signStatus: signType==1?0:1,
-                                msg: "sign success"
+                                msg: "签到成功"
                             });
                         }
                     });

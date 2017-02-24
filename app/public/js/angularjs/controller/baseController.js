@@ -76,7 +76,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     //首页 删除
     $scope.d={};
     $scope.remove = function(index,a,action){
-        var mymessage=confirm("是否确认删除  "+a);  
+        var mymessage=confirm("是否确认禁用  "+a);
         if(mymessage==true){
             $scope.d={
                 "AccountID":$scope.datas[index].AccountID,
@@ -109,8 +109,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
     //菜单的启用与禁用
     $scope.shiftStatus = function(action,index,name) {
-        var str = '是否确认删除';
-        if(action=='/backmenu/reuse') str = '是否确认要启用 ';
+        var str = '是否确认禁用';
+        if(action=='/backmenu/reuse') str = '是否确认启用 ';
         var mymessage=confirm(str + name);
         if(mymessage==true){
             var formdata = {
@@ -141,7 +141,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     //新增页面  添加
     $scope.formdata={};
     $scope.addnew = function(formdata,action) {
-        console.log(11111)
         console.log($scope.formdata)
         $http({
             method:'post',
@@ -520,7 +519,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
 
     //分配
-    $scope.Allocate = function (OrderID,orderStatus) {
+    $scope.Allocate = function (OrderID) {
         $scope.orderDelivery = {
             'OrderID': OrderID
         };
@@ -534,7 +533,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             url: '/jinkeBro/staff' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
             params: {
                 f: {
-                    StaffType: 2
+                    StaffType : 2
                 }
             }
         }).success(function (response) {
@@ -552,21 +551,19 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             url: '/jinkeBro/orderDelivery' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
             params: {
                 f: {
-                    OrderID: OrderID
+                    OrderID : OrderID
                 }
             }
         }).success(function (response) {
             $scope.orderDeliveryinfo = response.data[0];
             if (!response.isSuccess) {
-                if (orderStatus != 1) {
-                    alert(response.msg);
-                }
+                alert(response.msg);
             }
 
         }).error(function (response) {
             alert(response.msg);
         });
-    };
+    }
 
     //确认分配
     $scope.saveAllocate = function(){
@@ -659,8 +656,47 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }).
         success(function(response) {
             alert(response.msg)
+            getInit();
         }).
         error(function(response) {
+            alert(response.msg);
+        });
+    };
+
+    //开始配送
+    $scope.startDelivery = function (OrderID) {
+        $http({
+            method: 'put',
+            url: '/jinkeBro/orderDelivery/startDelivery' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            data: {
+                formdata: {
+                    OrderID:OrderID
+                }
+            }
+        }).success(function (response) {
+            if (response.isSuccess) {
+                alert(response.msg);
+            }
+            getInit();
+        }).error(function (response) {
+            alert(response.msg);
+        });
+    };
+
+    //配送完成
+    $scope.endDelivery = function (OrderID) {
+        $http({
+            method: 'put',
+            url: '/jinkeBro/orderDelivery/endDelivery' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            data: {
+                formdata: {
+                    OrderID:OrderID
+                }
+            }
+        }).success(function (response) {
+            alert(response.msg);
+            getInit();
+        }).error(function (response) {
             alert(response.msg);
         });
     };

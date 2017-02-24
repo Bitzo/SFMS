@@ -29,7 +29,7 @@ exports.queryAllRoles = function (data, callback) {
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount,
         'RoleName': data.RoleName || '',
-        'IsActive': data.IsActive || ''
+        'jit_role.IsActive': data.IsActive || ''
     }
     if (formdata.RoleID!=='') {
         logModel.OperationName = operationConfig.backendApp.roleManage.roleSingleQuery.actionName;

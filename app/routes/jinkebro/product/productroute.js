@@ -275,6 +275,7 @@ router.delete('/', function (req, res) {
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             //productID是主键，只需要此属性就可准确删除，不必传入其他参数
             var d = JSON.parse(req.query.d);
+
             var productID = d.ProductID;
             if (productID === undefined) {
                 res.status(404);
@@ -296,7 +297,7 @@ router.delete('/', function (req, res) {
                 "ProductID": productID
             };
 
-            //查询要删除的菜单是否存在
+
             productService.CountProducts(deleteData, function (err, result) {
                 if (err) {
                     res.status(500);
@@ -310,6 +311,7 @@ router.delete('/', function (req, res) {
 
                 //所要删除的产品存在，执行删除操作
                 if (result !== undefined && result[0]['num'] !== 0) {
+
                     productService.deleteProduct(deleteData, function (err, results) {
                         if (err) {
                             res.status(500);
@@ -590,6 +592,10 @@ router.get('/', function (req, res) {
                 ProductTypeID = query.ProductTypeID || '',
                 ProductPrice = query.ProductPrice || '',
                 OnSale = query.OnSale || '',
+                minProductPrice = query.minProductPrice || '',
+                maxProductPrice = query.maxProductPrice || '',
+                earlyExpireTime = query.earlyExpireTime || '',
+                lateExpireTime = query.lateExpireTime || '',
                 isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 0; //是否分页 0表示分页,1表示不分页
 
             page = page > 0 ? page : 1;
@@ -612,9 +618,13 @@ router.get('/', function (req, res) {
                 ProductTypeID: ProductTypeID,
                 ProductPrice: ProductPrice,
                 OnSale: OnSale,
-                isPaging: isPaging
+                isPaging: isPaging,
+                minProductPrice : minProductPrice,
+                maxProductPrice : maxProductPrice,
+                earlyExpireTime : earlyExpireTime,
+                lateExpireTime : lateExpireTime
             };
-
+            console.log(data);
             var intdata = {
                 page: page,
                 pageNum: pageNum,

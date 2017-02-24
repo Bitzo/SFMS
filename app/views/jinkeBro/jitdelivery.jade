@@ -41,10 +41,10 @@ block content
         div.buttons.pull-right
           label.form-group.my-form-group 配送员
             jason-select.select.ext(ng-model='f.DeliveryUserID',source='/jinkeBro/staff',selectparams='{"StaffType":2}',stext='StaffName',svalue='StaffID')
-          label.form-group.my-form-group  配送开始时间
-            input.form-control.ext(type='date',ng-model='f.DeliveryBeginTime')
-          label.form-group.my-form-group  配送完成时间
-            input.form-control.ext(type='date',ng-model='f.DeliveryEndTime')
+          //label.form-group.my-form-group  配送开始时间
+          //  input.form-control.ext(type='date',ng-model='f.DeliveryBeginTime')
+          //label.form-group.my-form-group  配送完成时间
+          //  input.form-control.ext(type='date',ng-model='f.DeliveryEndTime')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询
@@ -60,7 +60,7 @@ block content
             th 配送员姓名
             th 配送开始时间
             th 配送完成时间
-            th(style="width:100px;") 操作
+            th(style="width:230px;") 操作
         tbody
           tr(ng-repeat="x in datas")
             td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
@@ -71,6 +71,10 @@ block content
             td {{x.DeliveryEndTime}}
             td
               a(data-toggle="modal",data-target="#myModal",ng-click='editDelivery(x.OrderID, "/jinkeBro/orderDelivery")' href='')
-                i.icon.icon-edit  编辑
+                i.icon.icon-edit  编辑&nbsp&nbsp
+              a(data-toggle="modal" ,data-target="#startDelivery",ng-click="startDelivery(x.OrderID)",href='')
+                i.icon.icon-truck &nbsp开始配送&nbsp
+              a(data-toggle="modal",data-target="#endDelivery",ng-click="endDelivery(x.OrderID)",href='')
+                i.icon.icon-truck &nbsp配送完成
       div.pull-right
         jason-pagination(conf='paginationConf')

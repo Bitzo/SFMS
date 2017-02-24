@@ -467,4 +467,37 @@ router.get('/',function (req,res) {
     });
 });
 
+router.get('/staffType', function (req, res) {
+    staffService.getStaffType(function (err, result) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误！"
+            });
+
+        }
+
+        if (result !== undefined && result.length != 0) {
+            var resultBack = {
+                code: 200,
+                isSuccess: true,
+                msg: '查询成功！',
+                data: result
+            };
+            res.status(200);
+            return res.json(resultBack);
+        } else {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相应职位！"
+            });
+        }
+
+    });
+});
+
 module.exports = router;

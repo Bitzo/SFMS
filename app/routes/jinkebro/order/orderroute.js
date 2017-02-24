@@ -37,13 +37,15 @@ router.get('/order', function (req, res) {
             });
         }
         if (funcResult !== undefined && funcResult.isSuccess === true) {
+            // console.log(req.query);
+            var query = JSON.parse(req.query.f);
             //接收前端数据
             var page = (req.query.pageindex) ? (req.query.pageindex) : 1,
                 pageNum = (req.query.pagesize) ? (req.query.pagesize) : 20,
-                OrderID = req.query.OrderID || '',
-                isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
-                IsActive = (req.query.IsActive !== undefined) ? (req.query.IsActive) : '',
-                OrderStatus = req.query.OrderStatus || '';
+                OrderID = query.OrderID || '',
+                isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 0, //是否分页 0表示不分页,1表示分页
+                IsActive = (query.IsActive !== undefined) ? (query.IsActive) : '',
+                OrderStatus = query.OrderStatus || '';
 
             var sendData = {
                 page: page,
