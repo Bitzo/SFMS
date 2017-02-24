@@ -235,7 +235,7 @@ Product.prototype.CountProducts = function (data, callback) {
         lateExpireTime : data.lateExpireTime || ''
     };
 
-    productDAL.CountProducts(data, function (err, result) {
+    productDAL.CountProducts(formdata, function (err, result) {
         if (err) {
             callback(true);
             return;
