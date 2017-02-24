@@ -22,21 +22,28 @@ router.get('/:user_id', function(req, res) {
         }
         //成功获取用户基本信息
         if (result !== undefined && result.length > 0) {
+            console.log(result)
+            result = result[0];
             var data = {
                 status: 200,
                 isSuccess: true,
                 data: {
-                    ApplicationID: result[0].ApplicationID,
-                    AccountID: result[0].AccountID,
-                    Account: result[0].Account,
-                    UserName: result[0].UserName,
-                    CollegeName: result[0].College,
-                    GradeYear: result[0].GradeYear,
-                    Phone: result[0].Phone,
-                    ClassName: result[0].Class,
-                    Memo: result[0].Memo
+                    ApplicationID: result.ApplicationID,
+                    AccountID: result.AccountID,
+                    Account: result.Account,
+                    UserName: result.UserName,
+                    CollegeName: result.College,
+                    GradeYear: result.GradeYear,
+                    Phone: result.Phone,
+                    ClassName: result.Class,
+                    Memo: result.Memo
                 }
-            };
+            }
+            for (var key in data.data) {
+                if(data.data[key] === undefined ||data.data[key] === null) {
+                    data.data[key] = '暂无数据';
+                }
+            }
             res.status(200);
             res.json(data);
         } else {
