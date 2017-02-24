@@ -76,7 +76,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     //首页 删除
     $scope.d={};
     $scope.remove = function(index,a,action){
-        var mymessage=confirm("是否确认删除  "+a);  
+        var mymessage=confirm("是否确认禁用  "+a);
         if(mymessage==true){
             $scope.d={
                 "AccountID":$scope.datas[index].AccountID,
@@ -109,8 +109,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
     //菜单的启用与禁用
     $scope.shiftStatus = function(action,index,name) {
-        var str = '是否确认删除';
-        if(action=='/backmenu/reuse') str = '是否确认要启用 ';
+        var str = '是否确认禁用';
+        if(action=='/backmenu/reuse') str = '是否确认启用 ';
         var mymessage=confirm(str + name);
         if(mymessage==true){
             var formdata = {

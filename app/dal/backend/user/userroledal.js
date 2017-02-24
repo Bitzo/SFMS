@@ -103,7 +103,7 @@ exports.queryAppByUserID = function (data, callback) {
 
 //查询用户角色表的ID
 exports.query = function (data, callback) {
-    var sql = 'select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleCode,jit_role.RoleName,jit_roleuser.AccountID ';
+    var sql = 'select  jit_role.ApplicationID,jit_role.RoleID,jit_role.RoleCode,jit_role.RoleName,jit_role.IsActive,jit_roleuser.AccountID ';
 		sql += 'from jit_role left join jit_roleuser on  jit_role.RoleID = jit_roleuser.RoleID ';
 		sql += 'where jit_roleuser.AccountID = ' + data.AccountID;
 

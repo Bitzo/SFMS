@@ -65,15 +65,20 @@ exports.checkUserFunc = function (data, callback) {
         return callback(false, checkResult);
     }
 
-    userRoleService.query({AccountID: accountID}, function(err, results) {
+    userRoleService.query({AccountID: accountID,IsActive: 1}, function(err, results) {
         if (err) {
             checkResult.msg = '服务器内部错误！';
             return callback(true, checkResult);
         }
         if (results!==undefined && results.length>0) {
-            var roleID = [];
+            var roleID = [],k=0;
             for (var i in results) {
-                roleID[i] = results[i].RoleID;
+                if (results[i].IsActive === 1)
+                    roleID[k++] = results[i].RoleID;
+            }
+            if (roleID.length == 0) {
+                checkResult.msg = '您无此操作的权限！';
+                return callback(false, checkResult);
             }
             userFuncService.queryUserFunc({RoleID:roleID}, function (err, results) {
                 if (err) {
