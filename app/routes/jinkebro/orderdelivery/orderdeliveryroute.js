@@ -667,13 +667,35 @@ router.put('/endDelivery', function (req, res) {
                         }
 
                         if (result !== undefined && result.affectedRows != 0) {
-                            res.status(200);
-                            return res.json({
-                                code: 200,
-                                isSuccess: true,
-                                updateResult: result,
-                                msg: '完成配送操作成功！'
+
+                            orderService.updateOrder({ OrderStatus: 3,OrderID: OrderID}, function (err, updateOrderResult) {
+                                if (err) {
+                                    res.status(500);
+                                    return res.json({
+                                        code: 500,
+                                        isSuccess: false,
+                                        msg: '服务器出错，产品修改操作失败'
+                                    });
+                                    return;
+                                }
+
+                                if (updateOrderResult !== undefined && updateOrderResult.affectedRows != 0) {
+                                    res.status(200);
+                                    return res.json({
+                                        code: 200,
+                                        isSuccess: true,
+                                        msg: '订单修改成功'
+                                    });
+                                } else {
+                                    res.status(400);
+                                    return res.json({
+                                        code: 400,
+                                        isSuccess: true,
+                                        msg: '订单修改失败'
+                                    });
+                                }
                             });
+
                         } else {
                             res.status(404);
                             return res.json({
