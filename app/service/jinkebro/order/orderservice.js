@@ -488,7 +488,7 @@ Order.prototype.CountOrderProduct = function (data, callback) {
  */
 Order.prototype.checkInput = function (res, input, string) {
     if (input === undefined) {
-        console.log(string + ' is undefined');
+        
         logger.writeError(string + ' is undefined');
         res.status(404);
         return res.json({
@@ -507,7 +507,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
         'WechatUserCode': wechatUserCode
     }
 
-    console.log("[service/wechat/orderservice-------326行]" + msg);
+    
     //根据“1#3|2#2”的输入格式来分割字符串c
     var productInfo = msg.split('|');
     var productIDArray = [];
@@ -689,7 +689,7 @@ Order.prototype.getOrderInfo = function (orderID, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderQuery.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQuery.identifier;
 
-    orderDAL.queryOrders(sendData, function (err, orderInfo) {
+    orderDAL.queryOrderProductWechat(sendData, function (err, orderInfo) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = 0;
@@ -726,7 +726,7 @@ Order.prototype.getOrderInfo = function (orderID, callback) {
  * function: 通过以上参数获取订单的内容，检查是否重复下单
  */
 Order.prototype.checkIsRepeatOrder = function (data, callback) {
-    console.log(data);
+
     var checkInfo = {
         pageManage: {
             page: 1,
@@ -754,7 +754,7 @@ Order.prototype.checkIsRepeatOrder = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderQuery.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQuery.identifier;
 
-    orderDAL.queryOrders(checkInfo, function (err, queryInfo) {
+    orderDAL.checkIsReapte(checkInfo, function (err, queryInfo) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = 0;
@@ -779,10 +779,33 @@ Order.prototype.checkIsRepeatOrder = function (data, callback) {
             }
         });
         logger.writeInfo('订单查询成功');
-        console.log("*********************************************************");
-        console.log(queryInfo);
-        console.log("*********************************************************");
-        callback(false, queryInfo);
+        
+        //存取已查询到的ID以及商品的数量并进行比对
+        var productIDs = new Array();
+        var productCounts = new Array();
+        for (var i = 0; i < queryInfo.length; ++i) {
+               productCounts.push(queryInfo[i]['ProductCount']);
+               productIDs.push(queryInfo[i]['ProductID']);
+        }
+        
+        //统计与数据库中的商品的相同的个数
+        var countSameProudct = 0;
+        console.log(productIDs);
+        for(var i=0; i < productIDs.length; ++i) {
+            for (var j = 0; j < data.ProductIDs.length; ++j) {
+                if (productIDs[i] == data.ProductIDs[j] && productCounts[i] == data.ProductCounts[j])
+                    {
+                        countSameProudct++;
+                    }
+            }
+        }
+        
+        if (countSameProudct == productCounts.length) {
+            callback(false, queryInfo);
+        }
+        else {
+            callback(false, '');
+        }
         return;
     });
 }

@@ -79,10 +79,18 @@ exports.queryOrderDelivery = function (data, callback) {
     arr.push('and  jit_staff.StaffType = 2 ');
 
     var sql = arr.join(' ');
-
+    
     for (var key in data) {
-        if (data[key] != '')
-            sql += ' and ' + key + ' = ' + data[key] + ' ';
+        if (key == 'jit_orderdelivery.DeliveryBeginTime' && data[key] != '')
+        {
+            sql += " and " + key + " > '" + data[key] + "' ";
+        } else if(key == 'jit_orderdelivery.DeliveryEndTime' && data[key] != '')
+        {
+            sql += " and " + key  + " < '" + data[key] + "' ";
+        }
+        else if (data[key] != '') {                            
+            sql += " and " + key + " = '" + data[key] + "' ";
+        }
     }
 
     sql += ' order by jit_orderdelivery.OrderID desc ';
@@ -92,7 +100,7 @@ exports.queryOrderDelivery = function (data, callback) {
     }
 
     logger.writeInfo("[dal/jinkebro/orderdelivery]订单配送员查询:" + sql);
-
+    
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -114,6 +122,7 @@ exports.queryOrderDelivery = function (data, callback) {
  * @function: 订单配送员表的查询工作
  */
 exports.countOrderDelivery = function (data, callback) {
+ 
     var arr = new Array();
     arr.push('select count(1) as num');
     arr.push('from jit_orderdelivery,jit_staff');
@@ -123,12 +132,20 @@ exports.countOrderDelivery = function (data, callback) {
     var sql = arr.join(' ');
 
     for (var key in data) {
-        if (data[key] != '')
-            sql += " and " + key + " = " + data[key] + " ";
+        if (key == 'jit_orderdelivery.DeliveryBeginTime' && data[key] != '')
+        {
+            sql += " and " + key + " > '" + data[key] + "' ";
+        } else if(key == 'jit_orderdelivery.DeliveryEndTime' && data[key] != '')
+        {
+            sql += " and " + key  + " < '" + data[key] + "' ";
+        }
+        else if (data[key] != '') {                            
+            sql += " and " + key + " = '" + data[key] + "' ";
+        }
     }
 
     logger.writeInfo("[dal/jinkebro/orderdelivery]订单配送员计数:" + sql);
-
+    
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);

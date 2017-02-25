@@ -73,6 +73,8 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier;
 
+// console.log("***********************************************************");
+// console.log(data);
     var formdata = {
         "jit_orderdelivery.OrderID" : data.OrderID || '',
         "jit_orderdelivery.DeliveryUserID" : data.DeliveryUserID || '',
@@ -85,7 +87,10 @@ OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
         }
     };
 
+// console.log("********************************************");
+// console.log(formdata);
     orderdeliveryDAL.queryOrderDelivery (formdata, function (err, queryResult) {
+        
 		if (err) {
 			logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.CustomerID || 0;//0为管理员的操作
