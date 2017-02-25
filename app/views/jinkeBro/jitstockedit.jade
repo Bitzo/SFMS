@@ -16,7 +16,7 @@ block content
             td(width="15%",class="tableleft") 库存总数
             td
               input(type="textview",name="TotalNum",ng-model="paginationConf.formdata.TotalNum",ng-maxlength='50',required)
-              &nbsp&nbsp
+        
               small.error(ng-if="jitorderEdit.TotalNum.$error.maxlength && jitorderEdit.TotalNum.$touched") 账户最多50位
           
           tr
@@ -29,5 +29,5 @@ block content
             td(class="tableleft")
             td
               button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/jinkeBro/proStock')") 确认修改
-              &nbsp&nbsp&nbsp&nbsp
+  
               a.btn.btn-sm.btn-success(href='#jinkeBro/jitstock',ng-click='search()') 返回列表

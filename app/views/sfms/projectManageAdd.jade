@@ -14,7 +14,7 @@ block content
           td(width="15%",class="tableleft") 项目名称
           td
             input(type="textview",name="ProjectName",ng-model="formdata.ProjectName",ng-maxlength='45',required)
-            &nbsp&nbsp
+            
             small.error(ng-show="projectAdd.ProjectName.$error.maxlength && projectAdd.ProjectName.$touched") 应用名称最多45位
 
         tr
@@ -54,36 +54,36 @@ block content
           td(width="15%",class="tableleft") 项目经费预算
           td
             input(type="number",name="ProjectPrice",ng-model="formdata.ProjectPrice",ng-maxlength='45',required)
-            &nbsp&nbsp
+            
             small.error(ng-show="projectAdd.ProjectPrice.$error.maxlength && projectAdd.ProjectPrice.$touched") 预算最多50位
             
         tr
           td(width="15%",class="tableleft") 项目进度
           td
             input(type="textview",name="ProjectTimeLine",ng-model="formdata.ProjectTimeLine",ng-maxlength='45',required)
-            &nbsp&nbsp
+            
             small.error(ng-show="projectAdd.ProjectTimeLine.$error.maxlength && projectAdd.ProjectTimeLine.$touched") 进度最多45位
         
         tr
           td(width="15%",class="tableleft") 项目状态
           td
              input(type="radio",name="ProjectStatus",value="结项",ng-model='formdata.ProjectStatus',style="width:15px;height:15px",checked)
-             &nbsp结项
-             &nbsp&nbsp          
+             |结项&nbsp&nbsp&nbsp
+                       
              input(type="radio",name="ProjectStatus",value="待完成",ng-model="formdata.ProjectStatus",style="width:15px;height:15px")
-             &nbsp待完成
+             |待完成
       
         
         tr
           td(width="15%",class="tableleft") 项目描述 
           td
             textarea(type="textview",name="ProjectDesc",ng-model='formdata.ProjectDesc',rows="5",cols="30",ng-maxlength='45',required)
-            &nbsp&nbsp
+            
             small.error(ng-show="projectAdd.ProjectDesc.$error.maxlength && projectAdd.ProjectDesc.$touched") 描述最多45位
 
         tr
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-disabled="projectAdd.$invalid",ng-click="addnew(formdata,'/sfms/api/project')") 添加
-            &nbsp&nbsp&nbsp&nbsp
+            
             a.btn.btn-sm.btn-success(href='#sfms/projectManage',ng-click='search()') 返回列表

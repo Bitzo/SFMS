@@ -15,7 +15,7 @@ block content
             td(width="15%",class="tableleft") 项目名称
             td
               input(type="textview",name="ProjectName",ng-model="paginationConf.formdata.ProjectName",ng-maxlength='45',required)
-              &nbsp&nbsp
+              
               small.error(ng-show="projectEdit.ProjectName.$error.maxlength && projectEdit.ProjectName.$touched") 应用名称最多45位    
 
           tr
@@ -73,36 +73,36 @@ block content
             td(width="15%",class="tableleft") 项目经费预算
             td
               input(type="textview",name="ProjectPrice",ng-model="paginationConf.formdata.ProjectPrice",ng-maxlength='45',required)
-              &nbsp&nbsp
+              
               small.error(ng-show="projectEdit.ProjectPrice.$error.maxlength && projectEdit.ProjectPrice.$touched") 预算最多45位
           
           tr
             td(width="15%",class="tableleft") 项目进度
             td
               input(type="textview",name="ProjectTimeLine",ng-model="paginationConf.formdata.ProjectTimeLine",ng-maxlength='45',required)
-              &nbsp&nbsp
+              
               small.error(ng-show="projectEdit.ProjectTimeLine.$error.maxlength && projectEdit.ProjectTimeLine.$touched") 进度最多45位
           
           tr
             td(width="15%",class="tableleft") 项目状态
             td
               input(type="radio",name="ProjectStatus",value="结项",ng-model='paginationConf.formdata.ProjectStatus',style="width:15px;height:15px",checked)
-              &nbsp结项
-              &nbsp&nbsp          
+              |结项&nbsp&nbsp&nbsp&nbsp
+                        
               input(type="radio",name="ProjectStatus",value="待完成",ng-model="paginationConf.formdata.ProjectStatus",style="width:15px;height:15px")
-              &nbsp待完成
+              |待完成
 
 
           tr
             td(width="15%",class="tableleft") 项目描述 
             td
               textarea(type="textview",name="ProjectDesc",ng-model='paginationConf.formdata.ProjectDesc',rows="5",cols="30",ng-maxlength='45',required)
-              &nbsp&nbsp
+              
               small.error(ng-show="projectEdit.ProjectDesc.$error.maxlength && projectEdit.ProjectDesc.$touched") 描述最多45位
 
           tr
             td(class="tableleft")
             td
               button.btn.btn-sm.btn-primary(type="submit",ng-disabled="projectEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/sfms/api/project')") 确认修改
-              &nbsp&nbsp&nbsp&nbsp
+              
               a.btn.btn-sm.btn-success(href='#sfms/projectManage',ng-click='search()') 返回列表
