@@ -219,7 +219,7 @@ router.get('/', function (req, res) {
                 deliveryEndTime = query.DeliveryEndTime || '',
                 isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 0;
 
-            var data = {
+           var data = {
                 page : page,
                 pageNum : pageNum,
                 isPaging : isPaging
@@ -254,6 +254,8 @@ router.get('/', function (req, res) {
             if (deliveryEndTime !== undefined) {
                 data.DeliveryEndTime = deliveryEndTime;
             }
+            
+            
             var countNum = -1;
             orderDelivery.countOrderDelivery(data, function (err, results) {
                 if (err) {
@@ -264,6 +266,7 @@ router.get('/', function (req, res) {
                         errorMsg: "查询失败，服务器内部错误！"
                     });
                 }
+                
                 if (results !== undefined && results.length != 0 && (results[0]['num']) > 0) {
                     countNum = results[0]['num'];
 
