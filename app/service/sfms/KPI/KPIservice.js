@@ -6,14 +6,13 @@
  * @Function: KPI 服务
  */
 
-var KPIdal = appRequire('dal/sfms/KPI/KPIdal.js');
-//引入日志中间件
-var logger = appRequire("util/loghelper").helper;
-var config = appRequire('config/config');
-var logModel = appRequire('model/backend/log/logmodel');
-var logService = appRequire('service/backend/log/logservice');
-var operationConfig = appRequire('config/operationconfig');
-var moment = require('moment');
+var KPIdal = appRequire('dal/sfms/KPI/KPIdal.js'),
+    logger = appRequire("util/loghelper").helper,
+    config = appRequire('config/config'),
+    logModel = appRequire('model/backend/log/logmodel'),
+    logService = appRequire('service/backend/log/logservice'),
+    operationConfig = appRequire('config/operationconfig'),
+    moment = require('moment');
 
 logModel.ApplicationID = operationConfig.sfmsApp.applicationID;
 logModel.ApplicationName = operationConfig.sfmsApp.applicationName;
@@ -34,7 +33,7 @@ exports.addKPI = function(data, callback) {
         'KPIStatus': data.KPIStatus,
         'Remark': data.Remark,
         'IsActive': data.IsActive
-    }
+    };
 
     logModel.OperationName = operationConfig.sfmsApp.KPIManage.KPIAdd.actionName;
     logModel.Action = operationConfig.sfmsApp.KPIManage.KPIAdd.actionName;
@@ -45,25 +44,30 @@ exports.addKPI = function(data, callback) {
         if (err) {
             logModel.Type = 1;
             logModel.Memo = "绩效新增失败";
+
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
                     logger.writeError("绩效新增失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+            });
+
             callback(true, '新增失败');
             return;
         }
+
         logModel.Type = 2;
         logModel.Memo = "绩效新增成功";
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("绩效新增成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
+
         logger.writeInfo('新增KPI');
         callback(false, results);
     })
-}
+};
 
 //KPI基本信息修改
 exports.updateKPI = function(data, callback) {
@@ -90,25 +94,30 @@ exports.updateKPI = function(data, callback) {
         if (err) {
             logModel.Type = 1;
             logModel.Memo = "绩效修改失败";
+
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
                     logger.writeError("绩效修改失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+            });
+
             callback(true, '修改失败');
             return;
         }
+
         logModel.Type = 2;
         logModel.Memo = "绩效修改成功";
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("绩效修改成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
+
         logger.writeInfo('修改KPI');
         callback(false, results);
     })
-}
+};
 
 //KPI信息查询
 exports.queryKPI = function (data, callback) {
@@ -125,7 +134,8 @@ exports.queryKPI = function (data, callback) {
         'jit_kpiinfo.IsActive': data.IsActive || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount,
-    }
+    };
+
     if (data.ID!==''&&data.ID!==undefined) {
         logModel.OperationName = operationConfig.sfmsApp.KPIManage.KPISingleQuery.actionName;
         logModel.Action = operationConfig.sfmsApp.KPIManage.KPISingleQuery.actionName;
@@ -141,26 +151,32 @@ exports.queryKPI = function (data, callback) {
             logModel.Type = 1;
             logModel.Memo = "绩效查询失败";
             logModel.CreateUserID = data.OperateUserID;
+
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
                     logger.writeError("绩效查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+
+            });
+
             callback(true, '查询失败');
             return;
         }
+
         logModel.Type = 2;
         logModel.Memo = "绩效查询成功";
         logModel.CreateUserID = data.OperateUserID;
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("绩效查询成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
+
         logger.writeInfo('查询KPI信息');
         callback(false, results);
     })
-}
+};
 
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
@@ -172,16 +188,18 @@ exports.countQuery = function (data, callback) {
         'StartTime': data.StartTime || '',
         'EndTime': data.EndTime || '',
         'jit_kpiinfo.IsActive': data.IsActive || ''
-    }
+    };
+
     KPIdal.countQuery(queryData, function (err, results) {
         if (err) {
             callback(true, '失败');
             return;
         }
+
         logger.writeInfo('统计KPI数据量');
         callback(false, results);
     })
-}
+};
 
 //KPI审核
 exports.checkKPI = function (data, callback) {
@@ -190,7 +208,7 @@ exports.checkKPI = function (data, callback) {
         KPIStatus: data.KPIStatus,
         CheckUser: data.CheckUser,
         Remark: data.Remark
-    }
+    };
 
     logModel.OperationName = operationConfig.sfmsApp.KPIManage.KPICheck.actionName;
     logModel.Action = operationConfig.sfmsApp.KPIManage.KPICheck.actionName;
@@ -201,93 +219,111 @@ exports.checkKPI = function (data, callback) {
             logModel.Type = 1;
             logModel.Memo = "绩效审核失败";
             logModel.CreateUserID = data.CheckUser;
+
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
                     logger.writeError("绩效审核失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+            });
+
             callback(true, results);
             return;
         }
         logModel.Type = 2;
         logModel.Memo = "绩效审核成功";
         logModel.CreateUserID = data.CheckUser;
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("绩效审核成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
+
         logger.writeInfo('审核KPI');
         callback(false, results);
     })
-}
+};
 
 //KPI逻辑删除
 exports.delKPI = function (data, callback) {
     var formdata = {
         'ID': data.ID || '',
         'ProjectID': data.ProjectID || ''
-    }
+    };
+
     logModel.OperationName = operationConfig.sfmsApp.KPIManage.KPIDelete.actionName;
     logModel.Action = operationConfig.sfmsApp.KPIManage.KPIDelete.actionName;
     logModel.Identifier = operationConfig.sfmsApp.KPIManage.KPIDelete.identifier;
+
     KPIdal.delKPI(formdata, function (err, results) {
         if (err) {
             logModel.Type = 1;
             logModel.Memo = "绩效逻辑删除失败";
             logModel.CreateUserID = data.OperateUserID;
+
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
                     logger.writeError("绩效逻辑删除失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+            });
+
             callback(true, results);
             return;
         }
+
         logModel.Type = 2;
         logModel.Memo = "绩效逻辑删除成功";
         logModel.CreateUserID = data.OperateUserID;
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("绩效逻辑删除成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
+
         logger.writeInfo('逻辑删除KPI');
         callback(false, results);
     })
-}
+};
 
 exports.countKPI = function (data, callback) {
     var formdata = {
         'userID': data.userID || '',
         'startTime': data.startTime || '',
         'endTime': data.endTime || ''
-    }
+    };
+
     logModel.OperationName = operationConfig.sfmsApp.KPIManage.KPICount.actionName;
     logModel.Action = operationConfig.sfmsApp.KPIManage.KPICount.actionName;
     logModel.Identifier = operationConfig.sfmsApp.KPIManage.KPICount.identifier;
+
     KPIdal.countKPI(formdata, function (err, results) {
         if (err) {
             logModel.Type = 1;
             logModel.Memo = "绩效统计失败";
             logModel.CreateUserID = data.OperateUserID;
+
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
                     logger.writeError("绩效统计失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+            });
+
             callback(true, results);
             return;
         }
+
         logModel.Type = 2;
         logModel.Memo = "绩效统计成功";
         logModel.CreateUserID = data.OperateUserID;
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("绩效统计成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
+
         logger.writeInfo('逻辑删除KPI');
         callback(false, results);
     })
-}
+};

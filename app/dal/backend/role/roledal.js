@@ -18,8 +18,13 @@ exports.queryAllRoles = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && key !== 'SelectType' && data[key]!=='') {
-                sql += ' and ' + key + "='" + data[key] + "' ";
+            if (key !== 'page' && key !== 'pageNum' && key !== 'SelectType' &&
+                key !== 'RoleName' && key !== 'RoleCode' && data[key]!=='') {
+                sql += ' and ' + key + " = '" + data[key] + "' ";
+            }
+
+            if ((key === 'RoleName' || key === 'RoleCode') && data[key] !== '') {
+                sql += ' and ' + key + " like '%" + data[key] + "%' ";
             }
         }
     }
@@ -60,8 +65,14 @@ exports.countAllRoles = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'SelectType')
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' &&
+                key !== 'RoleName' && key !== 'RoleCode' && key !== 'SelectType') {
                 sql += " and " + key + " = '" + data[key] + "' ";
+            }
+
+            if ((key === 'RoleName' || key === 'RoleCode' ) && data[key] !== '' ) {
+                sql += ' and ' + key + " like '%" + data[key] + "%' ";
+            }
         }
     }
 

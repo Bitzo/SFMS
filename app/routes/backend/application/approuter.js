@@ -15,24 +15,29 @@ var express = require('express'),
     userFuncService = appRequire('service/backend/user/userfuncservice');
 
 router.post('/', function (req, res) {
-    var functionCode = functionConfig.backendApp.appManage.appAdd.functionCode;
-    var data = {
-        userID: req.query.jitkey,
-        functionCode: functionCode
-    }
+    var functionCode = functionConfig.backendApp.appManage.appAdd.functionCode,
+        data = {
+            userID: req.query.jitkey,
+            functionCode: functionCode
+        };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined&& results.isSuccess === true) {
-            var query = req.body.formdata,
-                err = 'required: ';
+            var query = req.body.formdata;
+
+            err = 'required: ';
             data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
+
             for(var value in data)
             {
                 if(!(data[value] in query))
@@ -56,7 +61,7 @@ router.post('/', function (req, res) {
                 IsActive = query.IsActive,
                 memo = query.Memo || '';
 
-            var data = {
+            data = {
                 'ApplicationName': ApplicationName,
                 'OperateUserID': req.query.jitkey,
                 'pageNum': config.pageCount
@@ -82,17 +87,21 @@ router.post('/', function (req, res) {
                         'Memo': memo,
                         'IsActive': IsActive,
                         'OperateUserID': req.query.jitkey,
-                    }
+                    };
+
                     if (data.ApplicationCode.length>50) {
                         res.status(400);
+
                         return res.json({
                             code: 400,
                             isSuccess: false,
                             msg: '应用代码过长,请勿超过50个字符'
                         });
                     }
+
                     if (data.ApplicationName.length>50) {
                         res.status(400);
+
                         return res.json({
                             code: 400,
                             isSuccess: false,
@@ -102,12 +111,14 @@ router.post('/', function (req, res) {
 
                     if (data.Memo!==undefined&&data.Memo.length>200) {
                         res.status(400);
+
                         return res.json({
                             code: 400,
                             isSuccess: false,
                             msg: '备注过长,请勿超过200个字符'
                         });
                     }
+
                     userSpring.insert(data, function (err, results) {
                         if (err) {
                             res.status(500);
@@ -119,6 +130,7 @@ router.post('/', function (req, res) {
                             logger.writeError('新增应用,出错信息: ' + err);
                             return;
                         }
+
                         res.status(200);
                         res.json({
                             code: 200,
@@ -156,28 +168,32 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', function (req, res) {
-    var functionCode = functionConfig.backendApp.appManage.appQuery.functionCode;
-    var data = {
-        userID: req.query.jitkey,
-        functionCode: functionCode
-    }
+    var functionCode = functionConfig.backendApp.appManage.appQuery.functionCode,
+        data = {
+            userID: req.query.jitkey,
+            functionCode: functionCode
+        };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined&& results.isSuccess === true) {
-            var query = JSON.parse(req.query.f);
-            var page = req.query.pageindex || 1,
+            var query = JSON.parse(req.query.f),
+                page = req.query.pageindex || 1,
                 pageNum = req.query.pagesize || config.pageCount,
                 ApplicationName = query.ApplicationName || '',
                 selectType = req.query.isPaging || '',
                 ID = query.ID || '',
                 isActive = query.isActive || '';
+
             page = page>0?page:1;
 
             data = {
@@ -189,6 +205,7 @@ router.get('/', function (req, res) {
                 'OperateUserID': req.query.jitkey,
                 'IsActive': isActive
             };
+
             //查找该应用
             var countNum = 0;
 
@@ -207,6 +224,7 @@ router.get('/', function (req, res) {
                 if (results !==undefined && results.length != 0) {
                     countNum = results[0]['num'];
                 }
+
                 userSpring.queryAllApp(data, function (err, results) {
                     if (err) {
                         res.status(500);
@@ -218,12 +236,14 @@ router.get('/', function (req, res) {
                         logger.writeError('查询应用,出错信息: ' + err);
                         return;
                     }
+
                     if (results !== undefined && results.length != 0) {
                         if (page == Math.ceil(countNum/pageNum)) {
                             var curpageNum = countNum - (page-1) * pageNum;
                         } else {
                             var curpageNum = pageNum;
                         }
+
                         res.status(200);
                         res.json({
                             code:200,
@@ -263,7 +283,8 @@ router.put('/', function(req, res) {
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.appManage.appEdit.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
@@ -273,6 +294,7 @@ router.put('/', function(req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var err = 'required: ',
                 query = req.body.formdata,
@@ -289,6 +311,7 @@ router.put('/', function(req, res) {
                     err += data[index] + ' ';
                 }
             }
+
             if (err != 'required: ') {
                 res.status(400);
                 res.json({
@@ -303,6 +326,7 @@ router.put('/', function(req, res) {
                 'ID': ID,
                 'OperateUserID': req.query.jitkey
             };
+
             userSpring.queryAllApp(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -314,6 +338,7 @@ router.put('/', function(req, res) {
                     logger.writeError('编辑应用,出错信息: ' + err);
                     return;
                 }
+
                 if (results !== undefined && results.length != 0) {
 
                     data = {
@@ -323,7 +348,8 @@ router.put('/', function(req, res) {
                         'Memo': Memo,
                         'IsActive': IsActive,
                         'OperateUserID': req.query.jitkey
-                    }
+                    };
+
                     if (data.ApplicationCode.length>50) {
                         res.status(400);
                         return res.json({
@@ -332,6 +358,7 @@ router.put('/', function(req, res) {
                             msg: '应用代码过长,请勿超过50个字符'
                         });
                     }
+
                     if (data.ApplicationName.length>50) {
                         res.status(400);
                         return res.json({
@@ -340,6 +367,7 @@ router.put('/', function(req, res) {
                             msg: '应用名称过长,请勿超过50个字符'
                         });
                     }
+
                     if (data.Memo.length>200) {
                         res.status(400);
                         return res.json({
@@ -348,6 +376,7 @@ router.put('/', function(req, res) {
                             msg: '备注过长,请勿超过200个字符'
                         });
                     }
+
                     userSpring.update(data, function (err, results) {
                         if (err) {
                             res.status(500);
@@ -359,6 +388,7 @@ router.put('/', function(req, res) {
                             logger.writeError('编辑应用,出错信息: ' + err);
                             return;
                         }
+
                         res.status(200);
                         res.json({
                             code:200,
@@ -400,7 +430,8 @@ router.delete('/', function (req, res) {
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.appManage.appDel.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
@@ -410,15 +441,17 @@ router.delete('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.d),
                 ID = query.ID;
-            var data = {
+
+            data = {
                 'ID': ID,
                 'IsActive': 0,
                 'pageNum': config.pageCount,
                 'OperateUserID': req.query.jitkey
-            }
+            };
 
             userSpring.queryAllApp(data, function (err, results) {
                 if (err) {
@@ -431,6 +464,7 @@ router.delete('/', function (req, res) {
                     logger.writeError('删除应用,出错信息: ' + err);
                     return;
                 }
+
                 if (results !== undefined && results.length != 0) {
                     data = {
                         'ID': results[0].ID,
@@ -439,7 +473,8 @@ router.delete('/', function (req, res) {
                         'Memo': results[0].Memo,
                         'IsActive': 0,
                         'OperateUserID': req.query.jitkey
-                    }
+                    };
+
                     userSpring.update(data, function (err, results) {
                         if (err) {
                             res.status(500);
@@ -451,6 +486,7 @@ router.delete('/', function (req, res) {
                             logger.writeError('删除应用,出错信息: ' + err);
                             return;
                         }
+
                         if (results !== undefined && results.affectedRows > 0) {
                             res.status(200);
                             res.json({

@@ -5,18 +5,16 @@
  * @Last Modified time: 2016/12/1 19:21
  * @Function: 项目用户
  */
-var express = require('express');
-var router = express.Router();
-var projectuserservice = appRequire('service/sfms/project/projectuserservice');
-var projectservice = appRequire('service/sfms/project/projectservice');
-var userservice = appRequire('service/backend/user/userservice');
-var moment = require('moment');
-var config = appRequire('config/config');
-
-//引入日志中间件
-var logger = appRequire("util/loghelper").helper;
-var functionConfig = appRequire('config/functionconfig');
-var userFuncService = appRequire('service/backend/user/userfuncservice');
+var express = require('express'),
+    router = express.Router(),
+    projectuserservice = appRequire('service/sfms/project/projectuserservice'),
+    projectservice = appRequire('service/sfms/project/projectservice'),
+    userservice = appRequire('service/backend/user/userservice'),
+    moment = require('moment'),
+    config = appRequire('config/config'),
+    logger = appRequire("util/loghelper").helper,
+    functionConfig = appRequire('config/functionconfig'),
+    userFuncService = appRequire('service/backend/user/userfuncservice');
 
 /**
  * 项目用户信息新增
@@ -41,21 +39,27 @@ router.post('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.projectUserManage.projectUserAdd.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var operateID = req.query.jitkey;
+
             data = req.body.formdata;
             //检查所需要的参数是否齐全
-            var temp = ['projectID', 'userID', 'editID', 'isActive'],
-                err = 'required: ';
+            var temp = ['projectID', 'userID', 'editID', 'isActive'];
+
+            err = 'required: ';
+
             for(var value in temp)
             {
                 if(!(temp[value] in data[0]))
@@ -64,43 +68,53 @@ router.post('/', function (req, res) {
                     err += temp[value] + ' ';
                 }
             }
+
             if(err!='required: ')
             {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: err
                 })
             };
+
             projectservice.queryProject({ID:data[0].projectID, IsActive:1}, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     })
                 }
+
                 if(results!==undefined && results.length > 0) {
                     for (var i in data) {
                         data[i].ProjectName = results[0].ProjectName;
                     }
+
                     userservice.querySingleID(operateID, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
                                 msg: '操作失败，服务器出错'
                             })
                         }
+
                         if (results!==undefined && results.length>0) {
                             for (var i in data) {
                                 data[i].editName = results[0].UserName;
                                 data[i].OperateUser = results[0].UserName;
                             }
+
                             var ID = [];
+
                             for (var i in data) {
                                 if (i==0) ID[i] = data[i].userID;
                                 else {
@@ -113,24 +127,29 @@ router.post('/', function (req, res) {
                                     }
                                 }
                             }
+
                             userservice.queryAccountByID(ID, function (err, results) {
                                 if (err) {
                                     res.status(500);
+
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
                                         msg: '操作失败，服务器出错'
                                     })
                                 }
+
                                 if (results!==undefined&&results.length>0) {
                                     for (var i=0;i<data.length;++i) {
                                         var k = false;
+
                                         for(var j=0;j<results.length;++j) {
                                             if (data[i].userID == results[j].AccountID) {
                                                 k = true;
                                                 data[i].UserName = results[j].UserName;
                                             }
                                         }
+
                                         if (k == false) {
                                             res.status(400);
                                             return res.json({
@@ -140,17 +159,21 @@ router.post('/', function (req, res) {
                                             })
                                         }
                                     }
+
                                     projectuserservice.addProjectUser(data, function (err, results) {
                                         if (err) {
-                                            res.status(500);
+                                            res.status(500)
+
                                             return res.json({
                                                 status: 500,
                                                 isSuccess: false,
                                                 msg: '操作失败，服务器出错'
                                             })
                                         }
+
                                         if(results !== undefined && results.insertId > 0) {
                                             res.status(200);
+
                                             return res.json({
                                                 status: 200,
                                                 isSuccess: true,
@@ -158,6 +181,7 @@ router.post('/', function (req, res) {
                                             })
                                         } else {
                                             res.status(404);
+
                                             return res.json({
                                                 status: 404,
                                                 isSuccess: false,
@@ -167,6 +191,7 @@ router.post('/', function (req, res) {
                                     })
                                 } else {
                                     res.status(400);
+
                                     return res.json({
                                         status: 400,
                                         isSuccess: false,
@@ -176,6 +201,7 @@ router.post('/', function (req, res) {
                             })
                         } else {
                             res.status(400);
+
                             return res.json({
                                 status: 400,
                                 isSuccess: false,
@@ -185,6 +211,7 @@ router.post('/', function (req, res) {
                     })
                 } else {
                     res.status(400);
+
                     return res.json({
                         status: 404,
                         isSuccess: false,
@@ -194,6 +221,7 @@ router.post('/', function (req, res) {
             })
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -209,15 +237,18 @@ router.put('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.projectUserManage.projectUserEdit.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var ID = req.body.formdata.ID,
                 projectName = req.body.formdata.projectName,
@@ -241,9 +272,12 @@ router.put('/', function (req, res) {
                 'IsActive': isActive,
                 'EditTime': ''
             };
+
             //检查所需要的参数是否齐全
-            var temp = ['ID', 'projectName', 'projectID', 'userID', 'userName', 'operateUser', 'editName', 'duty', 'isActive'],
-                err = 'required: ';
+            var temp = ['ID', 'projectName', 'projectID', 'userID', 'userName', 'operateUser', 'editName', 'duty', 'isActive'];
+
+            err = 'required: ';
+
             for(var value in temp)
             {
                 if(!(temp[value] in req.body))
@@ -252,9 +286,11 @@ router.put('/', function (req, res) {
                     err += temp[value] + ' ';
                 }
             }
+
             if(err!='required: ')
             {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
@@ -265,14 +301,17 @@ router.put('/', function (req, res) {
             projectuserservice.updateProjectUser(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     })
                 }
+
                 if(results !== undefined && results.affectedRows > 0) {
                     res.status(200);
+
                     return res.json({
                         status: 200,
                         isSuccess: true,
@@ -280,6 +319,7 @@ router.put('/', function (req, res) {
                     })
                 } else {
                     res.status(404);
+
                     return res.json({
                         status: 404,
                         isSuccess: false,
@@ -289,6 +329,7 @@ router.put('/', function (req, res) {
             })
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -304,18 +345,21 @@ router.get('/:projectID', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.projectUserManage.projectUserQuery.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
-            var query = req.query;
-            var projectID = req.params.projectID || '',
+            var query = req.query,
+                projectID = req.params.projectID || '',
                 userName = query.userName || '',
                 isActive = query.isActive || 1,
                 page = req.query.pageindex > 0 ? req.query.pageindex : 1 ,
@@ -335,26 +379,32 @@ router.get('/:projectID', function (req, res) {
             projectuserservice.countQuery(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     })
                 }
+
                 logger.writeInfo(results);
                 totalNum = results[0].num;
+
                 if(totalNum > 0) {
                     //查询所需的详细数据
                     projectuserservice.queryProjectUser(data, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
                                 msg: '操作失败，服务器出错'
                             })
                         }
+
                         logger.writeInfo(results);
+
                         if (results !== undefined && results.length > 0) {
                             var result = {
                                 status: 200,
@@ -365,13 +415,17 @@ router.get('/:projectID', function (req, res) {
                                 curPageNum: pageNum,
                                 data: results
                             };
+
                             if(result.curPage == result.totalPage) {
                                 result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                             }
+
                             res.status(200);
+
                             return res.json(result);
                         } else {
                             res.status(200);
+
                             return res.json({
                                 status: 200,
                                 isSuccess: true,
@@ -381,6 +435,7 @@ router.get('/:projectID', function (req, res) {
                     })
                 } else {
                     res.status(200);
+
                     return res.json({
                         status: 200,
                         isSuccess: true,
@@ -390,6 +445,7 @@ router.get('/:projectID', function (req, res) {
             })
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -404,9 +460,11 @@ router.delete('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.projectUserManage.projectUserDelete.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
@@ -415,14 +473,17 @@ router.delete('/', function (req, res) {
         }
         if (results !== undefined && results.isSuccess === true) {
             var ID = JSON.parse(req.query.d).ID;
+
             if (ID == '' || ID === undefined) {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: 'require: ID'
                 })
             }
+
             data = [
                 {
                     'ID': ID,
@@ -433,14 +494,17 @@ router.delete('/', function (req, res) {
             projectuserservice.updateProjectUser(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         code: 500,
                         isSuccess: false,
                         msg: "操作失败，服务器出错"
                     });
                 }
+
                 if (results!==undefined) {
                     res.status(200);
+
                     return res.json({
                         code: 200,
                         isSuccess: false,
@@ -450,6 +514,7 @@ router.delete('/', function (req, res) {
             })
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
