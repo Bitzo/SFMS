@@ -6,19 +6,17 @@
  * @Function: 财务管理
  */
 
-var express = require('express');
-var router = express.Router();
-var financeService = appRequire('service/sfms/finance/financeservice');
-var projectservice = appRequire('service/sfms/project/projectservice');
-var dataservice = appRequire('service/backend/datadictionary/datadictionaryservice');
-var userservice = appRequire('service/backend/user/userservice');
-var config = appRequire('config/config');
-var moment = require('moment');
-
-//引入日志中间件
-var logger = appRequire("util/loghelper").helper;
-var functionConfig = appRequire('config/functionconfig');
-var userFuncService = appRequire('service/backend/user/userfuncservice');
+var express = require('express'),
+    router = express.Router(),
+    financeService = appRequire('service/sfms/finance/financeservice'),
+    projectservice = appRequire('service/sfms/project/projectservice'),
+    dataservice = appRequire('service/backend/datadictionary/datadictionaryservice'),
+    userservice = appRequire('service/backend/user/userservice'),
+    config = appRequire('config/config'),
+    moment = require('moment'),
+    logger = appRequire("util/loghelper").helper,
+    functionConfig = appRequire('config/functionconfig'),
+    userFuncService = appRequire('service/backend/user/userfuncservice');
 
 /**
  * 财务信息新增
@@ -32,15 +30,18 @@ router.post('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.financeManage.financeAdd.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query = req.body.formdata,
                 fiName = query.FIName,
@@ -55,8 +56,10 @@ router.post('/', function (req, res) {
                 isActive = 1,
                 //前端需要传输的数据
                 temp = ['FIName', 'FIType', 'InOutType', 'FIPrice', 'ProjectID','UserID','Remark'],
-                temp1 = ['财务名称', '财务类型', '财务收支', '财务金额','所属项目', '用户名', '财务描述'],
-                err = '缺少值: ';
+                temp1 = ['财务名称', '财务类型', '财务收支', '财务金额','所属项目', '用户名', '财务描述'];
+
+            err = '缺少值: ';
+
             for(var value in temp)
             {
                 if(!(temp[value] in query))
@@ -65,6 +68,7 @@ router.post('/', function (req, res) {
                     err += temp1[value] + ' ';
                 }
             }
+
             if(err!='缺少值: ')
             {
                 res.status(400);
@@ -81,55 +85,65 @@ router.post('/', function (req, res) {
                 'IsActive': 1,
                 'OperateUserID': req.query.jitkey
             };
+
             projectservice.queryProject(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 if (results !== undefined && results.length > 0) {
                     //查询fiType、inOutType是否在字典表中
                     var DicID = {
                         'DictionaryID': [fiType, inOutType]
                     };
+
                     dataservice.queryDatadictionaryByID(DicID, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
                                 msg: '操作失败，服务器出错'
                             });
                         }
+
                         if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                            // fiType = results[0].DictionaryValue;
-                            // inOutType = results[1].DictionaryValue;
                             //获取userid的username
                             userservice.querySingleID(userID, function (err, results) {
                                 if (err) {
                                     res.status(500);
+
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
                                         msg: '操作失败，服务器出错'
                                     });
                                 }
+
                                 if (results !== undefined && results.length > 0) {
                                     userName = results[0].UserName;
+
                                     userservice.querySingleID(userID, function (err, results) {
                                         if (err) {
                                             res.status(500);
+
                                             return res.json({
                                                 status: 500,
                                                 isSuccess: false,
                                                 msg: '操作失败，服务器出错'
                                             });
                                         }
+
                                         if (results !== undefined && results.length > 0) {
                                             operateUser = results[0].UserName;
+
                                             //数据全部验证完毕后存入数据
                                             var data = {
                                                 'FIName': fiName,
@@ -145,16 +159,20 @@ router.post('/', function (req, res) {
                                                 'Remark': remark,
                                                 'IsActive': isActive
                                             };
+
                                             if (isNaN(data.FIPrice)||data.FIPrice<0) {
                                                 res.status(400);
+
                                                 return res.json({
                                                     code: 400,
                                                     isSuccess: false,
                                                     msg: '财务金额不是正确的数值'
                                                 });
                                             }
+
                                             if (data.FIName.length>45) {
                                                 res.status(400);
+
                                                 return res.json({
                                                     code: 400,
                                                     isSuccess: false,
@@ -163,23 +181,28 @@ router.post('/', function (req, res) {
                                             }
                                             if (data.Remark.length>45) {
                                                 res.status(400);
+
                                                 return res.json({
                                                     code: 400,
                                                     isSuccess: false,
                                                     msg: '备注过长,请勿超过45个字符'
                                                 });
                                             }
+
                                             financeService.addFinance(data, function (err, results) {
                                                 if (err) {
                                                     res.status(500);
+
                                                     return res.json({
                                                         status: 500,
                                                         isSuccess: false,
                                                         msg: '操作失败，服务器出错'
                                                     });
                                                 }
+
                                                 if(results !== undefined && results.insertId > 0) {
                                                     res.status(200);
+
                                                     return res.json({
                                                         status: 200,
                                                         isSuccess: true,
@@ -187,6 +210,7 @@ router.post('/', function (req, res) {
                                                     });
                                                 } else {
                                                     res.status(400);
+
                                                     return res.json({
                                                         status: 404,
                                                         isSuccess: false,
@@ -196,6 +220,7 @@ router.post('/', function (req, res) {
                                             })
                                         } else {
                                             res.status(400);
+
                                             return res.json({
                                                 status: 404,
                                                 isSuccess: false,
@@ -205,6 +230,7 @@ router.post('/', function (req, res) {
                                     });
                                 } else {
                                     res.status(400);
+
                                     return res.json({
                                         status: 404,
                                         isSuccess: false,
@@ -214,6 +240,7 @@ router.post('/', function (req, res) {
                             });
                         } else {
                             res.status(400);
+
                             return res.json({
                                 status: 404,
                                 isSuccess: false,
@@ -223,6 +250,7 @@ router.post('/', function (req, res) {
                     });
                 } else {
                     res.status(400);
+
                     return res.json({
                         status: 404,
                         isSuccess: false,
@@ -232,6 +260,7 @@ router.post('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -254,15 +283,18 @@ router.put('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.financeManage.financeEdit.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query = req.body.formdata,
                 ID = query.ID,
@@ -278,8 +310,9 @@ router.put('/', function (req, res) {
                 isActive = 1,
                 //前端需要传输的数据
                 temp = ['ID', 'FIName', 'FIType', 'InOutType', 'FIPrice', 'ProjectId','UserID','Remark'],
-                temp1 = ['财务ID', '财务名称', '财务类型', '财务收支', '财务金额','所属项目', '用户名', '财务描述'],
-                err = '缺少值: ';
+                temp1 = ['财务ID', '财务名称', '财务类型', '财务收支', '财务金额','所属项目', '用户名', '财务描述'];
+
+            err = '缺少值: ';
 
             for(var value in temp)
             {
@@ -289,32 +322,39 @@ router.put('/', function (req, res) {
                     err += temp1[value] + ' ';
                 }
             }
+
             if(err!='缺少值: ')
             {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: err
                 })
             }
+
             financeService.queryFinance({'ID':ID,'OperateUserID':req.query.jitkey}, function (err, results) {
                 if (err) {
-                    res.status(500);
+                    res.status(500)
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 if (results.length>0 && results[0].IsActive === 0 ) {
                     res.status(400);
+
                     return res.json({
                         status: 400,
                         isSuccess: false,
                         msg: '操作失败，该财务信息已无效'
                     });
                 }
+
                 if (results[0].FIStatu == '待审核') {
 
                     //验证申报财务的项目是否存在
@@ -323,53 +363,62 @@ router.put('/', function (req, res) {
                         'IsActive': 1,
                         'OperateUserID': req.query.jitkey
                     };
+
                     projectservice.queryProject(data, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
                                 msg: '操作失败，服务器出错'
                             });
                         }
+
                         if (results !== undefined && results.length > 0) {
                             //查询fiType、inOutType是否在字典表中
                             var DicID = {
                                 'DictionaryID': [fiType, inOutType]
                             };
+
                             dataservice.queryDatadictionaryByID(DicID, function (err, results) {
                                 if (err) {
                                     res.status(500);
+
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
                                         msg: '操作失败，服务器出错'
                                     });
                                 }
+
                                 if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                                    // fiType = results[0].DictionaryValue;
-                                    // inOutType = results[1].DictionaryValue;
                                     //获取userid的username
                                     userservice.querySingleID(userID, function (err, results) {
                                         if (err) {
                                             res.status(500);
+
                                             return res.json({
                                                 status: 500,
                                                 isSuccess: false,
                                                 msg: '操作失败，服务器出错'
                                             });
                                         }
+
                                         if (results !== undefined && results.length > 0) {
                                             userName = results[0].UserName;
+
                                             userservice.querySingleID(operateUser, function (err, results) {
                                                 if (err) {
                                                     res.status(500);
+
                                                     return res.json({
                                                         status: 500,
                                                         isSuccess: false,
                                                         msg: '操作失败，服务器出错'
                                                     });
                                                 }
+
                                                 if (results !== undefined && results.length > 0) {
                                                     operateUser = results[0].UserName;
                                                     //数据全部验证完毕后存入数据
@@ -388,41 +437,51 @@ router.put('/', function (req, res) {
                                                         'Remark': remark,
                                                         'IsActive': isActive
                                                     };
+
                                                     if (isNaN(data.FIPrice)||data.FIPrice<0) {
                                                         res.status(400);
+
                                                         return res.json({
                                                             code: 400,
                                                             isSuccess: false,
                                                             msg: '财务金额不是正确的数值'
                                                         });
                                                     }
+
                                                     if (data.FIName.length>45) {
                                                         res.status(400);
+
                                                         return res.json({
                                                             code: 400,
                                                             isSuccess: false,
                                                             msg: '财务名称过长,请勿超过45个字符'
                                                         });
                                                     }
+
                                                     if (data.Remark.length>45) {
                                                         res.status(400);
+
                                                         return res.json({
                                                             code: 400,
                                                             isSuccess: false,
                                                             msg: '备注过长,请勿超过45个字符'
                                                         });
                                                     }
+
                                                     financeService.updateFinance(data, function (err, results) {
                                                         if (err) {
                                                             res.status(500);
+
                                                             return res.json({
                                                                 status: 500,
                                                                 isSuccess: false,
                                                                 msg: '操作失败，服务器出错'
                                                             });
                                                         }
+
                                                         if(results !== undefined && results.affectedRows > 0) {
                                                             res.status(200);
+
                                                             return res.json({
                                                                 status: 200,
                                                                 isSuccess: true,
@@ -430,6 +489,7 @@ router.put('/', function (req, res) {
                                                             });
                                                         } else {
                                                             res.status(400);
+
                                                             return res.json({
                                                                 status: 404,
                                                                 isSuccess: false,
@@ -439,6 +499,7 @@ router.put('/', function (req, res) {
                                                     });
                                                 } else {
                                                     res.status(400);
+
                                                     return res.json({
                                                         status: 404,
                                                         isSuccess: false,
@@ -448,6 +509,7 @@ router.put('/', function (req, res) {
                                             });
                                         } else {
                                             res.status(400);
+
                                             return res.json({
                                                 status: 404,
                                                 isSuccess: false,
@@ -457,6 +519,7 @@ router.put('/', function (req, res) {
                                     });
                                 } else {
                                     res.status(400);
+
                                     return res.json({
                                         status: 404,
                                         isSuccess: false,
@@ -466,6 +529,7 @@ router.put('/', function (req, res) {
                             });
                         } else {
                             res.status(400);
+
                             return res.json({
                                 status: 404,
                                 isSuccess: false,
@@ -475,6 +539,7 @@ router.put('/', function (req, res) {
                     });
                 } else {
                     res.status(400);
+
                     return res.json({
                         status: 404,
                         isSuccess: false,
@@ -484,6 +549,7 @@ router.put('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -499,15 +565,18 @@ router.get('/count', function(req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.financeManage.financeCount.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var startTime = req.query.startTime || '',
                 endTime = req.query.endTime || '';
@@ -524,41 +593,50 @@ router.get('/count', function(req, res) {
             financeService.financeCount(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 if (results!==undefined&&results.length>0) {
                     var DicID = [];
+
                     for (var i=0;i<results.length;++i) {
                         if (i==0) {
                             DicID[0] = results[i].FIType;
                             DicID[1] = results[i].InOutType;
-                        }
-                        else {
+                        } else {
                             var k=0;
+
                             for (k=0;k<DicID.length;++k) {
                                 if (DicID[k] == results[i].FIType) break;
                             }
+
                             if (k == DicID.length) DicID[k] = results[i].FIType;
+
                             for (k=0;k<DicID.length;++k) {
                                 if (DicID[k] == results[i].InOutType) break;
                             }
+
                             if (k == DicID.length) DicID[k] = results[i].InOutType;
                         }
                     }
+
                     //查询字典表 更新所有字典表数据
                     dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
                                 msg: '操作失败，服务器出错'
                             });
                         }
+
                         if (data!==undefined && data.length>0) {
                             for (var i in results) {
                                 var j=0;
@@ -567,23 +645,28 @@ router.get('/count', function(req, res) {
                                     if (results[i].InOutType == data[j].DictionaryID) results[i].InOutTypeValue = data[j].DictionaryValue;
                                 }
                             }
+
                             data = {
                                 'InSum': 0,
                                 'OutSum': 0,
                                 'detail': results
                             };
+
                             for (var i in results) {
                                 if (results[i].InOutTypeValue == '收入') data.InSum +=  results[i].sum;
                                 if (results[i].InOutTypeValue == '支出') data.OutSum +=  results[i].sum;
                             }
+
                             res.status(200);
+
                             return res.json({
                                 code: 200,
                                 isSuccess: true,
                                 data: data
                             });
                         } else {
-                            res.status(200);
+                            res.status(200)
+
                             return res.json({
                                 status: 200,
                                 isSuccess: false,
@@ -593,6 +676,7 @@ router.get('/count', function(req, res) {
                     });
                 } else {
                     res.status(200);
+
                     return res.json({
                         status: 200,
                         isSuccess: true,
@@ -602,6 +686,7 @@ router.get('/count', function(req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -617,6 +702,7 @@ router.get('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.financeManage.financeQuery.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
@@ -626,6 +712,7 @@ router.get('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.f),
                 ID = query.ID || '',
@@ -641,7 +728,9 @@ router.get('/', function (req, res) {
                 page = req.query.pageindex || 1,
                 pageNum = req.query.pagesize || config.pageCount,
                 totalNum = 0;
+
             page = page > 0 ? page : 1;
+
             var data = {
                 'ID':ID,
                 'Username': username,
@@ -657,39 +746,47 @@ router.get('/', function (req, res) {
                 'pageNum': pageNum,
                 'IsActive': isActive
             };
+
             if (moment(data.startTime).isValid())
                 data.startTime = moment(data.startTime).format("YYYY-MM-DD HH:mm:ss");
+
             if (moment(data.endTime).isValid())
                 data.endTime = moment(data.endTime).format("YYYY-MM-DD HH:mm:ss");
 
             financeService.countQuery(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 logger.writeInfo(results);
                 totalNum = results[0].num;
+
                 if(totalNum > 0) {
                     //查询所需的详细数据
                     financeService.queryFinance(data, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
                                 msg: '操作失败，服务器出错'
                             });
                         }
+
                         if (results !== undefined && results.length > 0) {
                             for (var i in results) {
                                 results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
                                 if(results[i].CheckTime !== null)
                                     results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
                             }
+
                             var result = {
                                 status: 200,
                                 isSuccess: true,
@@ -699,11 +796,14 @@ router.get('/', function (req, res) {
                                 curPageNum: pageNum,
                                 data: results
                             };
+
                             if(result.curPage == result.totalPage) {
                                 result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                             }
+
                             //替换用户名
                             var ID = [],DicID = [];
+
                             for (var i=0;i<results.length;++i) {
                                 if (results[i].CheckUser == null) continue;
                                 if (i==0) ID[i] = results[i].CheckUser;
@@ -715,6 +815,7 @@ router.get('/', function (req, res) {
                                     if (j == ID.length) ID[j] = results[i].CheckUser;
                                 }
                             }
+
                             for (var i=0;i<results.length;++i) {
                                 if (i==0) {
                                     DicID[0] = results[i].FIType;
@@ -732,15 +833,18 @@ router.get('/', function (req, res) {
                                     if (k == DicID.length) DicID[k] = results[i].InOutType;
                                 }
                             }
+
                             userservice.queryAccountByID(ID, function (err, data) {
                                 if (err) {
                                     res.status(500);
+
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
                                         msg: '操作失败，服务器出错'
                                     });
                                 }
+
                                 for (var i in results) {
                                     for (var j in data) {
                                         if (results[i].CheckUser == data[j].AccountID) {
@@ -749,16 +853,19 @@ router.get('/', function (req, res) {
                                         }
                                     }
                                 }
+
                                 //查询字典表 更新所有字典表数据
                                 dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
                                     if (err) {
                                         res.status(500);
+
                                         return res.json({
                                             status: 500,
                                             isSuccess: false,
                                             msg: '操作失败，服务器出错'
                                         });
                                     }
+
                                     if (data!==undefined && data.length>0) {
                                         for (var i in results) {
                                             var j=0;
@@ -767,10 +874,13 @@ router.get('/', function (req, res) {
                                                 if (results[i].InOutType == data[j].DictionaryID) results[i].InOutTypeValue = data[j].DictionaryValue;
                                             }
                                         }
+
                                         res.status(200);
+
                                         return res.json(result);
                                     } else {
                                         res.status(200);
+
                                         return res.json({
                                             status: 200,
                                             isSuccess: false,
@@ -781,6 +891,7 @@ router.get('/', function (req, res) {
                             });
                         } else {
                             res.status(200);
+
                             return res.json({
                                 status: 200,
                                 isSuccess: false,
@@ -790,6 +901,7 @@ router.get('/', function (req, res) {
                     });
                 } else {
                     res.status(200);
+
                     return res.json({
                         status: 200,
                         isSuccess: false,
@@ -799,6 +911,7 @@ router.get('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -814,35 +927,43 @@ router.put('/check', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.financeManage.financeCheck.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var data = req.body.formdata,
                 temp = ['ID', 'FIStatu'],
-                temp1 = ['财务ID', '审核结果'],
-                err = '缺少值: ';
+                temp1 = ['财务ID', '审核结果'];
+            err = '缺少值: ';
+
             for (var key in temp) {
                 if (!(temp[key] in data)) {
                     logger.writeInfo("缺少值: " + temp[key]);
                     err += temp1[key];
                 }
             }
+
             if (err != '缺少值: ') {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: err
                 });
             }
+
             data.OperataUserID = req.query.jitkey;
+
             if (data.FIStatu != '不通过' && data.FIStatu != '通过' ) {
                 res.status(400);
                 return res.json({
@@ -851,15 +972,19 @@ router.put('/check', function (req, res) {
                     msg: '操作失败,未选择审核结果'
                 });
             }
+
             if(data.FIStatu == '不通过' && (data.Memo === undefined || data.Memo.trim()==='')) {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: '操作失败，不通过的审核需填写备注信息'
                 });
             }
+
             if(data.FIStatu == '不通过') data.Remark = data.Memo;
+
             if (data.Remark.length>45) {
                 res.status(400);
                 return res.json({
@@ -868,32 +993,40 @@ router.put('/check', function (req, res) {
                     msg: '备注过长,请勿超过45个字符'
                 });
             }
+
             data.CheckUser = req.query.jitkey;
+
             var ID = data.ID;
+
             //查看该财务信息是否已经被审核
             financeService.queryFinance({ID:ID,OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 if (results !== undefined && results.length>0 && results[0].IsActive === 1) {
                     //所有结果均为未审核状态
                     if (results[0].FIStatu == '待审核') {
                         financeService.checkFinance(data, function (err, results) {
                             if (err) {
                                 res.status(500);
+
                                 return res.json({
                                     status: 500,
                                     isSuccess: false,
                                     msg: '操作失败，服务器出错'
                                 });
                             }
+
                             if(results !== undefined && results.affectedRows > 0) {
                                 res.status(200);
+
                                 return res.json({
                                     status: 200,
                                     isSuccess: true,
@@ -901,6 +1034,7 @@ router.put('/check', function (req, res) {
                                 });
                             } else {
                                 res.status(400);
+
                                 return res.json({
                                     status: 404,
                                     isSuccess: false,
@@ -910,6 +1044,7 @@ router.put('/check', function (req, res) {
                         });
                     } else {
                         res.status(400);
+
                         return res.json({
                             status: 400,
                             isSuccess: false,
@@ -918,6 +1053,7 @@ router.put('/check', function (req, res) {
                     }
                 } else {
                     res.status(400);
+
                     return res.json({
                         status: 400,
                         isSuccess: false,
@@ -927,6 +1063,7 @@ router.put('/check', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -942,19 +1079,24 @@ router.delete('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.financeManage.financeDelete.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var ID = JSON.parse(req.query.d).ID;
+
             if (ID == '' || ID === undefined) {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
@@ -970,22 +1112,26 @@ router.delete('/', function (req, res) {
             financeService.delFinance(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         code: 500,
                         isSuccess: false,
                         msg: "操作失败，服务器出错"
                     });
                 }
+
                 if(results !== undefined && results.affectedRows > 0) {
                     res.status(200);
-                    res.json({
+
+                    return res.json({
                         status: 200,
                         isSuccess: true,
                         msg: "操作成功"
                     });
                 } else {
                     res.status(400);
-                    res.json({
+
+                    return res.json({
                         status: 400,
                         isSuccess: true,
                         msg: "操作失败"
@@ -994,6 +1140,7 @@ router.delete('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,

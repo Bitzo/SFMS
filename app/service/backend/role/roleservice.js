@@ -6,13 +6,13 @@
  * @Function: 角色模块功能
  */
 
-var roleDAL = appRequire('dal/backend/role/roledal.js');
-var logger = appRequire("util/loghelper").helper;
-var logModel = appRequire('model/backend/log/logmodel');
-var moment = require('moment');
-var config = appRequire('config/config');
-var operationConfig = appRequire('config/operationconfig');
-var logService = appRequire('service/backend/log/logservice');
+var roleDAL = appRequire('dal/backend/role/roledal.js'),
+    logger = appRequire("util/loghelper").helper,
+    logModel = appRequire('model/backend/log/logmodel'),
+    moment = require('moment'),
+    config = appRequire('config/config'),
+    operationConfig = appRequire('config/operationconfig'),
+    logService = appRequire('service/backend/log/logservice');
 
 logModel.ApplicationID = operationConfig.backendApp.applicationID;
 logModel.ApplicationName = operationConfig.backendApp.applicationName;
@@ -30,7 +30,8 @@ exports.queryAllRoles = function (data, callback) {
         'pageNum': data.pageNum || config.pageCount,
         'RoleName': data.RoleName || '',
         'jit_role.IsActive': data.IsActive || ''
-    }
+    };
+
     if (formdata.RoleID!=='') {
         logModel.OperationName = operationConfig.backendApp.roleManage.roleSingleQuery.actionName;
         logModel.Action = operationConfig.backendApp.roleManage.roleSingleQuery.actionName;
@@ -40,6 +41,7 @@ exports.queryAllRoles = function (data, callback) {
         logModel.Action = operationConfig.backendApp.roleManage.roleMultiQuery.actionName;
         logModel.Identifier = operationConfig.backendApp.roleManage.roleMultiQuery.identifier;
     }
+
     roleDAL.queryAllRoles(formdata, function (err, results) {
         if (err) {
             logModel.Type = 1;
@@ -53,6 +55,7 @@ exports.queryAllRoles = function (data, callback) {
             callback(true);
             return;
         }
+
         logModel.Type = 2;
         logModel.Memo = "角色查询成功";
         logModel.CreateUserID = data.OperateUserID;
@@ -61,10 +64,11 @@ exports.queryAllRoles = function (data, callback) {
                 logger.writeError("角色查询成功，生成操作日志失败 " + logModel.CreateTime);
             }
         })
+
         logger.writeInfo('queryAllRoles');
         callback(false, results);
     })
-}
+};
 
 //查询对应项目的角色个数
 exports.countAllRoles = function (data, callback) {
@@ -73,16 +77,18 @@ exports.countAllRoles = function (data, callback) {
         'RoleID': data.RoleID || '',
         'RoleName': data.RoleName || '',
         'IsActive': data.IsActive || ''
-    }
+    };
+
     roleDAL.countAllRoles(formdata, function (err, results) {
         if (err) {
             callback(true);
             return;
         }
+
         logger.writeInfo('countAllRoles');
         callback(false, results);
     })
-}
+};
 
 //新增角色信息
 exports.addRole = function (data, callback) {
@@ -91,35 +97,42 @@ exports.addRole = function (data, callback) {
         'RoleCode': data.RoleCode,
         'RoleName': data.RoleName,
         'IsActive': data.IsActive
-    }
+    };
+
     logModel.OperationName = operationConfig.backendApp.roleManage.roleAdd.actionName;
     logModel.Action = operationConfig.backendApp.roleManage.roleAdd.actionName;
     logModel.Identifier = operationConfig.backendApp.roleManage.roleAdd.identifier;
+
     roleDAL.addRole(formdata, function (err, results) {
         if (err) {
             logModel.Type = 1;
             logModel.Memo = "角色新增失败 ";
             logModel.CreateUserID = data.OperateUserID;
+
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
                     logger.writeError("角色新增失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             })
+
             callback(true);
             return;
         }
+
         logModel.Type = 2;
         logModel.Memo = "角色新增成功";
         logModel.CreateUserID = data.OperateUserID;
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("角色新增成功，生成操作日志失败 " + logModel.CreateTime);
             }
         })
+
         logger.writeInfo('addRole');
         callback(false, results);
     })
-}
+};
 
 //修改角色的基本信息
 exports.updateRole = function (data, callback) {
@@ -129,7 +142,8 @@ exports.updateRole = function (data, callback) {
         'RoleCode': data.RoleCode || '',
         'RoleName': data.RoleName || '',
         'IsActive': data.IsActive
-    }
+    };
+
     if (formdata.IsActive === 0) {
         logModel.OperationName = operationConfig.backendApp.roleManage.roleDel.actionName;
         logModel.Action = operationConfig.backendApp.roleManage.roleDel.actionName;
@@ -145,22 +159,27 @@ exports.updateRole = function (data, callback) {
             logModel.Type = 1;
             logModel.Memo = "角色修改失败 ";
             logModel.CreateUserID = data.OperateUserID;
+
             logService.insertOperationLog(logModel, function (err, insertID) {
                 if (err) {
                     logger.writeError("角色修改失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             })
+
             callback(true);
             return;
         }
+
         logModel.Type = 2;
         logModel.Memo = "角色修改成功";
         logModel.CreateUserID = data.OperateUserID;
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("角色修改成功，生成操作日志失败 " + logModel.CreateTime);
             }
         })
+
         logger.writeInfo("updateRole");
         callback(false, results);
     })
@@ -181,7 +200,8 @@ exports.updateRole = function (data, callback) {
         if(err) {
             callback(true, results);
             return ;
-        } 
+        }
+
         callback(false, results);
         return ;
      });
