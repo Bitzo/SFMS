@@ -525,9 +525,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             'OrderID': OrderID
         };
 
-        $scope.f = {
-            'OrderID': OrderID
-        };
+
 
         $http({
             method: 'get',

@@ -952,3 +952,91 @@ exports.CountOrders = function(data, callback) {
         });
     });
 };
+
+/**
+ * @function: 查询是否有重复的菜单
+ */
+ 
+ exports.checkIsReapte = function(data, callback) {
+    var arr = new Array();
+  
+    arr.push("select A.OrderID , A.OrderTime , A.PayMethod , A.IsValid , A.IsActive , A.OrderStatus , B.CustomerID");
+    arr.push(" , C.ProductID , C.ProductCount from jit_order A left join jit_ordercustomer B on B.OrderID = A.OrderID");
+    arr.push(" left join jit_orderproduct C on A.OrderID = C.OrderID where 1=1 ");
+    
+    var query_sql = arr.join(' ');
+   
+    //订单中的order信息，包含OrderID WechatUserCode CustomerID OrderStatus IsActive
+    var order = data['order']
+    for (var key in order) {
+        if (key == 'jit_customer.CustomerID')
+        {
+            query_sql += " and B.CustomerID = " + order[key];
+        }
+        
+        if (key == 'jit_order.OrderStatus') {
+             query_sql += " and A.OrderStatus = " + order[key];
+        }
+    }    
+    
+    logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
+    console.log("[queryOrders func in productdal]订单查询:" + query_sql);
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(query_sql, function(err, results) {
+            connection.release();
+            if (err) {
+                callback(true);
+                return;
+            }
+
+            callback(false, results);
+            return;
+        });
+    });
+
+};
+
+/**
+ * 根据订单的订单号查询所订购的商品的信息
+ * @param data
+ * @param callback
+ */
+exports.queryOrderProductWechat = function(data, callback) {
+ 
+    var arr = new Array();
+
+    arr.push("select A.OrderID , A.OrderStatus , B.ProductID , B.ProductCount , C.ProductName , C.ProductPrice");
+    arr.push("from jit_order A left join jit_orderproduct B on A.OrderID = B.OrderID ");
+    arr.push("left join jit_product C on B.ProductID = C.ProductID where A.OrderStatus = 1 ");
+
+    var query_sql = arr.join(' ');
+
+    query_sql += ' and A.OrderID = ' + data.order['jit_ordercustomer.OrderID'];
+    
+    logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(query_sql, function(err, results) {
+            connection.release();
+            if (err) {
+                callback(true);
+                return;
+            }
+
+            callback(false, results);
+            return;
+        });
+    });
+
+};

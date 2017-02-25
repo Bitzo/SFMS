@@ -16,6 +16,11 @@ var db_backend = appRequire('db/db_backend'),
  * @param callback
  */
 exports.queryAllMenus = function(data, callback) {
+    var MenuData = data.MenuManage,
+        num = data.pageManage.pageNum, //每页显示的个数
+        page = data.pageManage.page || 1,
+        IsPaging = data.pageManage.isPaging;
+
     var arr = new Array();
 
     arr.push(' select jit_menu.MenuName,jit_menu.MenuID,jit_menu.ApplicationID,jit_application.ApplicationName, ');
@@ -27,7 +32,6 @@ exports.queryAllMenus = function(data, callback) {
 
     var sql = arr.join(' ');
 
-    var MenuData = data.MenuManage;
     if(MenuData !== undefined){
         for(var key in MenuData){
             if (MenuData[key] != ''){
@@ -41,16 +45,11 @@ exports.queryAllMenus = function(data, callback) {
         }
     }
 
-    var num = data.pageManage.pageNum; //每页显示的个数
-    var page = data.pageManage.page || 1;
-    var IsPaging = data.pageManage.isPaging;
-
-    if (IsPaging == 1) {
+    if (IsPaging == 0) {
         sql += " LIMIT " + (page-1)*num + "," + num;
     }
 
     logger.writeInfo("[queryAllMenus func in menudal]查询所有菜单：" + sql);
-    console.log("in dal,查询所有的菜单：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -61,17 +60,22 @@ exports.queryAllMenus = function(data, callback) {
 
         connection.query(sql, function(err, results) {
             connection.release();
+
             if (err) {
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return ;
+            return callback(false, results);
         });
-    })
-}
+    });
+};
 
+/**
+ * 查询所有一级菜单
+ * @param data
+ * @param callback
+ */
 exports.queryAllParentMenus = function(data, callback) {
     var arr = new Array();
 
@@ -86,9 +90,9 @@ exports.queryAllParentMenus = function(data, callback) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != ''){
                 //判断data[key]是否是数值类型
                 if(!isNaN(data[key])){
-                    sql += ' and ' + key + ' = '+ data[key] + ' ';
+                    sql += " and " + key + " = " + data[key] + " ";
                 }else {
-                    sql += ' and ' + key + ' = "'+ data[key] + '" ';
+                    sql += " and " + key + " = '" + data[key] + "' ";
                 }
             }
         }
@@ -100,7 +104,6 @@ exports.queryAllParentMenus = function(data, callback) {
     sql += " LIMIT " + (page-1)*num + "," + num + " ;";
 
     logger.writeInfo("[queryAllParentMenus func in menudal]查询所有父级菜单：" + sql);
-    console.log("in dal,查询所有的父级菜单：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -111,17 +114,16 @@ exports.queryAllParentMenus = function(data, callback) {
 
         connection.query(sql, function(err, results) {
             connection.release();
+
             if (err) {
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return ;
+            return callback(false, results);
         });
-    })
-}
-
+    });
+};
 
 //计数，查询菜单表的总个数
 exports.countAllMenus = function (data, callback) {
@@ -140,21 +142,21 @@ exports.countAllMenus = function (data, callback) {
             return;
         }
 
-        logger.writeInfo("连接成功");
-        logger.writeInfo(sql);
-        console.log(sql);
+        logger.writeInfo('查询指定菜单的个数：' + sql);
 
         connection.query(sql, function (err, results) {            
             connection.release();
+
             if (err) {
                 callback(true);
                 return;
-            };
+            }
+
             logger.writeInfo("查询成功");
-            callback(false, results);
-            return; 
+
+            return callback(false, results);
         });
-    })
+    });
 };
 
 /**
@@ -165,6 +167,7 @@ exports.countAllMenus = function (data, callback) {
 exports.menuInsert = function (data,callback) {
     var insert_sql = 'insert into jit_menu set ';
     var sql = '';
+
     if(data !== undefined){
         for(var key in data){
             if (key !== undefined) {
@@ -174,7 +177,6 @@ exports.menuInsert = function (data,callback) {
                     sql += ", " + key + " = '" + data[key] + "' " ;
                 }
             }
-
         }
     }
 
@@ -191,18 +193,18 @@ exports.menuInsert = function (data,callback) {
         }
         connection.query(insert_sql, function(err, result) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
-            callback(false, result);
-            return;
-        })
-    })
 
+            return callback(false, result);
+        });
+    });
+};
 
-}
 /**
  * 启用菜单
  * @param data
@@ -211,50 +213,51 @@ exports.menuInsert = function (data,callback) {
 exports.reuseMenu = function (data,callback) {
     var MenuID = data.MenuID;
     var update_sql = '';
+
     if (MenuID instanceof Array) {
         update_sql = 'update jit_menu set IsActive = ' + data.IsActive + ' where MenuID in (';
-        for (var i=0; i<MenuID.length;i++){
+        for (var i = 0; i < MenuID.length; i++) {
             if (i == (MenuID.length - 1)) {
                 update_sql += MenuID[i] + ');';
-            }else {
+            } else {
                 update_sql += MenuID[i] + ',';
             }
         }
-    }else {
+    } else {
         update_sql = 'update jit_menu set IsActive = ' + data.IsActive + ' where MenuID = ' + MenuID + ';';
     }
 
-    db_backend.mysqlPool.getConnection(function (err,connection) {
-        if(err) {
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
             logger.writeError("[menudal]数据库连接错误：" + err);
             callback(true);
             return;
         }
 
         logger.writeInfo("in menudal,菜单启用:" + update_sql);
-        console.log("in menudal,菜单启用:" + update_sql);
 
-        connection.query(update_sql, function(err, results) {
+        connection.query(update_sql, function (err, results) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return ;
-        })
-
+            return callback(false, results);
+        });
     });
-}
+};
+
 /**
- * 把菜单置为无效
+ * 把菜单及其子菜单置为无效
  * @param data
  * @param callback
  */
 exports.updateMenuIsActive = function (data,callback) {
     var update_sql = 'update jit_menu set IsActive = ' + data.IsActive + ' where MenuID = ' + data.MenuID + ' or ParentID = ' + data.MenuID +';';
+
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err) {
             logger.writeError("[menudal]数据库连接错误：" + err);
@@ -263,18 +266,17 @@ exports.updateMenuIsActive = function (data,callback) {
         }
 
         logger.writeInfo("in menudal,修改订单状态:" + update_sql);
-        console.log("in menudal,修改订单状态:" + update_sql);
 
         connection.query(update_sql, function(err, results) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return ;
+            return callback(false, results);
         })
 
     });
@@ -288,6 +290,7 @@ exports.updateMenuIsActive = function (data,callback) {
 exports.menuUpdate = function(data, callback) {
     var update_sql = 'update jit_menu set ';
     var sql = '';
+
     if(data !== undefined){
         for(var key in data){
             if(key != 'MenuID' && key !== undefined){
@@ -299,11 +302,11 @@ exports.menuUpdate = function(data, callback) {
             }
         }
     }
+
     sql += " where MenuID = " + data['MenuID'];
     update_sql = update_sql + sql;
 
     logger.writeInfo("[menuUpdate func in menudal]菜单编辑:" + update_sql);
-    console.log("in dal,菜单编辑：" + update_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err) {
@@ -314,18 +317,17 @@ exports.menuUpdate = function(data, callback) {
 
         connection.query(update_sql, function(err, results) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return ;
-        })
-
+            return callback(false, results);
+        });
     });
-}
+};
 
 
 /**
@@ -337,7 +339,6 @@ exports.menuDelete = function (data, callback) {
     var update_sql = 'update jit_menu set IsActive = 0 where IsActive = 1 and MenuID = ' + data['MenuID'];
 
     logger.writeInfo("[menuDelete func in menudal]菜单删除：" + update_sql);
-    console.log("in dal,菜单删除：" + update_sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -348,17 +349,17 @@ exports.menuDelete = function (data, callback) {
 
         connection.query(update_sql, function(err, results) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return ;
             }
 
-            callback(false, results);
-            return;
-        })
-    })
-}
+            return callback(false, results);
+        });
+    });
+};
 
 
 /**
@@ -374,10 +375,10 @@ exports.queryRoleByUserID = function (data,callback) {
     arr.push('  where jit_roleuser.AccountID = ');
 
     var sql = arr.join(' ');
+
     sql = sql + data.userID;
 
     logger.writeInfo("[queryRoleByUserID func in menudal]根据UserID查询角色: " + sql);
-    console.log("[queryRoleByUserID func in menudal]根据UserID查询角色: " + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -388,17 +389,17 @@ exports.queryRoleByUserID = function (data,callback) {
 
         connection.query(sql,function (err, results) {
             connection.release();
+
             if(err){
                 throw err;
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return ;
-        })
-    })
-}
+            return callback(false, results);
+        });
+    });
+};
 
 /**
  * 根据UserID,获取用户相应地菜单
@@ -419,10 +420,10 @@ exports.queryMenuByUserID = function (data,callback) {
     arr.push(' and jit_usermenu.userID =  ');
 
     var sql = arr.join(' ');
+
     sql = sql + data.userID;
 
     logger.writeInfo("[queryMenuByUserID func in menudal]根据UserID查询菜单: : " + sql);
-    console.log("[queryMenuByUserID func in menudal]根据UserID查询菜单: : " + sql);
 
     db_backend.mysqlPool.getConnection(function (err,connection) {
         if(err){
@@ -433,17 +434,17 @@ exports.queryMenuByUserID = function (data,callback) {
 
         connection.query(sql, function(err, results) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
 
-            callback(false,results);
-            return ;
+            return callback(false,results);
         });
     });
-}
+};
 
 /**
  * 查询多个菜单
@@ -453,30 +454,35 @@ exports.queryMenuByUserID = function (data,callback) {
 exports.queryMenuByID = function (data, callback) {
     var sql = 'select count(1) as count from jit_menu where IsActive=1';
     sql += " and (";
+
     var MenuID = data.MenuID;
 
     for (var i in MenuID) {
         if (i == MenuID.length - 1) {
-            sql += "MenuID=" + MenuID[i] + " )";
+            sql += " MenuID= " + MenuID[i] + " ) ";
         } else {
-            sql += "MenuID=" + MenuID[i] + " or ";
+            sql += " MenuID= " + MenuID[i] + " or ";
         }
     }
+
     logger.writeInfo("判断菜单是否存在:" + sql);
+
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
             return;
         }
+
         connection.query(sql, function (err, results) {
             connection.release();
+
             if (err) {
                 logger.writeError('根据MenuID判断该菜单是否存在err:' + err);
                 callback(true);
                 return;
             }
-            callback(false, results);
-            return ;
+
+            return callback(false, results);
         });
     });
-}
+};
