@@ -18,6 +18,7 @@ var express = require('express'),
 
 //查询角色信息
 router.get('/',function (req, res) {
+    console.log(req.query)
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.roleManage.roleQuery.functionCode
@@ -43,6 +44,7 @@ router.get('/',function (req, res) {
                 isActive = query.IsActive || '',
                 selectType = req.query.isPaging || '',
                 roleName = query.RoleName || '',
+                roleCode = query.RoleCode || '',
                 page = page > 0 ? page : 1;
 
             data = {
@@ -50,9 +52,10 @@ router.get('/',function (req, res) {
                 'RoleID': roleID,
                 'SelectType': selectType,
                 'IsActive': isActive,
+                'RoleName': roleName,
+                'RoleCode': roleCode,
                 'page': page,
                 'pageNum': pageNum,
-                'RoleName': roleName,
                 'OperateUserID': req.query.jitkey
             };
 

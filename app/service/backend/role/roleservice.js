@@ -25,12 +25,18 @@ exports.queryAllRoles = function (data, callback) {
     var formdata = {
         'ApplicationID': data.ApplicationID || '',
         'RoleID': data.RoleID || '',
+        'RoleName': data.RoleName || '',
+        'RoleCode': data.RoleCode || '',
         'SelectType': data.SelectType || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount,
         'RoleName': data.RoleName || '',
         'jit_role.IsActive': data.IsActive || ''
     };
+
+    if (formdata.RoleCode !== '') {
+        formdata.RoleCode = formdata.RoleCode.toLocaleUpperCase();
+    }
 
     if (formdata.RoleID!=='') {
         logModel.OperationName = operationConfig.backendApp.roleManage.roleSingleQuery.actionName;
@@ -76,8 +82,13 @@ exports.countAllRoles = function (data, callback) {
         'ApplicationID': data.ApplicationID || '',
         'RoleID': data.RoleID || '',
         'RoleName': data.RoleName || '',
+        'RoleCode': data.RoleCode || '',
         'IsActive': data.IsActive || ''
     };
+
+    if (formdata.RoleCode !== '') {
+        formdata.RoleCode = formdata.RoleCode.toLocaleUpperCase();
+    }
 
     roleDAL.countAllRoles(formdata, function (err, results) {
         if (err) {
