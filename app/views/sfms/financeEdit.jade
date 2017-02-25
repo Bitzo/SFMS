@@ -4,7 +4,7 @@ block content
     span 
       h2 财务编辑
     jason-form(method="post",source='/sfms/api/finance',name='financeEdit',conf='paginationConf',tocc="ProjectId,UserID")
-      form(name='financeEdit' ng-controller="sfmsApiFinanceController" )
+      form(name='financeEdit' ng-controller="sfmsApiFinanceEditController" )
         table.table.table-bordered.table-hover.definedwidth.m10
           tr
             td(width="15%",class="tableleft") 财务名称

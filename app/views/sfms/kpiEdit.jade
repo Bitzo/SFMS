@@ -4,7 +4,7 @@ block content
     span 
       h2 绩效编辑
     jason-form(method="post",source='/sfms/api/kpi/person',name='kpiEdit',conf='paginationConf',tocc="ProjectID,UserID")
-      form(name='kpiEdit' ng-controller="sfmsApiFinanceController")
+      form(name='kpiEdit' ng-controller="sfmsApiFinanceEditController")
         table.table.table-bordered.table-hover.definedwidth.m10
           tr
             td(width="15%",class="tableleft") 绩效名称
