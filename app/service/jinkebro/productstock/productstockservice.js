@@ -32,17 +32,30 @@ ProStock.prototype.queryProStock = function (data, callback) {
         page : data.page,
         pageNum : data.pageNum,
         ProductID: data.ProductID || '',
+        TotalNum : data.TotalNum || '',
         StockAreaID: data.StockAreaID || '',
         CreateUserID: data.CreateUserID || '',
         CreateTime: data.CreateTime || '',
         EditUserID: data.EditUserID || '',
-        EditTime: data.EditTime || ''
+        EditTime: data.EditTime || '',
+        minTotalNum : data.minTotalNum || '',
+        maxTotalNum : data.maxTotalNum || ''
     };
 
     proStockDAL.queryProStock(formdata, function (err, results) {
         if (err) {
             callback(true, results);
             return;
+        }
+
+        for (var i=0;i<results.length;i++) {
+            if(results[i].CreateTime != undefined && results[i].CreateTime != '') {
+                results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+
+            if(results[i].EditTime != undefined && results[i].EditTime != '') {
+                results[i].EditTime = moment(results[i].EditTime).format('YYYY-MM-DD HH:mm:ss');
+            }
         }
         callback(false, results);
         return;
@@ -62,10 +75,13 @@ ProStock.prototype.countProStock = function (data, callback) {
     var formdata = {
         ProductID: data.ProductID || '',
         StockAreaID: data.StockAreaID || '',
+        TotalNum : data.TotalNum || '',
         CreateUserID: data.CreateUserID || '',
         CreateTime: data.CreateTime || '',
         EditUserID: data.EditUserID || '',
-        EditTime: data.EditTime || ''
+        EditTime: data.EditTime || '',
+        minTotalNum : data.minTotalNum || '',
+        maxTotalNum : data.maxTotalNum || ''
     };
 
     proStockDAL.countProStock(formdata, function (err, results) {
@@ -73,6 +89,7 @@ ProStock.prototype.countProStock = function (data, callback) {
             callback(true, results);
             return;
         }
+
         return callback(false, results);
     });
 };
@@ -114,6 +131,15 @@ ProStock.prototype.update = function (data, callback) {
         loggerWrite();
         return callback(true, logModel.OperationName);
     }
+
+    var formdata = {
+        'ProductID': data.ProductID,
+        'TotalNum': data.TotalNum,
+        'StockAreaID': data.StockAreaID,
+        'EditUserID': data.EditUserID,
+        'EditTime': data.EditTime
+    };
+
     proStockDAL.update(data, function (err, results) {
         if (err) {
             logger.writeError('修改库存信息异常:' + this.createTime);

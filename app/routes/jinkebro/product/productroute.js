@@ -46,8 +46,7 @@ router.post('/', function (req, res) {
                 'ProductPrice',
                 'OnSale',
                 'TotalNum',
-                'StockAreaID',
-                'CreateUserID',
+                'StockAreaID'
             ];
 
             var err = 'require: ';
@@ -109,7 +108,7 @@ router.post('/', function (req, res) {
                 OnSale = formdata.OnSale,
                 TotalNum = formdata.TotalNum,
                 StockAreaID = formdata.StockAreaID,
-                CreateUserID = formdata.CreateUserID,
+                CreateUserID = req.query.jitkey,
                 CreateTime = moment().format("YYYY-MM-DD HH:mm:ss"); // 创建库存时间
 
             var requiredValue = '缺少输入参数 ：',
@@ -608,23 +607,23 @@ router.get('/', function (req, res) {
             var countNum = 0;
 
             var data = {
-                page: page,
-                pageNum: pageNum,
-                SKU: SKU,
-                ProductID: ProductID,
-                ProductName: ProductName,
-                ExpireTime: ExpireTime,
-                SupplierID: SupplierID,
-                ProductTypeID: ProductTypeID,
-                ProductPrice: ProductPrice,
-                OnSale: OnSale,
-                isPaging: isPaging,
-                minProductPrice : minProductPrice,
-                maxProductPrice : maxProductPrice,
-                earlyExpireTime : earlyExpireTime,
-                lateExpireTime : lateExpireTime
+                page: page || 1,
+                pageNum: pageNum || config.pageCount,
+                SKU: SKU || '',
+                ProductID: ProductID || '',
+                ProductName: ProductName || '',
+                ExpireTime: ExpireTime || '',
+                SupplierID: SupplierID || '',
+                ProductTypeID: ProductTypeID || '',
+                ProductPrice: ProductPrice || '',
+                OnSale: OnSale || '',
+                isPaging: isPaging || '',
+                minProductPrice : minProductPrice || '',
+                maxProductPrice : maxProductPrice || '',
+                earlyExpireTime : earlyExpireTime || '',
+                lateExpireTime : lateExpireTime || ''
             };
-            console.log(data);
+
             var intdata = {
                 page: page,
                 pageNum: pageNum,
@@ -706,9 +705,9 @@ router.get('/', function (req, res) {
                 }
             });
         } else {
-            res.status(400);
+            res.status(404);
             return res.json({
-                code: 400,
+                code: 404,
                 isSuccess: false,
                 msg: funcResult.msg
             });
