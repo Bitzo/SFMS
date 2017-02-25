@@ -39,12 +39,14 @@ block content
       ng-form.form-inline
         span.title  订单配送管理
         div.buttons.pull-right
+          label.form-group.my-form-group   订单号
+            input.est(ng-model='f.OrderID')
           label.form-group.my-form-group 配送员
             jason-select.select.ext(ng-model='f.DeliveryUserID',source='/jinkeBro/staff',selectparams='{"StaffType":2}',stext='StaffName',svalue='StaffID')
-          label.form-group.my-form-group  配送开始时间
-            input.form-control.ext(type='date',ng-model='f.DeliveryBeginTime')
-          label.form-group.my-form-group  配送完成时间
-            input.form-control.ext(type='date',ng-model='f.DeliveryEndTime')
+          //label.form-group.my-form-group  配送开始时间
+          //  input.form-control.ext(type='date',ng-model='f.DeliveryBeginTime')
+          //label.form-group.my-form-group  配送完成时间
+          //  input.form-control.ext(type='date',ng-model='f.DeliveryEndTime')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询

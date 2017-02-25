@@ -10,7 +10,7 @@ var dataservice = appRequire('service/backend/datadictionary/datadictionaryservi
 router.get('/:user_id', function(req, res) {
     var userid = req.params.user_id;
 
-    userService.querySingleID(userid, function(err, result) {
+    userService.queryAllUsers({AccountID:userid}, function(err, result) {
         if (err) {
             res.status(500);
             res.json({
@@ -22,52 +22,30 @@ router.get('/:user_id', function(req, res) {
         }
         //成功获取用户基本信息
         if (result !== undefined && result.length > 0) {
+            console.log(result)
             result = result[0];
-            //开始处理初始的数据
-            var collegeName = result.CollegeID,
-                gradeYear = result.GradeYear,
-                className = result.ClassID;
-            var query = {
-                'DictionaryID': [collegeName, gradeYear, className]
+            var data = {
+                status: 200,
+                isSuccess: true,
+                data: {
+                    ApplicationID: result.ApplicationID,
+                    AccountID: result.AccountID,
+                    Account: result.Account,
+                    UserName: result.UserName,
+                    CollegeName: result.College,
+                    GradeYear: result.GradeYear,
+                    Phone: result.Phone,
+                    ClassName: result.Class,
+                    Memo: result.Memo
+                }
             }
-            dataservice.queryDatadictionaryByID(query, function (err, results) {
-                if (err) {
-                    res.status(500);
-                    res.json({
-                        status: 500,
-                        isSuccess: false,
-                        msg: '查询失败'
-                    })
-                    return;
+            for (var key in data.data) {
+                if(data.data[key] === undefined ||data.data[key] === null) {
+                    data.data[key] = '暂无数据';
                 }
-                if(results.length == 3) {
-                    collegeName = results[0].DictionaryValue;//'软件工程学院';
-                    gradeYear = results[1].DictionaryValue;//'2015';
-                    className = results[2].DictionaryValue;//'15软件工程（嵌入式培养）3班';
-                } else {
-                    collegeName =  "数据有误";
-                    gradeYear = "数据有误";
-                    className = "数据有误";
-                }
-
-                var data = {
-                    status: 200,
-                    isSuccess: true,
-                    data: {
-                        ApplicationID: result.ApplicationID,
-                        AccountID: result.AccountID,
-                        Account: result.Account,
-                        UserName: result.UserName,
-                        CollegeName: collegeName,
-                        GradeYear: gradeYear,
-                        Phone: "13776653627",
-                        ClassName: className,
-                        Memo: result.Memo
-                    }
-                }
-                res.status(200);
-                res.json(data);
-            })
+            }
+            res.status(200);
+            res.json(data);
         } else {
             res.status(200);
             res.json({

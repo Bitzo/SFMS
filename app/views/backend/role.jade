@@ -56,9 +56,9 @@ block content
                         td {{data.IsActive | numToChin:data.IsActive }}
                         td
                           a(href='#/backend/roleEdit/?RoleID={{data.RoleID}}' )
-                            i.icon.icon-edit 编辑  
+                            i.icon.icon-edit  编辑&nbsp&nbsp
                           a(ng-click="remove($index,data.RoleName,'/backrole')" href='')
-                            i.icon.icon-trash  删除 
+                            i.icon.icon-ban-circle 禁用&nbsp&nbsp
                           a(data-toggle="modal",data-target="#myModal",ng-click="morerole($index,'rolefunc/')" href='') 
                             i.icon.icon-zoom-in   更多
             div.pull-right

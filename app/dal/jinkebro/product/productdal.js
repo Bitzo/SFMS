@@ -257,7 +257,7 @@ exports.updateProduct = function(data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key != 'ProductID') {
+            if (key != 'ProductID' && data[key] != '' && key != undefined && data[key] != undefined) {
                 if (sql.length == 0) {
                     sql += " " + key + " = '" + data[key] + "' ";
                 } else {
@@ -311,18 +311,46 @@ exports.queryProducts = function(data, callback) {
 
     var query_sql = arr.join(' ');
 
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging') {
+    var queryData = {
+        SKU: data.SKU || '',
+        "jit_product.ProductID" : data['jit_product.ProductID'] || '',
+        ProductName: data.ProductName || '',
+        ExpireTime: data.ExpireTime || '',
+        SupplierID: data.SupplierID || '',
+        ProductTypeID: data.ProductTypeID || '',
+        ProductPrice: data.ProductPrice || '',
+        OnSale: data.OnSale || '',
+    };
+
+    if (queryData !== undefined) {
+        for (var key in queryData) {
+            if (key !== 'page' && key !== 'pageNum' && queryData[key] != '' && key !== 'isPaging') {
                 //判断data[key]是否是数值类型
-                if (!isNaN(data[key])) {
-                    query_sql += ' and ' + key + ' = ' + data[key] + ' ';
+                if (!isNaN(queryData[key])) {
+                    query_sql += ' and ' + key + ' = ' + queryData[key] + ' ';
                 } else {
-                    query_sql += ' and ' + key + ' = "' + data[key] + '" ';
+                    query_sql += ' and ' + key + ' = "' + queryData[key] + '" ';
                 }
             }
         }
     }
+
+    if (data.minProductPrice != '' && data.minProductPrice != undefined) {
+        query_sql += " and jit_product.ProductPrice > " + data.minProductPrice + " ";
+    }
+
+    if (data.maxProductPrice != '' && data.maxProductPrice != undefined) {
+        query_sql += " and jit_product.ProductPrice < " + data.maxProductPrice + " ";
+    }
+
+    if (data.earlyExpireTime != '' && data.earlyExpireTime != undefined) {
+        query_sql += " and jit_product.ExpireTime > '" + data.earlyExpireTime + "' ";
+    }
+
+    if (data.lateExpireTime != '' && data.lateExpireTime != undefined) {
+        query_sql += " and jit_product.ExpireTime < '" + data.lateExpireTime + "' ";
+    }
+
 
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
@@ -347,13 +375,11 @@ exports.queryProducts = function(data, callback) {
         connection.query(query_sql, function(err, results) {
             connection.release();
             if (err) {
-                console.log('connection.query查询商品失败');
                 callback(true, JSON.stringify(results));
                 return;
             }
 
-            callback(false, results);
-            return;
+            return callback(false, results);
         });
     });
 };
@@ -361,18 +387,44 @@ exports.queryProducts = function(data, callback) {
 //查询指定条件商品的个数
 exports.CountProducts = function(data, callback) {
     var sql = ' select count(1) as num from jit_product where 1=1 ';
+    var queryData = {
+        SKU: data.SKU || '',
+        "jit_product.ProductID" : data['jit_product.ProductID'] || '',
+        ProductName: data.ProductName || '',
+        ExpireTime: data.ExpireTime || '',
+        SupplierID: data.SupplierID || '',
+        ProductTypeID: data.ProductTypeID || '',
+        ProductPrice: data.ProductPrice || '',
+        OnSale: data.OnSale || ''
+    };
 
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] != '' && key !== 'isPaging') {
+    if (queryData !== undefined) {
+        for (var key in queryData) {
+            if (key !== 'page' && key !== 'pageNum' && queryData[key] != '' && key !== 'isPaging') {
                 //如果data[key]是数字
-                if (!isNaN(data[key])) {
-                    sql += " and " + key + " = " + data[key] + " ";
+                if (!isNaN(queryData[key])) {
+                    sql += " and " + key + " = " + queryData[key] + " ";
                 } else {
-                    sql += " and " + key + " = '" + data[key] + "' ";
+                    sql += " and " + key + " = '" + queryData[key] + "' ";
                 }
             }
         }
+    }
+
+    if (data.minProductPrice != '' && data.minProductPrice != undefined) {
+        sql += " and jit_product.ProductPrice > " + data.minProductPrice + " ";
+    }
+
+    if (data.maxProductPrice != '' && data.maxProductPrice != undefined) {
+        sql += " and jit_product.ProductPrice < " + data.maxProductPrice + " ";
+    }
+
+    if (data.earlyExpireTime != '' && data.earlyExpireTime != undefined) {
+        sql += " and jit_product.ExpireTime > '" + data.earlyExpireTime + "' ";
+    }
+
+    if (data.lateExpireTime != '' && data.lateExpireTime != undefined) {
+        sql += " and jit_product.ExpireTime < '" + data.lateExpireTime + "' ";
     }
 
     logger.writeInfo("查询指定条件的商品个数,sql:" + sql);
@@ -391,9 +443,7 @@ exports.CountProducts = function(data, callback) {
                 callback(true);
                 return;
             }
-
-            callback(false, results);
-            return;
+            return callback(false, results);
     });
 });
 };

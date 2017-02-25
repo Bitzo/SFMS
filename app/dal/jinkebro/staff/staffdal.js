@@ -250,9 +250,32 @@ var countStaff = function (data,callback) {
     });
 };
 
+var getStaffType = function (callback) {
+    var querySql = "select distinct jit_staff.Position from jit_staff ;";
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            logger.writeError("[staffdal]数据库连接错误：" + err);
+            callback(true,'数据库连接失败！');
+            return;
+        }
+        connection.query(querySql, function(err, result) {
+            connection.release();
+            if (err) {
+                throw err;
+                callback(true,'失败！');
+                return;
+            }
+
+            logger.writeInfo('成功！');
+            return callback(false, result);
+        });
+    });
+};
+
+
 exports.addStaff = addStaff;
 exports.deleteStaff = deleteStaff;
 exports.updateStaff = updateStaff;
 exports.getStaff = getStaff;
 exports.countStaff = countStaff;
-
+exports.getStaffType = getStaffType;

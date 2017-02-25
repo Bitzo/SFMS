@@ -15,12 +15,12 @@ block content
         tr
           td(width="15%",class="tableleft") 应用名称
           td
-            jason-select.input(name='ApplicationID',ng-model='formdata.ApplicationID',source='/app', stext='ApplicationName',svalue='ID',required)
+            jason-select.input(name='ApplicationID',ng-model='formdata.ApplicationID',source='/app', stext='ApplicationName',svalue='ID',sactive='1',required)
       
         tr
           td(width="15%",class="tableleft") 	对应的父级名称
           td
-            jason-select.input(,name='ParentID',ng-model="formdata.ParentID", source='/backmenu/parent',stext='ParentMenuName',svalue='ParentID',required)
+            jason-select.input(name='ParentID',ng-model="formdata.ParentID", source='/backmenu/parent',stext='ParentMenuName',svalue='ParentID',sactive='1',required)
             &nbsp&nbsp
             small.error(ng-if="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级名称最多11位
 

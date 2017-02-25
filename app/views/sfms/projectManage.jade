@@ -67,9 +67,9 @@ block content
             td {{x.IsActive | numToChin:x.IsActive}}
             td
               a(href='#/sfms/projectManageEdit/?ID={{x.ID}}' )
-                i.icon.icon-edit 编辑
+                i.icon.icon-edit 编辑&nbsp
               a(ng-click="remove($index,x.ProjectName,'/sfms/api/project')",href='')
-                i.icon.icon-trash 删除
+                i.icon.icon-trash 删除&nbsp
               a(data-toggle="modal",data-target="#myModal",ng-click="moreproject($index,'/sfms/api/projectuser/')",href='')
                 i.icon.icon-zoom-in  更多           
       div.pull-right

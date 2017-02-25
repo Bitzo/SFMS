@@ -55,6 +55,7 @@ block content
             th 所在学院
             th 所在班级
             th 手机号码
+            th 是否有效
             th 操作
         tbody
           tr(ng-repeat="x in datas" )
@@ -65,15 +66,16 @@ block content
             td {{x.College}}
             td {{x.Class}}
             td {{x.Phone}}
+            td {{x.IsActive | numToChin:x.IsActive}}
             td 
               a(href='#/backend/useredit/?AccountID={{x.AccountID}}' ng-click="show(x.AccountID,'/backuser')")
-                i.icon.icon-edit 编辑 
+                i.icon.icon-edit 编辑&nbsp
               a(ng-click="remove($index,x.Account,'/backuser')",href='')
                 i.icon.icon-trash  删除
               a(data-toggle="modal",data-target="#myModal",ng-click="moreuser($index,'userrole/userID/')",href='') 
-                i.icon.icon-zoom-in  更多
+                i.icon.icon-zoom-in  更多&nbsp
               a(href='#/backend/userrole/?AccountID={{x.AccountID}}')
-                i.icon.icon-user  角色
+                i.icon.icon-user  角色&nbsp
               a(href='#/backend/usermenu/?AccountID={{x.AccountID}}')
                 i.icon.icon-list  菜单
       div.pull-right
