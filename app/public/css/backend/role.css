@@ -41,7 +41,11 @@ ul{list-style:none;}
   color: #d06666;
   height: 15px;
 }
-
+@media only screen and (max-width: 991px) {
+    .page-content{
+        margin-left: 50px;
+    }
+}
 
 /*tree*/
 .tree {

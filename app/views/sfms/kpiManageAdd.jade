@@ -3,13 +3,13 @@ block content
   div.container-fluid
     span 
       h2 绩效新增
-    form(method="post",name="kpiManageAdd",ng-controller="sfmsApiFinanceController" )
+    form(method="post",name="kpiManageAdd",ng-controller="sfmsApiFinanceAddController" )
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
           td
             input(type="textview",name='KPIName',ng-model='formdata.KPIName',ng-maxlength='45',required)
-            &nbsp&nbsp
+            
             small.error(ng-if="kpiManageAdd.FIName.$error.maxlength && kpiManageAdd.FIName.$touched") 绩效名称最多45位 
 
         tr
@@ -32,19 +32,19 @@ block content
           td(width="15%",class="tableleft") 绩效分
           td
             input(type="number",name="KPIScore",ng-model="formdata.KPIScore",ng-maxlength='45',required)
-            &nbsp&nbsp
+            
             small.error(ng-if="kpiManageAdd.KPIScore.$error.maxlength && kpiManageAdd.KPIScore.$touched") 绩效分最多45位
        
         tr
           td(width="15%",class="tableleft") 绩效备注
           td
             textarea(type="textview",name="Remark",ng-model='formdata.Remark',rows="5",cols="30",ng-maxlength='45',required)
-            &nbsp&nbsp
+            
             small.error(ng-if="kpiManageAdd.Remark.$error.maxlength && kpiManageAdd.Remark.$touched") 备注最多45位
 
         tr
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-disabled="kpiManageAdd.$invalid",ng-click="addnew(formdata,'/sfms/api/kpi')") 添加
-            &nbsp&nbsp&nbsp&nbsp
+            
             a.btn.btn-sm.btn-success(href='#sfms/kpiManage',ng-click='search()') 返回列表

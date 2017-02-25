@@ -13,7 +13,7 @@ block content
           td(width="15%",class="tableleft") 角色名称
           td
             input(type="text",name="roleName",ng-model="formdata.RoleName",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
-            &nbsp&nbsp
+            
             span.error(ng-show="formdata.RoleName.$dirty &&formdata.RoleName.$invalid")
               small.error(ng-show="formdata.RoleName.$error.minlength") 角色名称至少三位
               small.error(ng-show="formdata.RoleName.$error.maxlength") 角色名称最多十位
@@ -21,7 +21,7 @@ block content
           td(width="15%",class="tableleft") 角色代码
           td
             input(type="text",name="roleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
-            &nbsp&nbsp
+            
             span.error(ng-show="formdata.RoleCode.$dirty &&formdata.RoleCode.$invalid")
               small.error(ng-show="formdata.RoleCode.$error.minlength") 角色号至少三位
               small.error(ng-show="formdata.RoleCode.$error.maxlength") 角色号最多十位
@@ -29,10 +29,10 @@ block content
           td(class="tableleft") 是否有效
           td
             input(type="radio",name="isActive",value="1",ng-model="formdata.IsActive",checked,style="width:15px;height:15px")
-            有效
-            &nbsp&nbsp&nbsp
+            |有效&nbsp&nbsp&nbsp
+            
             input(type="radio",name="isActive",ng-model="formdata.IsActive",value="0",style="width:15px;height:15px")
-            无效
+            |无效
         tr
           td(class="tableleft") 权限树
           td
@@ -42,7 +42,7 @@ block content
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-click="submit()") 确认修改
-            &nbsp&nbsp&nbsp&nbsp
+            
             a.btn.btn-sm.btn-success(href='#backend/role',ng-click='search()') 返回列表
     div.modal.fade(id='functionModel')
         div.modal-dialog

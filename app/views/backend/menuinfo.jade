@@ -9,7 +9,7 @@ block content
           td(width="15%",class="tableleft") 菜单名称 
           td
             input(type="textview",name="MenuName",ng-model='formdata.MenuName',ng-maxlength='50',required)
-            &nbsp&nbsp
+            
             small.error(ng-if="menuInfo.MenuName.$error.maxlength && menuInfo.MenuName.$touched") 菜单名称最多50位
 
         tr
@@ -21,46 +21,46 @@ block content
           td(width="15%",class="tableleft") 	对应的父级名称
           td
             jason-select.input(name='ParentID',ng-model="formdata.ParentID", source='/backmenu/parent',stext='ParentMenuName',svalue='ParentID',sactive='1',required)
-            &nbsp&nbsp
+            
             small.error(ng-if="formdata.ParentID.$error.maxlength && formdata.ParentID.$touched") 对应的父级名称最多11位
 
         tr
           td(width="15%",class="tableleft") 菜单对应的层级
           td
             input(type="radio",name="MenuLevel",value="1",ng-model="formdata.MenuLevel",style="width:15px;height:15px",checked)
-            &nbsp1
-            &nbsp&nbsp &nbsp           
+            |1&nbsp&nbsp&nbsp&nbsp
+                       
             input(type="radio",name="MenuLevel",value="2",ng-model="formdata.MenuLevel",style="width:15px;height:15px")
-            &nbsp2          
+            |2          
            
         tr
           td(class="tableleft") 是否有效
           td
             input(type="radio",name="IsActive",value="1",ng-model="formdata.IsActive",style="width:15px;height:15px",checked)
-            &nbsp有效
-            &nbsp&nbsp          
+            |有效&nbsp&nbsp&nbsp
+                      
             input(type="radio",name="IsActive",value="0",ng-model="formdata.IsActive",style="width:15px;height:15px")
-            &nbsp无效    
+            |无效    
 
         tr
           td(width="15%",class="tableleft")  对应的菜单排序顺序  
           td
             input(type="number",name="SortIndex",ng-model='formdata.SortIndex',ng-maxlength='11',required)
-            &nbsp&nbsp
+            
             small.error(ng-if="menuInfo.SortIndex.$error.maxlength && menuInfo.SortIndex.$touched") 对应的菜单排序顺序最多11位
           
         tr
           td(width="15%",class="tableleft") 	对应菜单的icon路径 
           td
             input(type="textview",name="IconPath",ng-model='formdata.IconPath',ng-maxlength='100',required)
-            &nbsp&nbsp 
+             
             small.error(ng-if="menuInfo.IconPath.$error.maxlength && menuInfo.IconPath.$touched") 对应菜单的icon路径最多100位
             
         tr
           td(width="15%",class="tableleft") 菜单对应的url 
           td
             input(type="textview",name='Url',ng-model='formdata.Url',ng-maxlength='50',required)
-            &nbsp&nbsp
+            
             small.error(ng-if="menuInfo.Url.$error.maxlength && menuInfo.Url.$touched") 菜单对应的url最多50位
                     
         tr
@@ -73,5 +73,5 @@ block content
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-disabled="menuInfo.$invalid",ng-click="addnew(formdata,'/backmenu')") 添加
-            &nbsp&nbsp&nbsp&nbsp
+            
             a.btn.btn-sm.btn-success(href='#backend/menu',ng-click='search()') 返回列表    
