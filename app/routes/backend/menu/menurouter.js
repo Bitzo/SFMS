@@ -25,7 +25,8 @@ router.get('/tree',function (req,res) {
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuQuery.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(checkFuncData, function(err, results) {
         if (err) {
             res.status(500);
@@ -35,10 +36,12 @@ router.get('/tree',function (req,res) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.f?req.query.f:"{}");
-            var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
-                pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
+            var page = (req.query.pageindex) ? (req.query.pageindex) : 1,
+                pageNum = (req.query.pagesize) ? (req.query.pagesize) : config.pageCount,
+                isPaging = (req.query.isPaging) ? (req.query.isPaging) : 0,
                 applicationID = query.ApplicationID || '',
                 menuID = query.MenuID || '',
                 parentID = query.ParentID || '',
@@ -165,7 +168,8 @@ router.get('/plain',function (req,res) {
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuQuery.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(checkFuncData, function(err, results) {
         if (err) {
             res.status(500);
@@ -175,10 +179,12 @@ router.get('/plain',function (req,res) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
-            var query = JSON.parse(req.query.f?req.query.f:"{}");
+            var query = JSON.parse(req.query.f ? req.query.f : "{}");
             var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
                 pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
+                isPaging = (req.query.isPaging) ? (req.query.isPaging) : 0,
                 applicationID = query.ApplicationID || '',
                 menuID = query.MenuID || '',
                 parentID = query.ParentID || '',
@@ -261,18 +267,20 @@ router.get('/plain',function (req,res) {
                                 totalPage: Math.ceil(countNum/pageNum),
                                 data: result
                             };
+
                             if(resultBack.curPage == resultBack.totalPage) {
                                 resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
                             }
+
                             res.status(200);
-                            //console.log(resultBack);
                             return res.json(resultBack);
+
                         } else {
                             res.status(200);
                             return res.json({
                                 code: 404,
                                 isSuccess: false,
-                                msg: "未查询到相应菜单"
+                                msg: "未查询到相应菜单!"
                             });
                         }
                     });
@@ -281,7 +289,7 @@ router.get('/plain',function (req,res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "未查询到相应菜单"
+                        msg: "未查询到相应菜单!"
                     });
                 }
             });
@@ -301,7 +309,8 @@ router.get('/parent',function (req,res) {
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuQuery.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(checkFuncData, function(err, results) {
         if (err) {
             res.status(500);
@@ -311,10 +320,12 @@ router.get('/parent',function (req,res) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.f?req.query.f:"{}");
             var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
                 pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 500,
+                isPaging = (req.query.isPaging) ? (req.query.isPaging) : 0,
                 applicationID = query.ApplicationID || '',
                 menuID = query.MenuID || '',
                 parentID = query.ParentID || '',
@@ -401,11 +412,12 @@ router.get('/parent',function (req,res) {
                                 totalPage: Math.ceil(countNum/pageNum),
                                 data: result
                             };
+
                             if(resultBack.curPage == resultBack.totalPage) {
                                 resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage-1)*pageNum;
                             }
+
                             res.status(200);
-                            //console.log(resultBack);
                             return res.json(resultBack);
                         } else {
                             res.status(200);
@@ -434,16 +446,17 @@ router.get('/parent',function (req,res) {
             });
         }
     });
-
 });
 
 //通过jitkey获得树形Menu结构
+//完成检查 2017.2.25 单凯
 router.get('/',function (req,res) {
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuQuery.functionCode
-    }
-    userFuncService.checkUserFunc(checkFuncData, function(err, results) {
+    };
+
+    userFuncService.checkUserFunc(checkFuncData, function(err, funcResults) {
         if (err) {
             res.status(500);
             return res.json({
@@ -452,7 +465,8 @@ router.get('/',function (req,res) {
                 msg: '服务器内部错误！'
             });
         }
-        if (results !== undefined && results.isSuccess === true) {
+
+        if (funcResults !== undefined && funcResults.isSuccess) {
             var userID = req.query.jitkey;
             var data = {
                 "userID":userID
@@ -460,6 +474,7 @@ router.get('/',function (req,res) {
 
             if (userID === undefined || parseInt(userID) <= 0) {
                 res.status(404);
+
                 return res.json({
                     code: 404,
                     isSuccess: false,
@@ -476,6 +491,7 @@ router.get('/',function (req,res) {
                         msg : '服务器出错'
                     });
                 }
+
                 if(result !== undefined && result.length != 0){
                     menuService.queryMenuTreeByUserID(data,function (err,results) {
                         if(err){
@@ -483,7 +499,7 @@ router.get('/',function (req,res) {
                             return res.json({
                                 code : 500,
                                 isSuccess : false,
-                                msg : '服务器连接错误'
+                                msg : '服务器连接错误!'
                             });
                         }
 
@@ -502,7 +518,7 @@ router.get('/',function (req,res) {
                             return res.json({
                                 code: 404,
                                 isSuccess: false,
-                                msg: '未查到相应菜单'
+                                msg: '未查到相应菜单!'
                             });
                         }
                     });
@@ -511,7 +527,7 @@ router.get('/',function (req,res) {
                     return res.json({
                         code : 404,
                         isSuccess :false,
-                        msg : '用户不存在'
+                        msg : '用户不存在!'
                     });
                 }
             });
@@ -532,7 +548,8 @@ router.post('/',function(req,res,next) {
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuAdd.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(checkFuncData, function(err, results) {
         if (err) {
             res.status(500);
@@ -542,15 +559,18 @@ router.post('/',function(req,res,next) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             // 检查所需要的字段是否都存在
             var data = ['ApplicationID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
             var err = 'require: ';
+
             for (var value in data){
                 if(!(data[value] in req.body.formdata)){
                     err += data[value] + ' ';
                 }
             }
+
             //如果要求的字段不在req的参数中
             if(err !== 'require: ') {
                 logger.writeError(err);
@@ -575,7 +595,6 @@ router.post('/',function(req,res,next) {
             if(memo === undefined || memo === null){
                 memo = '';
             }
-
 
             // 存放接收的数据
             var data = {
@@ -677,15 +696,17 @@ router.post('/',function(req,res,next) {
     });
 
 });
+
 /**
  * 禁用某些菜单，将IsActive置为0
  */
 router.put('/forbid',function (req,res) {
-    console.log(req.body)
+
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuEdit.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(checkFuncData, function(err, results) {
         if (err) {
             res.status(500);
@@ -695,6 +716,7 @@ router.put('/forbid',function (req,res) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             if (req.body.formdata.MenuID == undefined) {
                 res.status(400);
@@ -704,6 +726,7 @@ router.put('/forbid',function (req,res) {
                     msg: "菜单为空"
                 });
             }
+
             if (isNaN(req.body.formdata.MenuID)) {
                 res.status(400);
                 return res.json({
@@ -712,8 +735,10 @@ router.put('/forbid',function (req,res) {
                     msg: "菜单ID不是数字"
                 });
             }
+
             var MenuID = req.body.formdata.MenuID;
             var menuLevel = -1;
+            var parentID = -1;
             menuService.queryAllMenus({"MenuID":MenuID,"isPaging":0},function (err,queryResult) {
                 if (err){
                     res.status(500);
@@ -727,6 +752,7 @@ router.put('/forbid',function (req,res) {
                 if (queryResult != undefined && queryResult.length != 0){
                     menuLevel = queryResult[0].MenuLevel;
                     parentID = queryResult[0].ParentID;
+
                     if (menuLevel == 1 || menuLevel == 2) {
                         menuService.reuseMenu({"MenuID":MenuID,"IsActive":0},function (err,updateResult1) {
                             if (err){
@@ -795,7 +821,8 @@ router.put('/reuse',function (req,res) {
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuEdit.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(checkFuncData, function(err, results) {
         if (err) {
             res.status(500);
@@ -805,6 +832,7 @@ router.put('/reuse',function (req,res) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             if (req.body.formdata.MenuID == undefined) {
                 res.status(400);
@@ -814,6 +842,7 @@ router.put('/reuse',function (req,res) {
                     msg: "菜单为空"
                 });
             }
+
             if (isNaN(req.body.formdata.MenuID)) {
                 res.status(400);
                 return res.json({
@@ -822,10 +851,12 @@ router.put('/reuse',function (req,res) {
                     msg: "菜单ID不是数字"
                 });
             }
+
             var MenuID = req.body.formdata.MenuID;
 
             var menuLevel = -1;
             var parentID = -1;
+
             menuService.queryAllMenus({"MenuID":MenuID,"isPaging":0},function (err,queryResult) {
                 if (err){
                     res.status(500);
@@ -945,7 +976,8 @@ router.put('/',function (req,res) {
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuEdit.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(checkFuncData, function(err, results) {
         if (err) {
             res.status(500);
@@ -955,15 +987,18 @@ router.put('/',function (req,res) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             // 检查所需要的字段是否都存在
             var data = ['ApplicationID','MenuID','MenuLevel','ParentID','SortIndex','MenuName','IconPath','Url','Memo','IsActive'];
             var err = 'require: ';
+
             for (var value in data){
                 if(!(data[value] in req.body.formdata)){
                     err += data[value] + ' ';
                 }
             }
+
             //如果要求的字段不在req的参数中
             if(err !== 'require: ') {
                 logger.writeError(err);
@@ -1010,6 +1045,7 @@ router.put('/',function (req,res) {
                 "SortIndex" : sortIndex,
                 "IsActive" : isActive
             };
+
             for (var key in intdata){
                 if(isNaN(intdata[key])){
                     res.status(400);
@@ -1197,7 +1233,8 @@ router.delete('/',function(req,res) {
     var checkFuncData = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.memuManage.menuDel.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(checkFuncData, function(err, results) {
         if (err) {
             res.status(500);
@@ -1207,10 +1244,12 @@ router.delete('/',function(req,res) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             //MenuID是主键，只需要此属性就可准确删除，不必传入其他参数
             var d = JSON.parse(req.query.d);
             var menuID = d.MenuID;
+
             if (menuID === undefined) {
                 res.status(404);
                 return res.json({
@@ -1219,6 +1258,7 @@ router.delete('/',function(req,res) {
                     msg: 'require menuID'
                 });
             }
+
             if(isNaN(menuID)){
                 res.status(400);
                 return res.json({
