@@ -87,7 +87,6 @@ exports.queryAllProType = function (data, callback) {
     }
 
     logger.writeInfo("得到所有产品类别得到所有产品类别:" + sql);
-    console.log("得到所有产品类别得到所有产品类别:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -97,14 +96,14 @@ exports.queryAllProType = function (data, callback) {
         }
         connection.query(sql, function (err, results) {
             connection.release();
+
             if (err) {
                 logger.writeError('得到产品类别，出错信息：' + err)
                 callback(true,'系统内部错误');
                 return;
             }
 
-            callback(false, results);
-            return ;
+            return callback(false, results);
         });
     });
 };

@@ -103,24 +103,13 @@ exports.countAllDataDicts = function (data, callback) {
             callback(true);
             return;
         }
-        logger.writeInfo('countAllDataDicts');
-        logger.writeInfo('countAllDataDicts');
-        callback(false, results);
-    })
-}
 
-//查询对应字典的角色个数
-exports.countAllDataDictsBySubcode = function (data, callback) {
-    datadictionaryDal.countAllDataDictsBySubcode(data, function (err, results) {
-        if (err) {
-            callback(true);
-            return;
-        }
-        logger.writeInfo('countAllDataDictsBySubcode func in service ');
-        logger.writeInfo('countAllDataDictsBySubcode func in service ');
+        logger.writeInfo('countAllDataDicts');
+
         callback(false, results);
-    })
-}
+    });
+};
+
 
 //字典新增
 exports.datadictionaryInsert = function (data,callback) {
@@ -209,19 +198,7 @@ exports.datadictionaryDeleteLogically = function (data, callback) {
     });
 }
 
-exports.queryDatadictionaryBySubcode = function (data,callback) {
 
-    datadictionaryDal.queryDatadictionaryBySubcode(data, function (err, results) {
-        if (err) {
-            callback(true);
-            return;
-        }
-
-        logger.writeInfo('queryDatadictionaryBySubcode func in service ');
-
-        callback(false, results);
-    })
-}
 exports.queryDatadictionaryByID = function (data,callback) {
     /**
      *  data = {
