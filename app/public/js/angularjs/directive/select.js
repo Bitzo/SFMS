@@ -16,8 +16,7 @@ jasonapp.service('jasonService', function ($http, $q) {
                     pageindex:1,
                     pagesize:10,
                     f:{
-                        StaffType: 1,
-                        isActive : 1
+
                     }
                 }
             })
@@ -30,7 +29,7 @@ jasonapp.service('jasonService', function ($http, $q) {
                     pageindex:1,
                     pagesize:10,
                     f:{
-                        StaffType: 1
+
                     }
                 }
             })

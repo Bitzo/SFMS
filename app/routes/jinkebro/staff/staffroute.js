@@ -381,7 +381,7 @@ router.put('/',function (req,res) {
 });
 
 router.get('/',function (req,res) {
-    console.log(req.query)
+
     var f = {};
     if (req.query.f == undefined) {
         f = {};
