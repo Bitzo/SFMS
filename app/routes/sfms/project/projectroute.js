@@ -822,7 +822,7 @@ router.get('/user', function (req, res) {
                     projectInfo = results;
                 }
 
-                projectservice.queryProject({ProjectManageID:userID, OperateUserID: req.query.jitkey}, function (err, results) {
+                projectservice.queryProject({ProjectManageID:userID, IsActive:1, OperateUserID: req.query.jitkey}, function (err, results) {
                     if (err) {
                         res.status(500);
 
