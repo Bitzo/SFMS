@@ -3,28 +3,28 @@ block content
     div.container-fluid
         span
             h2 订单新增
-        form(method="post"  name="goodsInfo" ng-controller="selectController")
+        form(method="post"  name="orderAdd" ng-controller="selectController")
             table.table.table-bordered.table-hover.definedwidth.m10
                 tr
                     td(width="15%",class="tableleft") 仓储量的单位
                     td
                         input(type="textview",name="SKU",ng-model='formdata.SKU',ng-maxlength='50',required)
                         
-                        small.error(ng-if="goodsInfo.SKU.$error.maxlength && goodsInfo.SKU.$touched") 用户姓名最多50位
+                        small.error(ng-if="orderAdd.SKU.$error.maxlength && orderAdd.SKU.$touched") 仓储量的单位最多50位
 
                     tr
                         td(width="15%",class="tableleft")  商品名称
                         td
                             input(type="textview",name="ProductName",ng-model="formdata.ProductName",ng-maxlength='50',required)
                         
-                        small.error(ng-if="goodsInfo.ProductName.$error.maxlength && goodsInfo.ProductName.$touched") 密码最多50位
+                        small.error(ng-if="orderAdd.ProductName.$error.maxlength && orderAdd.ProductName.$touched") 商品名称最多50位
 
                     tr
                         td(width="15%",class="tableleft") 商品图片路径
                         td
-                            input(type="textview",name="ProductImgPath",ng-model="formdata.ProductImgPath",ng-maxlength='200',required)
+                            input(type="textview",name="ProductImgPath",ng-model="formdata.ProductImgPath",ng-maxlength='50',required)
                         
-                        small.error(ng-if="goodsInfo.ProductImgPath.$error.maxlength && goodsInfo.ProductImgPath.$touched") 账户最多200位
+                        small.error(ng-if="orderAdd.ProductImgPath.$error.maxlength && orderAdd.ProductImgPath.$touched") 商品图片路径最多50位
 
                     tr
                         td(width="15%",class="tableleft") 有效期
@@ -53,12 +53,12 @@ block content
                         td
                             textarea(type="textview",rows="5",cols="30",name="ProductDesc",ng-model='formdata.ProductDesc',ng-maxlength='200')
                             
-                            small.error(ng-if="goodsInfo.ProductDesc.$error.maxlength && goodsInfo.ProductDesc.$touched") 填写备注
+                            small.error(ng-if="orderAdd.ProductDesc.$error.maxlength && orderAdd.ProductDesc.$touched") 商品描述最多200位
 
                     tr
                         td(class="tableleft")
                         td
-                            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="goodsInfo.$invalid",ng-click="addnew(formdata,'/jinkeBro/product')") 添加
+                            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="orderAdd.$invalid",ng-click="addnew(formdata,'/jinkeBro/product')") 添加
 
                             
                             a.btn.btn-sm.btn-success(href='#jinkeBro/jitgoods' ng-click="search()") 返回列表

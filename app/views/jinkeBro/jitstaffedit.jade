@@ -11,7 +11,7 @@ block content
                         td
                             input(type="textview",name="StaffName",ng-model='paginationConf.formdata.StaffName',ng-maxlength='50',required)
                             
-                            small.error(ng-if="staffedit.SKU.$error.maxlength && staffedit.SKU.$touched") 姓名最多10位
+                            small.error(ng-if="staffedit.StaffName.$error.maxlength && staffedit.StaffName.$touched") 姓名最多10位
 
                     tr
                         td(width="15%",class="tableleft") 员工性别
@@ -43,7 +43,7 @@ block content
                         td(width="15%",class="tableleft") 员工职位
                         td
                             input(type="text",name="Position",ng-model="paginationConf.formdata.Position",value='{{paginationConf.formdata.Position}}',required)
-                            small.error(ng-if="staffedit.Phone.$error.maxlength && stuffAdd.Phone.$touched") 职位名称最多50位
+                            small.error(ng-if="staffedit.Position.$error.maxlength && stuffAdd.Position.$touched") 职位名称最多50位
                     tr
                         td(class="tableleft")
                         td
