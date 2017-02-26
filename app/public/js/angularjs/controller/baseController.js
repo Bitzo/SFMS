@@ -374,7 +374,36 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             error(function(response) {
                  alert(response.msg);
             });
+        };
+
+    //项目管理 启用项目
+    $scope.restart = function (index,a,action) {
+        var mymessage=confirm("是否确认启用  "+a);
+        if(mymessage==true){
+            var formdata={
+                "ID":$scope.datas[index].ID,
+            };
+            $http({
+                method:'put',
+                url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data: {
+                    formdata:formdata
+                }
+            }).
+            success(function(response) {
+                alert(response.msg)
+                if(response.isSuccess === true) {
+                    $scope.datas[index].IsActive = 1;
+                }
+            }).
+            error(function(response) {
+                alert(response.msg)
+            });
+        }else{
+
         }
+
+    };
 
     //查询列表点击表头排序
     $scope.logSort = function (sortindex) {

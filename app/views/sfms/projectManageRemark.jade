@@ -7,7 +7,7 @@ block content
         span(style='font-size: 24px;') 项目备注查看(管理)
         div.buttons.pull-right
           label.form-group.my-form-group 项目名称: 
-            jason-select.select.ext(data-max-options='2',ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
+            jason-select.select.ext(data-max-options='2',ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ProjectID')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询

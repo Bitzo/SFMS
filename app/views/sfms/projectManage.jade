@@ -69,7 +69,9 @@ block content
               a(href='#/sfms/projectManageEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑&nbsp
               a(ng-click="remove($index,x.ProjectName,'/sfms/api/project')",href='')
-                i.icon.icon-trash 删除&nbsp
+                i.icon.icon-ban-circle 禁用 &nbsp
+              a(ng-click="restart($index,x.ProjectName,'/sfms/api/project/restart')",href='')
+                i.icon.icon-ok 启用 &nbsp
               a(data-toggle="modal",data-target="#myModal",ng-click="moreproject($index,'/sfms/api/projectuser/')",href='')
                 i.icon.icon-zoom-in  更多           
       div.pull-right

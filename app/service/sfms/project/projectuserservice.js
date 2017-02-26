@@ -55,7 +55,7 @@ exports.queryProjectUser = function (data, callback) {
     var formdata = {
         'ProjectID': data.ProjectID || '',
         'UserName': data.UserName || '',
-        'IsActive': 1,
+        'jit_projectruser.IsActive': 1,
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount
     };
@@ -100,7 +100,7 @@ exports.countQuery = function (data, callback) {
     var queryData = {
         'ProjectID': data.ProjectID || '',
         'UserName': data.UserName || '',
-        'IsActive': 1
+        'jit_projectruser.IsActive': 1
     };
 
     projectuserDAL.countQuery(queryData, function (err, results) {
