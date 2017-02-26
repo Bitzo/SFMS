@@ -9,13 +9,15 @@ var express = require('express'),
     router = express.Router(),
     url = require('url');
 
-//产品业务逻辑组件
+//商品业务逻辑组件
 var productService = appRequire('service/jinkebro/product/productservice'),
     logger = appRequire("util/loghelper").helper,
     config = appRequire('config/config'),
     functionConfig = appRequire('config/functionconfig'),
     userFuncService = appRequire('service/backend/user/userfuncservice'),
-    moment = require('moment');
+    moment = require('moment'),
+    validator = require('validator'),
+    dataCheck = appRequire('util/dataverify');
 
 //商品新增
 router.post('/', function (req, res) {
@@ -23,7 +25,7 @@ router.post('/', function (req, res) {
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
-    }
+    };
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
         if (err) {
@@ -34,72 +36,13 @@ router.post('/', function (req, res) {
                 msg: '服务器内部错误！'
             });
         }
+
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var formdata = req.body.formdata;
-            // var formdata = JSON.parse(req.body.formdata);
 
-            //检查所需要的字段是否都存在
-            var data = ['ProductName',
-                'ExpireTime',
-                'ProducTime',
-                'SupplierID',
-                'ProductPrice',
-                'OnSale',
-                'TotalNum',
-                'StockAreaID'
-            ];
-
-            var err = 'require: ';
-            for (var value in data) {
-                if (!(data[value] in formdata)) {
-                    err += data[value] + ' ';
-                }
-            }
-            //如果要求的字段不在req的参数中
-            if (err !== 'require: ') {
-                logger.writeError(err);
-                res.status(400);
-                return res.json({
-                    code: 404,
-                    isSuccess: false,
-                    msg: '存在未填写的必填字段' + err
-                });
-            }
-
-            // var productstockmodel = {
-            //     ID : '',
-            //     ProductID : '',
-            //     TotalNum : '',
-            //     StockAreaID : '',
-            //     CreateUserID : '',
-            //     CreateTime : '',
-            //     EditUserID : '', // can be null
-            //     EditTime : '' // can be null
-            // };
-
-            // var producttypemodel = {
-            //     ID : '',
-            //     ProductTypeName : ''
-            // };
-
-            // var SKU = formdata.SKU || "123",
-            //     ProductName = formdata.ProductName || "德芙巧克力",
-            //     ProductDesc = formdata.ProductDesc || '',
-            //     ProductImgPath = formdata.ProductImgPath || '',
-            //     ExpireTime = formdata.ExpireTime || moment().format("YYYY-MM-DD"),
-            //     ProducTime = formdata.ProducTime || moment().format("YYYY-MM-DD"),
-            //     SupplierID = formdata.SupplierID || 1,
-            //     ProductTypeID = formdata.ProductTypeID || 4,
-            //     ProductPrice = formdata.ProductPrice || 29.5,
-            //     OnSale = formdata.OnSale || 1,
-            //     TotalNum = formdata.TotalNum || 100,
-            //     StockAreaID = formdata.StockAreaID || 1,
-            //     CreateUserID = formdata.CreateUserID || 41,
-            //     CreateTime = formdata.CreateTime || moment().format("YYYY-MM-DD HH:mm:ss"),
-            //     newProductTypeName = formdata.newProductTypeName || '德芙 香浓黑巧克力 碗装 252克/碗';
             var ProductName = formdata.ProductName,
-                ProductDesc = formdata.ProductDesc,
-                ProductImgPath = formdata.ProductImgPath,
+                ProductDesc = formdata.ProductDesc || '',
+                ProductImgPath = formdata.ProductImgPath || '',
                 ExpireTime = formdata.ExpireTime,
                 ProducTime = formdata.ProducTime,
                 newProductTypeName = formdata.newProductTypeName,
@@ -110,72 +53,6 @@ router.post('/', function (req, res) {
                 StockAreaID = formdata.StockAreaID,
                 CreateUserID = req.query.jitkey,
                 CreateTime = moment().format("YYYY-MM-DD HH:mm:ss"); // 创建库存时间
-
-            var requiredValue = '缺少输入参数 ：',
-                requiredData = {
-                    "ProductName": ProductName,
-                    "SupplierID": SupplierID,
-                    "ProductPrice": ProductPrice,
-                    "OnSale": OnSale,
-                    "TotalNum" : TotalNum,
-                    "StockAreaID" :  StockAreaID,
-                    "CreateUserID" : CreateUserID,
-                    "newProductTypeName" : newProductTypeName
-                };
-
-            for (var key in requiredData) {
-                if (requiredData[key] == undefined) {
-                    requiredValue += key;
-                    logger.writeError(requiredValue);
-                    res.status(400);
-                    return res.json({
-                        code: 400,
-                        isSuccess: false,
-                        msg: requiredValue
-                    });
-                }
-            }
-
-            if (ExpireTime != undefined) {
-                ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");
-            } else {
-                res.status(400);
-                res.json({
-                    code : 400,
-                    isSuccess : false,
-                    msg : '商品过期时间必须设置！'
-                });
-            }
-
-            if (ProducTime != undefined) {
-                ProducTime = moment(formdata.ProducTime).format("YYYY-MM-DD");
-            } else {
-                res.status(400);
-                res.json({
-                    code : 400,
-                    isSuccess : false,
-                    msg : '商品生产日期必须设置！'
-                });
-            }
-            
-
-            var shouldIntData = {
-                "SupplierID" : SupplierID,
-                "OnSale" : OnSale,
-                "TotalNum" : TotalNum,
-                "StockAreaID" :  StockAreaID,
-                "CreateUserID" : CreateUserID
-            };
-            for (var key in shouldIntData) {
-                if (isNaN(shouldIntData[key])) {
-                    res.status(400);
-                    return res.json({
-                        code : 400,
-                        isSuccess : false,
-                        msg : key + " : " + shouldIntData[key] + '不是数字！'
-                    });
-                }
-            }
 
             var insertdata = {
                 "ProductName": ProductName,
@@ -192,8 +69,7 @@ router.post('/', function (req, res) {
                 "CreateTime" : CreateTime,
                 "newProductTypeName" : newProductTypeName
             };
-            console.log('router!');
-            console.log(insertdata);
+
             productService.getMaxSKUNext(function (err,skuResult) {
                 if (err) {
                     res.status(500);
@@ -217,7 +93,8 @@ router.post('/', function (req, res) {
                             });
                         }
 
-                        if (result !== undefined && result.affectedRows != 0) {
+
+                        if (result !== undefined && result.affectedRows != 0 && result.affectedRows != undefined) {
                             res.status(200);
                             return res.json({
                                 code: 200,
@@ -230,7 +107,7 @@ router.post('/', function (req, res) {
                             return res.json({
                                 code: 404,
                                 isSuccess: false,
-                                msg: "产品添加操作失败！"
+                                msg: result.msg
                             });
                         }
                     });

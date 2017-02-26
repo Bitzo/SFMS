@@ -34,6 +34,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.pageInit = function () {
         $scope.paginationConf.currentPage = 1;
         $scope.paginationConf.itemsPerPage = 10;
+        $scope.f = {};
     };
 
     //首页 数据显示
@@ -100,7 +101,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
                 }
             }).
             error(function(response) {
-                alert("操作失败")
+                alert(response.msg)
             });
         }else{
 
@@ -524,9 +525,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             'OrderID': OrderID
         };
 
-        $scope.f = {
-            'OrderID': OrderID
-        };
+
 
         $http({
             method: 'get',

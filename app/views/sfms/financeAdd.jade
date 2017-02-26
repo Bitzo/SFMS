@@ -3,15 +3,15 @@ block content
   div.container-fluid
     span 
       h2 财务新增
-    form(method="post",name="financeAdd" ng-controller="sfmsApiFinanceController")
+    form(method="post",name="financeAdd",ng-controller="sfmsApiFinanceAddController")
       table.table.table-bordered.table-hover.definedwidth.m10      
         tr
           td(width="15%",class="tableleft") 财务名称
           td
             input(type="textview",name='FIName',ng-model='formdata.FIName',ng-maxlength='45',required)
-            &nbsp&nbsp
+           
             small.error(ng-if="financeAdd.FIName.$error.maxlength && financeAdd.FIName.$touched") 财务名称最多45位
-        
+
         tr
           td(width="15%",class="tableleft") 用户名
           td
@@ -37,19 +37,19 @@ block content
           td(width="15%",class="tableleft") 财务金额 
           td
             input(type="number",name="FIPrice",ng-model="formdata.FIPrice",ng-maxlength='45',required)
-            &nbsp&nbsp
+           
             small.error(ng-if="financeAdd.FIPrice.$error.maxlength && financeAdd.FIPrice.$touched") 金额最多45位
   
         tr
           td(width="15%",class="tableleft") 财务描述 
           td
             textarea(type="textview",name="Remark",ng-model='formdata.Remark',rows="5",cols="30",ng-maxlength='45',required)
-            &nbsp&nbsp
+           
             small.error(ng-if="financeAdd.Remark.$error.maxlength && financeAdd.Remark.$touched") 描述最多45位
 
         tr
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-disabled="financeAdd.$invalid",ng-click="addnew(formdata,'/sfms/api/finance')") 添加
-            &nbsp&nbsp&nbsp&nbsp
+       
             a.btn.btn-sm.btn-success(href='#sfms/finance',ng-click='search()') 返回列表

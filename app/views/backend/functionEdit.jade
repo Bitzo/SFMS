@@ -21,7 +21,7 @@ block content
           td(width="15%",class="tableleft") 功能点号 
           td
             input(type="textview",name="FunctionCode",ng-model='paginationConf.formdata.FunctionCode',ng-maxlength='8',required)
-            &nbsp&nbsp
+            
             small.error(ng-show="paginationConf.formdata.FunctionCode.$error.maxlength && paginationConf.formdata.FunctionCode.$touched") 对应的功能点号最多11位
           
            
@@ -29,7 +29,7 @@ block content
           td(width="15%",class="tableleft") 	功能点名称 
           td
             input(type="textview",name="FunctionName",ng-model='paginationConf.formdata.FunctionName',ng-maxlength='50',required)
-            &nbsp&nbsp
+            
             small.error(ng-show="paginationConf.formdata.FunctionName.$error.maxlength && paginationConf.formdata.FunctionName.$touched") 功能点名称最多50位
 
         tr
@@ -42,7 +42,7 @@ block content
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(paginationConf.formdata,'/backmenu')") 添加
  
-            &nbsp&nbsp&nbsp&nbsp
+            
             a.btn.btn-sm.btn-success(href='#sfms/function') 返回列表
 
 

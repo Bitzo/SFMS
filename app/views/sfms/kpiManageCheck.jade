@@ -45,21 +45,21 @@ block content
           td(class="tableleft") 审核结果
           td
             input(type="radio",name="IsActive",value="通过",ng-model="paginationConf.formdata.KPIStatus",style="width:15px;height:15px",checked)
-            &nbsp 通过
-            &nbsp         
+            | 通过&nbsp&nbsp&nbsp
+                     
             input(type="radio",name="IsActive",value="不通过",ng-model="paginationConf.formdata.KPIStatus",style="width:15px;height:15px")
-            &nbsp不通过
+            |不通过
 
         tr
           td(width="15%",class="tableleft") 审核意见
           td
             textarea(type="textview",name="Memo",ng-model='paginationConf.formdata.Memo',rows="5",cols="30",ng-maxlength='45',required) 
-            &nbsp&nbsp
+            
             small.error(ng-if="kpiManageCheck.Memo.$error.maxlength && kpiManageCheck.Memo.$touched") 审核意见最多45位
 
         tr
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-disabled="kpiManageCheck.$invalid",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 确认审核
-            &nbsp&nbsp&nbsp&nbsp
+            
             a.btn.btn-sm.btn-success(href='#sfms/kpiManage',ng-click='search()') 返回列表

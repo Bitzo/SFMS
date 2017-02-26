@@ -2799,138 +2799,270 @@ li [class^="icon-"], li [class*=" icon-"], .nav-list li [class^="icon-"], .nav-l
 
 @media only screen and (max-width: 991px) {
     .sidebar:before {
-        display: none
+        display: block
     }
 
     .sidebar {
-        display: none;
-        float: none;
-        position: absolute;
-        z-index: 999;
-        left: 0;
-        bottom: auto;
-        top: auto !important;
-        margin-top: 40px;
-        border: 1px solid #CCC;
-        border-left-width: 0;
-        box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2)
+        
+
     }
 
-    .sidebar.display {
+    .sidebar {
         display: block
     }
 
-    .menu-toggler {
-        display: inline-block;
-        position: absolute;
-        left: 0;
-        z-index: 998;
-        width: 52px;
-        height: 32px;
-        margin-right: 2px;
-        line-height: normal;
-        padding-left: 33px;
-        padding-top: 7px;
-        padding-bottom: 1px;
-        font-size: 13px;
-        font-weight: bold;
-        text-transform: uppercase;
-        background-color: #444;
-        color: #f3f3f3;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box
-    }
 
-    .menu-toggler:hover {
-        text-decoration: none
-    }
+    .sidebar .nav-search .form-search {
+    position: absolute;
+    left: 5px;
+    z-index: 14
+}
 
-    .menu-toggler:before {
-        border-top: 1px solid #87b87f;
-        border-bottom: 1px solid #6fb3e0;
-        height: 2px;
-        width: 24px;
-        content: "";
-        position: absolute;
-        z-index: 11;
-        top: 13px;
-        left: 4px;
-        -webkit-transition: all .1s ease;
-        transition: all .1s ease;
-        -o-transition: none;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box
-    }
+.sidebar .nav-search .nav-search-input {
+    width: 0 !important;
+    max-width: 0 !important;
+    opacity: 0 !important;
+    filter: alpha(opacity=0) !important
+}
 
-    .menu-toggler:after {
-        border-top: 1px solid #ffa24d;
-        border-bottom: 1px solid #d15b47;
-        content: "";
-        height: 2px;
-        width: 24px;
-        position: absolute;
-        top: 19px;
-        left: 4px;
-        -webkit-transition: all .1s ease;
-        transition: all .1s ease;
-        -o-transition: none;
-        -webkit-box-sizing: content-box;
-        -moz-box-sizing: content-box;
-        box-sizing: content-box
-    }
+.sidebar .nav-search .nav-search-input:hover, .sidebar .nav-search .nav-search-input:focus, .sidebar .nav-search .nav-search-input:active {
+    width: 162px !important;
+    max-width: 162px !important;
+    opacity: 1 !important;
+    filter: alpha(opacity=100) !important
+}
 
-    .menu-toggler.display:before {
-        height: 4px;
-        top: 8px;
-        border-width: 2px
-    }
+.sidebar .nav-search .nav-search-input:hover ~ #nav-search-icon, .sidebar .nav-search .nav-search-input:focus ~ #nav-search-icon, .sidebar .nav-search .nav-search-input:active ~ #nav-search-icon {
+    border: 0;
+    border-radius: 0;
+    padding: 0 3px !important
+}
 
-    .menu-toggler.display:after {
-        height: 4px;
-        top: 20px;
-        border-width: 2px
-    }
+.sidebar .nav-search:hover .nav-search-input {
+    width: 162px !important;
+    max-width: 162px !important;
+    opacity: 1 !important;
+    filter: alpha(opacity=100) !important
+}
 
-    .menu-toggler > .menu-text {
-        display: block;
-        position: absolute;
-        bottom: -18px;
-        left: 0;
-        border: 1px solid transparent;
-        border-width: 9px 42px;
-        border-top-color: #444
-    }
+.sidebar .nav-search:hover .nav-search-input ~ .nav-search-icon {
+    border: 0;
+    border-radius: 0;
+    padding: 0 3px !important
+}
 
-    .menu-toggler > .menu-text:after {
-        display: block;
-        color: #FFF;
-        content: "MENU";
-        position: absolute;
-        left: -8px;
-        top: -41px
-    }
+.sidebar .nav-search .nav-search-icon {
+    border: 1px solid;
+    border-radius: 32px;
+    background-color: #FFF;
+    padding: 0 5px !important
+}
 
-    .nav-list > li.active:after {
-        display: none
-    }
+.sidebar {
+    width: 43px
+}
 
-    .nav-list li.active > a:after {
-        display: none
-    }
+.sidebar:before {
+    width: 43px
+}
 
-    .nav-list li.active.open > .submenu > li.active > a:after {
-        display: none
-    }
+.sidebar + .main-content {
+    margin-left: 43px
+}
 
-    .menu-min .nav-list > li.active:after {
-        display: block
-    }
+.sidebar + .main-content .breadcrumbs.fixed, .sidebar + .main-content .breadcrumbs.breadcrumbs-fixed {
+    left: 43px
+}
 
-    .menu-min .nav-list > li.active > a:after {
-        display: block
-    }
+ .nav-list a .badge,  .nav-list a .label {
+    position: relative;
+    top: -1px;
+    right: auto;
+    left: 4px
+}
+
+ .nav-list .submenu .submenu a .badge,  .nav-list .submenu .submenu a .label {
+    top: 0
+}
+
+ .nav-list > li > a {
+    position: relative
+}
+
+ .nav-list > li > a > .menu-text {
+    display: none;
+    position: absolute;
+    left: 42px;
+    top: -2px;
+    width: 174px;
+    height: 40px;
+    line-height: 38px;
+    background-color: #f5f5f5;
+    z-index: 121;
+    -webkit-box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    padding-left: 12px
+}
+
+ .nav-list > li > a.dropdown-toggle > .menu-text {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 0;
+    top: -1px;
+    left: 43px;
+    width: 174px;
+    border-bottom: 1px solid #ddd
+}
+
+ .nav-list > li > a .arrow {
+    display: none
+}
+
+ .nav-list > li > a:hover:before {
+    width: 2px
+}
+
+ .nav-list > li:hover > a {
+    color: #1963aa
+}
+
+ .nav-list > li:hover > a > .menu-text {
+    display: block
+}
+
+ .nav-list > li.active > a > .menu-text {
+    border-left-color: #1963aa
+}
+
+ .nav-list > li.open > a {
+    background-color: #fafafa;
+    color: #585858
+}
+
+ .nav-list > li.open.active > a {
+    background-color: #fff
+}
+
+ .nav-list > li.open:hover > a {
+    color: #1963aa
+}
+
+ .nav-list > li.active > a {
+    color: #2b7dbc
+}
+
+ .nav-list > li.active > a:after {
+    border-width: 10px 6px;
+    top: 8px
+}
+
+ .nav-list > li.active.open > a:after {
+    display: block
+}
+
+ .nav-list > li.active.open li.active > a:after {
+    display: none
+}
+
+ .nav-list > li > .submenu {
+    background: #fff;
+    position: absolute;
+    z-index: 120;
+    left: 42px;
+    top: -2px;
+    width: 176px;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    padding-top: 40px;
+    padding-bottom: 2px;
+    display: none !important
+}
+
+ .nav-list > li > .submenu:before {
+    display: none
+}
+
+ .nav-list > li > .submenu li:before {
+    display: none
+}
+
+ .nav-list > li > .submenu li > a {
+    margin-left: 0;
+    padding-left: 24px
+}
+
+ .nav-list > li > .submenu li > a > [class*="icon-"]:first-child {
+    left: 4px
+}
+
+ .nav-list > li:hover > .submenu {
+    display: block !important
+}
+
+ .nav-list > li.active > .submenu {
+    border-left-color: #2b7dbc
+}
+
+ .sidebar-shortcuts {
+    position: relative
+}
+
+ .sidebar-shortcuts-mini {
+    display: block
+}
+
+ .sidebar-shortcuts-large {
+    display: none;
+    position: absolute;
+    z-index: 20;
+    top: -1px;
+    left: 42px;
+    width: 182px;
+    padding: 0 2px 1px;
+    background-color: #fff;
+    -webkit-box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 1px 2px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc
+}
+
+ .sidebar-shortcuts:hover .sidebar-shortcuts-large {
+    display: block
+}
+
+ .sidebar-collapse:before {
+    left: 5px;
+    right: 5px
+}
+
+ .sidebar-collapse > [class*="icon-"] {
+    font-size: 13px;
+    padding: 0 4px;
+    line-height: 15px;
+    border-width: 1px;
+    border-color: #aeaeae
+}
+
+ .nav-list > li > .submenu li > .submenu > li > a {
+    margin-left: 0;
+    padding-left: 30px
+}
+
+ .nav-list > li > .submenu li > .submenu > li > .submenu > li > a {
+    margin-left: 0;
+    padding-left: 45px
+}
+
+ .nav-list > li > .submenu li.active > a:after {
+    display: none
+}
+
+ .nav-list li.active.open > .submenu > li.active > a:after {
+    display: none
+}
+
+    
 }
 
 @media only screen and (max-width: 320px) {

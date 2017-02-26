@@ -13,24 +13,24 @@ block content
           td(width="15%",class="tableleft") 角色名称
           td
             input(type="text",name="RoleName",ng-model="formdata.RoleName",style="width:160px;height:30px",required)
-            &nbsp&nbsp
+            
             span.error(ng-show="roleAddForm.RoleName.$dirty &&roleAddForm.RoleName.$invalid")
               
         tr
           td(width="15%",class="tableleft") 角色代码
           td
             input(type="text",name="RoleCode",ng-model="formdata.RoleCode",style="width:160px;height:30px",required)
-            &nbsp&nbsp
+            
             span.error(ng-show="roleAddForm.RoleCode.$dirty &&roleAddForm.RoleCode.$invalid")
             
         tr
           td(class="tableleft") 是否有效
           td
             input(type="radio",name="isActive",value="1",ng-model="formdata.IsActive",checked,style="width:15px;height:15px") 
-            有效
-            &nbsp&nbsp&nbsp
+            |有效  &nbsp&nbsp&nbsp
+      
             input(type="radio",name="isActive",ng-model="formdata.IsActive",value="0",style="width:15px;height:15px")
-            无效
+            |无效&nbsp
 
         tr
           td(class="tableleft") 权限树
@@ -42,7 +42,7 @@ block content
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-click="submit()") 添加角色
-            &nbsp&nbsp&nbsp&nbsp
+            
             a.btn.btn-success(href="#backend/role") 返回列表
     div.modal.fade(id='functionModel')
         div.modal-dialog

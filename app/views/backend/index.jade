@@ -83,15 +83,11 @@ html(lang='en')
           #sidebar-collapse.sidebar-collapse
             i.icon-double-angle-left(data-icon1='icon-double-angle-left', data-icon2='icon-double-angle-right')
         .main-content
-          .page-content(ng-view='')
+          .page-content.box(ng-view='')
              img(src='imgs/login_pic.png',style="width:800px;height:500px;")
           
            
-  // /.page-content
-// /.main-content
-// /.main-container-inner
-// /.main-container
-// <script src="bower_components/jquery/dist/jquery.js"></script>
+
 script(src='assets/js/jquery-2.0.3.min.js')
 script(src='assets/js/bootstrap.min.js')
 script(src='assets/js/ace.min.js')
@@ -118,7 +114,9 @@ script(src='/js/angularjs/controller/userMenuController.js')
 
 
 script(src='/js/angularjs/controller/sfmsProjectController.js')
-script(src='/js/angularjs/controller/sfmsApiFinanceController.js')
+script(src='/js/angularjs/controller/sfmsApiFinanceAddController.js')
+script(src='/js/angularjs/controller/sfmsApiFinanceEditController.js')
+
 
 script(src='/js/angularjs/controller/jitgoodsAddController.js')
 

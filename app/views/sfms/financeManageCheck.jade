@@ -51,21 +51,21 @@ block content
           td(width="15%",class="tableleft") 是否通过
           td
             input(type="radio",name="FIStatus",value="通过",ng-model="paginationConf.formdata.FIStatu",style="width:15px;height:15px",checked)
-            &nbsp通过
-            &nbsp&nbsp          
+            | 通过&nbsp&nbsp&nbsp
+                      
             input(type="radio",name="FIStatus",value="不通过",ng-model="paginationConf.formdata.FIStatu",style="width:15px;height:15px")
-            &nbsp不通过
+            | 不通过
 
         tr
           td(width="15%",class="tableleft") 审核意见 
           td
             textarea(type="textview",name="Memo",ng-model='paginationConf.formdata.Memo',rows="5",cols="30",ng-maxlength='45',required) 
-            &nbsp&nbsp
+            
             small.error(ng-if="financeCheck.Memo.$error.maxlength && financeCheck.Memo.$touched") 审核意见最多45位
 
         tr
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-disabled="financeCheck.$invalid",ng-click="newedit(paginationConf.formdata,'/sfms/api/finance/check')") 确认审核
-            &nbsp&nbsp&nbsp&nbsp
+            
             a.btn.btn-sm.btn-success(href='#sfms/financeManage',ng-click='search()') 返回列表

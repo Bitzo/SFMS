@@ -6,39 +6,43 @@
  * @Function: 角色功能点的增删改查
  */
 
-var express = require('express');
-var router = express.Router();
-//引入角色服务、角色功能点服务
-var rolefuncservice = appRequire('service/backend/role/rolefuncservice');
-var functionservice = appRequire('service/backend/function/functionservice');
-//引入日志中间件
-var logger = appRequire("util/loghelper").helper;
-var functionConfig = appRequire('config/functionconfig');
-var userFuncService = appRequire('service/backend/user/userfuncservice');
+var express = require('express'),
+    router = express.Router(),
+    rolefuncservice = appRequire('service/backend/role/rolefuncservice'),
+    functionservice = appRequire('service/backend/function/functionservice'),
+    logger = appRequire("util/loghelper").helper,
+    functionConfig = appRequire('config/functionconfig'),
+    userFuncService = appRequire('service/backend/user/userfuncservice');
 
 //角色功能查询
 router.get('/:roleID', function (req, res) {
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.roleFuncManage.roleFuncQuery.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var roleID = req.params.roleID;
+
             data = {
                 'RoleID': roleID,
                 'OperateUserID': req.query.jitkey
             };
+
             if (roleID === undefined) {
                 res.status(404);
+
                 return res.json({
                     code: 404,
                     isSuccess: false,
@@ -49,15 +53,18 @@ router.get('/:roleID', function (req, res) {
             rolefuncservice.queryRoleFunc(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         code: 500,
                         isSuccess: false,
                         msg: '查询失败，服务器出错'
                     });
                 }
+
                 //查询到结果并返回
                 if (results !== undefined && results.length != 0) {
                     res.status(200);
+
                     return res.json({
                         code: 200,
                         isSuccess: true,
@@ -67,6 +74,7 @@ router.get('/:roleID', function (req, res) {
                     })
                 } else {
                     res.status(200);
+
                     return res.json({
                         code: 404,
                         isSuccess: true,
@@ -91,6 +99,7 @@ router.post('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.roleFuncManage.roleFuncAdd.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
@@ -100,11 +109,14 @@ router.post('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
-            var err = 'required: ';
-            var roleID = req.body.RoleID,
+            var err = 'required: ',
+                roleID = req.body.RoleID,
                 funcData = req.body.data;
+
             data = ['RoleID', 'FunctionID'];
+
             for (var value in data) {
                 if (req.body.data.length > 0) {
                     if ((!(data[value] in req.body.data[0])) && (!(data[value] in req.body))) {
@@ -113,8 +125,10 @@ router.post('/', function (req, res) {
                     }
                 }
             }
+
             if (err != 'required: ') {
                 res.status(400);
+
                 return res.json({
                     code: 400,
                     isSuccess: false,
@@ -128,20 +142,25 @@ router.post('/', function (req, res) {
             for (i = 0; i < funcData.length; ++i) {
                 funcID[i] = funcData[i].FunctionID;
             }
+
             data = {
                 'FunctionID': funcID
             };
+
             //验证传入的functionID是否都存在或有效
             functionservice.queryFuncByID(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         code: 500,
                         isSuccess: false,
                         msg: "功能点增加操作失败，服务器出错"
                     });
                 }
+
                 var count = results[0]['count'];
+
                 if (results !== undefined && count == i) {
                     //数据相同可以添加功能点
                     data = {
@@ -149,10 +168,12 @@ router.post('/', function (req, res) {
                         'data': funcData,
                         'OperateUserID': req.query.jitkey
                     };
+
                     //先删除原来的功能点
                     rolefuncservice.delRoleFunc(data, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 code: 500,
                                 isSuccess: false,
@@ -166,12 +187,14 @@ router.post('/', function (req, res) {
                                 logger.writeInfo(results);
                                 if (err) {
                                     res.status(500);
+
                                     return res.json({
                                         code: 500,
                                         isSuccess: false,
                                         msg: "操作失败，服务器出错"
                                     });
                                 }
+
                                 if (results !== undefined && results.insertId > 0) {
                                     data = {
                                         code: 200,
@@ -183,6 +206,7 @@ router.post('/', function (req, res) {
                                     return res.json(data);
                                 } else {
                                     res.status(400);
+
                                     return res.json({
                                         code: 400,
                                         isSuccess: false,
@@ -195,6 +219,7 @@ router.post('/', function (req, res) {
                 } else {
                     //数据非法，重新输入
                     res.status(400);
+
                     return res.json({
                         code: 400,
                         isSuccess: false,
@@ -204,6 +229,7 @@ router.post('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -218,19 +244,23 @@ router.delete('/', function (req, res) {
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.backendApp.roleFuncManage.roleFuncDel.functionCode
-    }
+    };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             if (req.body.RoleID === undefined) {
                 res.status(400);
+
                 return res.json({
                     code: 400,
                     isSuccess: false,
@@ -246,14 +276,17 @@ router.delete('/', function (req, res) {
             rolefuncservice.delRoleFunc(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         code: 500,
                         isSuccess: false,
                         msg: "操作失败，服务器出错"
                     });
                 }
+
                 if (results !== undefined && results.affectedRows != 0) {
                     res.status(200);
+
                     return res.json({
                         code: 200,
                         isSuccess: true,
@@ -261,6 +294,7 @@ router.delete('/', function (req, res) {
                     });
                 } else {
                     res.status(400);
+
                     return res.json({
                         code: 404,
                         isSuccess: false,
@@ -270,6 +304,7 @@ router.delete('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,

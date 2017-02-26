@@ -31,20 +31,23 @@ exports.queryMenuTreeByUserID = function(data, callback){
     logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
     logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
     logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
+
     menuDAl.queryMenuByUserID(data,function (err,results) {
         if(err){
+
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.userID || 0;  //0代表系统管理员操作
             logModel.Memo = "通过jitkey查询菜单失败";
+
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
                     logger.writeError("通过jitkey查询菜单失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
 
-            callback(true,'通过jitkey查询菜单失败');
-            return ;
+            return callback(true,'通过jitkey查询菜单失败');
         }
+
         //形成菜单树形结构
         var tree = [];
         var k;
@@ -68,17 +71,17 @@ exports.queryMenuTreeByUserID = function(data, callback){
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data.userID || 0; //0代表系统管理员操作
         logModel.Memo = "通过jitkey查询菜单成功";
+
         logService.insertOperationLog(logModel, function (err, logResult) {
             if (err) {
                 logger.writeError("通过jitkey查询菜单成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
-        logger.writeInfo('通过jitkey查询菜单成功');
 
-        console.log('queryAllMenusFormTree func in service');
-        logger.writeInfo('queryAllMenusFormTree func in service');
+        logger.writeInfo('通过jitkey查询菜单成功！');
+
         //返回菜单树形JSON
-        callback(false,tree);
+        return callback(false,tree);
     });
 };
 
@@ -215,7 +218,7 @@ exports.queryAllMenus = function(data, callback){
         pageManage : {
             page: data.page || 1,
             pageNum: data.pageNum || 20,
-            isPaging : (data.isPaging != undefined) ? (data.isPaging) : 1
+            isPaging : (data.isPaging != undefined) ? (data.isPaging) : 0
         },
         MenuManage : {
             ApplicationID: data.ApplicationID || '',
@@ -246,7 +249,6 @@ exports.queryAllMenus = function(data, callback){
             }
         }
 
-        console.log('queryAllMenus func in service');
         logger.writeInfo('queryAllMenus func in service');
         callback(false,results);
     });
@@ -262,6 +264,7 @@ exports.queryAllParentMenus = function(data, callback){
     logModel.OperationName = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
     logModel.Action = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.actionName;
     logModel.Identifier = operationConfig.backendApp.memuManage.menuTreeQueryByjitkey.identifier;
+
     menuDAl.queryAllParentMenus(data,function (err,results) {
         if(err){
             callback(true);

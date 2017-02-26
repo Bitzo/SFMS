@@ -6,20 +6,18 @@
  * @Function: KPI 路由
  */
 
-var express = require('express');
-var router = express.Router();
-var KPIservice = appRequire('service/sfms/KPI/KPIservice');
-var projectservice = appRequire('service/sfms/project/projectservice');
-var dataservice = appRequire('service/backend/datadictionary/datadictionaryservice');
-var projectuserservice = appRequire('service/sfms/project/projectuserservice');
-var userservice = appRequire('service/backend/user/userservice');
-var config = appRequire('config/config');
-var moment = require('moment');
-
-//引入日志中间件
-var logger = appRequire("util/loghelper").helper;
-var functionConfig = appRequire('config/functionconfig');
-var userFuncService = appRequire('service/backend/user/userfuncservice');
+var express = require('express'),
+    router = express.Router(),
+    KPIservice = appRequire('service/sfms/KPI/KPIservice'),
+    projectservice = appRequire('service/sfms/project/projectservice'),
+    dataservice = appRequire('service/backend/datadictionary/datadictionaryservice'),
+    projectuserservice = appRequire('service/sfms/project/projectuserservice'),
+    userservice = appRequire('service/backend/user/userservice'),
+    config = appRequire('config/config'),
+    moment = require('moment'),
+    logger = appRequire("util/loghelper").helper,
+    functionConfig = appRequire('config/functionconfig'),
+    userFuncService = appRequire('service/backend/user/userfuncservice');
 
 /**
  * KPI信息新增：
@@ -35,15 +33,18 @@ router.post('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPIAdd.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query = req.body.formdata,
                 ProjectID = query.ProjectID,
@@ -54,10 +55,13 @@ router.post('/', function (req, res) {
                 KPIName = query.KPIName,
                 Remark = query.Remark || '',
                 isTrue = false; //用于逻辑上的判断
+
             //检查所需要的参数是否齐全
             var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID'],
-                temp1 = ['绩效名称', '绩效类型', '绩效分', '所属项目'],
-                err = '缺少值: ';
+                temp1 = ['绩效名称', '绩效类型', '绩效分', '所属项目'];
+
+            err = '缺少值: ';
+
             for(var value in temp)
             {
                 if(!(temp[value] in query))
@@ -66,57 +70,69 @@ router.post('/', function (req, res) {
                     err += temp1[value] + ' ';
                 }
             }
+
             if(err!='缺少值: ')
             {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: err
                 });
             };
+
             projectservice.queryProject({ID:ProjectID, IsActive: 1, OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 if (results!==undefined&&results.length>0) {
+
                     var ProjectManageID = results[0].ProjectManageID;
                     //验证绩效分用户userID是否属于项目projectID
                     projectuserservice.queryProjectByUserID({'UserID': UserID}, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
                                 msg: '操作失败，服务器出错'
                             });
                         }
+
                         if (results !== undefined) {
                             if (ProjectManageID == UserID) isTrue = true;
+
                             for (var i in results) {
                                 if (results[i].ProjectID == ProjectID) isTrue = true;
                             }
+
                             if (isTrue == true) {
                                 //查询KPIName, KPIType是否在字典表里
                                 var DicID = {
                                     'DictionaryID': [KPIType]
                                 };
+
                                 dataservice.queryDatadictionaryByID(DicID, function (err, results) {
                                     if (err) {
                                         res.status(500);
+
                                         return res.json({
                                             status: 500,
                                             isSuccess: false,
                                             msg: '操作失败，服务器出错'
                                         });
                                     }
+
                                     if (results !== undefined && results.length == DicID.DictionaryID.length) {
-                                        //KPIType = results[0].DictionaryValue;
                                         //查询当前申请的projectID内是否已经有KPIType类型的绩效
                                         query = {
                                             'ProjectID': ProjectID,
@@ -125,26 +141,31 @@ router.post('/', function (req, res) {
                                             'OperateUserID': req.query.jitkey,
                                             'IsActive': 1
                                         };
+
                                         KPIservice.queryKPI(query, function (err, results) {
                                             if (err) {
                                                 res.status(500);
+
                                                 return res.json({
                                                     status: 500,
                                                     isSuccess: false,
                                                     msg: '操作失败，服务器出错'
                                                 });
                                             }
+
                                             if (results !== undefined && results.length == 0) {
                                                 //获取userID的用户名UserName
                                                 userservice.querySingleID(UserID, function (err, results) {
                                                     if (err) {
                                                         res.status(500);
+
                                                         return res.json({
                                                             status: 500,
                                                             isSuccess: false,
                                                             msg: '操作失败，服务器出错'
                                                         });
                                                     }
+
                                                     if (results !== undefined && results.length > 0) {
                                                         var UserName = results[0].UserName;
                                                         //数据获取并验证完毕后再存入KPI数据
@@ -161,41 +182,51 @@ router.post('/', function (req, res) {
                                                             'Remark': Remark,
                                                             'IsActive': 1
                                                         };
+
                                                         if (data.KPIName.length>45) {
                                                             res.status(400);
+
                                                             return res.json({
                                                                 code: 400,
                                                                 isSuccess: false,
                                                                 msg: '绩效名称过长,请勿超过45个字符'
                                                             });
                                                         }
+
                                                         if (isNaN(data.KPIScore)||data.KPIScore<0) {
                                                             res.status(400);
+
                                                             return res.json({
                                                                 code: 400,
                                                                 isSuccess: false,
                                                                 msg: '绩效分不是正确的数值'
                                                             });
                                                         }
+
                                                         if (data.Remark.length>45) {
                                                             res.status(400);
+
                                                             return res.json({
                                                                 code: 400,
                                                                 isSuccess: false,
                                                                 msg: '备注过长,请勿超过45个字符'
                                                             });
                                                         }
+
                                                         KPIservice.addKPI(data, function (err, results) {
                                                             if (err) {
                                                                 res.status(500);
+
                                                                 return res.json({
                                                                     status: 500,
                                                                     isSuccess: false,
                                                                     msg: '操作失败，服务器出错'
                                                                 });
                                                             }
+
                                                             if(results !== undefined && results.insertId > 0) {
                                                                 res.status(200);
+
                                                                 return res.json({
                                                                     status: 200,
                                                                     isSuccess: true,
@@ -203,6 +234,7 @@ router.post('/', function (req, res) {
                                                                 });
                                                             } else {
                                                                 res.status(400);
+
                                                                 return res.json({
                                                                     status: 404,
                                                                     isSuccess: false,
@@ -212,6 +244,7 @@ router.post('/', function (req, res) {
                                                         });
                                                     } else {
                                                         res.status(400);
+
                                                         return res.json({
                                                             status: 404,
                                                             isSuccess: false,
@@ -221,6 +254,7 @@ router.post('/', function (req, res) {
                                                 });
                                             } else {
                                                 res.status(400);
+
                                                 return res.json({
                                                     status: 400,
                                                     isSuccess: false,
@@ -230,6 +264,7 @@ router.post('/', function (req, res) {
                                         });
                                     } else {
                                         res.status(400);
+
                                         return res.json({
                                             status: 404,
                                             isSuccess: false,
@@ -239,6 +274,7 @@ router.post('/', function (req, res) {
                                 });
                             } else {
                                 res.status(400);
+
                                 return res.json({
                                     status: 404,
                                     isSuccess: false,
@@ -247,6 +283,7 @@ router.post('/', function (req, res) {
                             }
                         } else {
                             res.status(400);
+
                             return res.json({
                                 status: 404,
                                 isSuccess: false,
@@ -256,6 +293,7 @@ router.post('/', function (req, res) {
                     });
                 } else {
                     res.status(400);
+
                     return res.json({
                         status: 400,
                         isSuccess: false,
@@ -265,6 +303,7 @@ router.post('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -280,9 +319,11 @@ router.put('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPIEdit.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
@@ -316,22 +357,27 @@ router.put('/', function (req, res) {
                 'Remark': Remark,
                 'IsActive': 1
             };
+
             if (data.KPIName.length>45) {
                 res.status(400);
+
                 return res.json({
                     code: 400,
                     isSuccess: false,
                     msg: '绩效名称过长,请勿超过45个字符'
                 });
             }
+
             if (isNaN(data.KPIScore)||data.KPIScore<0) {
                 res.status(400);
+
                 return res.json({
                     code: 400,
                     isSuccess: false,
                     msg: '绩效分不是正确的数值'
                 });
             }
+
             if (data.Remark.length>45) {
                 res.status(400);
                 return res.json({
@@ -340,10 +386,13 @@ router.put('/', function (req, res) {
                     msg: '备注过长,请勿超过45个字符'
                 });
             }
+
             //检查所需要的参数是否齐全
             var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID'],
-                temp1 = ['绩效ID', '绩效名称', '绩效类型', '绩效分', '所属项目', '用户名'],
-                err = '缺少值: ';
+                temp1 = ['绩效ID', '绩效名称', '绩效类型', '绩效分', '所属项目', '用户名'];
+
+            err = '缺少值: ';
+
             for(var value in temp)
             {
                 if(!(temp[value] in query))
@@ -352,80 +401,99 @@ router.put('/', function (req, res) {
                     err += temp1[value] + ' ';
                 }
             }
+
             if(err!='缺少值: ')
             {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: err
                 });
-            };
+            }
 
             KPIservice.queryKPI({'ID':ID, 'OperateUserID': req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 if(results !== undefined && results.length>0 && results[0].IsActive === 1) {
+
                     if (results[0].KPIStatus == '待审核') {
                         projectservice.queryProject({ID:ProjectID, IsActive: 1, OperateUserID: req.query.jitkey}, function (err, results) {
                             if (err) {
                                 res.status(500);
+
                                 return res.json({
                                     status: 500,
                                     isSuccess: false,
                                     msg: '操作失败，服务器出错'
                                 });
                             }
+
                             if (results!==undefined&&results.length>0) {
                                 var ProjectManageID = results[0].ProjectManageID;
+
                                 //验证绩效分用户userID是否属于项目projectID
                                 projectuserservice.queryProjectByUserID({'UserID': UserID}, function (err, results) {
                                     if (err) {
                                         res.status(500);
+
                                         return res.json({
                                             status: 500,
                                             isSuccess: false,
                                             msg: '操作失败，服务器出错'
                                         });
                                     }
+
                                     if (results !== undefined && results.length>0) {
+
                                         if (ProjectManageID == UserID) isTrue = true;
+
                                         for (var i in results) {
                                             if (results[i].ProjectID == ProjectID) isTrue = true;
                                         }
+
                                         if (isTrue == true) {
                                             //查询KPIType是否在字典表里
                                             var DicID = {
                                                 'DictionaryID': [KPIType]
                                             };
+
                                             dataservice.queryDatadictionaryByID(DicID, function (err, results) {
                                                 if (err) {
                                                     res.status(500);
+
                                                     return res.json({
                                                         status: 500,
                                                         isSuccess: false,
                                                         msg: '操作失败，服务器出错'
                                                     });
                                                 }
+
                                                 if (results !== undefined && results.length == DicID.DictionaryID.length) {
                                                     // KPIType = results[0].DictionaryValue;
                                                     KPIservice.updateKPI(data, function (err, results) {
                                                         if (err) {
                                                             res.status(500);
+
                                                             return res.json({
                                                                 status: 500,
                                                                 isSuccess: false,
                                                                 msg: '操作失败，服务器出错'
                                                             });
                                                         }
+
                                                         if(results !== undefined && results.affectedRows > 0) {
                                                             res.status(200);
+
                                                             return res.json({
                                                                 status: 200,
                                                                 isSuccess: true,
@@ -433,6 +501,7 @@ router.put('/', function (req, res) {
                                                             });
                                                         } else {
                                                             res.status(400);
+
                                                             return res.json({
                                                                 status: 404,
                                                                 isSuccess: false,
@@ -442,6 +511,7 @@ router.put('/', function (req, res) {
                                                     });
                                                 } else {
                                                     res.status(400);
+
                                                     return res.json({
                                                         status: 400,
                                                         isSuccess: false,
@@ -451,6 +521,7 @@ router.put('/', function (req, res) {
                                             });
                                         } else {
                                             res.status(400);
+
                                             return res.json({
                                                 status: 400,
                                                 isSuccess: false,
@@ -459,6 +530,7 @@ router.put('/', function (req, res) {
                                         }
                                     } else {
                                         res.status(400);
+
                                         return res.json({
                                             status: 400,
                                             isSuccess: false,
@@ -468,6 +540,7 @@ router.put('/', function (req, res) {
                                 });
                             } else {
                                 res.status(400);
+
                                 return res.json({
                                     status: 400,
                                     isSuccess: false,
@@ -477,6 +550,7 @@ router.put('/', function (req, res) {
                         });
                     } else {
                         res.status(400);
+
                         return res.json({
                             status: 404,
                             isSuccess: false,
@@ -485,6 +559,7 @@ router.put('/', function (req, res) {
                     }
                 } else {
                     res.status(400);
+
                     return res.json({
                         status: 404,
                         isSuccess: false,
@@ -494,6 +569,7 @@ router.put('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -509,9 +585,11 @@ router.get('/count', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPICount.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
@@ -524,9 +602,11 @@ router.get('/count', function (req, res) {
                 endTime = query.endTime || '',
                 page = req.query.pageindex || 1,
                 pagesize = req.query.pagesize || config.pageCount;
+
             page = page > 0 ? page : 1;
 
             if (startTime != '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
+
             if (endTime != '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
 
             var data = {
@@ -538,17 +618,21 @@ router.get('/count', function (req, res) {
             userservice.countUser({isActive: 1}, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 if (results!==undefined&&results.length>0) {
                     var totalNum = results[0].num;
+
                     userservice.queryAllUsers({page: page, pageNum: pagesize, IsPage: 0, isActive: 1}, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
@@ -557,6 +641,7 @@ router.get('/count', function (req, res) {
                         }
                         if (results !== undefined && results.length > 0) {
                             var ID = [], userInfo = [];
+
                             for (var i in results) {
                                 ID[i] = results[i].AccountID;
                                 userInfo[i] = {
@@ -567,7 +652,9 @@ router.get('/count', function (req, res) {
                                     'kpiScore': 0
                                 }
                             }
+
                             data.userID = ID;
+
                             KPIservice.countKPI(data, function (err, results) {
                                 if (err) {
                                     res.status(500);
@@ -577,6 +664,7 @@ router.get('/count', function (req, res) {
                                         msg: '操作失败，服务器出错'
                                     });
                                 }
+
                                 if (results!==undefined&&results.length>0) {
                                     for (var i in results) {
                                         for (var j in userInfo) {
@@ -586,6 +674,7 @@ router.get('/count', function (req, res) {
                                             }
                                         }
                                     }
+
                                     var temp = {
                                         status: 200,
                                         isSuccess: true,
@@ -595,10 +684,13 @@ router.get('/count', function (req, res) {
                                         curPageNum: pagesize,
                                         data: userInfo
                                     };
+
                                     if(temp.curPage == temp.totalPage) {
                                         temp.curPageNum = temp.dataNum - (temp.totalPage-1)*pagesize;
                                     }
+
                                     res.status(200);
+
                                     return res.json(temp);
                                 } else {
                                     var temp = {
@@ -609,16 +701,19 @@ router.get('/count', function (req, res) {
                                         totalPage: Math.ceil(totalNum/pagesize),
                                         curPageNum: pagesize,
                                         data: userInfo
-                                    }
+                                    };
+
                                     if(temp.curPage == temp.totalPage) {
                                         temp.curPageNum = temp.dataNum - (temp.totalPage-1)*pagesize;
                                     }
+
                                     res.status(200);
                                     return res.json(temp)
                                 }
                             });
                         } else {
                             res.status(200);
+
                             return res.json({
                                 status: 200,
                                 isSuccess: true,
@@ -628,6 +723,7 @@ router.get('/count', function (req, res) {
                     });
                 } else {
                     res.status(200);
+
                     return res.json({
                         status: 200,
                         isSuccess: true,
@@ -637,6 +733,7 @@ router.get('/count', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -652,15 +749,18 @@ router.get('/person', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPIQuery.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var UserID = req.query.jitkey,
                 query =  JSON.parse(req.query.f),
@@ -669,6 +769,7 @@ router.get('/person', function (req, res) {
                 StartTime = query.StartTime || '',
                 EndTime = query.EndTime || '',
                 KPIStatus = query.KPIStatus || '',
+                KPIType = query.KPIType || '',
                 IsActive = query.IsActive || '',
                 page = req.query.pageindex > 0 ? req.query.pageindex : 1,
                 pageNum = req.query.pagesize || config.pageCount,
@@ -680,39 +781,47 @@ router.get('/person', function (req, res) {
                 'UserID': UserID,
                 'OperateUserID': req.query.jitkey,
                 'KPIStatus': KPIStatus.trim(),
+                'KPIType': KPIType,
                 'StartTime': StartTime,
                 'EndTime': EndTime,
                 'IsActive': IsActive,
                 'page': page,
                 'pageNum': pageNum,
             };
+
             KPIservice.countQuery(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 totalNum = results[0].num;
+
                 if(totalNum > 0) {
                     //查询所需的详细数据
                     KPIservice.queryKPI(data, function (err, results) {
                         if (err) {
                             res.status(500);
+
                             return res.json({
                                 status: 500,
                                 isSuccess: false,
                                 msg: '操作失败，服务器出错'
                             });
                         }
+
                         if (results !== undefined && results.length > 0) {
                             for (var i in results) {
                                 results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD');
                                 if(results[i].CheckTime !== null)
                                     results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
                             }
+
                             var result = {
                                 status: 200,
                                 isSuccess: true,
@@ -722,45 +831,54 @@ router.get('/person', function (req, res) {
                                 curPageNum: pageNum,
                                 data: results
                             };
+
                             if(result.curPage == result.totalPage) {
                                 result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                             }
+
                             //替换用户名
                             var ID = [],DicID = [];
+
                             for (var i=0;i<results.length;++i) {
                                 if (results[i].CheckUser == null) continue;
+
                                 if (i==0) {
                                     ID[i] = results[i].CheckUser;
-                                }
-                                else {
+                                } else {
                                     var j = 0;
+
                                     for (j=0;j<ID.length;++j) {
                                         if (ID[j] == results[i].CheckUser) break;
                                     }
                                     if (j == ID.length) ID[j] = results[i].CheckUser;
                                 }
                             }
+
                             for (var i=0;i<results.length;++i) {
                                 if (i==0) {
                                     DicID[i] = results[i].KPIType;
-                                }
-                                else {
+                                } else {
                                     var k=0;
+
                                     for (k=0;k<DicID.length;++k) {
                                         if (DicID[k] == results[i].KPIType) break;
                                     }
+
                                     if (k == DicID.length) DicID[k] = results[i].KPIType;
                                 }
                             }
+
                             userservice.queryAccountByID(ID, function (err, data) {
                                 if (err) {
                                     res.status(500);
+
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
                                         msg: '操作失败，服务器出错'
                                     });
                                 }
+
                                 for (var i in results) {
                                     for (var j in data) {
                                         if (results[i].CheckUser == data[j].AccountID) {
@@ -769,16 +887,19 @@ router.get('/person', function (req, res) {
                                         }
                                     }
                                 }
+
                                 //查询字典表 更新所有字典表数据
                                 dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
                                     if (err) {
                                         res.status(500);
+
                                         return res.json({
                                             status: 500,
                                             isSuccess: false,
                                             msg: '操作失败，服务器出错'
                                         });
                                     }
+
                                     if (data!==undefined && data.length>0) {
                                         for (var i in results) {
                                             var j=0;
@@ -786,10 +907,13 @@ router.get('/person', function (req, res) {
                                                 if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
                                             }
                                         }
+
                                         res.status(200);
+
                                         return res.json(result);
                                     } else {
                                         res.status(200);
+
                                         return res.json({
                                             status: 200,
                                             isSuccess: false,
@@ -800,6 +924,7 @@ router.get('/person', function (req, res) {
                             });
                         } else {
                             res.status(200);
+
                             return res.json({
                                 status: 200,
                                 isSuccess: false,
@@ -809,6 +934,7 @@ router.get('/person', function (req, res) {
                     });
                 } else {
                     res.status(200);
+
                     return res.json({
                         status: 200,
                         isSuccess: false,
@@ -818,6 +944,7 @@ router.get('/person', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -833,15 +960,18 @@ router.get('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPIQuery.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query =  JSON.parse(req.query.f),
                 ID = query.ID || '',
@@ -875,6 +1005,7 @@ router.get('/', function (req, res) {
             KPIservice.countQuery(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
@@ -882,6 +1013,7 @@ router.get('/', function (req, res) {
                     });
                 }
                 totalNum = results[0].num;
+
                 if(totalNum > 0) {
                     //查询所需的详细数据
                     KPIservice.queryKPI(data, function (err, results) {
@@ -893,12 +1025,14 @@ router.get('/', function (req, res) {
                                 msg: '操作失败，服务器出错'
                             });
                         }
+
                         if (results !== undefined && results.length > 0) {
                             for (var i in results) {
                                 results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
                                 if(results[i].CheckTime !== null)
                                     results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
                             }
+
                             var result = {
                                 status: 200,
                                 isSuccess: true,
@@ -908,15 +1042,20 @@ router.get('/', function (req, res) {
                                 curPageNum: pageNum,
                                 data: results
                             };
+
                             if(result.curPage == result.totalPage) {
                                 result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
                             }
+
                             //替换用户名
                             var ID = [],DicID = [];
+
                             for (var i=0;i<results.length;++i) {
                                 if (results[i].CheckUser == null) continue;
-                                if (i==0) ID[i] = results[i].CheckUser;
-                                else {
+
+                                if (i==0) {
+                                    ID[i] = results[i].CheckUser;
+                                } else {
                                     var j = 0;
                                     for (j=0;j<ID.length;++j) {
                                         if (ID[j] == results[i].CheckUser) break;
@@ -924,27 +1063,31 @@ router.get('/', function (req, res) {
                                     if (j == ID.length) ID[j] = results[i].CheckUser;
                                 }
                             }
+
                             for (var i=0;i<results.length;++i) {
                                 if (i==0) {
                                     DicID[i] = results[i].KPIType;
-                                }
-                                else {
+                                } else {
                                     var k=0;
+
                                     for (k=0;k<DicID.length;++k) {
                                         if (DicID[k] == results[i].KPIType) break;
                                     }
                                     if (k == DicID.length) DicID[k] = results[i].KPIType;
                                 }
                             }
+
                             userservice.queryAccountByID(ID, function (err, data) {
                                 if (err) {
                                     res.status(500);
+
                                     return res.json({
                                         status: 500,
                                         isSuccess: false,
                                         msg: '操作失败，服务器出错'
                                     });
                                 }
+
                                 for (var i in results) {
                                     for (var j in data) {
                                         if (results[i].CheckUser == data[j].AccountID) {
@@ -953,27 +1096,34 @@ router.get('/', function (req, res) {
                                         }
                                     }
                                 }
+
                                 //查询字典表 更新所有字典表数据
                                 dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
                                     if (err) {
                                         res.status(500);
+
                                         return res.json({
                                             status: 500,
                                             isSuccess: false,
                                             msg: '操作失败，服务器出错'
                                         });
                                     }
+
                                     if (data!==undefined && data.length>0) {
                                         for (var i in results) {
                                             var j=0;
+
                                             for (j=0;j<data.length;++j) {
                                                 if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
                                             }
                                         }
+
                                         res.status(200);
+
                                         return res.json(result);
                                     } else {
                                         res.status(200);
+
                                         return res.json({
                                             status: 200,
                                             isSuccess: false,
@@ -984,6 +1134,7 @@ router.get('/', function (req, res) {
                             });
                         } else {
                             res.status(200);
+
                             return res.json({
                                 status: 200,
                                 isSuccess: false,
@@ -993,6 +1144,7 @@ router.get('/', function (req, res) {
                     });
                 } else {
                     res.status(200);
+
                     return res.json({
                         status: 200,
                         isSuccess: false,
@@ -1002,6 +1154,7 @@ router.get('/', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -1017,36 +1170,46 @@ router.put('/check', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPICheck.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
-        if (results !== undefined && results.isSuccess === true) {
+
+        if (results !== undefined && results.isSuccess) {
             var temp = ['ID', 'KPIStatus'],
-                temp1 = ['绩效ID', '审核意见'],
-                err = '缺少值: ';
+                temp1 = ['绩效ID', '审核意见'];
+
+            err = '缺少值: ';
+
             data = req.body.formdata;
+
             for (var key in temp) {
                 if (!(temp[key] in data)) {
                     logger.writeInfo("缺少值: " + temp[key]);
                     err += temp1[key];
                 }
             }
+
             if (err != '缺少值: ') {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: err
                 });
             }
+
             if (data.KPIStatus != '不通过' && data.KPIStatus != '通过' ) {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
@@ -1056,18 +1219,21 @@ router.put('/check', function (req, res) {
 
             if(data.KPIStatus == '不通过' && (data.Memo === undefined || data.Memo.trim()==='')) {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
                     msg: '操作失败，不通过的审核需填写备注信息'
                 });
             }
+
             if(data.KPIStatus == '不通过') {
                 data.Remark = data.Memo;
             }
 
             if (data.Remark.length>45) {
                 res.status(400);
+
                 return res.json({
                     code: 400,
                     isSuccess: false,
@@ -1076,31 +1242,37 @@ router.put('/check', function (req, res) {
             }
 
             data.CheckUser = req.query.jitkey;
+
             var ID = data.ID;
 
             //查看该绩效信息是否已经被审核
             KPIservice.queryKPI({'ID':ID, 'OperateUserID': req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         status: 500,
                         isSuccess: false,
                         msg: '操作失败，服务器出错'
                     });
                 }
+
                 if (results !== undefined && results.length>0 && results[0].IsActive === 1) {
                     if (results[0].KPIStatus == '待审核') {
                         KPIservice.checkKPI(data, function (err, results) {
                             if (err) {
                                 res.status(500);
+
                                 return res.json({
                                     status: 500,
                                     isSuccess: false,
                                     msg: '操作失败，服务器出错'
                                 });
                             }
+
                             if (results !== undefined && results.affectedRows > 0) {
                                 res.status(200);
+
                                 return res.json({
                                     status: 200,
                                     isSuccess: true,
@@ -1108,6 +1280,7 @@ router.put('/check', function (req, res) {
                                 });
                             } else {
                                 res.status(400);
+
                                 return res.json({
                                     status: 404,
                                     isSuccess: false,
@@ -1117,6 +1290,7 @@ router.put('/check', function (req, res) {
                         });
                     } else {
                         res.status(400);
+
                         return res.json({
                             status: 400,
                             isSuccess: false,
@@ -1125,6 +1299,7 @@ router.put('/check', function (req, res) {
                     }
                 } else {
                     res.status(400);
+
                     return res.json({
                         status: 400,
                         isSuccess: false,
@@ -1134,6 +1309,7 @@ router.put('/check', function (req, res) {
             });
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,
@@ -1149,19 +1325,24 @@ router.delete('/', function (req, res) {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPIDelete.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
+
             return res.json({
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var ID = JSON.parse(req.query.d).ID;
+
             if (ID == '' || ID === undefined) {
                 res.status(400);
+
                 return res.json({
                     status: 400,
                     isSuccess: false,
@@ -1177,14 +1358,17 @@ router.delete('/', function (req, res) {
             KPIservice.delKPI(data, function (err, results) {
                 if (err) {
                     res.status(500);
+
                     return res.json({
                         code: 500,
                         isSuccess: false,
                         msg: "操作失败，服务器出错"
                     });
                 }
+
                 if(results !== undefined && results.affectedRows > 0) {
                     res.status(200);
+
                     return res.json({
                         status: 200,
                         isSuccess: true,
@@ -1192,6 +1376,7 @@ router.delete('/', function (req, res) {
                     });
                 } else {
                     res.status(400);
+
                     return res.json({
                         status: 400,
                         isSuccess: true,
@@ -1201,6 +1386,7 @@ router.delete('/', function (req, res) {
             })
         } else {
             res.status(400);
+
             return res.json({
                 code: 400,
                 isSuccess: false,

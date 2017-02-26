@@ -9,13 +9,14 @@ var productDAL = appRequire('dal/jinkebro/product/productdal'),
     logService = appRequire('service/backend/log/logservice'),
     logModel = appRequire('model/jinkebro/log/logmodel'),
     config = appRequire('config/config'),
-    operationConfig = appRequire('config/operationconfig');
-var http = require('http');
-var logger = appRequire('util/loghelper').helper;
-var logService = appRequire('service/backend/log/logservice');
-var logModel = appRequire('model/jinkebro/log/logmodel');
-//日期组件
-var moment = require('moment');
+    operationConfig = appRequire('config/operationconfig'),
+    http = require('http'),
+    logger = appRequire('util/loghelper').helper,
+    logService = appRequire('service/backend/log/logservice'),
+    logModel = appRequire('model/jinkebro/log/logmodel'),
+    moment = require('moment'),
+    validator = require('validator'),
+    dataCheck = appRequire('util/dataverify');
 
 logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
 logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
@@ -25,7 +26,7 @@ delete logModel.ID;
 
 var Product = function () {
 
-}
+};
 
 //新增商品
 Product.prototype.insertProduct = function (data, callback) {
@@ -35,32 +36,146 @@ Product.prototype.insertProduct = function (data, callback) {
     logModel.Identifier = operationConfig.jinkeBroApp.product.productAdd.identifier;
 
     var formdata = {
-        "SKU": data.SKU,
+        "SKU" : data.SKU,
         "ProductName": data.ProductName,
-        "ProductDesc": data.ProductDesc || '',
-        "ProductImgPath": data.ProductImgPath || '',
+        "ProductDesc": data.ProductDesc,
+        "ProductImgPath": data.ProductImgPath,
         "ExpireTime": data.ExpireTime,
         "ProducTime": data.ProducTime,
         "SupplierID": data.SupplierID,
-        "ProductTypeID": data.ProductTypeID,
         "ProductPrice": data.ProductPrice,
         "OnSale": data.OnSale,
         "TotalNum" : data.TotalNum,
         "StockAreaID" : data. StockAreaID,
         "CreateUserID" : data.CreateUserID,
         "CreateTime" : data.CreateTime,
-        "newProductTypeName" : data.newProductTypeName || ''
+        "newProductTypeName" : data.newProductTypeName
     };
+
+    var returnResult = {
+        "msg": "参数不能为空!"
+    };
+
+    var indispensableKeyArr = [
+        formdata.ProductName,
+        formdata.ProductDesc,
+        formdata.ProductImgPath,
+        formdata.ExpireTime,
+        formdata.ProducTime,
+        formdata.SupplierID,
+        formdata.ProductPrice,
+        formdata.OnSale,
+        formdata.TotalNum,
+        formdata.StockAreaID,
+        formdata.newProductTypeName
+    ];
+
+    var indispensableValueArr = [
+        '商品名称',
+        '商品描述',
+        '商品图片路径',
+        '有效期',
+        '生产日期',
+        '供应商',
+        '商品价格',
+        '是否在售',
+        '首次入库总数',
+        '存储位置',
+        '商品类别'
+    ];
+
+    var undefinedCheck = dataCheck.isUndefinedArray(indispensableKeyArr,indispensableValueArr);
+    if (!(undefinedCheck.isRight)) {
+        returnResult.msg = undefinedCheck.msg;
+        return callback(false,returnResult);
+    }
+
+    var shouldBeNumericKeyArr = [
+        formdata.SupplierID,
+        formdata.OnSale,
+        formdata.TotalNum,
+        formdata.StockAreaID
+    ];
+
+    var shouldBeNumericValueArr = [
+        '供应商',
+        '是否在售',
+        '首次入库总数',
+        '存储位置'
+    ];
+
+    var shouldBeNumeric = dataCheck.isNumericArray(shouldBeNumericKeyArr,shouldBeNumericValueArr);
+    if (!(shouldBeNumeric.isRight)) {
+        returnResult.msg = shouldBeNumeric.msg;
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.ProductName),{min:1,max:50}))) {
+        returnResult.msg = '商品名长度应该小于50位！';
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.ProductDesc),{min:1,max:200})) && (formdata.ProductDesc != '')) {
+        returnResult.msg = '商品描述长度应该小于200位！';
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.ProductImgPath),{min:1,max:200})) && (formdata.ProductImgPath != '')) {
+        returnResult.msg = '商品图片路径长度应该小于200位！';
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.TotalNum),{min:1,max:11}))) {
+        returnResult.msg = '首次入库总数应该小于11位！';
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.newProductTypeName),{min:1,max:50}))) {
+        returnResult.msg = '商品类型长度应该小于50位！';
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isDecimal((formdata.ProductPrice).toString()))) {
+        returnResult.msg = '商品价格应该是合法的整数或者小数！';
+        return callback(false,returnResult);
+    }
+
+    if (!(dataCheck.isUndefined(formdata.ExpireTime))) {
+        if (validator.isDate(formdata.ExpireTime)) {
+            formdata.ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");
+        } else {
+            returnResult.msg = '时间格式有误！';
+            return callback(false,returnResult);
+        }
+    } else {
+        returnResult.msg = '商品过期时间必须设置！';
+        return callback(false,returnResult);
+    }
+
+    if (!(dataCheck.isUndefined(formdata.ProducTime))) {
+        if (validator.isDate(formdata.ProducTime)) {
+            formdata.ProducTime = moment(formdata.ProducTime).format("YYYY-MM-DD");
+        } else {
+            returnResult.msg = '时间格式有误！';
+            return callback(false,returnResult);
+        }
+    } else {
+        returnResult.msg = '商品生产日期必须设置！';
+        return callback(false,returnResult);
+    }
+
     productDAL.insertProduct(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
             logModel.Memo = "商品新增失败";
+
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
                     logger.writeError("商品新增失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
+
             return callback(true,'商品新增失败');
         }
 
@@ -68,12 +183,12 @@ Product.prototype.insertProduct = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data.SupplierID || 0; //0代表系统管理员操作
         logModel.Memo = "商品新增成功";
+
         logService.insertOperationLog(logModel, function (err, logResult) {
             if (err) {
                 logger.writeError("商品新增成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
-
 
         logger.writeInfo('商品新增成功');
         return callback(false, result);
@@ -86,16 +201,19 @@ Product.prototype.deleteProduct = function (data, callback) {
     logModel.OperationName = operationConfig.jinkeBroApp.product.productDel.actionName;
     logModel.Action = operationConfig.jinkeBroApp.product.productDel.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productDel.identifier;
+
     productDAL.deleteProduct(data, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
             logModel.Memo = "商品删除失败";
+
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
                     logger.writeError("商品删除失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
+
             callback(true,'商品删除失败');
             return;
         }
@@ -110,8 +228,7 @@ Product.prototype.deleteProduct = function (data, callback) {
             }
         });
         logger.writeInfo('商品删除成功');
-        callback(false, result);
-        return;
+        return callback(false, result);
     });
 };
 
@@ -121,6 +238,7 @@ Product.prototype.updateProduct = function (data, callback) {
     logModel.OperationName = operationConfig.jinkeBroApp.product.productUpd.actionName;
     logModel.Action = operationConfig.jinkeBroApp.product.productUpd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productUpd.identifier;
+
     productDAL.updateProduct(data, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
@@ -139,14 +257,15 @@ Product.prototype.updateProduct = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data.SupplierID || 0; //0代表系统管理员操作
         logModel.Memo = "商品编辑成功";
+
         logService.insertOperationLog(logModel, function (err, logResult) {
             if (err) {
                 logger.writeError("商品编辑成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
+
         logger.writeInfo('商品编辑成功');
-        callback(false, result);
-        return;
+        return callback(false, result);
     });
 };
 
@@ -177,12 +296,12 @@ Product.prototype.queryProducts = function (data, callback) {
         lateExpireTime : data.lateExpireTime || ''
     };
 
-
     productDAL.queryProducts(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
             logModel.Memo = "商品查询失败"+result;
+
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
                     logger.writeError("商品查询失败，生成操作日志失败 " + logModel.CreateTime);
@@ -214,6 +333,7 @@ Product.prototype.queryProducts = function (data, callback) {
                 logger.writeError("商品查询成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
+
         callback(false, result);
     });
 };
@@ -241,8 +361,7 @@ Product.prototype.CountProducts = function (data, callback) {
             return;
         }
 
-        callback(false, result);
-        return;
+        return callback(false, result);
     });
 };
 
@@ -277,9 +396,17 @@ Product.prototype.getMaxSKUNext = function (callback) {
             callback(true);
             return;
         }
-        var maxSKU = result[0].SKU;
-        var rearStr = (parseInt(maxSKU.substr(10,5)) + 1).toString();
-        result[0].SKU = maxSKU.substr(0,10) + rearStr;
+
+        if (result != undefined && result.length != 0) {
+            var maxSKU = result[0].SKU;
+            var rearStr = (parseInt(maxSKU.substr(10,5)) + 1).toString();
+            result[0].SKU = maxSKU.substr(0,10) + rearStr;
+        } else {
+            result = [{
+                SKU : 'JK1320025220001'
+            }];
+        }
+
         return callback(false, result);
     });
 };

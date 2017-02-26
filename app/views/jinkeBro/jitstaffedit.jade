@@ -10,29 +10,29 @@ block content
                         td(width="15%",class="tableleft") 员工姓名
                         td
                             input(type="textview",name="StaffName",ng-model='paginationConf.formdata.StaffName',ng-maxlength='50',required)
-                            &nbsp&nbsp
+                            
                             small.error(ng-if="staffedit.SKU.$error.maxlength && staffedit.SKU.$touched") 姓名最多10位
 
                     tr
                         td(width="15%",class="tableleft") 员工性别
                         td
                             input(type="radio",name="Sex",value="1",ng-model="paginationConf.formdata.Sex",style="width:15px;height:15px",checked)
-                            &nbsp 男
-                            &nbsp&nbsp
+                            | 男&nbsp&nbsp&nbsp&nbsp
+                            
                             input(type="radio",name="Sex",value="2",ng-model="paginationConf.formdata.Sex",style="width:15px;height:15px")
-                            &nbsp 女
+                            | 女
 
                     tr
                         td(width="15%",class="tableleft") 员工类型
                         td
                             input(type="radio",name="StaffType",value="1",ng-model="paginationConf.formdata.StaffType",style="width:15px;height:15px",checked)
-                            &nbsp 供应商
-                            &nbsp&nbsp
+                            | 供应商&nbsp&nbsp&nbsp&nbsp
+                            
                             input(type="radio",name="StaffType",value="2",ng-model="paginationConf.formdata.StaffType",style="width:15px;height:15px")
-                            &nbsp 配送员
-                            &nbsp&nbsp
+                            | 配送员&nbsp&nbsp&nbsp&nbsp
+                            
                             input(type="radio",name="StaffType",value="3",ng-model="paginationConf.formdata.StaffType",style="width:15px;height:15px")
-                            &nbsp 管理员
+                            | 管理员
 
                     tr
                         td(width="15%",class="tableleft") 电话号码
@@ -48,5 +48,5 @@ block content
                         td(class="tableleft")
                         td
                             button.btn.btn-sm.btn-primary(type="submit",ng-disabled="staffedit.$invalid",ng-click="newedit(paginationConf.formdata,'/jinkeBro/staff')") 确认修改
-                            &nbsp&nbsp&nbsp&nbsp
+                            
                             a.btn.btn-sm.btn-success(href='#jinkeBro/jitstaffmanage',ng-click='search()') 返回列表
