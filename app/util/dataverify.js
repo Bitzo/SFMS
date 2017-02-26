@@ -52,9 +52,10 @@ DataVerify.prototype.isUndefinedArray = function(keyArr,valueArr) {
             }
         }
     }
+
     return {
         isRight : true
-    }
+    };
 };
 
 DataVerify.prototype.isNumericArray = function(keyArr,valueArr) {
@@ -73,9 +74,10 @@ DataVerify.prototype.isNumericArray = function(keyArr,valueArr) {
             }
         }
     }
+
     return {
         isRight : true
-    }
+    };
 };
 
 

@@ -97,6 +97,10 @@ var operationConfig = {
                 actionName: "通过jitkey查询菜单",
                 identifier: 1206
             },
+            menuCount: {
+                actionName: "查看满足指定条件的菜单个数！",
+                identifier: 1207
+            }
         },
         appManage: {
             module: "应用模块",
