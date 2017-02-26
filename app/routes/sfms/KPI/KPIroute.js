@@ -400,6 +400,7 @@ router.put('/', function (req, res) {
                     msg: '绩效记录无效或不存在'
                 })
             }
+
             if (results[0].KPIStatus != '待审核') {
                 res.status(400);
 
