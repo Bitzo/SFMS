@@ -40,18 +40,22 @@ exports.datadictionaryInsert = function (data,callback) {
             callback(true);
             return;
         }
+
+        logger.writeInfo("连接成功");
+
         connection.query(insert_sql, function(err, result) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
-            callback(false, result);
-            return ;
-        })
-    })
-}
+
+            return callback(false, result);
+        });
+    });
+};
 
 //字典编辑
 exports.datadictionaryUpdate = function (data,callback) {
@@ -91,20 +95,21 @@ exports.datadictionaryUpdate = function (data,callback) {
             return;
         }
 
+        logger.writeInfo("连接成功");
+
         connection.query(update_sql, function(err, results) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return ;
-        })
-
+            return callback(false, results);
+        });
     });
-}
+};
 
 //字典物理删除
 exports.datadictionaryDelete = function (data,callback) {
@@ -120,19 +125,21 @@ exports.datadictionaryDelete = function (data,callback) {
             return ;
         }
 
+        logger.writeInfo("连接成功");
+
         connection.query(sql, function(err, results) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return ;
             }
 
-            callback(false, results);
-            return ;
-        })
-    })
-}
+            return callback(false, results);
+        });
+    });
+};
 
 //字典查询
 exports.queryDatadictionary = function (data,callback) {
@@ -185,7 +192,7 @@ exports.queryDatadictionary = function (data,callback) {
     }
 
     logger.writeInfo("查询字典信息：" + sql);
-    console.log("查询字典信息：" + sql);
+
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -196,16 +203,18 @@ exports.queryDatadictionary = function (data,callback) {
 
         connection.query(sql, function (err, results) {
             connection.release();
+
             if (err) {
                 callback(true);
                 return;
             };
+
             logger.writeInfo("查询成功");
-            callback(false, results);
-            return ;
-        })
-    })
-}
+
+            return callback(false, results);
+        });
+    });
+};
 
 //计数，统计对应数据总个数
 exports.countAllDataDicts = function (data, callback) {
@@ -222,7 +231,8 @@ exports.countAllDataDicts = function (data, callback) {
         }
     }
 
-    logger.writeInfo(sql);
+    logger.writeInfo('查询字典计数：' + sql);
+
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -230,110 +240,23 @@ exports.countAllDataDicts = function (data, callback) {
         }
 
         logger.writeInfo("连接成功");
-        logger.writeInfo(sql);
 
         connection.query(sql, function (err, results) {
             connection.release();
+
             if (err) {
                 callback(true);
                 return;
             };
+
             logger.writeInfo("查询成功");
-            callback(false, results);
-            return ;
-        })
-    })
+
+            return callback(false, results);
+        });
+    });
 };
 
-//计数，统计对应数据总个数
-exports.countAllDataDictsBySubcode = function (data, callback) {
 
-    var code = data.DictionaryCode;
-
-    var sql =  'select count(1) AS num from jit_datadictionary where 1=1 ';
-
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key !== 'page' && key !== 'DictionaryCode' && key !== 'pageNum' && data[key] != '')
-                sql += " and " + key + " = '" + data[key] + "' ";
-        }
-    }
-
-    sql = sql + " and SUBSTRING(DictionaryCode,1,2) = '" +code.substring(0,2) + "' ";
-
-    logger.writeInfo(sql);
-
-    db_backend.mysqlPool.getConnection(function (err, connection) {
-        if (err) {
-            callback(true);
-            return;
-        }
-
-        logger.writeInfo("连接成功");
-        logger.writeInfo(sql);
-
-        connection.query(sql, function (err, results) {
-            connection.release();
-            if (err) {
-                callback(true);
-                return;
-            };
-            logger.writeInfo("查询成功");
-            callback(false, results);
-            return ;
-        })
-    })
-};
-
-exports.queryDatadictionaryBySubcode = function (data,callback) {
-    var arr = new Array();
-    var code = data.DictionaryCode;
-    arr.push(' select ApplicationID,DictionaryID,DictionaryLevel,ParentID,Category,DictionaryCode,DictionaryValue,Memo,IsActive ');
-    arr.push(' from jit_datadictionary ');
-    arr.push(' WHERE 1=1 ');
-
-    var sql = arr.join(' ');
-
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key !== 'page' && key !== 'DictionaryCode' && key !== 'pageNum' && data[key] != '')
-                sql += " and " + key + " = '" + data[key] + "' ";
-        }
-    }
-
-    sql = sql + " and SUBSTRING(DictionaryCode,1,2) = '" +code.substring(0,2) + "' ";
-
-    var num = data.pageNum; //每页显示的个数
-    var page = data.page || 1;
-
-    sql += " LIMIT " + (page-1)*num + "," + num;
-
-    logger.writeInfo("查询字典信息 by subCode：" + sql);
-
-    db_backend.mysqlPool.getConnection(function (err, connection) {
-        if (err) {
-            callback(true);
-            return;
-        }
-
-        logger.writeInfo("连接成功");
-
-        connection.query(sql, function (err, results) {
-            connection.release();
-            if (err) {
-                console.log(err);
-                callback(true);
-                return;
-            };
-
-            logger.writeInfo("查询成功");
-            callback(false, results);
-            return ;
-        })
-    })
-
-
-}
 exports.queryDatadictionaryByID = function (data,callback) {
     var sql = 'select DictionaryID,DictionaryCode,DictionaryValue from jit_datadictionary where 1=0 ';
 
@@ -354,17 +277,19 @@ exports.queryDatadictionaryByID = function (data,callback) {
 
         connection.query(sql, function (err, results) {
             connection.release();
+
             if (err) {
                 console.log(err);
                 callback(true);
                 return;
             };
+
             logger.writeInfo("查询成功");
-            callback(false, results);
-            return ;
-        })
-    })
-}
+
+            return callback(false, results);
+        });
+    });
+};
 
 
 

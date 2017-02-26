@@ -31,10 +31,15 @@ var Product = function () {
 //新增商品
 Product.prototype.insertProduct = function (data, callback) {
     //要写入operationlog表的
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
     logModel.OperationName = operationConfig.jinkeBroApp.product.productAdd.actionName;
     logModel.Action = operationConfig.jinkeBroApp.product.productAdd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productAdd.identifier;
-
+    logModel.CreateUserID = data.OperateUserID || 0;  //0代表系统管理员操作
+    // 接收router数据
     var formdata = {
         "SKU" : data.SKU,
         "ProductName": data.ProductName,
@@ -166,8 +171,8 @@ Product.prototype.insertProduct = function (data, callback) {
 
     productDAL.insertProduct(formdata, function (err, result) {
         if (err) {
+
             logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
             logModel.Memo = "商品新增失败";
 
             logService.insertOperationLog(logModel, function (err, logResult) {
@@ -181,7 +186,6 @@ Product.prototype.insertProduct = function (data, callback) {
 
         //新增成功
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = data.SupplierID || 0; //0代表系统管理员操作
         logModel.Memo = "商品新增成功";
 
         logService.insertOperationLog(logModel, function (err, logResult) {
@@ -191,6 +195,7 @@ Product.prototype.insertProduct = function (data, callback) {
         });
 
         logger.writeInfo('商品新增成功');
+
         return callback(false, result);
     });
 };
@@ -198,14 +203,36 @@ Product.prototype.insertProduct = function (data, callback) {
 //删除商品
 Product.prototype.deleteProduct = function (data, callback) {
     //要写入operationlog表的
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
     logModel.OperationName = operationConfig.jinkeBroApp.product.productDel.actionName;
     logModel.Action = operationConfig.jinkeBroApp.product.productDel.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productDel.identifier;
+    logModel.CreateUserID = data.OperateUserID || 0;  //0代表系统管理员操作
 
-    productDAL.deleteProduct(data, function (err, result) {
+    var formdata = {
+        "ProductID": data.ProductID
+    };
+
+    var returnResult = {
+        "msg": "参数不能为空!"
+    };
+
+    if (dataCheck.isUndefined(formdata.ProductID)) {
+        returnResult.msg = '产品ID必须，请检查！';
+        return callback(false,returnResult);
+    }
+
+    if (!(dataCheck.isNumeric(formdata.ProductID))) {
+        returnResult.msg = '产品ID必须为数字，请检查！';
+        return callback(false,returnResult);
+    }
+
+    productDAL.deleteProduct(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
             logModel.Memo = "商品删除失败";
 
             logService.insertOperationLog(logModel, function (err, logResult) {
@@ -220,14 +247,16 @@ Product.prototype.deleteProduct = function (data, callback) {
 
         //删除成功
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = data.SupplierID || 0; //0代表系统管理员操作
         logModel.Memo = "商品删除成功";
+
         logService.insertOperationLog(logModel, function (err, logResult) {
             if (err) {
                 logger.writeError("商品删除成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
+
         logger.writeInfo('商品删除成功');
+
         return callback(false, result);
     });
 };
@@ -235,27 +264,156 @@ Product.prototype.deleteProduct = function (data, callback) {
 //编辑商品信息
 Product.prototype.updateProduct = function (data, callback) {
     //要写入operationlog表的
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
     logModel.OperationName = operationConfig.jinkeBroApp.product.productUpd.actionName;
     logModel.Action = operationConfig.jinkeBroApp.product.productUpd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productUpd.identifier;
+    logModel.CreateUserID = data.OperateUserID || 0;  //0代表系统管理员操作
 
-    productDAL.updateProduct(data, function (err, result) {
+    // start data check
+    var formdata = {
+        "SKU" : data.SKU,
+        "ProductID" : data.ProductID,
+        "ProductName" : data.ProductName,
+        "ProductDesc" : data.ProductDesc,
+        "ProductImgPath" : data.ProductImgPath,
+        "ExpireTime" : data.ExpireTime,
+        "ProducTime" : data.ProducTime,
+        "SupplierID" : data.SupplierID,
+        "ProductTypeID" : data.ProductTypeID,
+        "ProductPrice" : data.ProductPrice,
+        "OnSale" : data.OnSale
+    };
+
+    var returnResult = {
+        "msg": "参数不能为空!"
+    };
+
+    var indispensableKeyArr = [
+        formdata.SKU,
+        formdata.ProductID,
+        formdata.ProductName,
+        formdata.ProductDesc,
+        formdata.ProductImgPath,
+        formdata.ExpireTime,
+        formdata.ProducTime,
+        formdata.SupplierID,
+        formdata.ProductTypeID,
+        formdata.ProductPrice,
+        formdata.OnSale
+    ];
+
+    var indispensableValueArr = [
+        '仓储量单位',
+        '商品ID',
+        '商品名称',
+        '商品描述',
+        '商品图片路径',
+        '有效期',
+        '生产日期',
+        '供应商',
+        '商品类别',
+        '商品价格',
+        '是否在售'
+    ];
+
+    var undefinedCheck = dataCheck.isUndefinedArray(indispensableKeyArr,indispensableValueArr);
+    if (!(undefinedCheck.isRight)) {
+        returnResult.msg = undefinedCheck.msg;
+        return callback(false,returnResult);
+    }
+
+    var shouldBeNumericKeyArr = [
+        formdata.ProductID,
+        formdata.SupplierID,
+        formdata.ProductTypeID,
+        formdata.OnSale,
+    ];
+
+    var shouldBeNumericValueArr = [
+        '商品ID',
+        '供应商',
+        '商品类别',
+        '是否在售',
+    ];
+
+    var shouldBeNumeric = dataCheck.isNumericArray(shouldBeNumericKeyArr,shouldBeNumericValueArr);
+    if (!(shouldBeNumeric.isRight)) {
+        returnResult.msg = shouldBeNumeric.msg;
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.ProductName),{min:1,max:50}))) {
+        returnResult.msg = '商品名长度应该小于50位！';
+        return callback(false,returnResult);
+    }
+
+    if ((formdata.SKU).toString().length != 15) {
+        returnResult.msg = '仓储量单位长度应该等于15位！';
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.ProductDesc),{min:1,max:200})) && (formdata.ProductDesc != '')) {
+        returnResult.msg = '商品描述长度应该小于200位！';
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.ProductImgPath),{min:1,max:200})) && (formdata.ProductImgPath != '')) {
+        returnResult.msg = '商品图片路径长度应该小于200位！';
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isDecimal((formdata.ProductPrice).toString()))) {
+        returnResult.msg = '商品价格应该是合法的整数或者小数！';
+        return callback(false,returnResult);
+    }
+
+    if (!(dataCheck.isUndefined(formdata.ExpireTime))) {
+        if (validator.isDate(formdata.ExpireTime)) {
+            formdata.ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");
+        } else {
+            returnResult.msg = '时间格式有误！';
+            return callback(false,returnResult);
+        }
+    } else {
+        returnResult.msg = '商品过期时间必须设置！';
+        return callback(false,returnResult);
+    }
+
+    if (!(dataCheck.isUndefined(formdata.ProducTime))) {
+        if (validator.isDate(formdata.ProducTime)) {
+            formdata.ProducTime = moment(formdata.ProducTime).format("YYYY-MM-DD");
+        } else {
+            returnResult.msg = '时间格式有误！';
+            return callback(false,returnResult);
+        }
+    } else {
+        returnResult.msg = '商品生产日期必须设置！';
+        return callback(false,returnResult);
+    }
+
+    // finish data check 单凯 2017.2.26 14:21
+
+    productDAL.updateProduct(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
             logModel.Memo = "商品编辑失败";
+
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
                     logger.writeError("商品编辑失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
+
             callback(true,'商品编辑失败');
             return;
         }
 
         //修改成功
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = data.SupplierID || 0; //0代表系统管理员操作
         logModel.Memo = "商品编辑成功";
 
         logService.insertOperationLog(logModel, function (err, logResult) {
@@ -265,6 +423,7 @@ Product.prototype.updateProduct = function (data, callback) {
         });
 
         logger.writeInfo('商品编辑成功');
+
         return callback(false, result);
     });
 };
@@ -274,9 +433,12 @@ Product.prototype.queryProducts = function (data, callback) {
     //要写入operationlog表的
     logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
     logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
     logModel.OperationName = operationConfig.jinkeBroApp.product.productQuery.actionName;
     logModel.Action = operationConfig.jinkeBroApp.product.productQuery.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.product.productQuery.identifier;
+    logModel.CreateUserID = data.OperateUserID || 0;  //0代表系统管理员操作
 
     var formdata = {
         page: data.page || 1,
@@ -299,8 +461,7 @@ Product.prototype.queryProducts = function (data, callback) {
     productDAL.queryProducts(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = data.SupplierID || 0;  //0代表系统管理员操作
-            logModel.Memo = "商品查询失败"+result;
+            logModel.Memo = "商品查询失败" + result;
 
             logService.insertOperationLog(logModel, function (err, logResult) {
                 if (err) {
@@ -309,6 +470,7 @@ Product.prototype.queryProducts = function (data, callback) {
             });
             
             callback(true,'商品查询失败');
+
             return ;
         }
 
@@ -325,7 +487,6 @@ Product.prototype.queryProducts = function (data, callback) {
 
         //查询成功
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = data.SupplierID || 0; //0代表系统管理员操作
         logModel.Memo = "商品查询成功";
         
         logService.insertOperationLog(logModel, function (err, logResult) {
@@ -333,6 +494,8 @@ Product.prototype.queryProducts = function (data, callback) {
                 logger.writeError("商品查询成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
+
+        logger.writeInfo("商品查询成功，生成操作日志成功！" + logModel.CreateTime);
 
         callback(false, result);
     });
@@ -397,7 +560,7 @@ Product.prototype.getMaxSKUNext = function (callback) {
             return;
         }
 
-        if (result != undefined && result.length != 0) {
+        if (result != undefined && result.length != 0 && result.length != undefined) {
             var maxSKU = result[0].SKU;
             var rearStr = (parseInt(maxSKU.substr(10,5)) + 1).toString();
             result[0].SKU = maxSKU.substr(0,10) + rearStr;

@@ -226,7 +226,6 @@ exports.deleteProduct = function(data, callback) {
     var delete_sql = "update jit_product set jit_product.OnSale = 0 where ProductID = " + data['ProductID'] + ";";
 
     logger.writeInfo("[menuDelete func in productdal]产品删除：" + delete_sql);
-    console.log("in dal,产品删除：" + delete_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -237,14 +236,14 @@ exports.deleteProduct = function(data, callback) {
 
         connection.query(delete_sql, function(err, results) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return;
+            return callback(false, results);
         });
     });
 };
@@ -272,7 +271,6 @@ exports.updateProduct = function(data, callback) {
     update_sql = update_sql + sql;
 
     logger.writeInfo("[updateProduct func in productdal]产品编辑:" + update_sql);
-    console.log("in dal,产品编辑：" + update_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -283,6 +281,7 @@ exports.updateProduct = function(data, callback) {
 
         connection.query(update_sql, function(err, results) {
             connection.release();
+
             if (err) {
                 connection.release();
                 throw err;
@@ -290,10 +289,8 @@ exports.updateProduct = function(data, callback) {
                 return;
             }
 
-            callback(false, results);
-            return;
-        })
-
+            return callback(false, results);
+        });
     });
 };
 
@@ -363,7 +360,7 @@ exports.queryProducts = function(data, callback) {
         query_sql += ';';
     }
 
-    console.log('查询商品的sql：' + query_sql);
+    logger.writeInfo('查询商品的sql：' + query_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -374,6 +371,7 @@ exports.queryProducts = function(data, callback) {
 
         connection.query(query_sql, function(err, results) {
             connection.release();
+
             if (err) {
                 callback(true, JSON.stringify(results));
                 return;
@@ -387,6 +385,7 @@ exports.queryProducts = function(data, callback) {
 //查询指定条件商品的个数
 exports.CountProducts = function(data, callback) {
     var sql = ' select count(1) as num from jit_product where 1=1 ';
+
     var queryData = {
         SKU: data.SKU || '',
         "jit_product.ProductID" : data['jit_product.ProductID'] || '',
@@ -428,7 +427,6 @@ exports.CountProducts = function(data, callback) {
     }
 
     logger.writeInfo("查询指定条件的商品个数,sql:" + sql);
-    console.log("查询指定条件的商品个数,sql:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -436,16 +434,19 @@ exports.CountProducts = function(data, callback) {
             callback(true);
             return;
         }
+
         connection.query(sql, function(err, results) {
             connection.release();
+
             if (err) {
                 logger.writeError('查询指定条件的商品个数：' + err);
                 callback(true);
                 return;
             }
+
             return callback(false, results);
+        });
     });
-});
 };
 
 //根据ID得到该商品类型的个数
