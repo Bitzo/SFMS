@@ -27,6 +27,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
                     console.log(response)  
                     $scope.roleTree = response.data || [];  
                     $scope.tree_data.map(function (data, index) {
+                            console.log(data+index)
                             foreachtree(data);
                         }
                     );

@@ -1,43 +1,44 @@
+link(rel='stylesheet' href="css/backend/role.css")
 block content
-                div.container-fluid
-                    div.row
-                        form.form-horizontal(role="form" ng-controller="jinkeBroIndexController")
-                            div
-                                label.col-sm-2.control-label 姓名：
-                                div.col-sm-10
-                                    input.form-control(type="text" placeholder="姓名")
-                            div(style="height:50px;width:100%")
-                            div
-                                label.col-sm-2.control-label 手机号码：
-                                div.col-sm-10
-                                    input.form-control(type="phone" placeholder="手机号码")
-                            div(style="height:50px;width:100%")
-                            div
-                                label.col-sm-2.control-label 所在学校：
-                                div.col-sm-10
-                                    select.form-control(ng-model='formdata.SchoolID' ng-change= "schoolChanged()")
-                                        option(ng-repeat="item in school" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
-                            div(style="height:50px;width:100%")
-                            div
-                                label.col-sm-2.control-label 所在区域：
-                                div.col-sm-10
-                                    select.form-control(ng-model='formdata.AreaID' ng-change= "areaChanged()")
-                                        option(ng-repeat="item in area" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
-                            div(style="height:50px;width:100%")
-                            div
-                                label.col-sm-2.control-label 所在楼栋：
-                                div.col-sm-10
-                                    select.form-control(ng-model='formdata.BuildingID')
-                                        option(ng-repeat="item in building" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
-                            div(style="height:50px;width:100%")
-                            div
-                                label.col-sm-2.control-label 其他地址：
-                                div.col-sm-10
-                                    input.form-control(type="phone" placeholder="选项没有时填写")
-                            div(style="height:50px;width:100%")
-                            div
-                                label.col-sm-2.control-label
-                                div.col-sm-10
-                                    button.form-control.btn.btn-sm.btn-success 添加
+    div.container-fluid
+        div.row
+            form.form-horizontal(role="form" ng-controller="jinkeBroIndexController")
+                div
+                    label.col-sm-2.control-label 姓名：
+                    div.col-sm-10
+                        input.form-control(type="text" placeholder="姓名")
+                div(style="height:50px;width:100%")
+                div
+                    label.col-sm-2.control-label 手机号码：
+                    div.col-sm-10
+                        input.form-control(type="phone" placeholder="手机号码")
+                div(style="height:50px;width:100%")
+                div
+                    label.col-sm-2.control-label 所在学校：
+                    div.col-sm-10
+                        select.form-control(ng-model='formdata.SchoolID' ng-change= "schoolChanged()")
+                            option(ng-repeat="item in school" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
+                div(style="height:50px;width:100%")
+                div
+                    label.col-sm-2.control-label 所在区域：
+                    div.col-sm-10
+                        select.form-control(ng-model='formdata.AreaID' ng-change= "areaChanged()")
+                            option(ng-repeat="item in area" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
+                div(style="height:50px;width:100%")
+                div
+                    label.col-sm-2.control-label 所在楼栋：
+                    div.col-sm-10
+                        select.form-control(ng-model='formdata.BuildingID')
+                            option(ng-repeat="item in building" value='{{item.DictionaryID}}') {{item.DictionaryValue}}
+                div(style="height:50px;width:100%")
+                div
+                    label.col-sm-2.control-label 其他地址：
+                    div.col-sm-10
+                        input.form-control(type="phone" placeholder="选项没有时填写")
+                div(style="height:50px;width:100%")
+                div
+                    label.col-sm-2.control-label
+                    div.col-sm-10
+                        button.form-control.btn.btn-sm.btn-success 添加
 
 
