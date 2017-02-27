@@ -28,6 +28,7 @@ var user = appRequire('service/backend/user/userservice'),
     userRole = appRequire('service/backend/user/userroleservice'),
     functionConfig = appRequire('config/functionconfig'),
     userFuncService = appRequire('service/backend/user/userfuncservice');
+    
 //插入用户
 router.post('/', function (req, res) {
     var functionCode = functionConfig.backendApp.userManage.userAdd.functionCode;
@@ -45,25 +46,37 @@ router.post('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+        
+        
+        if (funcResult == undefined && funcResult.isSuccess == false) {
+                res.status(400);
+                return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+        
         if (funcResult !== undefined && funcResult.isSuccess === true) {
-            var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'IsActive'];
-            var err = 'require: ';
+            var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'IsActive'];
+            var errSend = 'require: ';
 
-            for (var value in data) {
+            for (var value in dataRequire) {
 
-                if (!(data[value] in req.body.formdata)) {
+                if (!(dataRequire[value] in req.body.formdata)) {
                     ///if(data[value]!='Email'&&data[value]!='Address')
-                    err += data[value] + ' ';//检查post传输的数据
+                    errSend += dataRequire[value] + ' ';//检查post传输的数据
                 }
             }
 
-            if (err != 'require: ') {
+            if (errSend != 'require: ') {
                 res.status(400);
                 res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: err
+                    msg: errSend
                 });
+
                 logger.writeError("[routes/route/user/userroute]" + "缺少key值");
                 return;
             }
@@ -91,11 +104,12 @@ router.post('/', function (req, res) {
 
             var roledata = {};
             if (roleID != undefined && roleID.length != 0) {
+
                 roledata.RoleID = roleID;
             }
 
 
-            data = {
+            var data = {
                 'ApplicationID': applicationID,
                 'Account': account,
                 'UserName': userName,
@@ -120,6 +134,7 @@ router.post('/', function (req, res) {
                     isSuccess: false,
                     msg: requireValue
                 });
+
                 logger.writeError("[routes/backend/user/userroute]" + requireValue);
                 return;
             }
@@ -169,6 +184,7 @@ router.post('/', function (req, res) {
 
             //去除相同的账户名字
             var sameAccount = { 'Account': account };
+
             user.queryAccount(sameAccount, function (err, result) {
                 if (err) {
                     res.status(400);
@@ -180,6 +196,7 @@ router.post('/', function (req, res) {
                     logger.writeError("[routes/backend/user/userroute]" + "查询账户失败");
                     return;
                 }
+
                 if (result != undefined && result != 0) {
                     res.status(400);
                     res.json({
@@ -190,7 +207,6 @@ router.post('/', function (req, res) {
                     logger.writeError("[routes/backend/user/userroute]" + "账户名已存在");
                     return;
                 }
-
 
                 if (email != undefined && email.length != 0) {
                     if (email.length > 50) {
@@ -216,7 +232,6 @@ router.post('/', function (req, res) {
                     data['Email'] = email;
                 }
 
-
                 if (address != undefined && address.length != 0) {
                     if (address.length > 200) {
                         res.status(400);
@@ -230,7 +245,6 @@ router.post('/', function (req, res) {
                     }
                     data['Address'] = address;
                 }
-
 
                 if (collegeID != undefined && collegeID.length != 0) {
                     data['CollegeID'] = collegeID;
@@ -256,6 +270,7 @@ router.post('/', function (req, res) {
                 if (classID != undefined && classID.length != 0) {
                     data['ClassID'] = classID;
                 }
+
                 if (memo != undefined && memo.length != 0) {
                     if (memo.length > 200) {
                         res.status(400);
@@ -268,10 +283,10 @@ router.post('/', function (req, res) {
                     }
                     data['Memo'] = memo;
                 }
+
                 if (editUserID != undefined && editUserID.length != 0) {
                     data['EditUserID'] = editUserID;
                 }
-
 
                 user.insert(data, function (err, results) {
                     if (err) {
@@ -284,25 +299,19 @@ router.post('/', function (req, res) {
                         logger.writeError("[routes/backend/user/userrole]" + "插入失败");
                         return;
                     }
+
                     if (results.insertId != 0) {
-                         res.json({
-                             code: 200,
-                             isSuccess: true,
-                             msg: '操作成功'
-                         });
+                        res.json({
+                            code: 200,
+                            isSuccess: true,
+                            msg: '操作成功'
+                        });
                         logger.writeInfo("[routes/backend/user/userrole]" + "插入成功");
                         return;
                     }
                 });
             });
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
-            });
-        }
+        } 
     });
 });
 
@@ -323,6 +332,16 @@ router.get('/person', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+
+        if (results == undefined &&　results.isSuccess) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+        
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.f);
             console.log(req.query);
@@ -348,35 +367,46 @@ router.get('/person', function (req, res) {
             if (page == undefined || page.length == 0) {
                 page = 1;
             }
+            
             //选定筛选的条件
             if (accountID !== undefined && accountID.length != 0) {
                 data['AccountID'] = accountID;
             }
+
             if (applicationName !== undefined && applicationName.length != 0) {
                 data['ApplicationName'] = applicationName;
             }
+
             if (createUserName !== undefined && createUserName.length != 0) {
                 data['CreateUserName'] = createUserName;
             }
+
             if (applicationID !== undefined && applicationID.length != 0) {
                 data['ApplicationID'] = applicationID;
             }
+
             if (account !== undefined && account.length != 0) {
                 data['Account'] = account;
             }
+
             if (userName !== undefined && userName.length != 0) {
                 data['UserName'] = userName;
             }
-            if (classID !== undefined && classID.length != 0) {
+
+            if (classID !== undefined && classID.length != 0 ) {
                 data['ClassID'] = classID;
             }
+
             if (createUserID !== undefined && createUserID.length != 0) {
                 data['CreateUserID'] = createUserID;
             }
+
             if (editUserID !== undefined && editUserID.length != 0) {
                 data['EditUserID'] = editUserID;
             }
+
             data['IsActive'] = isActive;
+
             if (pageNum == undefined) {
                 pageNum = config.pageCount;
             }
@@ -396,6 +426,18 @@ router.get('/person', function (req, res) {
                     logger.writeError("[routes/backend/user/userroute]" + "数量获取失败");
                     return;
                 }
+
+                if (result == undefined && result.length == 0) {
+                    res.status(200);
+                    res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相关信息"
+                    });
+                    logger.writeError("[routes/backend/user/userroute]" + "为查询到相关的信息");
+                    return;
+                }
+                
                 if (result !== undefined && result.length != 0) {
                     allCount = result[0]['num'];
                     data['IsPage'] = isPage;
@@ -413,12 +455,14 @@ router.get('/person', function (req, res) {
                             logger.writeError("[routes/backend/user/userroute]" + "查询失败");
                             return;
                         }
+
                         if (results1 != undefined && results1.length != 0 && allCount != -1) {
                             //将时间格式化，并且将CreateUser的名字改一下
-                            var dataApplication = {};
+                            // var dataApplication = {};
                             for (var key in results1) {
                                 results1[key].CreateTime = moment(results1[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');
                             }
+
                             var results = {
                                 code: 200,
                                 isSuccess: true,
@@ -433,9 +477,11 @@ router.get('/person', function (req, res) {
                             if (results.curPage == results.totlePage) {
                                 results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
                             }
+
                             res.status(200);
                             res.json(results);
                             return;
+
                         } else {
                             res.status(200);
                             res.json({
@@ -447,23 +493,7 @@ router.get('/person', function (req, res) {
                             return;
                         }
                     });
-                } else {
-                    res.status(200);
-                    res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "未查询到相关信息"
-                    });
-                    logger.writeError("[routes/backend/user/userroute]" + "为查询到相关的信息");
-                    return;
                 }
-            });
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
             });
         }
     });
@@ -486,9 +516,10 @@ router.get('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.f);
-            console.log(req.query);
+
             logger.writeInfo("查询用户的记录");
             var data = {},
                 allCount,
@@ -511,35 +542,46 @@ router.get('/', function (req, res) {
             if (page == undefined || page.length == 0) {
                 page = 1;
             }
+            
             //选定筛选的条件
             if (accountID !== undefined && accountID.length != 0) {
                 data['AccountID'] = accountID;
             }
+
             if (applicationName !== undefined && applicationName.length != 0) {
                 data['ApplicationName'] = applicationName;
             }
+
             if (createUserName !== undefined && createUserName.length != 0) {
                 data['CreateUserName'] = createUserName;
             }
+
             if (applicationID !== undefined && applicationID.length != 0) {
                 data['ApplicationID'] = applicationID;
             }
+
             if (account !== undefined && account.length != 0) {
                 data['Account'] = account;
             }
+
             if (userName !== undefined && userName.length != 0) {
                 data['UserName'] = userName;
             }
+
             if (classID !== undefined && classID.length != 0) {
                 data['ClassID'] = classID;
             }
+
             if (createUserID !== undefined && createUserID.length != 0) {
                 data['CreateUserID'] = createUserID;
             }
+
             if (editUserID !== undefined && editUserID.length != 0) {
                 data['EditUserID'] = editUserID;
             }
+
             data['IsActive'] = isActive;
+
             if (pageNum == undefined) {
                 pageNum = config.pageCount;
             }
@@ -559,6 +601,17 @@ router.get('/', function (req, res) {
                     logger.writeError("[routes/backend/user/userroute]" + "数量获取失败");
                     return;
                 }
+
+                if (result == undefined && result.length == 0) {
+
+                    res.status(400);
+                    return res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: results.msg
+                    });
+                }
+
                 if (result !== undefined && result.length != 0) {
                     allCount = result[0]['num'];
                     data['IsPage'] = isPage;
@@ -576,12 +629,13 @@ router.get('/', function (req, res) {
                             logger.writeError("[routes/backend/user/userroute]" + "查询失败");
                             return;
                         }
+
                         if (results1 != undefined && results1.length != 0 && allCount != -1) {
-                            //将时间格式化，并且将CreateUser的名字改一下
-                            var dataApplication = {};
+
                             for (var key in results1) {
                                 results1[key].CreateTime = moment(results1[key].CreateTime).format('YYYY-MM-DD HH:mm:ss');
                             }
+
                             var results = {
                                 code: 200,
                                 isSuccess: true,
@@ -596,9 +650,11 @@ router.get('/', function (req, res) {
                             if (results.curPage == results.totlePage) {
                                 results.curpageNum = results.dataNum - (results.totlePage - 1) * pageNum;
                             }
+
                             res.status(200);
                             res.json(results);
                             return;
+
                         } else {
                             res.status(200);
                             res.json({
@@ -610,6 +666,7 @@ router.get('/', function (req, res) {
                             return;
                         }
                     });
+
                 } else {
                     res.status(200);
                     res.json({
@@ -621,13 +678,7 @@ router.get('/', function (req, res) {
                     return;
                 }
             });
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
-            });
+
         }
     });
 });
@@ -639,6 +690,7 @@ router.get('/', function (req, res) {
 
 router.get('/singID', function (req, res) {
     var functionCode = functionConfig.backendApp.userManage.userQuery.functionCode;
+
     var data = {
         userID: req.query.jitkey,
         functionCode: functionCode
@@ -653,6 +705,7 @@ router.get('/singID', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             var accountID = data.userID;
             if (accountID === undefined || accountID === '') {
@@ -692,6 +745,15 @@ router.get('/singID', function (req, res) {
                     });
                 }
 
+                if (result == undefined && result.length == 0) {
+                    res.status(400);
+                    return res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: results.msg
+                    });
+                }
+
                 if (result !== undefined && result.length != 0) {
                     res.status(200);
                     return res.json({
@@ -700,13 +762,6 @@ router.get('/singID', function (req, res) {
                         data: result[0]
                     });
                 }
-            });
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
             });
         }
     });
@@ -729,6 +784,16 @@ router.get('/:userID', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+        
+        if (results == undefined && results.isSuccess === false) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+        
         if (results !== undefined && results.isSuccess === true) {
             var userID = req.params.userID;
             if (userID === undefined || userID === '') {
@@ -739,6 +804,7 @@ router.get('/:userID', function (req, res) {
                     msg: 'require userID'
                 });
             }
+            
             if (isNaN(userID)) {
                 res.status(400);
                 return res.json({
@@ -747,6 +813,7 @@ router.get('/:userID', function (req, res) {
                     msg: 'userID不是数字'
                 });
             }
+            
             var uniqueData = {
                 "userID": userID
             };
@@ -761,6 +828,15 @@ router.get('/:userID', function (req, res) {
                         msg: '服务器出错'
                     });
                 }
+                
+                if (result == undefined && result.length) {
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: '用户不存在'
+                    });
+                }
+                
                 //user存在，则可以进行查询
                 if (result !== undefined && result.length != 0) {
                     menuService.queryMenuAndRoleByUserID(uniqueData, function (err, results) {
@@ -773,7 +849,16 @@ router.get('/:userID', function (req, res) {
                             });
                         }
 
+                        if (results.Menu == undefined && results.Menu.length == 0) {
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: '未查到菜单'
+                            });    
+                        }
+                        
                         if (results.Menu !== undefined && results.Menu.length != 0) {
+                            
                             if (results.Role !== undefined && results.Role.length != 0) {
                                 return res.json({
                                     code: 200,
@@ -788,31 +873,11 @@ router.get('/:userID', function (req, res) {
                                     msg: '未查到角色'
                                 });
                             }
-
-                        } else {
-                            return res.json({
-                                code: 404,
-                                isSuccess: false,
-                                msg: '未查到菜单'
-                            });
                         }
                     });
-                } else {
-                    return res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: '用户不存在'
-                    });
-                }
+                } 
             });
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
-            });
-        }
+        } 
     });
 });
 
@@ -833,26 +898,27 @@ router.put('/person', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+        
         if (results !== undefined && results.isSuccess === true) {
 
-            var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
-            var err = 'require: ';
+            var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
+            var errSend = 'require: ';
 
-            for (var value in data) {
-                if (!(data[value] in req.body.formdata)) {
+            for (var value in dataRequire) {
+                if (!(dataRequire[value] in req.body.formdata)) {
                     ///if(data[value]!='Email'&&data[value]!='Address')
-                    err += data[value] + ' ';//检查post传输的数据
+                    errSend += dataRequire[value] + ' ';//检查post传输的数据
                 }
             }
 
-            if (err != 'require: ') {
+            if (errSend != 'require: ') {
                 res.status(400);
                 res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: err
+                    msg: errSend
                 });
-                logger.writeError("[routes/backend/user/userrole]" + err);
+                logger.writeError("[routes/backend/user/userrole]" + errSend);
                 return;
             }
 
@@ -872,11 +938,11 @@ router.put('/person', function (req, res) {
                 editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
                 isActive = req.body.formdata.IsActive,
                 email = req.body.formdata.Email,
-                address = req.body.formdata.Address,
-                roleID = req.body.formdata.RoleID;
+                address = req.body.formdata.Address;
+                
 
 
-            data = {
+            var data = {
                 'ApplicationID': applicationID,
                 'AccountID': accountID,
                 'Account': account,
@@ -895,6 +961,7 @@ router.put('/person', function (req, res) {
                 }
 
             }
+            
             if (requireValue != '缺少值：') {
                 res.status(400);
                 res.json({
@@ -914,7 +981,7 @@ router.put('/person', function (req, res) {
                 'CreateUserID': createUserID,
                 'IsActive': isActive,
                 'EditUserID': editUserID,
-                'AccountID': accountID,
+               
             }
 
             for (var key in intNum) {
@@ -1004,7 +1071,7 @@ router.put('/person', function (req, res) {
             }
 
 
-            if (collegeID != undefined && collegeID.length != 0) {
+            if (collegeID != undefined && collegeID.length != 0 && collegeID != null) {
                 data['CollegeID'] = collegeID;
             }
 
@@ -1025,9 +1092,10 @@ router.put('/person', function (req, res) {
                 data['Phone'] = phone;
             }
 
-            if (classID != undefined && classID.length != 0) {
+            if (classID != undefined && classID.length != 0 && classID != null) {
                 data['ClassID'] = classID;
             }
+            
             if (memo != undefined && memo.length != 0) {
                 if (memo.length > 200) {
                     res.status(400);
@@ -1053,25 +1121,30 @@ router.put('/person', function (req, res) {
                     logger.writeError("[routes/backend/user/userroute]" + "修改信息失败，服务器出错");
                     return;
                 }
+                
                 if (results !== undefined && results.affectedRows != 0) {
                     res.json({
                         code: 200,
                         isSuccess: true,
                         msg: "修改信息成功"
-                    })
+                    });
+                    
                     logger.writeInfo("[routes/backend/user/userroute]" + "修改信息成功");
                     return;
+                    
                 } else {
                     res.status(400);
                     res.json({
                         code: 400,
                         isSuccess: false,
                         msg: "修改信息失败"
-                    })
+                    });
+                    
                     logger.writeError("[routes/backend/user/userrout]" + "修改信息失败");
                     return;
                 }
             });
+            
         } else {
             res.status(400);
             return res.json({
@@ -1086,12 +1159,12 @@ router.put('/person', function (req, res) {
 //用户的编辑功能
 router.put('/', function (req, res) {
     var functionCode = functionConfig.backendApp.userManage.userEdit.functionCode;
-    var data = {
+    var dataCheckIsAccess = {
         userID: req.query.jitkey,
         functionCode: functionCode
     }
 
-    userFuncService.checkUserFunc(data, function (err, results) {
+    userFuncService.checkUserFunc(dataCheckIsAccess, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
@@ -1100,26 +1173,36 @@ router.put('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+        
+        if (results == undefined && results.isSuccess == false) {
+             res.status(400);
+             return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+        
         if (results !== undefined && results.isSuccess === true) {
 
-            var data = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
-            var err = 'require: ';
+            var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
+            var errSend = 'require: ';
 
-            for (var value in data) {
-                if (!(data[value] in req.body.formdata)) {
-                    ///if(data[value]!='Email'&&data[value]!='Address')
-                    err += data[value] + ' ';//检查post传输的数据
+            for (var value in dataRequire) {
+                if (!(dataRequire[value] in req.body.formdata)) {
+                    ///if(dataRequire[value]!='Email'&&dataRequire[value]!='Address')
+                    errSend += dataRequire[value] + ' ';//检查post传输的数据
                 }
             }
 
-            if (err != 'require: ') {
+            if (errSend != 'require: ') {
                 res.status(400);
                 res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: err
+                    msg: errSend
                 });
-                logger.writeError("[routes/backend/user/userrole]" + err);
+                logger.writeError("[routes/backend/user/userrole]" + errSend);
                 return;
             }
 
@@ -1139,11 +1222,10 @@ router.put('/', function (req, res) {
                 editTime = moment().format("YYYY-MM-DD HH:mm:ss"),
                 isActive = req.body.formdata.IsActive,
                 email = req.body.formdata.Email,
-                address = req.body.formdata.Address,
-                roleID = req.body.formdata.RoleID;
+                address = req.body.formdata.Address;
+               
 
-
-            data = {
+            var data = {
                 'ApplicationID': applicationID,
                 'AccountID': accountID,
                 'Account': account,
@@ -1154,7 +1236,7 @@ router.put('/', function (req, res) {
                 'IsActive': isActive,
                 'EditUserID': editUserID
             }
-            
+
             var requireValue = '缺少值：';
             for (var value in data) {
                 if (data[value].length == 0) {
@@ -1180,8 +1262,7 @@ router.put('/', function (req, res) {
                 'AccountID': accountID,
                 'CreateUserID': createUserID,
                 'IsActive': isActive,
-                'EditUserID': editUserID,
-                'AccountID': accountID,
+                'EditUserID': editUserID,               
             }
 
             for (var key in intNum) {
@@ -1271,8 +1352,9 @@ router.put('/', function (req, res) {
             }
 
 
-            if (collegeID != undefined && collegeID.length != 0) {
+            if (collegeID != undefined && collegeID.length != 0 && collegeID != 'null') {
                 data['CollegeID'] = collegeID;
+              
             }
 
             if (gradeYear != undefined && gradeYear.length != 0) {
@@ -1292,9 +1374,10 @@ router.put('/', function (req, res) {
                 data['Phone'] = phone;
             }
 
-            if (classID != undefined && classID.length != 0) {
+            if (classID != undefined && classID.length != 0 && classID != 'null') {
                 data['ClassID'] = classID;
             }
+            
             if (memo != undefined && memo.length != 0) {
                 if (memo.length > 200) {
                     res.status(400);
@@ -1308,6 +1391,8 @@ router.put('/', function (req, res) {
                 data['Memo'] = memo;
             }
 
+console.log("******************************************************************************");
+console.log(data);
             user.update(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -1320,6 +1405,7 @@ router.put('/', function (req, res) {
                     logger.writeError("[routes/backend/user/userroute]" + "修改信息失败，服务器出错");
                     return;
                 }
+                
                 if (results !== undefined && results.affectedRows != 0) {
                     res.json({
                         code: 200,
@@ -1340,12 +1426,7 @@ router.put('/', function (req, res) {
                 }
             });
         } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
-            });
+           
         }
     });
 });
@@ -1367,6 +1448,7 @@ router.delete('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+        
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.d),
                 accountID = query.AccountID;
@@ -1374,6 +1456,7 @@ router.delete('/', function (req, res) {
                 'AccountID': accountID,
                 'IsActive': 0
             }
+            
             user.update(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -1386,12 +1469,14 @@ router.delete('/', function (req, res) {
                     logger.writeError("[routes/backend/user/userroute]" + "修改信息失败，服务器出错");
                     return;
                 }
+                
                 if (results !== undefined && results.affectedRows != 0) {
                     res.json({
                         code: 200,
                         isSuccess: true,
                         msg: "操作成功"
-                    })
+                    });
+                
                     logger.writeInfo("[routes/backend/user/userroute]" + "修改信息成功");
                     return;
                 } else {
@@ -1400,7 +1485,8 @@ router.delete('/', function (req, res) {
                         code: 400,
                         isSuccess: false,
                         msg: "操作失败"
-                    })
+                    });
+                    
                     logger.writeError("[routes/backend/user/userroute]" + "修改信息失败");
                     return;
                 }

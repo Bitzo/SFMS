@@ -499,6 +499,64 @@ Order.prototype.checkInput = function (res, input, string) {
     }
 }
 
+/**
+ * function: 用户点击历史信息出发的事件处理
+ * @param {string} wechatCode
+ */
+ 
+ Order.prototype.getHistoryOrderInfo = function (wechatUserCode,  callback) {
+     var queryCustomerInfo = {
+         'WechatUserCode': wechatUserCode
+     }
+     
+     var p = new Promise(function (resolve,  reject) {
+         customer.query(queryCustomerInfo, function (err, customerInfo) {
+            
+            if (err) {
+                reject(Error("没有数据"));
+                return;
+            } 
+            
+            //该用户不存在
+             if (customerInfo == undefined || customerInfo.length == 0) {
+                console.log('查询用户失败');
+                logger.writeError("[service/jinkebro/order/orderservice]当查询历史订单的时候查无此用户");
+                callback(true, "当查询历史订单的时候查无此用户");
+                return;
+            }
+            
+            resolve(customerInfo);
+         });
+     });
+     
+     p.then (function(customerInfo) {
+         var dataCustomer = {
+            "CustomerID": customerInfo[0].CustomerID
+        }
+
+        orderDAL.queryHistoryProductWechat(dataCustomer, function (err, queryHistoryInfo) {
+           
+           if (err) {
+               console.log("查询历史订单失败");
+               logger.writeError("[service/jinkebro/order/orderservice]当插入订单的时候查无此用户");
+               callback(true);
+               return;
+           } 
+           
+           if(queryHistoryInfo == undefined && queryHistoryInfo.length) {
+               callback(false, '');
+               return;
+           }
+           
+           if(queryHistoryInfo != undefined && queryHistoryInfo.length ) {
+       
+               callback(false, queryHistoryInfo);
+               return ;
+           }
+        });
+     });
+ }
+ 
 //根据用户的信息来将订单的内容插入进数据库
 Order.prototype.insertOrderInfo = function (msg, openid, callback) {
     var me = this;
