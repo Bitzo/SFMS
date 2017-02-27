@@ -564,6 +564,7 @@ router.put('/', function (req, res) {
                         msg: '操作失败，项目负责人信息有误'
                     });
                 }
+
                 projectManageName = results[0].UserName;
 
                 userservice.querySingleID(accountID, function (err, results) {
@@ -577,7 +578,7 @@ router.put('/', function (req, res) {
                         });
                     }
 
-                    if (results!==undefined && results.length>0) {
+                    if (!(results!==undefined && results.length>0)) {
                         res.status(400);
 
                         return res.json({
