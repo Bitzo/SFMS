@@ -899,6 +899,16 @@ router.put('/person', function (req, res) {
             });
         }
         
+        //鉴权功能点
+        if (results == undefined && results.isSuccess) {
+             res.status(400);
+             return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+        
         if (results !== undefined && results.isSuccess === true) {
 
             var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
@@ -1143,16 +1153,8 @@ router.put('/person', function (req, res) {
                     logger.writeError("[routes/backend/user/userrout]" + "修改信息失败");
                     return;
                 }
-            });
-            
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
-            });
-        }
+            });           
+        } 
     });
 });
 
@@ -1391,8 +1393,6 @@ router.put('/', function (req, res) {
                 data['Memo'] = memo;
             }
 
-console.log("******************************************************************************");
-console.log(data);
             user.update(data, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -1425,9 +1425,7 @@ console.log(data);
                     return;
                 }
             });
-        } else {
-           
-        }
+        } 
     });
 });
 
@@ -1446,6 +1444,16 @@ router.delete('/', function (req, res) {
                 code: 500,
                 isSuccess: false,
                 msg: '查询失败，服务器出错'
+            });
+        }
+        
+        //鉴权功能点
+        if (results == undefined && results.isSuccess) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
             });
         }
         
@@ -1492,12 +1500,7 @@ router.delete('/', function (req, res) {
                 }
             });
         } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
-            });
+            
         }
     });
 });

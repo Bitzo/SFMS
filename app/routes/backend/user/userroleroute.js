@@ -105,7 +105,6 @@ router.post('/', function (req, res) {
                     });
                 }
 
- console.log("*********************************");
                 var count = results[0]['count'];
                 
                 if (results === undefined && count != i) {
