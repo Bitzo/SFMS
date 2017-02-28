@@ -129,12 +129,15 @@ exports.queryAllParentMenus = function(data, callback) {
 exports.countAllMenus = function (data, callback) {
     var sql =  'select count(1) AS num from jit_menu where 1=1 ';
 
+
     if (data !== undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
+
+    console.log(sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -478,6 +481,35 @@ exports.queryMenuByID = function (data, callback) {
 
             if (err) {
                 logger.writeError('根据MenuID判断该菜单是否存在err:' + err);
+                callback(true);
+                return;
+            }
+
+            return callback(false, results);
+        });
+    });
+};
+
+/**
+ * 查询所有菜单
+ * @param callback
+ */
+exports.queryDistinctMenus = function (callback) {
+    var sql = 'select jit_menu.MenuID,jit_menu.MenuName from jit_menu where 1=1;';
+
+    logger.writeInfo("所有菜单:" + sql);
+
+    db_backend.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(sql, function (err, results) {
+            connection.release();
+
+            if (err) {
+                logger.writeError('查询数据库所有菜单:' + err);
                 callback(true);
                 return;
             }

@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/12/14.
  */
-myApp.controller('sfmsApiFinanceController', function($scope, $http,$q,baseService) {    
+myApp.controller('sfmsApiFinanceAddController', function($scope, $http,$q,baseService) {
 
         //实验室管理系统-绩效/财务管理-新增页面-项目名称  动态变化
         $scope.userKpiChanged = function() {

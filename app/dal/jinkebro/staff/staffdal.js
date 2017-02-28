@@ -121,13 +121,16 @@ var updateStaff = function (data,callback) {
             return;
         }
         connection.query(update_sql, function(err, result) {
-             connection.release();
+            connection.release();
+
             if (err) {
                 throw err;
                 callback(true,'失败！');
                 return;
             }
+
             logger.writeInfo('成功！');
+
             return callback(false, result);
         });
     });
@@ -175,7 +178,7 @@ var getStaff = function (data,callback) {
         querySql += ';';
     }
 
-    console.log(querySql);
+    logger.writeInfo('查询员工信息:' + querySql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -183,13 +186,16 @@ var getStaff = function (data,callback) {
             callback(true,'数据库连接失败！');
             return;
         }
+
         connection.query(querySql, function(err, result) {
             connection.release();
+
             if (err) {
                 throw err;
                 callback(true,'失败！');
                 return;
             }
+
             logger.writeInfo('成功！');
             
             return callback(false, result);
@@ -229,6 +235,7 @@ var countStaff = function (data,callback) {
             }
         }
     }
+
     logger.writeInfo('员工计数：' + querySql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
@@ -238,13 +245,16 @@ var countStaff = function (data,callback) {
             return;
         }
         connection.query(querySql, function(err, result) {
-                            connection.release();
+            connection.release();
+
             if (err) {
                 throw err;
                 callback(true,'失败！');
                 return;
             }
+
             logger.writeInfo('成功！');
+
             return callback(false, result);
         });
     });

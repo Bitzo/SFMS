@@ -3031,19 +3031,9 @@ li [class^="icon-"], li [class*=" icon-"], .nav-list li [class^="icon-"], .nav-l
     display: block
 }
 
- .sidebar-collapse:before {
-    left: 5px;
-    right: 5px
+ .sidebar-collapse{
+    display: none;
 }
-
- .sidebar-collapse > [class*="icon-"] {
-    font-size: 13px;
-    padding: 0 4px;
-    line-height: 15px;
-    border-width: 1px;
-    border-color: #aeaeae
-}
-
  .nav-list > li > .submenu li > .submenu > li > a {
     margin-left: 0;
     padding-left: 30px

@@ -182,9 +182,10 @@ router.get('/plain',function (req,res) {
 
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.f ? req.query.f : "{}");
-            var page = (req.query.pageindex || query.pageindex) ? (req.query.pageindex || query.pageindex) : 1,
-                pageNum = (req.query.pagesize || query.pagesize) ? (req.query.pagesize || query.pagesize) : 20,
-                isPaging = (req.query.isPaging) ? (req.query.isPaging) : 0,
+
+            var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
+                pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : (config.pageCount),
+                isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 0,
                 applicationID = query.ApplicationID || '',
                 menuID = query.MenuID || '',
                 parentID = query.ParentID || '',
@@ -204,12 +205,14 @@ router.get('/plain',function (req,res) {
             var data = {
                 page : page,
                 pageNum : pageNum,
+                isPaging : isPaging,
                 ApplicationID : applicationID,
                 MenuID : menuID,
                 ParentID : parentID,
                 MenuLevel : menuLevel,
                 MenuName : menuName,
-                IsActive : isActive
+                IsActive : isActive,
+                OperateUserID : req.query.jitkey
             };
 
             var intdata = {
@@ -1034,7 +1037,7 @@ router.put('/',function (req,res) {
                 "Url" : url,
                 "Memo" : memo,
                 "IsActive" : isActive,
-                "jitkey" : req.query.jitkey
+                "OperateUserID" : req.query.jitkey
             };
 
             var intdata = {
@@ -1267,10 +1270,12 @@ router.delete('/',function(req,res) {
                     msg: 'menuID不是数字'
                 });
             }
+
             var data = {
                 "MenuID" : menuID,
-                "IsActive" : 0
+                "OperateUserID" : req.query.jitkey
             };
+
             var deleteData = {
                 "MenuID" : menuID
             };
@@ -1338,5 +1343,64 @@ router.delete('/',function(req,res) {
 
 });
 
+router.get('/allMenus',function (req,res) {
+    var checkFuncData = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.backendApp.memuManage.menuQuery.functionCode
+    };
+
+    userFuncService.checkUserFunc(checkFuncData, function(err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '服务器内部错误！'
+            });
+        }
+
+        if (results !== undefined && results.isSuccess === true) {
+
+            menuService.queryDistinctMenus(function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误"
+                    });
+                }
+
+                if (result !== undefined && result.length != 0 && result.length != undefined) {
+                    var resultBack = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功',
+                        data: result
+                    };
+
+                    res.status(200);
+                    return res.json(resultBack);
+
+                } else {
+                    res.status(400);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相应菜单!"
+                    });
+                }
+            });
+
+        } else {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+    });
+});
 
 module.exports = router;

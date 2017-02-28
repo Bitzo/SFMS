@@ -56,6 +56,6 @@ block content
               a(href='#/sfms/kpiManageCheck/?ID={{x.ID}}' )
                 i.icon.icon-edit 审核&nbsp
               a(ng-click="remove($index,x.KPIName,'/sfms/api/kpi')",href='')
-                i.icon.icon-trash 删除
+                i.icon.icon-ban-circle 禁用
       div.pull-right
         jason-pagination(conf='paginationConf')

@@ -95,7 +95,11 @@ exports.updateProjectUser = function (data, callback) {
 
 //项目用户信息查询
 exports.queryProjectUser = function (data, callback) {
-    var sql = 'select ID,ProjectName,ProjectID,UserID,UserName,CreateTime,OperateUser,EditTime,EditName,Duty,IsActive from jit_projectruser where 1=1 ',
+    var sql = 'select jit_projectruser.ID,jit_projectruser.ProjectName,jit_projectruser.ProjectID,jit_projectruser.UserID,' +
+            'jit_projectruser.UserName,jit_projectruser.CreateTime,jit_projectruser.OperateUser,jit_projectruser.EditTime,' +
+            'jit_projectruser.EditName,jit_projectruser.Duty,jit_projectruser.IsActive ' +
+            'from jit_projectruser,jit_projectbaseinfo where 1=1 ' +
+            'and jit_projectruser.ProjectID = jit_projectbaseinfo.ID ',
         page = data.page || 1,
         num = data.pageNum || config.pageCount;
 
@@ -128,11 +132,12 @@ exports.queryProjectUser = function (data, callback) {
             return;
         });
     });
-}
+};
 
 //项目用户信息统计
 exports.countQuery = function (data, callback) {
-    var sql = 'select count(1) as num from jit_projectruser where 1=1 ';
+    var sql = 'select count(1) as num from jit_projectruser,jit_projectbaseinfo ' +
+        'where 1=1 and jit_projectruser.ProjectID = jit_projectbaseinfo.ID ';
 
     if (data !== undefined) {
         for(var key in data) {
