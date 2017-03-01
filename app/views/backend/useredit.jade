@@ -9,7 +9,7 @@ block content
           tr
             td(width="15%",class="tableleft") 应用名称
             td      
-              select(name='ApplicationID',ng-model='paginationConf.formdata.ApplicationID')
+              select(name='ApplicationID',ng-model='paginationConf.formdata.ApplicationID',,required)
                 option   
                 option(ng-repeat="item in applicationNames",value='{{item.ID}}') {{item.ApplicationName}}
               
@@ -87,6 +87,5 @@ block content
           tr
             td(class="tableleft")
             td
-              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="userEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/backuser')") 确认修改
-              
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled="userEdit.$invalid",ng-click="newedit(paginationConf.formdata,'/backuser')") 确认修改           
               a.btn.btn-sm.btn-success(href='#backend/user',ng-click='search()') 返回列表
