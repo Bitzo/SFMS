@@ -25,7 +25,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
             $http.get('/userrole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
             .success(function (response) {
                     console.log(response)  
-                    $scope.roleTree = response.data || [];  
+                    $scope.roleTree = response.data || [];                  
                     $scope.tree_data.map(function (data, index) {
                             console.log(data+index)
                             foreachtree(data);
