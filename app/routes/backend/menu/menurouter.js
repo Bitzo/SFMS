@@ -539,7 +539,7 @@ router.get('/',function (req,res) {
             return res.json({
                 code: 400,
                 isSuccess: false,
-                msg: results.msg
+                msg: funcResults.msg
             });
         }
     });

@@ -614,6 +614,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
                 return;
             }
 
+
             if (orderQueryInfo.length !== 0) {
                 console.log('已存在订单，不需要重复的插入');
                 return;

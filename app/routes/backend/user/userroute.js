@@ -59,18 +59,18 @@ router.post('/', function (req, res) {
         
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'IsActive'];
-            
-            var errSend = 'require: ';
+            var dataRequire1 = ['应用名称', '账户名', '用户的姓名', '密码', '有效值'];
+            var errSend = '未填: ';
 
             for (var value in dataRequire) {
 
                 if (!(dataRequire[value] in req.body.formdata)) {
                     ///if(data[value]!='Email'&&data[value]!='Address')
-                    errSend += dataRequire[value] + ' ';//检查post传输的数据
+                    errSend += dataRequire1[value] + ' ';//检查post传输的数据
                 }
             }
 
-            if (errSend != 'require: ') {
+            if (errSend != '未填: ') {
                 res.status(400);
                 res.json({
                     code: 400,
@@ -912,17 +912,18 @@ router.put('/person', function (req, res) {
         
         if (results !== undefined && results.isSuccess === true) {
 
-            var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
-            var errSend = 'require: ';
+            var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'IsActive'];
+            var dataRequire = ['应用名称', '账户名称', '用户姓名', '密码', '有效值']
+            var errSend = '未填: ';
 
             for (var value in dataRequire) {
                 if (!(dataRequire[value] in req.body.formdata)) {
                     ///if(data[value]!='Email'&&data[value]!='Address')
-                    errSend += dataRequire[value] + ' ';//检查post传输的数据
+                    errSend += dataRequire1[value] + ' ';//检查post传输的数据
                 }
             }
 
-            if (errSend != 'require: ') {
+            if (errSend != '未填: ') {
                 res.status(400);
                 res.json({
                     code: 400,
@@ -1188,17 +1189,18 @@ router.put('/', function (req, res) {
         
         if (results !== undefined && results.isSuccess === true) {
 
-            var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'CreateUserID', 'IsActive'];
-            var errSend = 'require: ';
+            var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'IsActive'];
+            var dataRequire1 = ['应用名称', '账户名称', '用户姓名', '密码', '有效值'];
+            var errSend = '未填: ';
 
             for (var value in dataRequire) {
                 if (!(dataRequire[value] in req.body.formdata)) {
                     ///if(dataRequire[value]!='Email'&&dataRequire[value]!='Address')
-                    errSend += dataRequire[value] + ' ';//检查post传输的数据
+                    errSend += dataRequire1[value] + ' ';//检查post传输的数据
                 }
             }
 
-            if (errSend != 'require: ') {
+            if (errSend != '未填: ') {
                 res.status(400);
                 res.json({
                     code: 400,

@@ -65,17 +65,18 @@ router.post('/', function (req, res) {
             var userID = req.body.AccountID,
                 roleData = req.body.data,
                 data = ['AccountID', 'RoleID'],
-                errSend = 'required: ';
+                data1 = ['账户名称', '角色名称'],
+                errSend = '未填: ';
 
             if (userID == undefined || userID.length == 0) {
-                errSend += 'AccountID';
+                errSend += data1[0];
             }
 
             if (roleData == undefined || roleData.length == 0) {
-                errSend += 'RoleID';
+                errSend += data[1];
             }
 
-            if (errSend != 'required: ') {
+            if (errSend != '未填: ') {
                 res.status(400);
                 return res.json({
                     code: 400,
@@ -204,16 +205,17 @@ router.put('/', function (req, res) {
         
         if (results !== undefined && results.isSuccess === true) {
             var data = ['ID', 'AccountID', 'RoleID'];
-            var errSend = 'required: ';
+            var data1 =  ['角色的ID', '账户名称', '角色名称'];
+            var errSend = '未填: ';
             
             for (var value in data) {
                 if (!(data[value] in req.body)) {
-                    console.log("require: " + data[value]);
-                    errSend += data[value] + ' ';
+                    
+                    errSend += data1[value] + ' ';
                 }
             }
            
-            if (errSend != 'required: ') {
+            if (errSend != '未填: ') {
                 res.status(400);
                 res.json({
                     code: 400,
@@ -283,7 +285,7 @@ router.get('/userID/:userID', function (req, res) {
     var data = {
         userID: req.query.jitkey,
         functionCode: functionCode
-    }
+    };
 
 
     userFuncService.checkUserFunc(data, function (err, results) {
