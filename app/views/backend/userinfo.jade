@@ -8,7 +8,7 @@ block content
         tr
           td(width="15%",class="tableleft") 应用名称
           td      
-            select(name='ApplicationID',ng-model='formdata.ApplicationID')
+            select(name='ApplicationID',ng-model='formdata.ApplicationID',required)
               option(ng-repeat="item in applicationNames",value='{{item.ID}}') {{item.ApplicationName}}
             
         tr

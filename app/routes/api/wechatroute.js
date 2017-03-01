@@ -71,7 +71,8 @@ wechat.textMsg(function (msg) {
             // 返回文本消息           
             if (/^(\d+#\d+)$/.test(msg.content) ||
                 /^((\d+#\d+\|)+(\d+#\d+))$/.test(msg.content)) {
-                console.log("收到订单的消息");
+
+                resMsg.content = "下单失败";
                 var p = new Promise(function (resolve, reject) {
                     order.insertOrderInfo(msg.content, msg.fromUserName,
                         function (err, orderInfo) {
@@ -80,32 +81,31 @@ wechat.textMsg(function (msg) {
                                 return;
                             }
 
-                            var sendOrderInfo = orderInfo;
-                            resolve(sendOrderInfo);
+                            var result= orderInfo;
+                            var sendMsg = '';
+                            if (result[0].OrderID === undefined) {
+                                sendMsg = '对不起，' + result + '库存数量不足';
+
+                            } else {
+                                var totalPrice = 0;
+                                sendMsg = '亲，您的订单号为：' + result[0].OrderID + '\n' + '您所订购的商品为:\n';
+                                result.forEach(function (item) {
+                                    sendMsg += item.ProductName + ' 数量为 ' + item.ProductCount + ' \n';
+                                    totalPrice += item.ProductPrice * item.ProductCount;
+                                });
+                                sendMsg += '总共消费' + totalPrice + '元， 正在准备配送';
+
+                                logger.writeInfo("[routes/api/wechatroute]订单成功");
+                            }
+                            
+                            console.log(sendMsg);
+                            resolve(sendMsg);
                         });
                 });
-
-                p.then(function (result) {
-                    //判断库存是否满足
-                    var sendMsg = '';
-                    if (result[0].OrderID === undefined) {
-                        sendMsg = '对不起，' + result + '库存数量不足';
-                        resMsg.content = sendMsg;
-                    }
-                    else {
-                        var totalPrice = 0;
-                        sendMsg = '亲，您的订单号为：' + result[0].OrderID + '\n' + '您所订购的商品为:\n';
-                        result.forEach(function (item) {
-                            sendMsg += item.ProductName + ' 数量为 ' + item.ProductCount + ' \n';
-                            totalPrice += item.ProductPrice * item.ProductCount;
-                        });
-                        sendMsg += '总共消费' + totalPrice + '元， 正在准备配送';
-
-                        resMsg.content = sendMsg;
-                        logger.writeInfo("[routes/api/wechatroute]订单成功");                       
-                    }                    
+               
+                p.then(function (resultSend) {
+                    resMsg.content = resultSend;
                     wechat.sendMsg(resMsg);
-                    
                 }, function (err) {
                     wechat.sendMsg(resMsg);
                 });
@@ -113,12 +113,14 @@ wechat.textMsg(function (msg) {
                 logger.writeInfo("[route/api/wechatroute]发送订单的消息给用户");
                 return;
             }
+            break;
             
             //输入其他的文字返回的是图文的信息
             var articles = [];
-            var picurl = "http://mmbiz.qpic.cn/mmbiz_png/2gG8lzb9PibtXRR";
-            picurl += "a2ibT3yQS8o2IFUiboGzSRCvbhzPVfooq34aNbs7MYXiaBkjMr";
-            picurl += "IlrR7biadliafyA3EcG16iaYg9hw/0";
+            var picurl = "http://mmbiz.qpic.cn/mmbiz_jpg/2gG8lzb9PibsPiadjuibZ6mm";
+            picurl += "GVvqk7am7a8yqW87U3v";
+            picurl += "vm2Bo6H0PXAa8Bxm3wpIKuicpjic0ZKYVT929L85fib64lwKw/0";
+
             articles[0] = {
                 title: "零食",
                 description: "测试描述",
@@ -133,6 +135,7 @@ wechat.textMsg(function (msg) {
                 articles: articles,
                 funcFlag: 0
             }
+
             wechat.sendNewsMsg(resMsg1);
             break;
 
@@ -148,12 +151,14 @@ wechat.textMsg(function (msg) {
                 HQMusicUrl: "高质量音乐url",
                 funcFlag: 0
             };
+
             wechat.sendMsg(resMsg);
             break;
 
         case "图文":
             // 返回图文消息
             var articles = [];
+
             articles[0] = {
                 title: "测试",
                 description: "测试描述",
@@ -169,7 +174,9 @@ wechat.textMsg(function (msg) {
                 articles: articles,
                 funcFlag: 0
             }
+
             wechat.sendMsg(resMsg);
+            break;
     }
 });
 
@@ -253,6 +260,7 @@ wechat.eventMsg(function (msg) {
                         })
                     }
                 });
+
             break;
             
         //取消订阅
@@ -262,12 +270,11 @@ wechat.eventMsg(function (msg) {
                     //当服务器出错的时候的补过
                     wechatCustomer.addAllList(token, function (err, errinfo) {
                         if (err) {
-                            console.log(errinfo);
-                            logger.writeError("[route/api/wechatroute-------------250行]" + errinfo);
+                            logger.writeError("[route/api/wechatroute]" + errinfo);
                             return;
                         }
 
-                        logger.writeInfo("[route/api/wechatroute---------------255行]服务器出错的时候导致漏加的用户补全");
+                        logger.writeInfo("[route/api/wechatroute]服务器出错的时候导致漏加的用户补全");
                         return;
                     });
                 }
@@ -280,11 +287,10 @@ wechat.eventMsg(function (msg) {
                     //取消时更改用户
                     wechatCustomer.unsubscribe(token, msg, function (err, errinfo) {
                         if (err) {
-                            console.log(errinfo);
-                            logger.writeInfo("[route/api/wechatroute---------------268行]" + errinfo);
+                            logger.writeInfo("[route/api/wechatroute]" + errinfo);
                             return;
                         }
-                        logger.writeInfo("[route/api/wechatroute---------------272行]取消成功");
+                        logger.writeInfo("[route/api/wechatroute]取消关注成功");
                     });
                 }
             });
@@ -336,6 +342,7 @@ wechat.eventMsg(function (msg) {
                             var filterresult = '当前没有可用商品信息，请稍候再试';
 
                             if (returndata !== undefined && returndata.length > 0) {
+
                                 filterresult = '';
                                 returndata.forEach(function (item) {
                                     filterresult += "编号:" + item.ProductID + "  ";
@@ -366,9 +373,10 @@ wechat.eventMsg(function (msg) {
                     break;
 
                 case 'TrackPackage':
+                    //跟踪包裹这一栏
                     console.log("跟踪包裹");
                     order.insertOrderInfo(msg.content, msg.fromUserName, function (resultinfo) {
-                        console.log("订单的消息" + resultinfo);
+
                         var resMsg = {
                             fromUserName: msg.toUserName,
                             toUserName: msg.fromUserName,
@@ -376,26 +384,41 @@ wechat.eventMsg(function (msg) {
                             content: resultinfo,
                             funcFlag: 0
                         };
+
                         wechat.sendMsg(resMsg);
                     });
                     break;
 
                 case 'OrderHistory':
-                    order.getHistoryOrderInfo(msg.FromUserName, function (orderinfo) {
-                        console.log("routes/api/wechatroute------------369行");
+                    order.getHistoryOrderInfo(msg.FromUserName, function (err, orderinfo) {
+
                         var historyInfo = '';
-                        var totalPrice = 0;
-                        var index = 1;
-                        for (var key in orderinfo.data) {
-                            historyInfo += index + '、订单号：' + orderinfo.data[key]['OrderID'] + "  ";
-                            historyInfo += '商品名称：' + orderinfo.data[key]['ProductName'] + "  ";
-                            historyInfo += '数量：' + orderinfo.data[key]['ProductCount'] + "  ";
-                            totalPrice += orderinfo.data[key]['ProductCount'] * orderinfo.data[key]['ProductPrice'];
-                            historyInfo += "付款：" + totalPrice;
-                            historyInfo += '\n';
-                            index++;
-                            totalPrice = 0;
+
+                        if (err) {
+
+                            historyInfo += "服务器内部错误，可取消关注，重新再下。";
+                        } else if (orderinfo.length == 0) {
+
+                            historyInfo += "您还没有下过单， 亲";
+                        } else {
+
+                            historyInfo += "亲，您的历史订单为：\n";
+                            var totalPrice = 0;
+                            var index = 1;
+                            for (var key in orderinfo) {
+                                historyInfo += index + '、订单号：' + orderinfo[key]['OrderID'] + "  ";
+                                historyInfo += '商品名称：' + orderinfo[key]['ProductName'] + "  ";
+                                historyInfo += '数量：' + orderinfo[key]['ProductCount'] + "  ";
+                                totalPrice += orderinfo[key]['ProductCount'] * orderinfo[key]['ProductPrice'];
+                                historyInfo += "付款：" + totalPrice;
+                                historyInfo += '\n';
+                                index++;
+                                totalPrice = 0;
+                            }
+
+                            historyInfo += "(此历史为你最近的三次消费记录)";
                         }
+
                         var resMsg = {
                             fromUserName: msg.ToUserName,
                             toUserName: msg.FromUserName,
@@ -403,7 +426,7 @@ wechat.eventMsg(function (msg) {
                             content: historyInfo,
                             funcFlag: 0
                         };
-                        console.log(historyInfo);
+
                         wechat.sendMsg(resMsg);
                     });
                     break;
@@ -416,6 +439,7 @@ wechat.eventMsg(function (msg) {
                 case 'http://sun.tunnel.2bdata.com/wechat/addressinfo':
                     wechat.sendClickAddressEvent(msg);
                     break;
+
                 case 'http://www.baidu.com':
                     console.log("点击了百度的页面");
                     break;

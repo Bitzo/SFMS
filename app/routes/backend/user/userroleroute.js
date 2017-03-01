@@ -33,6 +33,7 @@ var userRole = appRequire('service/backend/user/userroleservice'),
  * }
  * function: 为用户插入多个角色
  */
+ 
 router.post('/', function (req, res) {
 	var functionCode = functionConfig.backendApp.userRoleManage.userRoleAdd.functionCode;
     var data = {
@@ -49,26 +50,38 @@ router.post('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
-        if (results !== undefined && results.isSuccess === true) {
+        
+        if (results == undefined && results.isSuccess) {
+            res.status(400);
+			return res.json({
+				code: 400,
+				isSuccess: false,
+				msg: results.msg
+            });
+        }
+        
+        if (results !== undefined && results.isSuccess) {
+           
             var userID = req.body.AccountID,
                 roleData = req.body.data,
                 data = ['AccountID', 'RoleID'],
-                err = 'required: ';
+                data1 = ['账户名称', '角色名称'],
+                errSend = '未填: ';
 
             if (userID == undefined || userID.length == 0) {
-                err += 'AccountID';
+                errSend += data1[0];
             }
 
             if (roleData == undefined || roleData.length == 0) {
-                err += 'RoleID';
+                errSend += data[1];
             }
 
-            if (err != 'required: ') {
+            if (errSend != '未填: ') {
                 res.status(400);
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: err
+                    msg: errSend
                 });
             }
 
@@ -79,11 +92,11 @@ router.post('/', function (req, res) {
                 roleID.push(roleData[i].RoleID);
             }
 
-            var insertdata = {
+            var querydata = {
                 'RoleID': roleID
             }
 
-            roleservice.queryRoleByID(insertdata, function (err, results) {
+            roleservice.queryRoleByID(querydata, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -94,8 +107,19 @@ router.post('/', function (req, res) {
                 }
 
                 var count = results[0]['count'];
+                
+                if (results === undefined && count != i) {
+                    //数据非法，重新输入
+                    res.status(400);
+                    return res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: "角色数据有误，请重新编辑"
+                    });
+                }
+                
                 if (results !== undefined && count == i) {
-                    insertdata = {
+                     var insertdata = {
                         'AccountID': userID,
                         'data': roleData
                     }
@@ -145,24 +169,9 @@ router.post('/', function (req, res) {
                             });
                         }
                     });
-                } else {
-                    //数据非法，重新输入
-                    res.status(400);
-                    return res.json({
-                        code: 400,
-                        isSuccess: false,
-                        msg: "角色数据有误，请重新编辑"
-                    })
-                }
+                } 
             });
-        } else {
-			res.status(400);
-			return res.json({
-				code: 400,
-				isSuccess: false,
-				msg: results.msg
-			});
-    	}
+        }
 	});
 
 });
@@ -184,24 +193,36 @@ router.put('/', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+        
+        if (results == undefined && results.isSuccess) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+        
         if (results !== undefined && results.isSuccess === true) {
             var data = ['ID', 'AccountID', 'RoleID'];
-            var err = 'required: ';
+            var data1 =  ['角色的ID', '账户名称', '角色名称'];
+            var errSend = '未填: ';
+            
             for (var value in data) {
                 if (!(data[value] in req.body)) {
-                    console.log("require: " + data[value]);
-                    err += data[value] + ' ';
+                    
+                    errSend += data1[value] + ' ';
                 }
             }
-            console.log(req.params)
-            if (err != 'required: ') {
+           
+            if (errSend != '未填: ') {
                 res.status(400);
                 res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: err
+                    msg: errSend
                 });
-                logger.writeError("[routes/backend/user/userroleroute]" + err);
+                logger.writeError("[routes/backend/user/userroleroute]" + errSend);
                 return;
             }
 
@@ -209,13 +230,13 @@ router.put('/', function (req, res) {
                 accountID = req.body.AccountID,
                 roleID = req.body.RoleID;
 
-            var data = {
+            var updData = {
                 "ID": ID,
                 "AccountID": accountID,
                 "RoleID": roleID
             }
 
-            userRole.updateUserRole(data, function (err, results) {
+            userRole.updateUserRole(updData, function (err, results) {
                 if (err) {
                     res.status(500);
                     res.json(
@@ -227,13 +248,15 @@ router.put('/', function (req, res) {
                     logger.writeError("[routes/backend/user/userroleroute]" + "修改信息失败，服务器出错");
                     return;
                 }
+                
                 if (results !== undefined && results.affectedRows != 0) {
                     res.json({
                         code: 200,
                         isSuccess: true,
                         msg: "操作成功"
-                    })
+                    });
                     return;
+                    
                 } else {
                     res.status(400);
                     res.json({
@@ -244,13 +267,6 @@ router.put('/', function (req, res) {
                     logger.writeError("[routes/backend/user/userroleroute]" + "修改信息失败");
                     return;
                 }
-            })
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
             });
         }
 	});
@@ -271,6 +287,7 @@ router.get('/userID/:userID', function (req, res) {
         functionCode: functionCode
     };
 
+
     userFuncService.checkUserFunc(data, function (err, results) {
         if (err) {
             res.status(500);
@@ -280,6 +297,18 @@ router.get('/userID/:userID', function (req, res) {
                 msg: '查询失败，服务器出错'
             });
         }
+        
+        
+        if (results == undefined && results.isSuccess) {
+             res.status(400);
+             return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+        
+        
         if (results !== undefined && results.isSuccess === true) {
             var userID = req.params.userID;
             if (userID === undefined || userID === '') {
@@ -327,6 +356,7 @@ router.get('/userID/:userID', function (req, res) {
                     res.status(200);
                     res.json(results);
                     return;
+                    
                 } else {
                     res.status(200);
                     res.json({
@@ -339,23 +369,9 @@ router.get('/userID/:userID', function (req, res) {
                     return;
                 }
             });
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
-            });
-        }
+        } 
 	});
 });
 
-/**
- * method: {get} /userrole/more
- * @param {int} userID
- * function: 点击用户模块的更多的模态框，来获得所需要的每个用户所需要的角色名称以及角色代码
- */
- router.get("/more",  function(req, res) {
-     
- });
+
 module.exports = router;

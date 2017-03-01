@@ -12,6 +12,7 @@ var logger = appRequire('util/loghelper').helper;
 exports.insert = function (data, callback) {
 	var insert_sql = 'insert into jit_roleuser set';
 	var i = 0;
+	
 	for (var key in data) {
 		if (i == 0) {
 			insert_sql += ' ' + key + " = '" + data[key] + "' ";
@@ -21,7 +22,9 @@ exports.insert = function (data, callback) {
 			insert_sql += " , " + key + " = '" + data[key] + "' ";
 		}
 	}
+	
 	logger.writeInfo('用户新增角色：' + insert_sql);
+	
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
 			callback(true);
@@ -36,6 +39,7 @@ exports.insert = function (data, callback) {
 				logger.writeError("[dal/user/userroledal]用户角色的新增失败");
 				return;
 			}
+			
 			callback(false, results);
 			return;
 		});
@@ -45,6 +49,7 @@ exports.insert = function (data, callback) {
 exports.updateUserRole = function (data, callback) {
 	var sql = 'update jit_roleuser set ';
 	var i = 0;
+	
 	for (var key in data) {
 		if (i == 0) {
 			sql += key + "= '" + data[key] + "' ";
@@ -55,12 +60,14 @@ exports.updateUserRole = function (data, callback) {
 		}
 	}
 	sql += " where " + userModel.PK + " = '" + data[userModel.PK] + "' ";
+	
 	db_backend.mysqlPool.getConnection(function (err, connection) {
 		if (err) {
 			callback(true);
 			logger.writeError("[dal/user/userroledal]数据库的链接失败");
 			return;
 		}
+		
 		connection.query(sql, function (err, results) {
 			connection.release();
 			if (err) {
@@ -68,6 +75,7 @@ exports.updateUserRole = function (data, callback) {
 				logger.writeError("[dal/user/userrolrdal]用户角色的更新失败");
 				return;
 			}
+			
 			callback(false, results);
 			return;
 		});
@@ -88,6 +96,7 @@ exports.queryAppByUserID = function (data, callback) {
 			logger.writeError("[dal/user/userrole]数据库的链接失败");
 			return;
 		}
+		
 		connection.query(sql, function (err, results) {
 			connection.release();
 			if (err) {
@@ -95,6 +104,7 @@ exports.queryAppByUserID = function (data, callback) {
 				logger.writeError("[dal/user/userrole]用户角色的查询");
 				return;
 			}
+			
 			callback(false, results);
 			return;
 		});
@@ -123,6 +133,7 @@ exports.query = function (data, callback) {
 				logger.writeError("[dal/user/userrole]用户角色查询失败");
                 return;
             }
+			
             callback(false, results);
 			return;
         });
@@ -151,6 +162,7 @@ exports.query = function (data, callback) {
 				logger.writeError("[dal/user/userrole行]用户角色删除失败");
                 return;
             }
+			
             callback(false, results);
 			return;
         });
@@ -189,6 +201,7 @@ exports.query = function (data, callback) {
                 callback(true);
                 return;
             }
+			
             callback(false, results);
 			return ;
         });

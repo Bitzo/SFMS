@@ -37,18 +37,28 @@ router.post('/', function (req, res) {
                 msg: '服务器内部错误！'
             });
         }
+
+        if (funcResult == undefined && funcResult.isSuccess) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var formdata = req.body.formdata;
 
-            var data = ['OrderID', 'DeliveryUserID'];
-            var err = 'require: ';
-            for (var value in data) {
-                if (!(data[value] in formdata)) {
-                    err += data[value] + ' ';
+            var dataRequire = ['OrderID', 'DeliveryUserID'];
+            var errSend = 'require: ';
+            for (var value in dataRequire) {
+                if (!(dataRequire[value] in formdata)) {
+                    err += dataRequire[value] + ' ';
                 }
             }
 
-            if (err !== 'require: ') {
+            if (errSend !== 'require: ') {
                 logger.writeError(err);
                 res.status(400);
                 return res.json({
@@ -64,28 +74,32 @@ router.post('/', function (req, res) {
                 DeliveryEndTime = formdata.DeliveryEndTime;
 
             if (DeliveryBeginTime != undefined && DeliveryBeginTime != '') {
+
                 DeliveryBeginTime = moment(formdata.DeliveryBeginTime).format('YYYY-MM-DD HH:mm:ss');
             } else {
+
                 DeliveryBeginTime = '';
             }
 
             if (DeliveryEndTime != undefined && DeliveryEndTime != '') {
+
                 DeliveryEndTime = moment(formdata.DeliveryEndTime).format('YYYY-MM-DD HH:mm:ss');
             } else {
+
                 DeliveryEndTime = '';
             }
 
             //接收的数据进行object然后来插入
             var insertData = {
-                "OrderID" : OrderID,
-                "DeliveryUserID" : DeliveryUserID,
-                "DeliveryBeginTime" : DeliveryBeginTime || '',
-                "DeliveryEndTime" : DeliveryEndTime || ''
+                "OrderID": OrderID,
+                "DeliveryUserID": DeliveryUserID,
+                "DeliveryBeginTime": DeliveryBeginTime || '',
+                "DeliveryEndTime": DeliveryEndTime || ''
             };
 
             var intData = {
-                "OrderID" : OrderID,
-                "DeliveryUserID" : DeliveryUserID
+                "OrderID": OrderID,
+                "DeliveryUserID": DeliveryUserID
             };
 
             for (var key in intData) {
@@ -117,33 +131,35 @@ router.post('/', function (req, res) {
                             });
                         }
 
-                        if (result !== undefined && result.affectedRows != 0) {
-                            orderService.updateOrder({'OrderID': OrderID, 'OrderStatus': 2}, function (err, updateInfo) {
-                                    if (err) {
-                                        res.status(500);
-                                        return res.json({
-                                            code: 500,
-                                            isSuccess: false,
-                                            msg: '服务器内部错误!'
-                                        });
-                                    }
-
-                                    if (updateInfo !== undefined && updateInfo.affectedRows != 0) {
-                                        res.status(200);
-                                        return res.json({
-                                            code: 200,
-                                            isSuccess: true,
-                                            addProductResult: result,
-                                            msg: '配送员分配成功'
-                                        });
-                                    }
-                                });
-                        } else {
+                        if (result == undefined && result.affectedRows == 0) {
                             res.status(404);
                             return res.json({
                                 code: 404,
                                 isSuccess: false,
                                 msg: "订单配送员添加操作失败"
+                            });
+                        }
+
+                        if (result !== undefined && result.affectedRows != 0) {
+                            orderService.updateOrder({ 'OrderID': OrderID, 'OrderStatus': 2 }, function (err, updateInfo) {
+                                if (err) {
+                                    res.status(500);
+                                    return res.json({
+                                        code: 500,
+                                        isSuccess: false,
+                                        msg: '服务器内部错误!'
+                                    });
+                                }
+
+                                if (updateInfo !== undefined && updateInfo.affectedRows != 0) {
+                                    res.status(200);
+                                    return res.json({
+                                        code: 200,
+                                        isSuccess: true,
+                                        addProductResult: result,
+                                        msg: '配送员分配成功'
+                                    });
+                                }
                             });
                         }
                     });
@@ -162,6 +178,15 @@ router.post('/', function (req, res) {
                             });
                         }
 
+                        if (result == undefined && result.affectedRows == 0) {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "订单配送员修改操作失败"
+                            });
+                        }
+
                         if (result !== undefined && result.affectedRows != 0) {
                             res.status(200);
                             return res.json({
@@ -170,24 +195,9 @@ router.post('/', function (req, res) {
                                 updateResult: result,
                                 msg: '订单配送员修改成功'
                             });
-                        } else {
-                            res.status(404);
-                            return res.json({
-                                code: 404,
-                                isSuccess: false,
-                                msg: "订单配送员修改操作失败"
-                            });
                         }
                     });
-
                 }
-            });
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: funcResult.msg
             });
         }
     });
@@ -209,6 +219,16 @@ router.get('/', function (req, res) {
                 msg: '服务器内部错误！'
             });
         }
+
+        if (!(funcResult !== undefined && funcResult.isSuccess === true)) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var query = JSON.parse(req.query.f);
             var page = req.query.pageindex || 1,
@@ -219,10 +239,10 @@ router.get('/', function (req, res) {
                 deliveryEndTime = query.DeliveryEndTime || '',
                 isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 0;
 
-           var data = {
-                page : page,
-                pageNum : pageNum,
-                isPaging : isPaging
+            var data = {
+                page: page,
+                pageNum: pageNum,
+                isPaging: isPaging
             };
 
             if (orderID != undefined) {
@@ -254,8 +274,8 @@ router.get('/', function (req, res) {
             if (deliveryEndTime !== undefined) {
                 data.DeliveryEndTime = deliveryEndTime;
             }
-            
-            
+
+
             var countNum = -1;
             orderDelivery.countOrderDelivery(data, function (err, results) {
                 if (err) {
@@ -266,7 +286,16 @@ router.get('/', function (req, res) {
                         errorMsg: "查询失败，服务器内部错误！"
                     });
                 }
-                
+
+                if (!(results !== undefined && results.length != 0 && (results[0]['num']) > 0)) {
+                    res.status(200);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相应配送情况！"
+                    });
+                }
+
                 if (results !== undefined && results.length != 0 && (results[0]['num']) > 0) {
                     countNum = results[0]['num'];
 
@@ -291,12 +320,16 @@ router.get('/', function (req, res) {
                                 totalPage: Math.ceil(countNum / pageNum),
                                 data: result
                             };
+
                             if (resultBack.curPage == resultBack.totalPage) {
                                 resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
                             }
+
                             res.status(200);
                             return res.json(resultBack);
+
                         } else {
+
                             res.status(200);
                             return res.json({
                                 code: 404,
@@ -305,21 +338,7 @@ router.get('/', function (req, res) {
                             });
                         }
                     });
-                } else {
-                    res.status(200);
-                    return res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "未查询到相应配送情况！"
-                    });
                 }
-            });
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: funcResult.msg
             });
         }
     });
@@ -342,20 +361,30 @@ router.put('/', function (req, res) {
                 msg: '服务器内部错误！'
             });
         }
+
+        if (!(funcResult !== undefined && funcResult.isSuccess === true)) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             //接受前端的数据
             console.log(req.body.formdata);
             var formdata = req.body.formdata;
 
             var data = ['OrderID', 'DeliveryUserID'];
-            var err = 'require: ';
+            var errSend = 'require: ';
             for (var value in data) {
                 if (!(data[value] in formdata)) {
-                    err += data[value] + ' ';
+                    errSend += data[value] + ' ';
                 }
             }
 
-            if (err !== 'require: ') {
+            if (errSend !== 'require: ') {
                 logger.writeError(err);
                 res.status(400);
                 return res.json({
@@ -373,15 +402,15 @@ router.put('/', function (req, res) {
 
             //接收的数据进行object然后来插入
             var insertData = {
-                "OrderID" : OrderID,
-                "DeliveryUserID" : DeliveryUserID,
-                "DeliveryBeginTime" : DeliveryBeginTime || '',
-                "DeliveryEndTime" : DeliveryEndTime || ''
+                "OrderID": OrderID,
+                "DeliveryUserID": DeliveryUserID,
+                "DeliveryBeginTime": DeliveryBeginTime || '',
+                "DeliveryEndTime": DeliveryEndTime || ''
             };
 
             var intData = {
-                "OrderID" : OrderID,
-                "DeliveryUserID" : DeliveryUserID
+                "OrderID": OrderID,
+                "DeliveryUserID": DeliveryUserID
             };
 
             for (var key in intData) {
@@ -396,7 +425,7 @@ router.put('/', function (req, res) {
             }
 
             //执行插入操作
-            orderDelivery.countOrderDelivery({OrderID : OrderID},function (err,results) {
+            orderDelivery.countOrderDelivery({ OrderID: OrderID }, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -405,7 +434,7 @@ router.put('/', function (req, res) {
                         msg: '服务器内部错误！'
                     });
                 }
-                console.log(results)
+
                 if (results != undefined && results.length != 0 && results[0]['num'] > 0) {
                     orderDelivery.updateOrderDelivery(insertData, function (err, result) {
                         if (err) {
@@ -442,15 +471,6 @@ router.put('/', function (req, res) {
                         msg: "此条订单配送员记录不存在！"
                     });
                 }
-
-            });
-
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: funcResult.msg
             });
         }
     });
@@ -473,19 +493,29 @@ router.put('/startDelivery', function (req, res) {
                 msg: '服务器内部错误！'
             });
         }
+
+        if (!(funcResult !== undefined && funcResult.isSuccess === true)) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             //接受前端的数据
             var formdata = req.body.formdata;
 
             var data = ['OrderID'];
-            var err = 'require: ';
+            var errSend = 'require: ';
             for (var value in data) {
                 if (!(data[value] in formdata)) {
-                    err += data[value] + ' ';
+                    errSend += data[value] + ' ';
                 }
             }
 
-            if (err !== 'require: ') {
+            if (errSend !== 'require: ') {
                 logger.writeError(err);
                 res.status(400);
                 return res.json({
@@ -501,12 +531,12 @@ router.put('/startDelivery', function (req, res) {
 
             //接收的数据进行object然后来插入
             var insertData = {
-                "OrderID" : OrderID,
-                "DeliveryBeginTime" : DeliveryBeginTime || ''
+                "OrderID": OrderID,
+                "DeliveryBeginTime": DeliveryBeginTime || ''
             };
 
             var intData = {
-                "OrderID" : OrderID,
+                "OrderID": OrderID,
             };
 
             for (var key in intData) {
@@ -521,7 +551,7 @@ router.put('/startDelivery', function (req, res) {
             }
 
             //执行插入操作
-            orderDelivery.countOrderDelivery({OrderID : OrderID},function (err,results) {
+            orderDelivery.countOrderDelivery({ OrderID: OrderID }, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -530,7 +560,7 @@ router.put('/startDelivery', function (req, res) {
                         msg: '服务器内部错误！'
                     });
                 }
-                console.log(results)
+
                 if (results != undefined && results.length != 0 && results[0]['num'] > 0) {
                     orderDelivery.updateOrderDelivery(insertData, function (err, result) {
                         if (err) {
@@ -542,6 +572,15 @@ router.put('/startDelivery', function (req, res) {
                             });
                         }
 
+                        if (!(result !== undefined && result.affectedRows != 0)) {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "开始配送操作失败！"
+                            });
+                        }
+
                         if (result !== undefined && result.affectedRows != 0) {
                             res.status(200);
                             return res.json({
@@ -549,13 +588,6 @@ router.put('/startDelivery', function (req, res) {
                                 isSuccess: true,
                                 updateResult: result,
                                 msg: '开始配送操作成功！'
-                            });
-                        } else {
-                            res.status(404);
-                            return res.json({
-                                code: 404,
-                                isSuccess: false,
-                                msg: "开始配送操作失败！"
                             });
                         }
                     });
@@ -567,15 +599,6 @@ router.put('/startDelivery', function (req, res) {
                         msg: "此条订单配送员记录不存在！"
                     });
                 }
-
-            });
-
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: funcResult.msg
             });
         }
     });
@@ -599,20 +622,30 @@ router.put('/endDelivery', function (req, res) {
                 msg: '服务器内部错误！'
             });
         }
+
+        if (!(funcResult !== undefined && funcResult.isSuccess === true)) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             //接受前端的数据
 
             var formdata = req.body.formdata;
 
             var data = ['OrderID'];
-            var err = 'require: ';
+            var errSend = 'require: ';
             for (var value in data) {
                 if (!(data[value] in formdata)) {
-                    err += data[value] + ' ';
+                    errSend += data[value] + ' ';
                 }
             }
 
-            if (err !== 'require: ') {
+            if (errSend !== 'require: ') {
                 logger.writeError(err);
                 res.status(400);
                 return res.json({
@@ -628,12 +661,12 @@ router.put('/endDelivery', function (req, res) {
 
             //接收的数据进行object然后来插入
             var insertData = {
-                "OrderID" : OrderID,
-                "DeliveryEndTime" : DeliveryEndTime || ''
+                "OrderID": OrderID,
+                "DeliveryEndTime": DeliveryEndTime || ''
             };
 
             var intData = {
-                "OrderID" : OrderID
+                "OrderID": OrderID
             };
 
             for (var key in intData) {
@@ -648,7 +681,7 @@ router.put('/endDelivery', function (req, res) {
             }
 
             //执行插入操作
-            orderDelivery.countOrderDelivery({OrderID : OrderID},function (err,results) {
+            orderDelivery.countOrderDelivery({ OrderID: OrderID }, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -657,7 +690,7 @@ router.put('/endDelivery', function (req, res) {
                         msg: '服务器内部错误！'
                     });
                 }
-                console.log(results)
+
                 if (results != undefined && results.length != 0 && results[0]['num'] > 0) {
                     orderDelivery.updateOrderDelivery(insertData, function (err, result) {
                         if (err) {
@@ -669,9 +702,18 @@ router.put('/endDelivery', function (req, res) {
                             });
                         }
 
+                        if (!(result !== undefined && result.affectedRows != 0)) {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "完成配送操作失败！"
+                            });
+                        }
+
                         if (result !== undefined && result.affectedRows != 0) {
 
-                            orderService.updateOrder({ OrderStatus: 3,OrderID: OrderID}, function (err, updateOrderResult) {
+                            orderService.updateOrder({ OrderStatus: 3, OrderID: OrderID }, function (err, updateOrderResult) {
                                 if (err) {
                                     res.status(500);
                                     return res.json({
@@ -682,14 +724,7 @@ router.put('/endDelivery', function (req, res) {
                                     return;
                                 }
 
-                                if (updateOrderResult !== undefined && updateOrderResult.affectedRows != 0) {
-                                    res.status(200);
-                                    return res.json({
-                                        code: 200,
-                                        isSuccess: true,
-                                        msg: '订单修改成功'
-                                    });
-                                } else {
+                                if (!(updateOrderResult !== undefined && updateOrderResult.affectedRows != 0)) {
                                     res.status(400);
                                     return res.json({
                                         code: 400,
@@ -697,14 +732,15 @@ router.put('/endDelivery', function (req, res) {
                                         msg: '订单修改失败'
                                     });
                                 }
-                            });
 
-                        } else {
-                            res.status(404);
-                            return res.json({
-                                code: 404,
-                                isSuccess: false,
-                                msg: "完成配送操作失败！"
+                                if (updateOrderResult !== undefined && updateOrderResult.affectedRows != 0) {
+                                    res.status(200);
+                                    return res.json({
+                                        code: 200,
+                                        isSuccess: true,
+                                        msg: '订单修改成功'
+                                    });
+                                }
                             });
                         }
                     });
@@ -717,14 +753,6 @@ router.put('/endDelivery', function (req, res) {
                     });
                 }
 
-            });
-
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: funcResult.msg
             });
         }
     });
