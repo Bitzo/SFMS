@@ -61,7 +61,7 @@ exports.queryAllRoles = function (data, callback) {
 
 //计数，统计对应数据总个数
 exports.countAllRoles = function (data, callback) {
-    var sql =  'select count(1) AS num from jit_role where 1=1 ';
+    var sql =  'select count(1) AS num from jit_role,jit_application where 1=1 and jit_role.ApplicationID = jit_application.ID';
 
     if (data !== undefined) {
         for (var key in data) {
@@ -106,11 +106,12 @@ exports.addRole = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (sql.length == 0) {
-                sql += " " + key + " = '" + data[key] + "' ";
-            } else {
-                sql += ", " + key + " = '" + data[key] + "' ";
-            }
+            if (data[key]!=='')
+                if (sql.length == 0) {
+                    sql += " " + key + " = '" + data[key] + "' ";
+                } else {
+                    sql += ", " + key + " = '" + data[key] + "' ";
+                }
         }
     }
 

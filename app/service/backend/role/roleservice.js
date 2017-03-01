@@ -57,7 +57,8 @@ exports.queryAllRoles = function (data, callback) {
                 if (err) {
                     logger.writeError("角色查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+            });
+
             callback(true);
             return;
         }
@@ -65,11 +66,12 @@ exports.queryAllRoles = function (data, callback) {
         logModel.Type = 2;
         logModel.Memo = "角色查询成功";
         logModel.CreateUserID = data.OperateUserID;
+
         logService.insertOperationLog(logModel, function (err, insertID) {
             if (err) {
                 logger.writeError("角色查询成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
 
         logger.writeInfo('queryAllRoles');
         callback(false, results);
@@ -104,7 +106,7 @@ exports.countAllRoles = function (data, callback) {
 //新增角色信息
 exports.addRole = function (data, callback) {
     var formdata = {
-        'ApplicationID': data.ApplicationID,
+        'ApplicationID': data.ApplicationID || '',
         'RoleCode': data.RoleCode,
         'RoleName': data.RoleName,
         'IsActive': data.IsActive
@@ -124,7 +126,7 @@ exports.addRole = function (data, callback) {
                 if (err) {
                     logger.writeError("角色新增失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+            });
 
             callback(true);
             return;
@@ -138,7 +140,7 @@ exports.addRole = function (data, callback) {
             if (err) {
                 logger.writeError("角色新增成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
 
         logger.writeInfo('addRole');
         callback(false, results);
@@ -175,7 +177,7 @@ exports.updateRole = function (data, callback) {
                 if (err) {
                     logger.writeError("角色修改失败，生成操作日志失败 " + logModel.CreateTime);
                 }
-            })
+            });
 
             callback(true);
             return;
@@ -189,7 +191,7 @@ exports.updateRole = function (data, callback) {
             if (err) {
                 logger.writeError("角色修改成功，生成操作日志失败 " + logModel.CreateTime);
             }
-        })
+        });
 
         logger.writeInfo("updateRole");
         callback(false, results);

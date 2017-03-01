@@ -12,7 +12,10 @@ var projectuserDAL = appRequire('dal/sfms/project/projectuserdal.js'),
     logModel = appRequire('model/backend/log/logmodel'),
     logService = appRequire('service/backend/log/logservice'),
     operationConfig = appRequire('config/operationconfig'),
-    moment = require('moment');
+    moment = require('moment'),
+    projectservice = appRequire('service/sfms/project/projectservice'),
+    projectuserservice = appRequire('service/sfms/project/projectuserservice');
+
 
 logModel.ApplicationID = operationConfig.sfmsApp.applicationID;
 logModel.ApplicationName = operationConfig.sfmsApp.applicationName;
@@ -55,7 +58,7 @@ exports.queryProjectUser = function (data, callback) {
     var formdata = {
         'ProjectID': data.ProjectID || '',
         'UserName': data.UserName || '',
-        'IsActive': 1,
+        'jit_projectruser.IsActive': 1,
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount
     };
@@ -100,7 +103,7 @@ exports.countQuery = function (data, callback) {
     var queryData = {
         'ProjectID': data.ProjectID || '',
         'UserName': data.UserName || '',
-        'IsActive': 1
+        'jit_projectruser.IsActive': 1
     };
 
     projectuserDAL.countQuery(queryData, function (err, results) {
@@ -124,5 +127,72 @@ exports.queryProjectByUserID = function (data, callback) {
 
         logger.writeInfo('查询用户所在项目');
         callback(false, results);
+    })
+};
+
+//用以判断某用户是否属于某个项目的方法
+// data = {
+//    userID: 1,
+//    projectID: 1,
+//    operateUserID: 1
+// }
+exports.judgeUserProject = function (data, callback) {
+    var formdata = {
+        'userID': data.userID,
+        'projectID': data.projectID,
+        'operateUserID':data.operateUserID
+    },
+        results = {
+        isSuccess: false,
+        msg: ''
+    };
+
+    if (formdata.userID <= 0 || isNaN(formdata.userID)) {
+        results.msg = '用户ID有误！';
+        return callback(false, results);
+    }
+
+    if (formdata.projectID <= 0 || isNaN(formdata.projectID)) {
+        results.msg = '项目ID有误！';
+        return callback(false, results);
+    }
+
+    if (formdata.isActive == 0) formdata.isActive = '';
+    
+    projectservice.queryProject({ID:formdata.projectID, IsActive: 1, OperateUserID: formdata.operateUserID}, function (err, results) {
+        if (err) {
+            return callback(true, results);
+        }
+
+        if (results!==undefined&&results.length>0) {
+            var ProjectManageID = results[0].ProjectManageID,
+                isIn = false;
+
+            projectuserservice.queryProjectByUserID({'UserID': formdata.userID}, function (err, results) {
+                if (err) {
+                    return callback(true, results);
+                }
+
+                if (ProjectManageID == formdata.userID) isIn = true;
+
+                if(results!==undefined && !isIn) {
+                    for (var i in results) {
+                        if (results[i].ProjectID == formdata.projectID) isIn = true;
+                    }
+                }
+
+                if (isIn) {
+                    results.isSuccess = true;
+                    results.msg = '';
+                    return callback(false, results);
+                } else {
+                    results.msg = '用户不在项目中';
+                    return callback(false, results);
+                }
+            })
+        } else {
+            results.msg = '数据库返回数据有误！';
+            return callback(false, results);
+        }
     })
 };

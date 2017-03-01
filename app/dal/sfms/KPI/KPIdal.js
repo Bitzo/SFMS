@@ -50,7 +50,7 @@ exports.addKPI = function (data, callback) {
             return;
         });
     });
-}
+};
 
 //KPI编辑
 exports.updateKPI = function (data, callback) {
@@ -93,11 +93,12 @@ exports.updateKPI = function (data, callback) {
             return;
         });
     });
-}
+};
 
 //KPI查询数据量统计
 exports.countQuery = function (data, callback) {
-    var sql = 'select count(1) as num from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_projectbaseinfo.ID = jit_kpiinfo.projectID ';
+    var sql = 'select count(1) as num from jit_kpiinfo,jit_projectbaseinfo ' +
+        'where 1=1 and jit_projectbaseinfo.ID = jit_kpiinfo.projectID and jit_projectbaseinfo.IsActive = 1 ';
     if (data !== undefined) {
         for (var key in data) {
             if (data[key] !== '' && data[key] !== undefined && key !== 'StartTime' && key !== 'EndTime') {
@@ -129,11 +130,14 @@ exports.countQuery = function (data, callback) {
             return;
         });
     });
-}
+};
 
 //KPI查询
 exports.queryKPI = function (data, callback) {
-    var sql = 'select jit_kpiinfo.ID,KPIName,KPIType,KPIScore,ProjectID,ProjectName,UserID,UserName,jit_kpiinfo.CreateTime,jit_kpiinfo.OperateUser,CheckTime,CheckUser,KPIStatus,Remark,jit_kpiinfo.IsActive from jit_kpiinfo,jit_projectbaseinfo where 1=1 and jit_kpiinfo.projectID = jit_projectbaseinfo.ID ',
+    var sql = 'select jit_kpiinfo.ID,KPIName,KPIType,KPIScore,ProjectID,ProjectName,UserID,UserName,' +
+            'jit_kpiinfo.CreateTime,jit_kpiinfo.OperateUser,CheckTime,CheckUser,KPIStatus,Remark,' +
+            'jit_kpiinfo.IsActive from jit_kpiinfo,jit_projectbaseinfo ' +
+            'where 1=1 and jit_kpiinfo.projectID = jit_projectbaseinfo.ID and jit_projectbaseinfo.IsActive = 1 ',
         page = data.page || 1,
         num = data.pageNum || config.pageCount;
 
@@ -171,7 +175,7 @@ exports.queryKPI = function (data, callback) {
             return;
         });
     });
-}
+};
 
 //KPI审核
 exports.checkKPI = function (data, callback) {
@@ -210,7 +214,7 @@ exports.checkKPI = function (data, callback) {
             return;
         });
     });
-}
+};
 
 exports.delKPI = function (data, callback) {
     var sql = 'update jit_kpiinfo set IsActive = 0 ';
@@ -236,7 +240,7 @@ exports.delKPI = function (data, callback) {
             return;
         });
     });
-}
+};
 
 exports.countKPI = function (data, callback) {
     var sql = 'select UserId,sum(KPIScore) as sum from jit_kpiinfo,jit_projectbaseinfo where ' +
@@ -275,4 +279,4 @@ exports.countKPI = function (data, callback) {
             return;
         });
     });
-}
+};

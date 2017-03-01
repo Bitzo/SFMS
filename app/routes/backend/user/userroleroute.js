@@ -269,7 +269,7 @@ router.get('/userID/:userID', function (req, res) {
     var data = {
         userID: req.query.jitkey,
         functionCode: functionCode
-    }
+    };
 
     userFuncService.checkUserFunc(data, function (err, results) {
         if (err) {
