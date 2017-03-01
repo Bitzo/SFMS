@@ -116,9 +116,9 @@ wechat.textMsg(function (msg) {
             
             //输入其他的文字返回的是图文的信息
             var articles = [];
-            var picurl = "http://mmbiz.qpic.cn/mmbiz_png/2gG8lzb9PibtXRR";
-            picurl += "a2ibT3yQS8o2IFUiboGzSRCvbhzPVfooq34aNbs7MYXiaBkjMr";
-            picurl += "IlrR7biadliafyA3EcG16iaYg9hw/0";
+            var picurl = "ttp://mmbiz.qpic.cn/mmbiz_jpg/2gG8lzb9PibsPiadjuibZ6mm";
+            picurl += "GVvqk7am7a8yqW87U3v";
+            picurl += "vm2Bo6H0PXAa8Bxm3wpIKuicpjic0ZKYVT929L85fib64lwKw/0";
             
             articles[0] = {
                 title: "零食",

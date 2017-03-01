@@ -285,6 +285,7 @@ router.get('/userID/:userID', function (req, res) {
         functionCode: functionCode
     }
 
+
     userFuncService.checkUserFunc(data, function (err, results) {
         if (err) {
             res.status(500);
@@ -295,6 +296,7 @@ router.get('/userID/:userID', function (req, res) {
             });
         }
         
+        
         if (results == undefined && results.isSuccess) {
              res.status(400);
              return res.json({
@@ -303,6 +305,7 @@ router.get('/userID/:userID', function (req, res) {
                 msg: results.msg
             });
         }
+        
         
         if (results !== undefined && results.isSuccess === true) {
             var userID = req.params.userID;

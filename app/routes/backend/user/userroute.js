@@ -59,6 +59,7 @@ router.post('/', function (req, res) {
         
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'IsActive'];
+            
             var errSend = 'require: ';
 
             for (var value in dataRequire) {
