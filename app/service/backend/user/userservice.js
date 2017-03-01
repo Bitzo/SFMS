@@ -147,6 +147,7 @@ exports.queryAllUsers = function (data, callback) {
     }
 
     userDAL.queryAllUsers(data, function (err, results) {
+        
         if (err) {
             logModel.Type = 1;
             logModel.Memo = "查询用户的时候，数据库操作失败";
