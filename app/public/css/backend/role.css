@@ -42,13 +42,14 @@ ul{list-style:none;}
   height: 15px;
 }
 @media only screen and (max-width: 991px) {
+    
     .page-content{
         margin-left: 50px;
     }
 }
 
 /*tree*/
-.tree {
+/*.tree {
     min-height:20px;
     padding:19px;
     margin-bottom:20px;
@@ -100,4 +101,4 @@ ul{list-style:none;}
     background:#eee;
     border:1px solid #94a0b4;
     color:#000
-}
+}*/
