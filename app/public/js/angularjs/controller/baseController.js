@@ -460,9 +460,33 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         });
     };
 
-    $scope.excel = function() {
-        console.info("exportExcel");
-        var url =  "/sfms/api/sign/excel/"+1+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key');
+    $scope.excel = function(action) {
+        var url = action+'?' ;
+
+        var excelData = $scope.f;
+
+        if(excelData.startTime) {
+            var date = excelData.startTime;
+            date = date.toJSON();
+            url += "startTime="+ date + "&";
+        }
+
+        if(excelData.endTime) {
+            var date = excelData.endTime;
+            date = date.toJSON();
+            url += "endTime=" + date + "&";
+        }
+
+        if(excelData.startTime && excelData.endTime) {
+            if(excelData.startTime > excelData.endTime) {
+                alert("结束时间不能比起始时间早！");
+                return;
+            }
+        }
+
+        if(excelData.isActive) url += "isActive=" + excelData.isActive + "&";
+
+        url += "access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key');
         console.info(url);
         location.href = url;   //这里不能使用get方法跳转，否则下载不成功
     };
