@@ -166,9 +166,10 @@ router.post('/',function (req, res) {
             });
         }
 
-        var data = ['RoleCode', 'RoleName', 'IsActive'];
+        var data = ['RoleCode', 'RoleName', 'IsActive'],
+            temp = ['角色代码', '角色名称', '是否有效'];
 
-        err = 'required: ';
+        err = '缺少值： ';
 
         //增加角色功能点所需要的数据
         var funcData = req.body.funcData;
@@ -177,11 +178,11 @@ router.post('/',function (req, res) {
         {
             if(!(data[value] in req.body.formdata))
             {
-                err += data[value] + ' ';
+                err += temp[value] + ' ';
             }
         }
 
-        if(err!='required: ')
+        if(err!='缺少值： ')
         {
             res.status(400);
 
@@ -399,8 +400,9 @@ router.put('/', function (req, res) {
             });
         }
 
-        err = 'required: ';
+        err = '缺少值: ';
         data = ['RoleID', 'RoleCode', 'RoleName', 'IsActive'];
+        var temp = ['角色ID', '角色代码', '角色名称', '是否有效'];
 
         //编辑角色基本信息所需要的数据
         var appID = req.body.formdata.ApplicationID || 1,
@@ -425,12 +427,11 @@ router.put('/', function (req, res) {
         {
             if(!(data[value] in req.body.formdata))
             {
-                logger.writeInfo("require " + data[value]);
-                err += data[value] + ' ';
+                err += temp[value] + ' ';
             }
         }
 
-        if(err!='required: ')
+        if(err!='缺少值: ')
         {
             res.status(400);
 
@@ -643,7 +644,7 @@ router.delete('/', function (req, res) {
                 return res.json({
                     status: 400,
                     isSuccess: false,
-                    msg: "require RoleID"
+                    msg: "缺少角色ID"
                 })
             }
 
