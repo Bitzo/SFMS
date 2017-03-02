@@ -24,6 +24,26 @@ myApp.controller('roleAddController', function($scope, $http,$q,baseService,$loc
 
 
     $scope.tree_data = [];  
+    //获取角色数据
+    $http({
+        method: 'get',
+        url: "/backrole?access_token=" + accesstokenstring,
+        params: {
+            f: {"RoleID":1}
+        }
+    }).success(function (response) {
+        $scope.formdata.ApplicationID=1;
+        //获取树形菜单数据
+        $http.get("/func?access_token=" + accesstokenstring)
+        .success(function (response) {
+            for (i=0;i<response.data.length;i++)
+            {                 
+                if(response.data[i].ApplicationID == $scope.formdata.ApplicationID)
+                  $scope.tree_data[0] = response.data[i];
+            }
+            console.log($scope.tree_data);
+        });
+    })
    $scope.appChanged = function() {
             console.log($scope.formdata.ApplicationID)
              $http.get("/func?access_token=" + accesstokenstring)
