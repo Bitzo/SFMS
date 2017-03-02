@@ -21,15 +21,15 @@ router.post('/', function (req, res) {
     console.log(req.headers.referer);
     var arr = req.headers.referer.split('/');
     var wechatusercode = arr[4];
-    var data = ['truename', 'phone', 'school', 'area', 'house', 'dormNum'];
+    var dataRequire = ['truename', 'phone', 'school', 'area', 'house', 'dormNum'];
 
     var err = 'require: ';
 
-    for (var value in data) {
+    for (var value in dataRequire) {
 
-        if (!(data[value] in req.body)) {
+        if (!(dataRequire[value] in req.body)) {
             ///if(data[value]!='Email'&&data[value]!='Address')
-            err += data[value] + ' ';//检查post传输的数据
+            err += dataRequire[value] + ' ';//检查post传输的数据
         }
     }
 
@@ -51,8 +51,8 @@ router.post('/', function (req, res) {
         area = req.body.area,
         dromNum = req.body.house,
         roomNum = req.body.dormNum;
-    console.log("宿舍号为" + roomNum);
-    data = {
+   
+    var data = {
         'CustomerUserName': truename,
         'Phone': phone,
         'AreaID': area,

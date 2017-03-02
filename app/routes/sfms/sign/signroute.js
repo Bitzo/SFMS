@@ -14,7 +14,234 @@ var express = require('express'),
     moment = require('moment'),
     logger = appRequire("util/loghelper").helper,
     functionConfig = appRequire('config/functionconfig'),
-    userFuncService = appRequire('service/backend/user/userfuncservice');
+    userFuncService = appRequire('service/backend/user/userfuncservice'),
+    nodeExcel = require('excel-export'),
+    uuid = require('node-uuid'),
+    fs = require('fs');
+
+const disableLayout ={layout: false};
+
+//生成excel报表
+router.get('/excel/:id', function (req, res) {
+    // var query = JSON.parse(req.query.f),
+    //     userID = query.accountID || '',
+    //     startTime = query.startTime || '',
+    //     endTime = query.endTime || '',
+    //     page = req.query.pageindex || 1,
+    //     pagesize = req.query.pagesize || config.pageCount;
+    //
+    // page = page > 0? page : 1;
+    //
+    // if (startTime !== '') startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
+    //
+    // if (endTime !== '') endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
+    //
+    // var data = {
+    //     'userID': userID,
+    //     'startTime': startTime,
+    //     'endTime': endTime,
+    //     'OperateUserID': req.query.jitkey
+    // };
+    //
+    // userservice.countUser({isActive:1}, function (err,results) {
+    //     if (err) {
+    //         res.status(500);
+    //
+    //         return res.json({
+    //             status: 500,
+    //             isSuccess: false,
+    //             msg: '操作失败，服务器出错'
+    //         })
+    //     }
+    //
+    //     if (results!==undefined&&results.length>0) {
+    //         var totalNum = results[0].num;
+    //
+    //         userservice.queryAllUsers({page:page,pageNum:pagesize,IsPage:1,isActive:1}, function (err, results) {
+    //             if (err) {
+    //                 res.status(500);
+    //
+    //                 return res.json({
+    //                     status: 500,
+    //                     isSuccess: false,
+    //                     msg: '操作失败，服务器出错'
+    //                 })
+    //             }
+    //
+    //             if (results!==undefined&&results.length>0) {
+    //                 var ID = [], userInfo = [];
+    //
+    //                 for (var i in results) {
+    //                     ID[i] = results[i].AccountID;
+    //                     userInfo[i] = {
+    //                         'userID': results[i].AccountID,
+    //                         'userName': results[i].UserName,
+    //                         'college': results[i].College,
+    //                         'class': results[i].Class,
+    //                         'signTime': '00:00:00',
+    //                         'signNum': 0
+    //                     }
+    //                 }
+    //                 data.userID = ID;
+    //
+    //                 signservice.signCount(data, function (err, results) {
+    //                     if (err) {
+    //                         res.status(500);
+    //
+    //                         return res.json({
+    //                             status: 500,
+    //                             isSuccess: false,
+    //                             msg: '操作失败，服务器出错'
+    //                         })
+    //                     }
+    //
+    //                     if (results!==undefined&&results.length>0) {
+    //                         var signInfo = [],k=0;
+    //
+    //                         signInfo[k] = {
+    //                             userID: results[0].UserID,
+    //                             userName: '',
+    //                             inTime: 0,
+    //                             outTime: 0,
+    //                             signNum: 0
+    //                         };
+    //
+    //                         for(var i=0;i<results.length;++i) {
+    //                             if(signInfo[k].userID != results[i].UserID) {
+    //                                 signInfo[++k] = {
+    //                                     userID: results[i].UserID,
+    //                                     inTime: 0,
+    //                                     outTime: 0,
+    //                                     signNum: 0
+    //                                 };
+    //                             }
+    //
+    //                             if (signInfo[k].inTime == 0 && results[i].SignType == 1) continue;
+    //
+    //                             if (results[i].SignType == 0) {
+    //                                 //计算前先判断这次的签到信息是否有匹配的签出信息，若无，则跳过此数据
+    //                                 if(i==results.length-1) break;
+    //
+    //                                 if(results[i+1].UserID != undefined && results[i+1].UserID == signInfo[k].userID) {
+    //                                     signInfo[k].inTime += moment(results[i].CreateTime).unix();
+    //                                     signInfo[k].signNum ++;
+    //                                 }
+    //
+    //                             } else {
+    //                                 signInfo[k].outTime += moment(results[i].CreateTime).unix();
+    //                             }
+    //                         }
+    //
+    //                         for(var i in signInfo) {
+    //                             //取得签到时常总秒数，换算成小时
+    //                             var second = signInfo[i].outTime - signInfo[i].inTime,
+    //                                 h = Math.floor(second/3600),
+    //                                 m = Math.floor((second - h*3600)/60),
+    //                                 s = (second - h*3600 - m*60)
+    //
+    //                             signInfo[i].signTime = h+':'+m+':'+s ;
+    //
+    //                             delete signInfo[i].inTime;
+    //                             delete signInfo[i].outTime;
+    //                         }
+    //
+    //                         for (var i in userInfo) {
+    //                             for (var j in signInfo) {
+    //                                 if (userInfo[i].userID == signInfo[j].userID) {
+    //                                     userInfo[i].signTime = signInfo[j].signTime;
+    //                                     userInfo[i].signNum = signInfo[j].signNum;
+    //                                 }
+    //                             }
+    //                         }
+    //
+    //                         var temp = {
+    //                             status: 200,
+    //                             isSuccess: true,
+    //                             dataNum: totalNum,
+    //                             curPage: page,
+    //                             totalPage: Math.ceil(totalNum/pagesize),
+    //                             curPageNum: pagesize,
+    //                             data: userInfo
+    //                         };
+    //
+    //                         if(temp.curPage == temp.totalPage) {
+    //                             temp.curPageNum = temp.dataNum - (temp.totalPage-1)*pagesize;
+    //                         }
+    //
+    //                         res.status(200);
+    //                         return res.json(temp)
+    //                     } else {
+    //                         var temp = {
+    //                             status: 200,
+    //                             isSuccess: true,
+    //                             dataNum: totalNum,
+    //                             curPage: page,
+    //                             totalPage: Math.ceil(totalNum/pagesize),
+    //                             curPageNum: pagesize,
+    //                             data: userInfo
+    //                         };
+    //
+    //                         if(temp.curPage == temp.totalPage) {
+    //                             temp.curPageNum = temp.dataNum - (temp.totalPage-1)*pagesize;
+    //                         }
+    //
+    //                         res.status(200);
+    //                         return res.json(temp)
+    //                     }
+    //                 })
+    //             } else {
+    //                 res.status(200);
+    //
+    //                 return res.json({
+    //                     status: 200,
+    //                     isSuccess: false,
+    //                     msg: '暂无数据'
+    //                 })
+    //             }
+    //         })
+    //     }
+    // })
+
+    var conf ={};
+    conf.stylesXmlFile = __dirname+"/styles.xml";
+    conf.cols = [{
+        caption:'序号',
+        type:'string',
+        width:6
+    },{
+        caption:'帐号',
+        type:'string',
+        width: 10
+    },{
+        caption:'用户名',
+        type:'string'
+    },{
+        caption:'学院',
+        type:'string'
+    },{
+        caption:'班级',
+        type:'string'
+    },{
+        caption:'签到次数',
+        type:'string'
+    },{
+        caption:'签到时长',
+        type:'string'
+    }];
+
+    conf.rows = [];
+
+    for(var i=0;i<10;++i) {
+        conf.rows.push(["0"+i,"account"+i,"username"+i,"college"+i,"class"+i, 1001*i+243,"YYYY-MM-DD HH:mm:ss"]);
+    }
+
+    var result = nodeExcel.execute(conf);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+    res.setHeader("Content-Disposition", "attachment; filename=Report.xlsx");
+    res.end(result, 'binary');
+});
+
+
 
 //签到记录的统计
 router.get('/count', function (req, res) {

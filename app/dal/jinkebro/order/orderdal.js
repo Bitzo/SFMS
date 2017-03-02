@@ -323,6 +323,7 @@ exports.insertOrderFull = function(data, callback) {
             if (err) {
                 throw err;
             }
+            
             var returnResult = {};
             var funcArr = [];
 
@@ -968,6 +969,7 @@ exports.CountOrders = function(data, callback) {
    
     //订单中的order信息，包含OrderID WechatUserCode CustomerID OrderStatus IsActive
     var order = data['order']
+    
     for (var key in order) {
         if (key == 'jit_customer.CustomerID')
         {
@@ -977,6 +979,7 @@ exports.CountOrders = function(data, callback) {
         if (key == 'jit_order.OrderStatus') {
              query_sql += " and A.OrderStatus = " + order[key];
         }
+        
     }    
     
     logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
@@ -1040,3 +1043,46 @@ exports.queryOrderProductWechat = function(data, callback) {
     });
 
 };
+
+
+/**
+ * function:　用户的ID来获取用户的订单信息
+ * 缺陷：暂时只取其中的最新的3个
+ */
+ 
+exports.queryHistoryProductWechat = function(data, callback) {
+ 
+ console.log(data);
+    var arr = new Array();
+
+    arr.push("select A.CustomerID , A.OrderID , B.OrderStatus , C.ProductID  , C.ProductCount , D.ProductName , D.ProductPrice");
+    arr.push("from jit_ordercustomer A left join jit_order B on A.OrderID = B.OrderID ");
+    arr.push("left join jit_orderproduct C on A.OrderID = C.OrderID left join jit_product D on C.ProductID = D.ProductID where B.OrderStatus = 3");
+    arr.push("and A.IsActive = 1 ");
+    
+    var query_sql = arr.join(' ');
+
+    query_sql += ' and A.CustomerID = ' + data['CustomerID'] + " order by B.OrderTime desc limit 3";
+    
+    logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(query_sql, function(err, results) {
+            connection.release();
+            if (err) {
+                callback(true);
+                return;
+            }
+
+            callback(false, results);
+            return;
+        });
+    });
+
+}; 
+ 

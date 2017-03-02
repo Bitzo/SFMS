@@ -23,17 +23,21 @@ exports.insertOrderDelivery = function (data, callback) {
     for (var key in data) {
         if (key != 'ID' && data[key] != '') {
             if (i == 0) {
+                
                 if (!isNaN(data[key])) {
                     sql += key + " = " + data[key] + " ";
                     i++;
+                    
                 } else {
                     sql += key + " = '" + data[key] + "' ";
                     i++;
                 }
-            } else {
+            } else {               
                 if (!isNaN(data[key])) {
+                    
                     sql += " , " + key + " = " + data[key] + " ";
                 } else {
+                    
                     sql += " , " + key + " = '" + data[key] + "' ";
                 }
             }
@@ -41,13 +45,14 @@ exports.insertOrderDelivery = function (data, callback) {
     }
 
     logger.writeInfo('[dal/jinkebro/orderdelivery]商品配送员的新增');
-    console.log(sql);
+  
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
             logger.writeError("[dal/jinkebro/customer/customerdal]数据库的链接失败");
             return;
         }
+        
         connection.query(sql, function (err, results) {
             connection.release();
             if (err) {
@@ -84,7 +89,8 @@ exports.queryOrderDelivery = function (data, callback) {
         if (key == 'jit_orderdelivery.DeliveryBeginTime' && data[key] != '')
         {
             sql += " and " + key + " > '" + data[key] + "' ";
-        } else if(key == 'jit_orderdelivery.DeliveryEndTime' && data[key] != '')
+            
+        } else if(key == 'jit_orderdelivery.DeliveryEndTime' && data[key] != '')      
         {
             sql += " and " + key  + " < '" + data[key] + "' ";
         }
@@ -158,6 +164,7 @@ exports.countOrderDelivery = function (data, callback) {
                 callback(true);
                 return;
             }
+            
             callback(false, results);
             return;
         });

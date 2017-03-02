@@ -458,17 +458,15 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         error(function(response) {
             alert(response.msg);
         });
-    }
+    };
 
-    // 财务饼状图
-    // $scope.changeChart = function(siteName){
-    //     console.log($scope.f);
-    //     console.log(siteName)
-    //     if(siteName == 'financeChartsAlt'){
-    //        location.href = './index#/backend/peredit'; 
-    //     }else{
+    $scope.excel = function() {
+        console.info("exportExcel");
+        var url =  "/sfms/api/sign/excel/"+1+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key');
+        console.info(url);
+        location.href = url;   //这里不能使用get方法跳转，否则下载不成功
+    };
 
-    //     }
         
     // }
 //------金科小哥------
