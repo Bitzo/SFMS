@@ -19,6 +19,9 @@ jason-select{
 .est{
      width:90px;height:34px;
 }
+.btt{
+    padding: 2px;
+}
 table .arrow{
     display: none;
 }

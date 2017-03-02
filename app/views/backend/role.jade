@@ -6,8 +6,7 @@ block content
                 div.modal-content
                    div.modal-body 
                         h4.modal-title(id="myModalLabel") 角色对应功能点
-                          button.close(type="button",data-dismiss="modal")
-                            span(aria-hidden="true")&times;                
+                          button.close(type="button",data-dismiss="modal" aria-hidden="true") &times;                    
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
@@ -61,9 +60,12 @@ block content
                         td
                           a(href='#/backend/roleEdit/?RoleID={{data.RoleID}}' )
                             i.icon.icon-edit  编辑&nbsp&nbsp
-                          a(ng-click="remove($index,data.RoleName,'/backrole')" href='')
-                            i.icon.icon-ban-circle 禁用&nbsp&nbsp
                           a(data-toggle="modal",data-target="#myModal",ng-click="morerole($index,'rolefunc/')" href='') 
-                            i.icon.icon-zoom-in   更多
+                            i.icon.icon-zoom-in   更多 
+                          button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,data.RoleName,'/backrole')",href='',ng-disabled='data.IsActive')
+                            i.icon.icon-ok 启用 &nbsp
+                          button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,data.RoleName,'/backrole')",href='',ng-disabled='!data.IsActive')
+                            i.icon.icon-ban-circle 禁用 &nbsp
+                          
             div.pull-right
                 jason-pagination(conf='paginationConf')
