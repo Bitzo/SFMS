@@ -309,7 +309,6 @@ exports.insertOrderFull = function(data, callback) {
         receiveProductCounts = data.ProductCounts;
 
     logger.writeInfo("[insertOrderFull func in orderdal]订单新增. ");
-    console.log("[insertOrderFull func in orderdal]订单新增.");
 
     // 从链接池得到connection
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
@@ -499,8 +498,7 @@ exports.insertOrderFull = function(data, callback) {
                     }
                     console.log('insert success');
                     connection.release();
-                    callback(false, returnResult);
-                    return;
+                    return callback(false, returnResult);
                 });
             });
         });
@@ -716,27 +714,23 @@ exports.queryOrderProduct = function(data, callback) {
         query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
     }
 
-    logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
-    console.log("[queryOrders func in productdal]订单查询:" + query_sql);
+    logger.writeInfo("[queryOrders func in productdal]订单产品查询:" + query_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
-            callback(true);
-            return;
+            return callback(true);
         }
 
         connection.query(query_sql, function(err, results) {
             connection.release();
+
             if (err) {
-                callback(true);
-                return;
+                return callback(true);
             }
 
-            callback(false, results);
-            return;
+            return callback(false, results);
         });
     });
-
 };
 
 /**
@@ -806,25 +800,23 @@ exports.CountOrderProduct = function(data, callback) {
 
     sql += ';'; //sql拼接结束
 
-    logger.writeInfo("查询指定条件的订单个数,sql:" + sql);
-    console.log("查询指定条件的订单个数,sql:" + sql);
+    logger.writeInfo("查询指定条件的订单商品个数,sql:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             logger.writeError('数据库连接错误：' + err);
-            callback(true);
-            return;
+            return callback(true);
         }
+
         connection.query(sql, function(err, results) {
             connection.release();
+
             if (err) {
                 logger.writeError('查询指定条件的订单个数：' + err);
-                callback(true);
-                return;
+                return callback(true);
             }
 
-            callback(false, results);
-            return;
+            return callback(false, results);
         });
     });
 };
@@ -876,26 +868,23 @@ exports.queryOrders = function(data, callback) {
     }
 
     logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
-    console.log("[queryOrders func in productdal]订单查询:" + query_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
-            callback(true);
-            return;
+            return callback(true);
         }
 
         connection.query(query_sql, function(err, results) {
             connection.release();
+
             if (err) {
                 callback(true);
                 return;
             }
 
-            callback(false, results);
-            return;
+            return callback(false, results);
         });
     });
-
 };
 
 /**
@@ -933,23 +922,23 @@ exports.CountOrders = function(data, callback) {
     sql += ';'; //sql拼接结束
 
     logger.writeInfo("查询指定条件的订单个数,sql:" + sql);
-    console.log("查询指定条件的订单个数,sql:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             logger.writeError('数据库连接错误：' + err);
-            callback(true);
-            return;
+            return callback(true);
         }
+
         connection.query(sql, function(err, results) {
             connection.release();
+
             if (err) {
                 logger.writeError('查询指定条件的订单个数：' + err);
                 callback(true);
                 return;
             }
-            callback(false, results);
-            return;
+
+            return callback(false, results);
         });
     });
 };

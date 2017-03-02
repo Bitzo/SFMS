@@ -6,14 +6,17 @@
  * @Function: 库存查询，增，删，改
  */
 
-var proStockDAL = appRequire('dal/jinkebro/productstock/productstockdal');
-var moment = require('moment'),
+var proStockDAL = appRequire('dal/jinkebro/productstock/productstockdal'),
+    moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
     operationConfig = appRequire('config/operationconfig'),
-    logModel = appRequire('model/jinkebro/log/logmodel');
-var config = appRequire('config/config');
-var logger = appRequire("util/loghelper").helper;
-var http = require('http');
+    logModel = appRequire('model/jinkebro/log/logmodel'),
+    config = appRequire('config/config'),
+    logger = appRequire("util/loghelper").helper,
+    http = require('http'),
+    validator = require('validator'),
+    dataCheck = appRequire('util/dataverify');
+
 var ProStock = function () {
     this.createTime = moment().format("YYYY-MM-DD HH:mm:ss");
 };
@@ -123,14 +126,14 @@ ProStock.prototype.insert = function (data, callback) {
 
 //修改库存信息
 ProStock.prototype.update = function (data, callback) {
-    if (!checkData(data)) {
-        logModel.OperationName = '修改库存信息时,库存信息为undefined';
-        logModel.Action = operationConfig.jinkeBroApp.productStock.productStockUpd.actionName;
-        logModel.Memo = '修改库存信息失败';
-        logModel.Type = operationConfig.operationType.operation;
-        loggerWrite();
-        return callback(true, logModel.OperationName);
-    }
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
+    logModel.OperationName = operationConfig.jinkeBroApp.productStock.productStockUpd.actionName;
+    logModel.Action = operationConfig.jinkeBroApp.productStock.productStockUpd.actionName;
+    logModel.Identifier = operationConfig.jinkeBroApp.productStock.productStockUpd.identifier;
+    logModel.CreateUserID = data.EditUserID || 0;  //0代表系统管理员操作
 
     var formdata = {
         'ProductID': data.ProductID,
@@ -140,19 +143,78 @@ ProStock.prototype.update = function (data, callback) {
         'EditTime': data.EditTime
     };
 
+    var returnResult = {
+        "msg": "参数不能为空!"
+    };
+
+    var indispensableKeyArr = [
+        formdata.ProductID,
+        formdata.TotalNum,
+        formdata.StockAreaID
+    ];
+
+    var indispensableValueArr = [
+        '商品编号',
+        '库存数量',
+        '库存区域编号'
+    ];
+
+    var undefinedCheck = dataCheck.isUndefinedArray(indispensableKeyArr,indispensableValueArr);
+    if (!(undefinedCheck.isRight)) {
+        returnResult.msg = undefinedCheck.msg;
+        return callback(false,returnResult);
+    }
+
+    var shouldBeNumericKeyArr = [
+        formdata.ProductID,
+        formdata.TotalNum,
+        formdata.StockAreaID
+    ];
+
+    var shouldBeNumericValueArr = [
+        '商品编号',
+        '库存数量',
+        '库存区域编号'
+    ];
+
+    var shouldBeNumeric = dataCheck.isNumericArray(shouldBeNumericKeyArr,shouldBeNumericValueArr);
+    if (!(shouldBeNumeric.isRight)) {
+        returnResult.msg = shouldBeNumeric.msg;
+        return callback(false,returnResult);
+    }
+
+    if (!(validator.isLength((formdata.TotalNum).toString(),{min:1,max:11}))) {
+        returnResult.msg = '商品库存长度应该小于12位！';
+        return callback(false,returnResult);
+    }
+
     proStockDAL.update(data, function (err, results) {
         if (err) {
-            logger.writeError('修改库存信息异常:' + this.createTime);
-            console.log("修改库存信息异常");
-            logModel.OperationName = '修改库存信息';
-            logModel.Action = operationConfig.jinkeBroApp.productStock.productStockUpd.actionName;
-            logModel.Memo = '修改库存信息失败';
+
             logModel.Type = operationConfig.operationType.error;
-            loggerWrite();
-            return callback(true, logModel.OperationName);
+            logModel.Memo = "库存修改失败";
+
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("库存修改失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+
+            return callback(true,'服务器内部错误，库存修改失败');
         }
-        callback(false, results);
-        return;
+
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.Memo = "库存修改成功";
+
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("库存修改成功，生成操作日志失败" + logModel.CreateTime);
+            }
+        });
+
+        logger.writeInfo('库存修改成功');
+
+        return callback(false, results);
     });
 };
 

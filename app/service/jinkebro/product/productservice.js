@@ -395,8 +395,6 @@ Product.prototype.updateProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
-    // finish data check 单凯 2017.2.26 14:21
-
     productDAL.updateProduct(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;

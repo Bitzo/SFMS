@@ -340,6 +340,26 @@ var functionConfig = {
                 functionCode: "JB-PRODUCT-TYPE-QUERY"
             },
         },
+        staff: {
+            functionName: "金科小哥员工管理",
+            functionCode: "JB-STAFF-MANAGE",
+            staffAdd: {
+                functionName: "金科小哥员工新增",
+                functionCode: "JB-STAFF-ADD"
+            },
+            staffEdit: {
+                functionName: "金科小哥员工更新",
+                functionCode: "JB-STAFF-EDIT"
+            },
+            staffDel: {
+                functionName: "金科小哥员工删除",
+                functionCode: "JB-STAFF-DELETE"
+            },
+            staffQuery: {
+                functionName: "金科小哥员工查询",
+                functionCode: "JB-STAFF-QUERY"
+            },
+        },
     },
     sfmsApp: {
         applicationID: 3,
