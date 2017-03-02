@@ -15,13 +15,10 @@ var express = require('express'),
     logger = appRequire("util/loghelper").helper,
     functionConfig = appRequire('config/functionconfig'),
     userFuncService = appRequire('service/backend/user/userfuncservice'),
-    nodeExcel = require('excel-export'),
-    uuid = require('node-uuid'),
-    fs = require('fs');
+    nodeExcel = require('excel-export');
 
 //生成excel报表
 router.get('/excel', function (req, res) {
-
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.SignManage.SignLogCount.functionCode
@@ -56,22 +53,22 @@ router.get('/excel', function (req, res) {
 
         userservice.countUser({isActive:isActive}, function (err,results) {
             if (err) {
-                return res.send("数据异常1");
+                return res.send("数据异常");
             }
 
             if (results === undefined || results.length<=0) {
-                return res.send("数据异常2");
+                return res.send("数据异常");
             }
 
             var totalNum = results[0].num;
 
             userservice.queryAllUsers({IsPage:1,isActive:isActive}, function (err, results) {
                 if (err) {
-                    return res.send("数据异常3");
+                    return res.send("数据异常");
                 }
 
                 if (results===undefined || results.length!=totalNum) {
-                    return res.send("数据异常4");
+                    return res.send("数据异常");
                 }
 
                 var ID = [], userInfo = [];
@@ -93,7 +90,7 @@ router.get('/excel', function (req, res) {
 
                 signservice.signCount(data, function (err, results) {
                     if (err) {
-                        return res.send("数据异常5");
+                        return res.send("数据异常");
                     }
 
                     if (results!==undefined&&results.length>0) {

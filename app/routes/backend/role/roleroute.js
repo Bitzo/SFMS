@@ -414,15 +414,6 @@ router.put('/', function (req, res) {
         //增加角色功能点所需要的数据
         var funcData = req.body.funcdata;
 
-        data = {
-            'ApplicationID': appID,
-            'RoleID': roleID,
-            'RoleCode': roleCode,
-            'RoleName': roleName,
-            'IsActive': isActive,
-            'OperateUserID': req.query.jitkey
-        };
-
         for(var value in data)
         {
             if(!(data[value] in req.body.formdata))
@@ -441,6 +432,15 @@ router.put('/', function (req, res) {
                 msg: err
             });
         }
+
+        data = {
+            'ApplicationID': appID,
+            'RoleID': roleID,
+            'RoleCode': roleCode,
+            'RoleName': roleName,
+            'IsActive': isActive,
+            'OperateUserID': req.query.jitkey
+        };
 
         if (data.RoleName.length>50) {
             res.status(400);
@@ -464,6 +464,7 @@ router.put('/', function (req, res) {
 
         //先查询要增添的角色信息是否已经存在
         var querydata = {
+            'RoleID': roleID,
             'RoleCode': roleCode
         };
 
@@ -479,7 +480,7 @@ router.put('/', function (req, res) {
             }
 
             //没有查询重复的相关信息,则可以添加用户
-            if (!(results !== undefined && results[0]['num'] == 0)) {
+            if (!(results !== undefined && results[0]['num'] <= 1)) {
                 res.status(400);
 
                 return res.json({

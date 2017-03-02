@@ -39,7 +39,32 @@ block content
                                     span {{item}}
                                 li(ng-click="nextPage()")
                                     span&raquo
+        div.modal.fade(id="myModal1",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                    jason-pagecontent(conf='paginationConf')
+                        h4.modal-title(id="myModalLabel1") 生成报表
+                            button.close(type="button",data-dismiss="modal")
+                                span(aria-hidden="true")&times;
+                        br
+                        table.table.table-striped.table-bordered.text-center
+                            tr
+                                td(width="15%",class="tableleft") 起始时间
+                                td
+                                    input(type="date",name='startTime',ng-model='f.startTime')
+                            tr
+                                td(width="15%",class="tableleft") 截止时间
+                                td
+                                    input(type="date",name='endTime',ng-model='f.endTime')
+                            tr
+                                td(width="15%",class="tableleft") 用户类型
+                                td
+                                    select.est(ng-model='f.isActive')
+                                        option(value='1') 有效用户
+                                        option(value='') 全部用户
 
+                        button.btn.btn-default.pull-right(type="button" ng-click="excel('/sfms/api/kpi/excel')") 确认并下载报表
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
         div.page-content
             ng-form.form-inline
                 span(style='font-size: 24px;')  绩效统计
@@ -53,6 +78,8 @@ block content
                             i.icon.icon-search   查询
                         a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
                             i.icon.icon-repeat  刷新
+                        a.btn.btn-sm.btn-success(data-toggle="modal",data-target="#myModal1")
+                            i.icon.icon-table  生成报表
             hr
             table.table.table-striped.table-bordered.text-center
                 thead
