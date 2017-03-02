@@ -6,8 +6,7 @@ block content
                 div.modal-content
                    jason-pagecontent(conf='paginationConf')
                         h4.modal-title(id="myModalLabel") 签到详细信息
-                          button.close(type="button",data-dismiss="modal")
-                            span(aria-hidden="true")&times;
+                          button.close(type="button",data-dismiss="modal" aria-hidden="true") &times;     
                         br
                         table.table.table-striped.table-bordered.text-center
                             thead
@@ -50,19 +49,19 @@ block content
                           tr
                               td(width="15%",class="tableleft") 起始时间
                               td
-                                  input(type="date",name='startTime',ng-model='formdata.startTime')
+                                  input(type="date",name='startTime',ng-model='f.startTime')
                           tr
                               td(width="15%",class="tableleft") 截止时间
                               td
-                                  input(type="date",name='endTime',ng-model='formdata.endTime')
+                                  input(type="date",name='endTime',ng-model='f.endTime')
                           tr
-                              td(width="15%",class="tableleft") 是否有效
+                              td(width="15%",class="tableleft") 用户类型
                               td
                                   select.est(ng-model='f.isActive')
-                                    option(value='1') 有效
-                                    option(value='') 全部
+                                    option(value='1') 有效用户
+                                    option(value='') 全部用户
 
-                      button.btn.btn-default.pull-right(type="button" ng-click="excel('/sfms/api/sign/excel/')") 确认并下载报表
+                      button.btn.btn-default.pull-right(type="button" ng-click="excel('/sfms/api/sign/excel')") 确认并下载报表
                       button.btn.btn-default(type="button",data-dismiss="modal") Close
       div.page-content
       ng-form.form-inline

@@ -1,4 +1,4 @@
-link(rel='stylesheet' href="css/backend/role.css")
+link(rel='stylesheet' href="css/backend/tree.css")
 block content
   div.container-fluid(ng-controller='roleAddController')
     span 
@@ -6,10 +6,11 @@ block content
     form(method="post",name="roleAddForm") 
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") 应用名称
-          td
-            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationID' source='/app', stext='ApplicationName' svalue='ID',sactive='1',style="width:160px;height:30px",required)
-
+          td(width="15%",class="tableleft" ) 应用名称
+          td    
+            select(name='ApplicationID',ng-model='formdata.ApplicationID',ng-change= "appChanged()",required)
+                option   
+                option(ng-repeat="item in applicationNames",value='{{item.ID}}') {{item.ApplicationName}}
          tr
           td(width="15%",class="tableleft") 角色名称
           td
@@ -44,7 +45,7 @@ block content
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-click="submit()") 添加角色
             
-            a.btn.btn-success(href="#backend/role") 返回列表
+            a.btn.btn-sm.btn-success(href="#backend/role") 返回列表
     div.modal.fade(id='functionModel')
         div.modal-dialog
             div.modal-content
@@ -56,5 +57,5 @@ block content
                     div.modal-body
                         p {{Config.ModelBody}}
                     div.modal-footer
-                        button.btn.btn-default(type='button', ng-click='Config.Cancel()') {{Config.BtnCancel}}
-                        button.btn.btn-primary(type='button',ng-click='Config.Save()') {{Config.BtnSave}}
+                        button.btn.btn-sm.btn-default(type='button', ng-click='Config.Cancel()') {{Config.BtnCancel}}
+                        button.btn.btn-sm.btn-primary(type='button',ng-click='Config.Save()') {{Config.BtnSave}}

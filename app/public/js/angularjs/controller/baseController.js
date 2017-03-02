@@ -73,8 +73,41 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         getInit();
         $scope.formdata={};
     };
+   
+     //首页 启用
+    $scope.restart = function (index,a,action) {
+        var mymessage=confirm("是否确认启用  "+a);
+        if(mymessage==true){
+            var formdata={
+                "AccountID":$scope.datas[index].AccountID,
+                "MenuID":$scope.datas[index].MenuID,
+                "ID":$scope.datas[index].ID,
+                "RoleID" : $scope.datas[index].RoleID,
+                "StaffID": $scope.datas[index].StaffID,
+                "ProductID" : $scope.datas[index].ProductID
+            };
+            $http({
+                method:'put',
+                url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+                data: {
+                    formdata:formdata
+                }
+            }).
+            success(function(response) {
+                alert(response.msg)
+                if(response.isSuccess === true) {
+                    $scope.datas[index].IsActive = 1;
+                }
+            }).
+            error(function(response) {
+                alert(response.msg)
+            });
+        }else{
 
-    //首页 删除
+        }
+
+    };
+    //首页 禁用
     $scope.d={};
     $scope.remove = function(index,a,action){
         var mymessage=confirm("是否确认禁用  "+a);
@@ -108,36 +141,39 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }
     };
 
+
+    
+
     //菜单的启用与禁用
-    $scope.shiftStatus = function(action,index,name) {
-        var str = '是否确认禁用';
-        if(action=='/backmenu/reuse') str = '是否确认启用 ';
-        var mymessage=confirm(str + name);
-        if(mymessage==true){
-            var formdata = {
-                MenuID: $scope.datas[index].MenuID
-            };
+    // $scope.shiftStatus = function(action,index,name) {
+    //     var str = '是否确认禁用';
+    //     if(action=='/backmenu/reuse') str = '是否确认启用 ';
+    //     var mymessage=confirm(str + name);
+    //     if(mymessage==true){
+    //         var formdata = {
+    //             MenuID: $scope.datas[index].MenuID
+    //         };
 
-            $http({
-                method:'put',
-                url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                data:{
-                    formdata:formdata
-                }
-            }).
-            success(function(response) {
-                if(response.isSuccess === true) {
-                    $scope.datas[index].IsActive = -$scope.datas[index].IsActive+1;
-                }
-                alert(response.msg)
-            }).
-            error(function(response) {
-                alert(response.msg);
-            });
-        } else {
+    //         $http({
+    //             method:'put',
+    //             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+    //             data:{
+    //                 formdata:formdata
+    //             }
+    //         }).
+    //         success(function(response) {
+    //             if(response.isSuccess === true) {
+    //                 $scope.datas[index].IsActive = -$scope.datas[index].IsActive+1;
+    //             }
+    //             alert(response.msg)
+    //         }).
+    //         error(function(response) {
+    //             alert(response.msg);
+    //         });
+    //     } else {
 
-        }
-    };
+    //     }
+    // };
 
     //新增页面  添加
     $scope.formdata={};
@@ -376,34 +412,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             });
         };
 
-    //项目管理 启用项目
-    $scope.restart = function (index,a,action) {
-        var mymessage=confirm("是否确认启用  "+a);
-        if(mymessage==true){
-            var formdata={
-                "ID":$scope.datas[index].ID,
-            };
-            $http({
-                method:'put',
-                url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-                data: {
-                    formdata:formdata
-                }
-            }).
-            success(function(response) {
-                alert(response.msg)
-                if(response.isSuccess === true) {
-                    $scope.datas[index].IsActive = 1;
-                }
-            }).
-            error(function(response) {
-                alert(response.msg)
-            });
-        }else{
-
-        }
-
-    };
+   
 
     //查询列表点击表头排序
     $scope.logSort = function (sortindex) {
@@ -460,9 +469,33 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         });
     };
 
-    $scope.excel = function() {
-        console.info("exportExcel");
-        var url =  "/sfms/api/sign/excel/"+1+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key');
+    $scope.excel = function(action) {
+        var url = action+'?' ;
+
+        var excelData = $scope.f;
+
+        if(excelData.startTime) {
+            var date = excelData.startTime;
+            date = date.toJSON();
+            url += "startTime="+ date + "&";
+        }
+
+        if(excelData.endTime) {
+            var date = excelData.endTime;
+            date = date.toJSON();
+            url += "endTime=" + date + "&";
+        }
+
+        if(excelData.startTime && excelData.endTime) {
+            if(excelData.startTime > excelData.endTime) {
+                alert("结束时间不能比起始时间早！");
+                return;
+            }
+        }
+
+        if(excelData.isActive) url += "isActive=" + excelData.isActive + "&";
+
+        url += "access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key');
         console.info(url);
         location.href = url;   //这里不能使用get方法跳转，否则下载不成功
     };

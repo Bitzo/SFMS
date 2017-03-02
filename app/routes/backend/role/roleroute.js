@@ -166,9 +166,10 @@ router.post('/',function (req, res) {
             });
         }
 
-        var data = ['RoleCode', 'RoleName', 'IsActive'];
+        var data = ['RoleCode', 'RoleName', 'IsActive'],
+            temp = ['角色代码', '角色名称', '是否有效'];
 
-        err = 'required: ';
+        err = '缺少值： ';
 
         //增加角色功能点所需要的数据
         var funcData = req.body.funcData;
@@ -177,11 +178,11 @@ router.post('/',function (req, res) {
         {
             if(!(data[value] in req.body.formdata))
             {
-                err += data[value] + ' ';
+                err += temp[value] + ' ';
             }
         }
 
-        if(err!='required: ')
+        if(err!='缺少值： ')
         {
             res.status(400);
 
@@ -313,7 +314,7 @@ router.post('/',function (req, res) {
 
                     var count = results[0]['count'];
 
-                    if (!(results!==undefined && count == i)) {
+                    if (!(results!==undefined && count == funcData.length)) {
                         res.status(200);
 
                         return res.json({
@@ -399,8 +400,9 @@ router.put('/', function (req, res) {
             });
         }
 
-        err = 'required: ';
+        err = '缺少值: ';
         data = ['RoleID', 'RoleCode', 'RoleName', 'IsActive'];
+        var temp = ['角色ID', '角色代码', '角色名称', '是否有效'];
 
         //编辑角色基本信息所需要的数据
         var appID = req.body.formdata.ApplicationID || 1,
@@ -412,25 +414,15 @@ router.put('/', function (req, res) {
         //增加角色功能点所需要的数据
         var funcData = req.body.funcdata;
 
-        data = {
-            'ApplicationID': appID,
-            'RoleID': roleID,
-            'RoleCode': roleCode,
-            'RoleName': roleName,
-            'IsActive': isActive,
-            'OperateUserID': req.query.jitkey
-        };
-
         for(var value in data)
         {
             if(!(data[value] in req.body.formdata))
             {
-                logger.writeInfo("require " + data[value]);
-                err += data[value] + ' ';
+                err += temp[value] + ' ';
             }
         }
 
-        if(err!='required: ')
+        if(err!='缺少值: ')
         {
             res.status(400);
 
@@ -440,6 +432,15 @@ router.put('/', function (req, res) {
                 msg: err
             });
         }
+
+        data = {
+            'ApplicationID': appID,
+            'RoleID': roleID,
+            'RoleCode': roleCode,
+            'RoleName': roleName,
+            'IsActive': isActive,
+            'OperateUserID': req.query.jitkey
+        };
 
         if (data.RoleName.length>50) {
             res.status(400);
@@ -463,6 +464,7 @@ router.put('/', function (req, res) {
 
         //先查询要增添的角色信息是否已经存在
         var querydata = {
+            'RoleID': roleID,
             'RoleCode': roleCode
         };
 
@@ -478,7 +480,7 @@ router.put('/', function (req, res) {
             }
 
             //没有查询重复的相关信息,则可以添加用户
-            if (!(results !== undefined && results[0]['num'] == 0)) {
+            if (!(results !== undefined && results[0]['num'] <= 1)) {
                 res.status(400);
 
                 return res.json({
@@ -535,82 +537,119 @@ router.put('/', function (req, res) {
 
                 logger.writeInfo(queryData);
 
-                //验证传入的functionID是否都存在或有效
-                functionservice.queryFuncByID(queryData, function (err, results) {
-                    if (err) {
-                        res.status(200);
-
-                        return res.json({
-                            code: 500,
-                            isSuccess: false,
-                            msg: "角色修改成功，功能点添加失败，服务器出错"
-                        })
-                    }
-
-                    var count = results[0]['count'];
-
-                    if (!(results!==undefined && count == i)) {
-                        res.status(200);
-
-                        return res.json({
-                            code: 400,
-                            isSuccess: false,
-                            msg: "修改角色基本信息成功，修改功能点数据失败，功能点数据有误"
-                        });
-                    }
-
-                    //数据相同可以添加功能点
-                    data = {
-                        "RoleID":roleID,
-                        "data":funcData,
-                        'OperateUserID': req.query.jitkey
-                    };
-
-                    //先删除原先的功能点
-                    rolefuncservice.delRoleFunc(data, function (err, results) {
+                if(funcID.length>0){
+                    //验证传入的functionID是否都存在或有效
+                    functionservice.queryFuncByID(queryData, function (err, results) {
                         if (err) {
                             res.status(200);
 
                             return res.json({
                                 code: 500,
                                 isSuccess: false,
-                                msg: "修改角色基本信息成功，修改功能点失败，服务器出错"
-                            });
-                        }
-                        //已删除原来的功能点准备新增
-                        if (results!==undefined) {
-                            rolefuncservice.addRoleFunc(data, function (err, results) {
-                                if (err) {
-                                    res.status(200);
-
-                                    return res.json({
-                                        code: 500,
-                                        isSuccess: false,
-                                        msg: "修改角色基本信息成功，修改功能点失败，服务器出错"
-                                    });
-                                }
-
-                                if (results !== undefined && results.affectedRows != 0) {
-                                    res.status(200);
-
-                                    return res.json({
-                                        code: 200,
-                                        isSuccess: true,
-                                        msg: "操作成功"
-                                    });
-                                } else {
-                                    res.status(200);
-
-                                    return res.json({
-                                        code: 404,
-                                        isSuccess: false,
-                                        msg: "修改角色成功，修改功能点信息失败"
-                                    });
-                                }
+                                msg: "角色修改成功，功能点添加失败，服务器出错"
                             })
                         }
+
+                        var count = results[0]['count'];
+
+                        if (!(results!==undefined && count == funcData.length)) {
+                            res.status(200);
+
+                            return res.json({
+                                code: 400,
+                                isSuccess: false,
+                                msg: "修改角色基本信息成功，修改功能点数据失败，功能点数据有误"
+                            });
+                        }
+
+                        //数据相同可以添加功能点
+                        data = {
+                            "RoleID":roleID,
+                            "data":funcData,
+                            'OperateUserID': req.query.jitkey
+                        };
+
+                        //先删除原先的功能点
+                        rolefuncservice.delRoleFunc(data, function (err, results) {
+                            if (err) {
+                                res.status(200);
+
+                                return res.json({
+                                    code: 500,
+                                    isSuccess: false,
+                                    msg: "修改角色基本信息成功，修改功能点失败，服务器出错"
+                                });
+                            }
+                            //已删除原来的功能点准备新增
+                            if (results!==undefined) {
+                                rolefuncservice.addRoleFunc(data, function (err, results) {
+                                    if (err) {
+                                        res.status(200);
+
+                                        return res.json({
+                                            code: 500,
+                                            isSuccess: false,
+                                            msg: "修改角色基本信息成功，修改功能点失败，服务器出错"
+                                        });
+                                    }
+
+                                    if (results !== undefined && results.affectedRows != 0) {
+                                        res.status(200);
+
+                                        return res.json({
+                                            code: 200,
+                                            isSuccess: true,
+                                            msg: "操作成功"
+                                        });
+                                    } else {
+                                        res.status(200);
+
+                                        return res.json({
+                                            code: 404,
+                                            isSuccess: false,
+                                            msg: "修改角色成功，修改功能点信息失败"
+                                        });
+                                    }
+                                })
+                            }
+                        })
                     })
-                })
+                } else {
+                    data = {
+                        "RoleID": roleID,
+                        'OperateUserID': req.query.jitkey
+                    };
+
+                    rolefuncservice.delRoleFunc(data, function (err, results) {
+                        if (err) {
+                            res.status(500);
+
+                            return res.json({
+                                code: 500,
+                                isSuccess: false,
+                                msg: "操作失败，服务器出错"
+                            });
+                        }
+
+                        if (results !== undefined && results.affectedRows != 0) {
+                            res.status(200);
+
+                            return res.json({
+                                code: 200,
+                                isSuccess: true,
+                                msg: "操作成功"
+                            });
+                        } else {
+                            res.status(400);
+
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: "操作失败"
+                            });
+                        }
+                    });
+                }
             })
         })
     });
@@ -643,7 +682,7 @@ router.delete('/', function (req, res) {
                 return res.json({
                     status: 400,
                     isSuccess: false,
-                    msg: "require RoleID"
+                    msg: "缺少角色ID"
                 })
             }
 

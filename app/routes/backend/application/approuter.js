@@ -35,18 +35,19 @@ router.post('/', function (req, res) {
         if (results !== undefined&& results.isSuccess === true) {
             var query = req.body.formdata;
 
-            err = 'required: ';
+            err = '缺少值: ';
             data = ['ApplicationCode', 'ApplicationName', 'IsActive'];
+            var temp = ['应用代码','应用名称','是否有效'];
 
             for(var value in data)
             {
                 if(!(data[value] in query))
                 {
-                    err += data[value] + ' ';
+                    err += temp[value] + ' ';
                 }
             }
 
-            if (err != 'required: ') {
+            if (err != '缺少值: ') {
                 res.status(400);
                 res.json({
                     code: 400,
@@ -296,7 +297,7 @@ router.put('/', function(req, res) {
         }
 
         if (results !== undefined && results.isSuccess === true) {
-            var err = 'required: ',
+            var err = '缺少值: ',
                 query = req.body.formdata,
                 ApplicationCode = query.ApplicationCode,
                 ApplicationName = query.ApplicationName,
@@ -305,6 +306,7 @@ router.put('/', function(req, res) {
                 Memo = query.Memo||'';
 
             data = ['ApplicationCode', 'ApplicationName', 'IsActive', 'ID'];
+            temp = ['应用代码', '应用名称', '是否有效','应用ID']
 
             for (var index in data) {
                 if (!(data[index] in query)) {
@@ -312,7 +314,7 @@ router.put('/', function(req, res) {
                 }
             }
 
-            if (err != 'required: ') {
+            if (err != '缺少值: ') {
                 res.status(400);
                 res.json({
                     code: 400,

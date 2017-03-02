@@ -17,6 +17,7 @@ var express = require('express'),
     moment = require('moment'),
     logger = appRequire("util/loghelper").helper,
     functionConfig = appRequire('config/functionconfig'),
+    nodeExcel = require('excel-export'),
     userFuncService = appRequire('service/backend/user/userfuncservice');
 
 /**
@@ -488,6 +489,137 @@ router.put('/', function (req, res) {
                             msg: '操作失败，绩效类型有误！'
                         });
                     }
+                });
+            });
+        });
+    });
+});
+
+//绩效统计到处excel
+router.get('/excel', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.KPIManage.KPICount.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function(err, results) {
+        if (err) {
+            return res.send('数据异常');
+        }
+
+        if (!(results !== undefined && results.isSuccess)) {
+            return res.send(result.msg);
+
+        }
+
+        var query = req.query,
+            startTime = query.startTime || '',
+            endTime = query.endTime || '',
+            isActive = query.isActive || '';
+
+        if (startTime) startTime = moment(startTime).format('YYYY-MM-DD HH:mm:ss');
+
+        if (endTime) endTime = moment(endTime).format('YYYY-MM-DD HH:mm:ss');
+
+        var filename = moment().format('YYYYMMDDHHmmss').toString();
+
+        var data = {
+            'startTime': startTime,
+            'endTime': endTime,
+            'OperateUserID': req.query.jitkey
+        };
+
+        userservice.countUser({isActive: isActive}, function (err, results) {
+            if (err) {
+                return res.send("数据异常");
+            }
+
+            if (results === undefined || results.length<=0) {
+                return res.send("数据异常");
+            }
+
+            var totalNum = results[0].num;
+
+            userservice.queryAllUsers({IsPage: 1, isActive: isActive}, function (err, results) {
+                if (err) {
+                    return res.send("数据异常");
+                }
+
+                if (results===undefined || results.length!=totalNum) {
+                    return res.send("数据异常");
+                }
+
+                var ID = [], userInfo = [];
+
+                for (var i in results) {
+                    ID[i] = results[i].AccountID;
+                    userInfo[i] = {
+                        'userID': results[i].AccountID,
+                        'userName': results[i].UserName,
+                        'college': results[i].College,
+                        'class': results[i].Class,
+                        'kpiScore': 0,
+                        'isActive': results[i].IsActive ? '是':'否'
+                    }
+                }
+
+                data.userID = ID;
+
+                KPIservice.countKPI(data, function (err, results) {
+                    if (err) {
+                        return res.send("数据异常");
+                    }
+
+                    if (results!==undefined&&results.length>0) {
+                        for (var i in results) {
+                            for (var j in userInfo) {
+                                if (userInfo[j].userID == results[i].UserId) {
+                                    userInfo[j].kpiScore = results[i].sum;
+                                    break;
+                                }
+                            }
+                        }
+
+                    }
+
+                    var conf ={};
+
+                    conf.cols = [{
+                        caption:'序号',
+                        type:'string',
+                    },{
+                        caption:'帐号',
+                        type:'string',
+                    },{
+                        caption:'用户名',
+                        type:'string'
+                    },{
+                        caption:'学院',
+                        type:'string'
+                    },{
+                        caption:'班级',
+                        type:'string'
+                    },{
+                        caption:'绩效分',
+                        type:'number'
+                    },{
+                        caption:'有效用户',
+                        type:'string'
+                    }];
+
+                    conf.rows = [];
+
+                    for(var i=0;i<userInfo.length;++i) {
+                        conf.rows.push([(i+1).toString(), userInfo[i].userID.toString(), userInfo[i].userName, userInfo[i].college,
+                            userInfo[i].class, userInfo[i].kpiScore, userInfo[i].isActive]);
+                    }
+
+                    var result = nodeExcel.execute(conf);
+
+                    res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+                    res.setHeader("Content-Disposition", "attachment; filename="+filename+".xlsx");
+
+                    return res.end(result, 'binary');
                 });
             });
         });

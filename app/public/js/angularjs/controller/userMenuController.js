@@ -27,7 +27,7 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
                 
             }
 
-                //获取该用户的菜单信息
+            //获取该用户的菜单信息
             $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
             .success(function (response) { 
                 console.log(response)

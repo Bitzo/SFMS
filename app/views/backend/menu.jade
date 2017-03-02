@@ -36,12 +36,9 @@ block content
             td
               a(href='#/backend/menuedit/?MenuID={{x.MenuID}}')
                 i.icon.icon-edit &nbsp编辑&nbsp&nbsp
-              a(ng-click="shiftStatus('/backmenu/reuse',$index,x.MenuName)",href='')
-                i.icon.icon-ok &nbsp启用&nbsp&nbsp
-              a(ng-click="shiftStatus('/backmenu/forbid',$index,x.MenuName)",href='')
-                i.icon.icon-ban-circle &nbsp禁用
-              //- span(ng-click="changeMenuStatus(x.MenuID,x.IsActive)",href='')
-              //-   i.icon.icon-ok 是否有效
-              //-   input(type="checkbox" ng-model="x.IsActive")
+              button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.MenuName,'/backmenu/reuse')",href='',ng-disabled='x.IsActive')
+                i.icon.icon-ok 启用 &nbsp
+              button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,x.MenuName,'/backmenu/forbid')",href='',ng-disabled='!x.IsActive')
+                i.icon.icon-ban-circle 禁用 &nbsp
       div.pull-right
         jason-pagination(conf='paginationConf')
