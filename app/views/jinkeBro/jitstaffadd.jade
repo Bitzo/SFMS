@@ -8,9 +8,9 @@ block content
                 tr
                     td(width="15%",class="tableleft") 员工姓名
                     td
-                        input(type="textview",name="StaffName",ng-model='formdata.StaffName',ng-maxlength='10',required)
+                        input(type="textview",name="StaffName",ng-model='formdata.StaffName',ng-maxlength='50',required)
                         
-                        small.error(ng-if="stuffAdd.StaffName.$error.maxlength && stuffAdd.StaffName.$touched") 姓名最多10位
+                        small.error(ng-if="stuffAdd.StaffName.$error.maxlength && stuffAdd.StaffName.$touched") 姓名最多50位
 
                 tr
                     td(width="15%",class="tableleft") 员工性别
@@ -38,7 +38,7 @@ block content
                     td
                         input(type="text",name="Phone",ng-model="formdata.Phone",ng-maxlength='11')
                         
-                        small.error(ng-if="stuffAdd.Phone.$error.maxlength && stuffAdd.Phone.$touched") 电话号码最多10位
+                        small.error(ng-if="stuffAdd.Phone.$error.maxlength && stuffAdd.Phone.$touched") 电话号码最多11位
                 tr
                     td(width="15%",class="tableleft") 员工职位
                     td

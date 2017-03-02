@@ -38,12 +38,20 @@ block content
                         td(width="15%",class="tableleft") 电话号码
                         td
                             input(type="text",name="Phone",ng-model="paginationConf.formdata.Phone",value='{{paginationConf.formdata.Phone}}',ng-maxlength='11',required)
-                            small.error(ng-if="staffedit.Phone.$error.maxlength && stuffAdd.Phone.$touched") 电话号码最多10位
+                            small.error(ng-if="staffedit.Phone.$error.maxlength && stuffAdd.Phone.$touched") 电话号码最多11位
                     tr
                         td(width="15%",class="tableleft") 员工职位
                         td
                             input(type="text",name="Position",ng-model="paginationConf.formdata.Position",value='{{paginationConf.formdata.Position}}',required)
                             small.error(ng-if="staffedit.Position.$error.maxlength && stuffAdd.Position.$touched") 职位名称最多50位
+                    tr
+                        td(width="15%",class="tableleft") 是否有效
+                        td
+                            input(type="radio",name="IsActive",value="1",ng-model="paginationConf.formdata.IsActive",style="width:15px;height:15px",checked)
+                            | 有效&nbsp&nbsp&nbsp&nbsp
+
+                            input(type="radio",name="IsActive",value="0",ng-model="paginationConf.formdata.IsActive",style="width:15px;height:15px")
+                            | 无效
                     tr
                         td(class="tableleft")
                         td

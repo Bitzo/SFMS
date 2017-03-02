@@ -134,7 +134,7 @@ router.post('/',function (req,res) {
 });
 
 router.delete('/',function (req,res) {
-    var functionCode = functionConfig.jinkeBroApp.staff.staffQuery.functionCode;
+    var functionCode = functionConfig.jinkeBroApp.staff.staffDel.functionCode;
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
@@ -160,23 +160,9 @@ router.delete('/',function (req,res) {
         }
 
         var d = JSON.parse(req.query.d);
+
         var StaffID = d.StaffID;
-        if (StaffID === undefined) {
-            res.status(404);
-            return res.json({
-                code: 404,
-                isSuccess: false,
-                msg: '需要员工编号！'
-            });
-        }
-        if (isNaN(StaffID)) {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: '员工编号不是数字！'
-            });
-        }
+
         var deleteData = {
             "StaffID": StaffID
         };
@@ -187,50 +173,54 @@ router.delete('/',function (req,res) {
                 return res.json({
                     code: 500,
                     isSuccess: false,
-                    deleteResult: result,
                     msg: '操作失败，服务器出错'
                 });
             }
 
-            if (result !== undefined &&  result.length != 0 && result[0]['num'] !== 0) {
-                staffService.deleteStaff(deleteData, function (err, results) {
-                    if (err) {
-                        res.status(500);
-                        return res.json({
-                            code: 500,
-                            isSuccess: false,
-                            msg: '服务器出错，操作失败'
-                        });
-                    }
-
-                    if (results !== undefined && results.affectedRows != 0) {
-                        res.status(200);
-                        return res.json({
-                            code: 200,
-                            isSuccess: true,
-                            deleteResult: results,
-                            msg: '员工删除操作成功!'
-                        });
-                    } else {
-                        res.status(404);
-                        return res.json({
-                            code: 404,
-                            isSuccess: false,
-                            msg: "员工删除操作失败!"
-                        });
-                    }
-                });
-            } else {
+            if (result == undefined || result.length == 0 || result[0]['num'] == 0) {
                 res.status(404);
                 return res.json({
                     code: 404,
                     isSuccess: false,
-                    deleteResult: result,
                     msg: '操作失败，所要删除的员工不存在'
                 });
             }
-        });
 
+            staffService.deleteStaff(deleteData, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '服务器出错，操作失败'
+                    });
+                }
+
+                if (results !== undefined && results.affectedRows != 0 && results.affectedRows != undefined) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: '员工删除操作成功!'
+                    });
+                } else {
+                    res.status(404);
+                    if (results.msg != undefined) {
+                        return res.json({
+                            code: 404,
+                            isSuccess: false,
+                            msg: results.msg
+                        });
+                    } else {
+                        return res.json({
+                            code : 404,
+                            isSuccess : false,
+                            msg : '员工删除操作失败！'
+                        });
+                    }
+                }
+            });
+        });
     });
 });
 
@@ -251,33 +241,16 @@ router.put('/',function (req,res) {
             });
         }
 
-        // if (!(funcResult != undefined && funcResult.isSuccess)) {
-        //     res.status(400);
-        //     return res.json({
-        //         code: 400,
-        //         isSuccess: false,
-        //         msg: funcResult.msg
-        //     });
-        // }
-
-        var formdata = req.body.formdata;
-
-        var data = ['StaffID','StaffName', 'StaffType','Phone','Sex','CreateTime','IsActive'];
-        var err = 'require: ';
-        for (var value in data) {
-            if (!(data[value] in formdata)) {
-                err += data[value] + ' ';
-            }
-        }
-        if (err !== 'require: ') {
-            logger.writeError(err);
+        if (!(funcResult != undefined && funcResult.isSuccess)) {
             res.status(400);
             return res.json({
                 code: 400,
                 isSuccess: false,
-                msg: '存在未填写的必填的字段' + err
+                msg: funcResult.msg
             });
         }
+
+        var formdata = req.body.formdata;
 
         var StaffID = formdata.StaffID,
             StaffName = formdata.StaffName,
@@ -289,52 +262,6 @@ router.put('/',function (req,res) {
             LeaveTime = formdata.LeaveTime,
             IsActive = formdata.IsActive;
 
-        var intData = {
-            StaffID : StaffID,
-            StaffType : StaffType,
-            Sex : Sex,
-            IsActive : IsActive,
-            Phone : Phone
-        };
-        for (var key in intData) {
-            if (isNaN(intData[key])) {
-                res.status(400);
-                return res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: key + ": " + intData[key] + '不是数字'
-                });
-            }
-        }
-
-        if (CreateTime != undefined) {
-            CreateTime = moment(CreateTime).format('YYYY-MM-DD HH:mm:ss');
-        } else {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: '请设置创建时间！'
-            });
-        }
-
-        if (LeaveTime != undefined) {
-            LeaveTime = moment(LeaveTime).format('YYYY-MM-DD HH:mm:ss');
-        } else {
-            LeaveTime = '';
-        }
-
-        var mustData = {
-            StaffID : StaffID,
-            StaffName : StaffName,
-            StaffType : StaffType,
-            Phone : Phone,
-            Sex : Sex,
-            Position : Position,
-            IsActive : IsActive
-        };
-
-        //接收的数据进行object然后来插入
         var updateData = {
             StaffID : StaffID,
             StaffName : StaffName,
@@ -347,17 +274,6 @@ router.put('/',function (req,res) {
             IsActive : IsActive
         };
 
-        for (var key in mustData) {
-            if (mustData[key] == undefined) {
-                res.status(400);
-                return res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: '请设置' + key + '！'
-                });
-            }
-        }
-
         staffService.getStaff({staffID : StaffID}, function (err, result) {
             if (err) {
                 res.status(500);
@@ -368,35 +284,7 @@ router.put('/',function (req,res) {
                 });
             }
 
-            if (result !== undefined && result.length !== 0) {
-                staffService.updateStaff(updateData, function (err, results) {
-                    if (err) {
-                        res.status(500);
-                        return res.json({
-                            code: 500,
-                            isSuccess: false,
-                            msg: '服务器出错'
-                        });
-                    }
-
-                    if (results !== undefined && results.affectedRows != 0) {
-                        res.status(200);
-                        return res.json({
-                            code: 200,
-                            isSuccess: true,
-                            addProductResult: results,
-                            msg: '修改员工成功！'
-                        });
-                    } else {
-                        res.status(404);
-                        return res.json({
-                            code: 404,
-                            isSuccess: false,
-                            msg: "修改员工失败！"
-                        });
-                    }
-                });
-            } else {
+            if (result == undefined || result.length == 0) {
                 res.status(404);
                 return res.json({
                     code: 404,
@@ -404,6 +292,41 @@ router.put('/',function (req,res) {
                     msg: "修改的员工不存在，修改失败！"
                 });
             }
+
+            staffService.updateStaff(updateData, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: results
+                    });
+                }
+
+                if (results !== undefined && results.affectedRows != 0 && results.affectedRows != undefined) {
+                    res.status(200);
+                    return res.json({
+                        code: 200,
+                        isSuccess: true,
+                        msg: '修改员工成功！'
+                    });
+                } else {
+                    res.status(404);
+                    if (results.msg != undefined) {
+                        return res.json({
+                            code: 404,
+                            isSuccess: false,
+                            msg: results.msg
+                        });
+                    } else {
+                        return res.json({
+                            code : 404,
+                            isSuccess : false,
+                            msg : '修改员工失败！'
+                        });
+                    }
+                }
+            });
         });
     });
 });
@@ -462,54 +385,18 @@ router.get('/',function (req,res) {
         };
 
         var countNum = -1;
+
         staffService.countStaff(data, function (err, results) {
             if (err) {
                 res.status(500);
                 return res.json({
                     code: 500,
                     isSuccess: false,
-                    errorMsg: "查询失败，服务器内部错误"
+                    msg: "查询失败，服务器内部错误"
                 });
             }
-            if (results !== undefined && results.length != 0 && (results[0]['num']) > 0) {
-                countNum = results[0]['num'];
-                staffService.getStaff(data, function (err, result) {
-                    if (err) {
-                        res.status(500);
-                        return res.json({
-                            code: 500,
-                            isSuccess: false,
-                            msg: "查询失败，服务器内部错误！"
-                        });
 
-                    } else {
-                        if (result !== undefined && result.length != 0 && countNum != -1) {
-                            var resultBack = {
-                                code: 200,
-                                isSuccess: true,
-                                msg: '查询成功！',
-                                dataNum: countNum,
-                                curPage: page,
-                                curPageNum: pageNum,
-                                totalPage: Math.ceil(countNum / pageNum),
-                                data: result
-                            };
-                            if (resultBack.curPage == resultBack.totalPage) {
-                                resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
-                            }
-                            res.status(200);
-                            return res.json(resultBack);
-                        } else {
-                            res.status(404);
-                            return res.json({
-                                code: 404,
-                                isSuccess: false,
-                                msg: "未查询到相应员工！"
-                            });
-                        }
-                    }
-                });
-            } else {
+            if (results == undefined || results.length == 0 || (results[0]['num']) == 0) {
                 res.status(404);
                 return res.json({
                     code: 404,
@@ -517,11 +404,58 @@ router.get('/',function (req,res) {
                     msg: "未查询到相应员工！"
                 });
             }
+
+            countNum = results[0]['num'];
+
+            staffService.getStaff(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误！"
+                    });
+
+                }
+
+                if (result !== undefined && result.length != 0 && result.length != undefined) {
+                    var resultBack = {
+                        code: 200,
+                        isSuccess: true,
+                        msg: '查询成功！',
+                        dataNum: countNum,
+                        curPage: page,
+                        curPageNum: pageNum,
+                        totalPage: Math.ceil(countNum / pageNum),
+                        data: result
+                    };
+
+                    if (resultBack.curPage == resultBack.totalPage) {
+                        resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
+                    }
+
+                    res.status(200);
+                    return res.json(resultBack);
+                } else {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相应员工！"
+                    });
+                }
+            });
         });
     });
 });
 
 router.get('/staffType', function (req, res) {
+    var functionCode = functionConfig.jinkeBroApp.staff.staffQuery.functionCode;
+    var funcData = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    };
+
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
         if (err) {
             res.status(500);
@@ -552,13 +486,14 @@ router.get('/staffType', function (req, res) {
 
             }
 
-            if (result !== undefined && result.length != 0) {
+            if (result != undefined && result.length != 0 && result.length != undefined) {
                 var resultBack = {
                     code: 200,
                     isSuccess: true,
                     msg: '查询成功！',
                     data: result
                 };
+
                 res.status(200);
                 return res.json(resultBack);
             } else {
@@ -569,7 +504,6 @@ router.get('/staffType', function (req, res) {
                     msg: "未查询到相应职位！"
                 });
             }
-
         });
     });
 });
