@@ -78,14 +78,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
     $scope.restart = function (index,a,action) {
         var mymessage=confirm("是否确认启用  "+a);
         if(mymessage==true){
-            var formdata={
-                "AccountID":$scope.datas[index].AccountID,
-                "MenuID":$scope.datas[index].MenuID,
-                "ID":$scope.datas[index].ID,
-                "RoleID" : $scope.datas[index].RoleID,
-                "StaffID": $scope.datas[index].StaffID,
-                "ProductID" : $scope.datas[index].ProductID
-            };
+            var formdata=$scope.datas[index];
+            formdata.IsActive = 1;
             $http({
                 method:'put',
                 url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
