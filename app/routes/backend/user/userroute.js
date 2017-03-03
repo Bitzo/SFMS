@@ -1053,7 +1053,7 @@ router.put('/person', function (req, res) {
         if (results !== undefined && results.isSuccess === true) {
 
             var dataRequire = ['ApplicationID', 'Account', 'UserName', 'Pwd', 'IsActive'];
-            var dataRequire = ['应用名称', '账户名称', '用户姓名', '密码', '有效值']
+            var dataRequire1 = ['应用名称', '账户名称', '用户姓名', '密码', '有效值']
             var errSend = '未填: ';
 
             for (var value in dataRequire) {

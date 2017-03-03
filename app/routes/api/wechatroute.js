@@ -242,11 +242,11 @@ wechat.eventMsg(function (msg) {
                 function (isSussess, token) {
                     //如果成功  
                     if (isSussess) {
-                        //創建菜单的部分
-                        wechat.createMenu(token, function () {
-                            console.log("创建菜单");
-                            logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
-                        });
+                        // //創建菜单的部分
+                        // wechat.createMenu(token, function () {
+                        //     console.log("创建菜单");
+                        //     logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
+                        // });
 
                         //用户订阅时的操作
                         wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
