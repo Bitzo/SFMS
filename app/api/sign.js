@@ -27,12 +27,14 @@ router.post('/', function (req, res) {
             return res.json({
                 code: 500,
                 isSuccess: false,
-                msg: '查询失败，服务器出错'
+                msg: '签到失败，稍后再试'
             });
         }
+
         if (results !== undefined && results.isSuccess === true) {
             data = ['jitkey', 'IP', 'userAgent', 'MAC', 'longitude', 'latitude', 'signType'];
-            var err = 'required: ';
+            err = 'required: ';
+
             for(var value in data)
             {
                 if(!(data[value] in req.body))
@@ -48,7 +50,7 @@ router.post('/', function (req, res) {
                 res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: err
+                    msg: '缺少字段'
                 });
                 return;
             }
@@ -79,13 +81,15 @@ router.post('/', function (req, res) {
                     res.json({
                         code: 500,
                         isSuccess: false,
-                        msg: '记录失败,连接数据库有误'
+                        msg: '记录失败,稍后再试'
                     });
                     return;
                 }
-                logger.writeInfo('前一次签到信息：' + results);
+
                 if (results[0] === undefined) results[0] = {SignType: 1};
+
                 var signStatus = results[0].SignType==1?0:1;
+
                 if (results[0].SignType == data.SignType) {
                     res.status(400);
                     res.json({
@@ -113,10 +117,11 @@ router.post('/', function (req, res) {
                             res.json({
                                 code: 500,
                                 isSuccess: false,
-                                msg: '记录失败,连接数据库有误'
+                                msg: '记录失败,稍后再试'
                             });
                             return;
                         }
+
                         if (result!==undefined&&result.affectedRows===1)
                         {
                             res.status(200);

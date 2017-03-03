@@ -43,11 +43,7 @@ router.post('/', function(req, res) {
     userService.querySingleUser(username, password, function(err, user) {
         if (err) {
             res.status(500);
-            return res.json({
-                "status": 500,
-                "message": "应用程序异常!",
-                "error": err
-            });
+            return res.json(resultData);
         }
 
         if (!user || user.length == 0) {
@@ -61,26 +57,28 @@ router.post('/', function(req, res) {
             data = {
                 'UserID': user[0].AccountID
             };
+
             signservice.signCheck(data, function (err, results) {
                 if (err) {
                     res.status(500);
-                    return res.json({
-                        "status": 500,
-                        "message": "应用程序异常!",
-                        "error": err
-                    });
+                    return res.json(resultData);
                 }
+
                 logger.writeInfo('前一次签到信息：' + results);
                 resultData.data.isSuccess = true;
                 resultData.data.accountId = user[0].AccountID;
                 resultData.data.msg = "登录成功";
+
                 if(results[0] !== undefined) {
                     resultData.data.signType = results[0].SignType;
                 } else {
                     resultData.data.signType = 1;
                 }
+
                 var signStatus = resultData.data.signType==0?1:0;
+
                 resultData.data.signStatus = signStatus;
+
                 return res.json(jwtHelper.genToken(resultData.data));
             })
         } else {
