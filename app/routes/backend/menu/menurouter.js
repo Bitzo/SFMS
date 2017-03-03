@@ -717,7 +717,7 @@ router.post('/',function(req,res) {
 /**
  * 禁用某些菜单，将IsActive置为0
  */
-router.put('/forbid',function (req,res) {
+router.delete('/forbid',function (req,res) {
 
     var checkFuncData = {
         userID: req.query.jitkey,
@@ -740,7 +740,7 @@ router.put('/forbid',function (req,res) {
             return res.json({
                 code: 404,
                 isSuccess: false,
-                msg: results.msg
+                msg:"fsdfhk"
             });
         }
 
@@ -1244,115 +1244,6 @@ router.put('/',function (req,res) {
                 });
             });
         }
-    });
-});
-
-//逻辑删除
-router.delete('/',function(req,res) {
-    var checkFuncData = {
-        userID: req.query.jitkey,
-        functionCode: functionConfig.backendApp.memuManage.menuDel.functionCode
-    };
-
-    userFuncService.checkUserFunc(checkFuncData, function(err, results) {
-        if (err) {
-            res.status(500);
-            return res.json({
-                code: 500,
-                isSuccess: false,
-                msg: '服务器内部错误！'
-            });
-        }
-
-        if (!(results != undefined && results.isSuccess)) {
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: results.msg
-            });
-        }
-
-        //MenuID是主键，只需要此属性就可准确删除，不必传入其他参数
-        var d = JSON.parse(req.query.d);
-        var menuID = d.MenuID;
-
-        if (menuID === undefined) {
-            res.status(404);
-            return res.json({
-                code: 404,
-                isSuccess: false,
-                msg: 'require menuID'
-            });
-        }
-
-        if(isNaN(menuID)){
-            res.status(400);
-            return res.json({
-                code: 400,
-                isSuccess: false,
-                msg: 'menuID不是数字'
-            });
-        }
-
-        var data = {
-            "MenuID" : menuID,
-            "OperateUserID" : req.query.jitkey
-        };
-
-        var deleteData = {
-            "MenuID" : menuID
-        };
-
-        // 判断要修改的菜单是否存在
-        menuService.countAllMenus({"MenuID" : menuID}, function (err, results) {
-            if (err) {
-                res.status(500);
-                return res.json({
-                    code: 500,
-                    isSuccess: false,
-                    errorMsg: "查询失败，服务器内部错误"
-                });
-            }
-
-            if (results == undefined || results.length == 0 || results[0]['num'] <= 0) {
-                res.status(404);
-                return res.json({
-                    code :404,
-                    isSuccess : false,
-                    msg : '操作失败，所要修改的菜单不存在'
-                });
-            }
-
-            //菜单存在
-            menuService.updateMenuIsActive(data,function (err,result) {
-                if(err){
-                    res.status(500);
-                    return res.json({
-                        code :500,
-                        isSuccess : false,
-                        msg : '操作失败，服务器出错'
-                    });
-                }
-
-                if (result !== undefined && result.affectedRows != 0) {
-                    //修改菜单表成功
-                    res.status(200);
-                    return res.json({
-                        code: 200,
-                        isSuccess: true,
-                        msg: "删除菜单成功"
-                    });
-                } else {
-                    res.status(404);
-                    return res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "删除菜单失败"
-                    });
-                }
-            });
-        });
     });
 });
 

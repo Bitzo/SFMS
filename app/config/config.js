@@ -55,8 +55,8 @@ var config = {
     },
     //金科小哥相关的
     jinkebro: {
-        host: 'sun.tunnel.2bdata.com',
-        baseUrl: 'http://sun.tunnel.2bdata.com/',
+        host: 'jit.upsnail.com',
+        baseUrl: 'http://jit.upsnail.com/',
         // host: 'http://d64a5cce.ngrok.io',
         // baseUrl: 'http://d64a5cce.ngrok.io/',
         productInfo: 'jinkeBro/product/info',

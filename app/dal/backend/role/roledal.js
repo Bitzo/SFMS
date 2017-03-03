@@ -19,12 +19,16 @@ exports.queryAllRoles = function (data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && key !== 'SelectType' &&
-                key !== 'RoleName' && key !== 'RoleCode' && data[key]!=='') {
+                key !== 'RoleName_f' && key !== 'RoleCode_f' && data[key]!=='') {
                 sql += ' and ' + key + " = '" + data[key] + "' ";
             }
 
-            if ((key === 'RoleName' || key === 'RoleCode') && data[key] !== '') {
-                sql += ' and ' + key + " like '%" + data[key] + "%' ";
+            if (key === 'RoleName_f' && data[key] !== '') {
+                sql += " and RoleName like '%" + data[key] + "%' ";
+            }
+
+            if (key === 'RoleCode_f' && data[key] !== '') {
+                sql += " and RoleCode like '%" + data[key] + "%' ";
             }
         }
     }
@@ -66,12 +70,16 @@ exports.countAllRoles = function (data, callback) {
     if (data !== undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && data[key] !== '' &&
-                key !== 'RoleName' && key !== 'RoleCode' && key !== 'SelectType') {
+                key !== 'RoleName_f' && key !== 'RoleCode_f' && key !== 'SelectType') {
                 sql += " and " + key + " = '" + data[key] + "' ";
             }
 
-            if ((key === 'RoleName' || key === 'RoleCode' ) && data[key] !== '' ) {
-                sql += ' and ' + key + " like '%" + data[key] + "%' ";
+            if (key === 'RoleName_f' && data[key] !== '') {
+                sql += " and RoleName like '%" + data[key] + "%' ";
+            }
+
+            if (key === 'RoleCode_f' && data[key] !== '') {
+                sql += " and RoleCode like '%" + data[key] + "%' ";
             }
         }
     }

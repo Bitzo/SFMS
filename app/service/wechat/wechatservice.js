@@ -703,7 +703,7 @@ Weixin.prototype.createMenu = function (accessToken, callback) {
                 "sub_button": [{
                     "type": "view",
                     "name": "个人信息",
-                    "url": "http://sun.tunnel.2bdata.com/wechat/addressinfo"
+                    "url": "http://jit.upsnail.com/wechat/addressinfo"
                 }, 
                 {
                     "type" : "click",
