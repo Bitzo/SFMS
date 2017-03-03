@@ -93,7 +93,7 @@ wechat.textMsg(function (msg) {
                                     sendMsg += item.ProductName + ' 数量为 ' + item.ProductCount + ' \n';
                                     totalPrice += item.ProductPrice * item.ProductCount;
                                 });
-                                sendMsg += '总共消费' + totalPrice + '元， 正在准备配送';
+                                sendMsg += '总共消费' + totalPrice.toFixed(2) + '元， 正在准备配送';
 
                                 logger.writeInfo("[routes/api/wechatroute]订单成功");
                             }
@@ -243,10 +243,10 @@ wechat.eventMsg(function (msg) {
                     //如果成功  
                     if (isSussess) {
                         //創建菜单的部分
-                        // wechat.createMenu(token, function () {
-                        //     console.log("创建菜单");
-                        //     logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
-                        // });
+                        wechat.createMenu(token, function () {
+                            console.log("创建菜单");
+                            logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
+                        });
 
                         //用户订阅时的操作
                         wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
