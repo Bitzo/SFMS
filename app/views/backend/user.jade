@@ -6,8 +6,7 @@ block content
                 div.modal-content
                    div.modal-body 
                         h4.modal-title(id="myModalLabel") 用户对应角色
-                          button.close(type="button",data-dismiss="modal")
-                            span(aria-hidden="true")&times;                
+                          button.close(type="button",data-dismiss="modal" aria-hidden="true") &times;     
                         table.table.table-striped.table-bordered.text-center
                             thead
                                 tr
@@ -17,16 +16,26 @@ block content
                                 tr(ng-repeat="a in dataRole")
                                     td {{a.RoleCode}}
                                     td {{a.RoleName}}
-                        //table.table.table-striped.table-bordered.text-center
-                        //    thead
-                        //        tr
-                        //          th 菜单ID
-                        //          th 菜单名称
-                        //    tbody
-                        //        tr(ng-repeat="b in dataMenu")
-                        //          td {{b.MenuID}}
-                        //          td {{b.MenuName}}
                         button.btn.btn-default(type="button",data-dismiss="modal") Close
+
+    div.modal.fade(id="myModal1",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+      div.modal-dialog
+        div.modal-content
+          jason-pagecontent(conf='paginationConf')
+            h4.modal-title(id="myModalLabel1") 生成报表
+              button.close(type="button",data-dismiss="modal")
+                span(aria-hidden="true")&times;
+            br
+            table.table.table-striped.table-bordered.text-center
+              tr
+                td(width="15%",class="tableleft") 用户类型
+                td
+                  select.est(ng-model='f.isActive')
+                    option(value='1') 有效用户
+                    option(value='') 全部用户
+
+            button.btn.btn-default.pull-right(type="button" ng-click="excel('/backuser/excel')") 确认并下载报表
+            button.btn.btn-default(type="button",data-dismiss="modal") Close
     div.page-content
       ng-form.form-inline
         span(style='font-size: 24px;') 用户管理
@@ -44,6 +53,8 @@ block content
               i.icon.icon-plus 新建
             a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
               i.icon.icon-repeat  刷新
+            a.btn.btn-sm.btn-success(data-toggle="modal",data-target="#myModal1")
+              i.icon.icon-table  生成报表
       hr
       table.table.table-striped.table-bordered.text-center
         thead

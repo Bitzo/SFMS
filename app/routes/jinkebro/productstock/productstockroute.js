@@ -241,11 +241,6 @@ router.put('/', function (req, res) {
     }
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
-        // console.log(req.body.formdata);
-        // res.status(200);
-        // return res.json({
-        //     msg :' 1122'
-        // })
         if (err) {
             res.status(500);
             return res.json({
@@ -254,80 +249,8 @@ router.put('/', function (req, res) {
                 msg: '服务器内部错误！'
             });
         }
-        if (funcResult !== undefined && funcResult.isSuccess === true) {
-            var formdata = req.body.formdata;
 
-            //检查所需要的字段是否都存在
-            var data = ['ProductID', 'TotalNum'];
-            var err = 'require: ';
-            for (var value in data) {
-                if (!(data[value] in formdata)) {
-                    err += data[value] + ' ';
-                }
-            }
-            //如果要求的字段不在req的参数中
-            if (err !== 'require: ') {
-                logger.writeError(err);
-                res.status(400);
-                return res.json({
-                    code: 404,
-                    isSuccess: false,
-                    msg: '存在未填写的必填字段' + err
-                });
-            }
-            var initdata = {
-                'ID': formdata.ID,
-                'ProductID': formdata.ProductID,
-                'TotalNum': formdata.TotalNum,
-                'StockAreaID': formdata.StockAreaID,
-            }
-            for (var key in initdata) {
-                if (isNaN(initdata[key])) {
-                    res.status(400);
-                    return res.json({
-                        code: 400,
-                        isSuccess: false,
-                        msg: key + ": " + initdata[key] + '不是数字'
-                    });
-                }
-            }
-            // 存放接收的数据
-            var updatedata = {
-                'ProductID': initdata.ProductID,
-                'TotalNum': initdata.TotalNum,
-                'StockAreaID': initdata.StockAreaID,
-                'EditUserID': req.query.jitkey,
-                'EditTime': moment().format("YYYY-MM-DD HH:mm:ss"),
-            };
-
-            proStockService.update(updatedata, function (err, results) {
-                if (err) {
-                    res.status(500);
-                    return res.json({
-                        code: 500,
-                        isSuccess: false,
-                        msg: results
-                    });
-                }
-
-                if (results !== undefined && results.affectedRows != 0) {
-                    res.status(200);
-                    return res.json({
-                        code: 200,
-                        isSuccess: true,
-                        addProductResult: results,
-                        msg: '库存修改成功！'
-                    });
-                } else {
-                    res.status(404);
-                    return res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "库存操作失败！"
-                    });
-                }
-            });
-        } else {
+        if (!(funcResult != undefined && funcResult.isSuccess)) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -336,6 +259,51 @@ router.put('/', function (req, res) {
             });
         }
 
+        var formdata = req.body.formdata;
+
+        // 存放接收的数据
+        var updatedata = {
+            'ProductID': formdata.ProductID,
+            'TotalNum': formdata.TotalNum,
+            'StockAreaID': formdata.StockAreaID,
+            'EditUserID': req.query.jitkey,
+            'EditTime': moment().format("YYYY-MM-DD HH:mm:ss"),
+        };
+
+        proStockService.update(updatedata, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: results
+                });
+            }
+
+            if (results !== undefined && results.affectedRows != 0 && results.affectedRows != undefined) {
+                res.status(200);
+                return res.json({
+                    code: 200,
+                    isSuccess: true,
+                    msg: '库存修改成功！'
+                });
+            } else {
+                res.status(404);
+                if (results.msg != undefined) {
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: results.msg
+                    });
+                } else {
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: '库存修改操作失败！'
+                    });
+                }
+            }
+        });
     });
 });
 

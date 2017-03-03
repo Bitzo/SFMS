@@ -14,8 +14,7 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
         })
         .success(function (response) {
             $scope.tree_data = response.data;
-            var tree_data= $scope.tree_data;  
-            console.log(tree_data.length)       
+            var tree_data= $scope.tree_data;       
             for(var i=0;i<tree_data.length;i++)
             { 
                     tree_data[i].RoleName+="---"
@@ -25,12 +24,15 @@ myApp.controller('userRoleController', function($scope, $http,$q,baseService,$lo
             $http.get('/userrole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
             .success(function (response) {
                     console.log(response)  
-                    $scope.roleTree = response.data || [];                  
-                    $scope.tree_data.map(function (data, index) {
-                            console.log(data+index)
+                    $scope.roleTree = response.data || []; 
+                    if($scope.roleTree.length){
+                        $scope.tree_data.map(function (data, index) {  
                             foreachtree(data);
                         }
-                    );
+                      );
+
+                    }                   
+                    
              });
         });
         

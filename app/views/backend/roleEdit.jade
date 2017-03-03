@@ -1,3 +1,4 @@
+link(rel='stylesheet' href="css/backend/tree.css")
 block content
   div.container-fluid(ng-controller='roleEditController')
     span
@@ -5,22 +6,22 @@ block content
     form(method="post",source='/backrole' conf='paginationConf')
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
-          td(width="15%",class="tableleft") 应用名称
-          td
-            jason-select.input(placeholder='应用名称' ng-model='formdata.ApplicationID' source='/app', stext='ApplicationName' svalue='ID',sactive='1',style="width:160px;height:30px",required)
-
+          td(width="15%",class="tableleft" ) 应用名称
+          td    
+            select(name='ApplicationID',ng-model='formdata.ApplicationID',ng-change= "appChanged()",required)
+                option   
+                option(ng-repeat="item in applicationNames",value='{{item.ID}}') {{item.ApplicationName}}
          tr
           td(width="15%",class="tableleft") 角色名称
           td
-            input(type="text",name="roleName",ng-model="formdata.RoleName",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
-            
+            input(type="text",name="roleName",ng-model="formdata.RoleName",ng-minlength="3",ng-maxlength=15,style="width:160px;height:30px",required)
             span.error(ng-show="formdata.RoleName.$dirty &&formdata.RoleName.$invalid")
               small.error(ng-show="formdata.RoleName.$error.minlength") 角色名称至少三位
               small.error(ng-show="formdata.RoleName.$error.maxlength") 角色名称最多十位
         tr
           td(width="15%",class="tableleft") 角色代码
           td
-            input(type="text",name="roleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
+            input(type="text",name="roleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=20,style="width:160px;height:30px",required)
             
             span.error(ng-show="formdata.RoleCode.$dirty &&formdata.RoleCode.$invalid")
               small.error(ng-show="formdata.RoleCode.$error.minlength") 角色号至少三位
@@ -41,19 +42,6 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-click="submit()") 确认修改
-            
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="submit()") 确认修改    
             a.btn.btn-sm.btn-success(href='#backend/role',ng-click='search()') 返回列表
-    div.modal.fade(id='functionModel')
-        div.modal-dialog
-            div.modal-content
-                    div.modal-header
-                        button.close(type='button', data-dismiss='modal')
-                            span(aria-hidden='true') ×
-                            span.sr-only Close
-                        h4.modal-title {{Config.ModelTitle}}
-                    div.modal-body
-                        p {{Config.ModelBody}}
-                    div.modal-footer
-                        button.btn.btn-default(type='button', ng-click='Config.Cancel()') {{Config.BtnCancel}}
-                        button.btn.btn-primary(type='button',ng-click='Config.Save()') {{Config.BtnSave}}
+    

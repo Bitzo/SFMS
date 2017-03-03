@@ -46,7 +46,7 @@ router.get('/:roleID', function (req, res) {
                 return res.json({
                     code: 404,
                     isSuccess: false,
-                    msg: 'require roleID'
+                    msg: '缺少值：角色ID'
                 })
             }
 
@@ -111,22 +111,22 @@ router.post('/', function (req, res) {
         }
 
         if (results !== undefined && results.isSuccess === true) {
-            var err = 'required: ',
+            var err = '缺少值: ',
                 roleID = req.body.RoleID,
                 funcData = req.body.data;
 
             data = ['RoleID', 'FunctionID'];
+            var temp = ['角色ID', '功能点ID'];
 
             for (var value in data) {
                 if (req.body.data.length > 0) {
                     if ((!(data[value] in req.body.data[0])) && (!(data[value] in req.body))) {
-                        logger.writeError("require " + data[value]);
-                        err += data[value] + ' ';
+                        err += temp[value] + ' ';
                     }
                 }
             }
 
-            if (err != 'required: ') {
+            if (err != '缺少值: ') {
                 res.status(400);
 
                 return res.json({
@@ -264,7 +264,7 @@ router.delete('/', function (req, res) {
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: "require RoleID"
+                    msg: "缺少值：角色ID"
                 });
             }
 

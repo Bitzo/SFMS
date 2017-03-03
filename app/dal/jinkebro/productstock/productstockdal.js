@@ -47,7 +47,6 @@ exports.queryProStock= function (data, callback) {
 
 
     logger.writeInfo("根据条件查询库存:" + sql);
-    console.log("根据条件查询库存:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
@@ -57,10 +56,10 @@ exports.queryProStock= function (data, callback) {
         }
         connection.query(sql, function (err, results) {
             connection.release();
+
             if (err) {
                 logger.writeError('根据条件查询库存，出错信息：' + err);
-                callback(true,'系统内部错误');
-                return;
+                return callback(true,'系统内部错误');
             }
          
             return callback(false, results);
@@ -96,15 +95,15 @@ exports.countProStock = function (data,callback) {
     }
 
     logger.writeInfo("根据条件查询库存:" + sql);
-    console.log('查询库存的个数:' + sql);
+
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             logger.writeError('根据条件查询库存连接：err' + err);
-            callback(true,'连接出错');
-            return;
+            return callback(true,'连接出错');
         }
         connection.query(sql, function (err, results) {
             connection.release();
+
             if (err) {
                 logger.writeError('根据条件查询库存，出错信息：' + err);
                 callback(true,'系统内部错误');

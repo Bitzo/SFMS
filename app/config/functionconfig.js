@@ -75,6 +75,10 @@ var functionConfig = {
                 functionName: "菜单查询",
                 functionCode: "BACKEND-MENU-QUERY"
             },
+            menuGet: {
+                functionName: "个人菜单获取",
+                functionCode: "BACKEND-MENU-GET"
+            },
         },
         appManage: {
             functionName: "应用管理",
@@ -338,6 +342,26 @@ var functionConfig = {
             productTypeQuery: {
                 functionName: "商品种类查询",
                 functionCode: "JB-PRODUCT-TYPE-QUERY"
+            },
+        },
+        staff: {
+            functionName: "金科小哥员工管理",
+            functionCode: "JB-STAFF-MANAGE",
+            staffAdd: {
+                functionName: "金科小哥员工新增",
+                functionCode: "JB-STAFF-ADD"
+            },
+            staffEdit: {
+                functionName: "金科小哥员工更新",
+                functionCode: "JB-STAFF-EDIT"
+            },
+            staffDel: {
+                functionName: "金科小哥员工删除",
+                functionCode: "JB-STAFF-DELETE"
+            },
+            staffQuery: {
+                functionName: "金科小哥员工查询",
+                functionCode: "JB-STAFF-QUERY"
             },
         },
     },

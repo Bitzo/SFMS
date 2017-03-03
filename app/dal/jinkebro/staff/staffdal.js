@@ -77,42 +77,56 @@ var deleteStaff = function (data,callback) {
             callback(true,'数据库连接失败！');
             return;
         }
-        console.log(delete_sql);
+
         connection.query(delete_sql, function(err, result) {
             connection.release();
+
             if (err) {
-                throw err;
-                callback(true,'失败！');
-                return;
+                return callback(true,'服务器内部错误，员工删除失败！');
             }
-            logger.writeInfo('成功！');
+
+            logger.writeInfo('员工删除成功！');
+
             return callback(false, result);
         });
     });
 };
 
 var updateStaff = function (data,callback) {
+    var formdata = {
+        StaffName : data.StaffName,
+        StaffType : data.StaffType,
+        Phone : data.Phone,
+        Sex : data.Sex,
+        Position : data.Position,
+        CreateTime : data.CreateTime,
+        IsActive : data.IsActive
+    };
+
     var update_sql = 'update jit_staff set ';
     var sql = '';
 
-    if (data !== undefined) {
-        for (var key in data) {
-            if (key != 'StaffID' && data[key] != '') {
+    if (formdata !== undefined) {
+        for (var key in formdata) {
+            if (formdata[key] != '') {
                 if (sql.length == 0) {
-                    sql += " " + key + " = '" + data[key] + "' ";
+                    sql += " " + key + " = '" + formdata[key] + "' ";
                 } else {
-                    sql += ", " + key + " = '" + data[key] + "' ";
+                    sql += ", " + key + " = '" + formdata[key] + "' ";
                 }
             }
         }
     }
 
+    if (data.LeaveTime == '') {
+        sql += ", LeaveTime = NULL ";
+    }
+
     sql += " where StaffID = " + data['StaffID'];
 
-    update_sql = update_sql + sql;
+    update_sql = update_sql + sql + ";";
 
     logger.writeInfo("[updateStaff func in staffdal]员工修改：" + update_sql);
-    console.log("in dal,员工修改：" + update_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -120,16 +134,15 @@ var updateStaff = function (data,callback) {
             callback(true,'数据库连接失败！');
             return;
         }
+
         connection.query(update_sql, function(err, result) {
             connection.release();
 
             if (err) {
-                throw err;
-                callback(true,'失败！');
-                return;
+                return callback(true,'服务器内部错误！');
             }
 
-            logger.writeInfo('成功！');
+            logger.writeInfo('员工更新成功！');
 
             return callback(false, result);
         });
@@ -169,6 +182,7 @@ var getStaff = function (data,callback) {
     }
 
     querySql += " order by StaffID desc ";
+
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 

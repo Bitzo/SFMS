@@ -74,7 +74,7 @@ exports.queryAllUsers = function (data, callback) {
     var sql = arr.join(' ');
 
     for (var key in data) {
-        if (key != 'page' && key != 'pageNum' && key != 'IsPage') {
+        if (key != 'page' && key != 'pageNum' && key != 'IsPage' && data[key]!=='') {
             if (key == 'ApplicationName') {
                 sql += ' and C.' + key + " = '" + data[key] + "' ";
                 continue;
@@ -229,7 +229,7 @@ exports.delete = function (data, callback) {
 exports.countUser = function (data, callback) {
     var sql = 'select count(1) as num from jit_user where 1=1';
     for (var key in data) {
-        if (key != 'page' && key != 'pageNum' && key != 'CreateUserName' && key != 'ApplicationName')
+        if (key != 'page' && key != 'pageNum' && key != 'CreateUserName' && key != 'ApplicationName' && data[key]!=='')
             sql += " and " + key + " = '" + data[key] + "' ";
     }
 
