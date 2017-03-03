@@ -208,8 +208,6 @@ router.get('/', function (req, res) {
             ProductCount = JSON.parse(ProductCount);
         }
 
-        console.log("获取到的orderid=" + OrderID);
-
         page = page > 0 ? page : 1;
         if (pageNum == '') {
             pageNum = config.pageCount;
@@ -586,7 +584,6 @@ router.put('/', function (req, res) {
                             isSuccess: false,
                             msg: '服务器出错，产品修改操作失败'
                         });
-                        return;
                     }
 
                     if (result !== undefined && result.affectedRows != 0) {

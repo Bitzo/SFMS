@@ -52,7 +52,7 @@ router.get('/tree',function (req,res) {
         var query = JSON.parse(req.query.f?req.query.f:"{}");
         var page = (req.query.pageindex) ? (req.query.pageindex) : 1,
             pageNum = (req.query.pagesize) ? (req.query.pagesize) : config.pageCount,
-            isPaging = (req.query.isPaging) ? (req.query.isPaging) : 0,
+            isPaging = (req.query.isPaging) ? (req.query.isPaging) : 1,
             applicationID = query.ApplicationID || '',
             menuID = query.MenuID || '',
             parentID = query.ParentID || '',
@@ -72,6 +72,7 @@ router.get('/tree',function (req,res) {
         var data = {
             page : page,
             pageNum : pageNum,
+            isPaging : isPaging,
             ApplicationID : applicationID || '',
             MenuID : menuID || '',
             ParentID : parentID || '',

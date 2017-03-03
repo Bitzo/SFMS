@@ -14,15 +14,16 @@ var express = require('express'),
     userFuncService = appRequire('service/backend/user/userfuncservice'),
     logger = appRequire("util/loghelper").helper,
     moment = require('moment'),
-    async = require('async');
+    async = require('async'),
+    nodeExcel = require('excel-export');
 
-//查看库存信息
-router.get('/', function (req, res) {
+//生成报表
+router.get('/excel', function (req, res) {
     var functionCode = functionConfig.jinkeBroApp.productStock.productStockQuery.functionCode;
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
-    }
+    };
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
         if (err) {
@@ -33,111 +34,8 @@ router.get('/', function (req, res) {
                 msg: '服务器内部错误！'
             });
         }
-        if (funcResult !== undefined && funcResult.isSuccess === true) {
-            var data = {};
 
-            if (req.query !== undefined) {
-                var query = JSON.parse(req.query.f);
-                var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
-                    pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : 20;
-
-                data = {
-                    page: page,
-                    pageNum: pageNum,
-                    ProductID: query.ProductID || '',
-                    StockAreaID: query.StockAreaID || '',
-                    TotalNum : query.TotalNum || '',
-                    CreateUserID: query.CreateUserID || '',
-                    CreateTime: query.CreateTime || '',
-                    EditUserID: query.EditUserID || '',
-                    EditTime: query.EditTime || '',
-                    minTotalNum : query.minTotalNum || '',
-                    maxTotalNum : query.maxTotalNum || ''
-                };
-            }
-
-            var countNum = -1;
-            var queueAllResult = [];
-            var flag = 0;
-
-            proStockService.countProStock(data, function (err, results) {
-                if (err) {
-                    res.status(500);
-                    return res.json({
-                        code: 500,
-                        isSuccess: false,
-                        errorMsg: "查询失败，服务器内部错误"
-                    });
-                }
-                if (results !== undefined && results.length != 0 && (results[0]['num']) > 0) {
-                    countNum = results[0]['num'];
-
-                    proStockService.queryProStock(data, function (err, result) {
-                        if (err) {
-                            res.status(500);
-                            return res.json({
-                                code: 500,
-                                isSuccess: false,
-                                msg: "查询失败，服务器内部错误！"
-                            });
-                        }
-                        if (result !== undefined && result.length != 0 && countNum != -1) {
-                            var resultBack = {
-                                code: 200,
-                                isSuccess: true,
-                                msg: '查询成功！',
-                                dataNum: countNum,
-                                curPage: page,
-                                curPageNum: pageNum,
-                                totalPage: Math.ceil(countNum / pageNum),
-                                data: result
-                            };
-
-                            // 去计算价格
-                            async.map(result, function (item, callback) {
-                                var tempStockAreaID = item.StockAreaID;
-                                datadictionaryService.queryDatadictionary({ "DictionaryID": tempStockAreaID }, function (err, tags) {
-                                    item['StockAreaName'] = tags[0].DictionaryValue;
-                                    callback(null, item);
-                                })
-                            }, function (err, results1) {
-                                // !!!!!! 在此res.status() 、 res.json()  !!!!!!
-                                //执行顺序2
-                                for (var i = 0; i < results1.length; i++) {
-                                    queueAllResult[i] = results1[i];
-                                    if (i == results1.length - 1) {
-                                        flag = 1;
-                                    }
-                                }
-                                if (flag == 1) {
-                                    res.status(200);
-                                    return res.json(resultBack);
-                                }
-                            });
-
-                            if (resultBack.curPage == resultBack.totalPage) {
-                                resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
-                            }
-                            //执行顺序1
-                        } else {
-                            res.status(404);
-                            return res.json({
-                                code: 404,
-                                isSuccess: false,
-                                msg: "未查询到相应库存11！"
-                            });
-                        }
-                    });
-                } else {
-                    res.status(404);
-                    return res.json({
-                        code: 404,
-                        isSuccess: false,
-                        msg: "未查询到相应库存！"
-                    });
-                }
-            });
-        } else {
+        if (!(funcResult != undefined && funcResult.isSuccess)) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -145,6 +43,218 @@ router.get('/', function (req, res) {
                 msg: funcResult.msg
             });
         }
+
+        var data = {};
+
+        if (req.query != undefined) {
+            var query = req.query;
+            var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
+                pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : 20,
+                isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 1;
+
+            data = {
+                page: page,
+                pageNum: pageNum,
+                isPaging : isPaging,
+                ProductID: query.ProductID || '',
+                StockAreaID: query.StockAreaID || '',
+                TotalNum : query.TotalNum || '',
+                CreateUserID: query.CreateUserID || '',
+                CreateTime: query.CreateTime || '',
+                EditUserID: query.EditUserID || '',
+                EditTime: query.EditTime || '',
+                minTotalNum : query.minTotalNum || '',
+                maxTotalNum : query.maxTotalNum || ''
+            };
+        }
+
+        var countNum = -1;
+
+        proStockService.countProStock(data, function (err, results) {
+            if (err) {
+                return res.send("数据异常");
+            }
+
+            if (!(results != undefined && results.length != 0 && (results[0]['num']) > 0)) {
+                return res.send("数据异常");
+            }
+
+            countNum = results[0]['num'];
+
+            proStockService.queryProStock(data, function (err, queryStockResult) {
+                if (err) {
+                    return res.send("数据异常");
+                }
+
+                if (!(queryStockResult != undefined && queryStockResult.length > 0 && queryStockResult.length != undefined)) {
+                    return res.send("数据异常");
+                }
+
+                var filename = moment().format('YYYYMMDDHHmmss').toString();
+
+                var conf ={};
+
+                conf.name = "sheet1";
+
+                conf.cols = [{
+                    caption:'序号',
+                    type:'string'
+                },{
+                    caption:'商品编号',
+                    type:'string'
+                },{
+                    caption:'商品名称',
+                    type:'string'
+                },{
+                    caption:'商品总数',
+                    type:'string'
+                },{
+                    caption:'存储区域',
+                    type:'string'
+                },{
+                    caption:'创建者',
+                    type:'string'
+                },{
+                    caption:'创建时间',
+                    type:'string'
+                },{
+                    caption:'修改者',
+                    type:'string'
+                },{
+                    caption:'修改时间',
+                    type:'string'
+                }];
+
+                conf.rows = [];
+
+                for(var i=0; i<queryStockResult.length; ++i) {
+                    conf.rows.push([(i+1).toString(), queryStockResult[i].ProductID.toString(), queryStockResult[i].ProductName,queryStockResult[i].TotalNum.toString(), queryStockResult[i].StockAreaName,
+                        queryStockResult[i].CreateUserName, queryStockResult[i].CreateTime,queryStockResult[i].EditUserName,queryStockResult[i].EditTime]);
+                }
+
+                var result = nodeExcel.execute(conf);
+
+                res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+                res.setHeader("Content-Disposition", "attachment; filename=" + filename + ".xlsx");
+                return res.end(result, 'binary');
+
+            });
+        });
+    });
+});
+
+//查看库存信息
+router.get('/', function (req, res) {
+    var functionCode = functionConfig.jinkeBroApp.productStock.productStockQuery.functionCode;
+    var funcData = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    };
+
+    userFuncService.checkUserFunc(funcData, function (err, funcResult) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '服务器内部错误！'
+            });
+        }
+
+        if (!(funcResult != undefined && funcResult.isSuccess)) {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: funcResult.msg
+            });
+        }
+
+        var data = {};
+
+        if (req.query !== undefined) {
+            var query = JSON.parse(req.query.f);
+            var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
+                pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : 20,
+                isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 0;
+
+            data = {
+                page: page,
+                pageNum: pageNum,
+                isPaging : isPaging,
+                ProductID: query.ProductID || '',
+                StockAreaID: query.StockAreaID || '',
+                TotalNum : query.TotalNum || '',
+                CreateUserID: query.CreateUserID || '',
+                CreateTime: query.CreateTime || '',
+                EditUserID: query.EditUserID || '',
+                EditTime: query.EditTime || '',
+                minTotalNum : query.minTotalNum || '',
+                maxTotalNum : query.maxTotalNum || ''
+            };
+        }
+
+        var countNum = -1;
+
+        proStockService.countProStock(data, function (err, results) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    errorMsg: "查询失败，服务器内部错误"
+                });
+            }
+
+            if (!(results != undefined && results.length != 0 && (results[0]['num']) > 0)) {
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: "未查询到相应库存！"
+                });
+            }
+
+            countNum = results[0]['num'];
+
+            proStockService.queryProStock(data, function (err, result) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: "查询失败，服务器内部错误！"
+                    });
+                }
+
+                if (!(result != undefined && result.length > 0 && result.length != undefined)) {
+                    res.status(404);
+                    return res.json({
+                        code: 404,
+                        isSuccess: false,
+                        msg: "未查询到相应库存！"
+                    });
+                }
+
+                var resultBack = {
+                    code: 200,
+                    isSuccess: true,
+                    msg: '查询成功！',
+                    dataNum: countNum,
+                    curPage: page,
+                    curPageNum: pageNum,
+                    totalPage: Math.ceil(countNum / pageNum),
+                    data: result
+                };
+
+                if (resultBack.curPage == resultBack.totalPage) {
+                    resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
+                }
+
+                res.status(200);
+                return res.json(resultBack);
+            });
+        });
     });
 });
 
