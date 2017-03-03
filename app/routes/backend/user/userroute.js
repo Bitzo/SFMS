@@ -27,6 +27,7 @@ var user = appRequire('service/backend/user/userservice'),
     config = appRequire('config/config'),
     userRole = appRequire('service/backend/user/userroleservice'),
     functionConfig = appRequire('config/functionconfig'),
+    nodeExcel = require('excel-export'),
     userFuncService = appRequire('service/backend/user/userfuncservice');
     
 //插入用户
@@ -498,6 +499,145 @@ router.get('/person', function (req, res) {
             });
         }
     });
+});
+
+//用户信息导出excel
+router.get('/excel', function (req, res) {
+    var functionCode = functionConfig.backendApp.userManage.userQuery.functionCode;
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function (err, results) {
+        if (err) {
+            return res.send('数据异常');
+        }
+
+        if (!(results !== undefined && results.isSuccess)) {
+            return res.send(results.msg);
+        }
+
+
+        var query = req.query,
+            isActive = query.isActive || '';
+
+        var filename = moment().format('YYYYMMDDHHmmss').toString();
+
+        var data = {
+            'OperateUserID': req.query.jitkey
+        };
+
+        user.countUser({isActive: isActive}, function (err, results) {
+            if (err) {
+                return res.send("数据异常");
+            }
+
+            if (results === undefined || results.length<=0) {
+                return res.send("数据异常");
+            }
+
+            var totalNum = results[0].num;
+
+            user.queryAllUsers({IsPage: 1, isActive: isActive}, function (err, results) {
+                if (err) {
+                    return res.send("数据异常");
+                }
+
+                if (results===undefined || results.length!=totalNum) {
+                    return res.send("数据异常");
+                }
+
+                var userInfo = [];
+
+
+                for (var i in results) {
+                    userInfo[i] = {
+                        'applicationID': results[i].ApplicationID || '',
+                        'applicationName': results[i].ApplicationName || '',
+                        'userID': results[i].AccountID || '',
+                        'userName': results[i].UserName || '',
+                        'college': results[i].College || '',
+                        'gradeyear': results[i].GradeYear || '',
+                        'class': results[i].Class || '',
+                        'phone': results[i].Phone || '',
+                        'email': results[i].Email || '',
+                        'address': results[i].Address || '',
+                        'createTime': results[i].CreateTime || '',
+                        'createUserID': results[i].CreateUserID || '',
+                        'createUserName': results[i].CreateUserName || '',
+                        'isActive': results[i].IsActive ? '是':'否'
+                    };
+
+                    if(userInfo[i].createTime&&moment(userInfo[i].createTime).isValid()) {
+                        userInfo[i].createTime = moment(userInfo[i].createTime).format("YYYY-MM-DD HH:mm");
+                    }
+                }
+
+                var conf ={};
+
+                conf.cols = [{
+                    caption:'序号',
+                    type:'string',
+                },{
+                    caption:'应用名称',
+                    type:'string',
+                },{
+                    caption:'用户ID',
+                    type:'string',
+                },{
+                    caption:'用户名称',
+                    type:'string',
+                },{
+                    caption:'学院',
+                    type:'string',
+                },{
+                    caption:'年级',
+                    type:'string'
+                },{
+                    caption:'行政班',
+                    type:'string'
+                },{
+                    caption:'联系电话',
+                    type:'string'
+                },{
+                    caption:'邮箱',
+                    type:'string'
+                },{
+                    caption:'联系地址',
+                    type:'string'
+                },{
+                    caption:'用户创建时间',
+                    type:'string',
+                },{
+                    caption:'操作用户ID',
+                    type:'string',
+                },{
+                    caption:'操作用户名称',
+                    type:'string',
+                },{
+                    caption:'有效用户',
+                    type:'string',
+                },];
+
+                conf.rows = [];
+
+                for(var i=0;i<userInfo.length;++i) {
+                    conf.rows.push([(i+1).toString(), userInfo[i].applicationName,
+                        userInfo[i].userID.toString(), userInfo[i].userName, userInfo[i].college, userInfo[i].gradeyear,
+                        userInfo[i].class, userInfo[i].phone, userInfo[i].email, userInfo[i].address,
+                        userInfo[i].createTime, userInfo[i].createUserID.toString(), userInfo[i].createUserName, userInfo[i].isActive]);
+                }
+
+                var result = nodeExcel.execute(conf);
+
+                res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+                res.setHeader("Content-Disposition", "attachment; filename="+filename+".xlsx");
+
+                return res.end(result, 'binary');
+            });
+        });
+    })
 });
 
 //查询用户的资料
