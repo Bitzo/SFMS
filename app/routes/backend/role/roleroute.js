@@ -44,6 +44,8 @@ router.get('/',function (req, res) {
                 selectType = req.query.isPaging || '',
                 roleName = query.RoleName || '',
                 roleCode = query.RoleCode || '',
+                roleName_f = query.RoleName_f || '',
+                roleCode_f = query.RoleCode_f || '',
                 page = page > 0 ? page : 1;
 
             data = {
@@ -53,6 +55,8 @@ router.get('/',function (req, res) {
                 'IsActive': isActive,
                 'RoleName': roleName,
                 'RoleCode': roleCode,
+                'RoleName_f': roleName_f,
+                'RoleCode_f': roleCode_f,
                 'page': page,
                 'pageNum': pageNum,
                 'OperateUserID': req.query.jitkey
@@ -215,6 +219,7 @@ router.post('/',function (req, res) {
                 });
             }
 
+            console.log(results)
             //没有查询重复的相关信息,则可以添加用户
             if (!(results !== undefined && results[0]['num'] == 0)) {
                 res.status(400);
@@ -631,7 +636,7 @@ router.put('/', function (req, res) {
                             });
                         }
 
-                        if (results !== undefined && results.affectedRows != 0) {
+                        if (results !== undefined && results.affectedRows >= 0) {
                             res.status(200);
 
                             return res.json({

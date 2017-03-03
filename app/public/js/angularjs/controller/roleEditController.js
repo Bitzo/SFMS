@@ -146,7 +146,7 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
             formdata:$scope.formdata,
             funcdata:data
         };
-
+console.log(param)
         $http({
             method:'put',
             url:"/backrole?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),

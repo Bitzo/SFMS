@@ -14,14 +14,14 @@ block content
          tr
           td(width="15%",class="tableleft") 角色名称
           td
-            input(type="text",name="roleName",ng-model="formdata.RoleName",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)      
+            input(type="text",name="roleName",ng-model="formdata.RoleName",ng-minlength="3",ng-maxlength=15,style="width:160px;height:30px",required)
             span.error(ng-show="formdata.RoleName.$dirty &&formdata.RoleName.$invalid")
               small.error(ng-show="formdata.RoleName.$error.minlength") 角色名称至少三位
               small.error(ng-show="formdata.RoleName.$error.maxlength") 角色名称最多十位
         tr
           td(width="15%",class="tableleft") 角色代码
           td
-            input(type="text",name="roleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=10,style="width:160px;height:30px",required)
+            input(type="text",name="roleCode",ng-model="formdata.RoleCode",ng-minlength="3",ng-maxlength=20,style="width:160px;height:30px",required)
             
             span.error(ng-show="formdata.RoleCode.$dirty &&formdata.RoleCode.$invalid")
               small.error(ng-show="formdata.RoleCode.$error.minlength") 角色号至少三位
