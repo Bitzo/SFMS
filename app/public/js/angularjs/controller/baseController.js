@@ -489,6 +489,8 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
         if(excelData.isActive) url += "isActive=" + excelData.isActive + "&";
 
+        if($scope.f.StockAreaID) url += "StockAreaID=" + $scope.f.StockAreaID + "&";
+
         url += "access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key');
         console.info(url);
         location.href = url;   //这里不能使用get方法跳转，否则下载不成功
@@ -820,5 +822,28 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             alert(response.msg);
         });
     };
+
+    //商品类型编辑完成
+    $scope.generateStockReport = function () {
+        $http({
+            method:'get',
+            url: '/datadict/plain' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                isPaging:1,
+                pageindex:1,
+                pagesize:10,
+                f:{
+                    Category:"dc_stockArea"
+                }
+            }
+        }).
+        success(function(response) {
+            $scope.StockAreas = response.data;
+        }).
+        error(function(response) {
+        });
+    };
+
+
     $scope.formdata = {};
 });

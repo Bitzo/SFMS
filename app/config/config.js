@@ -17,7 +17,7 @@ var config = {
     jwt_secret: 'j1i3t20', //jwt
     isdev: false, //true:开发环境 false:生产环境
     secretsalt: 'what1r2u3nong7sha5lei4', //盐值
-    port: 80, // 程序运行的端口
+    port: 3000, // 程序运行的端口
     host: '127.0.0.1',
     mysql: {
         host: '139.224.51.160',
@@ -64,7 +64,7 @@ var config = {
         productstock: 'jinkeBro/proStock'
     },
     redis_prd: {
-        host: '120.27.38.175',
+        host: '47.93.91.197',
         port: '6379',
         password: 'jit1320go'
     },

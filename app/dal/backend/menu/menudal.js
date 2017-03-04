@@ -19,7 +19,7 @@ exports.queryAllMenus = function(data, callback) {
     var MenuData = data.MenuManage,
         num = data.pageManage.pageNum, //每页显示的个数
         page = data.pageManage.page || 1,
-        IsPaging = data.pageManage.isPaging;
+        IsPaging = data.pageManage.isPaging || 0;
 
     var arr = new Array();
 
@@ -129,23 +129,20 @@ exports.queryAllParentMenus = function(data, callback) {
 exports.countAllMenus = function (data, callback) {
     var sql =  'select count(1) AS num from jit_menu where 1=1 ';
 
-
-    if (data !== undefined) {
+    if (data != undefined) {
         for (var key in data) {
             if (key !== 'page' && key !== 'pageNum' && data[key] != '')
                 sql += " and " + key + " = '" + data[key] + "' ";
         }
     }
 
-    console.log(sql);
+    logger.writeInfo("查询指定条件的菜单个数：" + sql);
 
     db_backend.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
             return;
         }
-
-        logger.writeInfo('查询指定菜单的个数：' + sql);
 
         connection.query(sql, function (err, results) {            
             connection.release();

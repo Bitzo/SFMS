@@ -16,27 +16,27 @@ var logger = appRequire('util/loghelper').helper;
 var logService = appRequire('service/backend/log/logservice');
 var logModel = appRequire('model/jinkebro/log/logmodel');
 var config = appRequire('config/config');
-//微信接收消息通用组件
+//微信接收消息通用组件（待改，这种形式不好）
 var customerhtml = appRequire('views/jinkeBro/wechat/readfilecustomer');
 //微信的地址栏
 var wechat = appRequire("service/wechat/wechatservice");
-wechat.token = config.weChat.token;
 //从微信端获取数据插入数据库
 var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
 //调用商品的模块的内容
 var product = appRequire('service/jinkebro/product/productservice');
 var order = appRequire('service/jinkebro/order/orderservice');
 
+wechat.token = config.weChat.token;
+
 //微信开发者认证
-router.get('/accesscheck', function (req, res, next) {
+router.get('/accesscheck', function(req, res, next) {
     var query = url.parse(req.url, true).query;
     var signature = query.signature;
     var echostr = query.echostr;
     var timestamp = query['timestamp'];
     var nonce = query.nonce;
-    console.log("[routes/api/wechatroute]" + signature);
-
     var oriArray = new Array();
+
     oriArray[0] = nonce;
     oriArray[1] = timestamp;
     oriArray[2] = 'snail';
@@ -55,7 +55,7 @@ router.get('/accesscheck', function (req, res, next) {
 });
 
 // 监听文本消息
-wechat.textMsg(function (msg) {
+wechat.textMsg(function(msg) {
     console.log(msg);
     switch (msg.msgType) {
         case "text":
@@ -67,54 +67,57 @@ wechat.textMsg(function (msg) {
                 content: contentInfo,
                 funcFlag: 0
             };
-                    
+
             // 返回文本消息           
             if (/^(\d+#\d+)$/.test(msg.content) ||
                 /^((\d+#\d+\|)+(\d+#\d+))$/.test(msg.content)) {
-
                 resMsg.content = "下单失败";
-                var p = new Promise(function (resolve, reject) {
-                    order.insertOrderInfo(msg.content, msg.fromUserName,
-                        function (err, orderInfo) {
-                            if (err) {
-                                reject(orderInfo);
-                                return;
-                            }
+                var p = new Promise(function(resolve, reject) {
+                    order.insertOrderInfo(msg.content, msg.fromUserName, function(err, orderInfo) {
+                        var result = orderInfo;
+                        var sendMsg = '';
 
-                            var result= orderInfo;
-                            var sendMsg = '';
-                            if (result[0].OrderID === undefined) {
-                                sendMsg = '对不起，' + result + '库存数量不足';
+                        if (err) {
+                            reject(orderInfo);
+                            return;
+                        }
 
-                            } else {
-                                var totalPrice = 0;
-                                sendMsg = '亲，您的订单号为：' + result[0].OrderID + '\n' + '您所订购的商品为:\n';
-                                result.forEach(function (item) {
-                                    sendMsg += item.ProductName + ' 数量为 ' + item.ProductCount + ' \n';
-                                    totalPrice += item.ProductPrice * item.ProductCount;
-                                });
-                                sendMsg += '总共消费' + totalPrice.toFixed(2) + '元， 正在准备配送';
+                        if (result[0].OrderID === undefined) {
+                            sendMsg = '对不起，' + result + '库存数量不足';
+                        } else {
+                            var totalPrice = 0;
+                            sendMsg = '亲，您的订单号为：' + result[0].OrderID + '\n' + '您所订购的商品为:\n';
+                            result.forEach(function(item) {
+                                sendMsg += item.ProductName + ' 数量为 ' + item.ProductCount + ' \n';
+                                totalPrice += item.ProductPrice * item.ProductCount;
+                            });
 
-                                logger.writeInfo("[routes/api/wechatroute]订单成功");
-                            }
-                            
-                            console.log(sendMsg);
-                            resolve(sendMsg);
-                        });
+                            sendMsg += '总共消费' + totalPrice.toFixed(2) + '元， 正在准备配送';
+                            //这边记录这种日志一点意义都没有，既然要记录，那就记录哪个用户，什么时间点，下了什么商品的订单，下单是否成功
+                            logger.writeInfo("[routes/api/wechatroute]订单成功");
+                        }
+
+                        console.log(sendMsg);
+                        resolve(sendMsg);
+                    });
                 });
-               
-                p.then(function (resultSend) {
+
+                p.then(function(resultSend) {
                     resMsg.content = resultSend;
                     wechat.sendMsg(resMsg);
-                }, function (err) {
+                }, function(err) {
                     wechat.sendMsg(resMsg);
                 });
 
                 logger.writeInfo("[route/api/wechatroute]发送订单的消息给用户");
                 return;
+            } else {
+                resMsg.content = '自动回复正在开发中...';
+                wechat.sendMsg(resMsg);
             }
+
             break;
-            
+
             //输入其他的文字返回的是图文的信息
             var articles = [];
             var picurl = "http://mmbiz.qpic.cn/mmbiz_jpg/2gG8lzb9PibsPiadjuibZ6mm";
@@ -181,7 +184,7 @@ wechat.textMsg(function (msg) {
 });
 
 // 监听图片消息
-wechat.imageMsg(function (msg) {
+wechat.imageMsg(function(msg) {
     console.log("[routes/api/wechatroute----------165行]imageMsg received");
     console.log(JSON.stringify(msg));
     var resMsg = {};
@@ -202,44 +205,68 @@ wechat.imageMsg(function (msg) {
 });
 
 // 监听语音消息
-wechat.voiceMsg(function (msg) {
-    console.log("voiceMsg received");
-    console.log(JSON.stringify(msg));
+wechat.voiceMsg(function(msg) {
+    var resMsg = {
+        fromUserName: msg.toUserName,
+        toUserName: msg.fromUserName,
+        msgType: "text",
+        content: '该功能暂未开放!',
+        funcFlag: 0
+    };
+
+    wechat.sendMsg(resMsg);
 });
 
 // 监听位置消息
-wechat.locationMsg(function (msg) {
-    console.log("locationMsg received");
-    console.log(JSON.stringify(msg));
+wechat.locationMsg(function(msg) {
+    var resMsg = {
+        fromUserName: msg.toUserName,
+        toUserName: msg.fromUserName,
+        msgType: "text",
+        content: '该功能暂未开放!',
+        funcFlag: 0
+    };
+
+    wechat.sendMsg(resMsg);
 });
 
 // 监听链接消息
-wechat.urlMsg(function (msg) {
-    console.log("urlMsg received");
-    console.log(JSON.stringify(msg));
+wechat.urlMsg(function(msg) {
+    var resMsg = {
+        fromUserName: msg.toUserName,
+        toUserName: msg.fromUserName,
+        msgType: "text",
+        content: '该功能暂未开放!',
+        funcFlag: 0
+    };
+
+    wechat.sendMsg(resMsg);
 });
 
 // 监听事件消息
-wechat.eventMsg(function (msg) {
+wechat.eventMsg(function(msg) {
     console.log("eventMsg received");
     console.log(msg);
+
+    var resMsg = {
+        fromUserName: msg.ToUserName,
+        toUserName: msg.FromUserName,
+        msgType: "text",
+        content: '',
+        funcFlag: 0
+    };
+
     //判断是否是订阅以及取消的判断条件
     switch (msg.Event) {
         //订阅的事件
         case 'subscribe':
             //当订阅时间出发的时候发送欢迎标语
-            var resMsg = {
-                fromUserName: msg.ToUserName,
-                toUserName: msg.FromUserName,
-                msgType: "text",
-                content: "欢迎来到金科小哥",
-                funcFlag: 0
-            }
+            resMsg.content = "欢迎来到金科小哥";
             wechat.sendMsg(resMsg);
-            
+
             //获取token
             wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,
-                function (isSussess, token) {
+                function(isSussess, token) {
                     //如果成功  
                     if (isSussess) {
                         // //創建菜单的部分
@@ -249,7 +276,7 @@ wechat.eventMsg(function (msg) {
                         // });
 
                         //用户订阅时的操作
-                        wechatCustomer.addSubscibe(token, msg, function (err, errinfo) {
+                        wechatCustomer.addSubscibe(token, msg, function(err, errinfo) {
                             if (err) {
                                 console.log(errinfo);
                                 return;
@@ -262,13 +289,13 @@ wechat.eventMsg(function (msg) {
                 });
 
             break;
-            
-        //取消订阅
+
+            //取消订阅
         case 'unsubscribe':
-            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
+            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function(isSussess, token) {
                 if (isSussess) {
                     //当服务器出错的时候的补过
-                    wechatCustomer.addAllList(token, function (err, errinfo) {
+                    wechatCustomer.addAllList(token, function(err, errinfo) {
                         if (err) {
                             logger.writeError("[route/api/wechatroute]" + errinfo);
                             return;
@@ -280,12 +307,12 @@ wechat.eventMsg(function (msg) {
                 }
             });
             //获取token
-            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function (isSussess, token) {
+            wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier, function(isSussess, token) {
                 //如果成功  
 
                 if (isSussess) {
                     //取消时更改用户
-                    wechatCustomer.unsubscribe(token, msg, function (err, errinfo) {
+                    wechatCustomer.unsubscribe(token, msg, function(err, errinfo) {
                         if (err) {
                             logger.writeInfo("[route/api/wechatroute]" + errinfo);
                             return;
@@ -297,10 +324,10 @@ wechat.eventMsg(function (msg) {
 
             break;
 
-        //发送地址
+            //发送地址
         case 'LOCATION':
             //添加地址坐标到数据库
-            wechatCustomer.addLocation(msg, function (err, errinfo) {
+            wechatCustomer.addLocation(msg, function(err, errinfo) {
                 if (err) {
                     console.log(errinfo);
                     return;
@@ -311,30 +338,24 @@ wechat.eventMsg(function (msg) {
 
             break;
 
-        //扫码的事件
+            //扫码的事件
         case 'SCAN':
             break;
 
-        //菜单点击的事件
+            //菜单点击的事件
         case 'CLICK':
             switch (msg.EventKey) {
                 case 'ProductDisplay':
 
                     //优化后 snail
                     var contentInfo = '商品查询失败，请稍后再试!';
-                    var resMsg = {
-                        fromUserName: msg.ToUserName,
-                        toUserName: msg.FromUserName,
-                        msgType: "text",
-                        content: contentInfo,
-                        funcFlag: 0
-                    };
+                    resMsg.content = contentInfo;
 
-                    var p = new Promise(function (resolve, reject) {
+                    var p = new Promise(function(resolve, reject) {
                         product.queryProducts({
                             page: 1,
                             pageNum: 10
-                        }, function (err, returndata) {
+                        }, function(err, returndata) {
                             if (err) {
                                 reject(Error("没有数据"));
                             }
@@ -344,7 +365,7 @@ wechat.eventMsg(function (msg) {
                             if (returndata !== undefined && returndata.length > 0) {
 
                                 filterresult = '';
-                                returndata.forEach(function (item) {
+                                returndata.forEach(function(item) {
                                     filterresult += "编号:" + item.ProductID + "  ";
                                     filterresult += "名称:" + item.ProductName + "  ";
                                     filterresult += "价格:" + item.ProductPrice + "  ";
@@ -359,10 +380,10 @@ wechat.eventMsg(function (msg) {
                         });
                     });
 
-                    p.then(function (result) {
+                    p.then(function(result) {
                         resMsg.content = result;
                         wechat.sendMsg(resMsg);
-                    }, function (err) {
+                    }, function(err) {
                         wechat.sendMsg(resMsg);
                     });
 
@@ -370,75 +391,82 @@ wechat.eventMsg(function (msg) {
 
                 case 'SubmitOrder':
                     console.log("提交订单");
+                    resMsg.content = '提交订单，请输入格式为:商品id#购买数量';
+                    wechat.sendMsg(resMsg);
                     break;
 
                 case 'TrackPackage':
                     //跟踪包裹这一栏
                     console.log("跟踪包裹");
-                    order.insertOrderInfo(msg.content, msg.fromUserName, function (resultinfo) {
+                    // order.insertOrderInfo(msg.content, msg.fromUserName, function(resultinfo) {
+                    //     var resMsg = {
+                    //         fromUserName: msg.toUserName,
+                    //         toUserName: msg.fromUserName,
+                    //         msgType: "text",
+                    //         content: resultinfo,
+                    //         funcFlag: 0
+                    //     };
 
-                        var resMsg = {
-                            fromUserName: msg.toUserName,
-                            toUserName: msg.fromUserName,
-                            msgType: "text",
-                            content: resultinfo,
-                            funcFlag: 0
-                        };
+                    //     wechat.sendMsg(resMsg);
+                    // });
 
-                        wechat.sendMsg(resMsg);
-                    });
+                    resMsg.content = '正在开发中,请稍候再试';
+                    wechat.sendMsg(resMsg);
                     break;
 
                 case 'OrderHistory':
-                    order.getHistoryOrderInfo(msg.FromUserName, function (err, orderinfo) {
+                    // order.getHistoryOrderInfo(msg.FromUserName, function(err, orderinfo) {
 
-                        var historyInfo = '';
+                    //     var historyInfo = '';
 
-                        if (err) {
+                    //     if (err) {
 
-                            historyInfo += "服务器内部错误，可取消关注，重新再下。";
-                        } else if (orderinfo.length == 0) {
+                    //         historyInfo += "服务器内部错误，可取消关注，重新再下。";
+                    //     } else if (orderinfo.length == 0) {
 
-                            historyInfo += "您还没有下过单， 亲";
-                        } else {
+                    //         historyInfo += "您还没有下过单， 亲";
+                    //     } else {
 
-                            historyInfo += "亲，您的历史订单为：\n";
-                            var totalPrice = 0;
-                            var index = 1;
-                            for (var key in orderinfo) {
-                                historyInfo += index + '、订单号：' + orderinfo[key]['OrderID'] + "  ";
-                                historyInfo += '商品名称：' + orderinfo[key]['ProductName'] + "  ";
-                                historyInfo += '数量：' + orderinfo[key]['ProductCount'] + "  ";
-                                totalPrice += orderinfo[key]['ProductCount'] * orderinfo[key]['ProductPrice'];
-                                historyInfo += "付款：" + totalPrice;
-                                historyInfo += '\n';
-                                index++;
-                                totalPrice = 0;
-                            }
+                    //         historyInfo += "亲，您的历史订单为：\n";
+                    //         var totalPrice = 0;
+                    //         var index = 1;
+                    //         for (var key in orderinfo) {
+                    //             historyInfo += index + '、订单号：' + orderinfo[key]['OrderID'] + "  ";
+                    //             historyInfo += '商品名称：' + orderinfo[key]['ProductName'] + "  ";
+                    //             historyInfo += '数量：' + orderinfo[key]['ProductCount'] + "  ";
+                    //             totalPrice += orderinfo[key]['ProductCount'] * orderinfo[key]['ProductPrice'];
+                    //             historyInfo += "付款：" + totalPrice;
+                    //             historyInfo += '\n';
+                    //             index++;
+                    //             totalPrice = 0;
+                    //         }
 
-                            historyInfo += "(此历史为你最近的三次消费记录)";
-                        }
+                    //         historyInfo += "(此历史为你最近的三次消费记录)";
+                    //     }
 
-                        var resMsg = {
-                            fromUserName: msg.ToUserName,
-                            toUserName: msg.FromUserName,
-                            msgType: "text",
-                            content: historyInfo,
-                            funcFlag: 0
-                        };
+                    //     var resMsg = {
+                    //         fromUserName: msg.ToUserName,
+                    //         toUserName: msg.FromUserName,
+                    //         msgType: "text",
+                    //         content: historyInfo,
+                    //         funcFlag: 0
+                    //     };
 
-                        wechat.sendMsg(resMsg);
-                    });
+                    //     wechat.sendMsg(resMsg);
+                    // });
+                    resMsg.content = '正在开发中,请稍候再试';
+                    wechat.sendMsg(resMsg);
                     break;
             }
             break;
 
-        //菜单的链接的事件
+            //菜单的链接的事件
         case 'VIEW':
-            var linkddressInfo = config.jinkebro.baseUrl + 'wechat/addressinfo'; 
+            
             switch (msg.EventKey) {
-                
-                case linkddressInfo:
+
+                case config.jinkebro.baseUrl + 'wechat/addressinfo':
+
                     wechat.sendClickAddressEvent(msg);
                     break;
 
@@ -451,12 +479,12 @@ wechat.eventMsg(function (msg) {
 });
 
 //监听地址的事件
-wechat.clickAddress(function (judgement, username) {
+wechat.clickAddress(function(judgement, username) {
     console.log(username);
     if (judgement != undefined && judgement == 'true') {
         var tempRoute = '/' + username;
         console.log(tempRoute)
-        router.get(tempRoute, function (req, res) {
+        router.get(tempRoute, function(req, res) {
             customerhtml(res);
         });
         return;
@@ -465,7 +493,7 @@ wechat.clickAddress(function (judgement, username) {
 
 /************************************************************************************/
 //渲染地址栏的页面//待改
-router.get('/addressinfo', function (req, res) {
+router.get('/addressinfo', function(req, res) {
 
     var addressurl = config.jinkebro.baseUrl + 'wechat/' + wechat.data.FromUserName;
     console.log(addressurl);
@@ -479,7 +507,7 @@ router.get('/addressinfo', function (req, res) {
 /**
  * 与微信接口的统一入口（消息转发）
  */
-router.post('/accesscheck', function (req, res) {
+router.post('/accesscheck', function(req, res) {
     wechat.handleWechatMsg(req, res);
 });
 

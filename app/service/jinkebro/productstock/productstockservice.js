@@ -31,9 +31,11 @@ ProStock.prototype.queryProStock = function (data, callback) {
         loggerWrite();
         return callback(true, logModel.OperationName);
     }
+
     var formdata = {
         page : data.page,
         pageNum : data.pageNum,
+        isPaging : data.isPaging || 0,
         ProductID: data.ProductID || '',
         TotalNum : data.TotalNum || '',
         StockAreaID: data.StockAreaID || '',
@@ -60,8 +62,8 @@ ProStock.prototype.queryProStock = function (data, callback) {
                 results[i].EditTime = moment(results[i].EditTime).format('YYYY-MM-DD HH:mm:ss');
             }
         }
-        callback(false, results);
-        return;
+
+        return callback(false, results);
     });
 };
 
@@ -75,6 +77,7 @@ ProStock.prototype.countProStock = function (data, callback) {
         loggerWrite();
         return callback(true, logModel.OperationName);
     }
+
     var formdata = {
         ProductID: data.ProductID || '',
         StockAreaID: data.StockAreaID || '',
@@ -89,8 +92,7 @@ ProStock.prototype.countProStock = function (data, callback) {
 
     proStockDAL.countProStock(formdata, function (err, results) {
         if (err) {
-            callback(true, results);
-            return;
+            return callback(true, results);
         }
 
         return callback(false, results);
@@ -119,8 +121,8 @@ ProStock.prototype.insert = function (data, callback) {
             loggerWrite();
             return callback(true, logModel.OperationName);
         }
-        callback(false, results);
-        return;
+
+        return callback(false, results);
     });
 };
 

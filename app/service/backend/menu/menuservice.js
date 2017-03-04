@@ -109,13 +109,12 @@ exports.queryAllMenusFormTreeInTable = function(data, callback){
     //     MenuName: '',
     //     IsActive: ''
     // }
-    console.log('树形展示所有菜单');
-    console.log(data);
+
     var formdata = {
         pageManage : {
             page: data.page,
             pageNum: data.pageNum,
-            isPaging : 0
+            isPaging : data.isPaging
         },
         MenuManage : {
             ApplicationID: '',
@@ -152,7 +151,6 @@ exports.queryAllMenusFormTreeInTable = function(data, callback){
             }
         }
 
-        console.log('queryAllMenusFormTreeInTable func in service');
         logger.writeInfo('queryAllMenusFormTreeInTable func in service');
         //返回菜单树形JSON
         callback(false,tree);

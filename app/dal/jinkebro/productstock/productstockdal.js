@@ -12,11 +12,18 @@ var logger = appRequire("util/loghelper").helper,
 
 //查询库存
 exports.queryProStock= function (data, callback) {
-    var sql  = "select a.ID,a.ProductID,a.TotalNum,a.StockAreaID,a.CreateUserID,c.UserName as CreateUserName,a.CreateTime,a.EditUserID,d.UserName as EditUserName,a.EditTime,b.ProductName,c.Account " +
-    " from jit_productstock a " +
-    " left join jit_product b on a.ProductID=b.ProductID left join " +
-    " jit_backend.jit_user c on a.CreateUserID=c.AccountID " +
-    " left join jit_backend.jit_user d on a.EditUserID = d.AccountID where 1=1 ";
+    var arr = new Array();
+
+    arr.push(" select a.ID,a.ProductID,a.TotalNum,a.StockAreaID,e.DictionaryValue as StockAreaName, ");
+    arr.push(" a.CreateUserID,c.UserName as CreateUserName,a.CreateTime,a.EditUserID,d.UserName as EditUserName,a.EditTime,b.ProductName,c.Account ");
+    arr.push(" from jit_productstock a ");
+    arr.push(" left join jit_product b on a.ProductID=b.ProductID ");
+    arr.push(" left join jit_backend.jit_user c on a.CreateUserID=c.AccountID ");
+    arr.push(" left join jit_backend.jit_user d on a.EditUserID = d.AccountID ");
+    arr.push(" left join jit_backend.jit_datadictionary e on a.StockAreaID = e.DictionaryID ");
+    arr.push(" where 1=1 and e.Category = 'dc_stockArea' ");
+
+    var sql  = arr.join(" ");
 
     var queryData = {
         ProductID: data.ProductID || '',
@@ -43,17 +50,18 @@ exports.queryProStock= function (data, callback) {
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-    sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
-
+    if (data.isPaging == 0) {
+        sql += " LIMIT " + (page - 1) * num + "," + num + " ;";
+    }
 
     logger.writeInfo("根据条件查询库存:" + sql);
 
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
-            logger.writeError('根据条件查询库存连接：err' + err);
-            callback(true,'连接出错');
-            return;
+            logger.writeError('根据条件查询库存连接：' + err);
+            return callback(true,'数据库连接出错！');
         }
+
         connection.query(sql, function (err, results) {
             connection.release();
 
