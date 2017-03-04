@@ -435,8 +435,10 @@ wechat.eventMsg(function (msg) {
 
         //菜单的链接的事件
         case 'VIEW':
+            var linkddressInfo = config.jinkebro.baseUrl + 'wechat/addressinfo'; 
             switch (msg.EventKey) {
-                case 'http://sun.tunnel.2bdata.com/wechat/addressinfo':
+                
+                case linkddressInfo:
                     wechat.sendClickAddressEvent(msg);
                     break;
 
