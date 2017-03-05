@@ -24,7 +24,9 @@ if(objConfig.appenders){
     for(var i= 0, j=objConfig.appenders.length; i<j; i++){
         var item = objConfig.appenders[i];
         if(item["type"] == "console")
+        {
             continue;
+        }
 
         if(defaultAtt != null){
             for(var att in defaultAtt){
@@ -32,23 +34,36 @@ if(objConfig.appenders){
                     item[att] = defaultAtt[att];
             }
         }
+
         if(baseDir != null){
             if(item["filename"] == null)
+            {
                 item["filename"] = baseDir;
+            }
             else
+            {
                 item["filename"] = baseDir + item["filename"];
+            }
         }
+
         var fileName = item["filename"];
         if(fileName == null)
+        {
             continue;
+        }
+
         var pattern = item["pattern"];
+
         if(pattern != null){
             fileName += pattern;
         }
+
         var category = item["category"];
         if(!isAbsoluteDir(fileName))//path.isAbsolute(fileName))
             throw new Error("配置节" + category + "的路径不是绝对路径:" + fileName);
+        
         var dir = path.dirname(fileName);
+        
         checkAndCreateDir(dir);
     }
 }

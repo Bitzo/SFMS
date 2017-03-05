@@ -98,16 +98,16 @@ router.get('/excel', function (req, res) {
 
                 conf.cols = [{
                     caption:'序号',
-                    type:'string'
+                    type:'number'
                 },{
                     caption:'商品编号',
-                    type:'string'
+                    type:'number'
                 },{
                     caption:'商品名称',
                     type:'string'
                 },{
                     caption:'商品总数',
-                    type:'string'
+                    type:'number'
                 },{
                     caption:'存储区域',
                     type:'string'

@@ -104,9 +104,11 @@ exports.logger = function(name) {
   return logger;
 };
 
+//端口号的设置
 var  http=require('http');
 http.createServer(app).listen(config.port, function () {
   console.log("Express server listening on port:"+config.port );
 
 });
+
 module.exports = app;

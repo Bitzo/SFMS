@@ -192,6 +192,7 @@ exports.checkKPI = function (data, callback) {
             }
         }
     }
+
     sql += update_sql + ", CheckTime = '" + time + "'";
     sql += ' where ID = ' + data.ID;
 

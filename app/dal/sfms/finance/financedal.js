@@ -144,16 +144,22 @@ exports.queryFinance = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if (key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'startTime' && key !== 'endTime') {
+            if (key !== 'page' && key !== 'pageNum' && data[key] !== ''
+                && key !== 'isPage' && key !== 'startTime' && key !== 'endTime') {
                 if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
                 else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
+
     if (data.startTime !== '') sql += "and jit_financeinfo.CreateTime > '" + data.startTime + "' ";
     if (data.endTime !== '') sql += "and jit_financeinfo.CreateTime < '" + data.endTime + "' ";
 
-    sql += " order by jit_financeinfo.IsActive desc,FIStatu LIMIT " + (page-1)*num + "," + num;
+    if (data.isPage == 1) {
+        sql += " order by jit_financeinfo.IsActive desc,FIStatu";
+    } else {
+        sql += " order by jit_financeinfo.IsActive desc,FIStatu LIMIT " + (page-1)*num + "," + num;
+    }
 
     logger.writeInfo("查询财务信息：" + sql);
 

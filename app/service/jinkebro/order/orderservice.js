@@ -26,45 +26,49 @@ var productstock = appRequire('service/jinkebro/productstock/productstockservice
 //记录日志
 var wechat = appRequire("service/wechat/wechatservice");
 
-logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-logModel.PDate = moment().format('YYYY-MM-DD');
-delete logModel.ID;
-
-var Order = function () {
+var Order = function() {
     this.OrderTime = moment().format("YYYY-MM-DD HH:mm:ss"); //创建的时间
 }
 
+
 //新增一个订单的全部信息
-Order.prototype.insertOrderFull = function (data, callback) {
+Order.prototype.insertOrderFull = function(data, callback) {
+    var logModel = logService.generateLogModel(
+        operationConfig.jinkeBroApp.applicationID,
+        operationConfig.jinkeBroApp.applicationName,
+        operationConfig.operationType.operation,
+        operationConfig.jinkeBroApp.orderManger.orderAdd.actionName,
+        operationConfig.jinkeBroApp.orderManger.orderAdd.actionName,
+        operationConfig.jinkeBroApp.orderManger.orderAdd.identifier
+    );
     //要写入operationlog表的
-    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    logModel.PDate = moment().format('YYYY-MM-DD');
-    logModel.OperationName = operationConfig.jinkeBroApp.orderManger.orderAdd.actionName;
-    logModel.Action = operationConfig.jinkeBroApp.orderManger.orderAdd.actionName;
-    logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderAdd.identifier;
+    // logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    // logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    // logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    // logModel.PDate = moment().format('YYYY-MM-DD');
+    // logModel.OperationName = operationConfig.jinkeBroApp.orderManger.orderAdd.actionName;
+    // logModel.Action = operationConfig.jinkeBroApp.orderManger.orderAdd.actionName;
+    // logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderAdd.identifier;
 
     var formdata = {
-            "OrderTime": data.OrderTime,
-            "PayMethod": data.PayMethod,
-            "IsValid": data.IsValid,
-            "IsActive": data.IsActive,
-            "ProductIDs": data.ProductIDs,
-            "ProductCounts": data.ProductCounts,
-            "CustomerID": data.CustomerID,
-            "OrderStatus": data.OrderStatus
-        };
+        "OrderTime": data.OrderTime,
+        "PayMethod": data.PayMethod,
+        "IsValid": data.IsValid,
+        "IsActive": data.IsActive,
+        "ProductIDs": data.ProductIDs,
+        "ProductCounts": data.ProductCounts,
+        "CustomerID": data.CustomerID,
+        "OrderStatus": data.OrderStatus
+    };
 
     //新增订单
-    orderDAL.createOrder(formdata, function (err, result) {
+    orderDAL.createOrder(formdata, function(err, result) {
+        logModel.CreateUserID = data.CustomerID;
+     
         if (err) {
             logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = data.CustomerID;
             logModel.Memo = "订单新增失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("订单新增失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -74,21 +78,19 @@ Order.prototype.insertOrderFull = function (data, callback) {
         }
 
         //新增成功
-        logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = data.CustomerID;
         logModel.Memo = "订单新增成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单新增成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
-        logger.writeInfo('订单新增成功');
+
         callback(false, result);
     });
 }
 
 //删除订单
-Order.prototype.deleteOrder = function (data, callback) {
+Order.prototype.deleteOrder = function(data, callback) {
     //要写入operationlog表的
     logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
     logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
@@ -98,12 +100,12 @@ Order.prototype.deleteOrder = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderDel.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderDel.identifier;
     //删除订单
-    orderDAL.deleteOrder(data, function (err, result) {
+    orderDAL.deleteOrder(data, function(err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.CustomerID || 0;
             logModel.Memo = "订单删除失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("订单删除失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -116,7 +118,7 @@ Order.prototype.deleteOrder = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data.CustomerID || 0;
         logModel.Memo = "订单删除成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单删除成功，生成操作日志失败" + logModel.CreateTime);
             }
@@ -127,7 +129,7 @@ Order.prototype.deleteOrder = function (data, callback) {
 }
 
 //编辑订单信息
-Order.prototype.updateOrder = function (data, callback) {
+Order.prototype.updateOrder = function(data, callback) {
     //日志： 要写入operationlog表的
     logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
     logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
@@ -137,7 +139,7 @@ Order.prototype.updateOrder = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderUpd.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderUpd.identifier;
     var formdata = {
-        order : {
+        order: {
             OrderID: data.OrderID,
             OrderTime: data.OrderTime || '',
             PayTime: data.PayTime || '',
@@ -158,12 +160,12 @@ Order.prototype.updateOrder = function (data, callback) {
         }
     };
     //修改订单
-    orderDAL.updateOrder(formdata, function (err, result) {
+    orderDAL.updateOrder(formdata, function(err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data.CustomerID || 0;
             logModel.Memo = "订单修改失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("订单修改失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -176,7 +178,7 @@ Order.prototype.updateOrder = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data.CustomerID || 0;
         logModel.Memo = "订单修改成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单修改成功，生成操作日志失败" + logModel.CreateTime);
             }
@@ -187,7 +189,7 @@ Order.prototype.updateOrder = function (data, callback) {
 }
 
 //查询订单产品的信息
-Order.prototype.queryOrders = function (data, callback) {
+Order.prototype.queryOrders = function(data, callback) {
     logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
     logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
     logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -197,24 +199,24 @@ Order.prototype.queryOrders = function (data, callback) {
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQuery.identifier;
 
     var formdata = {
-        pageManage : {
-            page : data.page,
-            pageNum : data.pageNum,
-            isPaging : data.isPaging || 0
+        pageManage: {
+            page: data.page,
+            pageNum: data.pageNum,
+            isPaging: data.isPaging || 0
         },
-        order : {
-            "jit_order.OrderID" : data.OrderID,
-            "jit_order.OrderStatus" : data.OrderStatus,
-            "jit_order.IsActive" : data.IsActive
+        order: {
+            "jit_order.OrderID": data.OrderID,
+            "jit_order.OrderStatus": data.OrderStatus,
+            "jit_order.IsActive": data.IsActive
         }
     };
 
-    orderDAL.queryOrders(formdata, function (err, result) {
+    orderDAL.queryOrders(formdata, function(err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data['jit_customer.CustomerID'] || 0;
             logModel.Memo = "订单查询失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("订单查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -227,7 +229,7 @@ Order.prototype.queryOrders = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data['jit_customer.CustomerID'] || 0;
         logModel.Memo = "订单查询成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单查询成功，生成操作日志失败" + logModel.CreateTime);
             }
@@ -285,7 +287,7 @@ Order.prototype.queryOrders = function (data, callback) {
 }
 
 //计算满足相应条件的订单个数
-Order.prototype.CountOrders = function (data, callback) {
+Order.prototype.CountOrders = function(data, callback) {
     //满足相应条件的订单个数
     logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
     logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
@@ -296,24 +298,24 @@ Order.prototype.CountOrders = function (data, callback) {
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQueryCount.identifier;
 
     var formdata = {
-        pageManage : {
-            page : data.page,
-            pageNum : data.pageNum,
-            isPaging : data.isPaging
+        pageManage: {
+            page: data.page,
+            pageNum: data.pageNum,
+            isPaging: data.isPaging
         },
-        order : {
-            "jit_order.OrderID" : data.OrderID,
-            "jit_order.OrderStatus" : data.OrderStatus,
-            "jit_order.IsActive" : data.IsActive
+        order: {
+            "jit_order.OrderID": data.OrderID,
+            "jit_order.OrderStatus": data.OrderStatus,
+            "jit_order.IsActive": data.IsActive
         }
     };
 
-    orderDAL.CountOrders(formdata, function (err, result) {
+    orderDAL.CountOrders(formdata, function(err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data['jit_customer.CustomerID'] || 0;
             logModel.Memo = "计算满足相应条件的订单个数失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("计算满足相应条件的订单个数失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -326,7 +328,7 @@ Order.prototype.CountOrders = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data['jit_customer.CustomerID'] || 0;
         logModel.Memo = "计算满足相应条件的订单个数成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("计算满足相应条件的订单个数成功，生成操作日志失败" + logModel.CreateTime);
             }
@@ -338,7 +340,7 @@ Order.prototype.CountOrders = function (data, callback) {
 }
 
 //查询订单产品的信息
-Order.prototype.queryOrderProduct = function (data, callback) {
+Order.prototype.queryOrderProduct = function(data, callback) {
     logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
     logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
     logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -348,30 +350,30 @@ Order.prototype.queryOrderProduct = function (data, callback) {
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQuery.identifier;
 
     var formdata = {
-        pageManage : {
-            page : data.page || 1,
-            pageNum : data.pageNum || 20,
-            isPaging : data.isPaging || 0
+        pageManage: {
+            page: data.page || 1,
+            pageNum: data.pageNum || 20,
+            isPaging: data.isPaging || 0
         },
-        orderProduct : {
-            "jit_orderproduct.ProductID" : data.ProductID || [],
-            "jit_orderproduct.ProductCount" : data.ProductCount || []
+        orderProduct: {
+            "jit_orderproduct.ProductID": data.ProductID || [],
+            "jit_orderproduct.ProductCount": data.ProductCount || []
         },
-        order : {
-            "jit_ordercustomer.OrderID" : data.OrderID || '',
-            "jit_customer.WechatUserCode" : data.WechatUserCode || '',
-            "jit_customer.CustomerID" : data.CustomerID || '',
-            "jit_order.OrderStatus" : data.OrderStatus || '',
-            "jit_order.IsActive" : data.IsActive || ''
+        order: {
+            "jit_ordercustomer.OrderID": data.OrderID || '',
+            "jit_customer.WechatUserCode": data.WechatUserCode || '',
+            "jit_customer.CustomerID": data.CustomerID || '',
+            "jit_order.OrderStatus": data.OrderStatus || '',
+            "jit_order.IsActive": data.IsActive || ''
         }
     };
 
-    orderDAL.queryOrderProduct(formdata, function (err, result) {
+    orderDAL.queryOrderProduct(formdata, function(err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data['jit_customer.CustomerID'] || 0;
             logModel.Memo = "订单查询失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("订单查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -384,7 +386,7 @@ Order.prototype.queryOrderProduct = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data['jit_customer.CustomerID'] || 0;
         logModel.Memo = "订单查询成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单查询成功，生成操作日志失败" + logModel.CreateTime);
             }
@@ -421,7 +423,7 @@ Order.prototype.queryOrderProduct = function (data, callback) {
 
 
 //计算满足相应条件的订单产品个数
-Order.prototype.CountOrderProduct = function (data, callback) {
+Order.prototype.CountOrderProduct = function(data, callback) {
     //满足相应条件的订单个数
     logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
     logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
@@ -432,30 +434,30 @@ Order.prototype.CountOrderProduct = function (data, callback) {
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQueryCount.identifier;
 
     var formdata = {
-        pageManage : {
-            page : data.page,
-            pageNum : data.pageNum,
-            isPaging : data.isPaging
+        pageManage: {
+            page: data.page,
+            pageNum: data.pageNum,
+            isPaging: data.isPaging
         },
-        orderProduct : {
-            "jit_orderproduct.ProductID" : data.ProductID,
-            "jit_orderproduct.ProductCount" : data.ProductCount
+        orderProduct: {
+            "jit_orderproduct.ProductID": data.ProductID,
+            "jit_orderproduct.ProductCount": data.ProductCount
         },
-        order : {
-            "jit_ordercustomer.OrderID" : data.OrderID,
-            "jit_customer.WechatUserCode" : data.WechatUserCode,
-            "jit_customer.CustomerID" : data.CustomerID,
-            "jit_order.OrderStatus" : data.OrderStatus,
-            "jit_order.IsActive" : data.IsActive
+        order: {
+            "jit_ordercustomer.OrderID": data.OrderID,
+            "jit_customer.WechatUserCode": data.WechatUserCode,
+            "jit_customer.CustomerID": data.CustomerID,
+            "jit_order.OrderStatus": data.OrderStatus,
+            "jit_order.IsActive": data.IsActive
         }
     };
 
-    orderDAL.CountOrderProduct(formdata, function (err, result) {
+    orderDAL.CountOrderProduct(formdata, function(err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = data['jit_customer.CustomerID'] || 0;
             logModel.Memo = "计算满足相应条件的订单个数失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("计算满足相应条件的订单个数失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -468,7 +470,7 @@ Order.prototype.CountOrderProduct = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data['jit_customer.CustomerID'] || 0;
         logModel.Memo = "计算满足相应条件的订单个数成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("计算满足相应条件的订单个数成功，生成操作日志失败" + logModel.CreateTime);
             }
@@ -486,9 +488,9 @@ Order.prototype.CountOrderProduct = function (data, callback) {
  * @param input
  * @param string
  */
-Order.prototype.checkInput = function (res, input, string) {
+Order.prototype.checkInput = function(res, input, string) {
     if (input === undefined) {
-        
+
         logger.writeError(string + ' is undefined');
         res.status(404);
         return res.json({
@@ -503,81 +505,81 @@ Order.prototype.checkInput = function (res, input, string) {
  * function: 用户点击历史信息出发的事件处理
  * @param {string} wechatCode
  */
- 
- Order.prototype.getHistoryOrderInfo = function (wechatUserCode,  callback) {
-     var queryCustomerInfo = {
-         'WechatUserCode': wechatUserCode
-     }
-     
-     var p = new Promise(function (resolve,  reject) {
-         customer.query(queryCustomerInfo, function (err, customerInfo) {
-            
+
+Order.prototype.getHistoryOrderInfo = function(wechatUserCode, callback) {
+    var queryCustomerInfo = {
+        'WechatUserCode': wechatUserCode
+    }
+
+    var p = new Promise(function(resolve, reject) {
+        customer.query(queryCustomerInfo, function(err, customerInfo) {
+
             if (err) {
                 reject(Error("没有数据"));
                 return;
-            } 
-            
+            }
+
             //该用户不存在
-             if (customerInfo == undefined || customerInfo.length == 0) {
+            if (customerInfo == undefined || customerInfo.length == 0) {
                 console.log('查询用户失败');
                 logger.writeError("[service/jinkebro/order/orderservice]当查询历史订单的时候查无此用户");
                 callback(true, "当查询历史订单的时候查无此用户");
                 return;
             }
-            
+
             resolve(customerInfo);
-         });
-     });
-     
-     p.then (function(customerInfo) {
-         var dataCustomer = {
+        });
+    });
+
+    p.then(function(customerInfo) {
+        var dataCustomer = {
             "CustomerID": customerInfo[0].CustomerID
         }
 
-        orderDAL.queryHistoryProductWechat(dataCustomer, function (err, queryHistoryInfo) {
-           
-           if (err) {
-               console.log("查询历史订单失败");
-               logger.writeError("[service/jinkebro/order/orderservice]当插入订单的时候查无此用户");
-               callback(true);
-               return;
-           } 
-           
-           if(queryHistoryInfo == undefined && queryHistoryInfo.length) {
-               callback(false, '');
-               return;
-           }
-           
-           if(queryHistoryInfo != undefined && queryHistoryInfo.length ) {
-       
-               callback(false, queryHistoryInfo);
-               return ;
-           }
+        orderDAL.queryHistoryProductWechat(dataCustomer, function(err, queryHistoryInfo) {
+
+            if (err) {
+                console.log("查询历史订单失败");
+                logger.writeError("[service/jinkebro/order/orderservice]当插入订单的时候查无此用户");
+                callback(true);
+                return;
+            }
+
+            if (queryHistoryInfo == undefined && queryHistoryInfo.length) {
+                callback(false, '');
+                return;
+            }
+
+            if (queryHistoryInfo != undefined && queryHistoryInfo.length) {
+
+                callback(false, queryHistoryInfo);
+                return;
+            }
         });
-     });
- }
- 
+    });
+}
+
 //根据用户的信息来将订单的内容插入进数据库
-Order.prototype.insertOrderInfo = function (msg, openid, callback) {
+Order.prototype.insertOrderInfo = function(msg, openid, callback) {
     var me = this;
     var wechatUserCode = openid;
     var queryCustomerInfo = {
         'WechatUserCode': wechatUserCode
     }
 
-    
+
     //根据“1#3|2#2”的输入格式来分割字符串c
     var productInfo = msg.split('|');
     var productIDArray = [];
     var productCountArray = [];
 
-    var p = new Promise(function (resolve, reject) {
-        customer.query(queryCustomerInfo, function (err, customerInfo) {
+    var p = new Promise(function(resolve, reject) {
+        customer.query(queryCustomerInfo, function(err, customerInfo) {
 
             if (err) {
                 reject(Error('没有数据'));
             }
-                
+
             //该用户不存在
             if (customerInfo == undefined || customerInfo.length == 0) {
                 console.log('查询用户失败');
@@ -590,7 +592,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
         });
     });
 
-    p.then(function (customerInfo) {
+    p.then(function(customerInfo) {
         var orderInfo = {
             "CustomerID": customerInfo[0].CustomerID
         }
@@ -606,9 +608,9 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
         orderInfo.ProductCounts = productCountArray;
         return orderInfo;
 
-    }).then(function (orderInfo) {
+    }).then(function(orderInfo) {
 
-        me.checkIsRepeatOrder(orderInfo, function (err, orderQueryInfo) {
+        me.checkIsRepeatOrder(orderInfo, function(err, orderQueryInfo) {
             if (err) {
                 console.log('查询订单的失败');
                 return;
@@ -619,20 +621,20 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
                 console.log('已存在订单，不需要重复的插入');
                 return;
             }
-            
-            me.insertWechatOrder(orderInfo, function (err, orderInsertInfo) {
+
+            me.insertWechatOrder(orderInfo, function(err, orderInsertInfo) {
                 if (err) {
                     console.log('插入订单的时候失败');
                     return;
                 }
- 
+
                 /**
                  * 库存量不足
                  */
                 if (orderInsertInfo.insertId === undefined) {
                     productService.queryProducts({
                         'jit_product.ProductID': orderInsertInfo
-                    }, function (err, productInfo) {
+                    }, function(err, productInfo) {
                         if (err) {
                             console.log('查询商品的时候出错');
                             logger.writeError('[service/jinkebro/order/orderservice] 查询商品的时候出错');
@@ -643,13 +645,13 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
                     });
                     return;
                 }
-                
+
                 /**
                  * 库存量足的话，返回订单的信息
                  */
                 me.getOrderInfo({
                     'OrderID': orderInsertInfo.insertId
-                }, function (err, insertOrderInfo) {
+                }, function(err, insertOrderInfo) {
                     if (err) {
                         console.log('查询订单');
                         return;
@@ -665,7 +667,7 @@ Order.prototype.insertOrderInfo = function (msg, openid, callback) {
 }
 
 //从微信端获取数据插入到订单里面
-Order.prototype.insertWechatOrder = function (productInfo, callback) {
+Order.prototype.insertWechatOrder = function(productInfo, callback) {
     console.log("[service/jinkbro/orderservice]");
     console.log(productInfo);
 
@@ -675,7 +677,7 @@ Order.prototype.insertWechatOrder = function (productInfo, callback) {
         IsValid = 1,
         IsActive = 1,
         OrderStatus = 1,
-        ProductIDs = productInfo.ProductIDs,//数组，表示ProductID的集合
+        ProductIDs = productInfo.ProductIDs, //数组，表示ProductID的集合
         ProductCounts = productInfo.ProductCounts,
         CustomerID = productInfo.CustomerID || 1;
 
@@ -691,7 +693,7 @@ Order.prototype.insertWechatOrder = function (productInfo, callback) {
     };
 
     console.log(insertdata);
-    this.insertOrderFull(insertdata, function (err, insertOrderInfo) {
+    this.insertOrderFull(insertdata, function(err, insertOrderInfo) {
         if (err) {
             console.log('增加产品出错');
             callback(true);
@@ -717,7 +719,7 @@ Order.prototype.insertWechatOrder = function (productInfo, callback) {
 /**
  * function: 通过订单的Id来获取订单信息
  */
-Order.prototype.getOrderInfo = function (orderID, callback) {
+Order.prototype.getOrderInfo = function(orderID, callback) {
     console.log(orderID);
     //查询的条件
     // 传到dal的数据
@@ -748,12 +750,12 @@ Order.prototype.getOrderInfo = function (orderID, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderQuery.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQuery.identifier;
 
-    orderDAL.queryOrderProductWechat(sendData, function (err, orderInfo) {
+    orderDAL.queryOrderProductWechat(sendData, function(err, orderInfo) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = 0;
             logModel.Memo = "订单查询失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("订单查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -765,7 +767,7 @@ Order.prototype.getOrderInfo = function (orderID, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = 0;
         logModel.Memo = "订单查询成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单查询成功，生成操作日志失败" + logModel.CreateTime);
             }
@@ -784,7 +786,7 @@ Order.prototype.getOrderInfo = function (orderID, callback) {
  * @param {int} OrderStatus 
  * function: 通过以上参数获取订单的内容，检查是否重复下单
  */
-Order.prototype.checkIsRepeatOrder = function (data, callback) {
+Order.prototype.checkIsRepeatOrder = function(data, callback) {
 
     var checkInfo = {
         pageManage: {
@@ -813,12 +815,12 @@ Order.prototype.checkIsRepeatOrder = function (data, callback) {
     logModel.Action = operationConfig.jinkeBroApp.orderManger.orderQuery.actionName;
     logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQuery.identifier;
 
-    orderDAL.checkIsReapte(checkInfo, function (err, queryInfo) {
+    orderDAL.checkIsReapte(checkInfo, function(err, queryInfo) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
             logModel.CreateUserID = 0;
             logModel.Memo = "订单查询失败";
-            logService.insertOperationLog(logModel, function (err, logResult) {
+            logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("订单查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
@@ -832,37 +834,35 @@ Order.prototype.checkIsRepeatOrder = function (data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = 0;
         logModel.Memo = "订单查询成功";
-        logService.insertOperationLog(logModel, function (err, logResult) {
+        logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单查询成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
         logger.writeInfo('订单查询成功');
-        
+
         //存取已查询到的ID以及商品的数量并进行比对
         var productIDs = new Array();
         var productCounts = new Array();
         for (var i = 0; i < queryInfo.length; ++i) {
-               productCounts.push(queryInfo[i]['ProductCount']);
-               productIDs.push(queryInfo[i]['ProductID']);
+            productCounts.push(queryInfo[i]['ProductCount']);
+            productIDs.push(queryInfo[i]['ProductID']);
         }
-        
+
         //统计与数据库中的商品的相同的个数
         var countSameProudct = 0;
         console.log(productIDs);
-        for(var i=0; i < productIDs.length; ++i) {
+        for (var i = 0; i < productIDs.length; ++i) {
             for (var j = 0; j < data.ProductIDs.length; ++j) {
-                if (productIDs[i] == data.ProductIDs[j] && productCounts[i] == data.ProductCounts[j])
-                    {
-                        countSameProudct++;
-                    }
+                if (productIDs[i] == data.ProductIDs[j] && productCounts[i] == data.ProductCounts[j]) {
+                    countSameProudct++;
+                }
             }
         }
-        
+
         if (countSameProudct == productCounts.length) {
             callback(false, queryInfo);
-        }
-        else {
+        } else {
             callback(false, '');
         }
         return;

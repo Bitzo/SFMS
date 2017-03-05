@@ -16,9 +16,15 @@ myApp.service('baseService', function($http, $q) {
     };
 
     this.getLoginUserInfo = function() {
+        var data = {
+            AccountID: localStorage.getItem('jit_key')
+        };
         return $http({
             method:'get',
-            url:'backuser/singID?' + me.getPassToken()
+            url:'backuser/person?' + me.getPassToken(),
+            params:{
+                f:data
+            }
         });
     };
 });

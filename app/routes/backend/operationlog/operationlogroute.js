@@ -39,11 +39,15 @@ router.get('/', function (req, res) {
                 createTime = query.CreateTime || '',
                 createUserID = query.CreateUserID || '',
                 sort = query.sortindex || 'ID',
-                sortDirection = query.sortDirection || 'asc',
+                sortDirection = query.sortDirection || '',
                 totalNum = 0,
                 page = req.query.pageindex || 1,
                 pagesize = req.query.pagesize || config.pageCount;
             page = page > 0? page : 1;
+
+            if (sortDirection === '' && sort == 'ID') sortDirection = 'desc';
+
+            sortDirection = sortDirection || 'asc';
 
             if (moment(createTime).isValid())
                 createTime = moment(createTime).format("YYYY-MM-DD");

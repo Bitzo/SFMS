@@ -17,6 +17,7 @@ var express = require('express'),
     moment = require('moment'),
     logger = appRequire("util/loghelper").helper,
     functionConfig = appRequire('config/functionconfig'),
+    nodeExcel = require('excel-export'),
     userFuncService = appRequire('service/backend/user/userfuncservice');
 
 /**
@@ -290,6 +291,69 @@ router.post('/', function (req, res) {
                 });
             });
         })
+    });
+});
+
+//财务信息重新启用
+router.put('/reuse', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.financeManage.financeEdit.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function (err, results) {
+        if (err) {
+            res.status(500);
+
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+
+        if (!(results !== undefined && results.isSuccess === true)) {
+            res.status(400);
+
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+
+        data = req.body.formdata;
+        data.OperateUserID = req.query.jitkey;
+
+        financeService.updateFinance(data, function (err, results) {
+            if (err) {
+                res.status(500);
+
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                });
+            }
+
+            if(results !== undefined && results.affectedRows > 0) {
+                res.status(200);
+
+                return res.json({
+                    status: 200,
+                    isSuccess: true,
+                    msg: '操作成功'
+                });
+            } else {
+                res.status(400);
+
+                return res.json({
+                    status: 404,
+                    isSuccess: false,
+                    msg: '操作失败'
+                });
+            }
+        });
     });
 });
 
@@ -601,6 +665,199 @@ router.put('/', function (req, res) {
                 });
             });
         })
+    });
+});
+
+//财务统计导出excel
+router.get('/excel', function(req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.financeManage.financeCount.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function(err, results) {
+        if (err) {
+            return res.send("数据异常");
+        }
+
+        if (!(results !== undefined && results.isSuccess)) {
+            return res.send("数据异常");
+        }
+        var query = req.query,
+            startTime = query.startTime || '',
+            endTime = query.endTime || '',
+            isActive = query.isActive || '';
+
+        if (startTime!=='') startTime = startTime.slice(1,-1);
+        if (endTime!=='') endTime = endTime.slice(1,-1);
+
+        var filename = moment().format('YYYYMMDDHHmmss').toString(),
+            data = {
+                'startTime': startTime,
+                'endTime': endTime,
+                'IsActive': isActive,
+                'isPage': 1,
+                'OperateUserID': req.query.jitkey
+            };
+
+        financeService.countQuery(data, function (err, results) {
+            if (err) {
+                return res.send("数据异常");
+            }
+
+            var totalNum = results[0].num;
+
+            if(totalNum <= 0) {
+                return res.send("暂无数据");
+            }
+
+            //查询所需的详细数据
+            financeService.queryFinance(data, function (err, results) {
+                if (err) {
+                    return res.send("数据异常");
+                }
+
+                if (!(results !== undefined && results.length > 0)) {
+                    return res.send("暂无数据");
+                }
+                for (var i in results) {
+                    results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
+                    if(results[i].CheckTime !== null)
+                        results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
+                }
+
+                //替换用户名
+                var ID = [],DicID = [];
+
+                for (var i=0;i<results.length;++i) {
+                    if (results[i].CheckUser == null) continue;
+                    if (i==0) ID[i] = results[i].CheckUser;
+                    else {
+                        var j = 0;
+                        for (j=0;j<ID.length;++j) {
+                            if (ID[j] == results[i].CheckUser) break;
+                        }
+                        if (j == ID.length) ID[j] = results[i].CheckUser;
+                    }
+                }
+
+                for (var i=0;i<results.length;++i) {
+                    if (i==0) {
+                        DicID[0] = results[i].FIType;
+                        DicID[1] = results[i].InOutType;
+                    }
+                    else {
+                        var k=0;
+                        for (k=0;k<DicID.length;++k) {
+                            if (DicID[k] == results[i].FIType) break;
+                        }
+                        if (k == DicID.length) DicID[k] = results[i].FIType;
+                        for (k=0;k<DicID.length;++k) {
+                            if (DicID[k] == results[i].InOutType) break;
+                        }
+                        if (k == DicID.length) DicID[k] = results[i].InOutType;
+                    }
+                }
+
+                userservice.queryAccountByID(ID, function (err, data) {
+                    if (err) {
+                        return res.send("数据异常");
+                    }
+
+                    for (var i in results) {
+                        for (var j in data) {
+                            if (results[i].CheckUser == data[j].AccountID) {
+                                results[i].CheckUser = data[j].UserName;
+                                break;
+                            }
+                        }
+                    }
+
+                    //查询字典表 更新所有字典表数据
+                    dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
+                        if (err) {
+                            return res.send("数据异常");
+                        }
+
+                        if (!(data!==undefined && data.length>0)) {
+                            return res.send("暂无数据");
+                        }
+                        for (var i in results) {
+                            var j=0;
+                            for (j=0;j<data.length;++j) {
+                                if (results[i].FIType == data[j].DictionaryID) results[i].FITypeValue = data[j].DictionaryValue;
+                                if (results[i].InOutType == data[j].DictionaryID) results[i].InOutTypeValue = data[j].DictionaryValue;
+                            }
+                            results[i].IsActive = results[i].IsActive == 1 ? '是' : '否';
+                        }
+
+                        var conf ={};
+
+                        conf.cols = [{
+                            caption:'序号',
+                            type:'string',
+                        },{
+                            caption:'财务名称',
+                            type:'string',
+                        },{
+                            caption:'财务类型',
+                            type:'string'
+                        },{
+                            caption:'收支类型',
+                            type:'string'
+                        },{
+                            caption:'财务金额',
+                            type:'string'
+                        },{
+                            caption:'所属项目',
+                            type:'string'
+                        },{
+                            caption:'申请人帐号',
+                            type:'string'
+                        },{
+                            caption:'申请人',
+                            type:'string'
+                        },{
+                            caption:'申请时间',
+                            type:'string'
+                        },{
+                            caption:'审核状态',
+                            type:'string'
+                        },{
+                            caption:'审核人',
+                            type:'string'
+                        },{
+                            caption:'审核时间',
+                            type:'string'
+                        },{
+                            caption:'备注',
+                            type:'string'
+                        },{
+                            caption:'是否有效',
+                            type:'string'
+                        }];
+
+                        conf.rows = [];
+
+                        for(var i=0;i<results.length;++i) {
+                            conf.rows.push([(i+1).toString(), results[i].FIName, results[i].FITypeValue,
+                                results[i].InOutTypeValue, results[i].FIPrice, results[i].ProjectName,
+                                results[i].UserID.toString(), results[i].UserName, results[i].CreateTime,
+                                results[i].FIStatu, results[i].CheckUser, results[i].CheckTime,
+                                results[i].Remark, results[i].IsActive]);
+                        }
+
+                        var result = nodeExcel.execute(conf);
+
+                        res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+                        res.setHeader("Content-Disposition", "attachment; filename="+filename+".xlsx");
+
+                        return res.end(result, 'binary');
+
+                    });
+                });
+            });
+        });
     });
 });
 

@@ -507,6 +507,10 @@ var functionConfig = {
                 functionName: "签到记录统计",
                 functionCode: "SFMS-SIGN-LOG-COUNT"
             },
+            SignLogCountPerson: {
+                functionName: "个人签到记录统计",
+                functionCode: "SFMS-SIGN-LOG-COUNT-PERSON"
+            },
         },
     },
 };

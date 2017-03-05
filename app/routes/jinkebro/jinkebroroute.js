@@ -75,6 +75,9 @@ router.get('/jitdelivery', function (req, res, next) {
 router.get('/jitproducttype', function (req, res, next) {
     res.render('jinkeBro/jitproducttype', { title: 'Hi jkbro' });
 });
+router.get('/wechatMenuManage', function (req, res, next) {
+    res.render('jinkeBro/wechat/wechatMenuManage', { title: 'Hi jkbro' });
+});
 
 
 
