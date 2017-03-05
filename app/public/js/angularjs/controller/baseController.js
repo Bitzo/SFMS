@@ -9,12 +9,13 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
     //登录用户的个人信息
     $scope.loginUserInfo = baseService.getLoginUserInfo().then(function(response){
-        $scope.loginUserInfo = response.data.data;
+        $scope.loginUserInfo = response.data.data[0];
+        console.log($scope.loginUserInfo)
     });
     
     //跳转到个人资料界面
      $scope.turn = function(){
-        location.href = './index#/backend/peredit';   
+        location.href = './index#/backend/peredit';
     };
 
     //返回首页

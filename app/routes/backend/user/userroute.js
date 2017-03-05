@@ -346,7 +346,6 @@ router.get('/person', function (req, res) {
         
         if (results !== undefined && results.isSuccess === true) {
             var query = JSON.parse(req.query.f);
-            console.log(req.query);
             logger.writeInfo("查询用户的记录");
             var data = {},
                 allCount,
