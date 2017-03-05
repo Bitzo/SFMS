@@ -7,7 +7,7 @@
  */
 
 var productypeDAL = appRequire('dal/jinkebro/productype/productypedal');
-    moment = require('moment'),
+moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
     logModel = appRequire('model/jinkebro/log/logmodel'),
     productServ = appRequire('service/jinkebro/product/productservice');
@@ -21,9 +21,9 @@ Productype.prototype.queryAllProType = function(data, callback) {
     var formdata = {
         ID: data.ID || '',
         ProductTypeName: data.ProductTypeName || '',
-        page : data.page || 1,
-        pageNum : data.pageNum || (config.pageCount),
-        isPaging : data.isPaging || 0
+        page: data.page || 1,
+        pageNum: data.pageNum || (config.pageCount),
+        isPaging: data.isPaging || 0
     };
 
     productypeDAL.queryAllProType(formdata, function(err, results) {
@@ -112,7 +112,7 @@ Productype.prototype.delete = function(data, callback) {
         loggerWrite();
         return callback(true, logModel.OperationName);
     }
-    
+
     productServ.getProCountByID(data, function(err, results) {
         if (err) {
             logger.writeError('根据ID得到产品数量异常:' + this.createTime);
@@ -164,7 +164,7 @@ function loggerWrite() {
 
     logService.insertOperationLog(logModel, function(err, insertId) {
         if (err) {
-            logger.writeError('生成操作日志异常' + new Date());
+            logger.writeError('生成操作日志异常' + new Date() + "\n\r" + JSON.stringify(err));
         }
     });
 }

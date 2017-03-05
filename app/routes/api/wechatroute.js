@@ -263,17 +263,16 @@ wechat.eventMsg(function(msg) {
             //当订阅时间出发的时候发送欢迎标语
             resMsg.content = "欢迎来到金科小哥";
             wechat.sendMsg(resMsg);
-
             //获取token
             wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,
                 function(isSussess, token) {
                     //如果成功  
                     if (isSussess) {
-                        // //創建菜单的部分
-                        // wechat.createMenu(token, function () {
-                        //     console.log("创建菜单");
-                        //     logger.writeInfo("[route/api/wechatroute-------------------------195行]创建菜单成功");
-                        // });
+                        //創建菜单的部分
+
+                        wechat.createMenu(token, function() {
+                            console.log("重新创建菜单");
+                        });
 
                         //用户订阅时的操作
                         wechatCustomer.addSubscibe(token, msg, function(err, errinfo) {

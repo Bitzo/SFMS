@@ -20,7 +20,7 @@ var express = require('express'),
  * 新建一个员工
  */
 router.post('/',function (req,res) {
-    var functionCode = functionConfig.jinkeBroApp.staff.staffQuery.functionCode;
+    var functionCode = functionConfig.jinkeBroApp.staff.staffAdd.functionCode;
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
@@ -225,7 +225,7 @@ router.delete('/',function (req,res) {
 });
 
 router.put('/',function (req,res) {
-    var functionCode = functionConfig.jinkeBroApp.staff.staffQuery.functionCode;
+    var functionCode = functionConfig.jinkeBroApp.staff.staffEdit.functionCode;
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
