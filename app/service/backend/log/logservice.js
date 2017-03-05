@@ -4,7 +4,8 @@
  * @Last Modified by:  
  * @Last Modified time: 
  */
-var validator = require('validator');
+var validator = require('validator'),
+    moment = require('moment');
 
 var operationLogDAL = appRequire('dal/backend/log/logdal');
 var logger = appRequire('util/loghelper').helper;
@@ -47,7 +48,7 @@ exports.insertOperationLog = function(data, callback) {
 
     operationLogDAL.insertBizLog(data, function(err, results) {
         if (err) {
-            console.log('日志记录异常-->'+JSON.stringify(results));
+            console.log('日志记录异常-->' + JSON.stringify(results));
             return callback(true);
         }
         return callback(false, results.insertId);
@@ -55,7 +56,7 @@ exports.insertOperationLog = function(data, callback) {
 };
 
 //日志查询
-exports.queryLog = function (data, callback) {
+exports.queryLog = function(data, callback) {
     var formdata = {
         'ApplicationID': data.ApplicationID || '',
         'Type': data.Type || '',
@@ -67,7 +68,7 @@ exports.queryLog = function (data, callback) {
         'sortDirection': data.sortDirection
     };
 
-    operationLogDAL.queryLog(formdata, function (err, results) {
+    operationLogDAL.queryLog(formdata, function(err, results) {
         if (err) {
             return callback(true);
         }
@@ -77,19 +78,48 @@ exports.queryLog = function (data, callback) {
 }
 
 //查询数据量统计
-exports.countQuery = function (data, callback) {
+exports.countQuery = function(data, callback) {
     var formdata = {
         'ApplicationID': data.ApplicationID || '',
         'Type': data.Type || '',
         'PDate': data.CreateTime || '',
         'CreateUserID': data.CreateUserID || ''
     }
-    operationLogDAL.countQuery(formdata, function (err, results) {
-        if(err) {
+    operationLogDAL.countQuery(formdata, function(err, results) {
+        if (err) {
             callback(true);
             return;
         }
         logger.writeInfo('查询数据量统计');
         callback(false, results);
     })
+}
+
+/**
+ * 生成插入日志的模型，将一些固定的属性，直接初始化
+ * @param appID 应用的ID
+ * @param appName 应用的名称
+ * @param type 动作的类型
+ * @param action 当前的动作，可能是方法名
+ * @param operateName 方法名
+ * @param identifier 标识
+ * @param memo 备注
+ * @param createUserID 当前操作的用户ID
+ * @returns {object} 日志model 
+ */
+exports.generateLogModel = function(appID, appName, type, action, operateName, identifier, memo, createUserID) {
+    var logModel = {};
+
+    logModel.ApplicationID = appID;
+    logModel.ApplicationName = appName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
+    logModel.OperationName = operateName;
+    logModel.Action = action;
+    logModel.Identifier = identifier;
+    logModel.Type = type;
+    logModel.CreateUserID = createUserID;
+    logModel.Memo = memo;
+
+    return logModel;
 }
