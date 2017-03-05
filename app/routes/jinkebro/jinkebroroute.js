@@ -7,6 +7,7 @@ var customer = appRequire('routes/jinkebro/customer/customerroute');
 var product = appRequire('routes/jinkebro/product/productroute');
 var order = appRequire('routes/jinkebro/order/orderroute');
 var staff = appRequire('routes/jinkebro/staff/staffroute');
+var menu = appRequire('routes/jinkebro/wechat/menuroute');
 //产品类别路由
 var proTyperoute = appRequire('routes/jinkebro/productype/productyperoute');
 //库存信息路由
@@ -92,6 +93,7 @@ router.use('/proStock', proStockroute);
 router.use('/orderDelivery', orderdelivery);
 //员工
 router.use('/staff',staff);
-
+//创建微信菜单
+router.use('/createMenu',menu);
 module.exports = router;
 

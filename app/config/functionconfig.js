@@ -364,6 +364,14 @@ var functionConfig = {
                 functionCode: "JB-STAFF-QUERY"
             },
         },
+        menu: {
+            functionName: "金科小哥微信菜单管理",
+            functionCode: "JB-MENU-MANAGE",
+            menuAdd: {
+                functionName: "微信菜单的新增",
+                functionCode: "JB-MENU-ADD"
+            }
+        }
     },
     sfmsApp: {
         applicationID: 3,

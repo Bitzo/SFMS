@@ -94,7 +94,7 @@ wechat.textMsg(function(msg) {
 
                             sendMsg += '总共消费' + totalPrice.toFixed(2) + '元， 正在准备配送';
                             //这边记录这种日志一点意义都没有，既然要记录，那就记录哪个用户，什么时间点，下了什么商品的订单，下单是否成功
-                            logger.writeInfo("[routes/api/wechatroute]订单成功");
+                            // logger.writeInfo("[routes/api/wechatroute]订单成功");
                         }
 
                         console.log(sendMsg);
@@ -354,7 +354,8 @@ wechat.eventMsg(function(msg) {
                     var p = new Promise(function(resolve, reject) {
                         product.queryProducts({
                             page: 1,
-                            pageNum: 10
+                            pageNum: 10,
+                            isPaging: 1
                         }, function(err, returndata) {
                             if (err) {
                                 reject(Error("没有数据"));
@@ -480,7 +481,7 @@ wechat.eventMsg(function(msg) {
 
 //监听地址的事件
 wechat.clickAddress(function(judgement, username) {
-    console.log(username);
+    
     if (judgement != undefined && judgement == 'true') {
         var tempRoute = '/' + username;
         console.log(tempRoute)
@@ -496,7 +497,6 @@ wechat.clickAddress(function(judgement, username) {
 router.get('/addressinfo', function(req, res) {
 
     var addressurl = config.jinkebro.baseUrl + 'wechat/' + wechat.data.FromUserName;
-    console.log(addressurl);
     //路由的重定义
     res.redirect(301, addressurl);
 

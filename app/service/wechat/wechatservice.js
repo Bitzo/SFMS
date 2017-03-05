@@ -673,50 +673,12 @@ Weixin.prototype.getCustomerInfo = function (accessToken, openid, callback) {
 // ------------------ 微信创建自定义菜单  开始---------------
 
 //微信创建菜单的方法
-Weixin.prototype.createMenu = function (accessToken, callback) {
+Weixin.prototype.createMenu = function (accessToken, menuData, callback) {
     //微信的创建菜单的url
-    //var postUrl = config.weChat.baseUrl + "menu/jcreate?accessToken=j" + accessToken;
     var postUrl = config.weChat.baseUrl + config.weChat.createMenu + accessToken;
-
-    console.log(postUrl);
-    var body = {
-        "button": [{
-            'name': "我要下单",
-            'sub_button': [
-                {
-                    "type": "click",
-                    'name': "商品展示",
-                    'key': "ProductDisplay"
-                },
-                {
-                    'type': "click",
-                    'name': "提交订单",
-                    'key': "SubmitOrder"
-                }
-            ]
-        }, {
-                "type": "click",
-                "name": "跟踪包裹",
-                'key': "TrackPackage"
-            }, {
-                "name": "我",
-                "sub_button": [{
-                    "type": "view",
-                    "name": "个人信息",
-                    "url": config.jinkebro.baseUrl + "/wechat/addressinfo"
-                }, 
-                {
-                    "type" : "click",
-                    "name" : "历史订单",
-                    "key"  : "OrderHistory"
-                },
-                {
-                        "type": "view",
-                        "name": "联系我们",
-                        "url": "http://www.soso.com"
-                    }]
-            }]
-    }
+    
+    var body = menuData;
+   
     var bodyString = JSON.stringify(body);
 
     //头文件
@@ -744,6 +706,7 @@ Weixin.prototype.createMenu = function (accessToken, callback) {
         res.setEncoding('utf8');
         res.on('data', function (chunk) {
             console.log('Response: ' + chunk);
+            callback(chunk);
         });
     });
 
