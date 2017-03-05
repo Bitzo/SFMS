@@ -266,7 +266,7 @@ function loggerWrite() {
 
     logService.insertOperationLog(logModel, function (err, insertId) {
         if (err) {
-            logger.writeError('生成操作日志异常' + new Date());
+            logger.writeError('生成操作日志异常' + new Date()+"\n\r"+JSON.stringify(err));
         }
     });
 }
