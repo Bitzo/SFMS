@@ -9,12 +9,13 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
     //登录用户的个人信息
     $scope.loginUserInfo = baseService.getLoginUserInfo().then(function(response){
-        $scope.loginUserInfo = response.data.data;
+        $scope.loginUserInfo = response.data.data[0];
+        console.log($scope.loginUserInfo)
     });
     
     //跳转到个人资料界面
      $scope.turn = function(){
-        location.href = './index#/backend/peredit';   
+        location.href = './index#/backend/peredit';
     };
 
     //返回首页
@@ -384,8 +385,27 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }     
         };    
   
-    }
-    
+    };
+
+    $scope.signCountPerson = function (action) {
+        $http({
+            method:'get',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:$scope.f
+            }
+        }).
+        success(function(response) {
+            $scope.data = response.data;
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+
     //项目管理--首页 更多
     $scope.moreproject = function(index,action){
             $scope.f={
