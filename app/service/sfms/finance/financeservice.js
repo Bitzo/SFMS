@@ -79,7 +79,7 @@ exports.updateFinance = function(data, callback) {
         'FIType': data.FIType,
         'InOutType': data.InOutType,
         'FIPrice': data.FIPrice,
-        'ProjectID': data.ProjectID,
+        'ProjectID': data.ProjectID || data.ProjectId,
         'UserID': data.UserID,
         'UserName': data.UserName,
         'OperateUser': data.OperateUser,

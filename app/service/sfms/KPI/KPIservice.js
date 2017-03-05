@@ -76,7 +76,7 @@ exports.updateKPI = function(data, callback) {
         'KPIName': data.KPIName,
         'KPIType': data.KPIType,
         'KPIScore': data.KPIScore,
-        'ProjectId': data.ProjectId,
+        'ProjectId': data.ProjectId || data.ProjectID,
         'UserID': data.UserID,
         'UserName': data.UserName,
         'OperateUser': data.OperateUser,

@@ -293,6 +293,69 @@ router.post('/', function (req, res) {
     });
 });
 
+//财务信息重新启用
+router.put('/reuse', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.financeManage.financeEdit.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function (err, results) {
+        if (err) {
+            res.status(500);
+
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+
+        if (!(results !== undefined && results.isSuccess === true)) {
+            res.status(400);
+
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+
+        data = req.body.formdata;
+        data.OperateUserID = req.query.jitkey;
+
+        financeService.updateFinance(data, function (err, results) {
+            if (err) {
+                res.status(500);
+
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                });
+            }
+
+            if(results !== undefined && results.affectedRows > 0) {
+                res.status(200);
+
+                return res.json({
+                    status: 200,
+                    isSuccess: true,
+                    msg: '操作成功'
+                });
+            } else {
+                res.status(400);
+
+                return res.json({
+                    status: 404,
+                    isSuccess: false,
+                    msg: '操作失败'
+                });
+            }
+        });
+    });
+});
+
 /**
  * 财务基本信息编辑
  * 1. 先验证所要编辑的财务信息是否已经被审核

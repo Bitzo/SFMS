@@ -59,7 +59,7 @@ block content
             td
               a(href='#/sfms/financeEdit?ID={{x.ID}}')
                 i.icon.icon-edit 编辑&nbsp
-              button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.FIName,'/sfms/api/finance')",href='',ng-disabled='x.IsActive')
+              button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.FIName,'/sfms/api/finance/reuse')",href='',ng-disabled='x.IsActive')
                 i.icon.icon-ok 启用 &nbsp
               button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,x.FIName,'/sfms/api/finance')",href='',ng-disabled='!x.IsActive')
                 i.icon.icon-ban-circle 禁用 &nbsp

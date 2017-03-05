@@ -272,6 +272,70 @@ router.post('/', function (req, res) {
     });
 });
 
+//绩效启用
+
+router.put('/', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.KPIManage.KPIEdit.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function (err, results) {
+        if (err) {
+            res.status(500);
+
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+
+        if (!(results !== undefined && results.isSuccess)) {
+            res.status(400);
+
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+
+        data = req.body.formdata;
+        data.OperateUserID = req.query.jitkey;
+
+        KPIservice.updateKPI(data, function (err, results) {
+            if (err) {
+                res.status(500);
+
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                });
+            }
+
+            if(results !== undefined && results.affectedRows > 0) {
+                res.status(200);
+
+                return res.json({
+                    status: 200,
+                    isSuccess: true,
+                    msg: '操作成功'
+                });
+            } else {
+                res.status(400);
+
+                return res.json({
+                    status: 404,
+                    isSuccess: false,
+                    msg: results
+                });
+            }
+        });
+    });
+});
+
 //KPI基本信息编辑
 router.put('/', function (req, res) {
     var data = {
