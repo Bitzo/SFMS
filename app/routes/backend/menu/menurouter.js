@@ -465,7 +465,7 @@ router.get('/parent',function (req,res) {
 router.get('/',function (req,res) {
     var checkFuncData = {
         userID: req.query.jitkey,
-        functionCode: functionConfig.backendApp.memuManage.menuQuery.functionCode
+        functionCode: functionConfig.backendApp.userMenuManage.userMenuQuery.functionCode
     };
 
     userFuncService.checkUserFunc(checkFuncData, function(err, funcResults) {
