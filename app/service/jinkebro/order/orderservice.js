@@ -25,7 +25,7 @@ var customer = appRequire("service/jinkebro/customer/customerservice");
 var productstock = appRequire('service/jinkebro/productstock/productstockservice');
 //记录日志
 var wechat = appRequire("service/wechat/wechatservice");
-
+//待优化  by  snail  2017-03-05
 logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
 logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
 logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');

@@ -24,7 +24,7 @@ var wechat = appRequire("service/wechat/wechatservice");
 var wechatCustomer = appRequire("service/jinkebro/customer/customerservice");
 //调用商品的模块的内容
 var product = appRequire('service/jinkebro/product/productservice');
-var order = appRequire('service/jinkebro/order/orderservice');
+var orderService = appRequire('service/jinkebro/order/orderservice');
 
 wechat.token = config.weChat.token;
 
@@ -73,7 +73,7 @@ wechat.textMsg(function(msg) {
                 /^((\d+#\d+\|)+(\d+#\d+))$/.test(msg.content)) {
                 resMsg.content = "下单失败";
                 var p = new Promise(function(resolve, reject) {
-                    order.insertOrderInfo(msg.content, msg.fromUserName, function(err, orderInfo) {
+                    orderService.insertOrderInfo(msg.content, msg.fromUserName, function(err, orderInfo) {
                         var result = orderInfo;
                         var sendMsg = '';
 
@@ -93,8 +93,6 @@ wechat.textMsg(function(msg) {
                             });
 
                             sendMsg += '总共消费' + totalPrice.toFixed(2) + '元， 正在准备配送';
-                            //这边记录这种日志一点意义都没有，既然要记录，那就记录哪个用户，什么时间点，下了什么商品的订单，下单是否成功
-                            logger.writeInfo("[routes/api/wechatroute]订单成功");
                         }
 
                         console.log(sendMsg);
@@ -108,38 +106,35 @@ wechat.textMsg(function(msg) {
                 }, function(err) {
                     wechat.sendMsg(resMsg);
                 });
-
-                logger.writeInfo("[route/api/wechatroute]发送订单的消息给用户");
-                return;
+                // return;
             } else {
                 resMsg.content = '自动回复正在开发中...';
                 wechat.sendMsg(resMsg);
             }
-
             break;
 
             //输入其他的文字返回的是图文的信息
-            var articles = [];
-            var picurl = "http://mmbiz.qpic.cn/mmbiz_jpg/2gG8lzb9PibsPiadjuibZ6mm";
-            picurl += "GVvqk7am7a8yqW87U3v";
-            picurl += "vm2Bo6H0PXAa8Bxm3wpIKuicpjic0ZKYVT929L85fib64lwKw/0";
+            // var articles = [];
+            // var picurl = "http://mmbiz.qpic.cn/mmbiz_jpg/2gG8lzb9PibsPiadjuibZ6mm";
+            // picurl += "GVvqk7am7a8yqW87U3v";
+            // picurl += "vm2Bo6H0PXAa8Bxm3wpIKuicpjic0ZKYVT929L85fib64lwKw/0";
 
-            articles[0] = {
-                title: "零食",
-                description: "测试描述",
-                picUrl: picurl,
-                url: "https://www.baidu.com/"
-            };
+            // articles[0] = {
+            //     title: "零食",
+            //     description: "测试描述",
+            //     picUrl: picurl,
+            //     url: "https://www.baidu.com/"
+            // };
 
-            var resMsg1 = {
-                fromUserName: msg.toUserName,
-                toUserName: msg.fromUserName,
-                msgType: "news",
-                articles: articles,
-                funcFlag: 0
-            }
+            // var resMsg1 = {
+            //     fromUserName: msg.toUserName,
+            //     toUserName: msg.fromUserName,
+            //     msgType: "news",
+            //     articles: articles,
+            //     funcFlag: 0
+            // }
 
-            wechat.sendNewsMsg(resMsg1);
+            // wechat.sendNewsMsg(resMsg1);
             break;
 
         case "音乐":
@@ -397,7 +392,7 @@ wechat.eventMsg(function(msg) {
                 case 'TrackPackage':
                     //跟踪包裹这一栏
                     console.log("跟踪包裹");
-                    // order.insertOrderInfo(msg.content, msg.fromUserName, function(resultinfo) {
+                    // orderService.insertOrderInfo(msg.content, msg.fromUserName, function(resultinfo) {
                     //     var resMsg = {
                     //         fromUserName: msg.toUserName,
                     //         toUserName: msg.fromUserName,
@@ -414,7 +409,7 @@ wechat.eventMsg(function(msg) {
                     break;
 
                 case 'OrderHistory':
-                    // order.getHistoryOrderInfo(msg.FromUserName, function(err, orderinfo) {
+                    // orderService.getHistoryOrderInfo(msg.FromUserName, function(err, orderinfo) {
 
                     //     var historyInfo = '';
 
