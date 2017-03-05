@@ -39,7 +39,7 @@ router.get('/accesscheck', function(req, res, next) {
 
     oriArray[0] = nonce;
     oriArray[1] = timestamp;
-    oriArray[2] = 'snail';
+    oriArray[2] = config.weChat.token;
     oriArray.sort();
 
     var original = oriArray.join('');
