@@ -384,8 +384,27 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
             }     
         };    
   
-    }
-    
+    };
+
+    $scope.signCountPerson = function (action) {
+        $http({
+            method:'get',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            params:{
+                f:$scope.f
+            }
+        }).
+        success(function(response) {
+            $scope.data = response.data;
+            if(!response.isSuccess){
+                alert(response.msg);
+            };
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+
     //项目管理--首页 更多
     $scope.moreproject = function(index,action){
             $scope.f={

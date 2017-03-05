@@ -413,7 +413,7 @@ router.get('/count', function (req, res) {
 router.get('/count/person', function (req, res) {
     var data = {
         userID: req.query.jitkey,
-        functionCode: functionConfig.sfmsApp.SignManage.SignLogCount.functionCode
+        functionCode: functionConfig.sfmsApp.SignManage.SignLogCountPerson.functionCode
     };
 
     userFuncService.checkUserFunc(data, function(err, results) {
@@ -574,7 +574,7 @@ router.get('/count/person', function (req, res) {
                                 totalNum: 1,
                                 totalPage: Math.ceil(1 / pagesize),
                                 dataNum: pagesize,
-                                data: data
+                                data: userInfo
                             };
 
                             if(temp.curPage == temp.totalPage) {
