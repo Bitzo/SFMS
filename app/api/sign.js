@@ -19,7 +19,7 @@ var userFuncService = appRequire('service/backend/user/userfuncservice');
 router.post('/', function (req, res) {
     var data = {
         userID: req.body.jitkey,
-        functionCode: functionConfig.sfmsApp.SignManage.SignLogCount.functionCode
+        functionCode: functionConfig.sfmsApp.SignManage.SignLogADD.functionCode
     };
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
@@ -104,9 +104,9 @@ router.post('/', function (req, res) {
                     if (data.SignType == 1) {
                         if(!moment(results[0].CreateTime).isSame(data.CreateTime, 'day')) {
                             results[0].CreateTime = moment(results[0].CreateTime).set({
-                                'hour':23,
-                                'minute':59,
-                                'second': 59
+                                'hour':22,
+                                'minute':0,
+                                'second': 0
                             }).format('YYYY-MM-DD HH:mm:ss');
                             data.CreateTime = results[0].CreateTime;
                         }
