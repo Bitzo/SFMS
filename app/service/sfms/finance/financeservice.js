@@ -152,6 +152,7 @@ exports.queryFinance = function (data, callback) {
         'jit_financeinfo.IsActive': data.IsActive || '',
         'page': data.page || 1,
         'pageNum': data.pageNum || config.pageCount,
+        'isPage': data.isPage || 0
     };
 
     if (data.ID !== '' && data.ID !== undefined) {
@@ -206,7 +207,7 @@ exports.countQuery = function (data, callback) {
         'FIStatu': data.FIStatus || '',
         'startTime': data.startTime || '',
         'endTime': data.endTime || '',
-        'jit_financeinfo.IsActive': data.IsActive || ''
+        'jit_financeinfo.IsActive': data.IsActive || '',
     };
 
     financeDAL.countQuery(queryData, function (err, results) {
