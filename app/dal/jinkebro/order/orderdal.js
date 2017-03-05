@@ -593,25 +593,23 @@ exports.updateOrder = function(data, callback) {
 
     update_sql += temp_sql;
     update_sql += ' where OrderID = ' + orderTableData.OrderID + ';';
-    console.log('修改order表中记录的sql:' + update_sql);
+
     logger.writeInfo('修改order表中记录的sql:' + update_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             console.error('mysql 链接失败');
-            callback(true);
-            return;
+            return callback(true);
         }
 
         connection.query(update_sql, function(err, results) {
             connection.release();
+
             if (err) {
-                callback(true);
-                return;
+                return callback(true);
             }
 
-            callback(false, results);
-            return;
+            return callback(false, results);
         });
     });
 };
