@@ -185,7 +185,7 @@ wechat.textMsg(function(msg) {
 
 // 监听图片消息
 wechat.imageMsg(function(msg) {
-    console.log("[routes/api/wechatroute----------165行]imageMsg received");
+    console.log("[routes/api/wechatroute]imageMsg received");
     console.log(JSON.stringify(msg));
     var resMsg = {};
     switch (msg.msgType) {
