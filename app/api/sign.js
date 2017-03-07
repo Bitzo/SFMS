@@ -55,6 +55,8 @@ router.post('/', function (req, res) {
                 return;
             }
 
+
+
             var userID = req.body.jitkey;
             var ip = req.body.IP;
             var userAgent = req.body.userAgent || '';

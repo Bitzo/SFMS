@@ -135,7 +135,12 @@ router.get('/excel', function (req, res) {
                             var second = signInfo[i].outTime - signInfo[i].inTime,
                                 h = Math.floor(second / 3600),
                                 m = Math.floor((second - h * 3600) / 60),
-                                s = (second - h * 3600 - m * 60)
+                                s = (second - h * 3600 - m * 60);
+
+                            if(h>=0&&h<10) h = '0'+h.toString();
+                            if(m>=0&&m<10) m = '0'+m.toString();
+                            if(s>=0&&s<10) s = '0'+s.toString();
+
 
                             signInfo[i].signTime = h + ':' + m + ':' + s;
 
@@ -335,6 +340,10 @@ router.get('/count', function (req, res) {
                                             m = Math.floor((second - h*3600)/60),
                                             s = (second - h*3600 - m*60)
 
+                                        if(h>=0&&h<10) h = '0'+h.toString();
+                                        if(m>=0&&m<10) m = '0'+m.toString();
+                                        if(s>=0&&s<10) s = '0'+s.toString();
+
                                         signInfo[i].signTime = h+':'+m+':'+s ;
 
                                         delete signInfo[i].inTime;
@@ -533,6 +542,10 @@ router.get('/count/person', function (req, res) {
                                     h = Math.floor(second/3600),
                                     m = Math.floor((second - h*3600)/60),
                                     s = (second - h*3600 - m*60);
+
+                                if(h>=0&&h<10) h = '0'+h.toString();
+                                if(m>=0&&m<10) m = '0'+m.toString();
+                                if(s>=0&&s<10) s = '0'+s.toString();
 
                                 signInfo[i].signTime = h+':'+m+':'+s ;
 
