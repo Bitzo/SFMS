@@ -35,6 +35,23 @@ var operationConfig = {
                 actionName: "用户批量查询",
                 identifier: 4
             },
+            userroleAdd: {
+                actionName: "用户角色新增",
+                identifier: 5
+            },
+            userroleQuery: {
+                actionName: "用户角色的查询",
+                identifier: 6
+            },
+            userroleUpd: {
+                actionName: "用户角色的修改",
+                identifier: 7
+            },
+            userroleDel :{
+                actionName: "用户角色的删除",
+                identifier: 8
+            }
+
         },
         roleManage: {
             module: "角色模块",

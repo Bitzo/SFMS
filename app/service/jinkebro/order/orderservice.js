@@ -159,6 +159,7 @@ Order.prototype.updateOrder = function(data, callback) {
             OrderStatus: data.OrderStatus || ''
         }
     };
+    
     //修改订单
     orderDAL.updateOrder(formdata, function(err, result) {
         if (err) {
@@ -237,7 +238,7 @@ Order.prototype.queryOrders = function(data, callback) {
         logger.writeInfo('订单查询成功');
 
         for (var i = 0; i < result.length; i++) {
-            result[i].OrderTime = moment(result[i].OrderTime).format('YYYY-MM-DD HH:mm:SS');
+            result[i].OrderTime = moment(result[i].OrderTime).format('YYYY-MM-DD HH:mm:ss');
             switch (result[i].OrderStatus) {
                 case 1:
                     result[i]['OrderStatusDesc'] = '等待配送';
@@ -669,7 +670,6 @@ Order.prototype.insertOrderInfo = function(msg, openid, callback) {
 //从微信端获取数据插入到订单里面
 Order.prototype.insertWechatOrder = function(productInfo, callback) {
     console.log("[service/jinkbro/orderservice]");
-    console.log(productInfo);
 
     //这可以整个成一个订单的object
     var OrderTime = moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -742,36 +742,39 @@ Order.prototype.getOrderInfo = function(orderID, callback) {
         }
     };
 
-    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    logModel.PDate = moment().format('YYYY-MM-DD');
-    logModel.OperationName = operationConfig.jinkeBroApp.orderManger.orderQuery.actionName;
-    logModel.Action = operationConfig.jinkeBroApp.orderManger.orderQuery.actionName;
-    logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQuery.identifier;
-
+    logModel = logService.generateLogModel(
+            operationConfig.jinkeBroApp.applicationID,
+            operationConfig.jinkeBroApp.applicationName,
+            operationConfig.operationType.operation,
+            operationConfig.jinkeBroApp.orderManger.orderQuery.actionName,
+            operationConfig.jinkeBroApp.orderManger.orderQuery.actionName,
+            operationConfig.jinkeBroApp.customerManage.orderQuery.identifier,
+            0
+            );
+            
     orderDAL.queryOrderProductWechat(sendData, function(err, orderInfo) {
+        
         if (err) {
             logModel.Type = operationConfig.operationType.error;
-            logModel.CreateUserID = 0;
             logModel.Memo = "订单查询失败";
             logService.insertOperationLog(logModel, function(err, logResult) {
                 if (err) {
                     logger.writeError("订单查询失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
+            
             logger.writeError('[service/jinkebro/order/orderservice] 查詢订单的时候失败');
             callback(true, '查询订单的时候失败');
         };
 
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = 0;
         logModel.Memo = "订单查询成功";
         logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单查询成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
+        
         logger.writeInfo('订单查询成功');
         callback(false, orderInfo);
         return;
@@ -807,14 +810,16 @@ Order.prototype.checkIsRepeatOrder = function(data, callback) {
         }
     }
 
-    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    logModel.PDate = moment().format('YYYY-MM-DD');
-    logModel.OperationName = operationConfig.jinkeBroApp.orderManger.orderQuery.actionName;
-    logModel.Action = operationConfig.jinkeBroApp.orderManger.orderQuery.actionName;
-    logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderQuery.identifier;
-
+    logModel = logService.generateLogModel(
+        operationConfig.jinkeBroApp.applicationID,
+        operationConfig.jinkeBroApp.applicationName,
+        operationConfig.operationType.operation,
+        operationConfig.jinkeBroApp.orderManger.orderQuery.actionName,
+        operationConfig.jinkeBroApp.orderManger.orderQuery.actionName,
+        operationConfig.jinkeBroApp.orderManger.orderQuery.identifier,
+        0    
+    );
+    
     orderDAL.checkIsReapte(checkInfo, function(err, queryInfo) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;
@@ -832,7 +837,6 @@ Order.prototype.checkIsRepeatOrder = function(data, callback) {
         }
 
         logModel.Type = operationConfig.operationType.operation;
-        logModel.CreateUserID = 0;
         logModel.Memo = "订单查询成功";
         logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {

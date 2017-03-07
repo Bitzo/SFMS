@@ -107,7 +107,7 @@ exports.countQuery = function(data, callback) {
  * @param createUserID 当前操作的用户ID
  * @returns {object} 日志model 
  */
-exports.generateLogModel = function(appID, appName, type, action, operateName, identifier, memo, createUserID) {
+exports.generateLogModel = function(appID, appName, type, action, operateName, identifier, createUserID, memo) {
     var logModel = {};
 
     logModel.ApplicationID = appID;

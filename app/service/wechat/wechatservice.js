@@ -12,7 +12,7 @@ var sha1 = require('sha1'),
     xml2js = require('xml2js');
 var https = require('https');
 var iconv = require("iconv-lite");
-
+var operationConfig = appRequire('config/operationconfig');
 var config = appRequire('config/config');
 var logger = appRequire('util/loghelper').helper;
 var logService = appRequire('service/backend/log/logservice');
@@ -563,13 +563,17 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
         res.on("end", function() {
             var buff = Buffer.concat(datas, size);
             var result = JSON.parse(iconv.decode(buff, "utf8")); //转码//var result = buff.toString();//不需要转编码,直接tostring  
-            logModel.OperationName = '获取微信AccessToken';
-            logModel.NewValue = result.access_token;
-            logModel.Action = '微信操作_获取AccessToken';
-            logModel.Memo = 'AccessToken获取成功';
-            logModel.CreateUserID = operatorid;
-            logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-            logModel.PDate = moment().format('YYYY-MM-DD');
+            logModel = logService.generateLogModel(
+                            operationConfig.jinkeBroApp.applicationID,
+                            operationConfig.jinkeBroApp.applicationName,
+                            operationConfig.operationType.operation,
+                            operationConfig.weChat.infoManage.access_tolenGet.actionName,
+                            operationConfig.weChat.infoManage.access_tolenGet.actionName,
+                            operationConfig.weChat.infoManage.access_tolenGet.identifier,                           
+                            operatorid
+                            );
+            
+            logModel.NewValue = result.access_token;           
             logService.insertOperationLog(logModel, function(err, insertId) {
                 if (err) {
                     logger.writeError('获取微信token成功，生成操作日志异常' + new Date());
