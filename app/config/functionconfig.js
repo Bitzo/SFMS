@@ -75,10 +75,6 @@ var functionConfig = {
                 functionName: "菜单查询",
                 functionCode: "BACKEND-MENU-QUERY"
             },
-            menuGet: {
-                functionName: "个人菜单获取",
-                functionCode: "BACKEND-MENU-GET"
-            },
         },
         appManage: {
             functionName: "应用管理",
