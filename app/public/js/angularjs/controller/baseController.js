@@ -139,36 +139,6 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
 
     
 
-    //菜单的启用与禁用
-    // $scope.shiftStatus = function(action,index,name) {
-    //     var str = '是否确认禁用';
-    //     if(action=='/backmenu/reuse') str = '是否确认启用 ';
-    //     var mymessage=confirm(str + name);
-    //     if(mymessage==true){
-    //         var formdata = {
-    //             MenuID: $scope.datas[index].MenuID
-    //         };
-
-    //         $http({
-    //             method:'put',
-    //             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-    //             data:{
-    //                 formdata:formdata
-    //             }
-    //         }).
-    //         success(function(response) {
-    //             if(response.isSuccess === true) {
-    //                 $scope.datas[index].IsActive = -$scope.datas[index].IsActive+1;
-    //             }
-    //             alert(response.msg)
-    //         }).
-    //         error(function(response) {
-    //             alert(response.msg);
-    //         });
-    //     } else {
-
-    //     }
-    // };
 
     //新增页面  添加
     $scope.formdata={};
@@ -184,7 +154,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         success(function(response) {
             alert(response.msg);
         }).
-        error(function(response) {
+        error(function(response) {         
             alert(response.msg);
         });
     };

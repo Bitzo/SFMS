@@ -22,6 +22,7 @@ var logService = appRequire('service/backend/log/logservice'),
 wechat.token = config.weChat.token;
 
 router.post('/', function (req, res) {
+        console.log("enter the create wechat menu");
         var checkFuncData = {
                 userID: req.query.jitkey,
                 functionCode: functionConfig.jinkeBroApp.menuAdd.functionCode
