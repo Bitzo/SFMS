@@ -130,7 +130,7 @@ Product.prototype.insertProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
-    if (!(validator.isLength((formdata.TotalNum),{min:1,max:11}))) {
+    if (!(validator.isLength((formdata.TotalNum.toString()),{min:1,max:11}))) {
         returnResult.msg = '首次入库总数应该小于11位！';
         return callback(false,returnResult);
     }
@@ -442,7 +442,7 @@ Product.prototype.queryProducts = function (data, callback) {
         page: data.page || 1,
         pageNum: data.pageNum || config.pageCount,
         SKU: data.SKU || '',
-        "jit_product.ProductID" : data.ProductID || '',
+        ProductID : data.ProductID || '',
         ProductName: data.ProductName || '',
         ExpireTime: data.ExpireTime || '',
         SupplierID: data.SupplierID || '',

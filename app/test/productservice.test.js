@@ -10,21 +10,27 @@ var should = require('should');
 var productService = appRequire('service/jinkebro/product/productservice');
 var moment = require('moment');
 
-var data={
-    'SKU' : 'pdt003',
-    'ProductName': '香烟',
-    'ProductDesc':'',
-    'ProductImgPath':'',
-    'ExpireTime': moment().format('YYYY-MM-DD HH:mm:ss'),
-    'ProducTime': moment().format('YYYY-MM-DD HH:mm:ss'),
-    'SupplierID':1,
-    'ProductTypeID':1
+var data = {
+        "SKU" : "unittestSKU1111",
+        "ProductName": "香烟",
+        "ProductDesc": '',
+        "ProductImgPath": '',
+        "ExpireTime": moment().format('YYYY-MM-DD HH:mm:ss'),
+        "ProducTime": moment().format('YYYY-MM-DD HH:mm:ss'),
+        "SupplierID": 13,
+        "ProductPrice": 20,
+        "OnSale": 1,
+        "TotalNum" : 100,
+        "StockAreaID" : 94,
+        "CreateUserID" : 1,
+        "CreateTime" : moment().format('YYYY-MM-DD HH:mm:ss'),
+        "newProductTypeName" : "20支软盒装"
     },
     insertProductID = -1;
 
-describe("产品单元测试", function () {
+describe("商品单元测试", function () {
 
-    it("产品新增", function (done) {
+    it("商品新增", function (done) {
         productService.insertProduct(data, function (err, result) {
             if (err) return done(err);
             result.insertId.should.be.above(0).and.should.be.a.Number;
@@ -33,29 +39,29 @@ describe("产品单元测试", function () {
         });
     });
 
-    it("产品修改", function (done) {
+    it("商品修改", function (done) {
         var updateData = {
-            'SKU' : 'pdt',
+            'SKU' : 'unittestSKU2222',
             'ProductName': '咖啡',
             'ProductDesc':'提神',
             'ProductImgPath':'',
             'ExpireTime': moment().format('YYYY-MM-DD HH:mm:ss'),
             'ProducTime': moment().format('YYYY-MM-DD HH:mm:ss'),
             'SupplierID':1,
-            'ProductTypeID':1,
-            'ProductPrice' : 12.5,
+            'ProductTypeID':14,
+            'ProductPrice' : 13.5,
             'OnSale' : 1,
             'ProductID': insertProductID
-        }
+        };
+
         productService.updateProduct(updateData, function (err, result) {
             if (err) return done(err);
             result.affectedRows.should.be.above(0).and.should.be.a.Number;
-            result.changedRows.should.be.above(0).and.should.be.a.Number;
             done();
         });
     });
 
-    it("产品查询", function (done) {
+    it("商品查询", function (done) {
         var queryData = {
             'jit_product.ProductID': insertProductID,
             'SKU' : '',
@@ -65,8 +71,9 @@ describe("产品单元测试", function () {
             'ExpireTime' : '',
             'ProducTime' : '',
             'SupplierID' : '',
-            'jit_product.ProductTypeID' : 1
-        }
+            'jit_product.ProductTypeID' : ''
+        };
+
         productService.queryProducts(queryData, function (err, result) {
             if (err) return done(err);
             result.length.should.be.above(0).and.should.be.a.Number;
@@ -74,4 +81,11 @@ describe("产品单元测试", function () {
         });
     });
 
+    it("商品删除", function (done) {
+        productService.deleteProduct({ProductID : insertProductID}, function (err, result) {
+            if (err) return done(err);
+            result.affectedRows.should.be.above(0).and.should.be.a.Number;
+            done();
+        });
+    });
 });

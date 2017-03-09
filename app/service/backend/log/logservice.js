@@ -75,7 +75,7 @@ exports.queryLog = function(data, callback) {
         logger.writeInfo('查询操作日志');
         return callback(false, results);
     })
-}
+};
 
 //查询数据量统计
 exports.countQuery = function(data, callback) {
@@ -84,7 +84,8 @@ exports.countQuery = function(data, callback) {
         'Type': data.Type || '',
         'PDate': data.CreateTime || '',
         'CreateUserID': data.CreateUserID || ''
-    }
+    };
+
     operationLogDAL.countQuery(formdata, function(err, results) {
         if (err) {
             callback(true);
@@ -93,7 +94,7 @@ exports.countQuery = function(data, callback) {
         logger.writeInfo('查询数据量统计');
         callback(false, results);
     })
-}
+};
 
 /**
  * 生成插入日志的模型，将一些固定的属性，直接初始化
@@ -122,4 +123,4 @@ exports.generateLogModel = function(appID, appName, type, action, operateName, i
     logModel.Memo = memo;
 
     return logModel;
-}
+};

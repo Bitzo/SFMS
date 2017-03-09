@@ -310,11 +310,11 @@ exports.queryProducts = function(data, callback) {
 
     var queryData = {
         SKU: data.SKU || '',
-        "jit_product.ProductID" : data['jit_product.ProductID'] || '',
+        "jit_product.ProductID" : data.ProductID || '',
         ProductName: data.ProductName || '',
         ExpireTime: data.ExpireTime || '',
         SupplierID: data.SupplierID || '',
-        ProductTypeID: data.ProductTypeID || '',
+        "jit_product.ProductTypeID" : data.ProductTypeID || '',
         ProductPrice: data.ProductPrice || '',
         OnSale: data.OnSale || '',
     };
