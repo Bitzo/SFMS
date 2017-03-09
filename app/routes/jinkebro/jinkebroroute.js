@@ -14,6 +14,8 @@ var proTyperoute = appRequire('routes/jinkebro/productype/productyperoute');
 var proStockroute = appRequire('routes/jinkebro/productstock/productstockroute');
 //金科小哥主站点
 var orderdelivery = appRequire('routes/jinkebro/orderdelivery/orderdeliveryroute');
+//字典表
+var datadict = appRequire('routes/jinkebro/datadict/datadictroute');
 
 router.get('/', function (req, res, next) {
     res.render('sfms', { title: 'Hi jkbro' });
@@ -98,5 +100,8 @@ router.use('/orderDelivery', orderdelivery);
 router.use('/staff',staff);
 //创建微信菜单
 router.use('/createMenu',menu);
+//字典表
+router.use('/datadict',datadict);
+
 module.exports = router;
 

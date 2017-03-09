@@ -45,20 +45,26 @@ var addStaff = function (data,callback) {
     }
     insertSql += sql + ' ;';
 
+    logger.writeInfo('员工增加：' + insertSql);
+
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             logger.writeError("[staffdal]数据库连接错误：" + err);
             callback(true,'数据库连接失败！');
             return;
         }
+
         connection.query(insertSql, function(err, result) {
             connection.release();
+
             if (err) {               
                 throw err;
                 callback(true,'失败！');
                 return;
             }
+
             logger.writeInfo('成功！');
+
             return callback(false, result);
         });
     });
@@ -69,7 +75,6 @@ var deleteStaff = function (data,callback) {
         "' where StaffID = " + data['StaffID'] + ";";
 
     logger.writeInfo("[deleteStaff func in staffdal]员工删除：" + delete_sql);
-    console.log("in dal,员工删除：" + delete_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {

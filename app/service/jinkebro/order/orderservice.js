@@ -7,32 +7,30 @@
  */
 
 //调用http的模块
-var http = require('http');
-//调用config的数据
-var config = appRequire('config/config'),
-    operationConfig = appRequire('config/operationconfig');
-var orderDAL = appRequire('dal/jinkebro/order/orderdal'),
+var http = require('http'),
+    config = appRequire('config/config'),
+    operationConfig = appRequire('config/operationconfig'),
+    orderDAL = appRequire('dal/jinkebro/order/orderdal'),
     moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
     logModel = appRequire('model/jinkebro/log/logmodel'),
-    logger = appRequire("util/loghelper").helper;
+    logger = appRequire("util/loghelper").helper,
+    productService = appRequire('service/jinkebro/product/productservice'),
+    productStock = appRequire('service/jinkebro/productstock/productstockservice'),
+    customer = appRequire("service/jinkebro/customer/customerservice"),
+    productstock = appRequire('service/jinkebro/productstock/productstockservice'),
+    wechat = appRequire("service/wechat/wechatservice");
 
-var productService = appRequire('service/jinkebro/product/productservice');
-var productStock = appRequire('service/jinkebro/productstock/productstockservice');
-//关于客户方面的service
-var customer = appRequire("service/jinkebro/customer/customerservice");
-//关于库存
-var productstock = appRequire('service/jinkebro/productstock/productstockservice');
-//记录日志
-var wechat = appRequire("service/wechat/wechatservice");
+delete logModel.ID;
 
 var Order = function() {
     this.OrderTime = moment().format("YYYY-MM-DD HH:mm:ss"); //创建的时间
-}
+};
 
 
 //新增一个订单的全部信息
 Order.prototype.insertOrderFull = function(data, callback) {
+
     var logModel = logService.generateLogModel(
         operationConfig.jinkeBroApp.applicationID,
         operationConfig.jinkeBroApp.applicationName,
@@ -41,14 +39,6 @@ Order.prototype.insertOrderFull = function(data, callback) {
         operationConfig.jinkeBroApp.orderManger.orderAdd.actionName,
         operationConfig.jinkeBroApp.orderManger.orderAdd.identifier
     );
-    //要写入operationlog表的
-    // logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-    // logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-    // logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    // logModel.PDate = moment().format('YYYY-MM-DD');
-    // logModel.OperationName = operationConfig.jinkeBroApp.orderManger.orderAdd.actionName;
-    // logModel.Action = operationConfig.jinkeBroApp.orderManger.orderAdd.actionName;
-    // logModel.Identifier = operationConfig.jinkeBroApp.orderManger.orderAdd.identifier;
 
     var formdata = {
         "OrderTime": data.OrderTime,
@@ -73,8 +63,7 @@ Order.prototype.insertOrderFull = function(data, callback) {
                     logger.writeError("订单新增失败，生成操作日志失败 " + logModel.CreateTime);
                 }
             });
-            callback(true, '订单新增失败');
-            return;
+            return callback(true, '订单新增失败');
         }
 
         //新增成功
@@ -87,11 +76,11 @@ Order.prototype.insertOrderFull = function(data, callback) {
 
         callback(false, result);
     });
-}
+};
 
 //删除订单
 Order.prototype.deleteOrder = function(data, callback) {
-    //要写入operationlog表的
+
     logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
     logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
     logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -118,11 +107,13 @@ Order.prototype.deleteOrder = function(data, callback) {
         logModel.Type = operationConfig.operationType.operation;
         logModel.CreateUserID = data.CustomerID || 0;
         logModel.Memo = "订单删除成功";
+
         logService.insertOperationLog(logModel, function(err, logResult) {
             if (err) {
                 logger.writeError("订单删除成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
+
         logger.writeInfo('订单删除成功');
         callback(false, result);
     });

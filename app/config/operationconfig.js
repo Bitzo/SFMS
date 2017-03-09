@@ -298,6 +298,29 @@ var operationConfig = {
                 identifier: 2604
             },
         },
+        staff : {
+            module: "员工模块",
+            staffAdd: {
+                actionName: "员工新增",
+                identifier: 2701
+            },
+            staffUpd: {
+                actionName: "员工更新",
+                identifier: 2702
+            },
+            staffDel: {
+                actionName: "员工删除",
+                identifier: 2703
+            },
+            staffQuery: {
+                actionName: "员工查询",
+                identifier: 2704
+            },
+            staffTypeQuery: {
+                actionName: "员工类型查询",
+                identifier: 2705
+            }
+        }
     },
     sfmsApp: {
         applicationID: 3,
