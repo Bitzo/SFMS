@@ -431,6 +431,7 @@ router.get('/', function (req, res) {
             ProductPrice: ProductPrice || '',
             OnSale: OnSale || '',
             isPaging: isPaging || '',
+            OperateUserID : req.query.jitkey,
             minProductPrice : minProductPrice || '',
             maxProductPrice : maxProductPrice || '',
             earlyExpireTime : earlyExpireTime || '',

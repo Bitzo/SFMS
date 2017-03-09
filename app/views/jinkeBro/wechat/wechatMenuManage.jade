@@ -8,9 +8,7 @@ block content
         tr
           td(width="15%",class="tableleft") body   
           td
-            textarea(type="textview",name="body",ng-model='formdata.body',rows="15",cols="35",ng-maxlength='1000')
-    
-            small.error(ng-if="wechatMenu.body.$error.maxlength && wechatMenu.body.$touched") body最多1000位  
+            textarea(type="textview",name="body",ng-model='formdata.body',rows="15",cols="35")
 
         tr
           td(class="tableleft")
