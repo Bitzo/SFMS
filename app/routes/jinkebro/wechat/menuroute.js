@@ -24,7 +24,7 @@ wechat.token = config.weChat.token;
 router.post('/', function (req, res) {
         var checkFuncData = {
                 userID: req.query.jitkey,
-                functionCode: functionConfig.jinkeBroApp.menuAdd.functionCode
+                functionCode: functionConfig.jinkeBroApp.menu.menuAdd.functionCode
         };
 
         userFuncService.checkUserFunc(checkFuncData, function (err, funcResult) {
@@ -45,25 +45,54 @@ router.post('/', function (req, res) {
                                 msg: funcResult.msg
                         });
                 }
-
+ 
                 /**
                  * 其他部分已经做好  要写对数据的处理 部分
                  * 通过前端来传，postman 测试的格式不正确
                  */
-                var menuData = req.body.Menu;
-                console.log(req.body);
+                var menuData = req.body.formdata.body;
                 wechat.getLocalAccessToken(operateconfig.weChat.infoManage.access_tokenGet.identifier,
                         function (isSuccess, token) {				 
                                 //如果成功
+                                if (!isSuccess) {
+                                        res.json({
+                                                code: 200,
+                                                isSuccess: true,
+                                                msg: "微信获取token出错"
+                                        })
+                                }
+
                                 if (isSuccess) {
                                         console.log("获取token成功");
-                                        wechat.createMenu(token, menuData, function (result) {
+                                        try {
+                                                var data = JSON.parse(menuData);
+                                        } catch (error) {
 
-                                                console.log("errcode:" + result.errcode);
+                                                return res.json({
+                                                        code: 200,
+                                                        isSuccess: true,
+                                                        msg: "请输入正确的json格式"
+                                                });
+                                        }
+
+                                        wechat.createMenu(token, data, function (result) {
+                                                var response = JSON.parse(result);
+                                                console.log("errcode:" + response.errcode);
+                                                if (response.errcode == 0) {
+                                                        return res.json({
+                                                                code: 200,
+                                                                isSuccess: false,
+                                                                msg: "微信创建菜单成功"
+                                                        })
+                                                } else {
+                                                        return res.json({
+                                                                code: 200,
+                                                                isSuccess: true,
+                                                                msg: response.errmsg
+                                                        });
+                                                }
                                                 return;
                                         });
-                                } else {
-                                        console.log("获取微信端的token失败");
                                 }
                         });
 

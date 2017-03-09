@@ -567,9 +567,9 @@ Weixin.prototype.getAccessToken = function(operatorid, callback) {
                             operationConfig.jinkeBroApp.applicationID,
                             operationConfig.jinkeBroApp.applicationName,
                             operationConfig.operationType.operation,
-                            operationConfig.weChat.infoManage.access_tolenGet.actionName,
-                            operationConfig.weChat.infoManage.access_tolenGet.actionName,
-                            operationConfig.weChat.infoManage.access_tolenGet.identifier,                           
+                            operationConfig.weChat.infoManage.access_tokenGet.actionName,
+                            operationConfig.weChat.infoManage.access_tokenGet.actionName,
+                            operationConfig.weChat.infoManage.access_tokenGet.identifier,                           
                             operatorid
                             );
             
