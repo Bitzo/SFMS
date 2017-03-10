@@ -72,13 +72,14 @@ exports.querySign = function (data, callback) {
         'endTime': data.endTime || '',
         'SignType': data.SignType || '',
         'page': data.page || 1,
-        'pageNum': data.pageNum || config.pageCount
+        'pageNum': data.pageNum || config.pageCount,
+        'isPage': data.isPage || 0
     };
 
     logModel.OperationName = operationConfig.sfmsApp.SignManage.SignQuery.actionName;
     logModel.Action = operationConfig.sfmsApp.SignManage.SignQuery.actionName;
     logModel.Identifier = operationConfig.sfmsApp.SignManage.SignQuery.identifier;
-    logModel.CreateUserID = data.UserID;
+    logModel.CreateUserID = data.OperateUserID;
 
     signDAL.querySign(formdata, function (err, results) {
         if(err) {

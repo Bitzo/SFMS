@@ -106,7 +106,7 @@ router.post('/', function (req, res) {
                     if (data.SignType == 1) {
                         if(!moment(results[0].CreateTime).isSame(data.CreateTime, 'day')) {
                             results[0].CreateTime = moment(results[0].CreateTime).set({
-                                'hour':22,
+                                'hour':23,
                                 'minute':0,
                                 'second': 0
                             }).format('YYYY-MM-DD HH:mm:ss');

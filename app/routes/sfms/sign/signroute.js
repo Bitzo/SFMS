@@ -15,6 +15,7 @@ var express = require('express'),
     logger = appRequire("util/loghelper").helper,
     functionConfig = appRequire('config/functionconfig'),
     userFuncService = appRequire('service/backend/user/userfuncservice'),
+    schedule = require('node-schedule'),
     nodeExcel = require('excel-export');
 
 //生成excel报表
@@ -784,5 +785,78 @@ router.get('/:userID', function (req, res) {
     });
 });
 
+//定时任务：每天23：50触发，签退当日未主动签退的签到记录
+function autoSignOut(){
+    schedule.scheduleJob('00 50 23 * * *', function(){
+        var time = moment().format('YYYY-MM-DD HH:mm:ss');
+
+        console.log(time + ' ====> start scheduleJob autoSignOut');
+        time = moment(time).format('YYYY-MM-DD');
+
+        signservice.querySign({startTime: time, isPage: 1, OperateUserID: 0}, function(err, results){
+            if (err) {
+                console.log('autoSignOut scheduleJob failed......');
+                return;
+            }
+
+            if (results.length<=0){
+                console.log('autoSignOut scheduleJob finished......');
+                return;
+            }
+
+            var userIdArray = [];
+
+            for (var i in results){
+                var ID = results[i].UserID,
+                    count = 0;
+
+                if (userIdArray.indexOf(ID)<0) {
+                    userIdArray.push(ID);
+
+                    for (var j in results){
+                        if (results[j].UserID == ID){
+                            if (results[j].SignType == 0) {
+                                ++count;
+                            }
+
+                            if (results[j].SignType == 1) {
+                                --count;
+                            }
+                        }
+                    }
+
+                    if (count != 0) {
+
+                        time = moment(time).set({
+                            'hour': 23,
+                            'minute': 0,
+                            'second': 0
+                        }).format('YYYY-MM-DD HH:mm:ss');
+
+                        var data = {
+                            'UserID': ID,
+                            'IP': '127.0.0.1',
+                            'UserAgent': results[i].UserAgent,
+                            'MAC': 'mac',
+                            'Longitude': results[i].Longitude,
+                            'Latitude': results[i].Latitude,
+                            'SignType': 1,
+                            'CreateTime': time,
+                            'Remark': 'Auto Sign Out'
+                        };
+
+                        signservice.signLog(data, function(err, result) {
+                            if (err||result.affectedRows!=1) {
+                                console.log('ID: ' + data.UserID + 'AutoSignOut FAILED！！')
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    });
+}
+
+autoSignOut();
 
 module.exports = router;
