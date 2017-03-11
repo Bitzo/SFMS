@@ -15,7 +15,8 @@ var finance = appRequire('routes/sfms/finance/financeroute');
 //实验室管理系统主站点
 var userSpring = appRequire('service/backend/application/applicationservice');
 var logger = appRequire('util/loghelper').helper;
-
+//实验室管理系统 定时任务
+var signScheduleJob = appRequire('routes/sfms/sign/signScheduleJob');
 
 
 

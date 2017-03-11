@@ -55,7 +55,7 @@ block content
                         button(ng-click="resetEditUser(this)" style="width:80px;height:34px") 重置                  
                     tr 
                       td
-                        input(type="textview",ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
+                        input(type="textview",name='duty',ng-model="user.duty",ng-maxlength='50',style="width:150px;height:34px")
                       td
                         select(ng-model='user.userIndex' ng-change= "userChanged()") 
                           option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}
@@ -63,7 +63,8 @@ block content
                         span(ng-model='user.userID' style="width:150px;")  {{user.userID}}
                       td 
                         button(ng-click="addEditUser(user)" style="width:80px;height:34px") 添加
-
+              small.error(ng-show="projectEdit.duty.$error.maxlength && projectEdit.duty.$touched") 成员职责最多50位         
+          
           tr
             td(width="15%",class="tableleft") 项目截止时间
             td 

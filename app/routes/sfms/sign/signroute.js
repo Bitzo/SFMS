@@ -15,6 +15,7 @@ var express = require('express'),
     logger = appRequire("util/loghelper").helper,
     functionConfig = appRequire('config/functionconfig'),
     userFuncService = appRequire('service/backend/user/userfuncservice'),
+    schedule = require('node-schedule'),
     nodeExcel = require('excel-export');
 
 //生成excel报表
@@ -783,6 +784,5 @@ router.get('/:userID', function (req, res) {
         }
     });
 });
-
 
 module.exports = router;

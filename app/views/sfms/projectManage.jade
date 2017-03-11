@@ -67,10 +67,10 @@ block content
             td
               a(href='#/sfms/projectManageEdit/?ID={{x.ID}}' )
                 i.icon.icon-edit 编辑&nbsp
-              button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.ProjectName,'/sfms/api/project')",href='',ng-disabled='x.IsActive')
-                i.icon.icon-ok 启用 &nbsp
-              button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,x.ProjectName,'/sfms/api/project/restart')",href='',ng-disabled='!x.IsActive')
-                i.icon.icon-ban-circle 禁用 &nbsp
+              button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.ProjectName,'/sfms/api/project/restart')",href='',ng-disabled='x.IsActive')
+                i.icon.icon-ok 启用
+              button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,x.ProjectName,'/sfms/api/project')",href='',ng-disabled='!x.IsActive')
+                i.icon.icon-ban-circle 禁用
               a(data-toggle="modal",data-target="#myModal",ng-click="moreproject($index,'/sfms/api/projectuser/')",href='')
                 i.icon.icon-zoom-in  更多           
       div.pull-right

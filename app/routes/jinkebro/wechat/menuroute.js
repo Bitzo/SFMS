@@ -88,7 +88,7 @@ router.post('/', function (req, res) {
                                                         return res.json({
                                                                 code: 200,
                                                                 isSuccess: true,
-                                                                msg: response.errmsg
+                                                                msg: "创建失败，返回错误码：" + response.errcode + ",请查看api文档"
                                                         });
                                                 }
                                                 return;

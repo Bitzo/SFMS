@@ -50,12 +50,12 @@ myApp.controller('functionController', function($scope, $http,$q,baseService) {
         },
         {
             field: "ParentID"
-        },
-        {
-            field: "IsActive",
-            displayName: "是否删除",
-            cellTemplate: "<i>{{row.branch[col.field]=='0'?'是':'否'}}</i>"
         }
+        // {
+        //     field: "IsActive",
+        //     displayName: "是否删除",
+        //     cellTemplate: "<i>{{row.branch[col.field]=='0'?'是':'否'}}</i>"
+        // }
     ];
     //点击第一列时候发生的事件
     $scope.clickHander = function(e){

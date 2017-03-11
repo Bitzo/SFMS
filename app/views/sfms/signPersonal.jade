@@ -24,16 +24,16 @@ block content
       ng-form.form-inline
         span(style='font-size: 24px;')  签到统计个人用户信息
         div.buttons.pull-right
-          label.form-group.my-form-group 
+          label.form-group.my-form-group 起始时间
             input.form-control(type='date' ng-model='f.startTime')
-          label.form-group.my-form-group 
+          label.form-group.my-form-group 结束时间
             input.form-control(type='date' ng-model='f.endTime')
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询
             a.btn.btn-sm.btn-danger(data-toggle="modal",data-target="#myModal",ng-click="signCountPerson('/sfms/api/sign/count/person')")
               i.icon.icon-search   个人总时长
-            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
+            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
               i.icon.icon-repeat  刷新
       hr
       table.table.table-striped.table-bordered.text-center

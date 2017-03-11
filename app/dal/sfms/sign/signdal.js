@@ -69,7 +69,8 @@ exports.querySign = function (data, callback) {
         num = data.pageNum;
     if (data !== undefined) {
         for (var key in data) {
-            if(key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'startTime' && key !== 'endTime') {
+            if(key !== 'page' && key !== 'pageNum' && data[key] !== ''
+                && key !== 'startTime' && key !== 'endTime' && key !== 'isPage') {
                 sql += "and " + key + " = '" + data[key] + "' ";
             }
         }
@@ -78,7 +79,9 @@ exports.querySign = function (data, callback) {
     if (data.startTime !== '') sql += "and CreateTime >= '" + data.startTime + "' ";
     if (data.endTime !== '') sql += "and CreateTime <= '" + data.endTime + "' ";
 
-    sql += " LIMIT " + (page-1)*num + "," + num;
+    if (data.isPage == 0) {
+        sql += " LIMIT " + (page-1)*num + "," + num;
+    }
 
     logger.writeInfo("查询签到信息：" + sql);
 
