@@ -67,17 +67,17 @@ block content
       ng-form.form-inline
         span(style='font-size: 24px;')  签到统计
         div.buttons.pull-right
-          label.form-group.my-form-group 
-            input.form-control(type='date' ng-model='f.startTime')
-          label.form-group.my-form-group 
-            input.form-control(type='date' ng-model='f.endTime')
-          label.form-group.my-form-group
-            a.btn.btn-sm.btn-primary(ng-click='search()')
-              i.icon.icon-search   查询
-            a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
-              i.icon.icon-repeat  刷新
-            a.btn.btn-sm.btn-success(data-toggle="modal",data-target="#myModal1")
-              i.icon.icon-table  生成报表
+            label.form-group.my-form-group  开始时间
+              input.form-control.ext(type='date',ng-model='f.startTime')
+            label.form-group.my-form-group  结束时间
+              input.form-control.ext(type='date',ng-model='f.endTime')
+            label.form-group.my-form-group
+              a.btn.btn-sm.btn-primary(ng-click='search()')
+                i.icon.icon-search   查询
+              a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
+                i.icon.icon-repeat  刷新
+              a.btn.btn-sm.btn-success(data-toggle="modal",data-target="#myModal1")
+                i.icon.icon-table  生成报表
       hr
       table.table.table-striped.table-bordered.text-center
         thead

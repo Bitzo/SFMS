@@ -150,4 +150,70 @@ router.post('/', function (req, res) {
     });
 });
 
+router.get('/status', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.SignManage.SignLogQuery.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function(err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，稍后再试'
+            });
+        }
+
+        if(!(results !== undefined && results.isSuccess)){
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+
+        var userID = req.query.userID;
+
+        if (userID == undefined || userID.length<=0 || isNaN(userID)) {
+            res.status(400);
+            res.json({
+                code: 400,
+                isSuccess: false,
+                msg: '查询失败,用户ID有误！'
+            });
+            return;
+        }
+
+        signservice.signCheck({'UserID':userID}, function (err, results) {
+            if (err) {
+                res.status(500);
+                res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: '查询失败,稍后再试'
+                });
+                return;
+            }
+
+            if (results!==undefined && results.length == 0) results[0] = {SignType: 1};
+
+            if (results!=undefined&&results.length>0) {
+                var signStatus = results[0].SignType == 1 ? 0 : 1;
+
+                res.status(200);
+                res.json({
+                    code: 200,
+                    isSuccess: true,
+                    signType: results[0].SignType,
+                    signStatus: signStatus,
+                    msg: '查询成功'
+                })
+            }
+        })
+    })
+});
+
 module.exports = router;

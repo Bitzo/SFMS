@@ -200,6 +200,16 @@ router.post('/', function (req, res) {
                                                 });
                                             }
 
+                                            if (userData[i].duty.trim().length <= 0) {
+                                                res.status(400);
+
+                                                return res.json({
+                                                    status: 400,
+                                                    isSuccess: false,
+                                                    msg: '人员职责不得为空'
+                                                });
+                                            }
+
                                             userData[i].projectName = projectName;
                                             userData[i].editName = operateUserName;
                                             userData[i].operateUser = operateUserName;
@@ -322,7 +332,7 @@ router.post('/', function (req, res) {
                                             return res.json({
                                                 status: 400,
                                                 isSuccess: false,
-                                                msg: '操作失败，添加的用户信息有误！'
+                                                msg: '操作失败，添加的项目成员信息有误！'
                                             });
                                         }
                                     });
@@ -673,6 +683,16 @@ router.put('/', function (req, res) {
                                     });
                                 }
 
+                                if (userData[i].duty.trim().length<=0) {
+                                    res.status(400);
+
+                                    return res.json({
+                                        code: 400,
+                                        isSuccess: false,
+                                        msg: '项目成员职责不得为空'
+                                    });
+                                }
+
                                 userData[i].projectID = data.ID;
                                 userData[i].projectName = projectName;
                                 userData[i].editName = operateUserName;
@@ -759,7 +779,7 @@ router.put('/', function (req, res) {
                                     return res.json({
                                         status: 400,
                                         isSuccess: false,
-                                        msg: '操作失败，添加的用户信息有误！'
+                                        msg: '操作失败，添加的项目成员信息有误！'
                                     });
                                 }
                             });
