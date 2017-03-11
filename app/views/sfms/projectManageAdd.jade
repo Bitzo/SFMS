@@ -14,7 +14,6 @@ block content
           td(width="15%",class="tableleft") 项目名称
           td
             input(type="textview",name="ProjectName",ng-model="formdata.ProjectName",ng-maxlength='45',required)
-            
             small.error(ng-show="projectAdd.ProjectName.$error.maxlength && projectAdd.ProjectName.$touched") 应用名称最多45位
 
         tr
@@ -36,7 +35,7 @@ block content
                       button(ng-click="resetUser(this)" style="width:80px;height:34px") 重置
                   tr 
                     td
-                      input(type="textview",ng-model="user.duty",style="width:150px;height:34px")
+                      input(type="textview",name='duty',ng-model="user.duty",style="width:150px;height:34px",ng-maxlength='50')
                     td
                       select(ng-model='user.userIndex' ng-change= "userChanged()") 
                         option(ng-repeat="item in UserNames" value='{{$index}}') {{item.UserName}}
@@ -44,6 +43,7 @@ block content
                         span(ng-model='user.userID' style="width:150px;")  {{user.userID}}  
                     td 
                       button(ng-click="addUser(user)" style="width:80px;height:34px") 添加
+            small.error(ng-show="projectAdd.duty.$error.maxlength && projectAdd.duty.$touched") 成员职责最多50位       
 
         tr
           td(width="15%",class="tableleft") 项目截止时间

@@ -31,7 +31,6 @@ block content
           td(width="15%",class="tableleft") 	备注（可选） 
           td
             textarea(type="textview",name="Memo",ng-model='formdata.Memo',rows="5",cols="30",ng-maxlength='200')
-            
             small.error(ng-show="appInfo.Memo.$error.maxlength && appInfo.Memo.$touched") 备注最多200位
 
         tr
