@@ -281,4 +281,15 @@ myApp.config(function($routeProvider) {
                 return '男';
         }
     }
-})
+}).filter('isOnSaleFilter', function() {
+    return function(val) {
+        switch (val) {
+            case 0:
+                return '下架';
+            case 1:
+                return '在售';
+            default:
+                return '错误数据';
+        }
+    }
+});

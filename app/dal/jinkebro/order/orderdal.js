@@ -40,7 +40,7 @@ exports.createOrder = function(data, callback) {
         receiveProductCounts = data.ProductCounts;
 
     var failResponse = {
-        msg : '出错啦！！'
+        msg : '出错啦！'
     };
 
     // 从链接池得到connection
@@ -81,7 +81,7 @@ exports.createOrder = function(data, callback) {
                     }
                 }
                 insertSql1 += sql + ' ;';
-                console.log("insert into order,sql: " + insertSql1);
+
                 logger.writeInfo("insert into order,sql: " + insertSql1);
                 connection.query(insertSql1, function(err, info) {
                     if (err) {
@@ -129,7 +129,7 @@ exports.createOrder = function(data, callback) {
                     }
                 }
                 insertSql2 += sql + ' ;';
-                console.log("insert into ordercustomer,sql: " + insertSql2);
+
                 logger.writeInfo("insert into ordercustomer,sql: " + insertSql2)
                 connection.query(insertSql2, function(err, info) {
                     if (err) {
@@ -158,7 +158,6 @@ exports.createOrder = function(data, callback) {
                     var updateStockSql = 'update jit_productstock set jit_productstock.TotalNum = jit_productstock.TotalNum - ' + tempProCount;
                     updateStockSql += ' where jit_productstock.TotalNum >= ' + tempProCount + ' and ProductID = ' + tempProID + ';';
 
-                    console.log("updateStockSql" + index + ": " + updateStockSql);
                     logger.writeInfo("updateStockSql" + index + ": " + updateStockSql);
 
                     connection.query(updateStockSql, function(err, info) {
@@ -199,7 +198,7 @@ exports.createOrder = function(data, callback) {
                         insertSql3 += "(" + returnResult.insertId + "," + receiveProductIDs[i] + "," + receiveProductCounts[i] + "),";
                     }
                 }
-                console.log(insertSql3);
+
                 connection.query(insertSql3, function(err, info) {
                     if (err) {
                         connection.release();

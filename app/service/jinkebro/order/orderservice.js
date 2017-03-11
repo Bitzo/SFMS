@@ -734,14 +734,14 @@ Order.prototype.getOrderInfo = function(orderID, callback) {
     };
 
     logModel = logService.generateLogModel(
-            operationConfig.jinkeBroApp.applicationID,
-            operationConfig.jinkeBroApp.applicationName,
-            operationConfig.operationType.operation,
-            operationConfig.jinkeBroApp.orderManger.orderQuery.actionName,
-            operationConfig.jinkeBroApp.orderManger.orderQuery.actionName,
-            operationConfig.jinkeBroApp.customerManage.orderQuery.identifier,
-            0
-            );
+                    operationConfig.jinkeBroApp.applicationID,
+                    operationConfig.jinkeBroApp.applicationName,
+                    operationConfig.operationType.operation,
+                    operationConfig.jinkeBroApp.orderManger.orderQuery.actionName,
+                    operationConfig.jinkeBroApp.orderManger.orderQuery.actionName,
+                    operationConfig.jinkeBroApp.orderManger.orderQuery.identifier,
+                    0
+                );
             
     orderDAL.queryOrderProductWechat(sendData, function(err, orderInfo) {
         
