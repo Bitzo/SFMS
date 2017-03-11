@@ -1,38 +1,42 @@
+link(rel='stylesheet' href="css/backend/role.css")
 block content
     div.container-fluid(ng-controller='functionController')
         div.row
             div.col-lg-7.col-md-7.col-sm-7
                 tree-grid(showHead='true' tree-data="tree_data" col_defs='col_defs' expand-on="expanding_property" expandOn="ApplicationID" on-clickdelete='delete(branch,parent)' on-clickedit='clickHanderedit(branch)'  on-click='clickHander(branch)' on-clickadd='clickHanderAdd(branch)')
-            div.col-lg-4.col-md-4.col-sm-4(style='border:1px solid black')
+            div.col-lg-4.col-md-4.col-sm-4.function
                 h4 功能点编辑
                 form.form-horizontal(role='form')
-                    div.form-group
-                        label.col-sm-2.control-label 应用ID
-                        div.col-sm-10
-                            jason-select.input(ng-model='currentData.ApplicationID',name='ApplicationID' source='/app' stext='ApplicationName' svalue='ID',required,disabled='disable')
-                    div.form-group
-                        label.col-sm-2.control-label 父节点
-                        div.col-sm-10
-                            input(type='text' ng-model='currentData.ParentID',disabled='disable')
-                    div.form-group
-                        label.col-sm-2.control-label 节点层级
-                        div.col-sm-10
-                            input(type='text' ng-model='currentData.FunctionLevel',disabled='disable')
-                    div.form-group
-                        label.col-sm-2.control-label 功能名称
-                        div.col-sm-10
-                            input(type='text' ng-model='currentData.FunctionName',ng-disabled='disable')
-                    div.form-group
-                        label.col-sm-2.control-label 功能代码
-                        div.col-sm-10
-                            input(type='text' ng-model='currentData.FunctionCode',ng-disabled='disable')
-                    div.form-group.hidden
-                        label.col-sm-2.control-label 是否在线
-                        div.col-sm-10
-                            input(type='checkbox' ng-model='currentData.IsActive' ng-checked='currentData.IsActive==1',ng-disabled='disable')
-                    div.form-group.row.text-center
-                        button.btn.btn-primary(ng-click='edit()',href='') {{btnSaveMessage}}
-                        button.btn.btn-primary(style='margin-left:20px;' ng-click='cancel()',href='') 取消
+                    table.table.table-bordered.table-hover.definedwidth.m10
+                        tr
+                            td(width="15%",class="tableleft") 应用ID
+                            td
+                               jason-select.input(ng-model='currentData.ApplicationID',name='ApplicationID' source='/app' stext='ApplicationName' svalue='ID',required,disabled='disable')
+                        tr
+                            td(width="15%",class="tableleft") 	父节点
+                            td
+                                input(type='text' ng-model='currentData.ParentID',disabled='disable')
+                        tr
+                            td(width="15%",class="tableleft") 节点层级
+                            td
+                                input(type='text' ng-model='currentData.FunctionName',ng-disabled='disable')
+
+                        tr
+                            td(width="15%",class="tableleft") 	功能名称 
+                            td
+                                input(type='text' ng-model='currentData.FunctionName',ng-disabled='disable')
+                        tr
+                            td(class="tableleft")  功能代码
+                            td
+                                input(type='text' ng-model='currentData.FunctionCode',ng-disabled='disable')
+                
+                        tr
+                            td(width="15%",class="tableleft") 
+                            td
+                                button.btn.btn-primary(ng-click='edit()',href='') {{btnSaveMessage}}
+                                button.btn.btn-primary(style='margin-left:20px;' ng-click='cancel()',href='') 取消
+                        
+                
         div.modal.fade(id='functionModel')
             div.modal-dialog
                 div.modal-content

@@ -20,7 +20,9 @@ jason-select{
      width:90px;height:34px;
 }
 .btt{
-    padding: 2px;
+    padding:0px;
+    border-radius: 10px;
+    text-align: center;
 }
 table .arrow{
     display: none;
