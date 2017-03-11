@@ -2,6 +2,18 @@
   body{
       background-color:black;
   }
+  .function{
+      background-color: #fbfbfb;
+      margin-left: 20px;
+  }
+  .function h4{
+      margin-bottom: 20px;
+      margin-left: 20px;
+  }
+  .function form{
+      width: 90%;
+      margin: 0px auto;
+  }
   .table.table-bordered thead tr th {
     vertical-align: middle;
     text-align: center;
