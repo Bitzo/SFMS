@@ -290,7 +290,7 @@ router.put('/', function (req, res) {
 
             userName = results[0].UserName;
 
-            projectuserservice.judgeUserProject({userID:UserID,projectID:ProjectID,operateUserID:req.query.jitkey},function (err, results) {
+            projectuserservice.judgeUserProject({userID:userID,projectID:projectID,operateUserID:req.query.jitkey},function (err, results) {
                 if (err) {
                     res.status(500);
 

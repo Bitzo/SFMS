@@ -151,11 +151,11 @@ router.post('/', function (req, res) {
 });
 
 router.get('/status', function (req, res) {
-    console.log(1111)
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.SignManage.SignLogQuery.functionCode
     };
+
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
             res.status(500);
