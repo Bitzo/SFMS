@@ -75,10 +75,6 @@ var functionConfig = {
                 functionName: "菜单查询",
                 functionCode: "BACKEND-MENU-QUERY"
             },
-            menuGet: {
-                functionName: "个人菜单获取",
-                functionCode: "BACKEND-MENU-GET"
-            },
         },
         appManage: {
             functionName: "应用管理",
@@ -364,6 +360,14 @@ var functionConfig = {
                 functionCode: "JB-STAFF-QUERY"
             },
         },
+        menu: {
+            functionName: "金科小哥微信菜单管理",
+            functionCode: "JB-MENU-MANAGE",
+            menuAdd: {
+                functionName: "微信菜单的新增",
+                functionCode: "JB-MENU-ADD"
+            }
+        }
     },
     sfmsApp: {
         applicationID: 3,

@@ -57,8 +57,8 @@ var config = {
     jinkebro: {
         host: 'jit.upsnail.com',
         baseUrl: 'http://jit.upsnail.com/',
-        // host: 'http://d64a5cce.ngrok.io',
-        // baseUrl: 'http://d64a5cce.ngrok.io/',
+        //host: 'http://d64a5cce.ngrok.io',
+        //baseUrl: 'http://sun.tunnel.2bdata.com/',
         productInfo: 'jinkeBro/product/info',
         order: 'jinkeBro/order',
         productstock: 'jinkeBro/proStock'

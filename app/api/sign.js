@@ -19,7 +19,7 @@ var userFuncService = appRequire('service/backend/user/userfuncservice');
 router.post('/', function (req, res) {
     var data = {
         userID: req.body.jitkey,
-        functionCode: functionConfig.sfmsApp.SignManage.SignLogCount.functionCode
+        functionCode: functionConfig.sfmsApp.SignManage.SignLogADD.functionCode
     };
     userFuncService.checkUserFunc(data, function(err, results) {
         if (err) {
@@ -54,6 +54,8 @@ router.post('/', function (req, res) {
                 });
                 return;
             }
+
+
 
             var userID = req.body.jitkey;
             var ip = req.body.IP;
@@ -100,13 +102,13 @@ router.post('/', function (req, res) {
                         msg: '记录失败,签到信息有误'
                     })
                 } else {
-                    //如果是签退,判断是否已经跨天,若跨天则更改签退时间为签到当日的23：59：59
+                    //如果是签退,判断是否已经跨天,若跨天则更改签退时间为签到当日的22：00：00
                     if (data.SignType == 1) {
                         if(!moment(results[0].CreateTime).isSame(data.CreateTime, 'day')) {
                             results[0].CreateTime = moment(results[0].CreateTime).set({
                                 'hour':23,
-                                'minute':59,
-                                'second': 59
+                                'minute':0,
+                                'second': 0
                             }).format('YYYY-MM-DD HH:mm:ss');
                             data.CreateTime = results[0].CreateTime;
                         }
@@ -146,6 +148,72 @@ router.post('/', function (req, res) {
             });
         }
     });
+});
+
+router.get('/status', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.SignManage.SignLogQuery.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function(err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，稍后再试'
+            });
+        }
+
+        if(!(results !== undefined && results.isSuccess)){
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+
+        var userID = req.query.userID;
+
+        if (userID == undefined || userID.length<=0 || isNaN(userID)) {
+            res.status(400);
+            res.json({
+                code: 400,
+                isSuccess: false,
+                msg: '查询失败,用户ID有误！'
+            });
+            return;
+        }
+
+        signservice.signCheck({'UserID':userID}, function (err, results) {
+            if (err) {
+                res.status(500);
+                res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: '查询失败,稍后再试'
+                });
+                return;
+            }
+
+            if (results!==undefined && results.length == 0) results[0] = {SignType: 1};
+
+            if (results!=undefined&&results.length>0) {
+                var signStatus = results[0].SignType == 1 ? 0 : 1;
+
+                res.status(200);
+                res.json({
+                    code: 200,
+                    isSuccess: true,
+                    signType: results[0].SignType,
+                    signStatus: signStatus,
+                    msg: '查询成功'
+                })
+            }
+        })
+    })
 });
 
 module.exports = router;

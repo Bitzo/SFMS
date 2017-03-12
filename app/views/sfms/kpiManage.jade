@@ -56,8 +56,8 @@ block content
               a(href='#/sfms/kpiManageCheck/?ID={{x.ID}}' )
                 i.icon.icon-edit 审核&nbsp
               button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.KPIName,'/sfms/api/kpi')",href='',ng-disabled='x.IsActive')
-                i.icon.icon-ok 启用 &nbsp
+                i.icon.icon-ok 启用
               button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,x.KPIName,'/sfms/api/kpi')",href='',ng-disabled='!x.IsActive')
-                i.icon.icon-ban-circle 禁用 &nbsp
+                i.icon.icon-ban-circle 禁用
       div.pull-right
         jason-pagination(conf='paginationConf')

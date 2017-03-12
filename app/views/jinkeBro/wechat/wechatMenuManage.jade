@@ -1,8 +1,16 @@
-//
-   Created by Cecurio on 2017/3/5.
-link(rel='stylesheet', href='css/backend/backend.css')
+link(rel='stylesheet' href="css/backend/role.css")
 block content
-  jason-pagecontent(action='/jinkeBro/product' conf='paginationConf')
-    div.page-content
-      ng-form.form-inline
-        span.title 微信菜单管理
+  div.container-fluid
+    span 
+      h2 微信菜单管理
+    form(method="post"  name="wechatMenu")
+      table.table.table-bordered.table-hover.definedwidth.m10
+        tr
+          td(width="15%",class="tableleft") body   
+          td
+            textarea(type="textview",name="body",ng-model='formdata.body',rows="15",cols="35")
+
+        tr
+          td(class="tableleft")
+          td
+            button.btn.btn-sm.btn-primary(type="submit" ng-click="addnew(formdata,'/jinkeBro/createMenu')") 添加

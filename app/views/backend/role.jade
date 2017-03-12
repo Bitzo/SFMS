@@ -63,9 +63,9 @@ block content
                           a(data-toggle="modal",data-target="#myModal",ng-click="morerole($index,'rolefunc/')" href='') 
                             i.icon.icon-zoom-in   更多 
                           button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,data.RoleName,'/backrole')",href='',ng-disabled='data.IsActive')
-                            i.icon.icon-ok 启用 &nbsp
+                            i.icon.icon-ok 启用
                           button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,data.RoleName,'/backrole')",href='',ng-disabled='!data.IsActive')
-                            i.icon.icon-ban-circle 禁用 &nbsp
+                            i.icon.icon-ban-circle 禁用
                           
             div.pull-right
                 jason-pagination(conf='paginationConf')

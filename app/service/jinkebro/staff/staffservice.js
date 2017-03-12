@@ -16,11 +16,21 @@ var staffDal = appRequire('dal/jinkebro/staff/staffdal.js'),
     validator = require('validator'),
     dataCheck = appRequire('util/dataverify');
 
+delete logModel.ID;
+
 var Staff = function () {
 
 };
 
 Staff.prototype.addStaff = function (data,callback) {
+
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
+    logModel.OperationName = operationConfig.jinkeBroApp.staff.staffAdd.actionName;
+    logModel.Action = operationConfig.jinkeBroApp.staff.staffAdd.actionName;
+    logModel.Identifier = operationConfig.jinkeBroApp.staff.staffAdd.identifier;
 
     var formdata = {
         StaffName : data.StaffName,
@@ -82,7 +92,7 @@ Staff.prototype.addStaff = function (data,callback) {
         return callback(false,returnResult);
     }
 
-    if (!(validator.isLength((formdata.StaffName),{min:1,max:50}))) {
+    if (!(validator.isLength((formdata.StaffName.toString()),{min:1,max:50}))) {
         returnResult.msg = '员工姓名长度应该小于50位！';
         return callback(false,returnResult);
     }
@@ -94,16 +104,43 @@ Staff.prototype.addStaff = function (data,callback) {
 
     staffDal.addStaff(formdata, function (err, result) {
         if (err) {
-            callback(true,'失败！');
-            return;
+
+            logModel.Type = operationConfig.operationType.error;
+            logModel.Memo = "员工新增失败";
+
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("员工新增失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+
+            return callback(true,'员工新增失败！');
         }
 
-        logger.writeInfo('');
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.Memo = "员工新增成功";
+
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("员工新增成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        });
+
+        logger.writeInfo("员工新增成功");
+
         return callback(false, result);
     });
 };
 
 Staff.prototype.deleteStaff = function (data,callback) {
+
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
+    logModel.OperationName = operationConfig.jinkeBroApp.staff.staffDel.actionName;
+    logModel.Action = operationConfig.jinkeBroApp.staff.staffDel.actionName;
+    logModel.Identifier = operationConfig.jinkeBroApp.staff.staffDel.identifier;
 
     var formdata = {
         StaffID : data.StaffID
@@ -127,17 +164,45 @@ Staff.prototype.deleteStaff = function (data,callback) {
 
     staffDal.deleteStaff(formdata, function (err, result) {
         if (err) {
+
+            logModel.Type = operationConfig.operationType.error;
+            logModel.Memo = "员工删除失败";
+
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("员工删除失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+
             logger.writeError(result);
+
             return callback(true,result);
         }
 
-        logger.writeInfo('删除员工成功');
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.Memo = "员工删除成功";
+
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("员工删除成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        });
+
+        logger.writeInfo('员工删除成功');
 
         return callback(false, result);
     });
 };
 
 Staff.prototype.updateStaff = function (data,callback) {
+
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
+    logModel.OperationName = operationConfig.jinkeBroApp.staff.staffUpd.actionName;
+    logModel.Action = operationConfig.jinkeBroApp.staff.staffUpd.actionName;
+    logModel.Identifier = operationConfig.jinkeBroApp.staff.staffUpd.identifier;
 
     var formdata = {
         StaffID : data.StaffID,
@@ -223,9 +288,29 @@ Staff.prototype.updateStaff = function (data,callback) {
 
     staffDal.updateStaff(formdata, function (err, result) {
         if (err) {
+
+            logModel.Type = operationConfig.operationType.error;
+            logModel.Memo = "员工修改失败";
+
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("员工修改失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+
             logger.writeError(result);
+
             return callback(true,result);
         }
+
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.Memo = "员工修改成功";
+
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("员工修改成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        });
 
         logger.writeInfo('in service,员工修改成功！');
 
@@ -234,6 +319,14 @@ Staff.prototype.updateStaff = function (data,callback) {
 };
 
 Staff.prototype.getStaff = function (data,callback) {
+
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
+    logModel.OperationName = operationConfig.jinkeBroApp.staff.staffQuery.actionName;
+    logModel.Action = operationConfig.jinkeBroApp.staff.staffQuery.actionName;
+    logModel.Identifier = operationConfig.jinkeBroApp.staff.staffQuery.identifier;
 
     var formdata = {
         StaffID : data.StaffID || '',
@@ -252,11 +345,19 @@ Staff.prototype.getStaff = function (data,callback) {
 
     staffDal.getStaff(formdata, function (err, result) {
         if (err) {
-            callback(true,'失败！');
-            return;
-        }
+            logModel.Type = operationConfig.operationType.error;
+            logModel.Memo = "员工查询失败";
 
-        logger.writeInfo('');
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("员工查询失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+
+            logger.writeError(result);
+
+            return callback(true,'员工查询失败！');
+        }
 
         for (var i = 0; i < result.length; i++) {
             if (result[i].CreateTime != undefined) {
@@ -267,17 +368,55 @@ Staff.prototype.getStaff = function (data,callback) {
             }
         }
 
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.Memo = "员工查询成功";
+
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("员工查询成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        });
+
+        logger.writeInfo('in service,员工查询成功！');
+
         return callback(false, result);
     });
 };
 
 Staff.prototype.getStaffType = function (callback) {
 
+    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
+    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
+    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+    logModel.PDate = moment().format('YYYY-MM-DD');
+    logModel.OperationName = operationConfig.jinkeBroApp.staff.staffTypeQuery.actionName;
+    logModel.Action = operationConfig.jinkeBroApp.staff.staffTypeQuery.actionName;
+    logModel.Identifier = operationConfig.jinkeBroApp.staff.staffTypeQuery.identifier;
+
     staffDal.getStaffType(function (err, result) {
         if (err) {
-            callback(true,'获得员工类型失败！');
-            return;
+            logModel.Type = operationConfig.operationType.error;
+            logModel.Memo = "员工类型查询失败";
+
+            logService.insertOperationLog(logModel, function (err, logResult) {
+                if (err) {
+                    logger.writeError("员工类型查询失败，生成操作日志失败 " + logModel.CreateTime);
+                }
+            });
+
+            logger.writeError(result);
+
+            return callback(true,'获得员工类型失败！');
         }
+
+        logModel.Type = operationConfig.operationType.operation;
+        logModel.Memo = "员工类型查询成功";
+
+        logService.insertOperationLog(logModel, function (err, logResult) {
+            if (err) {
+                logger.writeError("员工类型查询成功，生成操作日志失败 " + logModel.CreateTime);
+            }
+        });
 
         logger.writeInfo('获得员工类型成功！');
         return callback(false, result);
@@ -299,11 +438,11 @@ Staff.prototype.countStaff = function (data,callback) {
 
     staffDal.countStaff(formdata, function (err, result) {
         if (err) {
-            callback(true,'失败！');
+            callback(true,'员工计数查询失败！');
             return;
         }
 
-        logger.writeInfo('');
+        logger.writeInfo('员工计数查询成功！');
         return callback(false, result);
     });
 };

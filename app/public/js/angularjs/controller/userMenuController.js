@@ -8,6 +8,18 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
        $http.get('/backmenu/tree?'+"access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
        .success(function (response) {
             $scope.tree_data = response.data;
+             //获取该用户的菜单信息
+            $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
+            .success(function (response) { 
+                console.log(1)
+                console.log(response)
+                $scope.menuTree = response.data.Menu || [];
+                $scope.tree_data.map(function (data, index) {
+                        foreachtree(data);
+                    }
+                );
+
+            });
             var tree_data= $scope.tree_data;     
             for(var i=0;i<tree_data.length;i++)
             { 
@@ -22,22 +34,13 @@ myApp.controller('userMenuController', function($scope, $http,$q,baseService,$lo
                         tree_data[i].children[j].MenuName+='(失效)'
                     }
                 }
-
+                }else{
+                    break;
                 }
                 
             }
 
-            //获取该用户的菜单信息
-            $http.get('/usermenurole/userID/'+$location.search().AccountID+"?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'))
-            .success(function (response) { 
-                console.log(response)
-                $scope.menuTree = response.data.Menu || [];
-                $scope.tree_data.map(function (data, index) {
-                        foreachtree(data);
-                    }
-                );
-
-            });
+           
         });
         
         

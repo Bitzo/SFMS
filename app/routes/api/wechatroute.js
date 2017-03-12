@@ -182,7 +182,7 @@ wechat.textMsg(function(msg) {
 
 // 监听图片消息
 wechat.imageMsg(function(msg) {
-    console.log("[routes/api/wechatroute----------165行]imageMsg received");
+    console.log("[routes/api/wechatroute]imageMsg received");
     console.log(JSON.stringify(msg));
     var resMsg = {};
     switch (msg.msgType) {
@@ -265,11 +265,11 @@ wechat.eventMsg(function(msg) {
                 function(isSussess, token) {
                     //如果成功  
                     if (isSussess) {
-                        //創建菜单的部分
+                        // //創建菜单的部分
 
-                        wechat.createMenu(token, function() {
-                            console.log("重新创建菜单");
-                        });
+                        // wechat.createMenu(token, function() {
+                        //     console.log("重新创建菜单");
+                        // });
 
                         //用户订阅时的操作
                         wechatCustomer.addSubscibe(token, msg, function(err, errinfo) {
@@ -350,7 +350,8 @@ wechat.eventMsg(function(msg) {
                     var p = new Promise(function(resolve, reject) {
                         product.queryProducts({
                             page: 1,
-                            pageNum: 10
+                            pageNum: 10,
+                            isPaging: 1
                         }, function(err, returndata) {
                             if (err) {
                                 reject(Error("没有数据"));
@@ -458,8 +459,11 @@ wechat.eventMsg(function(msg) {
 
             //菜单的链接的事件
         case 'VIEW':
+            
             switch (msg.EventKey) {
+
                 case config.jinkebro.baseUrl + 'wechat/addressinfo':
+
                     wechat.sendClickAddressEvent(msg);
                     break;
 
@@ -473,7 +477,7 @@ wechat.eventMsg(function(msg) {
 
 //监听地址的事件
 wechat.clickAddress(function(judgement, username) {
-    console.log(username);
+    
     if (judgement != undefined && judgement == 'true') {
         var tempRoute = '/' + username;
         console.log(tempRoute)
@@ -489,7 +493,6 @@ wechat.clickAddress(function(judgement, username) {
 router.get('/addressinfo', function(req, res) {
 
     var addressurl = config.jinkebro.baseUrl + 'wechat/' + wechat.data.FromUserName;
-    console.log(addressurl);
     //路由的重定义
     res.redirect(301, addressurl);
 

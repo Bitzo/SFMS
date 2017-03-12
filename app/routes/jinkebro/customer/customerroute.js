@@ -13,7 +13,7 @@ var logger = appRequire('util/loghelper').helper;
 var customer = appRequire('service/jinkebro/customer/customerservice');
 // 
 //加载中间件
-
+ 
     
 //res.render('jinkeBro/wechat/customer.html',{title:'Hi jkbro'})
 

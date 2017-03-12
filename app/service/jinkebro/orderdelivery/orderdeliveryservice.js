@@ -4,12 +4,9 @@ var orderdeliveryDAL = appRequire('dal/jinkebro/orderdelivery/orderdeliverydal')
 	config = appRequire('config/config'),
 	operationConfig = appRequire ('config/operationconfig'),
 	logModel = appRequire('model/jinkebro/log/logmodel'),
+    operationConfig = appRequire('config/operationconfig'),
     logger = appRequire('util/loghelper').helper;
 
-logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-logModel.PDate = moment().format('YYYY-MM-DD');
 delete logModel.ID;
 
 var OrderDelivery = function () {
@@ -19,14 +16,15 @@ var OrderDelivery = function () {
 //新增一个订单给配送员
 OrderDelivery.prototype.insertOrderDelivery = function (data, callback) {
     //要写入operationlog表的
-    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    logModel.PDate = moment().format('YYYY-MM-DD');
-    logModel.OperationName = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
-    logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
-    logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier;
-
+    logModel = logService.generateLogModel(
+        operationConfig.jinkeBroApp.applicationID,
+        operationConfig.jinkeBroApp.applicationName,
+        operationConfig.operationType.error,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier
+    );
+    
     var formdata = {
         "OrderID" : data.OrderID,
         "DeliveryUserID" : data.DeliveryUserID,
@@ -64,17 +62,17 @@ OrderDelivery.prototype.insertOrderDelivery = function (data, callback) {
 	
 //订单配送员的查询
 OrderDelivery.prototype.queryOrderDelivery = function (data, callback) {
+    logModel = logService.generateLogModel(
+        operationConfig.jinkeBroApp.applicationID,
+        operationConfig.jinkeBroApp.applicationName,
+        operationConfig.operationType.error,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier,
+        0
+    );
     //要写入operationlog表的
-    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    logModel.PDate = moment().format('YYYY-MM-DD');
-    logModel.OperationName = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
-    logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.actionName;
-    logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryAdd.identifier;
-
-// console.log("***********************************************************");
-// console.log(data);
+    
     var formdata = {
         "jit_orderdelivery.OrderID" : data.OrderID || '',
         "jit_orderdelivery.DeliveryUserID" : data.DeliveryUserID || '',
@@ -147,14 +145,16 @@ OrderDelivery.prototype.countOrderDelivery = function (data, callback) {
 //订单配送员的修改
 OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
     //要写入operationlog表的
-    logModel.ApplicationID = operationConfig.jinkeBroApp.applicationID;
-    logModel.ApplicationName = operationConfig.jinkeBroApp.applicationName;
-    logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-    logModel.PDate = moment().format('YYYY-MM-DD');
-    logModel.OperationName = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryUpd.actionName;
-    logModel.Action = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryUpd.actionName;
-    logModel.Identifier = operationConfig.jinkeBroApp.orderDelivery.orderdeliveryUpd.identifier;
-
+    logModel = logService.generateLogModel(
+        operationConfig.jinkeBroApp.applicationID,
+        operationConfig.jinkeBroApp.applicationName,
+        operationConfig.operationType.error,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryUpd.actionName,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryUpd.actionName,
+        operationConfig.jinkeBroApp.orderDelivery.orderdeliveryUpd.identifier,
+        0
+    );
+    
     var formdata = {
         "OrderID" : data.OrderID,
         "DeliveryUserID" : data.DeliveryUserID || '',
@@ -184,6 +184,7 @@ OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
                 logger.writeError("订单修改成功，生成操作日志失败" + logModel.CreateTime);
             }
         });
+        
         logger.writeInfo('订单修改成功');
         return callback(false, insertResult);
     });

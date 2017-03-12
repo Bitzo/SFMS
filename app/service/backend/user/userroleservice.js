@@ -15,16 +15,22 @@ var userRoleDAL = appRequire('dal/backend/user/userroledal'),
     operationConfig = appRequire('config/operationconfig'),
     logService = appRequire('service/backend/log/logservice');
 
-logModel.ApplicationID = operationConfig.backendApp.applicationID;
-logModel.ApplicationName = operationConfig.backendApp.applicationName;
-logModel.CreateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-logModel.PDate = moment().format('YYYY-MM-DD');
 delete logModel.ID;
 
 
 //勾选对应的功能,更改对应的功能
 
 exports.insert = function (data, callback) {
+    logModel = logService.generateLogModel(
+                operationConfig.backendApp.applicationID,
+                operationConfig.backendApp.applicationName,
+                operationConfig.operationType.error,
+                operationConfig.backendApp.userManage.userroleAdd.actionName,
+                operationConfig.backendApp.userManage.userroleAdd.actionName,
+                operationConfig.backendApp.userManage.userroleAdd.identifier,
+                0
+                );
+                
     userRoleDAL.insert(data, function (err, results) {
         for (var key in data) {
             if (key == undefined) {
@@ -34,7 +40,7 @@ exports.insert = function (data, callback) {
         }
 
         if (err) {
-            logModel.Type = 1;
+            logModel.Type = operationConfig.operationType.error;
             logModel.Memo = "插入用户角色的时候，数据库操作失败";
             logModel.CreateUserID = 0; //0代表的是管理员的操作
             logService.insertOperationLog(logModel, function (err, insertID) {
@@ -46,7 +52,7 @@ exports.insert = function (data, callback) {
             return;
         }
 
-        logModel.Type = 2;
+        logModel.Type = operationConfig.operationType.operation;
         logModel.Memo = "插入用户角色成功";
         logModel.CreateUserID = 0;  //0代表的是管理员的操作
         logService.insertOperationLog(logModel, function (err, insertID) {
@@ -62,6 +68,16 @@ exports.insert = function (data, callback) {
 };
 
 exports.updateUserRole = function (data, callback) {
+    logModel = logService.generateLogModel(
+                operationConfig.backendApp.applicationID,
+                operationConfig.backendApp.applicationName,
+                operationConfig.operationType.error,
+                operationConfig.backendApp.userManage.userroleUpd.actionName,
+                operationConfig.backendApp.userManage.userroleUpd.actionName,
+                operationConfig.backendApp.userManage.userroleUpd.identifier,
+                0
+                );
+                
     userRoleDAL.updateUserRole(data, function (err, results) {
         if (err) {
 
@@ -143,7 +159,6 @@ exports.query = function (data, callback) {
         return;
     }
 
-console.log("**********************************");
     userRoleDAL.query(data, function (err, results) {
         if (err) {
 
