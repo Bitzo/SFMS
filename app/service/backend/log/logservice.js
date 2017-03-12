@@ -41,7 +41,7 @@ exports.insertOperationLog = function(data, callback) {
         return callback(true, result);
     }
 
-    if (!validator.isInt(data.CreateUserID.toString()) && data.CreateUserID > 0) {
+    if (data.createUserID && !validator.isInt(data.CreateUserID.toString()) && data.CreateUserID > 0) {
         result.msg = "操作人不能为空!";
         return callback(true, result);
     }

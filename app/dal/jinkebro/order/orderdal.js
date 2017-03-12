@@ -8,15 +8,16 @@
 var db_jinkebro = appRequire('db/db_jinkebro'),
     order = appRequire('model/jinkebro/order/ordermodel'),
     logger = appRequire("util/loghelper").helper,
-    async = require('async'),
+    dbHelper = appRequire("util/dbhelper");
+async = require('async'),
     moment = require('moment');
 
 /**
- * 创建订单（事务保证，损失性能）
+ * 创建订单（事务保证，损失性能）,优化版本
  * @param {object} data 订单对象
  * @param {function} callback 回调方法
  */
-exports.createOrder = function(data, callback) {
+exports.createSimplifiedOrder = function(data, callback) {
     /**
      * 1.校验data传过来的必要的参数是否有，并且合法（这一步其实应该在service层做）
      * 2.校验当前订单对应的所有商品库存是否满足下单量
@@ -28,6 +29,210 @@ exports.createOrder = function(data, callback) {
      * 7.以上任何一步异常，回滚
      * 8.提交
      */
+    var createResult = {};
+    //创建订单sql
+    var createOrderSql = generateOrderSql(data);
+    //创建订单客户关系sql
+    var createOrderCustomerSql = '';
+    //创建订单商品关系sql
+    var createOrderProductsSql = '';
+    //存储商品库存扣减sql
+    var productStockSqls = [];
+
+    db_jinkebro.mysqlPool.getConnection(function(err, connection) {
+        if (err) {
+            console.error('mysql 链接失败');
+            callback(true);
+            return;
+        }
+
+        connection.beginTransaction(function(err) {
+            if (err) {
+                connection.release();
+                return callback(true, '订单创建异常!请检查DB连接');
+            }
+
+            //1.订单
+            var orderFunc = function(callback1) {
+                connection.query(createOrderSql, function(err, results) {
+                    if (err) {
+                        return callback1(true, "生成订单失败");
+                    }
+
+                    var newOrderID = results.insertId;
+
+                    createOrderCustomerSql = generateOrderCustomerSql(newOrderID, data);
+
+                    receiveProductCounts = data.ProductCounts;
+
+                    createOrderProductsSql = generateOrderProductsSql(newOrderID, data.ProductIDs, data.ProductCounts);
+
+                    createResult = results;
+                    console.log(1);
+                    callback1(null, newOrderID);
+                });
+            };
+
+            //2.订单客户关系
+            var customerOfOrderFunc = function(newOrderID, callback2) {
+                connection.query(createOrderCustomerSql, function(err, results) {
+                    if (err) {
+                        return callback2(true, "生成订单客户关系失败");
+                    }
+                    console.log(2);
+                    callback2(null, newOrderID);
+                });
+            };
+            //3.订单商品关系
+            var productOfOrderFunc = function(newOrderID, callback3) {
+                connection.query(createOrderProductsSql, function(err, results) {
+                    if (err) {
+                        return callback2(true, "生成订单商品关系失败");
+                    }
+                    console.log(3);
+                    callback3(null, newOrderID);
+                });
+            };
+            //同步执行
+            async.waterfall([orderFunc, customerOfOrderFunc, productOfOrderFunc], function(err, result) {
+                    if (err) {
+                        return callback(true, {});
+                    }
+
+                    data.ProductIDs.forEach(function(element) {
+                        var index = 0;
+                        var update_sql = generateUpdateProductStockSql(element, data.ProductCounts[index++]);
+                        productStockSqls.push(update_sql);
+                    });
+                    console.log(4);
+
+                    async.eachSeries(productStockSqls, function(sql, callback) {
+                        console.log(sql)
+                        connection.query(sql, function(err, results) {
+                            if (err) {
+                                console.log(5);
+                                // 异常后调用callback并传入err
+                                callback(err);
+                            } else {
+                                if (results.affectedRows == 0) {
+                                    console.log(6);
+                                    return callback(true, "商品库存不足!");
+                                }
+                                console.log(7);
+                                console.log(sql + "执行成功");
+                                // 执行完成后也要调用callback，不需要参数
+                                callback();
+                            }
+                        });
+                    }, function(err) {
+                        if (err) {
+                            console.log(8);
+                            connection.rollback(function() {
+
+                            });
+                            connection.release();
+                            return callback(true);
+                        } else {
+                            console.log(9);
+                            console.log("SQL全部执行成功");
+                            connection.commit(function(err) {
+                                if (err) {
+                                    connection.release();
+                                    connection.rollback(function() {
+                                        throw err;
+                                    });
+                                    return callback(true, "生成订单异常");
+                                }
+
+                                connection.release();
+                                return callback(false, createResult);
+                            });
+                        }
+                    });
+                },
+                function(err) {
+                    console.log('订单创建异常,err:' + JSON.stringify(err));
+                    return callback(true, {});
+                });
+        });
+    });
+}
+
+/**
+ * 生成插入订单的sql
+ * @param {object} data 元数据
+ */
+function generateOrderSql(data) {
+    var data = {
+        OrderTime: data.OrderTime,
+        PayMethod: data.PayMethod,
+        IsValid: data.IsValid,
+        IsActive: data.IsActive,
+        OrderStatus: data.OrderStatus
+    };
+
+    var sql = dbHelper.generateInsertCommonSql('jit_order', data);
+
+    return sql;
+}
+
+/**
+ * 生成插入订单客户关系的sql
+ * @param {int} orderid 新生成的订单号
+ * @param {object} data 元数据
+ */
+function generateOrderCustomerSql(orderid, data) {
+    var data = {
+        CustomerID: data.CustomerID,
+        OrderID: orderid,
+        IsActive: data.IsActive,
+        CreateTime: moment().format('YYYY-MM-DD HH:mm:ss')
+    };
+
+    var sql = dbHelper.generateInsertCommonSql('jit_ordercustomer', data);
+
+    return sql;
+}
+
+/**
+ * 生成订单商品关系sql
+ * @param {int} orderid 新生成的订单号
+ * @param {Array} products 商品数组
+ * @param {Array} receiveProductCounts 商品数量数组
+ */
+function generateOrderProductsSql(orderid, products, receiveProductCounts) {
+    var sql = 'insert into jit_orderproduct (OrderID,ProductID,ProductCount) values ';
+
+    for (var i = 0, totalProducts = products.length; i < totalProducts; i++) {
+        if (i == totalProducts - 1) {
+            sql += "(" + orderid + "," + products[i] + "," + receiveProductCounts[i] + ");";
+        } else {
+            sql += "(" + orderid + "," + products[i] + "," + receiveProductCounts[i] + "),";
+        }
+    }
+
+    return sql;
+}
+
+/**
+ * 生成商品扣减sql
+ * @param {int} reduceCount 扣减的数量
+ * @param {int} productID 商品ID
+ */
+function generateUpdateProductStockSql(productID, reduceCount) {
+    var sql = 'update jit_productstock set jit_productstock.TotalNum = jit_productstock.TotalNum - ' + reduceCount;
+    sql += ' where jit_productstock.TotalNum >= ' + reduceCount + ' and ProductID = ' + productID + ';';
+
+    return sql;
+}
+
+/**
+ * 创建订单（事务保证，损失性能）
+ * @param {object} data 订单对象
+ * @param {function} callback 回调方法
+ */
+exports.createOrder = function(data, callback) {
+
     var insertOrderData = {
         OrderTime: data.OrderTime,
         PayMethod: data.PayMethod,
@@ -40,7 +245,7 @@ exports.createOrder = function(data, callback) {
         receiveProductCounts = data.ProductCounts;
 
     var failResponse = {
-        msg : '出错啦！！'
+        msg: '出错啦！！'
     };
 
     // 从链接池得到connection
@@ -91,7 +296,7 @@ exports.createOrder = function(data, callback) {
                             console.log("[order]执行事务失败，" + "ERROR：" + err);
                             throw err;
                         });
-                        return ;
+                        return;
                     }
                     console.log(info);
                     returnResult = info;
@@ -139,7 +344,7 @@ exports.createOrder = function(data, callback) {
                             console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
                             throw err;
                         });
-                        return ;
+                        return;
                     }
                     console.log(info);
                     callback2(err, info);
@@ -169,16 +374,16 @@ exports.createOrder = function(data, callback) {
                                 console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
                                 throw err;
                             });
-                            return ;
+                            return;
                         }
                         if (info.affectedRows == 0) {
                             connection.release();
-                            connection.rollback(function () {
+                            connection.rollback(function() {
                                 logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                                 console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                             });
                             callback(false, tempProID);
-                            return ;
+                            return;
                         }
                         console.log(info);
                         callbacktemp(err, info);
@@ -192,10 +397,10 @@ exports.createOrder = function(data, callback) {
             var func3 = function(callback3) {
                 var insertSql3 = 'insert into jit_orderproduct (OrderID,ProductID,ProductCount) values ';
                 var receiveProductIDsLength = receiveProductIDs.length;
-                for (var i=0; i<receiveProductIDsLength; i++) {
-                    if (i == receiveProductIDsLength -1 ) {
+                for (var i = 0; i < receiveProductIDsLength; i++) {
+                    if (i == receiveProductIDsLength - 1) {
                         insertSql3 += "(" + returnResult.insertId + "," + receiveProductIDs[i] + "," + receiveProductCounts[i] + ");";
-                    }else {
+                    } else {
                         insertSql3 += "(" + returnResult.insertId + "," + receiveProductIDs[i] + "," + receiveProductCounts[i] + "),";
                     }
                 }
@@ -208,23 +413,23 @@ exports.createOrder = function(data, callback) {
                             console.log("[order]执行事务失败，" + "ERROR：" + err);
                             throw err;
                         });
-                        return ;
+                        return;
                     }
                     console.log(info);
                     if (info.affectedRows != receiveProductIDsLength) {
                         connection.release();
-                        connection.rollback(function () {
+                        connection.rollback(function() {
                             logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                             console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                         });
                         callback(false, '下单失败');
-                        return ;
+                        return;
                     }
                     callback3(err, info);
                 });
             };
             funcArr.push(func3);
-            
+
             async.series(funcArr, function(err, result) {
                 if (err) {
                     connection.release();
@@ -240,7 +445,7 @@ exports.createOrder = function(data, callback) {
                         connection.rollback(function() {
                             throw err;
                         });
-                        return ;
+                        return;
                     }
                     console.log('insert order success');
                     connection.release();
@@ -322,7 +527,7 @@ exports.insertOrderFull = function(data, callback) {
             if (err) {
                 throw err;
             }
-            
+
             var returnResult = {};
             var funcArr = [];
 
@@ -357,7 +562,7 @@ exports.insertOrderFull = function(data, callback) {
                             console.log("[order]执行事务失败，" + "ERROR：" + err);
                             throw err;
                         });
-                        return ;
+                        return;
                     }
                     console.log(info);
                     returnResult = info;
@@ -404,7 +609,7 @@ exports.insertOrderFull = function(data, callback) {
                             console.log("[ordercustomer]执行事务失败，" + "ERROR：" + err);
                             throw err;
                         });
-                        return ;
+                        return;
                     }
                     console.log(info);
                     callback2(err, info);
@@ -432,7 +637,7 @@ exports.insertOrderFull = function(data, callback) {
                                 console.log("[orderProduct]执行事务失败，" + "ERROR：" + err);
                                 throw err;
                             });
-                            return ;
+                            return;
                         }
                         console.log(info);
                         callbacktemp(err, info);
@@ -465,12 +670,12 @@ exports.insertOrderFull = function(data, callback) {
                             });
                         }
                         if (info.affectedRows == 0) {
-                            connection.rollback(function () {
+                            connection.rollback(function() {
                                 logger.writeError("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                                 console.log("[productstock]执行事务失败，" + "ProductID为" + tempProID + "的商品库存不足！");
                             });
                             callback(false, tempProID);
-                            return ;
+                            return;
                         }
                         console.log(info);
                         callbacktemp(err, info);
@@ -494,7 +699,7 @@ exports.insertOrderFull = function(data, callback) {
                         connection.rollback(function() {
                             throw err;
                         });
-                        return ;
+                        return;
                     }
                     console.log('insert success');
                     connection.release();
@@ -564,7 +769,7 @@ exports.updateOrder = function(data, callback) {
     // }
     var orderTableData = data.order;
     for (var key in orderTableData) {
-        if (orderTableData[key] == 0){
+        if (orderTableData[key] == 0) {
             orderTableData[key] = orderTableData[key].toString();
         }
     }
@@ -944,33 +1149,31 @@ exports.CountOrders = function(data, callback) {
 /**
  * @function: 查询是否有重复的菜单
  */
- 
- exports.checkIsReapte = function(data, callback) {
+
+exports.checkHasRepeatOrder = function(data, callback) {
     var arr = new Array();
-  
+
     arr.push("select A.OrderID , A.OrderTime , A.PayMethod , A.IsValid , A.IsActive , A.OrderStatus , B.CustomerID");
     arr.push(" , C.ProductID , C.ProductCount from jit_order A left join jit_ordercustomer B on B.OrderID = A.OrderID");
     arr.push(" left join jit_orderproduct C on A.OrderID = C.OrderID where 1=1 ");
-    
     var query_sql = arr.join(' ');
-   
+
     //订单中的order信息，包含OrderID WechatUserCode CustomerID OrderStatus IsActive
     var order = data['order']
-    
+
     for (var key in order) {
-        if (key == 'jit_customer.CustomerID')
-        {
+        if (key == 'jit_customer.CustomerID') {
             query_sql += " and B.CustomerID = " + order[key];
         }
-        
+
         if (key == 'jit_order.OrderStatus') {
-             query_sql += " and A.OrderStatus = " + order[key];
+            query_sql += " and A.OrderStatus = " + order[key];
         }
-        
-    }    
-    
-    logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
-    console.log("[queryOrders func in productdal]订单查询:" + query_sql);
+    }
+
+    query_sql += ' and A.OrderTime>="' + moment().add(-1, 'minutes').format('YYYY-MM-DD HH:mm:ss') + '"';
+
+    console.log("[查询该用户在1分钟内是否有重复未完成订单]订单查询:" + query_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
@@ -998,7 +1201,7 @@ exports.CountOrders = function(data, callback) {
  * @param callback
  */
 exports.queryOrderProductWechat = function(data, callback) {
- 
+
     var arr = new Array();
 
     arr.push("select A.OrderID , A.OrderStatus , B.ProductID , B.ProductCount , C.ProductName , C.ProductPrice");
@@ -1008,7 +1211,7 @@ exports.queryOrderProductWechat = function(data, callback) {
     var query_sql = arr.join(' ');
 
     query_sql += ' and A.OrderID = ' + data.order['jit_ordercustomer.OrderID'];
-    
+
     logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
@@ -1036,21 +1239,21 @@ exports.queryOrderProductWechat = function(data, callback) {
  * function:　用户的ID来获取用户的订单信息
  * 缺陷：暂时只取其中的最新的3个
  */
- 
+
 exports.queryHistoryProductWechat = function(data, callback) {
- 
- console.log(data);
+
+    console.log(data);
     var arr = new Array();
 
     arr.push("select A.CustomerID , A.OrderID , B.OrderStatus , C.ProductID  , C.ProductCount , D.ProductName , D.ProductPrice");
     arr.push("from jit_ordercustomer A left join jit_order B on A.OrderID = B.OrderID ");
     arr.push("left join jit_orderproduct C on A.OrderID = C.OrderID left join jit_product D on C.ProductID = D.ProductID where B.OrderStatus = 3");
     arr.push("and A.IsActive = 1 ");
-    
+
     var query_sql = arr.join(' ');
 
     query_sql += ' and A.CustomerID = ' + data['CustomerID'] + " order by B.OrderTime desc limit 3";
-    
+
     logger.writeInfo("[queryOrders func in productdal]订单查询:" + query_sql);
 
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
@@ -1071,5 +1274,4 @@ exports.queryHistoryProductWechat = function(data, callback) {
         });
     });
 
-}; 
- 
+};
