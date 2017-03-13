@@ -352,7 +352,7 @@ exports.queryProducts = function(data, callback) {
     var num = data.pageNum; //每页显示的个数
     var page = data.page || 1;
 
-    query_sql += ' order by jit_product.ProductID desc ';
+    query_sql += ' order by jit_product.OnSale desc,jit_product.ProductID desc ';
 
     if (data['isPaging'] == 0) {
         query_sql += " LIMIT " + (page - 1) * num + "," + num + " ;";

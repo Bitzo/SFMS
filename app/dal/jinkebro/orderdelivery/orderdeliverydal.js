@@ -151,7 +151,7 @@ exports.countOrderDelivery = function (data, callback) {
     }
 
     logger.writeInfo("[dal/jinkebro/orderdelivery]订单配送员计数:" + sql);
-    
+
     db_jinkebro.mysqlPool.getConnection(function (err, connection) {
         if (err) {
             callback(true);
@@ -219,3 +219,52 @@ exports.updateOrderDelivery = function (data, callback) {
         });
     });
 }
+
+
+/**
+ * function: 查看配送是否结束
+ */
+exports.checkDeliveryIsFinished = function (data, callback) {
+    var check_sql = "select count(1) as num from jit_orderdelivery where jit_orderdelivery.OrderID = " + data.OrderID + " and jit_orderdelivery.DeliveryEndTime IS NOT NULL;";
+
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(check_sql, function (err, results) {
+            connection.release();
+            if (err) {
+                callback(true);
+                return;
+            }
+
+            return callback(false, results);
+        });
+    });
+};
+
+/**
+ * function: 查看配送是否结束
+ */
+exports.checkDeliveryIsStarted = function (data, callback) {
+    var check_sql = "select count(1) as num from jit_orderdelivery where jit_orderdelivery.OrderID = " + data.OrderID + " and jit_orderdelivery.DeliveryBeginTime is not null;";
+
+    db_jinkebro.mysqlPool.getConnection(function (err, connection) {
+        if (err) {
+            callback(true);
+            return;
+        }
+
+        connection.query(check_sql, function (err, results) {
+            connection.release();
+            if (err) {
+                callback(true);
+                return;
+            }
+
+            return callback(false, results);
+        });
+    });
+};

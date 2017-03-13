@@ -44,7 +44,7 @@ router.post('/',function (req,res) {
                 msg: funcResult.msg
             });
         }
-
+        console.log(req.body.formdata);
         var formdata = req.body.formdata;
 
         var StaffName = formdata.StaffName,

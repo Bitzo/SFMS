@@ -42,7 +42,7 @@ block content
                 tr
                     td(width="15%",class="tableleft") 员工职位
                     td
-                        input(type="text",name="Position",ng-model="formdata.Position",ng-maxlength='50')
+                        input(type="text",name="Position",ng-model="formdata.Position",ng-maxlength='50',required)
                         
                         small.error(ng-if="stuffAdd.Position.$error.maxlength && stuffAdd.Position.$touched") 职位名称最多50位
                 tr
