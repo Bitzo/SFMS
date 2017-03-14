@@ -71,7 +71,7 @@ wechat.textMsg(function(msg) {
             // 返回文本消息           
             if (/^(\d+#\d+)$/.test(msg.content) ||
                 /^((\d+#\d+\|)+(\d+#\d+))$/.test(msg.content)) {
-                resMsg.content = "下单失败";
+                resMsg.content = "对不起,下单失败,请稍候重试";
                 var p = new Promise(function(resolve, reject) {
                     orderService.insertOrderInfo(msg.content, msg.fromUserName, function(err, orderInfo) {
                         var result = orderInfo;
@@ -101,9 +101,11 @@ wechat.textMsg(function(msg) {
                 });
 
                 p.then(function(resultSend) {
+                    console.log(1);
                     resMsg.content = resultSend;
                     wechat.sendMsg(resMsg);
                 }, function(err) {
+                    resMsg.content = err;
                     wechat.sendMsg(resMsg);
                 });
                 // return;

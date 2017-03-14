@@ -178,6 +178,15 @@ router.post('/', function (req, res) {
                             });
                         }
 
+                        if (result.msg) {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: result.msg
+                            });
+                        }
+
                         if (result == undefined && result.affectedRows == 0) {
                             res.status(404);
                             return res.json({
@@ -187,7 +196,7 @@ router.post('/', function (req, res) {
                             });
                         }
 
-                        if (result !== undefined && result.affectedRows != 0) {
+                        if (result !== undefined && result.affectedRows != 0 && result.msg == undefined) {
                             res.status(200);
                             return res.json({
                                 code: 200,
@@ -373,7 +382,7 @@ router.put('/', function (req, res) {
 
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             //接受前端的数据
-            console.log(req.body.formdata);
+
             var formdata = req.body.formdata;
 
             var data = ['OrderID', 'DeliveryUserID'];
@@ -446,15 +455,25 @@ router.put('/', function (req, res) {
                             });
                         }
 
-                        if (result !== undefined && result.affectedRows != 0) {
+                        if (result.msg) {
+                            res.status(404);
+                            return res.json({
+                                code: 404,
+                                isSuccess: false,
+                                msg: result.msg
+                            });
+                        }
+
+                        if (result != undefined && result.affectedRows) {
                             res.status(200);
                             return res.json({
                                 code: 200,
                                 isSuccess: true,
-                                updateResult: result,
                                 msg: '订单配送员记录修改成功！'
                             });
-                        } else {
+                        }
+
+                        if (result != undefined && result.affectedRows == 0){
                             res.status(404);
                             return res.json({
                                 code: 404,
@@ -551,7 +570,7 @@ router.put('/startDelivery', function (req, res) {
             }
 
             //执行插入操作
-            orderDelivery.countOrderDelivery({ OrderID: OrderID }, function (err, results) {
+            orderDelivery.checkDeliveryIsStarted({ OrderID: OrderID }, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -561,7 +580,7 @@ router.put('/startDelivery', function (req, res) {
                     });
                 }
 
-                if (results != undefined && results.length != 0 && results[0]['num'] > 0) {
+                if (results != undefined && results.length != 0 && results[0]['num'] == 0) {
                     orderDelivery.updateOrderDelivery(insertData, function (err, result) {
                         if (err) {
                             res.status(500);
@@ -596,7 +615,7 @@ router.put('/startDelivery', function (req, res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "此条订单配送员记录不存在！"
+                        msg: "此条订单配送员记录不存在或者已经开始配送！"
                     });
                 }
             });
@@ -681,7 +700,7 @@ router.put('/endDelivery', function (req, res) {
             }
 
             //执行插入操作
-            orderDelivery.countOrderDelivery({ OrderID: OrderID }, function (err, results) {
+            orderDelivery.checkDeliveryIsFinished({ OrderID: OrderID }, function (err, results) {
                 if (err) {
                     res.status(500);
                     return res.json({
@@ -691,7 +710,7 @@ router.put('/endDelivery', function (req, res) {
                     });
                 }
 
-                if (results != undefined && results.length != 0 && results[0]['num'] > 0) {
+                if (results != undefined && results.length != 0 && results[0]['num'] == 0) {
                     orderDelivery.updateOrderDelivery(insertData, function (err, result) {
                         if (err) {
                             res.status(500);
@@ -749,7 +768,7 @@ router.put('/endDelivery', function (req, res) {
                     return res.json({
                         code: 404,
                         isSuccess: false,
-                        msg: "此条订单配送员记录不存在！"
+                        msg: "此条订单配送员记录不存在或者已经完成！"
                     });
                 }
 

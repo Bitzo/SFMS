@@ -120,6 +120,11 @@ Product.prototype.insertProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
+    if (moment(formdata.ExpireTime).isBefore(formdata.ProducTime)) {
+        returnResult.msg = '有效期不能比生产日期早!';
+        return callback(false,returnResult);
+    }
+
     if (!(validator.isLength((formdata.ProductDesc),{min:1,max:200})) && (formdata.ProductDesc != '')) {
         returnResult.msg = '商品描述长度应该小于200位！';
         return callback(false,returnResult);

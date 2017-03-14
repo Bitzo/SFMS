@@ -162,6 +162,18 @@ OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
         "DeliveryEndTime" : data.DeliveryEndTime || ''
     };
 
+    var returnResult = {
+        msg : '参数不能为空!'
+    };
+
+    if (formdata.DeliveryBeginTime && formdata.DeliveryEndTime) {
+        if (moment(formdata.DeliveryEndTime).isBefore(formdata.DeliveryBeginTime)) {
+            returnResult.msg = '配送结束时间不能比配送开始时间早!';
+            return callback(false,returnResult);
+        }
+    }
+
+
 	orderdeliveryDAL.updateOrderDelivery (formdata, function (err, insertResult) {
 		if (err) {
 			logModel.Type = operationConfig.operationType.error;
@@ -188,6 +200,38 @@ OrderDelivery.prototype.updateOrderDelivery = function (data, callback) {
         logger.writeInfo('订单修改成功');
         return callback(false, insertResult);
     });
-}
-        
+};
+
+OrderDelivery.prototype.checkDeliveryIsFinished = function (data, callback) {
+
+    var formdata = {
+        "OrderID" : data.OrderID
+    };
+
+    orderdeliveryDAL.checkDeliveryIsFinished(formdata, function (err, checkResult) {
+        if (err) {
+            return callback(true);
+        }
+
+        return callback(false, checkResult);
+    });
+};
+
+
+OrderDelivery.prototype.checkDeliveryIsStarted = function (data, callback) {
+
+    var formdata = {
+        "OrderID" : data.OrderID
+    };
+
+    orderdeliveryDAL.checkDeliveryIsStarted(formdata, function (err, checkResult) {
+        if (err) {
+            return callback(true);
+        }
+
+        return callback(false, checkResult);
+    });
+};
+
+
 module.exports = new OrderDelivery();
