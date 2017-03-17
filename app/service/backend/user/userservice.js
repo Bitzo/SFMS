@@ -9,7 +9,7 @@ var userDAL = appRequire('dal/backend/user/userdal'),
 
 var operationConfig = appRequire('config/operationconfig'),
     logService = appRequire('service/backend/log/logservice'),
-    moment =  moment = require('moment'),
+    moment = require('moment'),
     logModel = appRequire('model/jinkebro/log/logmodel');
 
 logModel.ApplicationID = operationConfig.backendApp.applicationID;

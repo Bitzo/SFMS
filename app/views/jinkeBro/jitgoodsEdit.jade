@@ -38,7 +38,7 @@ block content
               input(type="date",name="ProducTime",ng-model="paginationConf.formdata.ProducTime",value='{{paginationConf.formdata.ProducTime}}',required)
           
           tr
-            td(width="15%",class="tableleft") 商品类型 {{paginationConf.formdata.ProductTypeID}}
+            td(width="15%",class="tableleft") 商品类型
             td
                 jason-select.input(placeholder='商品类型' ng-model='paginationConf.formdata.ProductTypeID' source='/jinkeBro/proType', stext='ProductTypeName' svalue='ID',style="width:160px;height:30px",required)
           

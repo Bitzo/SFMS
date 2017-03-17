@@ -76,6 +76,7 @@ myApp.controller('userInfoController', function($scope, $http,$q,baseService) {
             }).
             success(function(response) {
                 $scope.cls=response.data;
+                console.log($scope.cls)
             }).
             error(function(response) {
             });

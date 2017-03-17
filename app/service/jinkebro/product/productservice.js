@@ -399,7 +399,14 @@ Product.prototype.updateProduct = function (data, callback) {
         returnResult.msg = '商品生产日期必须设置！';
         return callback(false,returnResult);
     }
-
+    
+    if(formdata.ExpireTime && formdata.ProducTime){
+        if (moment(formdata.ExpireTime).isBefore(formdata.ProducTime)) {
+            returnResult.msg = '有效期不能比生产日期早!';
+            return callback(false,returnResult);
+        }
+    }
+    
     productDAL.updateProduct(formdata, function (err, result) {
         if (err) {
             logModel.Type = operationConfig.operationType.error;

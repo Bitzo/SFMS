@@ -45,16 +45,15 @@ block content
         tr
           td(width="15%",class="tableleft") 手机号码 (可选) 
           td
-            input(type="phone",name="Phone",ng-model="formdata.Phone",ng-maxlength='11',ng-minlength='11')
+            input(type="phone",name="Phone",ng-model="formdata.Phone")
             
-            small.error(ng-if="(userInfo.Phone.$error.maxlength||userInfo.Phone.$error.minlength)&& userInfo.Phone.$touched") 电话号码11位
         
         tr
           td(width="15%",class="tableleft") 邮箱 (可选)
           td
-            input(type="email",name="Email",ng-model='formdata.Email',ng-maxlength='50')
+            input(type="textview",name="Email",ng-model='formdata.Email',ng-maxlength='50')
             
-            small.error(ng-if="userInfo.Email.$error.maxlength && userInfo.Email.$touched") 请填写正确的邮箱地址
+            
                   
         tr
           td(width="15%",class="tableleft") 所在学院 (可选) 
@@ -66,7 +65,7 @@ block content
           td(width="15%",class="tableleft") 所在班级 (可选)  
           td
             select(ng-model='formdata.ClassID')
-              option(ng-repeat="item in cls",value='{{item.DictionaryID}}') {{item.DictionaryValue}})
+              option(ng-repeat="item in cls",value='{{item.DictionaryID}}') {{item.DictionaryValue}}
 
         tr
           td(width="15%",class="tableleft") 地址 (可选) 
@@ -85,6 +84,6 @@ block content
         tr
           td(class="tableleft")
           td
-            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="userInfo.$invalid",ng-click="addnew(formdata,'/backuser')") 添加
+            button.btn.btn-sm.btn-primary(type="submit",ng-click="addnew(formdata,'/backuser')") 添加
             
             a.btn.btn-sm.btn-success(href='#backend/user',ng-click='search()') 返回列表
