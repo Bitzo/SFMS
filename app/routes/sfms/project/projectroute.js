@@ -52,6 +52,15 @@ router.post('/', function (req, res) {
 
             projectEndTime = moment(projectEndTime).format("YYYY-MM-DD HH:mm:ss");
 
+            if (!moment(projectEndTime).isValid()){
+                res.status(400);
+                return res.json({
+                    status: 400,
+                    isSuccess: false,
+                    msg: '项目截止时间不合法'
+                });
+            }
+
             if (moment(projectEndTime).isBefore()) {
                 res.status(400);
                 return res.json({
@@ -86,7 +95,7 @@ router.post('/', function (req, res) {
                 });
             };
 
-            projectservice.queryProject({projectName: projectName}, function (err, results) {
+            projectservice.queryProject({projectName: projectName,OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
 
@@ -542,19 +551,8 @@ router.put('/', function (req, res) {
                     msg: '操作失败, 该项目不存在或已被禁用'
                 });
             }
-            projectEndTime = moment(projectEndTime).format("YYYY-MM-DD HH:mm:ss");
 
-            if (moment(projectEndTime).isBefore()) {
-                res.status(400);
-
-                return res.json({
-                    status: 400,
-                    isSuccess: false,
-                    msg: '项目截止时间不能比当前日期早'
-                });
-            }
-
-            userservice.querySingleID(projectManageID, function (err, results) {
+            projectservice.queryProject({projectName: projectName, OperateUserID: req.query.jitkey}, function (err, results) {
                 if (err) {
                     res.status(500);
 
@@ -565,19 +563,38 @@ router.put('/', function (req, res) {
                     });
                 }
 
-                if (!(results !== undefined && results.length > 0)) {
+                if (results.length!=0&&results[0].ID!=ID) {
+                    res.status(500);
+
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '已有同名的项目存在！'
+                    });
+                }
+
+                projectEndTime = moment(projectEndTime).format("YYYY-MM-DD HH:mm:ss");
+
+                if (!moment(projectEndTime).isValid()){
+                    res.status(400);
+                    return res.json({
+                        status: 400,
+                        isSuccess: false,
+                        msg: '项目截止时间不合法'
+                    });
+                }
+
+                if (moment(projectEndTime).isBefore()) {
                     res.status(400);
 
                     return res.json({
                         status: 400,
                         isSuccess: false,
-                        msg: '操作失败，项目负责人信息有误'
+                        msg: '项目截止时间不能比当前日期早'
                     });
                 }
 
-                projectManageName = results[0].UserName;
-
-                userservice.querySingleID(accountID, function (err, results) {
+                userservice.querySingleID(projectManageID, function (err, results) {
                     if (err) {
                         res.status(500);
 
@@ -588,65 +605,19 @@ router.put('/', function (req, res) {
                         });
                     }
 
-                    if (!(results!==undefined && results.length>0)) {
+                    if (!(results !== undefined && results.length > 0)) {
                         res.status(400);
 
                         return res.json({
                             status: 400,
                             isSuccess: false,
-                            msg: '操作失败，操作人信息有误'
+                            msg: '操作失败，项目负责人信息有误'
                         });
                     }
 
-                    var operateUserName = results[0].UserName;
+                    projectManageName = results[0].UserName;
 
-                    data = {
-                        'ID': ID,
-                        'ProjectDesc': projectDesc,
-                        'ProjectName': projectName,
-                        'ProjectManageID': projectManageID,
-                        'ProjectManageName': projectManageName,
-                        'ProjectEndTime': projectEndTime,
-                        'ProjectTimeLine': projectTimeLine,
-                        'ProjectStatus': projectStatus,
-                        'ProjectPrice': projectPrice,
-                        'OperateUser': operateUserName,
-                        'OperateUserID': req.query.jitkey,
-                        'EditUser': operateUserName,
-                        'EditTime': time
-                    };
-
-                    if (data.ProjectDesc.length>45) {
-                        res.status(400);
-
-                        return res.json({
-                            code: 400,
-                            isSuccess: false,
-                            msg: '项目描述过长,请勿超过45个字符'
-                        });
-                    }
-
-                    if (isNaN(data.ProjectPrice)||data.ProjectPrice<0) {
-                        res.status(400);
-
-                        return res.json({
-                            code: 400,
-                            isSuccess: false,
-                            msg: '项目预算不是正确的数值'
-                        });
-                    }
-
-                    if (data.ProjectTimeLine.length>45) {
-                        res.status(400);
-
-                        return res.json({
-                            code: 400,
-                            isSuccess: false,
-                            msg: '项目进度描述过长,请勿超过45个字符'
-                        });
-                    }
-
-                    projectservice.updateProject(data, function (err, results) {
+                    userservice.querySingleID(accountID, function (err, results) {
                         if (err) {
                             res.status(500);
 
@@ -657,141 +628,212 @@ router.put('/', function (req, res) {
                             });
                         }
 
-                        logger.writeInfo(results);
-                        if(!(results !== undefined && results.affectedRows > 0)) {
+                        if (!(results!==undefined && results.length>0)) {
                             res.status(400);
 
                             return res.json({
                                 status: 400,
                                 isSuccess: false,
-                                msg: '操作失败'
+                                msg: '操作失败，操作人信息有误'
                             });
                         }
 
-                        //如果有项目人员信息，则修改
-                        if (userData!==undefined) {
-                            //获取所有项目用户的username
-                            var ID = [];
+                        var operateUserName = results[0].UserName;
 
-                            for (var i in userData) {
-                                if (userData[i].duty.length>45) {
-                                    res.status(400);
-                                    return res.json({
-                                        status: 400,
-                                        isSuccess: false,
-                                        msg: '人员职责描述过长,请勿超过45个字符'
-                                    });
-                                }
+                        data = {
+                            'ID': ID,
+                            'ProjectDesc': projectDesc,
+                            'ProjectName': projectName,
+                            'ProjectManageID': projectManageID,
+                            'ProjectManageName': projectManageName,
+                            'ProjectEndTime': projectEndTime,
+                            'ProjectTimeLine': projectTimeLine,
+                            'ProjectStatus': projectStatus,
+                            'ProjectPrice': projectPrice,
+                            'OperateUser': operateUserName,
+                            'OperateUserID': req.query.jitkey,
+                            'EditUser': operateUserName,
+                            'EditTime': time
+                        };
 
-                                if (userData[i].duty.trim().length<=0) {
-                                    res.status(400);
+                        if (data.ProjectDesc.length>45) {
+                            res.status(400);
 
-                                    return res.json({
-                                        code: 400,
-                                        isSuccess: false,
-                                        msg: '项目成员职责不得为空'
-                                    });
-                                }
+                            return res.json({
+                                code: 400,
+                                isSuccess: false,
+                                msg: '项目描述过长,请勿超过45个字符'
+                            });
+                        }
 
-                                userData[i].projectID = data.ID;
-                                userData[i].projectName = projectName;
-                                userData[i].editName = operateUserName;
-                                userData[i].operateUser = operateUserName;
-                                userData[i].isActive = 1;
+                        if (isNaN(data.ProjectPrice)||data.ProjectPrice<0) {
+                            res.status(400);
 
-                                if (i==0) ID[i] = userData[i].userID;
+                            return res.json({
+                                code: 400,
+                                isSuccess: false,
+                                msg: '项目预算不是正确的数值'
+                            });
+                        }
 
-                                else {
-                                    var j = 0;
-                                    for(j=0;j<ID.length;++j) {
-                                        if (userData[i] == ID[j]) break;
-                                    }
-                                    if (j == ID.length) {
-                                        ID[j] = userData[i].userID;
-                                    }
-                                }
+                        if (data.ProjectTimeLine.length>45) {
+                            res.status(400);
+
+                            return res.json({
+                                code: 400,
+                                isSuccess: false,
+                                msg: '项目进度描述过长,请勿超过45个字符'
+                            });
+                        }
+
+                        projectservice.updateProject(data, function (err, results) {
+                            if (err) {
+                                res.status(500);
+
+                                return res.json({
+                                    status: 500,
+                                    isSuccess: false,
+                                    msg: '操作失败，服务器出错'
+                                });
                             }
 
-                            userservice.queryAccountByID(ID, function (err, results) {
-                                if (err) {
-                                    res.status(500);
+                            logger.writeInfo(results);
 
-                                    return res.json({
-                                        status: 500,
-                                        isSuccess: false,
-                                        msg: '操作失败，服务器出错'
-                                    });
+                            if(!(results !== undefined && results.affectedRows > 0)) {
+                                res.status(400);
+
+                                return res.json({
+                                    status: 400,
+                                    isSuccess: false,
+                                    msg: '操作失败'
+                                });
+                            }
+
+                            //如果有项目人员信息，则修改
+                            if (userData!==undefined) {
+                                //获取所有项目用户的username
+                                var ID = [];
+
+                                for (var i in userData) {
+                                    if (userData[i].duty.length>45) {
+                                        res.status(400);
+                                        return res.json({
+                                            status: 400,
+                                            isSuccess: false,
+                                            msg: '人员职责描述过长,请勿超过45个字符'
+                                        });
+                                    }
+
+                                    if (userData[i].duty.trim().length<=0) {
+                                        res.status(400);
+
+                                        return res.json({
+                                            code: 400,
+                                            isSuccess: false,
+                                            msg: '项目成员职责不得为空'
+                                        });
+                                    }
+
+                                    userData[i].projectID = data.ID;
+                                    userData[i].projectName = projectName;
+                                    userData[i].editName = operateUserName;
+                                    userData[i].operateUser = operateUserName;
+                                    userData[i].isActive = 1;
+
+                                    if (i==0) ID[i] = userData[i].userID;
+
+                                    else {
+                                        var j = 0;
+                                        for(j=0;j<ID.length;++j) {
+                                            if (userData[i] == ID[j]) break;
+                                        }
+                                        if (j == ID.length) {
+                                            ID[j] = userData[i].userID;
+                                        }
+                                    }
                                 }
 
-                                if (results!==undefined && results.length>0) {
-                                    for (var i = 0; i < userData.length; ++i) {
-                                        var k = false;
+                                userservice.queryAccountByID(ID, function (err, results) {
+                                    if (err) {
+                                        res.status(500);
 
-                                        for (var j = 0; j < results.length; ++j) {
-                                            if (userData[i].userID == results[j].AccountID) {
-                                                k = true;
-                                                userData[i].userName = results[j].UserName;
+                                        return res.json({
+                                            status: 500,
+                                            isSuccess: false,
+                                            msg: '操作失败，服务器出错'
+                                        });
+                                    }
+
+                                    if (results!==undefined && results.length>0) {
+                                        for (var i = 0; i < userData.length; ++i) {
+                                            var k = false;
+
+                                            for (var j = 0; j < results.length; ++j) {
+                                                if (userData[i].userID == results[j].AccountID) {
+                                                    k = true;
+                                                    userData[i].userName = results[j].UserName;
+                                                }
+                                            }
+
+                                            if (k == false) {
+                                                res.status(400);
+                                                return res.json({
+                                                    status: 400,
+                                                    isSuccess: false,
+                                                    msg: '操作失败，添加的用户 ' + userData[i].userID + ' 信息有误！'
+                                                });
                                             }
                                         }
 
-                                        if (k == false) {
-                                            res.status(400);
-                                            return res.json({
-                                                status: 400,
-                                                isSuccess: false,
-                                                msg: '操作失败，添加的用户 ' + userData[i].userID + ' 信息有误！'
-                                            });
-                                        }
+                                        projectuserservice.addProjectUser(userData, function (err, results) {
+                                            if (err) {
+                                                res.status(500);
+
+                                                return res.json({
+                                                    status: 500,
+                                                    isSuccess: false,
+                                                    msg: '操作失败，服务器出错'
+                                                });
+                                            }
+
+                                            if(results !== undefined && results.insertId > 0) {
+                                                res.status(200);
+
+                                                return res.json({
+                                                    status: 200,
+                                                    isSuccess: true,
+                                                    msg: '操作成功'
+                                                });
+                                            } else {
+                                                res.status(404);
+
+                                                return res.json({
+                                                    status: 404,
+                                                    isSuccess: false,
+                                                    msg: results
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        res.status(400);
+
+                                        return res.json({
+                                            status: 400,
+                                            isSuccess: false,
+                                            msg: '操作失败，添加的项目成员信息有误！'
+                                        });
                                     }
+                                });
+                            } else {
+                                res.status(200);
 
-                                    projectuserservice.addProjectUser(userData, function (err, results) {
-                                        if (err) {
-                                            res.status(500);
-
-                                            return res.json({
-                                                status: 500,
-                                                isSuccess: false,
-                                                msg: '操作失败，服务器出错'
-                                            });
-                                        }
-
-                                        if(results !== undefined && results.insertId > 0) {
-                                            res.status(200);
-
-                                            return res.json({
-                                                status: 200,
-                                                isSuccess: true,
-                                                msg: '操作成功'
-                                            });
-                                        } else {
-                                            res.status(404);
-
-                                            return res.json({
-                                                status: 404,
-                                                isSuccess: false,
-                                                msg: results
-                                            });
-                                        }
-                                    });
-                                } else {
-                                    res.status(400);
-
-                                    return res.json({
-                                        status: 400,
-                                        isSuccess: false,
-                                        msg: '操作失败，添加的项目成员信息有误！'
-                                    });
-                                }
-                            });
-                        } else {
-                            res.status(200);
-
-                            return res.json({
-                                status: 200,
-                                isSuccess: true,
-                                msg: '操作成功'
-                            });
-                        }
+                                return res.json({
+                                    status: 200,
+                                    isSuccess: true,
+                                    msg: '操作成功'
+                                });
+                            }
+                        });
                     });
                 });
             });
@@ -947,6 +989,7 @@ router.get('/person', function (req, res) {
             'CreateTime': startTime,
             'ProjectEndTime': endTime,
             'OperateUserID': req.query.jitkey,
+            'IsActive': 1,
             'page': page,
             'pageNum': pageNum,
         };

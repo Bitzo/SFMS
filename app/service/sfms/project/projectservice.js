@@ -167,7 +167,7 @@ exports.countQuery = function (data, callback) {
         logger.writeInfo('统计数据量');
         callback(false, results);
     })
-}
+};
 
 //项目信息查询
 exports.queryProject = function (data, callback) {

@@ -82,7 +82,7 @@ exports.updateRemark = function (data, callback) {
 
 //项目用户备注查询
 exports.queryRemark = function (data, callback) {
-    var sql = 'select jit_projectremark.ID,ProjectID,jit_projectremark.ProjectName,IsActive,UserID,UserName,' +
+    var sql = 'select jit_projectremark.ID,ProjectID,jit_projectbaseinfo.ProjectName,IsActive,UserID,UserName,' +
         'Remark,jit_projectremark.CreateTime,jit_projectremark.EditTime from jit_projectremark,jit_projectbaseinfo ' +
         'where 1=1 and jit_projectremark.ProjectID = jit_projectbaseinfo.ID and jit_projectbaseinfo.IsActive = 1 ';
 
