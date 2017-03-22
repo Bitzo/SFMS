@@ -348,7 +348,7 @@ router.put('/', function (req, res) {
     var funcData = {
         userID: req.query.jitkey,
         functionCode: functionCode
-    }
+    };
 
     userFuncService.checkUserFunc(funcData, function (err, funcResult) {
         if (err) {

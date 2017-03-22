@@ -140,6 +140,11 @@ Product.prototype.insertProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
+    if (formdata.TotalNum < 0) {
+        returnResult.msg = '首次入库总数不能为负数！';
+        return callback(false,returnResult);
+    }
+
     if (!(validator.isLength((formdata.newProductTypeName),{min:1,max:50}))) {
         returnResult.msg = '商品类型长度应该小于50位！';
         return callback(false,returnResult);
@@ -150,6 +155,10 @@ Product.prototype.insertProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
+    if (formdata.ProductPrice < 0) {
+        returnResult.msg = '商品价格不能为负数！';
+        return callback(false,returnResult);
+    }
     if (!(dataCheck.isUndefined(formdata.ExpireTime))) {
         if (validator.isDate(formdata.ExpireTime)) {
             formdata.ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");

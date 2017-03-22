@@ -10,7 +10,11 @@ var productypeDAL = appRequire('dal/jinkebro/productype/productypedal');
 moment = require('moment'),
     logService = appRequire('service/backend/log/logservice'),
     logModel = appRequire('model/jinkebro/log/logmodel'),
-    productServ = appRequire('service/jinkebro/product/productservice');
+    productServ = appRequire('service/jinkebro/product/productservice'),
+    operationConfig = appRequire('config/operationconfig'),
+    validator = require('validator'),
+    dataCheck = appRequire('util/dataverify'),
+    logger = appRequire('util/loghelper').helper;
 
 var Productype = function() {
     this.createTime = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -78,18 +82,38 @@ Productype.prototype.insert = function(data, callback) {
 
 //修改产品类别
 Productype.prototype.update = function(data, callback) {
-    if (!checkData(data)) {
-        logModel.OperationName = '修改产品类别时,库存信息为undefined';
-        logModel.Action = operationConfig.jinkeBroApp.productType.productTypeUpd.actionName;
-        logModel.Memo = '修改产品类别失败';
-        logModel.Type = operationConfig.operationType.operation;
-        loggerWrite();
-        return callback(true, logModel.OperationName);
+
+
+    var formdata = {
+        ProductTypeName : data.ProductTypeName
+    };
+
+    var returnResult = {
+        msg : '出错啦!'
+    };
+
+    var indispensableKeyArr = [
+        formdata.ProductTypeName,
+    ];
+
+    var indispensableValueArr = [
+        '商品类别'
+    ];
+
+    var undefinedCheck = dataCheck.isUndefinedArray(indispensableKeyArr,indispensableValueArr);
+    if (!(undefinedCheck.isRight)) {
+        returnResult.msg = undefinedCheck.msg;
+        return callback(false,returnResult);
     }
 
-    productypeDAL.update(data, function(err, results) {
+    if (!(validator.isLength((formdata.ProductTypeName),{min:1,max:50}))) {
+        returnResult.msg = '商品类型名长度应该小于50位！';
+        return callback(false,returnResult);
+    }
+
+    productypeDAL.update(formdata, function(err, results) {
         if (err) {
-            logger.writeErr('修改产品类别异常:' + this.createTime);
+            logger.writeError('修改产品类别异常:' + this.createTime);
             console.log("修改产品类别异常");
             logModel.OperationName = '修改产品类别';
             logModel.Action = operationConfig.jinkeBroApp.productType.productTypeUpd.actionName;
@@ -98,7 +122,8 @@ Productype.prototype.update = function(data, callback) {
             loggerWrite();
             return callback(true, logModel.OperationName);
         }
-        callback(false, results);
+
+        return callback(false, results);
     });
 };
 

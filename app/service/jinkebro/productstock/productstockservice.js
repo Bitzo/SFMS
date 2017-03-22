@@ -190,6 +190,11 @@ ProStock.prototype.update = function (data, callback) {
         return callback(false,returnResult);
     }
 
+    if (formdata.TotalNum < 0) {
+        returnResult.msg = '库存总数不能为负数!';
+        return callback(false,returnResult);
+    }
+
     proStockDAL.update(data, function (err, results) {
         if (err) {
 

@@ -14,6 +14,7 @@ block content
                                 td(width="15%",class="tableleft") 存储区域
                                 td
                                     select(ng-model='f.StockAreaID',ng-change="")
+                                        option(value='') 全部
                                         option(ng-repeat="item in StockAreas",value='{{item.DictionaryID}}') {{item.DictionaryValue}}
                         button.btn.btn-default.pull-right(type="button" ng-click="excel('/jinkeBro/proStock/excel')") 确认并下载报表
                         button.btn.btn-default(type="button",data-dismiss="modal") Close

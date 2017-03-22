@@ -237,40 +237,11 @@ router.put('/', function (req, res) {
         if (funcResult !== undefined && funcResult.isSuccess === true) {
             var formdata = req.body.formdata;
 
-            //检查所需要的字段是否都存在
-            var data = ['ID', 'ProductTypeName'];
-            var err = 'require: ';
-            for (var value in data) {
-                if (!(data[value] in formdata)) {
-                    err += data[value] + ' ';
-                }
-            }
-
-            //如果要求的字段不在req的参数中
-            if (err !== 'require: ') {
-                logger.writeError(err);
-                res.status(400);
-                return res.json({
-                    code: 404,
-                    isSuccess: false,
-                    msg: '存在未填写的必填字段' + err
-                });
-            }
-
-            // 存放接收的数据
             var updatedata = {
                 "ID": formdata.ID,
                 'ProductTypeName': formdata.ProductTypeName
             };
-            if (isNaN(formdata.ID)) {
-                res.status(400);
-                return res.json({
-                    code: 400,
-                    isSuccess: false,
-                    msg: key + ": " + intdata[key] + '不是数字'
-                });
-            }
-            console.log(updatedata)
+
             productypeService.update(updatedata, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -278,6 +249,15 @@ router.put('/', function (req, res) {
                         code: 500,
                         isSuccess: false,
                         msg: results
+                    });
+                }
+
+                if (results.msg) {
+                    res.status(400);
+                    return res.json({
+                        code: 400,
+                        isSuccess: false,
+                        msg: results.msg
                     });
                 }
 

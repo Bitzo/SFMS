@@ -36,9 +36,9 @@ block content
                 tr
                     td(width="15%",class="tableleft") 电话号码
                     td
-                        input(type="phone",name="Phone",ng-model="formdata.Phone",ng-maxlength='11')
+                        input(type="phone",name="Phone",ng-model="formdata.Phone",ng-maxlength='11',ng-minlength='11',required)
                         
-                        small.error(ng-if="stuffAdd.Phone.$error.maxlength && stuffAdd.Phone.$touched") 电话号码最多11位
+                        small.error(ng-if="stuffAdd.Phone.$error.maxlength || stuffAdd.Phone.$error.minlength && stuffAdd.Phone.$touched") 电话号码为11位
                 tr
                     td(width="15%",class="tableleft") 员工职位
                     td
