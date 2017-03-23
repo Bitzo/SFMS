@@ -407,7 +407,7 @@ wechat.eventMsg(function(msg) {
                     //     wechat.sendMsg(resMsg);
                     // });
 
-                    resMsg.content = '跟踪包裹';
+                    resMsg.content = '正在开发中,请稍候再试';
                     wechat.sendMsg(resMsg);
                     break;
 
