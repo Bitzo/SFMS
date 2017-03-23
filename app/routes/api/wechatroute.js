@@ -395,19 +395,19 @@ wechat.eventMsg(function(msg) {
                 case 'TrackPackage':
                     //跟踪包裹这一栏
                     console.log("跟踪包裹");
-                    orderService.insertOrderInfo(msg.content, msg.fromUserName, function(resultinfo) {
-                        var resMsg = {
-                            fromUserName: msg.toUserName,
-                            toUserName: msg.fromUserName,
-                            msgType: "text",
-                            content: resultinfo,
-                            funcFlag: 0
-                        };
+                    // orderService.insertOrderInfo(msg.content, msg.fromUserName, function(resultinfo) {
+                    //     var resMsg = {
+                    //         fromUserName: msg.toUserName,
+                    //         toUserName: msg.fromUserName,
+                    //         msgType: "text",
+                    //         content: resultinfo,
+                    //         funcFlag: 0
+                    //     };
 
-                        wechat.sendMsg(resMsg);
-                    });
+                    //     wechat.sendMsg(resMsg);
+                    // });
 
-                    // resMsg.content = '正在开发中,请稍候再试';
+                    resMsg.content = '跟踪包裹';
                     wechat.sendMsg(resMsg);
                     break;
 
