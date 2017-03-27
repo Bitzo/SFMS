@@ -1002,7 +1002,7 @@ router.get('/count', function(req, res) {
 router.get('/person', function (req, res, next) {
     var data = {
         userID: req.query.jitkey,
-        functionCode: functionConfig.sfmsApp.financeManage.financeQuery.functionCode
+        functionCode: functionConfig.sfmsApp.financeManage.financePersonQuery.functionCode
     };
 
     userFuncService.checkUserFunc(data, function(err, results) {
