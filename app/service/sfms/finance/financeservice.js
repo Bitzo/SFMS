@@ -141,7 +141,7 @@ exports.updateFinance = function(data, callback) {
 exports.queryFinance = function (data, callback) {
     var queryData = {
         'jit_financeinfo.ID': data.ID || '',
-        'Username': data.Username || '',
+        'UserID': data.UserID || '',
         'InOutType': data.InOutType || '',
         'FIType': data.FIType || '',
         'FIStatu': data.FIStatus || '',
