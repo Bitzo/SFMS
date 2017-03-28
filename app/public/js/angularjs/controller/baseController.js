@@ -419,7 +419,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }   
         $scope.f.sortindex = sortindex;
         getInit();
-    }
+    };
 
     //绩效统计--首页 更多
     $scope.moreKPI = function(index,page,f,action){
