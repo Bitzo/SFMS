@@ -201,6 +201,12 @@ myApp.config(function($routeProvider) {
     when('/jinkeBro/wechatMenuManage', {
         templateUrl: '/jinkeBro/wechatMenuManage?access_token=' + accesstokenstring,
     }).
+    when('/jinkeBro/wechatproductinfo', {
+        templateUrl: '/jinkeBro/wechatproductinfo?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/wechatshowpersonalorder', {
+        templateUrl: '/jinkeBro/wechatshowpersonalorder?access_token=' + accesstokenstring,
+    }).
     otherwise({
         redirectTo: '/'
     });
