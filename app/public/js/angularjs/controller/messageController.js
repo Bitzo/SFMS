@@ -22,10 +22,12 @@ myApp.controller('messageController', function($scope, $http,$q,baseService,$loc
     }).
     success(function(response) {
         $scope.datas=response.data;
-        console.log($scope.datas.length)
-        $scope.datas.push({
-            MessageTitle:'暂无通知'
-        })
+        if($scope.datas.length==0){
+            $scope.datas.push({
+                MessageTitle:'暂无通知'
+            })
+        }
+
     }).
     error(function(response) {
 
