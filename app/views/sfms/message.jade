@@ -1,0 +1,102 @@
+//
+   Created by Lenovo on 2017/3/29.
+
+link(rel='stylesheet', href='css/backend/backend.css')
+block content
+    jason-pagecontent(action='/sfms/api/message',conf='paginationConf')
+        div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-body
+                        h4.modal-title(id="myModalLabel") 通知新增
+                            button.close(type="button",data-dismiss="modal",ng-click="initForm()")
+                                span(aria-hidden="true")&times;
+                        br
+                        form(name="messageAdd")
+                            table.table.table-striped.table-bordered.text-center
+                                tr
+                                    td(width="15%") 通知标题
+                                    td(width="70%")
+                                        input(type="text",name="title",ng-model="formdata.MessageTitle",ng-maxlength='100',size='60',required)
+                                        small.error(ng-if="messageAdd.title.$error.maxlength && messageAdd.title.$touched") 通知标题最多100字
+                                tr
+                                    td(width="15%") 通知内容
+                                    td(width="75%")
+                                        textarea(type="textview",name="content",ng-model='formdata.MessageContent',rows="20",cols="60",ng-maxlength='300',style="resize:none",required)
+                                        small.error(ng-if="messageAdd.content.$error.maxlength && messageAdd.content.$touched") 通知内容最多300字
+
+                            button.btn.btn-default.pull-right(type="button" ng-disabled='form.$invalid' ng-click="addMessage('/sfms/api/message')") 提交
+
+                            button.btn.btn-default(type="button",data-dismiss="modal" ng-click="initForm()") Close
+        div.modal.fade(id="myModal1",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog
+                div.modal-content
+                    div.modal-body
+                        h4.modal-title(id="myModalLabel1") 通知编辑
+                            button.close(type="button",data-dismiss="modal",ng-click="initForm()")
+                                span(aria-hidden="true")&times;
+                        br
+                        form(name="messageEdit")
+                            table.table.table-striped.table-bordered.text-center
+                                tr
+                                    td(width="15%") 通知标题
+                                    td(width="70%")
+                                        input(type="text",name="title",ng-model="formdata.MessageTitle",ng-maxlength='100',size='60',required)
+                                        small.error(ng-if="messageEdit.title.$error.maxlength && messageEdit.title.$touched") 通知标题最多100字
+                                tr
+                                    td(width="15%") 通知内容
+                                    td(width="75%")
+                                        textarea(type="textview",name="content",ng-model='formdata.MessageContent',rows="20",cols="60",ng-maxlength='300',style="resize:none",required)
+                                        small.error(ng-if="messageEdit.content.$error.maxlength && messageEdit.content.$touched") 通知内容最多300字
+
+                            button.btn.btn-default.pull-right(type="button" ng-disabled='form.$invalid' ng-click="updateMessage('/sfms/api/message')") 提交
+
+                            button.btn.btn-default(type="button",data-dismiss="modal" ng-click="initForm()") Close
+        div.page-content
+            ng-form.form-inline
+                span.title  通知管理
+                div.buttons.pull-right
+                    label.form-group.my-form-group   通知标题
+                        input.form-control.ext(ng-model='f.title' type='text',style="width:110px;height:34px;")
+                    label.form-group.my-form-group   通知内容
+                        input.form-control.ext(ng-model='f.content' type='text',style="width:110px;height:34px;")
+                    label.form-group.my-form-group   开始时间
+                        input.form-control.ext(ng-model='f.startTime' type='date')
+                    label.form-group.my-form-group   结束时间
+                        input.form-control.ext(ng-model='f.endTime' type='date')
+
+                    label.form-group.my-form-group
+                        a.btn.btn-sm.btn-primary(ng-click='search()')
+                            i.icon.icon-search   查询
+                        a.btn.btn-sm.btn-success(data-toggle="modal",data-target="#myModal",href="",ng-click="moreProductType(x.ID,'/jinkeBro/proType')")
+                            i.icon.icon-plus 新建
+                        a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default')
+                            i.icon.icon-repeat  刷新
+            hr
+            table.table.table-striped.table-bordered.text-centerA
+                thead
+                    tr
+                        th(style="width:10%;") 序号
+                        th(style="width:20%;") 通知标题
+                        th(style="width:35%;") 通知内容
+                        th(style="width:10%;") 创建用户
+                        th(style="width:15%;") 创建时间
+                        th(style="width:10%;") 是否有效
+                        th(style="width:10%;") 操作
+                tbody
+                    tr(ng-repeat="x in datas")
+                        td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
+                        td {{x.MessageTitle}}
+                        td {{x.MessageContent}}
+                        td {{x.UserName}}
+                        td {{x.CreateTime}}
+                        td {{x.IsActive | numToChin:data.IsActive }}
+                        td
+                            a(data-toggle="modal",data-target="#myModal1",href="",ng-click="getMessage(x.ID,'/sfms/api/message')")
+                                i.icon.icon-edit 编辑
+                            button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.MessageTitle,'/sfms/api/message')",href='',ng-disabled='x.IsActive')
+                                i.icon.icon-ok 启用
+                            button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,x.MessageTitle,'/sfms/api/message')",href='',ng-disabled='!x.IsActive')
+                                i.icon.icon-ban-circle 禁用
+            div.pull-right
+                jason-pagination(conf='paginationConf')

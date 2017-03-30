@@ -449,7 +449,7 @@ var functionConfig = {
             },
             financePersonQuery: {
                 functionName: "个人财务查询",
-                functionCode: "SFMS-FINANCE-Person-QUERY"
+                functionCode: "SFMS-FINANCE-PERSON-QUERY"
             },
             financeDelete: {
                 functionName: "财务删除",

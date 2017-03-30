@@ -453,6 +453,74 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         });
     };
 
+    //通知新增
+    $scope.addMessage = function(){
+        $scope.formdata= {
+            "MessageTitle" : $scope.formdata.MessageTitle,
+            "MessageContent" : $scope.formdata.MessageContent,
+        }
+        $http({
+            method:'post',
+            url: "/sfms/api/message"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata : $scope.formdata
+            }
+        }).
+        success(function(response) {
+            alert(response.msg)
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+
+    //通知新增
+    $scope.updateMessage = function(){
+        $scope.formdata= {
+            "ID": $scope.formdata.ID,
+            "MessageTitle" : $scope.formdata.MessageTitle,
+            "MessageContent" : $scope.formdata.MessageContent
+        }
+        $http({
+            method:'put',
+            url: "/sfms/api/message"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata : $scope.formdata
+            }
+        }).
+        success(function(response) {
+            alert(response.msg)
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+
+    //通知新增
+    $scope.getMessage = function(ID, action){
+        $http({
+            method: 'get',
+            url: '/sfms/api/message' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            params: {
+                f: {
+                    ID: ID
+                }
+            }
+        }).success(function (response) {
+            $scope.formdata = response.data[0];
+            if (!response.isSuccess) {
+                alert(response.msg);
+            }
+        }).error(function (response) {
+            alert(response.msg);
+        });
+    };
+
+    $scope.initForm = function () {
+        $scope.formdata = {};
+        getInit();
+    };
+
     $scope.excel = function(action) {
         var url = action+'?' ;
 

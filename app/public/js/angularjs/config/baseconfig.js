@@ -147,6 +147,12 @@ myApp.config(function($routeProvider) {
     when('/sfms/signPersonal', {
         templateUrl: '/sfms/signPersonal?access_token=' + accesstokenstring,
     }).
+    when('/sfms/message', {
+        templateUrl: '/sfms/message?access_token=' + accesstokenstring,
+    }).
+    when('/sfms/showMessage', {
+        templateUrl: '/sfms/showMessage?access_token=' + accesstokenstring,
+    }).
     when('/jinkeBro/jitorder', {
         templateUrl: '/jinkeBro/jitorder',
     }).
