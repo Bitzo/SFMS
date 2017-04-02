@@ -1,12 +1,10 @@
 link(rel='stylesheet' href="css/backend/role.css")
-//link(rel='stylesheet', href="bower_components/bootstrap-fileinput/css/fileinput.min.css")
-//script(src="/bower_components/bootstrap-fileinput/js/fileinput.min.js" type="text/javascript")
-//script(src="/bower_components/bootstrap-fileinput/js/locales/zh.js" type="text/javascript")
+
 block content
   div.container-fluid
     span 
       h2 绩效新增
-    form(method="post",name="kpiAdd",enctype="multipart/form-data",ng-controller="sfmsApiFinanceAddController")
+    form(method="post",name="kpiAdd",enctype="multipart/form-data",ng-controller="kpiAddController")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
@@ -42,7 +40,8 @@ block content
         tr
           td(width="15%",class="tableleft") 相关材料
             td
-              input.file(id="file" type="file" ng-model="formdata.file")
+              div.form-group
+                input.file(id="file" type="file" multiple data-overwrite-initial="false" data-min-file-count="2")
 
         tr
           td(class="tableleft")
