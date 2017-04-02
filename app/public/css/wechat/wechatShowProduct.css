@@ -1,0 +1,98 @@
+@charset "utf-8";
+html{
+  height: 100%;
+}
+body{
+  height: 100%;
+}
+.login{
+  padding: 20px;
+  height: 100%;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-image: url(../../imgs/bg5.jpg);
+  background-size: 100%;
+  min-height: 635px;
+  background-repeat: repeat-y;
+}
+.login a {
+  color: #999;
+}
+.login .nav{
+  min-width: 600px;
+}
+.login .nav h3{
+  margin-left: 20px;
+  font-size: 25px;
+  font-weight: 00;
+  color:#4f98bb;
+}
+.login .container{
+  position: relative;
+  top: 0px;
+  width: 50%
+}
+.login .container h2{
+  text-align: center;
+  min-width: 300px;
+  letter-spacing: 5px;
+  font-size: 34px;
+  color: #83b9d4;
+}
+.login form{
+  max-width: 530px;
+  min-width: 250px;
+  position: relative;
+  top: 5px;
+  margin: 0px auto;
+  padding: 50px 50px 40px 50px;
+  background-color: rgba(245, 245, 245, 0.1);
+  border-radius: 10px;
+  box-shadow:  #ccc 5px 5px 25px;
+}
+.login form label{
+  color: #6b6a6a;
+  font-size: 15px;
+  font-weight: 500;
+}
+.login form .error{
+  position: relative;
+  top: 3px;
+  color: #d06666;
+  height: 15px;
+}
+.login form .pin_code{
+  width: 80%;
+  display: inline-block;
+}
+.login form  img{
+  position: relative;
+  width: 75px;
+  height: 30px;
+  left: 10px;
+  background-color: #ccc;
+}
+.login form button{
+  position:relative;
+  width: 30%;
+  min-width: 80px;
+}
+.login .footer{
+  margin: 20px auto;
+  text-align: center;
+}
+.login button a{
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+/*************product table *********************/
+#product {
+  height: 600px;
+}
+
+
+
+.bt1{
+  color: red;
+}

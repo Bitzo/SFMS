@@ -878,37 +878,6 @@ exports.queryOrderProduct = function(data, callback) {
         }
     }
 
-    //产品种类和数量的查询sql拼接
-    var tempSql = '',
-        tempArr = orderProductData['jit_orderproduct.ProductID'],
-        tempArrLength = tempArr.length;
-    if (tempArrLength != 0) {
-        for (var i = 0; i < tempArrLength; i++) {
-            if (tempSql.length == 0) {
-                tempSql += ' and jit_orderproduct.ProductID in (' + tempArr[i];
-            } else {
-                tempSql += ' ,' + tempArr[i];
-            }
-        }
-        tempSql += ' ) ';
-        query_sql += tempSql;
-    }
-
-    tempSql = '';
-    tempArr = orderProductData['jit_orderproduct.ProductCount'];
-    tempArrLength = tempArr.length;
-    if (tempArrLength != 0) {
-        for (var i = 0; i < tempArrLength; i++) {
-            if (tempSql.length == 0) {
-                tempSql += ' and jit_orderproduct.ProductCount in (' + tempArr[i];
-            } else {
-                tempSql += ' ,' + tempArr[i];
-            }
-        }
-        tempSql += ' ) ';
-        query_sql += tempSql;
-    }
-
     var num = pageManageData.pageNum; //每页显示的个数
     var page = pageManageData.page || 1;
 
@@ -967,37 +936,6 @@ exports.CountOrderProduct = function(data, callback) {
                 }
             }
         }
-    }
-
-    //产品种类和数量的查询sql拼接
-    var tempSql = '',
-        tempArr = orderProductData['jit_orderproduct.ProductID'],
-        tempArrLength = tempArr.length;
-    if (tempArrLength != 0) {
-        for (var i = 0; i < tempArrLength; i++) {
-            if (tempSql.length == 0) {
-                tempSql += ' and jit_orderproduct.ProductID in (' + tempArr[i];
-            } else {
-                tempSql += ' ,' + tempArr[i];
-            }
-        }
-        tempSql += ' ) ';
-        sql += tempSql;
-    }
-
-    tempSql = '';
-    tempArr = orderProductData['jit_orderproduct.ProductCount'];
-    tempArrLength = tempArr.length;
-    if (tempArrLength != 0) {
-        for (var i = 0; i < tempArrLength; i++) {
-            if (tempSql.length == 0) {
-                tempSql += ' and jit_orderproduct.ProductCount in (' + tempArr[i];
-            } else {
-                tempSql += ' ,' + tempArr[i];
-            }
-        }
-        tempSql += ' ) ';
-        sql += tempSql;
     }
 
     sql += ';'; //sql拼接结束

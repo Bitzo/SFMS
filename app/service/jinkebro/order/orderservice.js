@@ -192,14 +192,14 @@ Order.prototype.queryOrders = function(data, callback) {
 
     var formdata = {
         pageManage: {
-            page: data.page,
-            pageNum: data.pageNum,
+            page: data.page || 1,
+            pageNum: data.pageNum || config.pageCount,
             isPaging: data.isPaging || 0
         },
         order: {
-            "jit_order.OrderID": data.OrderID,
-            "jit_order.OrderStatus": data.OrderStatus,
-            "jit_order.IsActive": data.IsActive
+            "jit_order.OrderID": data.OrderID || '',
+            "jit_order.OrderStatus": data.OrderStatus || '',
+            "jit_order.IsActive": data.IsActive || ''
         }
     };
 
@@ -291,14 +291,14 @@ Order.prototype.CountOrders = function(data, callback) {
 
     var formdata = {
         pageManage: {
-            page: data.page,
-            pageNum: data.pageNum,
-            isPaging: data.isPaging
+            page: data.page || 1,
+            pageNum: data.pageNum || 20,
+            isPaging: data.isPaging || 1
         },
         order: {
             "jit_order.OrderID": data.OrderID,
-            "jit_order.OrderStatus": data.OrderStatus,
-            "jit_order.IsActive": data.IsActive
+            "jit_order.OrderStatus": data.OrderStatus || '',
+            "jit_order.IsActive": data.IsActive || ''
         }
     };
 
