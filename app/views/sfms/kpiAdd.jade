@@ -1,9 +1,12 @@
 link(rel='stylesheet' href="css/backend/role.css")
+//link(rel='stylesheet', href="bower_components/bootstrap-fileinput/css/fileinput.min.css")
+//script(src="/bower_components/bootstrap-fileinput/js/fileinput.min.js" type="text/javascript")
+//script(src="/bower_components/bootstrap-fileinput/js/locales/zh.js" type="text/javascript")
 block content
   div.container-fluid
     span 
       h2 绩效新增
-    form(method="post",name="kpiAdd",ng-controller="sfmsApiFinanceAddController")
+    form(method="post",name="kpiAdd",enctype="multipart/form-data",ng-controller="sfmsApiFinanceAddController")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
@@ -16,7 +19,7 @@ block content
           td(width="15%",class="tableleft") 绩效类型
           td
             jason-select.input(name='KPIType',ng-model='formdata.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
-    
+
         tr
           td(width="15%",class="tableleft") 所属项目
           td
@@ -35,7 +38,12 @@ block content
             textarea(type="textview",name="Remark",ng-model='formdata.Remark',rows="5",cols="30",ng-maxlength='45',required)
             
             small.error(ng-if="kpiAdd.Remark.$error.maxlength && kpiAdd.Remark.$touched") 备注最多45位
-            
+
+        tr
+          td(width="15%",class="tableleft") 相关材料
+            td
+              input.file(id="file" type="file" ng-model="formdata.file")
+
         tr
           td(class="tableleft")
           td

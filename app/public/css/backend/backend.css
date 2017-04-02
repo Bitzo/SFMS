@@ -32,3 +32,16 @@ table .arrow{
         margin-left: 50px;
     }
 }
+.error{
+    position: relative;
+    color: #d02125;
+    height: 15px;
+    font-size: 15px;
+}
+.panel{
+    margin: 30px;
+    max-height:220px;
+}
+.panel-body{
+    height: 200px;
+}

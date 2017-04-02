@@ -1,0 +1,14 @@
+//
+   Created by Lenovo on 2017/3/29.
+
+link(rel='stylesheet', href='css/backend/backend.css')
+block content
+    h1 相关通知
+    hr
+    form(ng-controller="messageController")
+        div.panel.panel-info(ng-repeat="x in datas")
+            div.panel-heading
+                h1.panel-title {{x.MessageTitle}}
+            div.panel-body(style="position:relative;")
+                p(style="font-size:16px") {{x.MessageContent}}
+                p.pull-right.bottom(style="font-size:15px;bottom:20px;position:absolute;right:20px") {{x.UserName}} &nbsp;&nbsp; {{x.CreateTime}}

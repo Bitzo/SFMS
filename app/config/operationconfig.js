@@ -457,6 +457,33 @@ var operationConfig = {
                 identifier: 3304
             },
         },
+        MessageManage: {
+            module: "通知模块",
+            MessageQuery: {
+                actionName: "通知查看",
+                identifier: 3401
+            },
+            MessageManage: {
+                actionName: "通知管理",
+                identifier: 3402
+            },
+            MessageAdd: {
+                actionName: "通知新增",
+                identifier: 3403
+            },
+            MessageEdit: {
+                actionName: "通知编辑",
+                identifier: 3404
+            },
+            MessageReuse: {
+                actionName: "通知启用",
+                identifier: 3405
+            },
+            MessageForbid: {
+                actionName: "通知禁用",
+                identifier: 3406
+            },
+        },
     },
     weChat: {
         applicationID: 4,
