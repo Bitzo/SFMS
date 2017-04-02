@@ -311,15 +311,16 @@ router.get('/', function (req, res) {
 });
 
 router.get('/wechat', function (req, res) {
-
     var f = JSON.parse(req.query.f);
     //接收前端数据
     var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
         pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
         OrderID = f.OrderID || '',
-        WechatUserCode = req.query.WechatUserCode || '',
+        WechatUserCode = f.WechatUserCode || '',
         isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
-        CustomerID = req.query.CustomerID || '';
+        CustomerID = f.CustomerID || '';
+
+    console.log(f);
 
     page = page > 0 ? page : 1;
 
@@ -340,16 +341,13 @@ router.get('/wechat', function (req, res) {
         CustomerID: CustomerID
     };
 
-    console.log("in router");
-    console.log(sendData);
-
     orderService.CountOrders(sendData, function (err, results) {
         if (err) {
             res.status(500);
             return res.json({
                 code: 500,
                 isSuccess: false,
-                errorMsg: "查询失败，服务器内部错误"
+                msg: "查询失败，服务器内部错误"
             });
         }
 

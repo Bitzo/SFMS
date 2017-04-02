@@ -6,15 +6,25 @@ html(lang='en')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(href='assets/css/bootstrap.min.css', rel='stylesheet')
     link(rel='stylesheet',href='css/wechat/wechatShowProduct.css')
-body(ng-app='myApp', ng-controller='wechatProductController')
+body(ng-app='wechatApp', ng-controller='wechatProductController')
   div.login
     div.container.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
       h2.form-signin-heading 商品展示
-      div#product 123
+      div.panel.panel-info(ng-repeat="x in products")
+        div.panel-heading
+          h1.panel-title {{x.ProductName}}
+        div.panel-body(style="position:relative;")
+          p(style="font-size:16px") 价格: {{x.ProductPrice}}
+          p(style="font-size:16px") 类别: {{x.ProductTypeName}}
+          p(style="font-size:16px") 库存量: {{x.TotalNum}}
+          p 购买数量:
+            input(type='number',value='0',step='1',min='0',ng-model='x.OrderCount')
+          p.pull-right.bottom(style="font-size:15px;bottom:20px;position:absolute;right:20px") {{x.UserName}} &nbsp;&nbsp; {{x.CreateTime}}
       form(class='form-signin' name='signUpForm' method='post' role='form')
         div.form-group
-          button.btn.btn-lg.btn-primary.pull-right(type="submit" ng-click="") 提交订单
-script(src='assets/js/jquery-2.0.3.min.js')
-script(src='assets/js/bootstrap.min.js')
-script(src='/bower_components/angular/angular.min.js')
-script(src='/js/angularjs/controller/controllers.js')
+          button.btn.btn-lg.btn-primary.pull-right(type="submit" ng-click="submitOrder()") 提交订单
+  script(src='assets/js/jquery-2.0.3.min.js')
+  script(src='assets/js/bootstrap.min.js')
+  script(src='/bower_components/angular/angular.min.js')
+  script(src='/js/angularjs/controller/controllers.js')
+  script(src='/js/angularjs/controller/wechatController.js')

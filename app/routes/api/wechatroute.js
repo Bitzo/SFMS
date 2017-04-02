@@ -507,4 +507,64 @@ router.post('/accesscheck', function(req, res) {
     wechat.handleWechatMsg(req, res);
 });
 
+//微信页面调用的插入订单的接口
+router.post('/addOrder',function (req,res) {
+
+    var formdata = req.body.formdata;
+    var orderProducts = formdata.orderProduct;
+    var fromUserName = formdata.wechatUserCode;
+    var submitMsg = '';
+
+    for (var i=0; i<orderProducts.length; ++i) {
+        if (i>0) {
+            submitMsg += '|' + orderProducts[i].ProductID + '#' + orderProducts[i].OrderCount;
+        } else {
+            submitMsg += orderProducts[i].ProductID + '#' + orderProducts[i].OrderCount;
+        }
+
+    }
+    console.log(submitMsg);
+    console.log(fromUserName);
+
+    if (! /^(\d+#\d+)$/.test(submitMsg) && !/^((\d+#\d+\|)+(\d+#\d+))$/.test(submitMsg)) {
+        res.status(400);
+        return res.json({
+            code : 400,
+            isSuccess : false,
+            msg : '数据格式有误,请检查!'
+        });
+    }
+
+    orderService.insertOrderInfo(submitMsg, fromUserName, function(err, orderInfo) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code : 500,
+                isSuccess : false,
+                msg : '服务器内部错误,请稍后重试!'
+            });
+        }
+        console.log(orderInfo);
+        if (orderInfo && orderInfo[0].OrderID) {
+            res.status(200);
+            return res.json({
+                code : 200,
+                isSuccess : true,
+                msg : '下单成功,您的订单号为:' + orderInfo[0].OrderID,
+                data : orderInfo
+            });
+        } else {
+            res.status(404);
+            return res.json({
+                code : 404,
+                isSuccess : false,
+                msg : '下单失败,请稍后重试!'
+            });
+        }
+
+
+    });
+
+});
+
 module.exports = router;

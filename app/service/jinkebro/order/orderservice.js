@@ -199,7 +199,8 @@ Order.prototype.queryOrders = function(data, callback) {
         order: {
             "jit_order.OrderID": data.OrderID || '',
             "jit_order.OrderStatus": data.OrderStatus || '',
-            "jit_order.IsActive": data.IsActive || ''
+            "jit_order.IsActive": data.IsActive || '',
+            "jit_customer.WechatUserCode" : data.WechatUserCode || ''
         }
     };
 
@@ -298,7 +299,8 @@ Order.prototype.CountOrders = function(data, callback) {
         order: {
             "jit_order.OrderID": data.OrderID,
             "jit_order.OrderStatus": data.OrderStatus || '',
-            "jit_order.IsActive": data.IsActive || ''
+            "jit_order.IsActive": data.IsActive || '',
+            "jit_customer.WechatUserCode" : data.WechatUserCode || ''
         }
     };
 
