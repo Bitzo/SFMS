@@ -310,6 +310,136 @@ router.get('/', function (req, res) {
     });
 });
 
+router.get('/wechat', function (req, res) {
+    var f = JSON.parse(req.query.f);
+    //接收前端数据
+    var page = (req.query.pageindex || req.query.pageindex) ? (req.query.pageindex || req.query.pageindex) : 1,
+        pageNum = (req.query.pagesize || req.query.pagesize) ? (req.query.pagesize || req.query.pagesize) : 20,
+        OrderID = f.OrderID || '',
+        WechatUserCode = f.WechatUserCode || '',
+        isPaging = (req.query.isPaging != undefined) ? (req.query.isPaging) : 1, //是否分页 0表示不分页,1表示分页
+        CustomerID = f.CustomerID || '';
+
+    console.log(f);
+
+    page = page > 0 ? page : 1;
+
+    if (pageNum == '') {
+        pageNum = config.pageCount;
+    }
+
+    //用于查询结果总数的计数
+    var countNum = 0;
+
+    // 传到dal的数据
+    var sendData = {
+        page: page,
+        pageNum: pageNum,
+        isPaging: isPaging,
+        OrderID: OrderID,
+        WechatUserCode: WechatUserCode,
+        CustomerID: CustomerID
+    };
+
+    orderService.CountOrders(sendData, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: "查询失败，服务器内部错误"
+            });
+        }
+
+        if (results == undefined || results.length == 0 || results[0]['num'] <= 0) {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相应订单"
+            });
+        }
+
+        countNum = results[0]['num'];
+
+        //所有的订单数据 result
+        orderService.queryOrders(sendData, function (err, result) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: "查询失败，服务器内部错误"
+                });
+            }
+
+            if (result == undefined || result.length == 0) {
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: "未查询到相应订单"
+                });
+            }
+
+            var resultBack = {
+                code: 200,
+                isSuccess: true,
+                msg: '查询成功',
+                dataNum: countNum,
+                curPage: page,
+                curPageNum: pageNum,
+                totalPage: Math.ceil(countNum / pageNum),
+                data: result
+            };
+
+            if (resultBack.curPage == resultBack.totalPage) {
+                resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
+            }
+            //执行顺序1
+            var queueAllResult = [];
+            var flag = 0;
+            // 去计算价格
+            async.map(result, function (item, callback) {
+                var tempOrderID = item.OrderID;
+                orderService.queryOrderProduct({ "OrderID": tempOrderID }, function (err, tags) {
+                    var tempSumOfMoney = 0;
+                    var productArr = [];
+                    for (var i = 0; i < tags.length; i++) {
+                        tempSumOfMoney += tags[i].ProductPrice * tags[i].ProductCount;
+                        productArr.push({
+                            ProductName : tags[i].ProductName,
+                            ProductPrice : tags[i].ProductPrice,
+                            ProductCount : tags[i].ProductCount,
+                            totalMoney : tags[i].ProductPrice * tags[i].ProductCount
+                        });
+                    }
+                    item['productInfo'] = productArr;
+                    item['totalMoney'] = tempSumOfMoney.toFixed(2);
+                    callback(null, item);
+                })
+            }, function (err, results1) {
+                // !!!!!! 在此res.status() 、 res.json()  !!!!!!
+                //执行顺序2
+                for (var i = 0; i < results1.length; i++) {
+                    queueAllResult[i] = results1[i];
+                    if (i == results1.length - 1) {
+                        flag = 1;
+                    }
+                }
+
+                if (flag == 1) {
+                    res.status(200);
+                    return res.json(resultBack);
+                }
+
+            });
+        });
+    });
+
+
+});
+
 /**
  * 使用事务新增一条订单的路由
  * success-responce:

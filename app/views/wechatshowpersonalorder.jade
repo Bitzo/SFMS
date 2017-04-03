@@ -1,0 +1,28 @@
+//
+   Created by Cecurio on 2017/3/29.
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title #{title}
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(href='assets/css/bootstrap.min.css', rel='stylesheet')
+    link(rel='stylesheet',href='css/wechat/wechatshowpersonalorder.css')
+  body(ng-app='wechatApp',ng-controller='wechatshowpersonalorder')
+    div.login
+      div.container.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
+        h2.form-signin-heading 个人订单
+        div.panel.panel-info(ng-repeat="x in orders")
+          div.panel-heading
+            h1.panel-title 订单号: {{x.OrderID}} &nbsp;&nbsp; 下单时间: {{x.OrderTime}}
+          div.panel-body(style="position:relative;")
+            p(style="font-size:16px") 支付方式: {{x.PayMethodDesc}}
+            p(style="font-size:16px") 订单状态: {{x.OrderStatusDesc}}
+            p(style="font-size:16px") 总金额: {{x.totalMoney}}
+            p(ng-repeat="item in x.productInfo") 商品名称: {{item.ProductName}}, &nbsp;&nbsp; 所购数量: {{item.ProductCount}}, &nbsp;&nbsp; 单个商品总金额:{{item.totalMoney}}
+            p.pull-right.bottom(style="font-size:15px;bottom:20px;position:absolute;right:20px") {{x.UserName}} &nbsp;&nbsp; {{x.CreateTime}}
+  script(src='assets/js/jquery-2.0.3.min.js')
+  script(src='assets/js/bootstrap.min.js')
+  script(src='/bower_components/angular/angular.min.js')
+  //script(src='/js/angularjs/controller/controllers.js')
+  script(src='/js/angularjs/controller/wechatController.js')

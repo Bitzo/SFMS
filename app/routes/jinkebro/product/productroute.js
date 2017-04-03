@@ -522,4 +522,113 @@ router.get('/', function (req, res) {
     });
 });
 
+//查看产品
+router.get('/wechat', function (req, res) {
+
+    var query = JSON.parse(req.query.f);
+    var page = (req.query.pageindex != undefined) ? (req.query.pageindex) : 1,
+        pageNum = (req.query.pagesize != undefined) ? (req.query.pagesize) : (config.pageCount),
+        ProductID = query.ProductID || '',
+        OnSale = query.OnSale ? query.OnSale : 1,
+        isPaging = (req.query.isPaging !== undefined) ? (req.query.isPaging) : 0; //是否分页 0表示分页,1表示不分页
+
+    page = page > 0 ? page : 1;
+
+    if (pageNum == '') {
+        pageNum = config.pageCount;
+    }
+
+    //用于查询结果总数的计数
+    var countNum = 0;
+
+    var data = {
+        page: page || 1,
+        pageNum: pageNum || config.pageCount,
+        ProductID: ProductID || '',
+        OnSale: OnSale || '',
+        isPaging: isPaging || '',
+        OperateUserID : req.query.jitkey
+    };
+
+    var intdata = {
+        page: page,
+        pageNum: pageNum,
+        ProductID: ProductID,
+        OnSale: OnSale,
+        isPaging: isPaging
+    };
+
+    for (var key in intdata) {
+        if (isNaN(intdata[key]) && intdata[key] != '') {
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: key + ": " + intdata[key] + '不是数字'
+            });
+        }
+    }
+
+    productService.CountProducts(data, function (err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                errorMsg: "查询失败，服务器内部错误"
+            });
+        }
+
+        if (results == undefined || results.length <= 0 || results[0]['num'] <= 0 || results.length == undefined) {
+            res.status(404);
+            return res.json({
+                code: 404,
+                isSuccess: false,
+                msg: "未查询到相应商品！"
+            });
+        }
+
+        countNum = results[0]['num'];
+
+        productService.queryProducts(data, function (err, result) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: "查询失败，服务器内部错误"
+                });
+            }
+
+            if (result == undefined || result.length == 0 && result.length == undefined) {
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: "未查询到相应商品！"
+                });
+            }
+
+            var resultBack = {
+                code: 200,
+                isSuccess: true,
+                msg: '查询成功',
+                dataNum: countNum,
+                curPage: page,
+                curPageNum: pageNum,
+                totalPage: Math.ceil(countNum / pageNum),
+                data: result
+            };
+
+            if (resultBack.curPage == resultBack.totalPage) {
+                resultBack.curPageNum = resultBack.dataNum - (resultBack.totalPage - 1) * pageNum;
+            }
+
+            res.status(200);
+            return res.json(resultBack);
+        });
+    });
+
+});
+
 module.exports = router;

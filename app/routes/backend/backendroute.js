@@ -41,6 +41,17 @@ router.get('/index', function(req, res, next) {
   });
 });
 
+router.get('/wechatShowProduct', function(req, res, next) {
+    res.render('wechatShowProduct', {
+        title: '金科小哥微信商品展示'
+    });
+});
+
+router.get('/wechatshowpersonalorder', function(req, res, next) {
+    res.render('wechatshowpersonalorder', {
+        title: '金科小哥微信个人订单'
+    });
+});
 /*router.get('/index', function(req, res, next) {
         res.render('backend/index', { title: 'Hi backend' });
 
