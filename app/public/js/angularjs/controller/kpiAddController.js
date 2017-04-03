@@ -74,24 +74,6 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
 
     };
 
-    //提交表单
-    $scope.addnew = function(formdata,action) {
-        console.log($scope.formdata);
-        $http({
-            method:'post',
-            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            data:{
-                formdata:$scope.formdata
-            }
-        }).
-        success(function(response) {
-            alert(response.msg);
-        }).
-        error(function(response) {
-            alert(response.msg);
-        });
-    };
-
     //bootstrap-fileinput 组件相关
 
     //初始化
@@ -111,9 +93,11 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
         var mymessage=confirm("是否确认删除此项");
         if(mymessage){
             $scope.files.splice(item.$index,1);
+            files.splice(item.$index,1);
         }
     };
 
+    //获取文件地址，用于预览
     function getObjectURL(file) {
         var url = null;
         if (window.createObjectURL!=undefined) { // basic
@@ -126,6 +110,7 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
         return url ;
     }
 
+    //更改文件大小变量
     function bytesToSize(bytes) {
         if (bytes === 0) return '0 B';
         var k = 1000, // or 1024
@@ -135,10 +120,16 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
     }
 
+    //用于页面上的显示
     $scope.files = [];
+    //暂时存放将要显示的文件的一些信息
     var file = '';
+    //暂时的文件对象
     var tempFile = '';
+    //存放确认需要提交的图片文件
     var files = [];
+
+    //当选择的文件更改时，重新设置变量
     $("#file").change(function(){
         tempFile = this.files[0];
         console.log(tempFile)
@@ -154,9 +145,15 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
         }
     });
 
+    //将图片文件添加到数组里，待与表单一起提交。
     $scope.addFile = function () {
         if(file === '') {
             alert('请选择文件！');
+            return;
+        }
+        if(tempFile.type.split('/')[0] !== 'image')
+        {
+            alert('请选择图片格式的文件！');
             return;
         }
         $scope.files.push(file);
@@ -165,34 +162,25 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
         tempFile = '';
     };
 
-    $scope.submit = function () {
-        console.log(files);
 
-        if(files.length == 0){
-            alert('请选择文件');
-            return;
-        }else{
-
-            $http({
-                method:'post',
-                headers: {
-                    'Content-Type': undefined
-                },
-                url:"sfms/api/kpi?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-
-                data:{
-                    file: files
-                }
-            }).
-            success(function(response) {
-                alert(response.msg);
-            }).
-            error(function(response) {
-                alert(response.msg);
-            });
-
-            alert('OK');
-        }
-    }
+    //提交表单
+    $scope.addnew = function(formdata,action) {
+        console.log(formdata)
+        console.log(files)
+        $http({
+            method:'post',
+            url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata:$scope.formdata,
+                files: files
+            }
+        }).
+        success(function(response) {
+            alert(response.msg);
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
 
 });

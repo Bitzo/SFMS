@@ -30,6 +30,13 @@ var express = require('express'),
  *  5、数据获取并验证完毕后再存入KPI数据
  */
 router.post('/', function (req, res) {
+    console.log(req.body);
+    res.json({
+        code: 200,
+        isSuccess: true,
+        msg: '测试'
+    })
+    return;
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPIAdd.functionCode
