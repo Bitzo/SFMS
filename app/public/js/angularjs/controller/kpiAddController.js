@@ -7,6 +7,11 @@
  */
 myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
 
+        $("#input-44").fileinput({
+            uploadUrl: '/sfms/api/project/file'+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            maxFilePreviewSize: 10240
+        });
+
 
         //实验室管理系统-绩效管理-新增页面-项目名称  动态变化
     $scope.userKpiChanged = function() {

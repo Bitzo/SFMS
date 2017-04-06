@@ -39,7 +39,7 @@ block content
 
         tr
           td(width="15%",class="tableleft") 相关材料
-            td
+            //td
               div(ng-repeat="x in files" style="width:210px; height:270px; display: inline-block; ")
                 img(style="max-width:200px;max-height:200px;border:solid 1px grey; display: block;margin: auto" src="{{x.url}}" alt="图片预览，请使用支持H5的浏览器")
                 p(style="text-align: center") {{x.fileName}}
@@ -48,7 +48,10 @@ block content
               div
                 input.file.files(type="file" id="file" style="min-width:300px; display:inline-block")
                 button.btn.btn-sm.btn-default(ng-click="addFile()") 添加文件
-
+          td
+            label.control-label Select File
+            input#input-44.file-loading(name="input44[]", type="file", multiple="")
+            #errorBlock.help-block
         tr
           td(class="tableleft")
           td
