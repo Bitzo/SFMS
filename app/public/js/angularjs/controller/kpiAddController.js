@@ -7,13 +7,37 @@
  */
 myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
 
-        $("#input-44").fileinput({
-            uploadUrl: '/sfms/api/project/file'+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
-            maxFilePreviewSize: 10240
-        });
+    $("#input-44").fileinput({
+        uploadUrl: '/sfms/api/kpi/file'+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+        allowedFileExtensions: ['jpg', 'png'],
+        showUploadedThumbs:false,
+        maxFileCount: 5,
+        language : 'zh',
+        maxFilePreviewSize: 10240,
+        uploadExtraData: function (previewId, index) {
+            var ID = {
+                ID:$scope.kpiMaterialID
+            };
+            return ID;
+        }
+    });
 
+    //bootstrap-fileinput 组件相关
 
-        //实验室管理系统-绩效管理-新增页面-项目名称  动态变化
+    //初始化
+    // $("#file").fileinput({
+    //     uploadUrl: '#', // you must set a valid URL here else you will get an error
+    //     allowedFileExtensions : ['jpg', 'png','gif'],
+    //     overwriteInitial: false,
+    //     maxFileSize: 1000,
+    //     maxFilesNum: 10,
+    //     //allowedFileTypes: ['image', 'video', 'flash'],
+    //     slugCallback: function(filename) {
+    //         return filename.replace('(', '_').replace(']', '_');
+    //     }
+    // });
+
+    //实验室管理系统-绩效管理-新增页面-项目名称  动态变化
     $scope.userKpiChanged = function() {
         console.log($scope.formdata.UserID)
         $http({
@@ -33,8 +57,7 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
         }).
         error(function(response) {
         });
-
-    }
+    };
 
     //实验室管理系统-绩效管理-编辑页面-项目名称  初始化
     $http({
@@ -78,21 +101,6 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
         });
 
     };
-
-    //bootstrap-fileinput 组件相关
-
-    //初始化
-    // $("#file").fileinput({
-    //     uploadUrl: '#', // you must set a valid URL here else you will get an error
-    //     allowedFileExtensions : ['jpg', 'png','gif'],
-    //     overwriteInitial: false,
-    //     maxFileSize: 1000,
-    //     maxFilesNum: 10,
-    //     //allowedFileTypes: ['image', 'video', 'flash'],
-    //     slugCallback: function(filename) {
-    //         return filename.replace('(', '_').replace(']', '_');
-    //     }
-    // });
 
     $scope.removeFile = function (item) {
         var mymessage=confirm("是否确认删除此项");
@@ -187,5 +195,4 @@ myApp.controller('kpiAddController', function($scope, $http,$q,baseService) {
             alert(response.msg);
         });
     };
-
 });

@@ -136,9 +136,11 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }
     };
 
-
-    
-
+    $scope.kpiMaterialID = 0;
+    $scope.getID = function (ID) {
+        $scope.kpiMaterialID = ID;
+        console.log($scope.kpiMaterialID);
+    };
 
     //新增页面  添加
     $scope.formdata={};

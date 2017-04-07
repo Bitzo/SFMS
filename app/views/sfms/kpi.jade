@@ -1,6 +1,18 @@
-link(rel='stylesheet', href='css/backend/backend.css')   
+link(rel='stylesheet', href='css/backend/backend.css')
 block content
   jason-pagecontent(action='/sfms/api/kpi/person',conf='paginationConf')
+    div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+      div.modal-dialog(style="width:800px")
+        div.modal-content
+          div.modal-body
+            h4.modal-title(id="myModalLabel") 提交相关证明材料
+              button.close(type="button",data-dismiss="modal" aria-hidden="true") &times;
+            form(method="post",name="kpiAdd",enctype="multipart/form-data",ng-controller="kpiAddController")
+              tr
+                td
+                  input#input-44.file-loading(name="input44[]", type="file", multiple="", )
+                  #errorBlock.help-block
+            button.btn.btn-default(type="button",data-dismiss="modal") Close
     div.page-content
       ng-form.form-inline
         span.title  绩效管理
@@ -37,7 +49,7 @@ block content
             th 备注
             th 审核状态
             th 是否有效
-            th(style="width:100px;") 操作
+            th(style="width:70px;") 操作
         tbody
           tr(ng-repeat="x in datas") 
             td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
@@ -55,5 +67,8 @@ block content
             td
               a(href='#/sfms/kpiEdit/?ID={{x.ID}}')
                 i.icon.icon-edit 编辑
+              br
+              a(data-toggle="modal",data-target="#myModal",ng-click="getID(x.ID)",href='')
+                i.icon.icon-zoom-in 添加相关材料
       div.pull-right
         jason-pagination(conf='paginationConf')

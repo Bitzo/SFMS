@@ -18,7 +18,57 @@ var express = require('express'),
     logger = appRequire("util/loghelper").helper,
     functionConfig = appRequire('config/functionconfig'),
     nodeExcel = require('excel-export'),
-    userFuncService = appRequire('service/backend/user/userfuncservice');
+    userFuncService = appRequire('service/backend/user/userfuncservice'),
+    formidable=require('formidable'),
+    fs = require('fs');
+
+//KPI证明材料接收
+router.post('/file', function (req, res) {
+    // parse a file upload
+    var form = new formidable.IncomingForm(),files=[],fields=[],docs=[];
+    console.log('start upload');
+    var ID = 0,
+        fileID = 0;
+    //存放目录
+    form.uploadDir = 'public/imgs/KPIMaterial';
+    var isDelete = 0;
+
+    form.on('field', function(field, value) {
+        // console.log(field, value);
+        // fields.push([field, value]);
+        if(field == 'ID') ID = value;
+        else fileID = value;
+
+    }).on('file', function(field, file) {
+        // console.log(field, file);
+        files.push([field, file]);
+        docs.push(file);
+
+        var types = file.name.split('.')[1];
+        var date = moment().format("YYYYMMDD");
+        fs.renameSync(file.path, "public/imgs/KPIMaterial/KPIMaterial" + date + '_'+ ID + '_' + fileID + '.' + types);
+    }).on('end', function() {
+        res.writeHead(200, {
+            'content-type': 'text/plain'
+        });
+        var out={
+            Resopnse:{
+                'result-code':0,
+                timeStamp:new Date(),
+            },
+            files:docs
+        };
+        var sout=JSON.stringify(out);
+        res.end(sout);
+    });
+
+    form.parse(req, function(err, fields, files) {
+        err && console.log('formidabel error : ' + err);
+
+        console.log('parsing done');
+    });
+});
+
 
 /**
  * KPI信息新增：
@@ -30,13 +80,6 @@ var express = require('express'),
  *  5、数据获取并验证完毕后再存入KPI数据
  */
 router.post('/', function (req, res) {
-    console.log(req.body);
-    res.json({
-        code: 200,
-        isSuccess: true,
-        msg: '测试'
-    })
-    return;
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPIAdd.functionCode
