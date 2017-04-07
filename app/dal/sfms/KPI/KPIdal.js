@@ -143,11 +143,26 @@ exports.queryKPI = function (data, callback) {
 
     if (data !== undefined) {
         for (var key in data) {
-            if ( key !== 'page' && key !== 'pageNum' && data[key] !== '' && key !== 'StartTime' && key !== 'EndTime' ) {
+            if ( key !== 'page' && key !== 'pageNum' && data[key] !== ''
+                && key !== 'StartTime' && key !== 'EndTime' && key !== 'ProjectID') {
                 if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
                 else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
+    }
+    if(Array.isArray(data['ProjectID'])){
+        sql += ' and ( ';
+        for (var i in data['ProjectID']){
+            if(i==0){
+                sql += 'ProjectID = ' + data['ProjectID'][i];
+            }else{
+                sql += ' or ProjectID = ' + data['ProjectID'][i];
+            }
+        }
+        sql += ' )'
+    }else{
+        if(data['ProjectID']!=='')
+            sql += ' and ProjectID = ' + data['ProjectID'];
     }
 
     if (data.StartTime !== '') sql += "and jit_kpiinfo.CreateTime > '" + data.StartTime + "' ";

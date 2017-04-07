@@ -118,6 +118,10 @@ router.get('/kpiManage', function(req, res, next) {
         res.render('sfms/kpiManage', { title: 'Hi sfms' });
 });
 
+router.get('/kpiLead', function(req, res, next) {
+    res.render('sfms/kpiLead', { title: 'Hi sfms' });
+});
+
 router.get('/kpiManageAdd', function(req, res, next) {
         res.render('sfms/kpiManageAdd', { title: 'Hi sfms' });
 });

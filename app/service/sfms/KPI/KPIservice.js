@@ -185,6 +185,7 @@ exports.countQuery = function (data, callback) {
         'ProjectID': data.ProjectID || '',
         'UserID': data.UserID || '',
         'KPIStatus': data.KPIStatus || '',
+        'KPIType': data.KPIType || '',
         'StartTime': data.StartTime || '',
         'EndTime': data.EndTime || '',
         'jit_kpiinfo.IsActive': data.IsActive || ''

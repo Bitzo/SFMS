@@ -143,8 +143,9 @@ exports.judgeUserProject = function (data, callback) {
         'operateUserID':data.operateUserID
     },
         results = {
-        isSuccess: false,
-        msg: ''
+            isSuccess: false,
+            msg: '',
+            isProjectManger: false
     };
 
     if (formdata.userID <= 0 || isNaN(formdata.userID)) {
@@ -173,7 +174,10 @@ exports.judgeUserProject = function (data, callback) {
                     return callback(true, results);
                 }
 
-                if (ProjectManageID == formdata.userID) isIn = true;
+                if (ProjectManageID == formdata.userID) {
+                    isIn = true;
+                    results.isProjectManger = true;
+                }
 
                 if(results!==undefined && !isIn) {
                     for (var i in results) {
