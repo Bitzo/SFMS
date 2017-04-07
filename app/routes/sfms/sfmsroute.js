@@ -122,6 +122,10 @@ router.get('/kpiLead', function(req, res, next) {
     res.render('sfms/kpiLead', { title: 'Hi sfms' });
 });
 
+router.get('/kpiLeadCheck', function(req, res, next) {
+    res.render('sfms/kpiLeadCheck', { title: 'Hi sfms' });
+});
+
 router.get('/kpiManageAdd', function(req, res, next) {
         res.render('sfms/kpiManageAdd', { title: 'Hi sfms' });
 });

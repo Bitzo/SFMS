@@ -54,7 +54,7 @@ block content
                         td {{x.KPIStatus}}
                         td {{x.IsActive | numToChin:data.IsActive }}
                         td
-                            a(href='#/sfms/kpiManageCheck/?ID={{x.ID}}' )
+                            a(href='#/sfms/kpiLeadCheck/?ID={{x.ID}}' )
                                 i.icon.icon-edit 审核&nbsp
                             button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.KPIName,'/sfms/api/kpi')",href='',ng-disabled='x.IsActive')
                                 i.icon.icon-ok 启用

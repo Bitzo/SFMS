@@ -11,4 +11,5 @@ results
 npm-debug.log
 node_modules
 .idea
-/public/imgs/KPIMaterial/*
+/public/imgs/KPIMaterial/*.jpg
+/public/imgs/KPIMaterial/*.png
