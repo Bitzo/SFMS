@@ -3,6 +3,15 @@ block content
   div.container-fluid
     span 
       h2 绩效审核
+    div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+      div.modal-dialog(style="width:80%")
+        div.modal-content
+          div.modal-body
+            h3.modal-title(id="myModalLabel") 详细预览
+            h6 {{fileName}}
+            hr
+            img(style="max-width:80%;max-height:80%;border:solid 1px grey; display: block;margin: auto" src="{{fileUrl}}" alt="图片预览，请使用支持H5的浏览器")
+            button.btn.btn-default(type="button",data-dismiss="modal") Close
     jason-form(method="post",source='/sfms/api/kpi',conf='paginationConf',tocc="KPIName,KPIType,UserID")
      form(name="kpiManageCheck")
       table.table.table-bordered.table-hover.definedwidth.m10
@@ -40,7 +49,15 @@ block content
           td(width="15%",class="tableleft") 绩效备注
           td
             span(type="textview",name="Memo",ng-model='paginationConf.formdata.Remark') {{paginationConf.formdata.Remark}}
-
+        tr
+          td(width="15%",class="tableleft") 相关材料
+          td
+            div(ng-repeat="x in paginationConf.formdata.files" style="width:210px; height:270px; margin-right:10px;display: inline-block; ")
+              a(href="", ng-click="showPic(x.fileName,x.fileUrl)",data-toggle="modal",data-target="#myModal")
+                img(style="max-width:200px;max-height:200px;border:solid 1px grey; display: block;margin: auto" src="{{x.fileUrl}}" alt="图片预览，请使用支持H5的浏览器")
+              //p(style="text-align: center") {{x.fileName}}
+              //p(style="text-align: center") {{x.size}}
+              //button.btn.btn-sm.btn-danger(ng-click="removeFile(this,x.fileName)" style="display: block; margin:5px auto") 删除文件
         tr
           td(class="tableleft") 审核结果
           td

@@ -111,11 +111,17 @@ myApp.config(function($routeProvider) {
     when('/sfms/kpiManage', {
         templateUrl: '/sfms/kpiManage?access_token=' + accesstokenstring,
     }).
+    when('/sfms/kpiLead', {
+        templateUrl: '/sfms/kpiLead?access_token=' + accesstokenstring,
+    }).
     when('/sfms/kpiManageAdd', {
         templateUrl: '/sfms/kpiManageAdd?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiManageCheck', {
         templateUrl: '/sfms/kpiManageCheck?access_token=' + accesstokenstring,
+    }).
+    when('/sfms/kpiLeadCheck', {
+        templateUrl: '/sfms/kpiLeadCheck?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiCount', {
         templateUrl: '/sfms/kpiCount?access_token=' + accesstokenstring,
