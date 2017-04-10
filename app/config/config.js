@@ -56,7 +56,7 @@ var config = {
     //金科小哥相关的
     jinkebro: {
         host: 'jit.upsnail.com',
-        baseUrl: 'http://jit.upsnail.com/',
+        baseUrl: 'http://duncan.ducnan.cn/',
         //host: 'http://d64a5cce.ngrok.io',
         //baseUrl: 'http://sun.tunnel.2bdata.com/',
         productInfo: 'jinkeBro/product/info',

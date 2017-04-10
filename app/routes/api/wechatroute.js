@@ -462,8 +462,7 @@ wechat.eventMsg(function(msg) {
             
             switch (msg.EventKey) {
 
-                case config.jinkebro.baseUrl + 'wechat/addressinfo':
-
+                case config.jinkebro.baseUrl + 'wechat/addressinfo':	
                     wechat.sendClickAddressEvent(msg);
                     break;
 
@@ -491,9 +490,12 @@ wechat.clickAddress(function(judgement, username) {
 /************************************************************************************/
 //渲染地址栏的页面//待改
 router.get('/addressinfo', function(req, res) {
-
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     var addressurl = config.jinkebro.baseUrl + 'wechat/' + wechat.data.FromUserName;
     //路由的重定义
+    console.log("**********************************************************");
+    console.log(addressurl);
+    console.log("***********************************************************");
     res.redirect(301, addressurl);
 
 });
