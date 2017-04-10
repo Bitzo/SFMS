@@ -1,0 +1,85 @@
+//
+   Created by Lenovo on 2017/4/7.
+
+link(rel='stylesheet' href="css/backend/role.css")
+block content
+    div.container-fluid
+        span
+            h2 绩效审核
+        div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+            div.modal-dialog(style="width:80%")
+                div.modal-content
+                    div.modal-body
+                        h3.modal-title(id="myModalLabel") 详细预览
+                        h6 {{fileName}}
+                        hr
+                        img(style="max-width:80%;max-height:80%;border:solid 1px grey; display: block;margin: auto" src="{{fileUrl}}" alt="图片预览，请使用支持H5的浏览器")
+                        button.btn.btn-default(type="button",data-dismiss="modal") Close
+        jason-form(method="post",source='/sfms/api/kpi',conf='paginationConf',tocc="KPIName,KPIType,UserID")
+            form(name="kpiManageCheck")
+                table.table.table-bordered.table-hover.definedwidth.m10
+                    tr
+                        td(width="15%",class="tableleft") 绩效名称
+                        td
+                            span(name='KPIName',ng-model='paginationConf.formdata.KPIName' ) {{paginationConf.formdata.KPIName}}
+
+                    tr
+                        td(width="15%",class="tableleft") 绩效类型
+                        td
+                            span(name='KPIType',ng-model='paginationConf.formdata.KPIType') {{paginationConf.formdata.KPITypeValue}}
+
+                    tr
+                        td(width="15%",class="tableleft") 绩效分
+                        td
+                            span(name="projectEndTime",ng-model="paginationConf.formdata.KPIScore") {{paginationConf.formdata.KPIScore}}
+
+                    tr
+                        td(width="15%",class="tableleft") 用户名
+                        td
+                            span(name='UserID',ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserName}}
+
+                    tr
+                        td(width="15%",class="tableleft") 所属项目
+                        td
+                            span(name='ProjectId',ng-model='paginationConf.formdata.ProjectId' ) {{paginationConf.formdata.ProjectName}}
+
+                    tr
+                        td(width="15%",class="tableleft") 申请时间
+                        td
+                            span(name='CreateTime',ng-model='paginationConf.formdata.CreateTime') {{paginationConf.formdata.CreateTime}}
+
+                    tr
+                        td(width="15%",class="tableleft") 绩效备注
+                        td
+                            span(type="textview",name="Memo",ng-model='paginationConf.formdata.Remark') {{paginationConf.formdata.Remark}}
+                    tr
+                        td(width="15%",class="tableleft") 相关材料
+                        td
+                            div(ng-repeat="x in paginationConf.formdata.files" style="width:210px; height:270px; margin-right:10px;display: inline-block; ")
+                                a(href="", ng-click="showPic(x.fileName,x.fileUrl)",data-toggle="modal",data-target="#myModal")
+                                    img(style="max-width:200px;max-height:200px;border:solid 1px grey; display: block;margin: auto" src="{{x.fileUrl}}" alt="图片预览，请使用支持H5的浏览器")
+                                //p(style="text-align: center") {{x.fileName}}
+                                //p(style="text-align: center") {{x.size}}
+                                //button.btn.btn-sm.btn-danger(ng-click="removeFile(this,x.fileName)" style="display: block; margin:5px auto") 删除文件
+                    tr
+                        td(class="tableleft") 审核结果
+                        td
+                            input(type="radio",name="IsActive",value="通过",ng-model="paginationConf.formdata.KPIStatus",style="width:15px;height:15px",checked)
+                            | 通过&nbsp&nbsp&nbsp
+
+                            input(type="radio",name="IsActive",value="不通过",ng-model="paginationConf.formdata.KPIStatus",style="width:15px;height:15px")
+                            |不通过
+
+                    tr
+                        td(width="15%",class="tableleft") 审核意见
+                        td
+                            textarea(type="textview",name="Memo",ng-model='paginationConf.formdata.Memo',rows="5",cols="30",ng-maxlength='45',required)
+
+                            small.error(ng-if="kpiManageCheck.Memo.$error.maxlength && kpiManageCheck.Memo.$touched") 审核意见最多45位
+
+                    tr
+                        td(class="tableleft")
+                        td
+                            button.btn.btn-sm.btn-primary(type="submit",ng-disabled="kpiManageCheck.$invalid",ng-click="newedit(formdata,'/sfms/api/kpi/check')") 确认审核
+
+                            a.btn.btn-sm.btn-success(href='#sfms/kpiLead',ng-click='search()') 返回列表

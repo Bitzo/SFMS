@@ -1,11 +1,11 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-  jason-pagecontent(action='/sfms/api/kpi',conf='paginationConf')
+  jason-pagecontent(action='/sfms/api/kpi/manage',conf='paginationConf')
     div.page-content
       ng-form.form-inline
-        span.title  绩效管理
+        span.title  绩效审核
         div.buttons.pull-right
-          label.form-group.my-form-group  绩效类型
+          //label.form-group.my-form-group  绩效类型
            jason-select.est(ng-model='f.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
           label.form-group.my-form-group  所属项目
            jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
@@ -17,8 +17,6 @@ block content
           label.form-group.my-form-group
             a.btn.btn-sm.btn-primary(ng-click='search()')
               i.icon.icon-search   查询
-            a.btn.btn-sm.btn-success(ng-href='#/sfms/kpiManageAdd')
-              i.icon.icon-plus 新建
             a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
               i.icon.icon-repeat  刷新
       hr
