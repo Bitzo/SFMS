@@ -23,7 +23,7 @@ App.controller('wechatshowpersonalorder', ['$scope', '$http', function ($scope, 
             url : 'jinkeBro/order/wechat',
             params : {
                 f : {
-                    WechatUserCode : "oW6zYv_xgJu0MbJrmM70X7blPpYo" 
+                    WechatUserCode : "oW6zYv4SQMzjk1-Ygj6eVTqXSxaM"
                 }
             }
         }).
