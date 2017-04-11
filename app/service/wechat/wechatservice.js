@@ -512,6 +512,7 @@ Weixin.prototype.getLocalAccessToken = function(operatorid, callback) {
         } else {
             if (token != 'null' && token != null) {
                 callback(true, token);
+                
             } else {
                 logger.writeInfo('redis中没有微信的token，准备从微信重新获取' + new Date());
 

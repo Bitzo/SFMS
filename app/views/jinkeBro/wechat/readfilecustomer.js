@@ -8,7 +8,7 @@
 var fs = require('fs');
 module.exports = function (res) {
 
-    fs.readFile(__dirname + '/customer.html', 'utf-8', function (err, data) {
+    fs.readFile(__dirname + '/index.html', 'utf-8', function (err, data) {
         if (err) {
             console.log('读取文件的时候出错');
         }

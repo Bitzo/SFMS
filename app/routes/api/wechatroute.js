@@ -493,6 +493,8 @@ wechat.clickAddress(function(judgement, username) {
 router.get('/addressinfo', function(req, res) {
 
     var addressurl = config.jinkebro.baseUrl + 'wechat/' + wechat.data.FromUserName;
+    console.log("********************************");
+    console.log(addressurl);
     //路由的重定义
     res.redirect(301, addressurl);
 

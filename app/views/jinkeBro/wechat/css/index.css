@@ -1,0 +1,207 @@
+/* 超小屏幕（手机，小于 768px） */
+/* 没有任何媒体查询相关的代码，因为这在 Bootstrap 中是默认的（还记得 Bootstrap 是移动设备优先的吗？） */
+.center {
+    text-align: center;
+}
+b {
+    font-weight: bold;
+}
+section{
+    width: 100%;
+    margin: 0px;
+    margin-top: -25px;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+.container{
+    width: 60%;  
+    margin: 0px auto;
+}
+.change-form{
+    width: 60%;
+    margin: 20px auto;
+}
+section#beta form {
+    display: block;
+    margin-top: 0em;
+}
+section#beta {
+    text-align: center;
+    overflow: hidden;
+    min-height: 700px;
+    position: relative;
+}
+section.green{
+    background: linear-gradient(#089ed8,#0decb9);
+    color: #fff;
+}
+section#beta .wrap-form-middle {
+    display: inline-block;
+    width: 90%;
+    vertical-align: middle;
+    text-align: initial;
+}
+section#beta h1 {
+    font-size: 54px;
+    font-weight: 400;
+}
+section#beta h4 {
+    font-weight: 100;
+}
+section#beta form {
+    padding: 0 50px;
+    overflow: visible;
+    height: 450px;
+}
+section#beta form #signup-part1 {
+    left: 0;
+}
+section#beta form #form-part1, section#beta form #signup-part1{
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    transition: left .3s;
+}
+section#beta form .row {
+    margin: 20px 0;
+}
+.row {
+    display: block;
+    width: 100%;
+    padding: 0;
+}
+section#beta form .row.extra-margin {
+    margin: 42px 0;
+}
+section#beta form input:not([type=checkbox]){
+    font-size: 18px;
+    font-family: Rajdhani;
+    color: #4a4a4a;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    outline: 0;
+    box-sizing: border-box;
+    width: 100%;
+}
+section#beta form select{
+    font-size: 18px;
+    font-family: Rajdhani;
+    color: #4a4a4a;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    outline: 0;
+    box-sizing: border-box;
+    width: 100%;
+}
+.checkbox {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background: 0 0;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin: 0 5px;
+}
+input {
+    -webkit-appearance: textfield;
+    background-color: white;
+    -webkit-rtl-ordering: logical;
+    user-select: text;
+    cursor: auto;
+    padding: 1px;
+    border-width: 2px;
+    border-style: inset;
+    border-color: initial;
+    border-image: initial;
+}
+section#beta input,select, button {
+    text-rendering: auto;
+    color: initial;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    margin: 0em 0em 0em 0em;
+    font: 11px system-ui;
+}
+label {
+    cursor: default;
+}
+
+section#beta form .btn-white {
+    width: 40%;
+    height: 50px;
+    padding: 8px 0;
+    text-align: center;
+    display: inline-block;
+    font-size: 20px;
+    color: #0fccc8;
+    border: 3px #fff solid;
+    font-family: Rajdhani;
+    font-weight: 500;
+}
+.btn.btn-white {
+    background: #fff;
+    color: #46b654;
+    border-color: #fff;
+}
+section#beta form  .btn {
+    border-radius: 10px;
+    padding: 5px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    border: none;
+}
+@media (max-width: 352px){
+    section#beta .wrap-form-middle {
+    width: 90%;
+  } 
+  
+}
+@media (max-width: 37.5em){
+    section#beta h4 {
+    line-height: 1;
+}
+section#beta {
+    min-height: 510px;
+ }
+}
+@media (max-width: 960px){
+  section#beta {
+    padding: 80px 0 200px;
+    height: calc(100vh - 200px);
+    min-height: 550px;
+ }
+ section#beta .wrap-form-middle {
+    width: 90%;
+}
+section#beta h1 {
+    font-size: 45px;
+}
+section#beta h4 {
+    font-size: 16px;
+    margin: 18px 0;
+}
+section#beta form .col-6 {
+    width: 100%;
+}
+
+section#beta form .col-6+.col-6 {
+    margin-top: 20px;
+}
+
+section#beta form .row.extra-margin {
+    margin: 20px 0;
+}
+
+}
+
+
