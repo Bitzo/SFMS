@@ -101,12 +101,29 @@ exports.countQuery = function (data, callback) {
         'where 1=1 and jit_projectbaseinfo.ID = jit_kpiinfo.projectID and jit_projectbaseinfo.IsActive = 1 ';
     if (data !== undefined) {
         for (var key in data) {
-            if (data[key] !== '' && data[key] !== undefined && key !== 'StartTime' && key !== 'EndTime') {
+            if (data[key] !== '' && data[key] !== undefined && key !== 'StartTime'
+                && key !== 'EndTime' && key !== 'ProjectID') {
                 if (data[key] == "已审核") sql += 'and ( ' + key + "= '通过' or " + key + " = '不通过' ) ";
                 else sql += 'and ' + key + "= '" + data[key] + "' ";
             }
         }
     }
+
+    if(Array.isArray(data['ProjectID'])){
+        sql += ' and ( ';
+        for (var i in data['ProjectID']){
+            if(i==0){
+                sql += 'ProjectID = ' + data['ProjectID'][i];
+            }else{
+                sql += ' or ProjectID = ' + data['ProjectID'][i];
+            }
+        }
+        sql += ' )'
+    }else{
+        if(data['ProjectID']!=='')
+            sql += ' and ProjectID = ' + data['ProjectID'];
+    }
+
     if (data.StartTime !== '') sql += "and jit_kpiinfo.CreateTime > '" + data.StartTime + "' ";
     if (data.EndTime !== '') sql += "and jit_kpiinfo.CreateTime < '" + data.EndTime + "' ";
 
