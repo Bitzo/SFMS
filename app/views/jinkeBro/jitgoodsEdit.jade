@@ -73,6 +73,6 @@ block content
           tr
             td(class="tableleft")
             td
-              button.btn.btn-sm.btn-primary(type="submit",ng-click="newedit(paginationConf.formdata,'/jinkeBro/product')") 确认修改
+              button.btn.btn-sm.btn-primary(type="submit",ng-disabled='paginationConf.formdata.$invalid',ng-click="newedit(paginationConf.formdata,'/jinkeBro/product')") 确认修改
               
               a.btn.btn-sm.btn-success(href='#jinkeBro/jitgoods',ng-click='search()') 返回列表

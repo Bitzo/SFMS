@@ -447,6 +447,10 @@ var functionConfig = {
                 functionName: "财务查询",
                 functionCode: "SFMS-FINANCE-QUERY"
             },
+            financePersonQuery: {
+                functionName: "个人财务查询",
+                functionCode: "SFMS-FINANCE-PERSON-QUERY"
+            },
             financeDelete: {
                 functionName: "财务删除",
                 functionCode: "SFMS-FINANCE-DELETE"
@@ -506,6 +510,34 @@ var functionConfig = {
             SignLogCountPerson: {
                 functionName: "个人签到记录统计",
                 functionCode: "SFMS-SIGN-LOG-COUNT-PERSON"
+            },
+        },
+        MessageManage: {
+            functionName: "通知模块",
+            functionCode: "SFMS-MESSAGE-MANAGE",
+            MessageQuery: {
+                functionName: "通知查看",
+                functionCode: "SFMS-MESSAGE-QUERY"
+            },
+            MessageManage: {
+                functionName: "通知管理",
+                functionCode: 'SFMS-MESSAGE-MANAGE'
+            },
+            MessageAdd: {
+                functionName: "通知新增",
+                functionCode: 'SFMS-MESSAGE-ADD'
+            },
+            MessageEdit: {
+                functionName: "通知编辑",
+                functionCode: 'SFMS-MESSAGE-UPDATE'
+            },
+            MessageReuse: {
+                functionName: "通知启用",
+                functionCode: 'SFMS-MESSAGE-REUSE'
+            },
+            MessageForbid: {
+                functionName: "通知禁用",
+                functionCode: 'SFMS-MESSAGE-FORBID'
             },
         },
     },

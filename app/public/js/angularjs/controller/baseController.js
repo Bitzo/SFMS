@@ -136,14 +136,83 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }
     };
 
+    $scope.kpiMaterialID = 0;
+    $scope.files = [];
+    function initPicture() {
+        $scope.files = [];
+        $http({
+            method: 'get',
+            url: '/sfms/api/kpi/file' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            params: {
+                ID: $scope.kpiMaterialID
+            }
+        }).success(function (response) {
+            // console.log(response);
+            if(response.isSuccess) {
+                for( var i in response.data)
+                {
+                    $scope.files.push( {
+                        'url': response.data[i].fileUrl,
+                        'fileName': response.data[i].fileName,
+                        'size': bytesToSize(response.data[i].size)
+                    })
+                }
+            }
+        }).error(function (response) {
 
-    
+        });
+    }
+
+    $scope.removeFile = function (item, file) {
+        var mymessage = confirm("是否确认删除此项");
+        if (mymessage) {
+            $http({
+                method: 'delete',
+                url: '/sfms/api/kpi/file' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+                params: {
+                    fileName:file
+                }
+            }).success(function (response) {
+                // $scope.files.splice(item.$index, 1);
+                initPicture();
+                alert(response.msg);
+
+            }).error(function (response) {
+                initPicture();
+                alert(response.msg);
+            });
+
+        }
+    };
+
+    //更改文件大小变量
+    function bytesToSize(bytes) {
+        if (bytes === 0) return '0 B';
+        var k = 1000, // or 1024
+            sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+            i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+    }
+
+    $scope.getID = function (ID) {
+        $scope.kpiMaterialID = ID;
+        // console.log($scope.kpiMaterialID);
+        initPicture();
+    };
+
+    $scope.fileUrl = '';
+    $scope.fileName = '';
+    $scope.showPic = function (name,url) {
+        $scope.fileUrl = url;
+        $scope.fileName = name;
+    };
 
 
     //新增页面  添加
     $scope.formdata={};
     $scope.addnew = function(formdata,action) {
-        console.log($scope.formdata)
+        // console.log($scope.formdata)
         $http({
             method:'post',
             url:action+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
@@ -419,7 +488,7 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         }   
         $scope.f.sortindex = sortindex;
         getInit();
-    }
+    };
 
     //绩效统计--首页 更多
     $scope.moreKPI = function(index,page,f,action){
@@ -451,6 +520,74 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         error(function(response) {
             alert(response.msg);
         });
+    };
+
+    //通知新增
+    $scope.addMessage = function(){
+        $scope.formdata= {
+            "MessageTitle" : $scope.formdata.MessageTitle,
+            "MessageContent" : $scope.formdata.MessageContent,
+        }
+        $http({
+            method:'post',
+            url: "/sfms/api/message"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata : $scope.formdata
+            }
+        }).
+        success(function(response) {
+            alert(response.msg)
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+
+    //通知新增
+    $scope.updateMessage = function(){
+        $scope.formdata= {
+            "ID": $scope.formdata.ID,
+            "MessageTitle" : $scope.formdata.MessageTitle,
+            "MessageContent" : $scope.formdata.MessageContent
+        }
+        $http({
+            method:'put',
+            url: "/sfms/api/message"+"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            data:{
+                formdata : $scope.formdata
+            }
+        }).
+        success(function(response) {
+            alert(response.msg)
+        }).
+        error(function(response) {
+            alert(response.msg);
+        });
+    };
+
+    //通知新增
+    $scope.getMessage = function(ID, action){
+        $http({
+            method: 'get',
+            url: '/sfms/api/message' + "?access_token=" + localStorage.getItem('jit_token') + "&jitkey=" + localStorage.getItem('jit_key'),
+            params: {
+                f: {
+                    ID: ID
+                }
+            }
+        }).success(function (response) {
+            $scope.formdata = response.data[0];
+            if (!response.isSuccess) {
+                alert(response.msg);
+            }
+        }).error(function (response) {
+            alert(response.msg);
+        });
+    };
+
+    $scope.initForm = function () {
+        $scope.formdata = {};
+        getInit();
     };
 
     $scope.excel = function(action) {

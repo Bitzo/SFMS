@@ -642,7 +642,7 @@ router.put('/endDelivery', function (req, res) {
             });
         }
 
-        if (!(funcResult !== undefined && funcResult.isSuccess === true)) {
+        if (!(funcResult !== undefined && funcResult.isSuccess)) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -651,55 +651,73 @@ router.put('/endDelivery', function (req, res) {
             });
         }
 
-        if (funcResult !== undefined && funcResult.isSuccess === true) {
-            //接受前端的数据
 
-            var formdata = req.body.formdata;
 
-            var data = ['OrderID'];
-            var errSend = 'require: ';
-            for (var value in data) {
-                if (!(data[value] in formdata)) {
-                    errSend += data[value] + ' ';
-                }
+        var formdata = req.body.formdata;
+
+        var data = ['OrderID'];
+        var errSend = 'require: ';
+        for (var value in data) {
+            if (!(data[value] in formdata)) {
+                errSend += data[value] + ' ';
             }
+        }
 
-            if (errSend !== 'require: ') {
-                logger.writeError(err);
+        if (errSend !== 'require: ') {
+            logger.writeError(err);
+            res.status(400);
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: '存在未填写的必填的字段' + err
+            });
+        }
+
+        var OrderID = formdata.OrderID,
+            DeliveryEndTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+
+        //接收的数据进行object然后来插入
+        var insertData = {
+            "OrderID": OrderID,
+            "DeliveryEndTime": DeliveryEndTime || ''
+        };
+
+        var intData = {
+            "OrderID": OrderID
+        };
+
+        for (var key in intData) {
+            if (isNaN(intData[key])) {
                 res.status(400);
                 return res.json({
                     code: 400,
                     isSuccess: false,
-                    msg: '存在未填写的必填的字段' + err
+                    msg: key + ": " + intData[key] + '不是数字'
+                });
+            }
+        }
+
+
+        orderDelivery.checkDeliveryIsStarted({OrderID: OrderID},function (err,startResult) {
+            if (err) {
+                res.status(500);
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: '服务器内部错误！'
                 });
             }
 
-            var OrderID = formdata.OrderID,
-                DeliveryEndTime = moment().format('YYYY-MM-DD HH:mm:ss');
-
-
-            //接收的数据进行object然后来插入
-            var insertData = {
-                "OrderID": OrderID,
-                "DeliveryEndTime": DeliveryEndTime || ''
-            };
-
-            var intData = {
-                "OrderID": OrderID
-            };
-
-            for (var key in intData) {
-                if (isNaN(intData[key])) {
-                    res.status(400);
-                    return res.json({
-                        code: 400,
-                        isSuccess: false,
-                        msg: key + ": " + intData[key] + '不是数字'
-                    });
-                }
+            if (!(startResult != undefined && startResult.length && startResult[0]['num'] > 0)) {
+                res.status(404);
+                return res.json({
+                    code: 404,
+                    isSuccess: false,
+                    msg: '未开始配送不能结束配送!'
+                });
             }
 
-            //执行插入操作
             orderDelivery.checkDeliveryIsFinished({ OrderID: OrderID }, function (err, results) {
                 if (err) {
                     res.status(500);
@@ -748,7 +766,7 @@ router.put('/endDelivery', function (req, res) {
                                     return res.json({
                                         code: 400,
                                         isSuccess: true,
-                                        msg: '订单修改失败'
+                                        msg: '操作失败!'
                                     });
                                 }
 
@@ -757,7 +775,7 @@ router.put('/endDelivery', function (req, res) {
                                     return res.json({
                                         code: 200,
                                         isSuccess: true,
-                                        msg: '订单修改成功'
+                                        msg: '操作成功!'
                                     });
                                 }
                             });
@@ -771,9 +789,9 @@ router.put('/endDelivery', function (req, res) {
                         msg: "此条订单配送员记录不存在或者已经完成！"
                     });
                 }
-
             });
-        }
+
+        });
     });
 });
 

@@ -60,7 +60,7 @@ router.post('/', function (req, res) {
             inOutType = query.InOutType,
             fiPrice = query.FIPrice,
             projectID = query.ProjectID,
-            userID = query.UserID,
+            userID = query.UserID || req.query.jitkey,
             userName = query.UserName,
             operateUser = req.query.jitkey,
             remark = query.Remark,
@@ -71,9 +71,25 @@ router.post('/', function (req, res) {
 
         err = '缺少值: ';
 
+        //数据全部验证完毕后存入数据
+        var data = {
+            'FIName': fiName,
+            'FIType': fiType,
+            'InOutType': inOutType,
+            'FIPrice': fiPrice,
+            'ProjectID': projectID,
+            'UserID': userID,
+            'UserName': userName,
+            'OperateUser': operateUser,
+            'OperateUserID': req.query.jitkey,
+            'FIStatu': '待审核',
+            'Remark': remark,
+            'IsActive': isActive
+        };
+
         for(var value in temp)
         {
-            if(!(temp[value] in query))
+            if(!(temp[value] in data))
             {
                 logger.writeInfo("缺少值 " + temp[value]);
                 err += temp1[value] + ' ';
@@ -112,13 +128,13 @@ router.post('/', function (req, res) {
             }
 
             //验证申报财务的项目是否存在
-            data = {
+            var temp_data = {
                 'ID': projectID,
                 'IsActive': 1,
                 'OperateUserID': req.query.jitkey
             };
 
-            projectservice.queryProject(data, function (err, results) {
+            projectservice.queryProject(temp_data, function (err, results) {
                 if (err) {
                     res.status(500);
 
@@ -187,7 +203,7 @@ router.post('/', function (req, res) {
                             });
                         }
 
-                        userName = results[0].UserName;
+                        data.UserName = results[0].UserName;
 
                         userservice.querySingleID(userID, function (err, results) {
                             if (err) {
@@ -210,23 +226,7 @@ router.post('/', function (req, res) {
                                 });
                             }
 
-                            operateUser = results[0].UserName;
-
-                            //数据全部验证完毕后存入数据
-                            var data = {
-                                'FIName': fiName,
-                                'FIType': fiType,
-                                'InOutType': inOutType,
-                                'FIPrice': fiPrice,
-                                'ProjectID': projectID,
-                                'UserID': userID,
-                                'UserName': userName,
-                                'OperateUser': operateUser,
-                                'OperateUserID': req.query.jitkey,
-                                'FIStatu': '待审核',
-                                'Remark': remark,
-                                'IsActive': isActive
-                            };
+                            data.OperateUser = results[0].UserName;
 
                             if (isNaN(data.FIPrice)||data.FIPrice<0) {
                                 res.status(400);
@@ -998,11 +998,11 @@ router.get('/count', function(req, res) {
     });
 });
 
-//财务信息查询
-router.get('/', function (req, res) {
+//财务信息查询-个人界面
+router.get('/person', function (req, res, next) {
     var data = {
         userID: req.query.jitkey,
-        functionCode: functionConfig.sfmsApp.financeManage.financeQuery.functionCode
+        functionCode: functionConfig.sfmsApp.financeManage.financePersonQuery.functionCode
     };
 
     userFuncService.checkUserFunc(data, function(err, results) {
@@ -1032,7 +1032,7 @@ router.get('/', function (req, res) {
             fiType = query.FIType || '',
             inOutType = query.InOutType || '',
             projectID = query.ProjectID || '',
-            username = query.username || '',
+            userID = req.query.jitkey,
             fiStatus = query.FIStatus || '',
             fiName = query.FIName || '',
             isActive = query.IsActive || '',
@@ -1044,7 +1044,7 @@ router.get('/', function (req, res) {
 
         var data = {
             'ID':ID,
-            'Username': username,
+            'UserID': userID,
             'InOutType': inOutType,
             'FIName': fiName,
             'ProjectID': projectID,
@@ -1093,6 +1093,232 @@ router.get('/', function (req, res) {
 
                     if (results !== undefined && results.length > 0) {
                         for (var i in results) {
+                            results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
+                            if(results[i].CheckTime !== null)
+                                results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
+                        }
+
+                        var result = {
+                            status: 200,
+                            isSuccess: true,
+                            dataNum: totalNum,
+                            curPage: page,
+                            totalPage: Math.ceil(totalNum/pageNum),
+                            curPageNum: pageNum,
+                            data: results
+                        };
+
+                        if(result.curPage == result.totalPage) {
+                            result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
+                        }
+
+                        //替换用户名
+                        var ID = [],DicID = [];
+
+                        for (var i=0;i<results.length;++i) {
+                            if (results[i].CheckUser == null) continue;
+                            if (i==0) ID[i] = results[i].CheckUser;
+                            else {
+                                var j = 0;
+                                for (j=0;j<ID.length;++j) {
+                                    if (ID[j] == results[i].CheckUser) break;
+                                }
+                                if (j == ID.length) ID[j] = results[i].CheckUser;
+                            }
+                        }
+
+                        for (var i=0;i<results.length;++i) {
+                            if (i==0) {
+                                DicID[0] = results[i].FIType;
+                                DicID[1] = results[i].InOutType;
+                            }
+                            else {
+                                var k=0;
+                                for (k=0;k<DicID.length;++k) {
+                                    if (DicID[k] == results[i].FIType) break;
+                                }
+                                if (k == DicID.length) DicID[k] = results[i].FIType;
+                                for (k=0;k<DicID.length;++k) {
+                                    if (DicID[k] == results[i].InOutType) break;
+                                }
+                                if (k == DicID.length) DicID[k] = results[i].InOutType;
+                            }
+                        }
+
+                        userservice.queryAccountByID(ID, function (err, data) {
+                            if (err) {
+                                res.status(500);
+
+                                return res.json({
+                                    status: 500,
+                                    isSuccess: false,
+                                    msg: '操作失败，服务器出错'
+                                });
+                            }
+
+                            for (var i in results) {
+                                for (var j in data) {
+                                    if (results[i].CheckUser == data[j].AccountID) {
+                                        results[i].CheckUser = data[j].UserName;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            //查询字典表 更新所有字典表数据
+                            dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
+                                if (err) {
+                                    res.status(500);
+
+                                    return res.json({
+                                        status: 500,
+                                        isSuccess: false,
+                                        msg: '操作失败，服务器出错'
+                                    });
+                                }
+
+                                if (data!==undefined && data.length>0) {
+                                    for (var i in results) {
+                                        var j=0;
+                                        for (j=0;j<data.length;++j) {
+                                            if (results[i].FIType == data[j].DictionaryID) results[i].FITypeValue = data[j].DictionaryValue;
+                                            if (results[i].InOutType == data[j].DictionaryID) results[i].InOutTypeValue = data[j].DictionaryValue;
+                                        }
+                                    }
+
+                                    res.status(200);
+
+                                    return res.json(result);
+                                } else {
+                                    res.status(200);
+
+                                    return res.json({
+                                        status: 200,
+                                        isSuccess: false,
+                                        msg: '无数据'
+                                    });
+                                }
+                            });
+                        });
+                    } else {
+                        res.status(200);
+
+                        return res.json({
+                            status: 200,
+                            isSuccess: false,
+                            msg: '无数据'
+                        });
+                    }
+                });
+            } else {
+                res.status(200);
+
+                return res.json({
+                    status: 200,
+                    isSuccess: false,
+                    msg: '无数据'
+                });
+            }
+        });
+    });
+});
+
+//财务信息查询
+router.get('/', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.financeManage.financeQuery.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function(err, results) {
+        if (err) {
+            res.status(500);
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+
+        if (!(results !== undefined && results.isSuccess)) {
+            res.status(400);
+
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+
+        var query = JSON.parse(req.query.f),
+            ID = query.ID || '',
+            startTime = query.startTime || '',
+            endTime = query.endTime || '',
+            fiType = query.FIType || '',
+            inOutType = query.InOutType || '',
+            projectID = query.ProjectID || '',
+            userID = query.userID || '',
+            fiStatus = query.FIStatus || '',
+            fiName = query.FIName || '',
+            isActive = query.IsActive || '',
+            page = req.query.pageindex || 1,
+            pageNum = req.query.pagesize || config.pageCount,
+            totalNum = 0;
+
+        page = page > 0 ? page : 1;
+
+        var data = {
+            'ID':ID,
+            'UserID': userID,
+            'InOutType': inOutType,
+            'FIName': fiName,
+            'ProjectID': projectID,
+            'FIType': fiType.trim(),
+            'FIStatus': fiStatus.trim(),
+            'startTime': startTime,
+            'endTime': endTime,
+            'OperateUserID': req.query.jitkey,
+            'page': page,
+            'pageNum': pageNum,
+            'IsActive': isActive
+        };
+
+        if (moment(data.startTime).isValid())
+            data.startTime = moment(data.startTime).format("YYYY-MM-DD HH:mm:ss");
+
+        if (moment(data.endTime).isValid())
+            data.endTime = moment(data.endTime).format("YYYY-MM-DD HH:mm:ss");
+
+        financeService.countQuery(data, function (err, results) {
+            if (err) {
+                res.status(500);
+
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                });
+            }
+
+            logger.writeInfo(results);
+            totalNum = results[0].num;
+
+            if(totalNum > 0) {
+                //查询所需的详细数据
+                financeService.queryFinance(data, function (err, results) {
+                    if (err) {
+                        res.status(500);
+
+                        return res.json({
+                            status: 500,
+                            isSuccess: false,
+                            msg: '操作失败，服务器出错'
+                        });
+                    }
+
+                    if (results !== undefined && results.length > 0) {
+                        for (var i in results) {
+                            results[i].ProjectID = results[i].ProjectId;
                             results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
                             if(results[i].CheckTime !== null)
                                 results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');

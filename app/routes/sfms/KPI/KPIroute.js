@@ -18,7 +18,173 @@ var express = require('express'),
     logger = appRequire("util/loghelper").helper,
     functionConfig = appRequire('config/functionconfig'),
     nodeExcel = require('excel-export'),
-    userFuncService = appRequire('service/backend/user/userfuncservice');
+    userFuncService = appRequire('service/backend/user/userfuncservice'),
+    formidable=require('formidable'),
+    fs = require('fs'),
+    path = require('path');
+
+//KPI证明材料接收
+router.post('/file', function (req, res) {
+    // parse a file upload
+    var form = new formidable.IncomingForm(),files=[],fields=[],docs=[];
+    console.log('start upload');
+    var ID = 0,
+        fileID = 0,
+        baseID = -1;
+    //存放目录
+    form.uploadDir = 'public/imgs/KPIMaterial';
+    // var isDelete = 0;
+
+    var fileUrl = 'public/imgs/KPIMaterial';
+
+        form.on('field', function(field, value) {
+            // console.log(field, value);
+            // fields.push([field, value]);
+            if(field == 'ID') ID = value;
+            else fileID = value;
+
+        }).on('file', function(field, file) {
+            // console.log(field, file);
+            files.push([field, file]);
+            docs.push(file);
+
+            var types = file.name.split('.')[file.name.split('.').length-1];
+            var date = moment().format("YYYYMMDD");
+            fs.readdir(fileUrl,function(err,files) {
+                if (err) {
+                    console.log('file dir error');
+                    return res.json({
+                        code: 500,
+                        isSuccess: false,
+                        msg: '错误'
+                    })
+                }
+
+                // console.log('=======' + ID)
+                for (var i in files) {
+                    if (ID === files[i].split('_')[1]) {
+                        // console.log(files[i].split('_')[2].split('.')[0])
+                        if (baseID < files[i].split('_')[2].split('.')[0]) {
+                            baseID = files[i].split('_')[2].split('.')[0];
+                        }
+                    }
+                }
+                // console.log('======= ' + baseID)
+                if(baseID != -1){
+                    fileID =parseInt(fileID) + parseInt(baseID) + 1;
+                }
+                // console.log('fileID: ' + fileID)
+                fs.renameSync(file.path, "public/imgs/KPIMaterial/KPIMaterial" + date + '_'+ ID + '_' + fileID + '.' + types);
+            });
+        }).on('end', function() {
+            res.writeHead(200, {
+                'content-type': 'text/plain'
+            });
+            var out={
+                Resopnse:{
+                    'result-code':0,
+                    timeStamp:new Date(),
+                },
+                files:docs
+            };
+            var sout=JSON.stringify(out);
+            res.end(sout);
+        });
+
+        form.parse(req, function(err, fields, files) {
+            err && console.log('formidabel error : ' + err);
+
+            // console.log('parsing done');
+        });
+});
+
+//KPI证明材料查询
+router.get('/file', function (req, res) {
+    var ID = req.query.ID,
+        userID = req.query.jitkey;
+
+    if(!ID || isNaN(ID)){
+        res.status(400);
+
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '查询失败,ID不合法'
+        });
+    }
+    var fileUrl = 'public/imgs/KPIMaterial';
+    fs.readdir(fileUrl,function(err,files){
+        if(err){
+            console.log('file dir error');
+            return res.json({
+                code: 200,
+                isSuccess: true,
+                data: {},
+                msg:'未查询到结果'
+            })
+        }
+
+        var count = files.length;
+        // console.log(files)
+        var filesArr = [];
+        // console.log('ID: ' + ID)
+        for(var i in files){
+            // console.log(files[i].split('_')[1])
+            if(ID === files[i].split('_')[1]) {
+                var size = fs.statSync(path.join(fileUrl,files[i])).size;
+                // console.log(size);
+                filesArr.push({
+                    'fileName': files[i],
+                    'fileUrl': path.join('imgs/KPIMaterial',files[i]),
+                    'size': size
+                })
+            }
+        }
+        return res.json({
+            code: 200,
+            isSuccess: true,
+            data: filesArr,
+            msg:'查询成功'
+        })
+    });
+});
+
+
+//KPI证明材料删除
+router.delete('/file', function (req, res) {
+    var fileName = req.query.fileName,
+        userID = req.query.jitkey;
+
+    console.log(req.body)
+    if(!fileName){
+        res.status(400);
+
+        return res.json({
+            code: 400,
+            isSuccess: false,
+            msg: '查询失败,文件不合法'
+        });
+    }
+    var fileUrl = 'public/imgs/KPIMaterial';
+    if(fs.existsSync(path.join(fileUrl, fileName))){
+        fs.unlink(path.join(fileUrl, fileName), function (err) {
+            if(err){
+                console.log(err)
+            }
+            return res.json({
+                code: 200,
+                isSuccess: true,
+                msg:'操作成功'
+            })
+        })
+    }else{
+        return res.json({
+            code: 200,
+            isSuccess: true,
+            msg:'操作成功'
+        })
+    }
+});
 
 /**
  * KPI信息新增：
@@ -111,7 +277,25 @@ router.post('/', function (req, res) {
                     msg: '操作失败，用户不在所在的项目中'
                 });
             }
+            console.log(results.isProjectManger + ' : '+ KPIType)
+            if(results.isProjectManger && KPIType == 16){
+                res.status(400);
 
+                return res.json({
+                    status: 404,
+                    isSuccess: false,
+                    msg: '操作失败，项目组长请勿申请组员绩效！'
+                });
+            }
+            if(!results.isProjectManger && KPIType == 10){
+                res.status(400);
+
+                return res.json({
+                    status: 404,
+                    isSuccess: false,
+                    msg: '操作失败，您不是该项目的项目组长！'
+                });
+            }
             //查询KPIName, KPIType是否在字典表里
             var DicID = {
                 'DictionaryID': [KPIType]
@@ -558,7 +742,7 @@ router.put('/', function (req, res) {
     });
 });
 
-//绩效统计到处excel
+//绩效统计导出excel
 router.get('/excel', function (req, res) {
     var data = {
         userID: req.query.jitkey,
@@ -1252,10 +1436,48 @@ router.get('/', function (req, res) {
                                     if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
                                 }
                             }
+                            ID = query.ID || '';
+                            console.log(ID)
+                            if(ID === ''){
+                                res.status(200);
 
-                            res.status(200);
+                                return res.json(result);
+                            }
+                            console.log('files')
+                            var fileUrl = 'public/imgs/KPIMaterial';
+                            fs.readdir(fileUrl,function(err,files){
+                                if(err){
+                                    console.log('file dir error');
+                                    return res.json({
+                                        code: 200,
+                                        isSuccess: true,
+                                        data: {},
+                                        msg:'未查询到结果'
+                                    })
+                                }
 
-                            return res.json(result);
+                                var count = files.length;
+                                // console.log(files)
+                                var filesArr = [];
+                                // console.log('ID: ' + ID)
+                                for(var i in files){
+                                    // console.log(files[i].split('_')[1])
+                                    if(ID === files[i].split('_')[1]) {
+                                        var size = fs.statSync(path.join(fileUrl,files[i])).size;
+                                        // console.log(size);
+                                        filesArr.push({
+                                            'fileName': files[i],
+                                            'fileUrl': path.join('imgs/KPIMaterial',files[i]),
+                                            'size': size
+                                        })
+                                    }
+                                }
+                                result.data[0].files = filesArr;
+
+                                res.status(200);
+
+                                return res.json(result);
+                            });
                         } else {
                             res.status(200);
 
@@ -1270,6 +1492,456 @@ router.get('/', function (req, res) {
 
             });
 
+        });
+    });
+});
+
+//KPI查询,此查询用于可审核绩效的角色进行查询
+router.get('/manage', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.KPIManage.KPIQuery.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function(err, results) {
+        if (err) {
+            res.status(500);
+
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+
+        if (!(results !== undefined && results.isSuccess)) {
+            res.status(400);
+
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+
+        var query =  JSON.parse(req.query.f),
+            ID = query.ID || '',
+            UserID = query.UserID || '',
+            ProjectID = query.ProjectID || '',
+            StartTime = query.StartTime || '',
+            EndTime = query.EndTime || '',
+            KPIStatus = query.KPIStatus || '',
+            KPIType =  10,
+            KPIName = query.KPIName || '',
+            IsActive = query.IsActive || '',
+            page = req.query.pageindex > 0 ? req.query.pageindex : 1,
+            pageNum = req.query.pagesize || config.pageCount,
+            totalNum = 0;
+
+        data = {
+            'ID': ID,
+            'ProjectID': ProjectID,
+            'UserID': UserID,
+            'KPIStatus': KPIStatus.trim(),
+            'KPIType': KPIType,
+            'KPIName': KPIName,
+            'StartTime': StartTime,
+            'EndTime': EndTime,
+            'OperateUserID': req.query.jitkey,
+            'page': page,
+            'pageNum': pageNum,
+            'IsActive': IsActive
+        };
+
+        KPIservice.countQuery(data, function (err, results) {
+            if (err) {
+                res.status(500);
+
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                });
+            }
+            totalNum = results[0].num;
+
+            if(totalNum <= 0) {
+                res.status(200);
+
+                return res.json({
+                    status: 200,
+                    isSuccess: false,
+                    msg: '无数据'
+                });
+            }
+            //查询所需的详细数据
+            KPIservice.queryKPI(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '操作失败，服务器出错'
+                    });
+                }
+
+                if (!(results !== undefined && results.length > 0)) {
+                    res.status(200);
+
+                    return res.json({
+                        status: 200,
+                        isSuccess: false,
+                        msg: '无数据'
+                    });
+                }
+
+                for (var i in results) {
+                    results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
+                    if(results[i].CheckTime !== null)
+                        results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
+                }
+
+                var result = {
+                    status: 200,
+                    isSuccess: true,
+                    dataNum: totalNum,
+                    curPage: page,
+                    totalPage: Math.ceil(totalNum/pageNum),
+                    curPageNum: pageNum,
+                    data: results
+                };
+
+                if(result.curPage == result.totalPage) {
+                    result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
+                }
+
+                //替换用户名
+                var ID = [],DicID = [];
+
+                for (var i=0;i<results.length;++i) {
+                    if (results[i].CheckUser == null) continue;
+
+                    if (i==0) {
+                        ID[i] = results[i].CheckUser;
+                    } else {
+                        var j = 0;
+                        for (j=0;j<ID.length;++j) {
+                            if (ID[j] == results[i].CheckUser) break;
+                        }
+                        if (j == ID.length) ID[j] = results[i].CheckUser;
+                    }
+                }
+
+                for (var i=0;i<results.length;++i) {
+                    if (i==0) {
+                        DicID[i] = results[i].KPIType;
+                    } else {
+                        var k=0;
+
+                        for (k=0;k<DicID.length;++k) {
+                            if (DicID[k] == results[i].KPIType) break;
+                        }
+                        if (k == DicID.length) DicID[k] = results[i].KPIType;
+                    }
+                }
+
+                userservice.queryAccountByID(ID, function (err, data) {
+                    if (err) {
+                        res.status(500);
+
+                        return res.json({
+                            status: 500,
+                            isSuccess: false,
+                            msg: '操作失败，服务器出错'
+                        });
+                    }
+
+                    for (var i in results) {
+                        for (var j in data) {
+                            if (results[i].CheckUser == data[j].AccountID) {
+                                results[i].CheckUser = data[j].UserName;
+                                break;
+                            }
+                        }
+                    }
+
+                    //查询字典表 更新所有字典表数据
+                    dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
+                        if (err) {
+                            res.status(500);
+
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            });
+                        }
+
+                        if (data!==undefined && data.length>0) {
+                            for (var i in results) {
+                                var j=0;
+
+                                for (j=0;j<data.length;++j) {
+                                    if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
+                                }
+                            }
+                            res.status(200);
+
+                            return res.json(result);
+                        } else {
+                            res.status(200);
+
+                            return res.json({
+                                status: 200,
+                                isSuccess: false,
+                                msg: '无数据'
+                            });
+                        }
+                    })
+                });
+            });
+        });
+    });
+});
+
+//KPI查询,此查询用于可审核绩效的角色进行查询
+router.get('/lead', function (req, res) {
+    var data = {
+        userID: req.query.jitkey,
+        functionCode: functionConfig.sfmsApp.KPIManage.KPIQuery.functionCode
+    };
+
+    userFuncService.checkUserFunc(data, function(err, results) {
+        if (err) {
+            res.status(500);
+
+            return res.json({
+                code: 500,
+                isSuccess: false,
+                msg: '查询失败，服务器出错'
+            });
+        }
+
+        if (!(results !== undefined && results.isSuccess)) {
+            res.status(400);
+
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
+        }
+
+        var query =  JSON.parse(req.query.f),
+            ID = query.ID || '',
+            UserID = query.UserID || '',
+            ProjectID = query.ProjectID || '',
+            StartTime = query.StartTime || '',
+            EndTime = query.EndTime || '',
+            KPIStatus = query.KPIStatus || '',
+            KPIType =  16,
+            KPIName = query.KPIName || '',
+            IsActive = query.IsActive || '',
+            page = req.query.pageindex > 0 ? req.query.pageindex : 1,
+            pageNum = req.query.pagesize || config.pageCount,
+            totalNum = 0;
+
+        data = {
+            'ID': ID,
+            'ProjectID': ProjectID,
+            'UserID': UserID,
+            'KPIStatus': KPIStatus.trim(),
+            'KPIType': KPIType,
+            'KPIName': KPIName,
+            'StartTime': StartTime,
+            'EndTime': EndTime,
+            'OperateUserID': req.query.jitkey,
+            'page': page,
+            'pageNum': pageNum,
+            'IsActive': IsActive
+        };
+
+        projectservice.queryProject({ProjectManageID:req.query.jitkey,
+            OperateUserID: req.query.jitkey, IsActive: 1, SelectType:1}, function(err, results){
+            if (err) {
+                res.status(500);
+
+                return res.json({
+                    status: 500,
+                    isSuccess: false,
+                    msg: '操作失败，服务器出错'
+                });
+            }
+            if(results.length == 0){
+                res.status(200);
+
+                return res.json({
+                    status: 200,
+                    isSuccess: false,
+                    msg: '无数据'
+                });
+            }
+            data.ProjectID = [];
+            for(var i in results){
+                data.ProjectID.push(results[i].ID);
+            }
+            KPIservice.countQuery(data, function (err, results) {
+                if (err) {
+                    res.status(500);
+
+                    return res.json({
+                        status: 500,
+                        isSuccess: false,
+                        msg: '操作失败，服务器出错'
+                    });
+                }
+                totalNum = results[0].num;
+
+                if(totalNum <= 0) {
+                    res.status(200);
+
+                    return res.json({
+                        status: 200,
+                        isSuccess: false,
+                        msg: '无数据'
+                    });
+                }
+                //查询所需的详细数据
+                KPIservice.queryKPI(data, function (err, results) {
+                    if (err) {
+                        res.status(500);
+                        return res.json({
+                            status: 500,
+                            isSuccess: false,
+                            msg: '操作失败，服务器出错'
+                        });
+                    }
+
+                    if (!(results !== undefined && results.length > 0)) {
+                        res.status(200);
+
+                        return res.json({
+                            status: 200,
+                            isSuccess: false,
+                            msg: '无数据'
+                        });
+                    }
+
+                    for (var i in results) {
+                        results[i].CreateTime = moment(results[i].CreateTime).format('YYYY-MM-DD HH:mm');
+                        if(results[i].CheckTime !== null)
+                            results[i].CheckTime = moment(results[i].CheckTime).format('YYYY-MM-DD HH:mm');
+                    }
+
+                    var result = {
+                        status: 200,
+                        isSuccess: true,
+                        dataNum: totalNum,
+                        curPage: page,
+                        totalPage: Math.ceil(totalNum/pageNum),
+                        curPageNum: pageNum,
+                        data: results
+                    };
+
+                    if(result.curPage == result.totalPage) {
+                        result.curPageNum = result.dataNum - (result.totalPage-1)*pageNum;
+                    }
+
+                    //替换用户名
+                    var ID = [],DicID = [];
+
+                    for (var i=0;i<results.length;++i) {
+                        if (results[i].CheckUser == null) continue;
+
+                        if (i==0) {
+                            ID[i] = results[i].CheckUser;
+                        } else {
+                            var j = 0;
+                            for (j=0;j<ID.length;++j) {
+                                if (ID[j] == results[i].CheckUser) break;
+                            }
+                            if (j == ID.length) ID[j] = results[i].CheckUser;
+                        }
+                    }
+
+                    for (var i=0;i<results.length;++i) {
+                        if (i==0) {
+                            DicID[i] = results[i].KPIType;
+                        } else {
+                            var k=0;
+
+                            for (k=0;k<DicID.length;++k) {
+                                if (DicID[k] == results[i].KPIType) break;
+                            }
+                            if (k == DicID.length) DicID[k] = results[i].KPIType;
+                        }
+                    }
+
+                    userservice.queryAccountByID(ID, function (err, data) {
+                        if (err) {
+                            res.status(500);
+
+                            return res.json({
+                                status: 500,
+                                isSuccess: false,
+                                msg: '操作失败，服务器出错'
+                            });
+                        }
+
+                        for (var i in results) {
+                            for (var j in data) {
+                                if (results[i].CheckUser == data[j].AccountID) {
+                                    results[i].CheckUser = data[j].UserName;
+                                    break;
+                                }
+                            }
+                        }
+
+                        //查询字典表 更新所有字典表数据
+                        dataservice.queryDatadictionaryByID({"DictionaryID":DicID}, function (err, data) {
+                            if (err) {
+                                res.status(500);
+
+                                return res.json({
+                                    status: 500,
+                                    isSuccess: false,
+                                    msg: '操作失败，服务器出错'
+                                });
+                            }
+
+                            if (data!==undefined && data.length>0) {
+                                for (var i in results) {
+                                    var j=0;
+
+                                    for (j=0;j<data.length;++j) {
+                                        if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
+                                    }
+                                }
+                                for (var i=0;i<result.data.length;++i)
+                                {
+                                    if(req.query.jitkey == result.data[i].UserID)
+                                    {
+                                        result.data.splice(i,1);
+                                        i--;
+                                    }
+                                }
+
+                                res.status(200);
+
+                                return res.json(result);
+                            } else {
+                                res.status(200);
+
+                                return res.json({
+                                    status: 200,
+                                    isSuccess: false,
+                                    msg: '无数据'
+                                });
+                            }
+                        })
+                    });
+                });
+            });
         });
     });
 });

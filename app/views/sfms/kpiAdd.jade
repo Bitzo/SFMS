@@ -1,44 +1,59 @@
 link(rel='stylesheet' href="css/backend/role.css")
+
 block content
   div.container-fluid
-    span 
+    span
       h2 绩效新增
-    form(method="post",name="kpiAdd",ng-controller="sfmsApiFinanceAddController")
+    form(method="post",name="kpiAdd",enctype="multipart/form-data",ng-controller="kpiAddController")
       table.table.table-bordered.table-hover.definedwidth.m10
         tr
           td(width="15%",class="tableleft") 绩效名称
           td
             input(type="textview",name='KPIName',ng-model='formdata.KPIName',ng-maxlength='45',required)
-            
-            small.error(ng-if="financeAdd.FIName.$error.maxlength && financeAdd.FIName.$touched") 绩效名称最多45位 
+
+            small.error(ng-if="financeAdd.FIName.$error.maxlength && financeAdd.FIName.$touched") 绩效名称最多45位
 
         tr
           td(width="15%",class="tableleft") 绩效类型
           td
             jason-select.input(name='KPIType',ng-model='formdata.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
-    
+
         tr
           td(width="15%",class="tableleft") 所属项目
           td
             jason-select.input(name='ProjectID',ng-model='formdata.ProjectID' source='/sfms/api/project/user' stext='ProjectName' svalue='ProjectID',sactive='1',)
-            
+
         tr
           td(width="15%",class="tableleft") 绩效分
           td
             input(type="number",name="KPIScore",ng-model="formdata.KPIScore",ng-maxlength='45',style="width:160px;height:30px",required)
-            
+
             small.error(ng-if="kpiAdd.KPIScore.$error.maxlength && kpiAdd.KPIScore.$touched") 绩效分最多45位
-        
+
         tr
           td(width="15%",class="tableleft") 绩效备注
           td
             textarea(type="textview",name="Remark",ng-model='formdata.Remark',rows="5",cols="30",ng-maxlength='45',required)
-            
+
             small.error(ng-if="kpiAdd.Remark.$error.maxlength && kpiAdd.Remark.$touched") 备注最多45位
-            
+
+        //tr
+        //  td(width="15%",class="tableleft") 相关材料
+        //    //td
+        //      div(ng-repeat="x in files" style="width:210px; height:270px; display: inline-block; ")
+        //        img(style="max-width:200px;max-height:200px;border:solid 1px grey; display: block;margin: auto" src="{{x.url}}" alt="图片预览，请使用支持H5的浏览器")
+        //        p(style="text-align: center") {{x.fileName}}
+        //        p(style="text-align: center") {{x.size}}
+        //        button.btn.btn-sm.btn-danger(ng-click="removeFile(this)" style="display: block; margin:5px auto") 删除文件
+        //      div
+        //        input.file.files(type="file" id="file" style="min-width:300px; display:inline-block")
+        //        button.btn.btn-sm.btn-default(ng-click="addFile()") 添加文件
+        //  td
+        //    input#input-44.file-loading(name="input44[]", type="file", multiple="")
+        //    #errorBlock.help-block
         tr
           td(class="tableleft")
           td
             button.btn.btn-sm.btn-primary(type="submit",ng-disabled="kpiAdd.$invalid",ng-click="addnew(formdata,'/sfms/api/kpi')") 添加
-            
+
             a.btn.btn-sm.btn-success(href='#sfms/kpi',ng-click='search()') 返回列表

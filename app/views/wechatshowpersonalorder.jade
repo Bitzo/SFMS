@@ -1,0 +1,84 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title #{title}
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(href='assets/css/bootstrap.min.css', rel='stylesheet')
+    link(rel='stylesheet',href='css/wechat/wechatshowpersonalorder.css')
+body(ng-app='wechatApp',ng-controller='wechatshowpersonalorder')
+  nav.navbar.navbar-default
+    .container-fluid
+        // Brand and toggle get grouped for better mobile display
+        .navbar-header
+          button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
+            span.sr-only Toggle navigation
+            |         
+            span.icon-bar
+            |         
+            span.icon-bar
+            |         
+            span.icon-bar
+          |       
+          a.navbar-brand(href='#') 个人订单
+        // Collect the nav links, forms, and other content for toggling
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li.active
+              a(href='#')
+                | 全部订单
+                span.sr-only (current)
+          
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href='#') 待付款
+            |   
+            li
+              a(href='#') 待评价
+            |  
+            li
+              a(href='#') 退款／售后
+            |        
+            
+  div
+    div.container.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
+      div(id='product' class='product')
+     
+         table.table   
+            tbody
+              tr.panel.panel-info(ng-repeat="x in orders")
+               td(style="width:50%")
+                ul.panel.panel-info
+                  li.panel-heading
+                    span.panel-title  订单号: {{x.OrderID}} 
+                    br
+                    span.panel-title  下单时间: {{x.OrderTime}}
+                    br
+                    span.panel-title  总金额: {{x.totalMoney}}
+                  li.panel-body
+                    table.table   
+                      thead
+                        tr
+                          th 商品名称
+                          |       
+                          th 数量
+                          |       
+                          th 总价
+                      tbody
+                        tr(ng-repeat="item in x.productInfo")
+                              td  {{item.ProductName}}
+                              td  {{item.ProductCount}}
+                              td  {{item.totalMoney}}
+                  li.panel-body
+                    p 支付方式: {{x.PayMethodDesc}}
+                    p 订单状态: {{x.OrderStatusDesc}}
+                    p 总金额: {{x.totalMoney}}
+                  
+                   
+             
+               
+  script(src='assets/js/jquery-2.0.3.min.js')
+  script(src='assets/js/bootstrap.min.js')
+  script(src='/bower_components/angular/angular.min.js')
+  script(src='/js/angularjs/controller/controllers.js')
+  script(src='/js/angularjs/controller/wechatController.js')

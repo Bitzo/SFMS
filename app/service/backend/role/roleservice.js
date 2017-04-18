@@ -87,7 +87,7 @@ exports.countAllRoles = function (data, callback) {
         'RoleID': data.RoleID || '',
         'RoleName': data.RoleName || '',
         'RoleCode': data.RoleCode || '',
-        'IsActive': data.IsActive || '',
+        'jit_role.IsActive': data.IsActive || '',
         'RoleName_f': data.RoleName_f || '',//_f标识模糊查询
         'RoleCode_f': data.RoleCode_f || ''//_f标识模糊查询
     };

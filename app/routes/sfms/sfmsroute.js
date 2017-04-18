@@ -12,12 +12,13 @@ var sign = appRequire('routes/sfms/sign/signroute');
 var kpi = appRequire('routes/sfms/KPI/KPIroute');
 //实验室管理系统 财务管理路由
 var finance = appRequire('routes/sfms/finance/financeroute');
+//实验室管理系统 通知管理路由
+var message = appRequire('routes/sfms/message/messageroute');
 //实验室管理系统主站点
 var userSpring = appRequire('service/backend/application/applicationservice');
 var logger = appRequire('util/loghelper').helper;
 //实验室管理系统 定时任务
 var signScheduleJob = appRequire('routes/sfms/sign/signScheduleJob');
-
 
 
 router.get('/appedit', function(req, res, next) {
@@ -117,6 +118,14 @@ router.get('/kpiManage', function(req, res, next) {
         res.render('sfms/kpiManage', { title: 'Hi sfms' });
 });
 
+router.get('/kpiLead', function(req, res, next) {
+    res.render('sfms/kpiLead', { title: 'Hi sfms' });
+});
+
+router.get('/kpiLeadCheck', function(req, res, next) {
+    res.render('sfms/kpiLeadCheck', { title: 'Hi sfms' });
+});
+
 router.get('/kpiManageAdd', function(req, res, next) {
         res.render('sfms/kpiManageAdd', { title: 'Hi sfms' });
 });
@@ -163,6 +172,13 @@ router.get('/financeManageCheck', function(req, res, next) {
         res.render('sfms/financeManageCheck', { title: 'Hi sfms' });
 });
 
+router.get('/message', function(req, res, next) {
+    res.render('sfms/message', { title: 'Hi sfms' });
+});
+
+router.get('/showMessage', function(req, res, next) {
+    res.render('sfms/showMessage', { title: 'Hi sfms' });
+});
 
 router.get('/getmenu', function(req, res, next) {
         //res.render('sfms/index', { title: 'Hi gemeun' });
@@ -253,4 +269,6 @@ router.use('/api/sign', sign);
 router.use('/api/kpi',kpi);
 //财务管理 路由
 router.use('/api/finance', finance);
+//通知管理 路由
+router.use('/api/message', message);
 module.exports = router;

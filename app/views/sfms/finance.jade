@@ -1,32 +1,6 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
-  jason-pagecontent(action='/sfms/api/finance',conf='paginationConf')
-    div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
-      div.modal-dialog
-        div.modal-content
-          jason-pagecontent(conf='paginationConf')
-            h4.modal-title(id="myModalLabel1") 生成报表
-              button.close(type="button",data-dismiss="modal")
-                span(aria-hidden="true")&times;
-            br
-            table.table.table-striped.table-bordered.text-center
-              tr
-                td(width="15%",class="tableleft") 起始时间
-                td
-                  input(type="date",name='startTime',ng-model='f.startTime')
-              tr
-                td(width="15%",class="tableleft") 截止时间
-                td
-                  input(type="date",name='endTime',ng-model='f.endTime')
-              tr
-                td(width="15%",class="tableleft") 财务记录
-                td
-                  select.est(ng-model='f.isActive')
-                    option(value='1') 有效记录
-                    option(value='') 全部记录
-
-            button.btn.btn-default.pull-right(type="button" ng-click="excel('/sfms/api/finance/excel')") 确认并下载报表
-            button.btn.btn-default(type="button",data-dismiss="modal") Close
+  jason-pagecontent(action='/sfms/api/finance/person',conf='paginationConf')
     div.page-content
       ng-form.form-inline
         span.title  财务管理
@@ -49,8 +23,6 @@ block content
               i.icon.icon-plus 新建
             a.btn.btn-sm.btn-info(ng-click='search()' class='btn btn-sm btn-default') 
               i.icon.icon-repeat  刷新
-            a.btn.btn-sm.btn-success(data-toggle="modal",data-target="#myModal")
-              i.icon.icon-table  生成报表
       hr
       table.table.table-striped.table-bordered.text-center
         thead
@@ -87,9 +59,5 @@ block content
             td
               a(href='#/sfms/financeEdit?ID={{x.ID}}')
                 i.icon.icon-edit 编辑&nbsp
-              button.btt.btn.btn-sm.btn-primary(ng-click="restart($index,x.FIName,'/sfms/api/finance/reuse')",href='',ng-disabled='x.IsActive')
-                i.icon.icon-ok 启用
-              button.btt.btn.btn-sm.btn-danger(ng-click="remove($index,x.FIName,'/sfms/api/finance')",href='',ng-disabled='!x.IsActive')
-                i.icon.icon-ban-circle 禁用
       div.pull-right
         jason-pagination(conf='paginationConf')

@@ -5,12 +5,13 @@ block content
       ng-form.form-inline
         span.title 商品管理
              div.buttons.pull-right
+               label.form-group.my-form-group   价格
+                 input(ng-model='f.minProductPrice' style="width:80px;" placeholder='最低价' type='number' min='0.00' step='0.01')
+               label.form-group.my-form-group  &nbsp;-&nbsp;
+                 input(ng-model='f.maxProductPrice' style="width:80px;" placeholder='最高价' type='number' min='0.00' step='0.01')
                label.form-group.my-form-group   商品名称
                  jason-select.est(ng-model='f.ProductID',source='/jinkeBro/product',stext='ProductName',svalue='ProductID')
-               label.form-group.my-form-group   价格
-                 input(ng-model='f.minProductPrice' placeholder='最低价' type='number' min='0.00' step='0.01')
-               label.form-group.my-form-group  &nbsp;-&nbsp;
-                 input(ng-model='f.maxProductPrice' placeholder='最高价' type='number' min='0.00' step='0.01')
+
                label.form-group.my-form-group   有效期区间
                  input.form-control.ext(ng-model='f.earlyExpireTime' type='date')
                label.form-group.my-form-group  &nbsp;-&nbsp;
@@ -37,8 +38,6 @@ block content
             th 生产日期
             th 有效期
             th 过期时间
-            th 供应商ID
-            th 商品类型ID
             th 商品类型
             th 价格
             th 库存量
@@ -53,8 +52,6 @@ block content
             td {{x.ProducTime}}
             td {{x.ExpireTime}}
             td {{x.remainTime}}天
-            td {{x.SupplierID}}
-            td {{x.ProductTypeID}}
             td {{x.ProductTypeName}}
             td {{x.ProductPrice}}元
             td {{x.TotalNum}}

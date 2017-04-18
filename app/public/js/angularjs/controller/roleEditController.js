@@ -54,7 +54,7 @@ myApp.controller('roleEditController', function($scope, $http,$q,baseService,$lo
                 );
             });
         });
-    })
+    });
    
    $scope.appChanged = function() {
             console.log($scope.formdata.ApplicationID)

@@ -1,4 +1,4 @@
- .table.table-bordered thead tr th {
+.table.table-bordered thead tr th {
     vertical-align: middle;
     text-align: center;
 }
@@ -31,4 +31,40 @@ table .arrow{
     .box{
         margin-left: 50px;
     }
+}
+.error{
+    position: relative;
+    color: #d02125;
+    height: 15px;
+    font-size: 15px;
+}
+.panel{
+    margin: 30px;
+    max-height:220px;
+}
+.panel-body{
+    height: 200px;
+}
+
+@media only screen and (min-width:768px) {
+    .modal-dialog{
+        right:auto;
+        left: 0;
+        width:600px;
+        padding-top: 30px;
+        padding-bottom:30px
+    }
+}
+.file-upload-indicator {
+    position: absolute;
+    text-align: center;
+    bottom: -10px;
+    left: 0px;
+    padding: 8px 8px 1px 3px;
+    border-left: none;
+    border-bottom: none;
+    border-right: 1px solid #8a6d3b;
+    border-top: 1px solid #8a6d3b;
+    border-top-right-radius: 24px;
+    font-size: 12px;
 }

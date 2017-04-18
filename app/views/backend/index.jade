@@ -10,11 +10,12 @@ html(lang='en')
     link(rel='stylesheet', href='assets/css/ace.min.css')
     link(rel='stylesheet', href='assets/css/ace-skins.min.css')
     link(rel='stylesheet', href='css/treeGrid.css')
+
   body(ng-app='myApp' ng-controller="baseController")
     #navbar.navbar.navbar-default
       #navbar-container.navbar-container
         .navbar-header.pull-left
-          a.navbar-brand(href='#')
+          a.navbar-brand(href='#/sfms/showMessage')
             small
               i.icon-leaf
               |                     金科实验室管理系统
@@ -107,6 +108,8 @@ script(src='/js/angularjs/controller/userRoleController.js')
 script(src='/js/angularjs/controller/userEditController.js')
 script(src='/js/angularjs/controller/userInfoController.js')
 script(src='/js/angularjs/controller/userMenuController.js')
+script(src='/js/angularjs/controller/messageController.js')
+script(src='/js/angularjs/controller/kpiAddController.js')
 
 
 script(src='/js/angularjs/controller/sfmsProjectController.js')
@@ -116,4 +119,12 @@ script(src='/js/angularjs/controller/sfmsApiFinanceEditController.js')
 
 script(src='/js/angularjs/controller/jitgoodsAddController.js')
 
-
+//bootstrap-fileinput 组件
+link(rel='stylesheet', href="bower_components/bootstrap-fileinput/css/fileinput.min.css")
+link(href="/bower_components/bootstrap-fileinput/themes/explorer/theme.css", media="all", rel="stylesheet", type="text/css")
+script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js")
+script(src="/bower_components/bootstrap-fileinput/js/fileinput.min.js", type="text/javascript")
+//script(src="/bower_components/bootstrap-fileinput/js/plugins/sortable.js", type="text/javascript")
+script(src="/bower_components/bootstrap-fileinput/themes/explorer/theme.js", type="text/javascript")
+script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", type="text/javascript")
+script(src="/bower_components/bootstrap-fileinput/js/locales/zh.js" type="text/javascript")

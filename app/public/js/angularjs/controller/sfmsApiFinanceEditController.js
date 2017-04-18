@@ -30,7 +30,7 @@ myApp.controller('sfmsApiFinanceEditController', function($scope, $http,$q,baseS
         console.log($scope.paginationConf.formdata.UserID);
         $http({
             method:'get',
-            url: '/sfms/api/project' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
+            url: '/sfms/api/project/user' +"?access_token="+localStorage.getItem('jit_token')+"&jitkey="+localStorage.getItem('jit_key'),
             params:{
                 isPaging:1,
                 pageindex:1,

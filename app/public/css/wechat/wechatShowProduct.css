@@ -1,0 +1,31 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+#product {
+  -webkit-column-count: 2;
+  -moz-column-count: 2;
+  column-count: 2;
+  -moz-column-gap:10px;
+  -webkit-column-gap:10px;
+  column-gap:10px;
+  padding:0px;
+}
+.box {
+  /*width: calc(100% - 20px);*/
+  padding: 5px;
+  border: solid 2px #eeeeee;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+.box img {
+  width: 100%;
+}
+.product .info span{
+  display: inline-block;
+  width: 100%;
+  height: 20px;
+  word-wrap: break-word; 
+  word-break: normal; 
+}

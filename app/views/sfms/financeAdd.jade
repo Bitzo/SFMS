@@ -15,7 +15,7 @@ block content
         tr
           td(width="15%",class="tableleft") 用户名
           td
-            jason-select.input(name='UserID',ng-model='formdata.UserID',source='/backuser',stext='UserName',svalue='AccountID',sactive='1',ng-change="userKpiChanged()")
+            p {{loginUserInfo.UserName}}
 
         tr
           td(width="15%",class="tableleft") 所属项目

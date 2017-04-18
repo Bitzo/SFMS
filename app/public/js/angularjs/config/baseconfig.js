@@ -111,11 +111,17 @@ myApp.config(function($routeProvider) {
     when('/sfms/kpiManage', {
         templateUrl: '/sfms/kpiManage?access_token=' + accesstokenstring,
     }).
+    when('/sfms/kpiLead', {
+        templateUrl: '/sfms/kpiLead?access_token=' + accesstokenstring,
+    }).
     when('/sfms/kpiManageAdd', {
         templateUrl: '/sfms/kpiManageAdd?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiManageCheck', {
         templateUrl: '/sfms/kpiManageCheck?access_token=' + accesstokenstring,
+    }).
+    when('/sfms/kpiLeadCheck', {
+        templateUrl: '/sfms/kpiLeadCheck?access_token=' + accesstokenstring,
     }).
     when('/sfms/kpiCount', {
         templateUrl: '/sfms/kpiCount?access_token=' + accesstokenstring,
@@ -146,6 +152,12 @@ myApp.config(function($routeProvider) {
     }).
     when('/sfms/signPersonal', {
         templateUrl: '/sfms/signPersonal?access_token=' + accesstokenstring,
+    }).
+    when('/sfms/message', {
+        templateUrl: '/sfms/message?access_token=' + accesstokenstring,
+    }).
+    when('/sfms/showMessage', {
+        templateUrl: '/sfms/showMessage?access_token=' + accesstokenstring,
     }).
     when('/jinkeBro/jitorder', {
         templateUrl: '/jinkeBro/jitorder',
@@ -194,6 +206,12 @@ myApp.config(function($routeProvider) {
     }).
     when('/jinkeBro/wechatMenuManage', {
         templateUrl: '/jinkeBro/wechatMenuManage?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/wechatproductinfo', {
+        templateUrl: '/jinkeBro/wechatproductinfo?access_token=' + accesstokenstring,
+    }).
+    when('/jinkeBro/wechatshowpersonalorder', {
+        templateUrl: '/jinkeBro/wechatshowpersonalorder?access_token=' + accesstokenstring,
     }).
     otherwise({
         redirectTo: '/'

@@ -50,6 +50,8 @@ angular.module('jason.pagination').directive('jasonForm',function($location,jaso
             scope.submit=function(){
 
             }
+
+
         }
     }
 });
