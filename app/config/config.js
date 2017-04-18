@@ -20,9 +20,10 @@ var config = {
     port: 80, // 程序运行的端口
     host: '127.0.0.1',
     mysql: {
-        host: '115.159.185.58',
-        user: 'root',
-        password: '907244758smy.',
+
+        host: '182.254.146.167',
+        user: 'stackfarm',
+        password: '1320program',
         database: 'jit_backend',
         
         connectionLimit: 100,

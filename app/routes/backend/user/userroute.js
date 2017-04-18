@@ -819,6 +819,14 @@ router.get('/', function (req, res) {
                 }
             });
 
+        }else{
+            res.status(400);
+
+            return res.json({
+                code: 400,
+                isSuccess: false,
+                msg: results.msg
+            });
         }
     });
 });
