@@ -19,6 +19,11 @@ block content
               span(name='UserID',ng-model='paginationConf.formdata.UserID') {{paginationConf.formdata.UserName}}
               
           tr
+            td(width="15%",class="tableleft") 绩效大类
+            td
+              jason-select.input(name='KPIClass',ng-model='paginationConf.formdata.KPIClass',source='/datadict/plain',selectparams='{"Category":"dc_kpiclass"}',stext='DictionaryValue',svalue='DictionaryID')
+
+          tr
             td(width="15%",class="tableleft") 绩效类型
             td
               jason-select.input(name='KPIType',ng-model='paginationConf.formdata.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')

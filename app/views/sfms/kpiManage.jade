@@ -5,7 +5,7 @@ block content
       ng-form.form-inline
         span.title  绩效审核
         div.buttons.pull-right
-          //label.form-group.my-form-group  绩效类型
+          label.form-group.my-form-group  绩效类型
            jason-select.est(ng-model='f.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
           label.form-group.my-form-group  所属项目
            jason-select.est(ng-model='f.ProjectID',source='/sfms/api/project',stext='ProjectName',svalue='ID')
@@ -25,6 +25,7 @@ block content
           tr
             th 序号
             th 绩效名称          
+            th 绩效大类
             th 绩效类型
             th 所属项目
             th 申请人
@@ -40,6 +41,7 @@ block content
           tr(ng-repeat="x in datas") 
             td {{$index+1+(paginationConf.currentPage-1)*paginationConf.itemsPerPage}}
             td {{x.KPIName}}            
+            td {{x.KPIClassValue}}
             td {{x.KPITypeValue}}
             td {{x.ProjectName}}
             td {{x.UserName}}
