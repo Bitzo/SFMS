@@ -25,6 +25,7 @@ exports.addKPI = function(data, callback) {
     var formdata = {
         'KPIName': data.KPIName,
         'KPIType': data.KPIType,
+        'KPIClass': data.KPIClass,
         'KPIScore': data.KPIScore,
         'ProjectId': data.ProjectId,
         'UserID': data.UserID,
@@ -75,6 +76,7 @@ exports.updateKPI = function(data, callback) {
         'ID': data.ID,
         'KPIName': data.KPIName,
         'KPIType': data.KPIType,
+        'KPIClass': data.KPIClass,
         'KPIScore': data.KPIScore,
         'ProjectId': data.ProjectId || data.ProjectID,
         'UserID': data.UserID,
@@ -127,6 +129,7 @@ exports.queryKPI = function (data, callback) {
         'UserID': data.UserID || '',
         'KPIStatus': data.KPIStatus || '',
         'KPIType': data.KPIType || '',
+        'KPIClass': data.KPIClass || '',
         'KPIName': data.KPIName || '',
         'StartTime': data.StartTime || '',
         'EndTime': data.EndTime || '',
@@ -186,6 +189,7 @@ exports.countQuery = function (data, callback) {
         'UserID': data.UserID || '',
         'KPIStatus': data.KPIStatus || '',
         'KPIType': data.KPIType || '',
+        'KPIClass': data.KPIClass || '',
         'StartTime': data.StartTime || '',
         'EndTime': data.EndTime || '',
         'jit_kpiinfo.IsActive': data.IsActive || ''

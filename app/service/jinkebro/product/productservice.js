@@ -160,7 +160,7 @@ Product.prototype.insertProduct = function (data, callback) {
         return callback(false,returnResult);
     }
     if (!(dataCheck.isUndefined(formdata.ExpireTime))) {
-        if (validator.isDate(formdata.ExpireTime)) {
+        if (validator.isDate(formdata.ExpireTime.toString())) {
             formdata.ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");
         } else {
             returnResult.msg = '时间格式有误！';
@@ -172,7 +172,7 @@ Product.prototype.insertProduct = function (data, callback) {
     }
 
     if (!(dataCheck.isUndefined(formdata.ProducTime))) {
-        if (validator.isDate(formdata.ProducTime)) {
+        if (validator.isDate(formdata.ProducTime.toString())) {
             formdata.ProducTime = moment(formdata.ProducTime).format("YYYY-MM-DD");
         } else {
             returnResult.msg = '时间格式有误！';
@@ -386,7 +386,7 @@ Product.prototype.updateProduct = function (data, callback) {
     }
 
     if (!(dataCheck.isUndefined(formdata.ExpireTime))) {
-        if (validator.isDate(formdata.ExpireTime)) {
+        if (validator.isDate(formdata.ExpireTime.toString())) {
             formdata.ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");
         } else {
             returnResult.msg = '时间格式有误！';
@@ -398,7 +398,7 @@ Product.prototype.updateProduct = function (data, callback) {
     }
 
     if (!(dataCheck.isUndefined(formdata.ProducTime))) {
-        if (validator.isDate(formdata.ProducTime)) {
+        if (validator.isDate(formdata.ProducTime.toString())) {
             formdata.ProducTime = moment(formdata.ProducTime).format("YYYY-MM-DD");
         } else {
             returnResult.msg = '时间格式有误！';

@@ -110,7 +110,6 @@ exports.queryProjectUser = function (data, callback) {
             }
         }
     }
-    sql += " limit " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询项目用户信息： " + sql);
 

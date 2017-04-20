@@ -151,7 +151,7 @@ exports.countQuery = function (data, callback) {
 
 //KPI查询
 exports.queryKPI = function (data, callback) {
-    var sql = 'select jit_kpiinfo.ID,KPIName,KPIType,KPIScore,ProjectID,ProjectName,UserID,UserName,' +
+    var sql = 'select jit_kpiinfo.ID,KPIName,KPIType,KPIClass,KPIScore,ProjectID,ProjectName,UserID,UserName,' +
             'jit_kpiinfo.CreateTime,jit_kpiinfo.OperateUser,CheckTime,CheckUser,KPIStatus,Remark,' +
             'jit_kpiinfo.IsActive from jit_kpiinfo,jit_projectbaseinfo ' +
             'where 1=1 and jit_kpiinfo.projectID = jit_projectbaseinfo.ID and jit_projectbaseinfo.IsActive = 1 ',

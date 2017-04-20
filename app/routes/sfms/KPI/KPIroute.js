@@ -225,6 +225,7 @@ router.post('/', function (req, res) {
         var query = req.body.formdata,
             ProjectID = query.ProjectID,
             KPIType = query.KPIType,//字典表的ID
+            KPIClass = query.KPIClass,
             KPIScore = query.KPIScore,
             OperateUser = req.query.jitkey,
             UserID = query.UserID || req.query.jitkey,
@@ -232,8 +233,8 @@ router.post('/', function (req, res) {
             Remark = query.Remark || '';
 
         //检查所需要的参数是否齐全
-        var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID'],
-            temp1 = ['绩效名称', '绩效类型', '绩效分', '所属项目'];
+        var temp = ['KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'KPIClass'],
+            temp1 = ['绩效名称', '绩效类型', '绩效分', '所属项目', '绩效大类'];
 
         err = '缺少值: ';
 
@@ -326,6 +327,7 @@ router.post('/', function (req, res) {
                 query = {
                     'ProjectID': ProjectID,
                     'KPIType': KPIType,
+                    'KPIClass': KPIClass,
                     'UserID': UserID,
                     'OperateUserID': req.query.jitkey,
                     'IsActive': 1
@@ -370,6 +372,7 @@ router.post('/', function (req, res) {
                             data = {
                                 'KPIName': KPIName,
                                 'KPIType': KPIType,
+                                'KPIClass': KPIClass,
                                 'KPIScore': KPIScore,
                                 'ProjectId': ProjectID,
                                 'UserID': UserID,
@@ -551,6 +554,7 @@ router.put('/', function (req, res) {
             ID = query.ID,
             KPIName = query.KPIName,
             KPIType = query.KPIType,
+            KPIClass = query.KPIClass,
             KPIScore = query.KPIScore,
             ProjectID = query.ProjectID,
             UserID = query.UserID,
@@ -562,6 +566,7 @@ router.put('/', function (req, res) {
             'ID': ID,
             'KPIName': KPIName,
             'KPIType': KPIType,
+            'KPIClass': KPIClass,
             'KPIScore': KPIScore,
             'ProjectId': ProjectID,
             'UserID': UserID,
@@ -603,8 +608,8 @@ router.put('/', function (req, res) {
         }
 
         //检查所需要的参数是否齐全
-        var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID'],
-            temp1 = ['绩效ID', '绩效名称', '绩效类型', '绩效分', '所属项目', '用户名'];
+        var temp = ['ID', 'KPIName', 'KPIType', 'KPIScore', 'ProjectID', 'UserID','KPIClass'],
+            temp1 = ['绩效ID', '绩效名称', '绩效类型', '绩效分', '所属项目', '用户名', '绩效大类'];
 
         err = '缺少值: ';
 
@@ -1072,6 +1077,7 @@ router.get('/person', function (req, res) {
             EndTime = query.EndTime || '',
             KPIStatus = query.KPIStatus || '',
             KPIType = query.KPIType || '',
+            KPIClass = query.KPIClass || '',
             IsActive = query.IsActive || '',
             page = req.query.pageindex > 0 ? req.query.pageindex : 1,
             pageNum = req.query.pagesize || config.pageCount,
@@ -1084,6 +1090,7 @@ router.get('/person', function (req, res) {
             'OperateUserID': req.query.jitkey,
             'KPIStatus': KPIStatus.trim(),
             'KPIType': KPIType,
+            'KPIClass': KPIClass,
             'StartTime': StartTime,
             'EndTime': EndTime,
             'IsActive': IsActive,
@@ -1177,14 +1184,17 @@ router.get('/person', function (req, res) {
                 for (var i=0;i<results.length;++i) {
                     if (i==0) {
                         DicID[i] = results[i].KPIType;
+                        DicID[1] = results[i].KPIClass;
                     } else {
                         var k=0;
-
                         for (k=0;k<DicID.length;++k) {
                             if (DicID[k] == results[i].KPIType) break;
                         }
-
                         if (k == DicID.length) DicID[k] = results[i].KPIType;
+                        for (k=0;k<DicID.length;++k) {
+                            if (DicID[k] == results[i].KPIClass) break;
+                        }
+                        if (k == DicID.length) DicID[k] = results[i].KPIClass;
                     }
                 }
 
@@ -1225,6 +1235,7 @@ router.get('/person', function (req, res) {
                                 var j=0;
                                 for (j=0;j<data.length;++j) {
                                     if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
+                                    if (results[i].KPIClass == data[j].DictionaryID) results[i].KPIClassValue = data[j].DictionaryValue;
                                 }
                             }
 
@@ -1283,6 +1294,7 @@ router.get('/', function (req, res) {
             EndTime = query.EndTime || '',
             KPIStatus = query.KPIStatus || '',
             KPIType =  query.KPIType || '',
+            KPIClass =  query.KPIClass || '',
             KPIName = query.KPIName || '',
             IsActive = query.IsActive || '',
             page = req.query.pageindex > 0 ? req.query.pageindex : 1,
@@ -1295,6 +1307,7 @@ router.get('/', function (req, res) {
             'UserID': UserID,
             'KPIStatus': KPIStatus.trim(),
             'KPIType': KPIType,
+            'KPIClass': KPIClass,
             'KPIName': KPIName,
             'StartTime': StartTime,
             'EndTime': EndTime,
@@ -1386,13 +1399,17 @@ router.get('/', function (req, res) {
                 for (var i=0;i<results.length;++i) {
                     if (i==0) {
                         DicID[i] = results[i].KPIType;
+                        DicID[1] = results[i].KPIClass;
                     } else {
                         var k=0;
-
                         for (k=0;k<DicID.length;++k) {
                             if (DicID[k] == results[i].KPIType) break;
                         }
                         if (k == DicID.length) DicID[k] = results[i].KPIType;
+                        for (k=0;k<DicID.length;++k) {
+                            if (DicID[k] == results[i].KPIClass) break;
+                        }
+                        if (k == DicID.length) DicID[k] = results[i].KPIClass;
                     }
                 }
 
@@ -1434,10 +1451,11 @@ router.get('/', function (req, res) {
 
                                 for (j=0;j<data.length;++j) {
                                     if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
+                                    if (results[i].KPIClass == data[j].DictionaryID) results[i].KPIClassValue = data[j].DictionaryValue;
+
                                 }
                             }
                             ID = query.ID || '';
-                            console.log(ID)
                             if(ID === ''){
                                 res.status(200);
 
@@ -1457,14 +1475,10 @@ router.get('/', function (req, res) {
                                 }
 
                                 var count = files.length;
-                                // console.log(files)
                                 var filesArr = [];
-                                // console.log('ID: ' + ID)
                                 for(var i in files){
-                                    // console.log(files[i].split('_')[1])
                                     if(ID === files[i].split('_')[1]) {
                                         var size = fs.statSync(path.join(fileUrl,files[i])).size;
-                                        // console.log(size);
                                         filesArr.push({
                                             'fileName': files[i],
                                             'fileUrl': path.join('imgs/KPIMaterial',files[i]),
@@ -1531,7 +1545,8 @@ router.get('/manage', function (req, res) {
             StartTime = query.StartTime || '',
             EndTime = query.EndTime || '',
             KPIStatus = query.KPIStatus || '',
-            KPIType =  10,
+            KPIClass =  10,
+            KPIType = query.KPIType || '',
             KPIName = query.KPIName || '',
             IsActive = query.IsActive || '',
             page = req.query.pageindex > 0 ? req.query.pageindex : 1,
@@ -1544,6 +1559,7 @@ router.get('/manage', function (req, res) {
             'UserID': UserID,
             'KPIStatus': KPIStatus.trim(),
             'KPIType': KPIType,
+            'KPIClass':KPIClass,
             'KPIName': KPIName,
             'StartTime': StartTime,
             'EndTime': EndTime,
@@ -1635,13 +1651,17 @@ router.get('/manage', function (req, res) {
                 for (var i=0;i<results.length;++i) {
                     if (i==0) {
                         DicID[i] = results[i].KPIType;
+                        DicID[1] = results[i].KPIClass;
                     } else {
                         var k=0;
-
                         for (k=0;k<DicID.length;++k) {
                             if (DicID[k] == results[i].KPIType) break;
                         }
                         if (k == DicID.length) DicID[k] = results[i].KPIType;
+                        for (k=0;k<DicID.length;++k) {
+                            if (DicID[k] == results[i].KPIClass) break;
+                        }
+                        if (k == DicID.length) DicID[k] = results[i].KPIClass;
                     }
                 }
 
@@ -1683,6 +1703,8 @@ router.get('/manage', function (req, res) {
 
                                 for (j=0;j<data.length;++j) {
                                     if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
+                                    if (results[i].KPIClass == data[j].DictionaryID) results[i].KPIClassValue = data[j].DictionaryValue;
+
                                 }
                             }
                             res.status(200);
@@ -1739,7 +1761,8 @@ router.get('/lead', function (req, res) {
             StartTime = query.StartTime || '',
             EndTime = query.EndTime || '',
             KPIStatus = query.KPIStatus || '',
-            KPIType =  16,
+            KPIClass =  16,
+            KPIType = query.KPIType || '',
             KPIName = query.KPIName || '',
             IsActive = query.IsActive || '',
             page = req.query.pageindex > 0 ? req.query.pageindex : 1,
@@ -1752,6 +1775,7 @@ router.get('/lead', function (req, res) {
             'UserID': UserID,
             'KPIStatus': KPIStatus.trim(),
             'KPIType': KPIType,
+            'KPIClass': KPIClass,
             'KPIName': KPIName,
             'StartTime': StartTime,
             'EndTime': EndTime,
@@ -1867,13 +1891,17 @@ router.get('/lead', function (req, res) {
                     for (var i=0;i<results.length;++i) {
                         if (i==0) {
                             DicID[i] = results[i].KPIType;
+                            DicID[1] = results[i].KPIClass;
                         } else {
                             var k=0;
-
                             for (k=0;k<DicID.length;++k) {
                                 if (DicID[k] == results[i].KPIType) break;
                             }
                             if (k == DicID.length) DicID[k] = results[i].KPIType;
+                            for (k=0;k<DicID.length;++k) {
+                                if (DicID[k] == results[i].KPIClass) break;
+                            }
+                            if (k == DicID.length) DicID[k] = results[i].KPIClass;
                         }
                     }
 
@@ -1915,6 +1943,8 @@ router.get('/lead', function (req, res) {
 
                                     for (j=0;j<data.length;++j) {
                                         if (results[i].KPIType == data[j].DictionaryID) results[i].KPITypeValue = data[j].DictionaryValue;
+                                        if (results[i].KPIClass == data[j].DictionaryID) results[i].KPIClassValue = data[j].DictionaryValue;
+
                                     }
                                 }
                                 for (var i=0;i<result.data.length;++i)

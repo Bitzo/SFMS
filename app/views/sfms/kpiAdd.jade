@@ -14,6 +14,11 @@ block content
             small.error(ng-if="financeAdd.FIName.$error.maxlength && financeAdd.FIName.$touched") 绩效名称最多45位
 
         tr
+          td(width="15%",class="tableleft") 绩效大类
+          td
+            jason-select.input(name='KPIClass',ng-model='formdata.KPIClass',source='/datadict/plain',selectparams='{"Category":"dc_kpiclass"}',stext='DictionaryValue',svalue='DictionaryID')
+
+        tr
           td(width="15%",class="tableleft") 绩效类型
           td
             jason-select.input(name='KPIType',ng-model='formdata.KPIType',source='/datadict/plain',selectparams='{"Category":"dc_kpitype"}',stext='DictionaryValue',svalue='DictionaryID')
