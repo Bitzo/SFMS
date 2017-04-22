@@ -65,7 +65,7 @@ DataVerify.prototype.isNumericArray = function(keyArr,valueArr) {
 
         if (keyLength == valueLength) {
             for (var i=0; i<keyLength; i++) {
-                if (!(DataVerify.prototype.isNumeric(keyArr[i]))) {
+                if (!(DataVerify.prototype.isNumeric(keyArr[i])) && keyArr[i] != '') {
                     return {
                         isRight : false,
                         msg : valueArr[i] + ' 应该是数字类型!'

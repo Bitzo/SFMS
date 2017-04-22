@@ -1,6 +1,17 @@
 link(rel='stylesheet', href='css/backend/backend.css')   
 block content
   jason-pagecontent(action='/jinkeBro/product' conf='paginationConf')
+    div.modal.fade(id="myModal",tabindex="-1",role="dialog",aria-labelleby="myModalLabel",aria-hidden="true")
+      div.modal-dialog(style="width:800px")
+        div.modal-content
+          div.modal-body
+            h3.modal-title(id="myModalLabel") 上传图片
+              button.close(type="button",data-dismiss="modal" aria-hidden="true") &times;
+            form(method="post",name="kpiAdd",enctype="multipart/form-data", ng-controller='jitgoodsAddController')
+              td(colspan='2')
+                input#input-44.file-loading(name="input44[]", type="file", multiple="",)
+                #errorBlock.help-block
+            button.btn.btn-default(type="button",data-dismiss="modal") Close
     div.page-content
       ng-form.form-inline
         span.title 商品管理
@@ -56,7 +67,9 @@ block content
             td {{x.ProductPrice}}元
             td {{x.TotalNum}}
             td {{x.OnSale | isOnSaleFilter : x.OnSale}}
-            td 
+            td
+              a(data-toggle="modal",data-target="#myModal",ng-click='getProductSKU(x.SKU,x.ProductID)',href='',)
+                i.icon.icon-zoom-in 上传图片
               a(href='#/jinkeBro/jitgoodsEdit/?ProductID={{x.ProductID}}' )
                 i.icon.icon-edit 编辑 
               a(ng-click="remove($index,x.ProductName,'/jinkeBro/product')")

@@ -271,7 +271,7 @@ exports.updateProduct = function(data, callback) {
     update_sql = update_sql + sql;
 
     logger.writeInfo("[updateProduct func in productdal]产品编辑:" + update_sql);
-
+    console.log("[updateProduct func in productdal]产品编辑:" + update_sql);
     db_jinkebro.mysqlPool.getConnection(function(err, connection) {
         if (err) {
             logger.writeError("[productdal]数据库连接错误：" + err);

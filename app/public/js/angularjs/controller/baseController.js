@@ -984,6 +984,10 @@ myApp.controller('baseController', function($scope, $http,$q,baseService,$locati
         });
     };
 
+    $scope.getProductSKU = function (SKU,ProductID) {
+        $scope.SKU = SKU;
+        $scope.ProductID = ProductID;
+    };
 
     $scope.formdata = {};
 });

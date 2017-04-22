@@ -115,12 +115,12 @@ Product.prototype.insertProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
-    if (!(validator.isLength((formdata.ProductName),{min:1,max:50}))) {
+    if (!(validator.isLength((formdata.ProductName),{min:1,max:50})) && formdata.ProductName != '') {
         returnResult.msg = '商品名长度应该小于50位！';
         return callback(false,returnResult);
     }
 
-    if (moment(formdata.ExpireTime).isBefore(formdata.ProducTime)) {
+    if (moment(formdata.ExpireTime).isBefore(formdata.ProducTime) && formdata.ProducTime != '' && formdata.ExpireTime != '') {
         returnResult.msg = '有效期不能比生产日期早!';
         return callback(false,returnResult);
     }
@@ -135,31 +135,31 @@ Product.prototype.insertProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
-    if (!(validator.isLength((formdata.TotalNum.toString()),{min:1,max:11}))) {
+    if (!(validator.isLength((formdata.TotalNum.toString()),{min:1,max:11})) && formdata.TotalNum != '') {
         returnResult.msg = '首次入库总数应该小于11位！';
         return callback(false,returnResult);
     }
 
-    if (formdata.TotalNum < 0) {
+    if (formdata.TotalNum < 0 && formdata.TotalNum != '') {
         returnResult.msg = '首次入库总数不能为负数！';
         return callback(false,returnResult);
     }
 
-    if (!(validator.isLength((formdata.newProductTypeName),{min:1,max:50}))) {
+    if (!(validator.isLength((formdata.newProductTypeName),{min:1,max:50})) && formdata.newProductTypeName != '') {
         returnResult.msg = '商品类型长度应该小于50位！';
         return callback(false,returnResult);
     }
 
-    if (!(validator.isDecimal((formdata.ProductPrice).toString()))) {
+    if (!(validator.isDecimal((formdata.ProductPrice).toString())) && formdata.ProductPrice != '') {
         returnResult.msg = '商品价格应该是合法的整数或者小数！';
         return callback(false,returnResult);
     }
 
-    if (formdata.ProductPrice < 0) {
+    if (formdata.ProductPrice < 0 && formdata.ProductPrice != '') {
         returnResult.msg = '商品价格不能为负数！';
         return callback(false,returnResult);
     }
-    if (!(dataCheck.isUndefined(formdata.ExpireTime))) {
+    if (!(dataCheck.isUndefined(formdata.ExpireTime)) && formdata.ExpireTime != '') {
         if (validator.isDate(formdata.ExpireTime.toString())) {
             formdata.ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");
         } else {
@@ -171,7 +171,7 @@ Product.prototype.insertProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
-    if (!(dataCheck.isUndefined(formdata.ProducTime))) {
+    if (!(dataCheck.isUndefined(formdata.ProducTime)) && formdata.ProducTime != '') {
         if (validator.isDate(formdata.ProducTime.toString())) {
             formdata.ProducTime = moment(formdata.ProducTime).format("YYYY-MM-DD");
         } else {
@@ -289,19 +289,19 @@ Product.prototype.updateProduct = function (data, callback) {
 
     // start data check
     var formdata = {
-        "SKU" : data.SKU,
+        "SKU" : data.SKU || '',
         "ProductID" : data.ProductID,
-        "ProductName" : data.ProductName,
-        "ProductDesc" : data.ProductDesc,
-        "ProductImgPath" : data.ProductImgPath,
-        "ExpireTime" : data.ExpireTime,
-        "ProducTime" : data.ProducTime,
-        "SupplierID" : data.SupplierID,
-        "ProductTypeID" : data.ProductTypeID,
-        "ProductPrice" : data.ProductPrice,
-        "OnSale" : data.OnSale
+        "ProductName" : data.ProductName || '',
+        "ProductDesc" : data.ProductDesc || '',
+        "ProductImgPath" : data.ProductImgPath || '',
+        "ExpireTime" : data.ExpireTime || '',
+        "ProducTime" : data.ProducTime || '',
+        "SupplierID" : data.SupplierID || '',
+        "ProductTypeID" : data.ProductTypeID || '',
+        "ProductPrice" : data.ProductPrice || '',
+        "OnSale" : data.OnSale || ''
     };
-
+    //console.log(formdata);
     var returnResult = {
         "msg": "参数不能为空!"
     };
@@ -360,12 +360,12 @@ Product.prototype.updateProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
-    if (!(validator.isLength((formdata.ProductName),{min:1,max:50}))) {
+    if (!(validator.isLength((formdata.ProductName),{min:1,max:50})) && formdata.ProductName != '') {
         returnResult.msg = '商品名长度应该小于50位！';
         return callback(false,returnResult);
     }
 
-    if ((formdata.SKU).toString().length != 15) {
+    if ((formdata.SKU).toString().length != 15 && formdata.SKU != '') {
         returnResult.msg = '仓储量单位长度应该等于15位！';
         return callback(false,returnResult);
     }
@@ -380,12 +380,12 @@ Product.prototype.updateProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
-    if (!(validator.isDecimal((formdata.ProductPrice).toString()))) {
+    if (!(validator.isDecimal((formdata.ProductPrice).toString())) && formdata.ProductPrice != '') {
         returnResult.msg = '商品价格应该是合法的整数或者小数！';
         return callback(false,returnResult);
     }
 
-    if (!(dataCheck.isUndefined(formdata.ExpireTime))) {
+    if (!(dataCheck.isUndefined(formdata.ExpireTime)) && formdata.ExpireTime != '') {
         if (validator.isDate(formdata.ExpireTime.toString())) {
             formdata.ExpireTime = moment(formdata.ExpireTime).format("YYYY-MM-DD");
         } else {
@@ -397,7 +397,7 @@ Product.prototype.updateProduct = function (data, callback) {
         return callback(false,returnResult);
     }
 
-    if (!(dataCheck.isUndefined(formdata.ProducTime))) {
+    if (!(dataCheck.isUndefined(formdata.ProducTime)) && formdata.ProducTime != '') {
         if (validator.isDate(formdata.ProducTime.toString())) {
             formdata.ProducTime = moment(formdata.ProducTime).format("YYYY-MM-DD");
         } else {
@@ -447,6 +447,20 @@ Product.prototype.updateProduct = function (data, callback) {
     });
 };
 
+Product.prototype.updateProductImgPath = function (data,callback) {
+    var formdata = {
+        ProductID : data.ProductID,
+        ProductImgPath : data.ProductImgPath
+    };
+
+    productDAL.updateProduct(formdata, function (err, result) {
+        if (err) {
+            return callback(true,'服务器内部错误!');
+        }
+
+        return callback(false, result);
+    });
+};
 //查询商品信息
 Product.prototype.queryProducts = function (data, callback) {
     //要写入operationlog表的

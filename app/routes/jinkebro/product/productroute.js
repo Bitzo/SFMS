@@ -17,7 +17,110 @@ var productService = appRequire('service/jinkebro/product/productservice'),
     userFuncService = appRequire('service/backend/user/userfuncservice'),
     moment = require('moment'),
     validator = require('validator'),
-    dataCheck = appRequire('util/dataverify');
+    dataCheck = appRequire('util/dataverify'),
+    formidable=require('formidable'),
+    fs = require('fs'),
+    path = require('path');
+
+//商品图片上传
+router.post('/imgupload',function (req,res) {
+
+    var form = new formidable.IncomingForm(),
+                files=[],
+                fields=[],
+                docs=[];
+
+    console.log('start upload in address: jinkeBro/product/imgupload');
+
+    var ID = 0,
+        fileID = 0,
+        baseID = -1,
+        filePath = '',
+        reqParams = [],
+        fileName = '',
+        productID = 0;
+    //存放目录
+    form.uploadDir = 'public/imgs/uploads';
+
+    var fileUrl = 'public/imgs/uploads';
+
+    form.on('field', function(field, value) {
+        if(field == 'SKU') {
+            reqParams = value.split(",");
+            ID = reqParams[0];
+            productID = parseInt(reqParams[1]);
+            fileName = ID;
+        } else {
+            fileID = value;
+        }
+    }).on('file', function(field, file) {
+
+        files.push([field, file]);
+        docs.push(file);
+
+        var types = file.name.split('.')[file.name.split('.').length-1];
+        var date = moment().format("YYYYMMDD");
+        fs.readdir(fileUrl,function(err,files) {
+            if (err) {
+                console.log('file dir error');
+                return res.json({
+                    code: 500,
+                    isSuccess: false,
+                    msg: '错误'
+                })
+            }
+
+            for (var i in files) {
+                if (ID === files[i].split('_')[1]) {
+                    // console.log(files[i].split('_')[2].split('.')[0])
+                    if (baseID < files[i].split('_')[2].split('.')[0]) {
+                        baseID = files[i].split('_')[2].split('.')[0];
+                    }
+                }
+            }
+            // console.log('======= ' + baseID)
+            if(baseID != -1){
+                fileID = parseInt(fileID) + parseInt(baseID) + 1;
+            }
+            // console.log('fileID: ' + fileID)
+            fs.renameSync(file.path, "public/imgs/uploads/" + fileName + '.' + types);
+            filePath += 'imgs/uploads/' + ID + '.' + types;
+            console.log('上传的filePath:' + filePath);
+            var formdata = {
+                ProductID : productID,
+                ProductImgPath : filePath
+            };
+            productService.updateProductImgPath(formdata,function (err,updateImgPathResult) {
+                if(err) {
+                    console.log(err);
+                }
+
+                //console.log(updateImgPathResult);
+                if (updateImgPathResult.affectedRows == 1) {
+                    console.log("修改图片路径成功!");
+                }
+            });
+        });
+    }).on('end', function() {
+        res.writeHead(200, {
+            'content-type': 'text/plain'
+        });
+        var out = {
+            Resopnse : {
+                'result-code':0,
+                 timeStamp : new Date(),
+            },
+            files:docs
+        };
+        var sout = JSON.stringify(out);
+        res.end(sout);
+    });
+
+    form.parse(req, function(err, fields, files) {
+        err && console.log('formidabel error : ' + err);
+        // console.log('parsing done');
+    });
+});
 
 //商品新增
 router.post('/', function (req, res) {
