@@ -147,7 +147,6 @@ exports.judgeUserProject = function (data, callback) {
             msg: '',
             isProjectManger: false
     };
-
     if (formdata.userID <= 0 || isNaN(formdata.userID)) {
         results.msg = '用户ID有误！';
         return callback(false, results);
@@ -159,29 +158,25 @@ exports.judgeUserProject = function (data, callback) {
     }
 
     if (formdata.isActive == 0) formdata.isActive = '';
-    
-    projectservice.queryProject({ID:formdata.projectID, IsActive: 1, OperateUserID: formdata.operateUserID}, function (err, results) {
+    projectservice.queryProject({ID:formdata.projectID, IsActive: 1, OperateUserID: formdata.operateUserID}, function (err, queryRes) {
         if (err) {
             return callback(true, results);
         }
-
-        if (results!==undefined&&results.length>0) {
-            var ProjectManageID = results[0].ProjectManageID,
+        if (queryRes!==undefined&&queryRes.length>0) {
+            var ProjectManageID = queryRes[0].ProjectManageID,
                 isIn = false;
 
-            projectuserservice.queryProjectByUserID({'UserID': formdata.userID}, function (err, results) {
+            projectuserservice.queryProjectByUserID({'UserID': formdata.userID}, function (err, queryRes) {
                 if (err) {
                     return callback(true, results);
                 }
-
                 if (ProjectManageID == formdata.userID) {
                     isIn = true;
                     results.isProjectManger = true;
                 }
-
-                if(results!==undefined && !isIn) {
-                    for (var i in results) {
-                        if (results[i].ProjectID == formdata.projectID) isIn = true;
+                if(queryRes!==undefined && !isIn) {
+                    for (var i in queryRes) {
+                        if (queryRes[i].ProjectID == formdata.projectID) isIn = true;
                     }
                 }
 

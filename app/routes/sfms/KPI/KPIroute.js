@@ -268,7 +268,6 @@ router.post('/', function (req, res) {
                     msg: '操作失败，服务器出错'
                 });
             }
-
             if (!results.isSuccess) {
                 res.status(400);
 
@@ -278,8 +277,8 @@ router.post('/', function (req, res) {
                     msg: '操作失败，用户不在所在的项目中'
                 });
             }
-            console.log(results.isProjectManger + ' : '+ KPIType)
-            if(results.isProjectManger && KPIType == 16){
+
+            if(results.isProjectManger && KPIClass == 16){
                 res.status(400);
 
                 return res.json({
@@ -288,7 +287,8 @@ router.post('/', function (req, res) {
                     msg: '操作失败，项目组长请勿申请组员绩效！'
                 });
             }
-            if(!results.isProjectManger && KPIType == 10){
+
+            if(!results.isProjectManger && KPIClass == 10){
                 res.status(400);
 
                 return res.json({
@@ -297,9 +297,10 @@ router.post('/', function (req, res) {
                     msg: '操作失败，您不是该项目的项目组长！'
                 });
             }
+
             //查询KPIName, KPIType是否在字典表里
             var DicID = {
-                'DictionaryID': [KPIType]
+                'DictionaryID': [KPIType,KPIClass]
             };
 
             dataservice.queryDatadictionaryByID(DicID, function (err, results) {
@@ -312,7 +313,6 @@ router.post('/', function (req, res) {
                         msg: '操作失败，服务器出错'
                     });
                 }
-
                 if (!(results !== undefined && results.length == DicID.DictionaryID.length)) {
                     res.status(400);
 
@@ -685,9 +685,30 @@ router.put('/', function (req, res) {
                     });
                 }
 
+
+                if(results.isProjectManger && KPIClass == 16){
+                    res.status(400);
+
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: '操作失败，项目组长请勿申请组员绩效！'
+                    });
+                }
+
+                if(!results.isProjectManger && KPIClass == 10){
+                    res.status(400);
+
+                    return res.json({
+                        status: 404,
+                        isSuccess: false,
+                        msg: '操作失败，您不是该项目的项目组长！'
+                    });
+                }
+
                 //查询KPIType是否在字典表里
                 var DicID = {
-                    'DictionaryID': [KPIType]
+                    'DictionaryID': [KPIType,KPIClass]
                 };
 
                 dataservice.queryDatadictionaryByID(DicID, function (err, results) {

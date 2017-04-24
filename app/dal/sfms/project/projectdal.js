@@ -147,7 +147,6 @@ exports.queryProject = function (data, callback) {
     else sql += "order by IsActive desc LIMIT " + (page-1)*num + "," + num;
 
     logger.writeInfo("查询项目信息：" + sql);
-    console.log(sql)
 
     db_sfms.mysqlPool.getConnection(function(err, connection) {
         if (err) {
