@@ -10,12 +10,11 @@ html(lang='en')
     link(rel='stylesheet', href='assets/css/ace.min.css')
     link(rel='stylesheet', href='assets/css/ace-skins.min.css')
     link(rel='stylesheet', href='css/treeGrid.css')
-
   body(ng-app='myApp' ng-controller="baseController")
     #navbar.navbar.navbar-default
       #navbar-container.navbar-container
         .navbar-header.pull-left
-          a.navbar-brand(href='#/sfms/showMessage')
+          a.navbar-brand(href='#')
             small
               i.icon-leaf
               |                     金科实验室管理系统
@@ -63,30 +62,30 @@ html(lang='en')
               span.btn.btn-info
               span.btn.btn-warning
               span.btn.btn-danger
- 
-         
+
+
           ul.nav.nav-list
-            li(ng-repeat='menu in menus') 
-              a.dropdown-toggle(href='{{menu.Url}}') 
+            li(ng-repeat='menu in menus')
+              a.dropdown-toggle(href='{{menu.Url}}')
                 i(class='{{menu.icon}}')
                 span.menu-text  {{menu.MenuName}}
-               // b.arrow.icon-angle-down
+              // b.arrow.icon-angle-down
               ul.submenu
                 li(ng-repeat='menuchid in menu.children')
                   a(href='{{menuchid.Url}}' ng-click='pageInit()')
                     i.icon-double-angle-right
-                    span {{menuchid.MenuName}}
-             // /.nav-list
+                    span {{menuchid.MenuName | menuFilter:menuchid.MenuName }}
+            // /.nav-list
           #sidebar-collapse.sidebar-collapse
             i.icon-double-angle-left(data-icon1='icon-double-angle-left', data-icon2='icon-double-angle-right')
         .main-content
           .page-content.box(ng-view='')
-             img(src='imgs/login_pic.png',style="width:800px;height:500px;")
-          
-           
+            img(src='imgs/login_pic.png',style="width:800px;height:500px;")
+
+
 
 script(src='assets/js/jquery-2.0.3.min.js')
-//script(src='assets/js/bootstrap.min.js')
+script(src='assets/js/bootstrap.min.js')
 script(src='assets/js/ace.min.js')
 script(src='assets/js/ace-extra.min.js')
 script(src='/bower_components/angular/angular.min.js')
@@ -108,8 +107,6 @@ script(src='/js/angularjs/controller/userRoleController.js')
 script(src='/js/angularjs/controller/userEditController.js')
 script(src='/js/angularjs/controller/userInfoController.js')
 script(src='/js/angularjs/controller/userMenuController.js')
-script(src='/js/angularjs/controller/messageController.js')
-script(src='/js/angularjs/controller/kpiAddController.js')
 
 
 script(src='/js/angularjs/controller/sfmsProjectController.js')
@@ -119,12 +116,4 @@ script(src='/js/angularjs/controller/sfmsApiFinanceEditController.js')
 
 script(src='/js/angularjs/controller/jitgoodsAddController.js')
 
-//bootstrap-fileinput 组件
-link(rel='stylesheet', href="bower_components/bootstrap-fileinput/css/fileinput.min.css")
-link(href="/bower_components/bootstrap-fileinput/themes/explorer/theme.css", media="all", rel="stylesheet", type="text/css")
-script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js")
-script(src="/bower_components/bootstrap-fileinput/js/fileinput.min.js", type="text/javascript")
-//script(src="/bower_components/bootstrap-fileinput/js/plugins/sortable.js", type="text/javascript")
-script(src="/bower_components/bootstrap-fileinput/themes/explorer/theme.js", type="text/javascript")
-script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js", type="text/javascript")
-script(src="/bower_components/bootstrap-fileinput/js/locales/zh.js" type="text/javascript")
+

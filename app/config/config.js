@@ -20,12 +20,11 @@ var config = {
     port: 80, // 程序运行的端口
     host: '127.0.0.1',
     mysql: {
-
         host: '182.254.146.167',
         user: 'stackfarm',
         password: '1320program',
         database: 'jit_backend',
-        
+
         connectionLimit: 100,
         supportBigNumbers: true,
     },
@@ -57,16 +56,17 @@ var config = {
     //金科小哥相关的
     jinkebro: {
         host: 'jit.upsnail.com',
-       // baseUrl: 'http://duncan.ducnan.cn/',
-        baseUrl: 'http://sun.tunnel.2bdata.com/',
+        baseUrl: 'http://jit.upsnail.com/',
+        //host: 'http://d64a5cce.ngrok.io',
+        //baseUrl: 'http://sun.tunnel.2bdata.com/',
         productInfo: 'jinkeBro/product/info',
         order: 'jinkeBro/order',
         productstock: 'jinkeBro/proStock'
     },
     redis_prd: {
-        host: '115.159.185.58',
+        host: '118.89.163.175',
         port: '6379',
-        //password: 'jit1320go'
+        password: 'jit1320go'
     },
     redis_local: {
         host: '127.0.0.1',

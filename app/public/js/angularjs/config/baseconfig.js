@@ -310,4 +310,13 @@ myApp.config(function($routeProvider) {
                 return '错误数据';
         }
     }
+}).filter('menuFilter', function() {
+    return function(val) {
+        var res = '';
+        for(var i in val){
+            if(val[i] == '(' || val[i] == '（') break;
+            res += val[i];
+        }
+        return res;
+    }
 });
