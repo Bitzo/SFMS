@@ -19,11 +19,11 @@ module.exports = function(app) {
     //主站
     app.use('/', backendRoute);
     //微信相关
-    app.use('/wechat', weChatRoute);
+    // app.use('/wechat', weChatRoute);
     //API相关
     app.use('/api/v1/', apiRoute);
     //实验室管理子系统
     app.use('/sfms', sfmsRoute);
     //金科小哥子系统
-    app.use('/jinkeBro', jinkeBroRoute);
+    // app.use('/jinkeBro', jinkeBroRoute);
 };

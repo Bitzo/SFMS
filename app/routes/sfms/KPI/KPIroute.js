@@ -333,7 +333,8 @@ router.post('/', function (req, res) {
                     'IsActive': 1
                 };
 
-                KPIservice.queryKPI(query, function (err, results) {
+                //获取userID的用户名UserName
+                userservice.querySingleID(UserID, function (err, results) {
                     if (err) {
                         res.status(500);
 
@@ -344,115 +345,92 @@ router.post('/', function (req, res) {
                         });
                     }
 
-                    if (!(results !== undefined && results.length == 0)) {
-                        res.status(400);
+                    if (results !== undefined && results.length > 0) {
+                        var UserName = results[0].UserName;
+                        //数据获取并验证完毕后再存入KPI数据
+                        data = {
+                            'KPIName': KPIName,
+                            'KPIType': KPIType,
+                            'KPIClass': KPIClass,
+                            'KPIScore': KPIScore,
+                            'ProjectId': ProjectID,
+                            'UserID': UserID,
+                            'UserName': UserName,
+                            'OperateUser': OperateUser,
+                            'OperateUserID': req.query.jitkey,
+                            'KPIStatus': '待审核',
+                            'Remark': Remark,
+                            'IsActive': 1
+                        };
 
-                        return res.json({
-                            status: 400,
-                            isSuccess: false,
-                            msg: '操作失败，当前项目，该用户已申请过此类型的绩效，不可重复申请'
-                        });
-                    }
-
-                    //获取userID的用户名UserName
-                    userservice.querySingleID(UserID, function (err, results) {
-                        if (err) {
-                            res.status(500);
-
-                            return res.json({
-                                status: 500,
-                                isSuccess: false,
-                                msg: '操作失败，服务器出错'
-                            });
-                        }
-
-                        if (results !== undefined && results.length > 0) {
-                            var UserName = results[0].UserName;
-                            //数据获取并验证完毕后再存入KPI数据
-                            data = {
-                                'KPIName': KPIName,
-                                'KPIType': KPIType,
-                                'KPIClass': KPIClass,
-                                'KPIScore': KPIScore,
-                                'ProjectId': ProjectID,
-                                'UserID': UserID,
-                                'UserName': UserName,
-                                'OperateUser': OperateUser,
-                                'OperateUserID': req.query.jitkey,
-                                'KPIStatus': '待审核',
-                                'Remark': Remark,
-                                'IsActive': 1
-                            };
-
-                            if (data.KPIName.length>45) {
-                                res.status(400);
-
-                                return res.json({
-                                    code: 400,
-                                    isSuccess: false,
-                                    msg: '绩效名称过长,请勿超过45个字符'
-                                });
-                            }
-
-                            if (isNaN(data.KPIScore)||data.KPIScore<0) {
-                                res.status(400);
-
-                                return res.json({
-                                    code: 400,
-                                    isSuccess: false,
-                                    msg: '绩效分不是正确的数值'
-                                });
-                            }
-
-                            if (data.Remark.length>45) {
-                                res.status(400);
-
-                                return res.json({
-                                    code: 400,
-                                    isSuccess: false,
-                                    msg: '备注过长,请勿超过45个字符'
-                                });
-                            }
-
-                            KPIservice.addKPI(data, function (err, results) {
-                                if (err) {
-                                    res.status(500);
-
-                                    return res.json({
-                                        status: 500,
-                                        isSuccess: false,
-                                        msg: '操作失败，服务器出错'
-                                    });
-                                }
-
-                                if(results !== undefined && results.insertId > 0) {
-                                    res.status(200);
-
-                                    return res.json({
-                                        status: 200,
-                                        isSuccess: true,
-                                        msg: '操作成功'
-                                    });
-                                } else {
-                                    res.status(400);
-
-                                    return res.json({
-                                        status: 404,
-                                        isSuccess: false,
-                                        msg: results
-                                    });
-                                }
-                            });
-                        } else {
+                        if (data.KPIName.length>45) {
                             res.status(400);
 
                             return res.json({
-                                status: 404,
+                                code: 400,
                                 isSuccess: false,
-                                msg: '操作失败，用户有误！'
+                                msg: '绩效名称过长,请勿超过45个字符'
                             });
                         }
-                    });
+
+                        if (isNaN(data.KPIScore)||data.KPIScore<0) {
+                            res.status(400);
+
+                            return res.json({
+                                code: 400,
+                                isSuccess: false,
+                                msg: '绩效分不是正确的数值'
+                            });
+                        }
+
+                        if (data.Remark.length>45) {
+                            res.status(400);
+
+                            return res.json({
+                                code: 400,
+                                isSuccess: false,
+                                msg: '备注过长,请勿超过45个字符'
+                            });
+                        }
+
+                        KPIservice.addKPI(data, function (err, results) {
+                            if (err) {
+                                res.status(500);
+
+                                return res.json({
+                                    status: 500,
+                                    isSuccess: false,
+                                    msg: '操作失败，服务器出错'
+                                });
+                            }
+
+                            if(results !== undefined && results.insertId > 0) {
+                                res.status(200);
+
+                                return res.json({
+                                    status: 200,
+                                    isSuccess: true,
+                                    msg: '操作成功'
+                                });
+                            } else {
+                                res.status(400);
+
+                                return res.json({
+                                    status: 404,
+                                    isSuccess: false,
+                                    msg: results
+                                });
+                            }
+                        });
+                    } else {
+                        res.status(400);
+
+                        return res.json({
+                            status: 404,
+                            isSuccess: false,
+                            msg: '操作失败，用户有误！'
+                        });
+                    }
                 });
             });
         });
@@ -460,7 +438,7 @@ router.post('/', function (req, res) {
 });
 
 //绩效启用
-router.put('/', function (req, res) {
+router.put('/reuse', function (req, res) {
     var data = {
         userID: req.query.jitkey,
         functionCode: functionConfig.sfmsApp.KPIManage.KPIEdit.functionCode
