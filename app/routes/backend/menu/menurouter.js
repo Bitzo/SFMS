@@ -743,7 +743,11 @@ router.delete('/forbid',function (req,res) {
                 msg:"fsdfhk"
             });
         }
-        if (req.body.formdata.MenuID == undefined) {
+        var MenuID = JSON.parse(req.query.d).MenuID;
+        var menuLevel = -1;
+        var parentID = -1;
+
+        if (MenuID == undefined) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -752,7 +756,7 @@ router.delete('/forbid',function (req,res) {
             });
         }
 
-        if (isNaN(req.body.formdata.MenuID)) {
+        if (isNaN(MenuID)) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -761,9 +765,6 @@ router.delete('/forbid',function (req,res) {
             });
         }
 
-        var MenuID = req.body.formdata.MenuID;
-        var menuLevel = -1;
-        var parentID = -1;
         menuService.queryAllMenus({"MenuID":MenuID,"isPaging":0},function (err,queryResult) {
             if (err){
                 res.status(500);
@@ -861,7 +862,11 @@ router.put('/reuse',function (req,res) {
             });
         }
 
-        if (req.body.formdata.MenuID == undefined) {
+        var MenuID = req.body.formdata.MenuID;
+        var menuLevel = -1;
+        var parentID = -1;
+
+        if (MenuID == undefined) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -870,7 +875,7 @@ router.put('/reuse',function (req,res) {
             });
         }
 
-        if (isNaN(req.body.formdata.MenuID)) {
+        if (isNaN(MenuID)) {
             res.status(400);
             return res.json({
                 code: 400,
@@ -878,11 +883,6 @@ router.put('/reuse',function (req,res) {
                 msg: "菜单ID不是数字"
             });
         }
-
-        var MenuID = req.body.formdata.MenuID;
-
-        var menuLevel = -1;
-        var parentID = -1;
 
         menuService.queryAllMenus({"MenuID":MenuID,"isPaging":0},function (err,queryResult) {
             if (err){

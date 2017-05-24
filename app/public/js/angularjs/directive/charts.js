@@ -143,7 +143,7 @@ angular.module('Lee.canvas',[]).directive('jasonCanvas',['$location','myData',fu
                     ctx.moveTo(posX, posY + 20 * i);  
                     ctx.font = 'bold 12px 微软雅黑';    //斜体 30像素 微软雅黑字体  
                     ctx.fillStyle = color_arr[i]; //"#000000";  
-                    var percent = text_arr[i] + "：" + 100 * data_arr[i] + "%" + "  " + "金额" + "："  + mon_arr[i];  
+                    var percent = text_arr[i] + "：" + 100 * data_arr[i] + "%" + "  " + "金额" + "："  + mon_arr[i].toFixed(2);
                     ctx.fillText(percent, textX, textY + 20 * i);  
                 }  
             }  

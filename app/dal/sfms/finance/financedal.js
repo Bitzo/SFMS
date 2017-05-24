@@ -246,11 +246,11 @@ exports.delFinance = function (data, callback) {
             return;
         });
     });
-}
+};
 
 exports.financeCount = function (data, callback) {
     var sql = 'select FIType,InOutType,sum(FIPrice) as sum from jit_financeinfo,jit_projectbaseinfo ' +
-        'where jit_projectbaseinfo.IsActive = 1 and jit_financeinfo.IsActive = 1 ' +
+        'where jit_projectbaseinfo.ID = jit_financeinfo.projectID and jit_projectbaseinfo.IsActive = 1 and jit_financeinfo.IsActive = 1 ' +
         "and FIStatu = '通过'";
 
     if (data.startTime !== '') sql += " and CheckTime > '" + data.startTime + "' ";
@@ -277,4 +277,4 @@ exports.financeCount = function (data, callback) {
             return;
         });
     });
-}
+};
