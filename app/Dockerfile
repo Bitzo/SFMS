@@ -1,4 +1,5 @@
-FROM hub.c.163.com/nce2/nodejs:0.12.2
+#FROM hub.c.163.com/nce2/nodejs:0.12.2
+FROM readytalk/nodejs
 
 # Create app directory
 RUN mkdir -p /home/app
